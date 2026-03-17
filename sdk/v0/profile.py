@@ -1,13 +1,4 @@
-from __future__ import annotations
-
-from dataclasses import dataclass
+from sdk._profiles import SdkProfile, get_sdk_profile
 
 
-@dataclass(slots=True, frozen=True)
-class SdkProfile:
-    package_name: str = "sdk"
-    docs_subdir: str = "docs"
-    authoring_mode: str = "base"
-
-
-DEFAULT_PROFILE = SdkProfile()
+DEFAULT_PROFILE = get_sdk_profile("sdk")

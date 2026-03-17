@@ -3,6 +3,8 @@ from __future__ import annotations
 from dataclasses import dataclass
 from pathlib import Path
 
+from sdk._profiles import SUPPORTED_SDK_PACKAGES, get_sdk_profile
+
 
 LEGACY_DESIGNER_PROMPT_NAME = "system_prompt.txt"
 DESIGNER_PROMPT_NAME = "designer_system_prompt.txt"
@@ -11,29 +13,12 @@ HYBRID_OPENAI_DESIGNER_PROMPT_NAME = "designer_system_prompt_openai_hybrid.txt"
 GEMINI_DESIGNER_PROMPT_NAME = "designer_system_prompt_gemini.txt"
 HYBRID_GEMINI_DESIGNER_PROMPT_NAME = "designer_system_prompt_gemini_hybrid.txt"
 
-SUPPORTED_SDK_PACKAGES = {"sdk", "sdk_hybrid"}
 SUPPORTED_SDK_DOCS_MODES = {"full", "core", "none"}
-
-CORE_SDK_DOCS_BY_PACKAGE: dict[str, list[str]] = {
-    "sdk": [
-        "00_quickstart.md",
-        "80_testing.md",
-    ],
-    "sdk_hybrid": [
-        "00_quickstart.md",
-        "35_cadquery.md",
-        "80_testing.md",
-    ],
-}
 
 
 def normalize_sdk_package(sdk_package: str) -> str:
     candidate = (sdk_package or "sdk").strip()
-    if candidate not in SUPPORTED_SDK_PACKAGES:
-        raise ValueError(
-            f"Unsupported SDK package: {sdk_package!r}. "
-            f"Expected one of {sorted(SUPPORTED_SDK_PACKAGES)!r}."
-        )
+    get_sdk_profile(candidate)
     return candidate
 
 
@@ -58,21 +43,19 @@ def resolve_sdk_package_flags(
 
 
 def _select_sdk_doc_paths(
-    docs_root: Path,
+    repo_root: Path,
     *,
     sdk_package: str,
     docs_mode: str,
 ) -> list[Path]:
-    package = normalize_sdk_package(sdk_package)
+    profile = get_sdk_profile(normalize_sdk_package(sdk_package))
     mode = normalize_sdk_docs_mode(docs_mode)
     if mode == "none":
         return []
-    if mode == "full":
-        return sorted(docs_root.glob("*.md"))
 
     selected: list[Path] = []
-    for name in CORE_SDK_DOCS_BY_PACKAGE.get(package, []):
-        path = docs_root / name
+    for rel_path in profile.docs_for_mode(mode):
+        path = repo_root / rel_path
         if path.exists():
             selected.append(path)
     return selected
@@ -86,12 +69,8 @@ def load_sdk_docs_reference(
 ) -> str:
     package = normalize_sdk_package(sdk_package)
     mode = normalize_sdk_docs_mode(docs_mode)
-    docs_root = repo_root / package / "docs"
-    if not docs_root.exists():
-        return ""
-
     doc_paths = _select_sdk_doc_paths(
-        docs_root,
+        repo_root,
         sdk_package=package,
         docs_mode=mode,
     )
@@ -111,7 +90,7 @@ def load_sdk_docs_reference(
     if mode == "core":
         parts.append(
             "Only the core SDK docs subset is injected for speed. "
-            "It focuses on quickstart, testing, repair, and package-specific essentials.\n"
+            "It focuses on quickstart, testing, and package-specific essentials.\n"
         )
     for path in doc_paths:
         rel = path.relative_to(repo_root).as_posix()
@@ -140,7 +119,7 @@ def resolve_system_prompt_path(
         else:
             path = generated_candidate
     provider_norm = (provider or "").strip().lower()
-    package = normalize_sdk_package(sdk_package)
+    profile = get_sdk_profile(normalize_sdk_package(sdk_package))
 
     candidates: list[Path] = []
     default_names = {
@@ -151,16 +130,9 @@ def resolve_system_prompt_path(
         GEMINI_DESIGNER_PROMPT_NAME,
         HYBRID_GEMINI_DESIGNER_PROMPT_NAME,
     }
-    if provider_norm == "openai":
-        if package == "sdk_hybrid" and path.name in default_names:
-            candidates.append(path.with_name(HYBRID_OPENAI_DESIGNER_PROMPT_NAME))
-        if path.name in default_names:
-            candidates.append(path.with_name(OPENAI_DESIGNER_PROMPT_NAME))
-    elif provider_norm == "gemini":
-        if package == "sdk_hybrid" and path.name in default_names:
-            candidates.append(path.with_name(HYBRID_GEMINI_DESIGNER_PROMPT_NAME))
-        if path.name in default_names:
-            candidates.append(path.with_name(GEMINI_DESIGNER_PROMPT_NAME))
+    profile_prompt_name = profile.prompt_name_for_provider(provider_norm)
+    if path.name in default_names and profile_prompt_name is not None:
+        candidates.append(path.with_name(profile_prompt_name))
     candidates.append(path)
 
     if path.name == LEGACY_DESIGNER_PROMPT_NAME:

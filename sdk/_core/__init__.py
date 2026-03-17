@@ -1,0 +1,1 @@
+"""Canonical shared SDK implementation."""

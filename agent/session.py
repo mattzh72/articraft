@@ -35,6 +35,7 @@ from agent.traces import TraceWriter
 from agent.tools.base import ToolResult
 from agent.tools.code_region import extract_editable_code
 from agent.tui.single_run import SingleRunDisplay
+from sdk._profiles import get_sdk_profile
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
@@ -416,11 +417,7 @@ class UrdfAgent:
 
     def _ensure_code_file(self) -> None:
         repo_root = Path(__file__).resolve().parents[1]
-        scaffold_path = (
-            repo_root / "scaffold_hybrid.py"
-            if self.sdk_package == "sdk_hybrid"
-            else repo_root / "scaffold.py"
-        )
+        scaffold_path = repo_root / get_sdk_profile(self.sdk_package).scaffold_path
         path = Path(self.file_path)
         if path.exists():
             existing = path.read_text()

@@ -60,8 +60,21 @@ def main() -> None:
     assert "FREEFORM tool" in instructions
     assert "write_code" in instructions
     assert "Do NOT provide `file_path`" in instructions
-    assert "## sdk/docs/00_quickstart.md" in docs_message
-    assert "## sdk/docs/80_testing.md" in docs_message
+    assert "## sdk/_docs/common/00_quickstart.md" in docs_message
+    assert "## sdk/_docs/common/80_testing.md" in docs_message
+
+    hybrid_docs_message = build_provider_payload_preview(
+        "a pair of scissors",
+        provider="openai",
+        model_id="gpt-5.4",
+        thinking_level="high",
+        system_prompt_path=DESIGNER_PROMPT_NAME,
+        sdk_package="sdk_hybrid",
+        sdk_docs_mode="core",
+    )["input"][0]["content"][0]["text"]
+    assert "## sdk/_docs/common/00_quickstart.md" in hybrid_docs_message
+    assert "## sdk/_docs/cadquery/35_cadquery.md" in hybrid_docs_message
+    assert "## sdk/_docs/common/80_testing.md" in hybrid_docs_message
 
     gemini_resolved = resolve_system_prompt_path(
         DESIGNER_PROMPT_NAME,

@@ -33,12 +33,14 @@ build-backend = "hatchling.build"
 [tool.hatch.build.targets.wheel]
 packages = [
     "agent",
+    "cli",
+    "store",
     "prompting",
     "dataset",
     "workbench",
+    "viewer",
     "sdk",
     "sdk_hybrid",
-    "sdk_internal",
 ]
 
 [dependency-groups]

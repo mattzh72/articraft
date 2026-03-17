@@ -11,9 +11,12 @@ from .cadquery import (
 from .articulated_object import ArticulatedObject
 from .geometry_qc import (
     GeometryOverlap,
+    UnsupportedPartFinding,
+    default_contact_tol_from_env,
     default_overlap_tol_from_env,
     default_overlap_volume_tol_from_env,
     find_geometry_overlaps,
+    find_unsupported_parts,
     validate_no_geometry_overlaps,
 )
 from .generated_collisions import CollisionGenerationSettings, collision_generation_settings_from_env
@@ -67,9 +70,12 @@ __all__ = [
     "mesh_from_cadquery",
     "ArticulatedObject",
     "GeometryOverlap",
+    "UnsupportedPartFinding",
+    "default_contact_tol_from_env",
     "default_overlap_tol_from_env",
     "default_overlap_volume_tol_from_env",
     "find_geometry_overlaps",
+    "find_unsupported_parts",
     "validate_no_geometry_overlaps",
     "CollisionGenerationSettings",
     "collision_generation_settings_from_env",
