@@ -4,7 +4,7 @@ import argparse
 import sys
 from pathlib import Path
 
-from prompting.spec import GENERATED_DIR, PromptVariant, iter_prompt_variants
+from agent.prompting.spec import GENERATED_DIR, PromptVariant, iter_prompt_variants
 
 
 def compile_prompt_variant(variant: PromptVariant) -> str:
@@ -70,7 +70,7 @@ def main(argv: list[str] | None = None) -> int:
             return 0
         for variant in stale:
             print(f"Stale prompt artifact: {variant.output}")
-        print("Run `python -m prompting.compile` to refresh generated prompts.")
+        print("Run `python -m agent.prompting.compile` to refresh generated prompts.")
         return 1
 
     written = compile_all_prompts()

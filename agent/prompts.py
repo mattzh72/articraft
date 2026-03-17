@@ -14,6 +14,8 @@ GEMINI_DESIGNER_PROMPT_NAME = "designer_system_prompt_gemini.txt"
 HYBRID_GEMINI_DESIGNER_PROMPT_NAME = "designer_system_prompt_gemini_hybrid.txt"
 
 SUPPORTED_SDK_DOCS_MODES = {"full", "core", "none"}
+PROMPTING_ROOT = Path(__file__).resolve().parent / "prompting"
+GENERATED_PROMPTS_DIR = PROMPTING_ROOT / "generated"
 
 
 def normalize_sdk_package(sdk_package: str) -> str:
@@ -113,7 +115,7 @@ def resolve_system_prompt_path(
         path = raw_path
     else:
         root_candidate = (root / raw_path).resolve()
-        generated_candidate = (root / "prompting" / "generated" / raw_path.name).resolve()
+        generated_candidate = (GENERATED_PROMPTS_DIR / raw_path.name).resolve()
         if root_candidate.exists() or len(raw_path.parts) > 1:
             path = root_candidate
         else:

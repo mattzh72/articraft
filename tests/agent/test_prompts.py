@@ -24,14 +24,14 @@ def main() -> None:
     repo_root = Path(__file__).resolve().parents[2]
 
     resolved = resolve_system_prompt_path(
-        str(Path("prompting/generated") / DESIGNER_PROMPT_NAME),
+        str(Path("agent/prompting/generated") / DESIGNER_PROMPT_NAME),
         provider="openai",
         repo_root=repo_root,
     )
     assert resolved.name == OPENAI_DESIGNER_PROMPT_NAME
 
     loaded_path, loaded_text = load_system_prompt_text(
-        str(Path("prompting/generated") / DESIGNER_PROMPT_NAME),
+        str(Path("agent/prompting/generated") / DESIGNER_PROMPT_NAME),
         provider="openai",
         repo_root=repo_root,
     )
@@ -39,7 +39,7 @@ def main() -> None:
     assert loaded_text == resolved.read_text(encoding="utf-8")
 
     hybrid_resolved = resolve_system_prompt_path(
-        str(Path("prompting/generated") / DESIGNER_PROMPT_NAME),
+        str(Path("agent/prompting/generated") / DESIGNER_PROMPT_NAME),
         provider="openai",
         sdk_package="sdk_hybrid",
         repo_root=repo_root,
@@ -47,14 +47,14 @@ def main() -> None:
     assert hybrid_resolved.name == HYBRID_OPENAI_DESIGNER_PROMPT_NAME
 
     gemini_resolved = resolve_system_prompt_path(
-        str(Path("prompting/generated") / DESIGNER_PROMPT_NAME),
+        str(Path("agent/prompting/generated") / DESIGNER_PROMPT_NAME),
         provider="gemini",
         repo_root=repo_root,
     )
     assert gemini_resolved.name == GEMINI_DESIGNER_PROMPT_NAME
 
     gemini_hybrid_resolved = resolve_system_prompt_path(
-        str(Path("prompting/generated") / DESIGNER_PROMPT_NAME),
+        str(Path("agent/prompting/generated") / DESIGNER_PROMPT_NAME),
         provider="gemini",
         sdk_package="sdk_hybrid",
         repo_root=repo_root,

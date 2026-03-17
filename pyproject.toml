@@ -35,7 +35,6 @@ packages = [
     "agent",
     "cli",
     "store",
-    "prompting",
     "viewer",
     "sdk",
     "sdk_hybrid",

@@ -8,8 +8,8 @@ if __package__ in {None, ""}:
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
 
-from prompting.compile import compile_prompt_variant, find_stale_prompts
-from prompting.spec import iter_prompt_variants
+from agent.prompting.compile import compile_prompt_variant, find_stale_prompts
+from agent.prompting.spec import iter_prompt_variants
 
 
 def main() -> None:
