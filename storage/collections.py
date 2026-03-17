@@ -2,13 +2,13 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
-from store.models import DatasetCollection, WorkbenchCollection
-from store.repo import StoreRepo
+from storage.models import DatasetCollection, WorkbenchCollection
+from storage.repo import StorageRepo
 
 
 @dataclass(slots=True)
 class CollectionStore:
-    repo: StoreRepo
+    repo: StorageRepo
 
     def save_dataset(self, collection: DatasetCollection) -> None:
         self.repo.write_json(self.repo.layout.dataset_collection_path(), collection.to_dict())

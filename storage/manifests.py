@@ -2,13 +2,13 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
-from store.collections import CollectionStore
-from store.repo import StoreRepo
+from storage.collections import CollectionStore
+from storage.repo import StorageRepo
 
 
 @dataclass(slots=True)
 class ManifestStore:
-    repo: StoreRepo
+    repo: StorageRepo
     collections: CollectionStore
 
     def dataset_manifest(self) -> dict:

@@ -5,17 +5,17 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
 
-from store.layout import StoreLayout
+from storage.layout import StorageLayout
 
 
 @dataclass(slots=True)
-class StoreRepo:
+class StorageRepo:
     root: Path
-    layout: StoreLayout = field(init=False)
+    layout: StorageLayout = field(init=False)
 
     def __post_init__(self) -> None:
         self.root = self.root.resolve()
-        self.layout = StoreLayout(self.root)
+        self.layout = StorageLayout(self.root)
 
     def ensure_layout(self) -> None:
         self.layout.ensure_base_dirs()

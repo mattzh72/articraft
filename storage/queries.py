@@ -3,12 +3,12 @@ from __future__ import annotations
 from dataclasses import dataclass
 from pathlib import Path
 
-from store.repo import StoreRepo
+from storage.repo import StorageRepo
 
 
 @dataclass(slots=True)
-class StoreQueries:
-    repo: StoreRepo
+class StorageQueries:
+    repo: StorageRepo
 
     def list_record_ids(self) -> list[str]:
         records_root = self.repo.layout.records_root

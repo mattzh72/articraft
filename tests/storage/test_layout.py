@@ -8,11 +8,11 @@ if __package__ in {None, ""}:
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
 
-from store.layout import StoreLayout
+from storage.layout import StorageLayout
 
 
 def main() -> None:
-    layout = StoreLayout(Path("/tmp/articraft"))
+    layout = StorageLayout(Path("/tmp/articraft"))
     assert layout.record_dir("rec_123") == Path("/tmp/articraft/data/records/rec_123")
     assert layout.record_assets_dir("rec_123") == Path("/tmp/articraft/data/records/rec_123/assets")
     assert layout.record_asset_meshes_dir("rec_123") == Path("/tmp/articraft/data/records/rec_123/assets/meshes")

@@ -3,10 +3,10 @@ from __future__ import annotations
 import argparse
 from datetime import datetime, timezone
 
-from store.collections import CollectionStore
-from store.models import DatasetCollection
-from store.queries import StoreQueries
-from store.repo import StoreRepo
+from storage.collections import CollectionStore
+from storage.models import DatasetCollection
+from storage.queries import StorageQueries
+from storage.repo import StorageRepo
 
 from cli.common import add_data_root_argument
 
@@ -20,7 +20,7 @@ def _build_parser() -> argparse.ArgumentParser:
     add_data_root_argument(parser)
     subparsers = parser.add_subparsers(dest="command", required=True)
 
-    subparsers.add_parser("init-store", help="Create the canonical data/ directory layout.")
+    subparsers.add_parser("init-storage", help="Create the canonical data/ directory layout.")
     subparsers.add_parser("status", help="Show dataset storage status.")
     return parser
 
@@ -29,11 +29,11 @@ def main(argv: list[str] | None = None) -> int:
     parser = _build_parser()
     args = parser.parse_args(argv)
 
-    repo = StoreRepo(args.repo_root)
+    repo = StorageRepo(args.repo_root)
     collections = CollectionStore(repo)
-    queries = StoreQueries(repo)
+    queries = StorageQueries(repo)
 
-    if args.command == "init-store":
+    if args.command == "init-storage":
         repo.ensure_layout()
         if collections.load_dataset() is None:
             collections.save_dataset(
@@ -43,7 +43,7 @@ def main(argv: list[str] | None = None) -> int:
                     updated_at=_utc_now(),
                 )
             )
-        print(f"Initialized dataset store at {repo.layout.data_root}")
+        print(f"Initialized dataset storage at {repo.layout.data_root}")
         return 0
 
     if args.command == "status":

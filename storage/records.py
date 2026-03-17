@@ -4,13 +4,13 @@ import shutil
 from dataclasses import dataclass
 from pathlib import Path
 
-from store.models import CompileReport, Provenance, Record
-from store.repo import StoreRepo
+from storage.models import CompileReport, Provenance, Record
+from storage.repo import StorageRepo
 
 
 @dataclass(slots=True)
 class RecordStore:
-    repo: StoreRepo
+    repo: StorageRepo
 
     def ensure_record_dirs(self, record_id: str) -> Path:
         record_dir = self.repo.layout.record_dir(record_id)

@@ -34,7 +34,7 @@ build-backend = "hatchling.build"
 packages = [
     "agent",
     "cli",
-    "store",
+    "storage",
     "viewer",
     "sdk",
     "sdk_hybrid",

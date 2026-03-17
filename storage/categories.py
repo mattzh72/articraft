@@ -2,13 +2,13 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
-from store.models import CategoryRecord
-from store.repo import StoreRepo
+from storage.models import CategoryRecord
+from storage.repo import StorageRepo
 
 
 @dataclass(slots=True)
 class CategoryStore:
-    repo: StoreRepo
+    repo: StorageRepo
 
     def save(self, category: CategoryRecord) -> None:
         path = self.repo.layout.category_metadata_path(category.slug)

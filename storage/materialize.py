@@ -3,8 +3,8 @@ from __future__ import annotations
 import hashlib
 from dataclasses import dataclass
 
-from store.models import AssetStatus
-from store.repo import StoreRepo
+from storage.models import AssetStatus
+from storage.repo import StorageRepo
 
 
 def build_materialization_fingerprint(
@@ -27,7 +27,7 @@ def build_materialization_fingerprint(
 
 @dataclass(slots=True)
 class MaterializationStore:
-    repo: StoreRepo
+    repo: StorageRepo
 
     def asset_status(self, record_id: str) -> AssetStatus:
         assets_dir = self.repo.layout.record_assets_dir(record_id)

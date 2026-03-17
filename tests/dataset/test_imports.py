@@ -9,12 +9,12 @@ if __package__ in {None, ""}:
 
 
 from cli.dataset import main as dataset_main
-from store.repo import StoreRepo
+from storage.repo import StorageRepo
 
 
 def main() -> None:
     assert callable(dataset_main)
-    repo = StoreRepo(Path.cwd())
+    repo = StorageRepo(Path.cwd())
     assert repo.layout.records_root.name == "records"
 
 

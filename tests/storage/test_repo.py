@@ -9,9 +9,9 @@ if __package__ in {None, ""}:
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
 
-from store.collections import CollectionStore
-from store.materialize import MaterializationStore, build_materialization_fingerprint
-from store.models import (
+from storage.collections import CollectionStore
+from storage.materialize import MaterializationStore, build_materialization_fingerprint
+from storage.models import (
     CompileReport,
     DatasetCollection,
     DisplayMetadata,
@@ -26,13 +26,13 @@ from store.models import (
     GenerationSettings,
     MaterializationInputs,
 )
-from store.records import RecordStore
-from store.repo import StoreRepo
+from storage.records import RecordStore
+from storage.repo import StorageRepo
 
 
 def main() -> None:
     with TemporaryDirectory() as tmpdir:
-        repo = StoreRepo(Path(tmpdir))
+        repo = StorageRepo(Path(tmpdir))
         repo.ensure_layout()
 
         collections = CollectionStore(repo)

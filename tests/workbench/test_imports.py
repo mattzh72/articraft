@@ -9,12 +9,12 @@ if __package__ in {None, ""}:
 
 
 from cli.workbench import main as workbench_main
-from store.repo import StoreRepo
+from storage.repo import StorageRepo
 
 
 def main() -> None:
     assert callable(workbench_main)
-    repo = StoreRepo(Path.cwd())
+    repo = StorageRepo(Path.cwd())
     assert repo.layout.runs_root.name == "runs"
 
 

@@ -4,12 +4,12 @@ import shutil
 from dataclasses import dataclass
 from pathlib import Path
 
-from store.repo import StoreRepo
+from storage.repo import StorageRepo
 
 
 @dataclass(slots=True)
 class PromptBatchStore:
-    repo: StoreRepo
+    repo: StorageRepo
 
     def copy_batch(self, category_slug: str, source: Path, batch_id: str) -> Path:
         destination = self.repo.layout.prompt_batch_path(category_slug, batch_id)

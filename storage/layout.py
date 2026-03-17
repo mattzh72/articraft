@@ -5,7 +5,7 @@ from pathlib import Path
 
 
 @dataclass(slots=True, frozen=True)
-class StoreLayout:
+class StorageLayout:
     root: Path
 
     @property
