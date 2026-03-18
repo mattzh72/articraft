@@ -1,0 +1,1 @@
+A service manipulator with a rotary base joint, mid-span telescoping slide, and rotary wrist hinge, modeled as a tidy CAD assembly with simple housings.

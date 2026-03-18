@@ -1,0 +1,2 @@
+A pan-only turntable mechanism with a low-profile rotary base, circular top plate, and rigid mounting pedestal for a sensor payload.
+A horizontal scanning platform with one vertical-axis pan joint, bearing race detail, and an industrial mounting frame.

@@ -1,0 +1,1 @@
+A realistic opposed twin-slide gripper with a rigid central body, two symmetrical sliding jaws, visible guide rails, and a compact industrial end-effector appearance. The jaws articulate naturally on opposing linear axes, and the mechanism should feel like real automation hardware with precise support and clean hard-surface construction.

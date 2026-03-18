@@ -1,0 +1,2 @@
+A rotary base with a vertical linear slide mounted above it, combining one yaw axis and one prismatic lift axis in a compact machine module.
+A turntable pedestal supporting a Z-axis elevator, with cylindrical base housing, linear guide rails, and a rigid top carriage.

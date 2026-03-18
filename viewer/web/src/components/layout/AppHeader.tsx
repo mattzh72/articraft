@@ -58,23 +58,23 @@ export function AppHeader(): JSX.Element {
   };
 
   return (
-    <header className="flex h-10 shrink-0 items-center gap-3 border-b border-[#e4e4e4] bg-[#f8f8f8] px-3">
-      <div className="flex items-center gap-1.5 text-[12px]">
-        <span className="font-medium text-[#1e1e1e]">Articraft</span>
-        <span className="text-[#ccc]">/</span>
-        <span className="text-[#888]">Viewer</span>
+    <header className="flex h-11 shrink-0 items-center gap-3 border-b border-[var(--border-default)] bg-[var(--surface-0)] px-4">
+      <div className="flex items-center gap-2 text-[12px]">
+        <span className="font-semibold tracking-[-0.02em] text-[var(--text-primary)]">Articraft</span>
+        <span className="text-[var(--border-strong)]">/</span>
+        <span className="text-[var(--text-tertiary)]">Viewer</span>
       </div>
 
       <div className="mx-1 flex min-w-0 flex-1 items-center justify-center">
         {selectedRecordTitle ? (
           <p
-            className="max-w-full truncate text-[12px] text-[#666]"
+            className="max-w-full truncate text-[12px] text-[var(--text-secondary)]"
             title={selectedRecordTitleFull ?? undefined}
           >
             {selectedRecordTitle}
           </p>
         ) : (
-          <p className="text-[12px] text-[#bbb]">No record selected</p>
+          <p className="text-[12px] text-[var(--text-quaternary)]">No record selected</p>
         )}
       </div>
 
@@ -84,7 +84,7 @@ export function AppHeader(): JSX.Element {
           size="sm"
           onClick={handleRefresh}
           disabled={state.loading}
-          className="h-7 w-7 p-0 text-[#999] hover:bg-[#eee] hover:text-[#666]"
+          className="h-7 w-7 rounded-md p-0 text-[var(--text-tertiary)] hover:text-[var(--text-secondary)]"
         >
           <RefreshCw
             className={`size-3.5 ${state.loading ? "animate-spin" : ""}`}

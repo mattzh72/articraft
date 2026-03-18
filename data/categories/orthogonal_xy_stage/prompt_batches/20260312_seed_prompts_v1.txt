@@ -1,0 +1,2 @@
+An orthogonal XY stage with stacked linear rails, rectangular carriages, and a flat top plate, designed like a precision positioning table.
+A compact two-axis Cartesian stage using one X slide under one Y slide, with simple bearing blocks and machined base plates.

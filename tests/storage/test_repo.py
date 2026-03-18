@@ -4,7 +4,6 @@ import sys
 from pathlib import Path
 from tempfile import TemporaryDirectory
 
-
 if __package__ in {None, ""}:
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
@@ -15,6 +14,9 @@ from storage.materialize import MaterializationStore, build_materialization_fing
 from storage.models import (
     CompileReport,
     DisplayMetadata,
+    EnvironmentSettings,
+    GenerationSettings,
+    MaterializationInputs,
     PromptingSettings,
     Provenance,
     Record,
@@ -23,9 +25,6 @@ from storage.models import (
     RunSummary,
     SdkSettings,
     SourceRef,
-    EnvironmentSettings,
-    GenerationSettings,
-    MaterializationInputs,
 )
 from storage.records import RecordStore
 from storage.repo import StorageRepo
@@ -55,6 +54,7 @@ def main() -> None:
             record_id="rec_123",
             created_at="2026-03-18T00:00:00Z",
             updated_at="2026-03-18T00:00:00Z",
+            rating=None,
             kind="generated_model",
             prompt_kind="single_prompt",
             category_slug="hinges",
@@ -75,6 +75,7 @@ def main() -> None:
         )
         record_store.write_record(record)
         assert repo.layout.record_metadata_path("rec_123").exists()
+        assert repo.read_json(repo.layout.record_metadata_path("rec_123"))["rating"] is None
         assert repo.layout.record_inputs_dir("rec_123").exists()
         assert not repo.layout.record_assets_dir("rec_123").exists()
 
@@ -103,7 +104,9 @@ def main() -> None:
         provenance = Provenance(
             schema_version=1,
             record_id="rec_123",
-            generation=GenerationSettings(provider="openai", model_id="gpt-5.4", thinking_level="high"),
+            generation=GenerationSettings(
+                provider="openai", model_id="gpt-5.4", thinking_level="high"
+            ),
             prompting=PromptingSettings(
                 system_prompt_file="designer_system_prompt_openai.txt",
                 system_prompt_sha256="abc",

@@ -6,7 +6,7 @@ import os
 import random
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Dict, Iterable, Iterator, List, Optional, Sequence, Tuple
+from typing import Dict, Iterable, List, Optional, Sequence, Tuple
 
 from .assets import resolve_asset_root
 from .errors import ValidationError
@@ -150,10 +150,7 @@ def _mat4_mul(a: Mat4, b: Mat4) -> Mat4:
     for i in range(4):
         for j in range(4):
             out[i][j] = (
-                a[i][0] * b[0][j]
-                + a[i][1] * b[1][j]
-                + a[i][2] * b[2][j]
-                + a[i][3] * b[3][j]
+                a[i][0] * b[0][j] + a[i][1] * b[1][j] + a[i][2] * b[2][j] + a[i][3] * b[3][j]
             )
     return tuple(tuple(row) for row in out)  # type: ignore[return-value]
 
@@ -321,12 +318,7 @@ class UnsupportedPartFinding:
 
 def _transform_aabb(aabb: AABB, tf: Mat4) -> AABB:
     (min_x, min_y, min_z), (max_x, max_y, max_z) = aabb
-    corners = [
-        (x, y, z)
-        for x in (min_x, max_x)
-        for y in (min_y, max_y)
-        for z in (min_z, max_z)
-    ]
+    corners = [(x, y, z) for x in (min_x, max_x) for y in (min_y, max_y) for z in (min_z, max_z)]
     tx0 = ty0 = tz0 = float("inf")
     tx1 = ty1 = tz1 = float("-inf")
     for c in corners:
@@ -353,8 +345,8 @@ def _geometry_local_aabb(
         return (-sx / 2.0, -sy / 2.0, -sz / 2.0), (sx / 2.0, sy / 2.0, sz / 2.0)
     if isinstance(geometry, Cylinder):
         r = float(geometry.radius)
-        l = float(geometry.length)
-        return (-r, -r, -l / 2.0), (r, r, l / 2.0)
+        length = float(geometry.length)
+        return (-r, -r, -length / 2.0), (r, r, length / 2.0)
     if isinstance(geometry, Sphere):
         r = float(geometry.radius)
         return (-r, -r, -r), (r, r, r)
@@ -481,7 +473,9 @@ def link_world_aabb(
     )
 
 
-def _mat4_rotation_translation(mat: Mat4) -> tuple[tuple[tuple[float, float, float], ...], tuple[float, float, float]]:
+def _mat4_rotation_translation(
+    mat: Mat4,
+) -> tuple[tuple[tuple[float, float, float], ...], tuple[float, float, float]]:
     rot = (
         (float(mat[0][0]), float(mat[0][1]), float(mat[0][2])),
         (float(mat[1][0]), float(mat[1][1]), float(mat[1][2])),
@@ -521,9 +515,9 @@ def _collision_object_from_geometry(
     asset_root: Optional[Path],
     mesh_cache: Dict[Path, object],
 ) -> object:
-    from .types import Box, Cylinder, Sphere
-
     import fcl
+
+    from .types import Box, Cylinder, Sphere
 
     if isinstance(geometry, Box):
         shape = fcl.Box(*[float(v) for v in geometry.size])
@@ -569,7 +563,7 @@ def compute_part_world_transforms(
     if not isinstance(links, list) or not isinstance(joints, list):
         raise ValidationError("model must have .parts and .articulations lists")
 
-    link_names = [getattr(l, "name", None) for l in links]
+    link_names = [getattr(link, "name", None) for link in links]
     if not all(isinstance(n, str) for n in link_names):
         raise ValidationError("model.parts must have string names")
     if len(set(link_names)) != len(link_names):
@@ -594,7 +588,9 @@ def compute_part_world_transforms(
 
     roots = sorted(link_name_set - child_set)
     if not roots:
-        raise ValidationError("Articulated object has no root part (cycle or every part is a child)")
+        raise ValidationError(
+            "Articulated object has no root part (cycle or every part is a child)"
+        )
 
     world: Dict[str, Mat4] = {root: _identity4() for root in roots}
     visited: set[str] = set()
@@ -630,7 +626,7 @@ def compute_part_world_transforms(
             elif joint_type == ArticulationType.FIXED:
                 motion_tf = _identity4()
             else:
-                # Planar/floating are not well-defined without more state; treat as identity.
+                # Unsupported multi-DOF articulations are not well-defined without more state.
                 motion_tf = _identity4()
 
             child_tf = _mat4_mul(_mat4_mul(parent_tf, joint_tf), motion_tf)
@@ -844,7 +840,11 @@ def _find_collision_overlaps_fcl(
                             continue
                         depth = _aabb_intersection_depth(aabb_a, aabb_b)
                         volume = _aabb_intersection_volume(aabb_a, aabb_b)
-                        if not (depth[0] > overlap_tol and depth[1] > overlap_tol and depth[2] > overlap_tol):
+                        if not (
+                            depth[0] > overlap_tol
+                            and depth[1] > overlap_tol
+                            and depth[2] > overlap_tol
+                        ):
                             continue
                         if volume <= overlap_volume_tol:
                             continue
@@ -1099,10 +1099,14 @@ def _find_unsupported_parts_collision(
                     supported[b] = True
 
                 if pair_min_distance is not None:
-                    if nearest_distance[a] is None or pair_min_distance < float(nearest_distance[a]):
+                    if nearest_distance[a] is None or pair_min_distance < float(
+                        nearest_distance[a]
+                    ):
                         nearest_distance[a] = pair_min_distance
                         nearest_part[a] = b
-                    if nearest_distance[b] is None or pair_min_distance < float(nearest_distance[b]):
+                    if nearest_distance[b] is None or pair_min_distance < float(
+                        nearest_distance[b]
+                    ):
                         nearest_distance[b] = pair_min_distance
                         nearest_part[b] = a
 
@@ -1217,9 +1221,17 @@ def find_geometry_overlaps(
                 geometry = getattr(item, "geometry", None)
                 if geometry is None:
                     continue
-                local_aabb = _geometry_local_aabb(geometry, asset_root=asset_root, _obj_cache=obj_cache)
+                local_aabb = _geometry_local_aabb(
+                    geometry, asset_root=asset_root, _obj_cache=obj_cache
+                )
                 elem_tf = _mat4_mul(world_tf, _origin_to_mat4(origin))
-                bounds.append((_transform_aabb(local_aabb, elem_tf), _obb_from_local_aabb_and_tf(local_aabb, elem_tf), item))
+                bounds.append(
+                    (
+                        _transform_aabb(local_aabb, elem_tf),
+                        _obb_from_local_aabb_and_tf(local_aabb, elem_tf),
+                        item,
+                    )
+                )
 
             if bounds:
                 link_elem_bounds[name] = bounds
@@ -1237,7 +1249,11 @@ def find_geometry_overlaps(
                 for ia, (aabb_a, obb_a, item_a) in enumerate(elems_a):
                     for ib, (aabb_b, obb_b, item_b) in enumerate(elems_b):
                         depth = _aabb_intersection_depth(aabb_a, aabb_b)
-                        if not (depth[0] > overlap_tol and depth[1] > overlap_tol and depth[2] > overlap_tol):
+                        if not (
+                            depth[0] > overlap_tol
+                            and depth[1] > overlap_tol
+                            and depth[2] > overlap_tol
+                        ):
                             continue
                         volume = _aabb_intersection_volume(aabb_a, aabb_b)
                         if volume <= overlap_volume_tol:
@@ -1248,22 +1264,26 @@ def find_geometry_overlaps(
                             continue
                         overlaps.append(
                             GeometryOverlap(
-                            pose_index=pose_index,
-                            pose=dict(pose),
-                            link_a=a,
-                            link_b=b,
-                            elem_a=ia,
-                            elem_b=ib,
-                            overlap_depth=depth,
-                            overlap_volume=volume,
-                            aabb_a=aabb_a,
-                            aabb_b=aabb_b,
-                            elem_a_name=getattr(item_a, "name", None),
-                            elem_b_name=getattr(item_b, "name", None),
-                            elem_a_origin=getattr(item_a, "origin", None),
-                            elem_b_origin=getattr(item_b, "origin", None),
-                            elem_a_geometry=type(getattr(item_a, "geometry", None)).__name__ if getattr(item_a, "geometry", None) is not None else None,
-                            elem_b_geometry=type(getattr(item_b, "geometry", None)).__name__ if getattr(item_b, "geometry", None) is not None else None,
+                                pose_index=pose_index,
+                                pose=dict(pose),
+                                link_a=a,
+                                link_b=b,
+                                elem_a=ia,
+                                elem_b=ib,
+                                overlap_depth=depth,
+                                overlap_volume=volume,
+                                aabb_a=aabb_a,
+                                aabb_b=aabb_b,
+                                elem_a_name=getattr(item_a, "name", None),
+                                elem_b_name=getattr(item_b, "name", None),
+                                elem_a_origin=getattr(item_a, "origin", None),
+                                elem_b_origin=getattr(item_b, "origin", None),
+                                elem_a_geometry=type(getattr(item_a, "geometry", None)).__name__
+                                if getattr(item_a, "geometry", None) is not None
+                                else None,
+                                elem_b_geometry=type(getattr(item_b, "geometry", None)).__name__
+                                if getattr(item_b, "geometry", None) is not None
+                                else None,
                             )
                         )
 
@@ -1338,7 +1358,9 @@ def validate_no_geometry_overlaps(
 
 
 def default_overlap_tol_from_env() -> float:
-    raw = os.environ.get("OBJECT_GEOMETRY_OVERLAP_TOL", os.environ.get("URDF_GEOMETRY_OVERLAP_TOL", "0.005"))
+    raw = os.environ.get(
+        "OBJECT_GEOMETRY_OVERLAP_TOL", os.environ.get("URDF_GEOMETRY_OVERLAP_TOL", "0.005")
+    )
     try:
         return float(raw)
     except ValueError:

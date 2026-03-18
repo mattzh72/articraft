@@ -1,0 +1,1 @@
+A cartesian-fed linkage with a base slider, center revolute joint, and distal prismatic tool slide, designed as a clean industrial CAD mechanism.

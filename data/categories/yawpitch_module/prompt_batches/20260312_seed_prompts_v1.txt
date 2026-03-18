@@ -1,0 +1,2 @@
+A two-axis turret module with a base yaw turntable supporting a pitch yoke, using simple mechanical brackets, bearing rings, and a boxy payload mount.
+A compact camera gimbal head with one vertical yaw axis and one horizontal pitch axis, rendered as a clean industrial CAD assembly.

@@ -1,0 +1,2 @@
+A vertical slide carrying a single wrist hinge at the top, using linear guides, a lifted carriage, and a compact rotary tool bracket.
+A Z-axis carriage with an attached revolute wrist joint, modeled as a neat industrial subassembly with straight rails and bearing blocks.

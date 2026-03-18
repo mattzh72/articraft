@@ -1,0 +1,2 @@
+A sliding monitor mount where a carriage first moves linearly along a rail and then supports one hinged display plate.
+A machine fixture with one horizontal prismatic carriage carrying a single rotating inspection flap.

@@ -1,0 +1,2 @@
+A finger-like phalanx chain with serial revolute joints and tapered rigid segments, modeled as a mechanical linkage rather than an organic hand.
+A compact articulated digit made of three hinge-connected phalanx plates, with pin joints and a rigid base mount.

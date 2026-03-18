@@ -10,12 +10,12 @@ export function createLightingRig(): THREE.Group {
   group.name = 'lighting-rig';
 
   // Hemisphere light for soft ambient illumination
-  const hemiLight = new THREE.HemisphereLight(0xf0f0ff, 0x444444, 0.6);
+  const hemiLight = new THREE.HemisphereLight(0xf4f5ff, 0x62676f, 0.75);
   hemiLight.name = 'hemisphere-light';
   group.add(hemiLight);
 
   // Key directional light with shadows
-  const keyLight = new THREE.DirectionalLight(0xffffff, 0.8);
+  const keyLight = new THREE.DirectionalLight(0xffffff, 0.9);
   keyLight.name = 'key-light';
   keyLight.position.set(5, 10, 7);
   keyLight.castShadow = true;
@@ -30,16 +30,22 @@ export function createLightingRig(): THREE.Group {
   group.add(keyLight);
 
   // Fill light (slightly blue tint, softer)
-  const fillLight = new THREE.DirectionalLight(0x8888ff, 0.3);
+  const fillLight = new THREE.DirectionalLight(0xaab8ff, 0.45);
   fillLight.name = 'fill-light';
   fillLight.position.set(-5, 3, -5);
   group.add(fillLight);
 
   // Rim light (behind, for edge definition)
-  const rimLight = new THREE.DirectionalLight(0xffffff, 0.2);
+  const rimLight = new THREE.DirectionalLight(0xffffff, 0.28);
   rimLight.name = 'rim-light';
   rimLight.position.set(0, -5, 10);
   group.add(rimLight);
+
+  // Low frontal fill to keep dark front-facing panels readable.
+  const frontFillLight = new THREE.DirectionalLight(0xfff7ef, 0.22);
+  frontFillLight.name = 'front-fill-light';
+  frontFillLight.position.set(0, 4, 8);
+  group.add(frontFillLight);
 
   return group;
 }
@@ -154,11 +160,11 @@ export function createEnvironmentMap(renderer: THREE.WebGLRenderer): THREE.Textu
   const envScene = new THREE.Scene();
 
   // Top hemisphere color
-  const topColor = new THREE.Color(0xccddff);
+  const topColor = new THREE.Color(0xdbe7ff);
   // Bottom hemisphere color
-  const bottomColor = new THREE.Color(0x666666);
+  const bottomColor = new THREE.Color(0x8a8f98);
   // Equator accent
-  const midColor = new THREE.Color(0xffffff);
+  const midColor = new THREE.Color(0xfafcff);
 
   // Use a large sphere with a gradient shader as environment
   const envGeometry = new THREE.SphereGeometry(100, 32, 16);

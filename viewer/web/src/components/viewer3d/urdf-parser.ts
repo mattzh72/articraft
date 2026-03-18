@@ -24,6 +24,7 @@ export interface UrdfVisualGeometry {
   radius?: number; // cylinder, sphere
   length?: number; // cylinder
   filename?: string; // mesh
+  scale?: [number, number, number]; // mesh
 }
 
 export interface UrdfVisual {
@@ -39,6 +40,8 @@ export interface UrdfVisual {
     texture?: { filename: string };
   };
 }
+
+type UrdfMaterial = NonNullable<UrdfVisual['material']>;
 
 export interface UrdfLink {
   name: string;
@@ -58,7 +61,11 @@ export interface UrdfSpec {
 export function parseVec3(str: string | undefined): [number, number, number] {
   if (!str) return [0, 0, 0];
   const parts = str.trim().split(/\s+/).map(parseFloat);
-  return [parts[0] || 0, parts[1] || 0, parts[2] || 0];
+  return [
+    Number.isFinite(parts[0]) ? parts[0] : 0,
+    Number.isFinite(parts[1]) ? parts[1] : 0,
+    Number.isFinite(parts[2]) ? parts[2] : 0,
+  ];
 }
 
 /**
@@ -67,42 +74,35 @@ export function parseVec3(str: string | undefined): [number, number, number] {
 export function parseVec4(str: string | undefined): [number, number, number, number] {
   if (!str) return [1, 1, 1, 1];
   const parts = str.trim().split(/\s+/).map(parseFloat);
-  return [parts[0] || 1, parts[1] || 1, parts[2] || 1, parts[3] || 1];
+  return [
+    Number.isFinite(parts[0]) ? parts[0] : 1,
+    Number.isFinite(parts[1]) ? parts[1] : 1,
+    Number.isFinite(parts[2]) ? parts[2] : 1,
+    Number.isFinite(parts[3]) ? parts[3] : 1,
+  ];
 }
 
 /**
- * Convert RPY (roll, pitch, yaw) Euler angles to THREE.Matrix4
- * URDF uses fixed-axis rotations (RPY = rotate Z, then Y, then X)
+ * Convert URDF fixed-axis RPY (roll, pitch, yaw) to THREE.Matrix4.
+ * This matches the legacy synth-urdf viewer: Rz(yaw) * Ry(pitch) * Rx(roll).
  */
 export function rpyToMatrix4(rpy: [number, number, number]): THREE.Matrix4 {
   const [roll, pitch, yaw] = rpy;
-  const matrix = new THREE.Matrix4();
-
-  // URDF convention: intrinsic Z-Y-X (yaw-pitch-roll)
-  // THREE.js Euler order 'ZYX' is extrinsic X-Y-Z, so we reverse
-  const euler = new THREE.Euler(roll, pitch, yaw, 'XYZ');
-  matrix.makeRotationFromEuler(euler);
-
-  return matrix;
+  const mx = new THREE.Matrix4().makeRotationX(roll);
+  const my = new THREE.Matrix4().makeRotationY(pitch);
+  const mz = new THREE.Matrix4().makeRotationZ(yaw);
+  return new THREE.Matrix4().multiplyMatrices(mz, new THREE.Matrix4().multiplyMatrices(my, mx));
 }
 
 /**
  * Convert URDF origin (xyz + rpy) to THREE.Matrix4
  */
 export function originToMatrix4(origin?: { xyz?: [number, number, number]; rpy?: [number, number, number] }): THREE.Matrix4 {
-  const matrix = new THREE.Matrix4();
-
-  if (origin?.xyz) {
-    const [x, y, z] = origin.xyz;
-    matrix.setPosition(x, y, z);
-  }
-
-  if (origin?.rpy) {
-    const rotMatrix = rpyToMatrix4(origin.rpy);
-    matrix.multiply(rotMatrix);
-  }
-
-  return matrix;
+  const xyz = origin?.xyz ?? [0, 0, 0];
+  const rpy = origin?.rpy ?? [0, 0, 0];
+  const translation = new THREE.Matrix4().makeTranslation(xyz[0], xyz[1], xyz[2]);
+  const rotation = rpyToMatrix4(rpy);
+  return new THREE.Matrix4().multiplyMatrices(translation, rotation);
 }
 
 /**
@@ -156,9 +156,11 @@ function parseGeometry(geomEl: Element | null): UrdfVisualGeometry | null {
 
   const meshEl = geomEl.querySelector('mesh');
   if (meshEl) {
+    const scaleStr = meshEl.getAttribute('scale') ?? undefined;
     return {
       type: 'mesh',
       filename: meshEl.getAttribute('filename') || '',
+      scale: scaleStr ? parseVec3(scaleStr) : undefined,
     };
   }
 
@@ -189,10 +191,31 @@ function parseMaterial(matEl: Element | null): UrdfVisual['material'] | undefine
   return material;
 }
 
+function resolveMaterial(
+  material: UrdfVisual['material'],
+  materialLibrary: Map<string, UrdfMaterial>,
+): UrdfVisual['material'] {
+  if (!material?.name) {
+    return material;
+  }
+
+  const libraryMaterial = materialLibrary.get(material.name);
+  if (!libraryMaterial) {
+    return material;
+  }
+
+  return {
+    ...libraryMaterial,
+    ...material,
+    color: material.color ?? libraryMaterial.color,
+    texture: material.texture ?? libraryMaterial.texture,
+  };
+}
+
 /**
  * Parse <visual> or <collision> element
  */
-function parseVisual(visualEl: Element): UrdfVisual {
+function parseVisual(visualEl: Element, materialLibrary: Map<string, UrdfMaterial>): UrdfVisual {
   const name = visualEl.getAttribute('name') || undefined;
   const originEl = visualEl.querySelector('origin');
   const geomEl = visualEl.querySelector('geometry');
@@ -207,24 +230,24 @@ function parseVisual(visualEl: Element): UrdfVisual {
     name,
     origin: parseOrigin(originEl),
     geometry,
-    material: parseMaterial(matEl),
+    material: resolveMaterial(parseMaterial(matEl), materialLibrary),
   };
 }
 
 /**
  * Parse <link> element
  */
-function parseLink(linkEl: Element): UrdfLink {
+function parseLink(linkEl: Element, materialLibrary: Map<string, UrdfMaterial>): UrdfLink {
   const name = linkEl.getAttribute('name') || '';
 
   const visuals: UrdfVisual[] = [];
   for (const visualEl of linkEl.querySelectorAll(':scope > visual')) {
-    visuals.push(parseVisual(visualEl));
+    visuals.push(parseVisual(visualEl, materialLibrary));
   }
 
   const collisions: UrdfVisual[] = [];
   for (const collisionEl of linkEl.querySelectorAll(':scope > collision')) {
-    collisions.push(parseVisual(collisionEl));
+    collisions.push(parseVisual(collisionEl, materialLibrary));
   }
 
   return { name, visuals, collisions };
@@ -336,10 +359,19 @@ export function parseUrdf(urdfXml: string): UrdfSpec {
   }
 
   const name = robotEl.getAttribute('name') || 'robot';
+  const materialLibrary = new Map<string, UrdfMaterial>();
+
+  for (const materialEl of robotEl.querySelectorAll(':scope > material')) {
+    const material = parseMaterial(materialEl);
+    if (!material?.name) {
+      continue;
+    }
+    materialLibrary.set(material.name, material);
+  }
 
   const links: UrdfLink[] = [];
   for (const linkEl of robotEl.querySelectorAll(':scope > link')) {
-    links.push(parseLink(linkEl));
+    links.push(parseLink(linkEl, materialLibrary));
   }
 
   const joints: UrdfJoint[] = [];

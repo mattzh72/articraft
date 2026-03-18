@@ -1,13 +1,16 @@
 from __future__ import annotations
 
 import json
+import shutil
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
 from storage.collections import CollectionStore
 from storage.datasets import DatasetStore
+from storage.records import RecordStore
 from storage.repo import StorageRepo
+from storage.search import SearchIndex
 from viewer.api.schemas import (
     DatasetEntryResponse,
     RecordDetailResponse,
@@ -32,10 +35,67 @@ def _coerce_int(value: Any) -> int | None:
     return value if isinstance(value, int) else None
 
 
+def _coerce_rating(value: Any) -> int | None:
+    if isinstance(value, int) and 1 <= value <= 5:
+        return value
+    return None
+
+
 def _coerce_float(value: Any) -> float | None:
     if isinstance(value, (int, float)):
         return float(value)
     return None
+
+
+def _within_time_filter(created_at: str | None, filter_value: str | None) -> bool:
+    if filter_value in {None, "", "any"}:
+        return True
+    if not created_at:
+        return False
+    try:
+        created_at_dt = datetime.fromisoformat(created_at.replace("Z", "+00:00"))
+    except ValueError:
+        return False
+    thresholds = {
+        "24h": 24 * 60 * 60,
+        "7d": 7 * 24 * 60 * 60,
+        "30d": 30 * 24 * 60 * 60,
+        "90d": 90 * 24 * 60 * 60,
+    }
+    seconds = thresholds.get(filter_value)
+    if seconds is None:
+        return True
+    now = datetime.now(timezone.utc)
+    return (now - created_at_dt).total_seconds() <= seconds
+
+
+def _within_cost_filter(total_cost_usd: float | None, filter_value: str | None) -> bool:
+    if filter_value in {None, "", "any"}:
+        return True
+    if filter_value == "missing":
+        return total_cost_usd is None
+    if total_cost_usd is None:
+        return False
+    if filter_value == "lt_0_01":
+        return total_cost_usd <= 0.01
+    if filter_value == "lt_0_05":
+        return total_cost_usd <= 0.05
+    if filter_value == "lt_0_10":
+        return total_cost_usd <= 0.1
+    if filter_value == "gte_0_10":
+        return total_cost_usd >= 0.1
+    return True
+
+
+def _within_rating_filter(rating: int | None, filter_value: str | None) -> bool:
+    if filter_value in {None, "", "any"}:
+        return True
+    if filter_value == "unrated":
+        return rating is None
+    try:
+        return rating == int(filter_value)
+    except ValueError:
+        return True
 
 
 class ViewerStore:
@@ -45,6 +105,9 @@ class ViewerStore:
         self.repo.ensure_layout()
         self.collections = CollectionStore(self.repo)
         self.datasets = DatasetStore(self.repo)
+        self.records = RecordStore(self.repo)
+        self.search = SearchIndex(self.repo)
+        self.search.ensure_current()
 
     def _read_jsonl(self, path: Path) -> list[dict[str, Any]]:
         if not path.exists():
@@ -97,8 +160,10 @@ class ViewerStore:
             record_id=record_id,
             title=str(display.get("title") or record_id),
             prompt_preview=str(display.get("prompt_preview") or ""),
+            rating=_coerce_rating(record.get("rating")),
             created_at=record.get("created_at"),
             updated_at=record.get("updated_at"),
+            sdk_package=record.get("sdk_package"),
             provider=record.get("provider"),
             model_id=record.get("model_id"),
             turn_count=turn_count,
@@ -269,3 +334,66 @@ class ViewerStore:
             dataset_entries=self.list_dataset_entries(),
             runs=self.list_runs(),
         )
+
+    def search_records(
+        self,
+        query: str,
+        *,
+        source_filter: str | None = None,
+        run_id: str | None = None,
+        time_filter: str | None = None,
+        model_filter: str | None = None,
+        cost_filter: str | None = None,
+        rating_filter: str | None = None,
+        limit: int = 200,
+    ) -> list[RecordSummaryResponse]:
+        if not query.strip():
+            return []
+
+        record_ids = self.search.search_record_ids(
+            query,
+            source_filter=source_filter,
+            run_id=run_id,
+            limit=max(limit * 10, 1000),
+        )
+        results: list[RecordSummaryResponse] = []
+        for record_id in record_ids:
+            summary = self._record_summary(record_id)
+            if summary is None:
+                continue
+            if not _within_time_filter(summary.created_at, time_filter):
+                continue
+            if model_filter and summary.model_id != model_filter:
+                continue
+            if not _within_cost_filter(summary.total_cost_usd, cost_filter):
+                continue
+            if not _within_rating_filter(summary.rating, rating_filter):
+                continue
+            results.append(summary)
+            if len(results) >= limit:
+                break
+        return results
+
+    def delete_record(self, record_id: str) -> bool:
+        record = self.records.load_record(record_id)
+        if not isinstance(record, dict):
+            return False
+
+        source = record.get("source")
+        run_id = source.get("run_id") if isinstance(source, dict) else None
+
+        self.collections.remove_workbench_entries(record_id)
+
+        if isinstance(run_id, str) and run_id:
+            for path in (
+                self.repo.layout.run_staging_dir(run_id) / record_id,
+                self.repo.layout.run_failures_dir(run_id) / record_id,
+            ):
+                if path.exists():
+                    shutil.rmtree(path)
+
+        deleted = self.records.delete_record(record_id)
+        if deleted:
+            self.datasets.write_dataset_manifest()
+            self.search.ensure_current()
+        return deleted

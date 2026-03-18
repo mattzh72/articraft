@@ -1,0 +1,2 @@
+A four-link deployable arm with four serial revolute joints and a small fixed sensor pod at the tip.
+A long-reach inspection arm made of four rigid segments connected by four simple hinge joints in one chain.

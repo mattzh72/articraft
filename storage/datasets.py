@@ -13,6 +13,13 @@ class DatasetStore:
     def load_entry(self, record_id: str) -> dict | None:
         return self.repo.read_json(self.repo.layout.record_dataset_entry_path(record_id))
 
+    def find_record_id_by_dataset_id(self, dataset_id: str) -> str | None:
+        for entry in self.list_entries():
+            if str(entry.get("dataset_id") or "") == dataset_id:
+                record_id = str(entry.get("record_id") or "")
+                return record_id or None
+        return None
+
     def list_entries(self) -> list[dict]:
         entries: list[dict] = []
         records_root = self.repo.layout.records_root
@@ -22,7 +29,9 @@ class DatasetStore:
             entry = self.load_entry(record_dir.name)
             if entry is not None:
                 entries.append(entry)
-        return sorted(entries, key=lambda entry: (str(entry["dataset_id"]), str(entry["record_id"])))
+        return sorted(
+            entries, key=lambda entry: (str(entry["dataset_id"]), str(entry["record_id"]))
+        )
 
     def promote_record(
         self,
@@ -39,6 +48,11 @@ class DatasetStore:
         existing = self.load_entry(record_id)
         if existing is not None:
             raise ValueError(f"Record already promoted: {record_id}")
+        existing_record_id = self.find_record_id_by_dataset_id(dataset_id)
+        if existing_record_id is not None:
+            raise ValueError(
+                f"Dataset ID already exists: {dataset_id} (record {existing_record_id})"
+            )
 
         record_category = record.get("category_slug")
         entry_category = category_slug or record_category
@@ -91,7 +105,9 @@ class DatasetStore:
             if not entry_record_id:
                 errors.append(f"{entry_path}: missing record_id")
             elif entry_record_id != record_dir.name:
-                errors.append(f"{entry_path}: record_id={entry_record_id} does not match directory={record_dir.name}")
+                errors.append(
+                    f"{entry_path}: record_id={entry_record_id} does not match directory={record_dir.name}"
+                )
 
             if not dataset_id:
                 errors.append(f"{entry_path}: missing dataset_id")

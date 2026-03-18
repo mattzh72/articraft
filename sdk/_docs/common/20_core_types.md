@@ -93,6 +93,26 @@ Use:
 - `ArticulationType.PRISMATIC`
 - `ArticulationType.FIXED`
 - `ArticulationType.FLOATING`
-- `ArticulationType.PLANAR`
+
+Strict motion-limit rules:
+
+- `REVOLUTE` and `PRISMATIC` articulations must set `motion_limits=MotionLimits(...)` with positive `effort` and `velocity`, plus both `lower` and `upper`.
+- `CONTINUOUS` articulations must set `motion_limits=MotionLimits(effort=..., velocity=...)`.
+- `CONTINUOUS` articulations must not set `lower` or `upper`.
+- `FIXED` and `FLOATING` articulations do not use `motion_limits`.
+
+Example continuous articulation:
+
+```python
+Articulation(
+    name="mast_slew",
+    articulation_type=ArticulationType.CONTINUOUS,
+    parent="chassis",
+    child="mast",
+    origin=Origin(...),
+    axis=(0.0, 0.0, 1.0),
+    motion_limits=MotionLimits(effort=12.0, velocity=1.5),
+)
+```
 
 For authored models, the canonical constructor is `model.articulation(...)`.

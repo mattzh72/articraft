@@ -5,6 +5,7 @@ import type { UrdfSpec, UrdfJoint } from './urdf-parser';
 export interface JointControllerState {
   jointValues: Map<string, number>;
   setJointValue: (name: string, value: number) => void;
+  applyJointValues: (values: Map<string, number>, options?: { commit?: boolean }) => void;
   resetAll: () => void;
 }
 
@@ -60,20 +61,32 @@ export function useJointController(
     [jointNodes],
   );
 
+  const applyJointValues = useCallback(
+    (values: Map<string, number>, options?: { commit?: boolean }) => {
+      if (!jointNodes || !jointSpecMap.current) return;
+
+      for (const [name, node] of jointNodes) {
+        const spec = jointSpecMap.current.get(name);
+        if (!spec) {
+          continue;
+        }
+
+        const axis = new THREE.Vector3(...(spec.axis ?? [0, 0, 1])).normalize();
+        applyJointValue(node, spec, axis, values.get(name) ?? 0);
+      }
+
+      if (options?.commit) {
+        setJointValues(new Map(values));
+      }
+    },
+    [jointNodes],
+  );
+
   const resetAll = useCallback(() => {
-    if (!jointNodes || !jointSpecMap.current) return;
+    applyJointValues(new Map(), { commit: true });
+  }, [applyJointValues]);
 
-    for (const [name, node] of jointNodes) {
-      const spec = jointSpecMap.current.get(name);
-      if (!spec) continue;
-      const axis = new THREE.Vector3(...(spec.axis ?? [0, 0, 1])).normalize();
-      applyJointValue(node, spec, axis, 0);
-    }
-
-    setJointValues(new Map());
-  }, [jointNodes]);
-
-  return { jointValues, setJointValue, resetAll };
+  return { jointValues, setJointValue, applyJointValues, resetAll };
 }
 
 /**

@@ -10,6 +10,7 @@ import multiprocessing as mp
 import os
 import re
 import runpy
+import statistics
 import sys
 import traceback
 from pathlib import Path
@@ -109,6 +110,12 @@ def compile_urdf_report(script_path: Path, *, sdk_package: str = "sdk") -> Compi
     test_report = None
     try:
         _warn_cwd_relative_asset_paths(script_path=script_path, warnings=warnings)
+        _warn_geometry_scale_anomalies(
+            globals_dict,
+            script_dir=script_path.parent,
+            warnings=warnings,
+            sdk_package=sdk_package,
+        )
         overlap_warning = _validate_geometry_overlaps(
             globals_dict,
             script_dir=script_path.parent,
@@ -178,6 +185,151 @@ def _warn_cwd_relative_asset_paths(*, script_path: Path, warnings: list[str]) ->
         + "\nUse script-local paths instead: `HERE = Path(__file__).resolve().parent`, "
         "write meshes under `HERE / 'meshes'`, and set `TestContext(..., asset_root=HERE)`."
     )
+
+
+def _env_int(name: str, default: int) -> int:
+    raw = os.environ.get(name)
+    if raw is None:
+        return default
+    try:
+        return int(raw.strip())
+    except Exception:
+        return default
+
+
+def _iter_model_links(object_model: object) -> list[object]:
+    links = getattr(object_model, "links", None)
+    if isinstance(links, list):
+        return links
+    parts = getattr(object_model, "parts", None)
+    if isinstance(parts, list):
+        return parts
+    return []
+
+
+def _format_dims(dims: tuple[float, float, float]) -> str:
+    return "(" + ", ".join(f"{float(v):.4g}" for v in dims) + ")m"
+
+
+def _warn_geometry_scale_anomalies(
+    globals_dict: dict,
+    *,
+    script_dir: Path,
+    warnings: list[str],
+    sdk_package: str = "sdk",
+) -> None:
+    if os.environ.get("URDF_DISABLE_IMPORTANT_GEOMETRY_WARNINGS") in {"1", "true", "TRUE"}:
+        return
+
+    object_model = globals_dict.get("object_model")
+    if object_model is None:
+        return
+
+    links = _iter_model_links(object_model)
+    if not links:
+        return
+
+    absurd_dim_max = float(os.environ.get("URDF_IMPORTANT_GEOMETRY_MAX_DIM", "1000.0"))
+    outlier_ratio = float(os.environ.get("URDF_IMPORTANT_GEOMETRY_OUTLIER_RATIO", "100.0"))
+    outlier_abs_min = float(os.environ.get("URDF_IMPORTANT_GEOMETRY_OUTLIER_ABS_MIN", "10.0"))
+    max_findings = _env_int("URDF_IMPORTANT_GEOMETRY_MAX_FINDINGS", 10)
+
+    absurd_findings: list[str] = []
+    span_records: list[tuple[str, str, int, str, tuple[float, float, float], float]] = []
+
+    for link in links:
+        link_name = getattr(link, "name", None)
+        if not isinstance(link_name, str) or not link_name:
+            continue
+
+        for source_name in ("visuals", "collisions"):
+            items = getattr(link, source_name, None)
+            if not isinstance(items, list) or not items:
+                continue
+
+            for index, item in enumerate(items):
+                geometry = getattr(item, "geometry", None)
+                if geometry is None:
+                    continue
+                try:
+                    local_min, local_max = _geometry_local_aabb(
+                        geometry,
+                        script_dir=script_dir,
+                        sdk_package=sdk_package,
+                    )
+                except Exception:
+                    continue
+
+                dims = (
+                    float(local_max[0] - local_min[0]),
+                    float(local_max[1] - local_min[1]),
+                    float(local_max[2] - local_min[2]),
+                )
+                geom_type = type(geometry).__name__
+                max_dim = max(abs(d) for d in dims)
+
+                has_non_finite = any(not math.isfinite(v) for v in (*local_min, *local_max, *dims))
+                if has_non_finite or max_dim > absurd_dim_max:
+                    reason = (
+                        "non-finite dimensions" if has_non_finite else f"max_dim={max_dim:.4g}m"
+                    )
+                    absurd_findings.append(
+                        f"- link={link_name!r} source={source_name[:-1]!r} index={index} "
+                        f"geometry={geom_type!r} dims={_format_dims(dims)} reason={reason}"
+                    )
+
+                if all(math.isfinite(v) for v in dims) and max_dim > 0.0:
+                    span_records.append(
+                        (link_name, source_name[:-1], index, geom_type, dims, max_dim)
+                    )
+
+    if absurd_findings:
+        preview = "\n".join(absurd_findings[:max_findings])
+        more = (
+            ""
+            if len(absurd_findings) <= max_findings
+            else f"\n... ({len(absurd_findings) - max_findings} more)"
+        )
+        warnings.append(
+            "IMPORTANT: URDF compile warning (non-blocking): non-finite or absurd geometry dimensions detected.\n"
+            f"{preview}{more}\n"
+            "These dimensions are likely numerically broken and will likely look wrong in the viewer. "
+            "Check for sign errors, bad normalization denominators, unit mistakes, or runaway procedural geometry."
+        )
+
+    if not span_records:
+        return
+
+    spans = [record[5] for record in span_records]
+    median_span = float(statistics.median(spans))
+    if not math.isfinite(median_span) or median_span <= 0.0:
+        return
+
+    outlier_findings: list[str] = []
+    for link_name, source_name, index, geom_type, dims, max_dim in span_records:
+        if max_dim < outlier_abs_min:
+            continue
+        ratio = max_dim / max(median_span, 1e-9)
+        if ratio < outlier_ratio:
+            continue
+        outlier_findings.append(
+            f"- link={link_name!r} source={source_name!r} index={index} geometry={geom_type!r} "
+            f"dims={_format_dims(dims)} max_dim={max_dim:.4g}m median_dim={median_span:.4g}m ratio={ratio:.4g}x"
+        )
+
+    if outlier_findings:
+        preview = "\n".join(outlier_findings[:max_findings])
+        more = (
+            ""
+            if len(outlier_findings) <= max_findings
+            else f"\n... ({len(outlier_findings) - max_findings} more)"
+        )
+        warnings.append(
+            "IMPORTANT: URDF compile warning (non-blocking): geometry outlier dimensions detected.\n"
+            f"{preview}{more}\n"
+            "One or more members are dramatically larger than the rest of the object and are likely malformed. "
+            "Check for bad interpolation, reversed spans, or accidental scale explosions in authored geometry."
+        )
 
 
 def _compile_worker(script_path_str: str, sdk_package: str, conn: object) -> None:
@@ -327,8 +479,16 @@ def _validate_geometry_overlaps(
     except Exception:
         return None
 
-    ignore_fixed = os.environ.get("URDF_GEOMETRY_OVERLAP_IGNORE_FIXED", "1") in {"1", "true", "TRUE"}
-    ignore_adjacent = os.environ.get("URDF_GEOMETRY_OVERLAP_IGNORE_ADJACENT", "1") in {"1", "true", "TRUE"}
+    ignore_fixed = os.environ.get("URDF_GEOMETRY_OVERLAP_IGNORE_FIXED", "1") in {
+        "1",
+        "true",
+        "TRUE",
+    }
+    ignore_adjacent = os.environ.get("URDF_GEOMETRY_OVERLAP_IGNORE_ADJACENT", "1") in {
+        "1",
+        "true",
+        "TRUE",
+    }
     strict = os.environ.get("URDF_GEOMETRY_OVERLAP_STRICT", "0") in {"1", "true", "TRUE"}
 
     allowed_pairs = None
@@ -487,7 +647,9 @@ def _validate_mesh_connectivity(
     if not isinstance(links, list) or not isinstance(joints, list):
         return
 
-    link_to_aabbs: dict[str, list[tuple[tuple[float, float, float], tuple[float, float, float]]]] = {}
+    link_to_aabbs: dict[
+        str, list[tuple[tuple[float, float, float], tuple[float, float, float]]]
+    ] = {}
     for link in links:
         name = getattr(link, "name", None)
         if not isinstance(name, str):
@@ -569,7 +731,11 @@ def _warn_visual_connectivity_misalignment(
     if os.environ.get("URDF_DISABLE_VISUAL_CONNECTIVITY_WARNINGS") in {"1", "true", "TRUE"}:
         return
 
-    tol = float(os.environ.get("URDF_VISUAL_CONNECTIVITY_TOL", os.environ.get("URDF_MESH_CONNECTIVITY_TOL", "0.02")))
+    tol = float(
+        os.environ.get(
+            "URDF_VISUAL_CONNECTIVITY_TOL", os.environ.get("URDF_MESH_CONNECTIVITY_TOL", "0.02")
+        )
+    )
     max_center_dist = float(os.environ.get("URDF_VISUAL_COLLISION_MAX_CENTER_DIST", "0.03"))
     max_size_rel_err = float(os.environ.get("URDF_VISUAL_COLLISION_MAX_SIZE_REL_ERR", "0.35"))
 
@@ -583,7 +749,7 @@ def _warn_visual_connectivity_misalignment(
         return
 
     def union_aabb(
-        aabbs: list[tuple[tuple[float, float, float], tuple[float, float, float]]]
+        aabbs: list[tuple[tuple[float, float, float], tuple[float, float, float]]],
     ) -> tuple[tuple[float, float, float], tuple[float, float, float]] | None:
         if not aabbs:
             return None
@@ -596,13 +762,13 @@ def _warn_visual_connectivity_misalignment(
         return (min_x, min_y, min_z), (max_x, max_y, max_z)
 
     def aabb_center(
-        aabb: tuple[tuple[float, float, float], tuple[float, float, float]]
+        aabb: tuple[tuple[float, float, float], tuple[float, float, float]],
     ) -> tuple[float, float, float]:
         (mn, mx) = aabb
         return ((mn[0] + mx[0]) * 0.5, (mn[1] + mx[1]) * 0.5, (mn[2] + mx[2]) * 0.5)
 
     def aabb_size(
-        aabb: tuple[tuple[float, float, float], tuple[float, float, float]]
+        aabb: tuple[tuple[float, float, float], tuple[float, float, float]],
     ) -> tuple[float, float, float]:
         (mn, mx) = aabb
         return (float(mx[0] - mn[0]), float(mx[1] - mn[1]), float(mx[2] - mn[2]))
@@ -613,8 +779,12 @@ def _warn_visual_connectivity_misalignment(
         dz = float(a[2] - b[2])
         return float(math.sqrt(dx * dx + dy * dy + dz * dz))
 
-    link_to_vis_aabbs: dict[str, list[tuple[tuple[float, float, float], tuple[float, float, float]]]] = {}
-    link_to_col_aabbs: dict[str, list[tuple[tuple[float, float, float], tuple[float, float, float]]]] = {}
+    link_to_vis_aabbs: dict[
+        str, list[tuple[tuple[float, float, float], tuple[float, float, float]]]
+    ] = {}
+    link_to_col_aabbs: dict[
+        str, list[tuple[tuple[float, float, float], tuple[float, float, float]]]
+    ] = {}
 
     for link in links:
         name = getattr(link, "name", None)
@@ -917,8 +1087,7 @@ def _run_required_tests(
     report = run_tests()
     if not isinstance(report, test_report_type):
         raise ValueError(
-            f"run_tests() must return {sdk_package}.TestReport "
-            f"(got {type(report).__name__})"
+            f"run_tests() must return {sdk_package}.TestReport (got {type(report).__name__})"
         )
 
     if not bool(getattr(report, "passed", False)):

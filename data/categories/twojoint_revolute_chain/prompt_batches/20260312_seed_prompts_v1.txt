@@ -1,0 +1,2 @@
+A two-link articulated reading lamp with a base shoulder hinge and one elbow hinge, no additional joints.
+A simple robot arm with one shoulder revolute joint and one elbow revolute joint ending in a fixed tool block.

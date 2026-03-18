@@ -1,0 +1,2 @@
+A vane array with several slim blades, each rotating about its own pivot shaft inside a rigid support frame.
+An adjustable louver-style mechanism composed of independent pivoting vanes, modeled with parallel shafts and neat mechanical spacing.

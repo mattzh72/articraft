@@ -1,0 +1,2 @@
+A three-link articulated task arm with shoulder, elbow, and wrist revolute joints ending in a fixed rectangular pad.
+A desk-mounted microphone boom with three serial revolute joints and a compact microphone body at the end.

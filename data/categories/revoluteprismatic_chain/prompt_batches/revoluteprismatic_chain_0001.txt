@@ -1,0 +1,1 @@
+A pivoting inspection arm mounted on one revolute base hinge followed by a single linear extension stage.

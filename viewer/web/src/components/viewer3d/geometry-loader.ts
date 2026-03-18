@@ -5,6 +5,12 @@ import type { UrdfVisualGeometry } from './urdf-parser';
 import type { MaterialSpec } from './materials';
 import { createMaterial, createEdgeLines } from './materials';
 
+export interface LoadGeometryOptions {
+  kind?: 'visual' | 'collision';
+  materialSpec?: MaterialSpec;
+  doubleSided?: boolean;
+}
+
 /**
  * Build a Three.js mesh from a URDF primitive geometry spec (box, cylinder, sphere).
  * Returns null for mesh-type geometries (use loadGeometryObject instead).
@@ -25,9 +31,8 @@ export function buildPrimitiveMesh(
       const radius = geometry.radius ?? 1;
       const length = geometry.length ?? 1;
       bufferGeometry = new THREE.CylinderGeometry(radius, radius, length, 32);
-      // URDF cylinders are along Z-axis, Three.js cylinders are along Y-axis.
-      // Rotate -90 degrees around X to align Z-up to Y-up.
-      bufferGeometry.rotateX(-Math.PI / 2);
+      // URDF cylinders are aligned to the Z axis; Three.js uses Y.
+      bufferGeometry.rotateX(Math.PI / 2);
       break;
     }
     case 'sphere': {
@@ -54,6 +59,7 @@ export function buildPrimitiveMesh(
 export async function loadGeometryObject(
   geometry: UrdfVisualGeometry,
   baseUrl: string,
+  options: LoadGeometryOptions = {},
 ): Promise<THREE.Group> {
   if (geometry.type !== 'mesh' || !geometry.filename) {
     throw new Error(`loadGeometryObject requires a mesh geometry with a filename`);
@@ -65,12 +71,15 @@ export async function loadGeometryObject(
     : `${baseUrl}/${filename}`;
 
   const extension = filename.split('.').pop()?.toLowerCase();
+  const scale = geometry.scale ?? [1, 1, 1];
 
   if (extension === 'glb' || extension === 'gltf') {
     const loader = new GLTFLoader();
     const gltf = await loader.loadAsync(url);
     const group = new THREE.Group();
     group.add(gltf.scene);
+    group.scale.set(scale[0], scale[1], scale[2]);
+    applyLoadedMeshPresentation(group, options);
     return group;
   }
 
@@ -79,10 +88,46 @@ export async function loadGeometryObject(
     const obj = await loader.loadAsync(url);
     const group = new THREE.Group();
     group.add(obj);
+    group.scale.set(scale[0], scale[1], scale[2]);
+    applyLoadedMeshPresentation(group, options);
     return group;
   }
 
   throw new Error(`Unsupported mesh file format: .${extension} (${filename})`);
+}
+
+function applyLoadedMeshPresentation(root: THREE.Object3D, options: LoadGeometryOptions): void {
+  const kind = options.kind ?? 'visual';
+  const materialSpec = options.materialSpec;
+  const side = options.doubleSided ? THREE.DoubleSide : THREE.FrontSide;
+
+  root.traverse((child) => {
+    if (!(child instanceof THREE.Mesh)) {
+      return;
+    }
+
+    if (!child.geometry.attributes.normal) {
+      child.geometry.computeVertexNormals();
+    }
+
+    if (materialSpec) {
+      child.material = createMaterial(materialSpec, {
+        side,
+        transparent: kind === 'collision',
+      });
+    }
+
+    child.castShadow = kind === 'visual';
+    child.receiveShadow = kind === 'visual';
+    child.userData.articraftVisual = kind === 'visual';
+    child.userData.articraftCollision = kind === 'collision';
+    child.visible = kind === 'visual';
+
+    if (kind === 'collision') {
+      child.renderOrder = 10;
+      child.add(createEdgeLines(child.geometry, materialSpec?.color.getHex() ?? 0x000000));
+    }
+  });
 }
 
 /**

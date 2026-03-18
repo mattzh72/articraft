@@ -1,0 +1,2 @@
+A linear positioning module carrying a rotary elbow and a final telescoping extension, built from slide rails, machined plates, and compact actuator covers.
+A cartesian-fed linkage with a base slider, center revolute joint, and distal prismatic tool slide, designed as a clean industrial CAD mechanism.

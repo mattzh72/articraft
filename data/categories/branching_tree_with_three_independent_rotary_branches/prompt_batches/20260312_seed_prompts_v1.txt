@@ -1,0 +1,2 @@
+A three-branch rotary tree mechanism with a central hub and three independent hinged arms, designed as a clean CAD linkage assembly.
+A radial base supporting three separate revolute branches, each with simple rigid links and compact bearing housings.

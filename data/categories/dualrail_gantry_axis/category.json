@@ -1,0 +1,15 @@
+{
+  "schema_version": 1,
+  "slug": "dualrail_gantry_axis",
+  "title": "Dual-rail gantry axis",
+  "description": "",
+  "prompt_batch_ids": [
+    "realism_articulation_v1"
+  ],
+  "target_sdk_version": "hybrid_cad",
+  "current_count": 1,
+  "last_item_index": 1,
+  "created_at": "2026-03-16T13:40:08Z",
+  "updated_at": "2026-03-17T12:33:39Z",
+  "run_count": 1
+}

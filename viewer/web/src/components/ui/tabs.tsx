@@ -16,7 +16,7 @@ export function TabsList({
 }: React.ComponentProps<typeof TabsPrimitive.List>): React.JSX.Element {
   return (
     <TabsPrimitive.List
-      className={cn("inline-flex h-auto items-center bg-transparent p-0 text-[#999]", className)}
+      className={cn("inline-flex h-auto items-center bg-transparent p-0 text-[var(--text-tertiary)]", className)}
       {...props}
     />
   );
@@ -29,7 +29,7 @@ export function TabsTrigger({
   return (
     <TabsPrimitive.Trigger
       className={cn(
-        "inline-flex items-center justify-center px-2.5 py-2 text-[11px] font-medium transition-colors data-[state=active]:text-[#1e1e1e] focus-visible:outline-1 focus-visible:outline-offset-1 focus-visible:outline-[#007acc]",
+        "relative inline-flex items-center justify-center px-3 py-2.5 text-[11px] font-medium tracking-[0.01em] transition-colors duration-150 data-[state=active]:text-[var(--text-primary)] hover:text-[var(--text-secondary)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-soft)]",
         className,
       )}
       {...props}

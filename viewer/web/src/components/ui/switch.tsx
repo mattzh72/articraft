@@ -11,14 +11,14 @@ export function Switch({
     <SwitchPrimitive.Root
       data-slot="switch"
       className={cn(
-        "peer inline-flex h-[16px] w-[30px] shrink-0 cursor-pointer items-center rounded-full border border-transparent transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#007acc] disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:bg-[#007acc] data-[state=unchecked]:bg-[#d4d4d4]",
+        "peer inline-flex h-[18px] w-[32px] shrink-0 cursor-pointer items-center rounded-full transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-soft)] disabled:cursor-not-allowed disabled:opacity-40 data-[state=checked]:bg-[var(--accent)] data-[state=unchecked]:bg-[var(--border-strong)]",
         className,
       )}
       {...props}
     >
       <SwitchPrimitive.Thumb
         className={cn(
-          "pointer-events-none block size-[12px] rounded-full bg-white ring-0 transition-transform data-[state=checked]:translate-x-[15px] data-[state=unchecked]:translate-x-[1px]",
+          "pointer-events-none block size-[14px] rounded-full bg-white shadow-[0_1px_2px_rgba(0,0,0,0.1)] ring-0 transition-transform duration-150 data-[state=checked]:translate-x-[15px] data-[state=unchecked]:translate-x-[1px]",
         )}
       />
     </SwitchPrimitive.Root>

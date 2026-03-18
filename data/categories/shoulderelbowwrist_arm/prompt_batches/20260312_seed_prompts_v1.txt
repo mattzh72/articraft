@@ -1,0 +1,2 @@
+A three-joint robotic arm with shoulder, elbow, and wrist hinges, built from machined housings, rectangular links, and a small tool flange.
+A lightweight articulated arm featuring a rotary shoulder, rotary elbow, and single wrist joint, modeled as a clean CAD mechanism.

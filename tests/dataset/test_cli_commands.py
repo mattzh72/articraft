@@ -6,7 +6,6 @@ from contextlib import redirect_stdout
 from pathlib import Path
 from tempfile import TemporaryDirectory
 
-
 if __package__ in {None, ""}:
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
@@ -28,6 +27,7 @@ def main() -> None:
             record_id="rec_cli",
             created_at="2026-03-18T00:00:00Z",
             updated_at="2026-03-18T00:00:00Z",
+            rating=None,
             kind="generated_model",
             prompt_kind="single_prompt",
             category_slug="hinges",

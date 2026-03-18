@@ -8,21 +8,19 @@ from typing import Dict, Iterable, List, Optional, Sequence, Union
 from .assets import AssetContext, coerce_asset_context, resolve_asset_root
 from .errors import ValidationError
 from .geometry_qc import (
+    _prefer_collisions_from_source,
     default_overlap_tol_from_env,
     default_overlap_volume_tol_from_env,
-    _prefer_collisions_from_source,
     validate_no_geometry_overlaps,
 )
 from .types import (
     Articulation,
     ArticulationType,
     Box,
-    Collision,
     Cylinder,
     Geometry,
     Inertial,
     Material,
-    MaterialRef,
     Mesh,
     MotionLimits,
     MotionProperties,
@@ -73,7 +71,9 @@ class ArticulatedObject:
     meta: Dict[str, object] = field(default_factory=dict)
     assets: Optional[AssetContext] = None
     _part_index: Dict[str, Part] = field(default_factory=dict, init=False, repr=False)
-    _articulation_index: Dict[str, Articulation] = field(default_factory=dict, init=False, repr=False)
+    _articulation_index: Dict[str, Articulation] = field(
+        default_factory=dict, init=False, repr=False
+    )
 
     def __post_init__(self) -> None:
         self.assets = coerce_asset_context(self.assets)
@@ -345,7 +345,9 @@ class ArticulatedObject:
             if strict and articulation.articulation_type == ArticulationType.CONTINUOUS:
                 if articulation.motion_limits is None:
                     raise ValidationError(
-                        f"Articulation {articulation.name!r} must include effort and velocity limits"
+                        f"Continuous articulation {articulation.name!r} must set "
+                        "motion_limits=MotionLimits(effort=..., velocity=...) and "
+                        "cannot set lower/upper limits"
                     )
                 if (
                     articulation.motion_limits.lower is not None
@@ -383,9 +385,7 @@ class ArticulatedObject:
 
         for part in self.parts:
             if part.inertial and part.inertial.mass <= 0:
-                raise ValidationError(
-                    f"Part {part.name!r} inertial mass must be positive"
-                )
+                raise ValidationError(f"Part {part.name!r} inertial mass must be positive")
             for visual in part.visuals:
                 if visual.material is not None:
                     if isinstance(visual.material, str):

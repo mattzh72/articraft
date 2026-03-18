@@ -6,7 +6,6 @@ from __future__ import annotations
 
 import argparse
 import asyncio
-from dataclasses import dataclass
 import hashlib
 import json
 import logging
@@ -15,6 +14,7 @@ import platform
 import shutil
 import subprocess
 import sys
+from dataclasses import dataclass
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Callable, Optional
@@ -22,34 +22,36 @@ from typing import Any, Callable, Optional
 from dotenv import load_dotenv
 
 from agent.compiler import (
-    compile_urdf,
     compile_urdf_report_maybe_timeout,
 )
+from agent.harness import ArticraftAgent
 from agent.prompts import (
-    DESIGNER_PROMPT_NAME,
-    GEMINI_DESIGNER_PROMPT_NAME,
-    HYBRID_OPENAI_DESIGNER_PROMPT_NAME,
-    HYBRID_GEMINI_DESIGNER_PROMPT_NAME,
-    OPENAI_DESIGNER_PROMPT_NAME,
     SUPPORTED_SDK_DOCS_MODES,
     load_sdk_docs_reference,
     load_system_prompt_text,
-    resolve_sdk_package_flags,
     resolve_system_prompt_path,
 )
 from agent.providers.gemini import GeminiLLM, gemini_api_keys_from_env
 from agent.providers.openai import OpenAILLM
-from agent.harness import ArticraftAgent
 from agent.tools import (
     build_first_turn_messages as _build_first_turn_messages,
+)
+from agent.tools import (
     build_initial_user_content as _build_initial_user_content,
+)
+from agent.tools import (
     build_tool_registry,
     provider_system_prompt_suffix,
+)
+from agent.tools import (
     resolve_image_path as _resolve_image_path,
 )
 from storage.collections import CollectionStore
+from storage.datasets import DatasetStore
 from storage.models import (
     CompileReport as StorageCompileReport,
+)
+from storage.models import (
     CompileWarning,
     DisplayMetadata,
     EnvironmentSettings,
@@ -123,7 +125,9 @@ def _utc_now(now: datetime | None = None) -> str:
     current = now or datetime.now(timezone.utc)
     if current.tzinfo is None:
         current = current.replace(tzinfo=timezone.utc)
-    return current.astimezone(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z")
+    return (
+        current.astimezone(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z")
+    )
 
 
 def _timestamp_token(now: datetime | None = None) -> str:
@@ -267,6 +271,7 @@ def _write_success_record(
     storage_repo: StorageRepo,
     record_store: RecordStore,
     collections: CollectionStore,
+    datasets: DatasetStore,
     context: SingleRunContext,
     prompt_text: str,
     display_prompt: str,
@@ -288,7 +293,9 @@ def _write_success_record(
     compile_attempt_count: int,
     label: str | None,
     tags: list[str],
+    collection: str,
     category_slug: str | None,
+    dataset_id: str | None,
 ) -> Path:
     record_store.ensure_record_dirs(context.record_id)
     storage_repo.write_text(context.record_prompt_path, prompt_text)
@@ -299,9 +306,17 @@ def _write_success_record(
         record_store.copy_input_image(context.record_id, image_path)
 
     _copy_if_exists(context.cost_path, context.record_dir / "cost.json")
-    _copytree_if_exists(context.staging_dir / "meshes", storage_repo.layout.record_asset_meshes_dir(context.record_id))
-    _copytree_if_exists(context.staging_dir / "glb", storage_repo.layout.record_asset_glb_dir(context.record_id))
-    _copytree_if_exists(context.staging_dir / "viewer", storage_repo.layout.record_asset_viewer_dir(context.record_id))
+    _copytree_if_exists(
+        context.staging_dir / "meshes",
+        storage_repo.layout.record_asset_meshes_dir(context.record_id),
+    )
+    _copytree_if_exists(
+        context.staging_dir / "glb", storage_repo.layout.record_asset_glb_dir(context.record_id)
+    )
+    _copytree_if_exists(
+        context.staging_dir / "viewer",
+        storage_repo.layout.record_asset_viewer_dir(context.record_id),
+    )
 
     compile_report = StorageCompileReport(
         schema_version=1,
@@ -368,6 +383,7 @@ def _write_success_record(
         record_id=context.record_id,
         created_at=context.created_at,
         updated_at=_utc_now(),
+        rating=None,
         kind="generated_model",
         prompt_kind="single_prompt",
         category_slug=category_slug,
@@ -393,15 +409,28 @@ def _write_success_record(
             model_py_sha256=model_py_sha,
             model_urdf_sha256=model_urdf_sha,
         ),
-        collections=["workbench"],
+        collections=[collection],
     )
     record_store.write_record(record)
-    collections.append_workbench_entry(
-        record_id=context.record_id,
-        added_at=_utc_now(),
-        label=label,
-        tags=tags,
-    )
+    if collection == "workbench":
+        collections.append_workbench_entry(
+            record_id=context.record_id,
+            added_at=_utc_now(),
+            label=label,
+            tags=tags,
+        )
+    elif collection == "dataset":
+        if not dataset_id:
+            raise ValueError("dataset_id is required when collection=dataset")
+        datasets.promote_record(
+            record_id=context.record_id,
+            dataset_id=dataset_id,
+            category_slug=category_slug,
+            promoted_at=_utc_now(),
+        )
+        datasets.write_dataset_manifest()
+    else:
+        raise ValueError(f"Unsupported collection: {collection}")
     return context.record_dir
 
 
@@ -484,15 +513,33 @@ async def run_from_input(
     openai_reasoning_summary: Optional[str] = "auto",
     label: str | None = None,
     tags: Optional[list[str]] = None,
+    collection: str = "workbench",
     category_slug: str | None = None,
+    dataset_id: str | None = None,
 ) -> int:
     resolved_repo_root = repo_root.resolve()
     storage_repo = StorageRepo(resolved_repo_root)
     storage_repo.ensure_layout()
     record_store = RecordStore(storage_repo)
     collections = CollectionStore(storage_repo)
+    datasets = DatasetStore(storage_repo)
     run_store = RunStore(storage_repo)
-    collections.ensure_workbench()
+    if collection not in {"workbench", "dataset"}:
+        raise ValueError(f"Unsupported collection: {collection}")
+    if collection == "dataset":
+        if not dataset_id:
+            raise ValueError("dataset_id is required when collection=dataset")
+        if not category_slug:
+            raise ValueError("category_slug is required when collection=dataset")
+        existing_record_id = datasets.find_record_id_by_dataset_id(dataset_id)
+        if existing_record_id is not None:
+            logger.error(
+                "Dataset ID already exists: %s (record %s)", dataset_id, existing_record_id
+            )
+            return 1
+    else:
+        collections.ensure_workbench()
+    run_mode = "dataset_single" if collection == "dataset" else "workbench_single"
 
     context = _build_single_run_context(
         repo_root=resolved_repo_root,
@@ -510,8 +557,8 @@ async def run_from_input(
         RunRecord(
             schema_version=1,
             run_id=context.run_id,
-            run_mode="workbench_single",
-            collection="workbench",
+            run_mode=run_mode,
+            collection=collection,
             created_at=context.created_at,
             updated_at=context.created_at,
             provider=provider,
@@ -557,8 +604,8 @@ async def run_from_input(
             RunRecord(
                 schema_version=1,
                 run_id=context.run_id,
-                run_mode="workbench_single",
-                collection="workbench",
+                run_mode=run_mode,
+                collection=collection,
                 created_at=context.created_at,
                 updated_at=finished_at,
                 provider=provider,
@@ -587,8 +634,8 @@ async def run_from_input(
             RunRecord(
                 schema_version=1,
                 run_id=context.run_id,
-                run_mode="workbench_single",
-                collection="workbench",
+                run_mode=run_mode,
+                collection=collection,
                 created_at=context.created_at,
                 updated_at=finished_at,
                 provider=provider,
@@ -620,9 +667,7 @@ async def run_from_input(
             if context.cost_path.exists():
                 with open(context.cost_path, encoding="utf-8") as file:
                     cost_data = json.load(file)
-                    total_cost = (
-                        cost_data.get("total", {}).get("costs_usd", {}).get("total", 0.0)
-                    )
+                    total_cost = cost_data.get("total", {}).get("costs_usd", {}).get("total", 0.0)
                     logger.info("Total cost: $%.6f", total_cost)
         except Exception:
             pass
@@ -647,8 +692,8 @@ async def run_from_input(
                 RunRecord(
                     schema_version=1,
                     run_id=context.run_id,
-                    run_mode="workbench_single",
-                    collection="workbench",
+                    run_mode=run_mode,
+                    collection=collection,
                     created_at=context.created_at,
                     updated_at=finished_at,
                     provider=provider,
@@ -677,41 +722,77 @@ async def run_from_input(
     if final_code is None:
         final_code = context.script_path.read_text(encoding="utf-8")
 
-    record_dir = _write_success_record(
-        repo_root=resolved_repo_root,
-        storage_repo=storage_repo,
-        record_store=record_store,
-        collections=collections,
-        context=context,
-        prompt_text=prompt_text,
-        display_prompt=display_prompt or prompt_text,
-        image_path=image_path,
-        provider=provider,
-        model_id=actual_model_id,
-        openai_transport=openai_transport,
-        thinking_level=thinking_level,
-        max_turns=max_turns,
-        system_prompt_path=loaded_system_prompt_path,
-        sdk_package=sdk_package,
-        sdk_docs_mode=sdk_docs_mode,
-        openai_reasoning_summary=openai_reasoning_summary,
-        final_code=final_code,
-        urdf_xml=urdf_xml,
-        compile_warnings=compile_warnings,
-        turn_count=result.turn_count,
-        tool_call_count=result.tool_call_count,
-        compile_attempt_count=result.compile_attempt_count,
-        label=label,
-        tags=list(tags or []),
-        category_slug=category_slug,
-    )
+    try:
+        record_dir = _write_success_record(
+            repo_root=resolved_repo_root,
+            storage_repo=storage_repo,
+            record_store=record_store,
+            collections=collections,
+            datasets=datasets,
+            context=context,
+            prompt_text=prompt_text,
+            display_prompt=display_prompt or prompt_text,
+            image_path=image_path,
+            provider=provider,
+            model_id=actual_model_id,
+            openai_transport=openai_transport,
+            thinking_level=thinking_level,
+            max_turns=max_turns,
+            system_prompt_path=loaded_system_prompt_path,
+            sdk_package=sdk_package,
+            sdk_docs_mode=sdk_docs_mode,
+            openai_reasoning_summary=openai_reasoning_summary,
+            final_code=final_code,
+            urdf_xml=urdf_xml,
+            compile_warnings=compile_warnings,
+            turn_count=result.turn_count,
+            tool_call_count=result.tool_call_count,
+            compile_attempt_count=result.compile_attempt_count,
+            label=label,
+            tags=list(tags or []),
+            collection=collection,
+            category_slug=category_slug,
+            dataset_id=dataset_id,
+        )
+    except Exception as exc:
+        finished_at = _utc_now()
+        run_store.write_run(
+            RunRecord(
+                schema_version=1,
+                run_id=context.run_id,
+                run_mode=run_mode,
+                collection=collection,
+                created_at=context.created_at,
+                updated_at=finished_at,
+                provider=provider,
+                model_id=actual_model_id,
+                sdk_package=sdk_package,
+                status="failed",
+                category_slug=category_slug,
+                prompt_count=1,
+            )
+        )
+        run_store.append_result(
+            context.run_id,
+            {
+                "record_id": context.record_id,
+                "status": "failed",
+                "message": f"Failed to persist record: {exc}",
+                "turn_count": result.turn_count,
+                "tool_call_count": result.tool_call_count,
+                "compile_attempt_count": result.compile_attempt_count,
+                "staging_dir": _relative_to_repo(context.staging_dir, resolved_repo_root),
+            },
+        )
+        logger.error("Failed to persist record: %s", exc)
+        return 4
     finished_at = _utc_now()
     run_store.write_run(
         RunRecord(
             schema_version=1,
             run_id=context.run_id,
-            run_mode="workbench_single",
-            collection="workbench",
+            run_mode=run_mode,
+            collection=collection,
             created_at=context.created_at,
             updated_at=finished_at,
             provider=provider,
@@ -767,21 +848,18 @@ def _build_prompt_with_qc(prompt: str, qc_blurb_text: Optional[str]) -> str:
     )
 
 
-def main() -> int:
+def main(argv: list[str] | None = None) -> int:
     logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")
     load_dotenv()
 
     parser = argparse.ArgumentParser(
-        description="Generate an articulated object and persist it as a workbench record."
+        description="Generate an articulated object and persist it to workbench or dataset storage."
     )
     parser.add_argument("--prompt", required=True, help="Text prompt for the object.")
     parser.add_argument(
         "--image",
         default=None,
-        help=(
-            "Optional reference image to augment --prompt. "
-            "Currently supported only with --provider openai."
-        ),
+        help="Optional reference image to augment --prompt.",
     )
     parser.add_argument(
         "--provider",
@@ -795,9 +873,28 @@ def main() -> int:
         default=Path(__file__).resolve().parents[1],
         help="Repository root where data/records and data/cache/runs will be written.",
     )
-    parser.add_argument("--label", default=None, help="Optional workbench label for the saved record.")
-    parser.add_argument("--tag", action="append", default=[], help="Optional workbench tag. Repeatable.")
-    parser.add_argument("--category", default=None, help="Optional category slug to attach to the record.")
+    parser.add_argument(
+        "--label", default=None, help="Optional workbench label for the saved record."
+    )
+    parser.add_argument(
+        "--tag", action="append", default=[], help="Optional workbench tag. Repeatable."
+    )
+    parser.add_argument(
+        "--collection",
+        default="workbench",
+        choices=["workbench", "dataset"],
+        help="Target collection for the generated record. Defaults to workbench.",
+    )
+    parser.add_argument(
+        "--dataset-id",
+        default=None,
+        help="Stable dataset identifier to assign when --collection dataset is used.",
+    )
+    parser.add_argument(
+        "--category",
+        default=None,
+        help="Optional category slug to attach to the record. Required for --collection dataset.",
+    )
     parser.add_argument("--model", default=None, help="Model id (provider-specific).")
     parser.add_argument(
         "--openai-transport",
@@ -809,30 +906,19 @@ def main() -> int:
         ),
     )
     parser.add_argument(
-        "--flash",
-        action=argparse.BooleanOptionalAction,
-        default=False,
-        help="Use gemini-3-flash-preview (Gemini only).",
-    )
-    parser.add_argument(
         "--thinking",
         default="high",
         choices=["low", "med", "high"],
         help="Thinking budget level.",
     )
-    parser.add_argument(
-        "--openai-reasoning-summary",
-        default="auto",
-        help=(
-            "OpenAI reasoning summary mode. Use `none` to omit thought summaries and "
-            "reduce output latency/cost."
-        ),
-    )
     parser.add_argument("--max-turns", type=int, default=30)
     parser.add_argument(
         "--system-prompt",
         default="designer_system_prompt.txt",
-        help="Path to the system prompt file.",
+        help=(
+            "Path or generated prompt name for the system prompt file. "
+            "Standard designer prompt names resolve to provider-specific generated files automatically."
+        ),
     )
     parser.add_argument(
         "--qc-blurb",
@@ -855,13 +941,6 @@ def main() -> int:
         default=2,
         help="JSON indent for --dump-provider-payload (default: 2).",
     )
-    sdk_group = parser.add_mutually_exclusive_group()
-    sdk_group.add_argument(
-        "--hybrid-sdk",
-        action="store_true",
-        default=False,
-        help="Use `sdk_hybrid` instead of `sdk` for scaffold/docs/compile-time helpers.",
-    )
     parser.add_argument(
         "--sdk-docs-mode",
         default="full",
@@ -871,9 +950,17 @@ def main() -> int:
             "to reduce prompt size; `none` disables injected SDK docs entirely."
         ),
     )
-    args = parser.parse_args()
+    args = parser.parse_args(argv)
+    if args.collection == "dataset":
+        if not args.dataset_id:
+            parser.error("--dataset-id is required when --collection dataset.")
+        if not args.category:
+            parser.error("--category is required when --collection dataset.")
+    elif args.dataset_id:
+        parser.error("--dataset-id is only supported with --collection dataset.")
 
-    sdk_package = resolve_sdk_package_flags(hybrid_sdk=args.hybrid_sdk)
+    sdk_package = "sdk"
+    openai_reasoning_summary = "auto"
 
     if args.provider != "openai" and args.openai_transport != "http":
         print("--openai-transport is only supported for --provider openai.", file=sys.stderr)
@@ -896,15 +983,13 @@ def main() -> int:
     user_content = _build_initial_user_content(prompt_with_qc, image_path=image_path)
 
     if args.dump_provider_payload:
-        if args.provider == "gemini":
-            if args.flash:
-                model_id = "gemini-3-flash-preview"
-            elif args.model:
-                model_id = args.model
-            else:
-                model_id = GeminiLLM(dry_run=True).model_id
-        else:
-            model_id = args.model if args.model else OpenAILLM(dry_run=True).model_id
+        model_id = _default_model_id(
+            provider=args.provider,
+            model_id=args.model,
+            thinking_level=args.thinking,
+            openai_transport=args.openai_transport,
+            openai_reasoning_summary=openai_reasoning_summary,
+        )
 
         payload = build_provider_payload_preview(
             user_content,
@@ -915,7 +1000,7 @@ def main() -> int:
             system_prompt_path=args.system_prompt,
             sdk_package=sdk_package,
             sdk_docs_mode=args.sdk_docs_mode,
-            openai_reasoning_summary=args.openai_reasoning_summary,
+            openai_reasoning_summary=openai_reasoning_summary,
         )
         text = json.dumps(payload, indent=args.dump_provider_payload_indent, ensure_ascii=False)
         if args.dump_provider_payload_out:
@@ -936,11 +1021,8 @@ def main() -> int:
         if not os.environ.get("OPENAI_API_KEY"):
             print("OPENAI_API_KEY environment variable is required.", file=sys.stderr)
             return 1
-        if args.flash:
-            print("--flash is only supported for --provider gemini.", file=sys.stderr)
-            return 1
 
-    model_id = "gemini-3-flash-preview" if args.provider == "gemini" and args.flash else args.model
+    model_id = args.model
 
     return asyncio.run(
         run_from_input(
@@ -957,10 +1039,12 @@ def main() -> int:
             system_prompt_path=args.system_prompt,
             sdk_package=sdk_package,
             sdk_docs_mode=args.sdk_docs_mode,
-            openai_reasoning_summary=args.openai_reasoning_summary,
+            openai_reasoning_summary=openai_reasoning_summary,
             label=args.label,
             tags=list(args.tag or []),
+            collection=args.collection,
             category_slug=args.category,
+            dataset_id=args.dataset_id,
         )
     )
 

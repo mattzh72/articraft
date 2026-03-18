@@ -1,0 +1,2 @@
+A two-axis wrist module combining a pitch hinge and a coaxial roll stage, with compact bearing housings and rectangular link plates.
+A sensor mount with a pitch cradle carrying a roll-axis spindle, designed with straightforward mechanical geometry and exposed fastener patterns.

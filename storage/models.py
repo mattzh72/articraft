@@ -4,10 +4,9 @@ from dataclasses import asdict, dataclass, field
 from pathlib import Path
 from typing import Any, Literal
 
-
 CollectionName = Literal["dataset", "workbench"]
 PromptKind = Literal["single_prompt", "prompt_series"]
-RunMode = Literal["dataset_batch", "workbench_batch", "workbench_single"]
+RunMode = Literal["dataset_batch", "dataset_single", "workbench_batch", "workbench_single"]
 MaterializationStatus = Literal["missing", "available", "stale"]
 
 
@@ -71,6 +70,7 @@ class Record:
     record_id: str
     created_at: str
     updated_at: str
+    rating: int | None
     kind: str
     prompt_kind: PromptKind
     category_slug: str | None
@@ -90,6 +90,7 @@ class Record:
             "record_id": self.record_id,
             "created_at": self.created_at,
             "updated_at": self.updated_at,
+            "rating": self.rating,
             "kind": self.kind,
             "prompt_kind": self.prompt_kind,
             "category_slug": self.category_slug,
@@ -293,6 +294,12 @@ class CategoryRecord:
     title: str
     description: str = ""
     prompt_batch_ids: list[str] = field(default_factory=list)
+    target_sdk_version: str | None = None
+    current_count: int | None = None
+    last_item_index: int | None = None
+    created_at: str | None = None
+    updated_at: str | None = None
+    run_count: int | None = None
 
     def to_dict(self) -> dict[str, Any]:
         return asdict(self)

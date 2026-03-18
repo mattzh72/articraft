@@ -1,0 +1,2 @@
+A linear carriage moving along one rail while carrying an independent rotary end-effector, built from a prismatic base and a separate revolute spindle.
+A slide-mounted rotary tool head with one translational axis and one uncoupled rotary axis, using boxy supports and simple CAD housings.

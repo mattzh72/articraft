@@ -16,7 +16,6 @@ class ReadFileParams(BaseModel):
     file_path: str | None = None
     offset: int = 1
     limit: int = 200
-    line_numbers: bool = True
 
 
 class ReadFileInvocation(BaseToolInvocation[ReadFileParams, str]):
@@ -51,14 +50,8 @@ class ReadFileInvocation(BaseToolInvocation[ReadFileParams, str]):
 
             start = self.params.offset - 1
             end = min(len(lines), start + self.params.limit)
-            slice_lines = lines[start:end]
-            if self.params.line_numbers:
-                formatted = [
-                    f"L{idx}: {lines[idx - 1]}"
-                    for idx in range(start + 1, end + 1)
-                ]
-                return ToolResult(output="\n".join(formatted))
-            return ToolResult(output="\n".join(slice_lines))
+            formatted = [f"L{idx}: {lines[idx - 1]}" for idx in range(start + 1, end + 1)]
+            return ToolResult(output="\n".join(formatted))
         except FileNotFoundError:
             return ToolResult(error=f"File {self.params.file_path} not found")
         except Exception as exc:
@@ -73,6 +66,7 @@ class ReadFileTool(BaseDeclarativeTool):
             name="read_file",
             description=(
                 "Read the current target file with 1-indexed line numbers.\n\n"
+                "Returned lines are formatted as `L{line_number}: ...`.\n\n"
                 "This run is bound to a single file by the harness, so do not pass file paths.\n"
                 "Use offset/limit to read a slice before creating an apply_patch update."
             ),
@@ -84,13 +78,6 @@ class ReadFileTool(BaseDeclarativeTool):
                 "limit": {
                     "type": "integer",
                     "description": "Maximum number of lines to return (default: 200).",
-                },
-                "line_numbers": {
-                    "type": "boolean",
-                    "description": (
-                        "If true (default), prefix each returned line with its 1-indexed line number. "
-                        "Set false when you need exact raw text for edit_code.old_string."
-                    ),
                 },
             },
             required=[],

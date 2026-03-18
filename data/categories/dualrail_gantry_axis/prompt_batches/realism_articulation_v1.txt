@@ -1,0 +1,1 @@
+A realistic dual-rail gantry axis with two parallel linear rails, a bridging carriage, exposed guide blocks, and a clean CNC or automation-stage appearance. The carriage articulates naturally along the rails, and the mechanism should feel like real precision motion hardware with rigid support and aligned structure.

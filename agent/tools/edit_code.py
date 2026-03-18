@@ -5,16 +5,16 @@ EditCode tool - Make precise edits to code files using old_string/new_string
 import aiofiles
 from pydantic import BaseModel
 
-from agent.tools.code_region import (
-    extract_editable_code,
-    map_syntax_error_line_to_editable,
-    replace_editable_code,
-)
 from agent.tools.base import (
     BaseDeclarativeTool,
     BaseToolInvocation,
     ToolResult,
     make_tool_schema,
+)
+from agent.tools.code_region import (
+    extract_editable_code,
+    map_syntax_error_line_to_editable,
+    replace_editable_code,
 )
 
 
@@ -40,11 +40,6 @@ class EditCodeInvocation(BaseToolInvocation[EditCodeParams, str]):
         try:
             if not self.params.file_path:
                 return ToolResult(error="file_path is required")
-            # Validate old_string is not empty
-            if not self.params.old_string:
-                return ToolResult(
-                    error="old_string cannot be empty. Please provide the exact string to replace."
-                )
 
             # Load current code
             async with aiofiles.open(self.params.file_path, mode="r") as f:
@@ -52,11 +47,28 @@ class EditCodeInvocation(BaseToolInvocation[EditCodeParams, str]):
 
             editable_code = extract_editable_code(full_code)
 
+            if not self.params.old_string:
+                if editable_code.strip():
+                    return ToolResult(
+                        error=(
+                            "old_string cannot be empty unless the editable section is empty. "
+                            "Please provide the exact string to replace."
+                        )
+                    )
+                new_editable_code = self.params.new_string
+                new_code = replace_editable_code(full_code, new_editable_code)
+                validation = self._validate_python_syntax(
+                    new_code, self.params.file_path or "<string>"
+                )
+                async with aiofiles.open(self.params.file_path, mode="w") as f:
+                    await f.write(new_code)
+                return ToolResult(output="Code edited successfully", compilation=validation)
+
             # Check if old_string exists in editable code
             if self.params.old_string not in editable_code:
                 return ToolResult(
-                    error=f"Could not find the old_string in the code. "
-                    f"Make sure the string matches exactly, including whitespace and indentation. "
+                    error="Could not find the old_string in the code. "
+                    "Make sure the string matches exactly, including whitespace and indentation. "
                 )
 
             # Count occurrences
@@ -143,11 +155,11 @@ class EditCodeTool(BaseDeclarativeTool):
                 "You will receive immediate feedback on whether the code is valid or contains syntax errors.\n\n"
                 "Matching behavior:\n"
                 "- old_string must match EXACTLY, including whitespace, indentation, and newlines\n"
+                "- Exception: if the editable section is empty, old_string may be an empty string to insert initial code\n"
                 "- By default, old_string must appear exactly once in the file\n"
                 "- If old_string appears multiple times, you must either provide more context to make it unique, "
                 "or set replace_all=true\n"
-                "- If exact matching keeps failing, re-read the file and keep edits narrow; "
-                "use write_code only as a last-resort full rewrite\n\n"
+                "- If exact matching keeps failing, re-read the file and keep edits narrow\n\n"
                 "Response format:\n"
                 "On success, you receive:\n"
                 "- output: 'Code edited successfully' (or 'replaced N occurrences' if replace_all=true)\n"
@@ -164,7 +176,8 @@ class EditCodeTool(BaseDeclarativeTool):
                     "type": "string",
                     "description": (
                         "The exact string to find and replace. Must match exactly including whitespace, "
-                        "indentation, and newlines. Cannot be empty. Must be unique unless replace_all=true."
+                        "indentation, and newlines. May be empty only when the editable section is empty "
+                        "and you are inserting the initial code. Must be unique unless replace_all=true."
                     ),
                 },
                 "new_string": {

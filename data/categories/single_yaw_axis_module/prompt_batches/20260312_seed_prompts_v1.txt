@@ -1,0 +1,2 @@
+A pedestal-mounted yaw module with a vertical rotation axis, circular bearing housing, square motor base, and rigid top plate.
+A compact rotary indexing base providing one yaw axis, with a cylindrical turntable, bolted support frame, and mechanical end-stop details.

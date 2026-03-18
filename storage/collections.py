@@ -70,3 +70,33 @@ class CollectionStore:
         )
         self.save_workbench(updated)
         return updated.to_dict()
+
+    def remove_workbench_entries(self, record_id: str) -> bool:
+        current = self.load_workbench()
+        if current is None:
+            return False
+
+        entries = list(current.get("entries", []))
+        filtered_entries = [
+            entry for entry in entries if str(entry.get("record_id", "")) != record_id
+        ]
+        if len(filtered_entries) == len(entries):
+            return False
+
+        updated = WorkbenchCollection(
+            schema_version=int(current.get("schema_version", 1)),
+            collection="workbench",
+            updated_at=_utc_now(),
+            entries=[
+                WorkbenchEntry(
+                    record_id=str(entry["record_id"]),
+                    added_at=str(entry["added_at"]),
+                    label=entry.get("label"),
+                    tags=list(entry.get("tags", [])),
+                    archived=bool(entry.get("archived", False)),
+                )
+                for entry in filtered_entries
+            ],
+        )
+        self.save_workbench(updated)
+        return True

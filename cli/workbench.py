@@ -3,12 +3,12 @@ from __future__ import annotations
 import argparse
 from datetime import datetime, timezone
 
+from cli.common import add_data_root_argument
 from storage.collections import CollectionStore
 from storage.models import WorkbenchCollection
 from storage.queries import StorageQueries
 from storage.repo import StorageRepo
-
-from cli.common import add_data_root_argument
+from storage.search import SearchIndex
 
 
 def _utc_now() -> str:
@@ -21,6 +21,7 @@ def _build_parser() -> argparse.ArgumentParser:
     subparsers = parser.add_subparsers(dest="command", required=True)
 
     subparsers.add_parser("init-storage", help="Create the canonical data/ directory layout.")
+    subparsers.add_parser("rebuild-search-index", help="Rebuild the cached viewer search index.")
     subparsers.add_parser("status", help="Show workbench storage status.")
     return parser
 
@@ -32,6 +33,7 @@ def main(argv: list[str] | None = None) -> int:
     repo = StorageRepo(args.repo_root)
     collections = CollectionStore(repo)
     queries = StorageQueries(repo)
+    search = SearchIndex(repo)
 
     if args.command == "init-storage":
         repo.ensure_layout()
@@ -50,6 +52,17 @@ def main(argv: list[str] | None = None) -> int:
         record_count = len(queries.list_record_ids())
         workbench_entries = (collections.load_workbench() or {}).get("entries", [])
         print(f"records={record_count} workbench_entries={len(workbench_entries)}")
+        return 0
+
+    if args.command == "rebuild-search-index":
+        repo.ensure_layout()
+        stats = search.rebuild()
+        print(
+            f"search_index={stats.path} "
+            f"records={stats.record_count} "
+            f"categories={stats.category_count} "
+            f"workbench_entries={stats.workbench_entry_count}"
+        )
         return 0
 
     parser.error(f"Unhandled command: {args.command}")

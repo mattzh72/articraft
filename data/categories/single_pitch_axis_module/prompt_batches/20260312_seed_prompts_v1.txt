@@ -1,0 +1,2 @@
+A pitch-axis actuator module with side support cheeks, a horizontal hinge shaft, and a rectangular payload bracket, modeled like a CAD subassembly.
+A tilting cradle with one pitch joint, bearing blocks on both sides, and a rigid equipment plate suspended between the supports.

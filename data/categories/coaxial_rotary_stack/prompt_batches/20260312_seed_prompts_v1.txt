@@ -1,0 +1,2 @@
+A coaxial rotary stack with multiple revolute stages sharing the same central axis, using concentric cylindrical housings and mounting flanges.
+A nested rotary assembly with two or more coaxial joints, compact bearing rings, and a layered industrial turntable design.

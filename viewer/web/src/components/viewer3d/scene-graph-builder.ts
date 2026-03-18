@@ -16,6 +16,7 @@ export interface SceneGraphOptions {
 export interface RobotSceneGraph {
   root: THREE.Group;
   jointNodes: Map<string, THREE.Object3D>;
+  jointFrames: Map<string, THREE.Group>;
   linkNodes: Map<string, THREE.Group>;
 }
 
@@ -34,7 +35,7 @@ const COLLISION_DEBUG_PALETTE = [
   "#5dd62c",
 ] as const;
 
-function collisionColorForIndex(index: number): THREE.Color {
+export function collisionColorForIndex(index: number): THREE.Color {
   return new THREE.Color(COLLISION_DEBUG_PALETTE[index % COLLISION_DEBUG_PALETTE.length]);
 }
 
@@ -77,6 +78,7 @@ export function buildRobotSceneGraph(
 
   const linkNodes = new Map<string, THREE.Group>();
   const jointNodes = new Map<string, THREE.Object3D>();
+  const jointFrames = new Map<string, THREE.Group>();
 
   // Index links by name for quick lookup
   const linkByName = new Map<string, UrdfLink>();
@@ -145,17 +147,22 @@ export function buildRobotSceneGraph(
     const childGroup = linkNodes.get(joint.child);
     if (!parentGroup || !childGroup) continue;
 
-    const jointGroup = new THREE.Group();
-    jointGroup.name = `joint:${joint.name}`;
+    const jointFrame = new THREE.Group();
+    jointFrame.name = `joint-frame:${joint.name}`;
 
     // Apply joint origin transform
     if (joint.origin) {
-      jointGroup.applyMatrix4(originToMatrix4(joint.origin));
+      jointFrame.applyMatrix4(originToMatrix4(joint.origin));
     }
 
-    jointGroup.add(childGroup);
-    parentGroup.add(jointGroup);
-    jointNodes.set(joint.name, jointGroup);
+    const motionGroup = new THREE.Group();
+    motionGroup.name = `joint-motion:${joint.name}`;
+
+    motionGroup.add(childGroup);
+    jointFrame.add(motionGroup);
+    parentGroup.add(jointFrame);
+    jointFrames.set(joint.name, jointFrame);
+    jointNodes.set(joint.name, motionGroup);
   }
 
   // Find root link and wrap in a top-level group
@@ -170,5 +177,5 @@ export function buildRobotSceneGraph(
     }
   }
 
-  return { root, jointNodes, linkNodes };
+  return { root, jointNodes, jointFrames, linkNodes };
 }

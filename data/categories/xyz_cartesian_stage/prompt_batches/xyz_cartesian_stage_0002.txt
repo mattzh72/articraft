@@ -1,0 +1,1 @@
+An XYZ Cartesian stage with three stacked linear axes, boxy carriage blocks, cable-clearance gaps, and a square end-effector plate.

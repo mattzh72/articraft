@@ -1,0 +1,2 @@
+A multi-segment fold-out boom with repeated revolute joints, slim rectangular links, and simple bracket details suitable for CAD modeling.
+A deployable articulated arm with several hinged sections that unfold from a compact stacked arrangement, using consistent mechanical geometry.

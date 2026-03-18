@@ -1,10 +1,12 @@
 import { useState, useEffect, useRef } from 'react';
 import * as THREE from 'three';
-import { parseUrdf, rewriteAbsoluteMeshFilenames } from './urdf-parser';
+import { originToMatrix4, parseUrdf, rewriteAbsoluteMeshFilenames } from './urdf-parser';
 import type { UrdfSpec } from './urdf-parser';
-import { buildRobotSceneGraph } from './scene-graph-builder';
-import { computeFit } from './camera-utils';
+import { buildRobotSceneGraph, collisionColorForIndex } from './scene-graph-builder';
+import { computeFit, preserveViewAcrossModelSwitch } from './camera-utils';
 import { positionGroundHelpers } from './lighting';
+import { loadGeometryObject } from './geometry-loader';
+import { resolveVisualMaterialSpec } from './materials';
 
 /** Sentinel name attached to the robot group so we can find and remove it later. */
 const ROBOT_GROUP_NAME = '__articraft_robot__';
@@ -12,6 +14,7 @@ const ROBOT_GROUP_NAME = '__articraft_robot__';
 export interface UrdfLoaderState {
   urdfSpec: UrdfSpec | null;
   jointNodes: Map<string, THREE.Object3D> | null;
+  jointFrames: Map<string, THREE.Group> | null;
   loading: boolean;
   error: string | null;
 }
@@ -37,6 +40,7 @@ export function useUrdfLoader(
 ): UrdfLoaderState {
   const [urdfSpec, setUrdfSpec] = useState<UrdfSpec | null>(null);
   const [jointNodes, setJointNodes] = useState<Map<string, THREE.Object3D> | null>(null);
+  const [jointFrames, setJointFrames] = useState<Map<string, THREE.Group> | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -48,6 +52,7 @@ export function useUrdfLoader(
     if (!recordId || !scene) {
       setUrdfSpec(null);
       setJointNodes(null);
+      setJointFrames(null);
       setError(null);
       return;
     }
@@ -74,10 +79,12 @@ export function useUrdfLoader(
         // 3. Build scene graph.
         // Always include collision geometry in the scene graph so the render toggle
         // can reveal it without rebuilding the whole robot.
-        const { root, jointNodes: joints } = buildRobotSceneGraph(spec, { showCollisions: true });
+        const { root, jointNodes: joints, jointFrames: frames, linkNodes } = buildRobotSceneGraph(spec, { showCollisions: true });
+        await attachMeshGeometry(spec, linkNodes, `/api/records/${recordId}/files`);
         if (cancelled) return;
 
         // 4. Swap robot group in scene.
+        const hadPreviousRobot = robotGroupRef.current !== null;
         if (robotGroupRef.current) {
           scene.remove(robotGroupRef.current);
           disposeGroup(robotGroupRef.current);
@@ -85,16 +92,25 @@ export function useUrdfLoader(
 
         const robotGroup = new THREE.Group();
         robotGroup.name = ROBOT_GROUP_NAME;
+        robotGroup.rotation.x = -Math.PI / 2;
         robotGroup.add(root);
         scene.add(robotGroup);
         robotGroupRef.current = robotGroup;
 
-        // 5. Fit camera.
+        // 5. Fit camera on first load, otherwise preserve the current view direction
+        // while re-centering and scaling to the new object.
         if (camera && controls) {
-          const fit = computeFit(camera, robotGroup);
-          camera.position.copy(fit.position);
-          controls.target.copy(fit.target);
-          controls.update();
+          if (hadPreviousRobot) {
+            preserveViewAcrossModelSwitch(camera, controls, robotGroup);
+          } else {
+            const fit = computeFit(camera, robotGroup);
+            camera.position.copy(fit.position);
+            controls.target.copy(fit.target);
+            camera.near = fit.near;
+            camera.far = fit.far;
+            camera.updateProjectionMatrix();
+            controls.update();
+          }
         }
 
         // 6. Position grid and axis under the model.
@@ -105,12 +121,14 @@ export function useUrdfLoader(
         if (!cancelled) {
           setUrdfSpec(spec);
           setJointNodes(joints);
+          setJointFrames(frames);
         }
       } catch (err) {
         if (!cancelled) {
           setError(err instanceof Error ? err.message : 'Unknown error loading URDF');
           setUrdfSpec(null);
           setJointNodes(null);
+          setJointFrames(null);
         }
       } finally {
         if (!cancelled) {
@@ -126,7 +144,70 @@ export function useUrdfLoader(
     };
   }, [recordId, scene, camera, controls, gridGroup, axisGroup]);
 
-  return { urdfSpec, jointNodes, loading, error };
+  return { urdfSpec, jointNodes, jointFrames, loading, error };
+}
+
+async function attachMeshGeometry(
+  spec: UrdfSpec,
+  linkNodes: Map<string, THREE.Group>,
+  baseUrl: string,
+): Promise<void> {
+  const pending: Array<Promise<void>> = [];
+  let collisionIndex = 0;
+
+  for (const link of spec.links) {
+    const linkGroup = linkNodes.get(link.name);
+    if (!linkGroup) {
+      continue;
+    }
+
+    for (const visual of link.visuals) {
+      if (visual.geometry.type !== 'mesh') {
+        continue;
+      }
+
+      pending.push(
+        loadGeometryObject(visual.geometry, baseUrl, {
+          kind: 'visual',
+          materialSpec: resolveVisualMaterialSpec(visual),
+        }).then((meshGroup) => {
+          if (visual.origin) {
+            meshGroup.applyMatrix4(originToMatrix4(visual.origin));
+          }
+          meshGroup.name = visual.name ?? `visual:${link.name}`;
+          linkGroup.add(meshGroup);
+        }),
+      );
+    }
+
+    for (const collision of link.collisions) {
+      if (collision.geometry.type !== 'mesh') {
+        continue;
+      }
+
+      const color = collisionColorForIndex(collisionIndex);
+      collisionIndex += 1;
+      pending.push(
+        loadGeometryObject(collision.geometry, baseUrl, {
+          kind: 'collision',
+          materialSpec: {
+            color,
+            opacity: 0.88,
+            metalness: 0,
+            roughness: 1,
+          },
+        }).then((meshGroup) => {
+          if (collision.origin) {
+            meshGroup.applyMatrix4(originToMatrix4(collision.origin));
+          }
+          meshGroup.name = collision.name ?? `collision:${link.name}`;
+          linkGroup.add(meshGroup);
+        }),
+      );
+    }
+  }
+
+  await Promise.all(pending);
 }
 
 /**
@@ -134,13 +215,25 @@ export function useUrdfLoader(
  */
 function disposeGroup(group: THREE.Object3D): void {
   group.traverse((object) => {
-    if (object instanceof THREE.Mesh) {
-      object.geometry?.dispose();
-      const mat = object.material;
-      if (Array.isArray(mat)) {
-        mat.forEach((m) => m.dispose());
-      } else {
-        mat?.dispose();
+    if ("geometry" in object) {
+      const geometry = (object as { geometry?: THREE.BufferGeometry }).geometry;
+      geometry?.dispose();
+    }
+
+    if ("material" in object) {
+      const material = (object as { material?: THREE.Material | THREE.Material[] }).material;
+      if (Array.isArray(material)) {
+        material.forEach((entry) => {
+          if (entry instanceof THREE.SpriteMaterial) {
+            entry.map?.dispose();
+          }
+          entry.dispose();
+        });
+      } else if (material) {
+        if (material instanceof THREE.SpriteMaterial) {
+          material.map?.dispose();
+        }
+        material.dispose();
       }
     }
   });

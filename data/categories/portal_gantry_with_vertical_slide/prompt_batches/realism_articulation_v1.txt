@@ -1,0 +1,1 @@
+A realistic portal gantry with two rigid side uprights, a spanning top beam, a centered carriage, and a guided vertical slide with a clean automation-frame appearance. The carriage and vertical slide articulate naturally, and the structure should feel like a real machine axis with clear support and believable load paths.

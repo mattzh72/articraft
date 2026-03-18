@@ -6,7 +6,7 @@ interface SidebarProps {
 
 export function Sidebar({ children }: SidebarProps): JSX.Element {
   return (
-    <aside className="flex h-full min-w-0 flex-col overflow-hidden border-r border-[#e4e4e4] bg-[#f8f8f8]">
+    <aside className="flex h-full min-w-0 flex-col overflow-hidden bg-[var(--surface-0)]">
       {children}
     </aside>
   );

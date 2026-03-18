@@ -26,6 +26,12 @@ Do not emit URDF XML yourself. The harness compiles `object_model`, generates co
    - `ctx.check_part_geometry_connected(use="visual")`
    - `ctx.check_no_overlaps(..., ignore_adjacent=True, ignore_fixed=True)`
 
+Joint authoring rules:
+
+- `ArticulationType.REVOLUTE` and `ArticulationType.PRISMATIC` require `MotionLimits(effort=..., velocity=..., lower=..., upper=...)`.
+- `ArticulationType.CONTINUOUS` requires `MotionLimits(effort=..., velocity=...)` and must not set `lower` or `upper`.
+- `ArticulationType.FIXED` and `ArticulationType.FLOATING` do not use `motion_limits`.
+
 Collisions are generated automatically at compile time:
 
 - primitive visuals become matching primitive collisions
@@ -123,6 +129,20 @@ def run_tests() -> TestReport:
 
 
 object_model = build_object_model()
+```
+
+Continuous-joint example:
+
+```python
+model.articulation(
+    "base_to_turntable",
+    ArticulationType.CONTINUOUS,
+    parent="base",
+    child="turntable",
+    origin=Origin(xyz=(0.0, 0.0, 0.05)),
+    axis=(0.0, 0.0, 1.0),
+    motion_limits=MotionLimits(effort=8.0, velocity=2.0),
+)
 ```
 
 ## Asset paths

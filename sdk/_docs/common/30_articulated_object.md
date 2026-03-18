@@ -45,6 +45,26 @@ model.articulation(
 )
 ```
 
+Joint-limit rules:
+
+- `revolute` and `prismatic` articulations require `MotionLimits` with `effort`, `velocity`, `lower`, and `upper`.
+- `continuous` articulations require `MotionLimits` with `effort` and `velocity`, and must not set `lower` or `upper`.
+- `fixed` and `floating` articulations should not set `motion_limits`.
+
+Example continuous articulation:
+
+```python
+model.articulation(
+    "chassis_to_mast",
+    ArticulationType.CONTINUOUS,
+    parent="chassis",
+    child="mast",
+    origin=Origin(...),
+    axis=(0.0, 0.0, 1.0),
+    motion_limits=MotionLimits(effort=12.0, velocity=1.5),
+)
+```
+
 Lookup helpers:
 
 ```python
@@ -80,7 +100,9 @@ This checks:
 - at least one part exists
 - part and articulation names are unique
 - every articulation references existing parts
-- limits and axes are valid in strict mode
+- axes are valid in strict mode
+- `revolute` and `prismatic` articulations include `effort`, `velocity`, `lower`, and `upper`
+- `continuous` articulations include `effort` and `velocity`, but no `lower` or `upper`
 - the articulation graph is connected from at least one root part
 
 ## Overlap validation

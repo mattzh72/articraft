@@ -72,10 +72,10 @@ class Mesh:
         object.__setattr__(self, "filename", filename)
         if self.scale is not None:
             object.__setattr__(self, "scale", _as_vec3(self.scale, name="mesh.scale"))
-        if self.source_geometry is not None and not isinstance(self.source_geometry, (Box, Cylinder, Sphere)):
-            raise ValidationError(
-                "mesh.source_geometry must be a Box, Cylinder, Sphere, or None"
-            )
+        if self.source_geometry is not None and not isinstance(
+            self.source_geometry, (Box, Cylinder, Sphere)
+        ):
+            raise ValidationError("mesh.source_geometry must be a Box, Cylinder, Sphere, or None")
         if self.source_transform is not None:
             if self.source_geometry is None:
                 raise ValidationError("mesh.source_transform requires mesh.source_geometry")
@@ -144,7 +144,9 @@ class Inertial:
     origin: Origin = field(default_factory=Origin)
 
     @staticmethod
-    def from_geometry(geometry: Geometry, mass: float, *, origin: Optional[Origin] = None) -> "Inertial":
+    def from_geometry(
+        geometry: Geometry, mass: float, *, origin: Optional[Origin] = None
+    ) -> "Inertial":
         mass = float(mass)
         if mass <= 0:
             raise ValidationError("Mass must be positive")
@@ -156,8 +158,8 @@ class Inertial:
             izz = (1.0 / 12.0) * mass * (x * x + y * y)
         elif isinstance(geometry, Cylinder):
             r = float(geometry.radius)
-            l = float(geometry.length)
-            ixx = (1.0 / 12.0) * mass * (3 * r * r + l * l)
+            length = float(geometry.length)
+            ixx = (1.0 / 12.0) * mass * (3 * r * r + length * length)
             iyy = ixx
             izz = 0.5 * mass * r * r
         elif isinstance(geometry, Sphere):
@@ -178,7 +180,6 @@ class ArticulationType(str, Enum):
     PRISMATIC = "prismatic"
     FIXED = "fixed"
     FLOATING = "floating"
-    PLANAR = "planar"
 
 
 def _coerce_articulation_type(

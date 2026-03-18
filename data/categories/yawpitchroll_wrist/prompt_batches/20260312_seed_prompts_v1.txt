@@ -1,0 +1,2 @@
+A three-axis wrist assembly with nested yaw, pitch, and roll joints, built from compact rings, side yokes, and a small tool flange.
+A robotic wrist head using serial yaw-pitch-roll axes, with concentric housings, clean machined brackets, and a precise CAD-like layout.

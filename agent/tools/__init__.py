@@ -14,10 +14,10 @@ from agent.tools.base import (
     make_tool_schema,
 )
 from agent.tools.edit_code import EditCodeTool
+from agent.tools.read_code import ReadCodeTool
 from agent.tools.read_file import ReadFileTool
 from agent.tools.registry import ToolRegistry
 from agent.tools.write_code import WriteCodeTool
-
 
 SUPPORTED_IMAGE_MIME_TYPES_BY_PROVIDER: dict[str, set[str]] = {
     "openai": {
@@ -40,8 +40,8 @@ def build_tool_registry(provider: str, *, sdk_package: str = "sdk") -> ToolRegis
     provider_norm = (provider or "openai").strip().lower()
     normalize_sdk_package(sdk_package)
     if provider_norm == "openai":
-        return ToolRegistry([ReadFileTool(), WriteCodeTool(), ApplyPatchFreeformTool()])
-    return ToolRegistry([ReadFileTool(), EditCodeTool(), WriteCodeTool()])
+        return ToolRegistry([ReadFileTool(), ApplyPatchFreeformTool()])
+    return ToolRegistry([ReadCodeTool(), EditCodeTool()])
 
 
 def provider_system_prompt_suffix(provider: str, *, sdk_package: str = "sdk") -> str:
@@ -101,8 +101,7 @@ def resolve_image_path(
         raise ValueError(f"Unsupported provider for image validation: {provider}")
     if mime_type not in supported_mime_types:
         raise ValueError(
-            f"Unsupported image type for {provider_norm}: {path.name} "
-            f"({mime_type or 'unknown'})"
+            f"Unsupported image type for {provider_norm}: {path.name} ({mime_type or 'unknown'})"
         )
 
     size_bytes = path.stat().st_size
@@ -127,6 +126,7 @@ __all__ = [
     "ApplyPatchFreeformTool",
     "ApplyPatchTool",
     "EditCodeTool",
+    "ReadCodeTool",
     "ReadFileTool",
     "WriteCodeTool",
     "ToolRegistry",

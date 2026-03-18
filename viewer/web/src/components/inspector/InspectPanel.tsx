@@ -1,9 +1,10 @@
 import { useEffect, useMemo, useState, type JSX } from "react";
-import { RotateCcw } from "lucide-react";
+import { Copy, FolderOpen, RotateCcw, Star } from "lucide-react";
 
-import { fetchRecordFile } from "@/lib/api";
+import { fetchRecordFile, openRecordFolder, saveRecordRating } from "@/lib/api";
+import { buildRecordPath, copyTextToClipboard } from "@/lib/record-path";
 import { findRecordInBootstrap } from "@/lib/record-summary";
-import { useViewer } from "@/lib/viewer-context";
+import { useViewer, useViewerDispatch } from "@/lib/viewer-context";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -17,15 +18,6 @@ type InspectPanelProps = {
   onJointChange: (name: string, value: number) => void;
   onResetAll: () => void;
 };
-
-function Field({ label, value }: { label: string; value: string | null | undefined }): JSX.Element {
-  return (
-    <div className="bg-white px-2.5 py-[7px]">
-      <dt className="text-[10px] font-medium uppercase tracking-[0.04em] text-[#aaa]">{label}</dt>
-      <dd className="mt-px whitespace-normal break-words text-[12px] text-[#1e1e1e]">{value || "--"}</dd>
-    </div>
-  );
-}
 
 function isMovableJoint(joint: UrdfJoint): boolean {
   return joint.type !== "fixed";
@@ -49,27 +41,21 @@ function jointBadgeVariant(joint: UrdfJoint): "secondary" | "success" {
   return isMovableJoint(joint) ? "success" : "secondary";
 }
 
-function SectionHeader({
-  eyebrow,
-  title,
-  meta,
-  action,
-}: {
-  eyebrow: string;
-  title: string;
-  meta?: string;
-  action?: JSX.Element;
-}): JSX.Element {
+function SectionLabel({ children }: { children: React.ReactNode }): JSX.Element {
   return (
-    <div className="flex items-start justify-between gap-3">
-      <div className="min-w-0">
-        <p className="text-[10px] font-medium uppercase tracking-[0.05em] text-[#aaa]">{eyebrow}</p>
-        <h3 className="mt-0.5 text-[13px] font-medium leading-[1.3] text-[#1e1e1e]">{title}</h3>
-        {meta ? <p className="mt-0.5 font-mono text-[10px] text-[#999]">{meta}</p> : null}
-      </div>
-      {action}
+    <div className="flex items-center gap-2 pb-2">
+      <span className="text-[10px] font-medium uppercase tracking-[0.05em] text-[var(--text-tertiary)]">{children}</span>
+      <div className="h-px flex-1 bg-[var(--border-subtle)]" />
     </div>
   );
+}
+
+function isEditableTarget(target: EventTarget | null): boolean {
+  if (!(target instanceof HTMLElement)) {
+    return false;
+  }
+  const tagName = target.tagName.toLowerCase();
+  return target.isContentEditable || tagName === "input" || tagName === "textarea" || tagName === "select";
 }
 
 function buildRootLinks(joints: UrdfJoint[]): string[] {
@@ -98,24 +84,20 @@ function LinkBranch({ linkName, jointsByParent, jointValues, onJointChange, seen
   const childJoints = jointsByParent.get(linkName) ?? [];
 
   return (
-    <div className="space-y-2.5">
-      <div className="flex items-center justify-between gap-3 rounded-sm border border-[#e8e8e8] bg-white px-2.5 py-1.5">
-        <div className="flex min-w-0 items-center gap-2">
-          <span className="size-2.5 shrink-0 rounded-full border border-[#cfcfcf] bg-[#f7f7f7]" />
-          <div className="min-w-0">
-            <p className="truncate font-mono text-[11px] text-[#1e1e1e]" title={linkName}>
-              {linkName}
-            </p>
-            <p className="mt-0.5 text-[10px] uppercase tracking-[0.04em] text-[#aaa]">Link</p>
-          </div>
-        </div>
-        <span className="shrink-0 font-mono text-[10px] tabular-nums text-[#aaa]">
-          {childJoints.length} child{childJoints.length === 1 ? "" : "ren"}
+    <div className="space-y-1">
+      {/* Link node */}
+      <div className="flex items-center gap-2 py-1">
+        <span className="size-[5px] shrink-0 rounded-full bg-[var(--border-strong)]" />
+        <span className="truncate font-mono text-[11px] text-[var(--text-primary)]" title={linkName}>
+          {linkName}
+        </span>
+        <span className="ml-auto shrink-0 font-mono text-[9.5px] tabular-nums text-[var(--text-quaternary)]">
+          {childJoints.length > 0 ? `${childJoints.length}` : ""}
         </span>
       </div>
 
       {childJoints.length > 0 && (
-        <div className="ml-[5px] space-y-3 border-l border-[#ececec] pl-5">
+        <div className="ml-1 space-y-1 border-l border-[var(--border-subtle)] pl-4">
           {childJoints.map((joint) => {
             const nextSeen = new Set(seen);
             const canDescend = !seen.has(joint.child);
@@ -124,34 +106,20 @@ function LinkBranch({ linkName, jointsByParent, jointValues, onJointChange, seen
             const value = jointValues.get(joint.name) ?? 0;
 
             return (
-              <div key={joint.name} className="relative space-y-2.5">
-                <div className="absolute -left-5 top-4 h-px w-4 bg-[#ececec]" />
-                <div className="rounded-sm border border-[#e8e8e8] bg-[#fcfcfc] px-2.5 py-2.5">
-                  <div className="flex items-start justify-between gap-2">
+              <div key={joint.name} className="space-y-1">
+                {/* Joint node */}
+                <div className="rounded-lg bg-[var(--surface-1)] px-3 py-2">
+                  <div className="flex items-center justify-between gap-2">
                     <div className="min-w-0">
-                      <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
-                        <p className="truncate font-mono text-[11px] text-[#1e1e1e]" title={joint.name}>
-                          {joint.name}
-                        </p>
-                        <span className="text-[10px] text-[#bbb]">to</span>
-                        <p className="truncate font-mono text-[11px] text-[#666]" title={joint.child}>
-                          {joint.child}
-                        </p>
-                      </div>
-                      <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-[10px] text-[#999]">
-                        <span>
-                          Parent <span className="font-mono text-[#777]">{joint.parent}</span>
-                        </span>
-                        <span>
-                          Child <span className="font-mono text-[#777]">{joint.child}</span>
-                        </span>
-                      </div>
+                      <p className="truncate font-mono text-[11px] text-[var(--text-primary)]" title={joint.name}>
+                        {joint.name}
+                      </p>
                     </div>
                     <Badge variant={jointBadgeVariant(joint)}>{joint.type}</Badge>
                   </div>
 
                   {isMovableJoint(joint) ? (
-                    <div className="mt-2.5 space-y-2">
+                    <div className="mt-2.5 space-y-1.5">
                       <Slider
                         min={min}
                         max={max}
@@ -159,9 +127,9 @@ function LinkBranch({ linkName, jointsByParent, jointValues, onJointChange, seen
                         value={[value]}
                         onValueChange={([nextValue]) => onJointChange(joint.name, nextValue)}
                       />
-                      <div className="flex justify-between font-mono text-[10px] text-[#bbb]">
+                      <div className="flex justify-between font-mono text-[9.5px] text-[var(--text-quaternary)]">
                         <span>{formatJointValue(joint, min)}</span>
-                        <span className="text-[#666]">{formatJointValue(joint, value)}</span>
+                        <span className="text-[var(--text-secondary)]">{formatJointValue(joint, value)}</span>
                         <span>{formatJointValue(joint, max)}</span>
                       </div>
                     </div>
@@ -177,7 +145,7 @@ function LinkBranch({ linkName, jointsByParent, jointValues, onJointChange, seen
                     seen={nextSeen}
                   />
                 ) : (
-                  <div className="ml-2 rounded-sm border border-dashed border-[#e4e4e4] bg-white px-2.5 py-2 text-[10px] text-[#999]">
+                  <div className="ml-4 py-1 text-[10px] text-[var(--text-quaternary)]">
                     Cycle detected at {joint.child}
                   </div>
                 )}
@@ -197,12 +165,19 @@ export function InspectPanel({
   onResetAll,
 }: InspectPanelProps): JSX.Element {
   const { bootstrap, selectedRecordId } = useViewer();
+  const dispatch = useViewerDispatch();
   const [promptText, setPromptText] = useState<string | null>(null);
-  const [loadingPrompt, setLoadingPrompt] = useState(false);
+  const [promptStatus, setPromptStatus] = useState<"idle" | "loading" | "loaded" | "unavailable">("idle");
+  const [hoveredRating, setHoveredRating] = useState<number | null>(null);
+  const [savingRating, setSavingRating] = useState(false);
+  const [ratingError, setRatingError] = useState<string | null>(null);
+  const [copyState, setCopyState] = useState<"idle" | "copied" | "error">("idle");
+  const [openState, setOpenState] = useState<"idle" | "opened" | "error">("idle");
 
   const record = selectedRecordId ? findRecordInBootstrap(bootstrap, selectedRecordId) : null;
   const joints = urdfSpec?.joints ?? [];
   const movableJointCount = joints.filter(isMovableJoint).length;
+  const recordPath = bootstrap && selectedRecordId ? buildRecordPath(bootstrap.repo_root, selectedRecordId) : null;
 
   const { rootLinks, jointsByParent } = useMemo(() => {
     const nextMap = new Map<string, UrdfJoint[]>();
@@ -220,33 +195,170 @@ export function InspectPanel({
   useEffect(() => {
     if (!selectedRecordId || !record) {
       setPromptText(null);
-      setLoadingPrompt(false);
+      setPromptStatus("idle");
       return;
     }
 
     let cancelled = false;
-    setLoadingPrompt(true);
+    setPromptText(null);
+    setPromptStatus("loading");
 
     fetchRecordFile(selectedRecordId, "prompt.txt")
       .then((text) => {
-        if (!cancelled) setPromptText(text.trim() || null);
+        if (cancelled) {
+          return;
+        }
+        const normalized = text.trim();
+        setPromptText(normalized || null);
+        setPromptStatus(normalized ? "loaded" : "unavailable");
       })
       .catch(() => {
-        if (!cancelled) setPromptText(null);
+        if (!cancelled) {
+          setPromptText(null);
+          setPromptStatus("unavailable");
+        }
       })
-      .finally(() => {
-        if (!cancelled) setLoadingPrompt(false);
-      });
 
     return () => {
       cancelled = true;
     };
   }, [selectedRecordId, record]);
 
+  useEffect(() => {
+    setHoveredRating(null);
+    setSavingRating(false);
+    setRatingError(null);
+    setCopyState("idle");
+    setOpenState("idle");
+  }, [selectedRecordId]);
+
+  useEffect(() => {
+    if (copyState === "idle") {
+      return;
+    }
+
+    const timeoutId = window.setTimeout(() => {
+      setCopyState("idle");
+    }, 1800);
+
+    return () => {
+      window.clearTimeout(timeoutId);
+    };
+  }, [copyState]);
+
+  useEffect(() => {
+    if (openState === "idle") {
+      return;
+    }
+
+    const timeoutId = window.setTimeout(() => {
+      setOpenState("idle");
+    }, 1800);
+
+    return () => {
+      window.clearTimeout(timeoutId);
+    };
+  }, [openState]);
+
+  async function handleRatingSelect(nextRating: number): Promise<void> {
+    if (!selectedRecordId || !record || savingRating) {
+      return;
+    }
+
+    setSavingRating(true);
+    setRatingError(null);
+
+    try {
+      const updated = await saveRecordRating(selectedRecordId, nextRating);
+      dispatch({
+        type: "UPDATE_RECORD_RATING",
+        payload: {
+          recordId: updated.record_id,
+          rating: updated.rating,
+          updatedAt: updated.updated_at,
+        },
+      });
+    } catch (error) {
+      setRatingError(error instanceof Error ? error.message : "Failed to save rating.");
+    } finally {
+      setSavingRating(false);
+      setHoveredRating(null);
+    }
+  }
+
+  async function handleCopyRecordPath(): Promise<void> {
+    if (!recordPath) {
+      setCopyState("error");
+      return;
+    }
+
+    try {
+      await copyTextToClipboard(recordPath);
+      setCopyState("copied");
+    } catch {
+      setCopyState("error");
+    }
+  }
+
+  async function handleOpenRecordFolder(): Promise<void> {
+    if (!selectedRecordId) {
+      setOpenState("error");
+      return;
+    }
+
+    try {
+      await openRecordFolder(selectedRecordId);
+      setOpenState("opened");
+    } catch {
+      setOpenState("error");
+    }
+  }
+
+  useEffect(() => {
+    if (!selectedRecordId || !record) {
+      return;
+    }
+
+    const keyToRating = new Map<string, number>([
+      ["Digit1", 1],
+      ["Digit2", 2],
+      ["Digit3", 3],
+      ["Digit4", 4],
+      ["Digit5", 5],
+      ["Numpad1", 1],
+      ["Numpad2", 2],
+      ["Numpad3", 3],
+      ["Numpad4", 4],
+      ["Numpad5", 5],
+    ]);
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      const nextRating = keyToRating.get(event.code);
+      if (
+        !nextRating ||
+        event.repeat ||
+        event.altKey ||
+        event.ctrlKey ||
+        event.metaKey ||
+        event.shiftKey ||
+        isEditableTarget(event.target)
+      ) {
+        return;
+      }
+      event.preventDefault();
+      void handleRatingSelect(nextRating);
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [record, selectedRecordId, savingRating]);
+
   if (!selectedRecordId) {
     return (
       <div className="flex h-32 items-center justify-center">
-        <p className="text-[11px] text-[#bbb]">Select a record</p>
+        <p className="text-[11px] text-[var(--text-quaternary)]">Select a record</p>
       </div>
     );
   }
@@ -254,72 +366,156 @@ export function InspectPanel({
   if (!record) {
     return (
       <div className="flex h-32 items-center justify-center">
-        <p className="text-[11px] text-[#bbb]">Record not found</p>
+        <p className="text-[11px] text-[var(--text-quaternary)]">Record not found</p>
       </div>
     );
   }
 
   return (
     <ScrollArea className="h-full">
-      <div className="space-y-4 pb-2">
-        <section className="space-y-1.5">
-          <SectionHeader
-            eyebrow="Inspect"
-            title="Prompt"
-            meta="Source prompt used to generate the current record"
-          />
-          <div className="rounded-sm border border-[#e8e8e8] bg-white px-3 py-3 shadow-[0_1px_0_rgba(0,0,0,0.02)]">
-            {loadingPrompt ? (
-              <div className="space-y-1.5">
-                <Skeleton className="h-3 w-full" />
-                <Skeleton className="h-3 w-[92%]" />
-                <Skeleton className="h-3 w-[85%]" />
-              </div>
-            ) : (
-              <p className="whitespace-pre-wrap text-[12px] leading-[1.55] text-[#1e1e1e]">
-                {promptText ?? record.prompt_preview ?? "--"}
-              </p>
-            )}
+      <div className="space-y-5 pb-3">
+        <section className="flex items-start gap-2 border-b border-[var(--border-subtle)] pb-3">
+          <div className="min-w-0 flex-1">
+            <p
+              className="truncate font-mono text-[10px] text-[var(--text-quaternary)]"
+              title={recordPath ?? undefined}
+            >
+              {recordPath ?? "Object path unavailable"}
+            </p>
+          </div>
+          <div className="flex shrink-0 items-center gap-0.5">
+            <button
+              type="button"
+              aria-label={copyState === "copied" ? "Copied object path" : "Copy object path"}
+              title={copyState === "copied" ? "Copied object path" : copyState === "error" ? "Copy failed" : "Copy object path"}
+              className="flex size-6 items-center justify-center rounded-md text-[var(--text-quaternary)] transition-colors duration-100 hover:bg-[var(--surface-1)] hover:text-[var(--text-secondary)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-soft)]"
+              onClick={() => void handleCopyRecordPath()}
+            >
+              <Copy className={`size-3.5 ${copyState === "copied" ? "text-[var(--success)]" : ""}`} />
+            </button>
+            <button
+              type="button"
+              aria-label={openState === "opened" ? "Opened object folder" : "Open object folder"}
+              title={openState === "opened" ? "Opened object folder" : openState === "error" ? "Open failed" : "Open object folder"}
+              className="flex size-6 items-center justify-center rounded-md text-[var(--text-quaternary)] transition-colors duration-100 hover:bg-[var(--surface-1)] hover:text-[var(--text-secondary)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-soft)]"
+              onClick={() => void handleOpenRecordFolder()}
+            >
+              <FolderOpen className={`size-3.5 ${openState === "opened" ? "text-[var(--success)]" : ""}`} />
+            </button>
           </div>
         </section>
 
-        <section className="space-y-1.5">
-          <SectionHeader
-            eyebrow="Record"
-            title="Generation Context"
-            meta="Primary metadata used to identify and compare outputs"
-          />
-          <dl className="grid grid-cols-3 gap-px overflow-hidden rounded-sm border border-[#e8e8e8] bg-[#e8e8e8]">
-            <Field label="Provider" value={record.provider} />
-            <Field label="Model" value={record.model_id} />
-            <Field label="Category" value={record.category_slug} />
-          </dl>
+        {/* Prompt */}
+        <section>
+          <SectionLabel>Prompt</SectionLabel>
+          {promptStatus === "idle" || promptStatus === "loading" ? (
+            <div className="space-y-1.5">
+              <Skeleton className="h-3 w-full" />
+              <Skeleton className="h-3 w-[92%]" />
+              <Skeleton className="h-3 w-[85%]" />
+            </div>
+          ) : promptText ? (
+            <p className="whitespace-pre-wrap break-words text-[12px] leading-[1.6] text-[var(--text-secondary)] [overflow-wrap:anywhere]">
+              {promptText}
+            </p>
+          ) : (
+            <p className="text-[11px] text-[var(--text-quaternary)]">Prompt unavailable</p>
+          )}
         </section>
 
-        <section className="space-y-2">
-          <SectionHeader
-            eyebrow="Mechanism"
-            title="Kinematic Tree"
-            meta={`${joints.length} joint${joints.length === 1 ? "" : "s"} total, ${movableJointCount} movable`}
-            action={
+        {/* Rating */}
+        <section>
+          <SectionLabel>Rating</SectionLabel>
+          <div className="flex items-center justify-between">
+            <div
+              className="flex items-center gap-0.5"
+              onMouseLeave={() => setHoveredRating(null)}
+            >
+              {[1, 2, 3, 4, 5].map((starValue) => {
+                const activeRating = hoveredRating ?? record.rating ?? 0;
+                const isActive = starValue <= activeRating;
+
+                return (
+                  <button
+                    key={starValue}
+                    type="button"
+                    aria-label={`Rate ${starValue} star${starValue === 1 ? "" : "s"}`}
+                    aria-pressed={record.rating === starValue}
+                    disabled={savingRating}
+                    className="rounded-md p-1 text-[var(--border-strong)] transition-colors duration-100 hover:text-[#e0a100] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-soft)] disabled:cursor-not-allowed"
+                    onMouseEnter={() => setHoveredRating(starValue)}
+                    onClick={() => void handleRatingSelect(starValue)}
+                  >
+                    <Star
+                      className={`size-3.5 ${isActive ? "fill-[#e0a100] text-[#e0a100]" : "fill-transparent text-current"}`}
+                    />
+                  </button>
+                );
+              })}
+            </div>
+            <span className="text-[10px] text-[var(--text-tertiary)]">
+              {savingRating
+                ? "Saving…"
+                : record.rating
+                  ? `${record.rating} / 5`
+                  : "Unrated"}
+            </span>
+          </div>
+          {ratingError ? <p className="mt-1.5 text-[10px] text-[var(--destructive)]">{ratingError}</p> : null}
+        </section>
+
+        {/* Record context */}
+        <section>
+          <SectionLabel>Info</SectionLabel>
+          <div className="space-y-0">
+            <div className="prop-row">
+              <span className="prop-label">SDK</span>
+              <span className="prop-value font-mono text-[10px]">{record.sdk_package || "--"}</span>
+            </div>
+            <div className="prop-row">
+              <span className="prop-label">Provider</span>
+              <span className="prop-value">{record.provider || "--"}</span>
+            </div>
+            <div className="prop-row">
+              <span className="prop-label">Model</span>
+              <span className="prop-value font-mono text-[10px]">{record.model_id || "--"}</span>
+            </div>
+            <div className="prop-row">
+              <span className="prop-label">Category</span>
+              <span className="prop-value">{record.category_slug || "--"}</span>
+            </div>
+          </div>
+        </section>
+
+        {/* Kinematic Tree */}
+        <section>
+          <div className="flex items-center justify-between pb-2">
+            <div className="flex items-center gap-2">
+              <span className="text-[10px] font-medium uppercase tracking-[0.05em] text-[var(--text-tertiary)]">Kinematic Tree</span>
+              <div className="h-px flex-1 bg-[var(--border-subtle)]" />
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="font-mono text-[9.5px] tabular-nums text-[var(--text-quaternary)]">
+                {joints.length} joint{joints.length === 1 ? "" : "s"} · {movableJointCount} movable
+              </span>
               <Button
                 variant="ghost"
                 size="sm"
                 onClick={onResetAll}
-                className="mt-0.5 h-6 gap-1 px-2 text-[11px] text-[#999] hover:text-[#666]"
+                className="h-5 gap-1 px-1.5 text-[10px] text-[var(--text-tertiary)] hover:text-[var(--text-secondary)]"
               >
-                <RotateCcw className="size-3" />
+                <RotateCcw className="size-2.5" />
                 Reset
               </Button>
-            }
-          />
+            </div>
+          </div>
 
           {joints.length === 0 ? (
-            <div className="flex h-32 items-center justify-center rounded-sm border border-dashed border-[#e4e4e4] bg-white">
-              <p className="text-[11px] text-[#bbb]">No joints detected</p>
+            <div className="flex h-20 items-center justify-center">
+              <p className="text-[11px] text-[var(--text-quaternary)]">No joints detected</p>
             </div>
           ) : (
-            <div className="space-y-4 rounded-sm border border-[#ececec] bg-[#fcfcfc] p-3">
+            <div className="space-y-1">
               {rootLinks.map((rootLink) => (
                 <LinkBranch
                   key={rootLink}

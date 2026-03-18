@@ -1,0 +1,2 @@
+A compact serial elbow arm with rotary shoulder and elbow joints, rigid box-section links, and a simple end mounting plate.
+An industrial pick-and-place arm with two main revolute joints and a short forearm, using straight mechanical links and visible joint hubs.

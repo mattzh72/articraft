@@ -1,0 +1,2 @@
+A push-pull plunger chain with serial sliding plungers or rod elements moving along one axis through guide sleeves, modeled as an industrial actuation module.
+A chained plunger mechanism using aligned prismatic elements, cylindrical sleeves, and rigid mounting brackets in a clean CAD assembly.

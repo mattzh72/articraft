@@ -54,6 +54,9 @@ class StorageLayout:
     def dataset_manifest_path(self) -> Path:
         return self.manifests_root / "dataset.json"
 
+    def search_index_path(self) -> Path:
+        return self.cache_root / "search.sqlite"
+
     def record_dir(self, record_id: str) -> Path:
         return self.records_root / record_id
 

@@ -95,7 +95,7 @@ export function CodePanel(): JSX.Element {
   if (!selectedRecordId) {
     return (
       <div className="flex h-32 items-center justify-center">
-        <p className="text-[10px] text-[#bbb]">Select a record</p>
+        <p className="text-[10px] text-[var(--text-quaternary)]">Select a record</p>
       </div>
     );
   }
@@ -106,8 +106,8 @@ export function CodePanel(): JSX.Element {
   const lineCount = getLineCount(content);
 
   return (
-    <div className="flex h-full flex-col overflow-hidden border border-[#e8e8e8] bg-white">
-      <div className="flex items-center border-b border-[#e8e8e8] px-2">
+    <div className="flex h-full flex-col overflow-hidden rounded-lg border border-[var(--border-default)] bg-[var(--surface-0)]">
+      <div className="flex items-center border-b border-[var(--border-default)] px-2">
         <div className="flex items-center gap-0.5">
           {(["model.py", "model.urdf"] as const).map((tab) => (
             <button
@@ -115,24 +115,24 @@ export function CodePanel(): JSX.Element {
               type="button"
               onClick={() => setActiveTab(tab)}
               className={cn(
-                "border-b-[1.5px] px-2 py-[7px] font-mono text-[9px] transition-colors",
+                "relative px-2.5 py-2 font-mono text-[10px] transition-colors duration-150",
                 activeTab === tab
-                  ? "border-b-[#1e1e1e] text-[#1e1e1e]"
-                  : "border-b-transparent text-[#999] hover:text-[#666]",
+                  ? "text-[var(--text-primary)] after:absolute after:bottom-0 after:left-2.5 after:right-2.5 after:h-[1.5px] after:rounded-full after:bg-[var(--text-primary)]"
+                  : "text-[var(--text-tertiary)] hover:text-[var(--text-secondary)]",
               )}
             >
               {tab}
             </button>
           ))}
         </div>
-        <div className="ml-auto font-mono text-[9px] uppercase tracking-[0.12em] text-[#999]">
+        <div className="ml-auto font-mono text-[9px] tabular-nums text-[var(--text-quaternary)]">
           {lineCount} lines
         </div>
       </div>
 
       <div className="min-h-0 flex-1">
         {isLoading ? (
-          <div className="space-y-1.5 p-2.5">
+          <div className="space-y-1.5 p-3">
             <Skeleton className="h-3 w-3/4" />
             <Skeleton className="h-3 w-full" />
             <Skeleton className="h-3 w-5/6" />
@@ -140,62 +140,55 @@ export function CodePanel(): JSX.Element {
           </div>
         ) : error ? (
           <div className="flex h-24 items-center justify-center">
-            <p className="px-3 text-center text-[10px] text-[#bbb]">{error}</p>
+            <p className="px-3 text-center text-[10px] text-[var(--text-quaternary)]">{error}</p>
           </div>
         ) : content ? (
-          <div className="code-panel-scroll min-h-0 h-full overflow-auto bg-white">
+          <div className="code-panel-scroll min-h-0 h-full overflow-auto bg-[var(--surface-0)]">
             <div className="min-w-max">
-              <div className="overflow-hidden border-b border-[#f1f1f1]">
-                <div className="border-b border-[#e8e8e8] px-3 py-1.5">
-                  <div className="font-mono text-[9px] uppercase tracking-[0.12em] text-[#999]">
-                    {getLanguage(activeTab)}
-                  </div>
-                </div>
-                <SyntaxHighlighter
-                  language={getLanguage(activeTab)}
-                  style={codeTheme}
-                  showLineNumbers
-                  showInlineLineNumbers
-                  customStyle={{
-                    margin: 0,
-                    padding: "12px 0",
-                    background: "transparent",
+              <SyntaxHighlighter
+                language={getLanguage(activeTab)}
+                style={codeTheme}
+                showLineNumbers
+                showInlineLineNumbers
+                customStyle={{
+                  margin: 0,
+                  padding: "12px 0",
+                  background: "transparent",
+                  fontFamily: "var(--font-mono)",
+                  fontSize: "10px",
+                  lineHeight: "1.7",
+                  minWidth: "100%",
+                }}
+                codeTagProps={{
+                  style: {
                     fontFamily: "var(--font-mono)",
-                    fontSize: "9px",
-                    lineHeight: "1.7",
-                    minWidth: "100%",
-                  }}
-                  codeTagProps={{
-                    style: {
-                      fontFamily: "var(--font-mono)",
-                      whiteSpace: "pre",
-                    },
-                  }}
-                  lineNumberStyle={{
-                    minWidth: "3.25rem",
+                    whiteSpace: "pre",
+                  },
+                }}
+                lineNumberStyle={{
+                  minWidth: "3rem",
+                  paddingRight: "1rem",
+                  textAlign: "right",
+                  color: "var(--text-quaternary)",
+                  userSelect: "none",
+                  borderRight: "1px solid var(--border-subtle)",
+                  marginRight: "1rem",
+                }}
+                lineProps={() => ({
+                  style: {
+                    display: "block",
                     paddingRight: "1rem",
-                    textAlign: "right",
-                    color: "#b0b0b0",
-                    userSelect: "none",
-                    borderRight: "1px solid #ececec",
-                    marginRight: "1rem",
-                  }}
-                  lineProps={() => ({
-                    style: {
-                      display: "block",
-                      paddingRight: "1rem",
-                      whiteSpace: "pre",
-                    },
-                  })}
-                >
-                  {content}
-                </SyntaxHighlighter>
-              </div>
+                    whiteSpace: "pre",
+                  },
+                })}
+              >
+                {content}
+              </SyntaxHighlighter>
             </div>
           </div>
         ) : (
           <div className="flex h-24 items-center justify-center">
-            <p className="text-[10px] text-[#bbb]">No content</p>
+            <p className="text-[10px] text-[var(--text-quaternary)]">No content</p>
           </div>
         )}
       </div>

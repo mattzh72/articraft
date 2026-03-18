@@ -41,7 +41,7 @@ export function useThreeScene(
     // --- Renderer ---
     const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false });
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 1.2;
+    renderer.toneMappingExposure = 1.3;
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     renderer.setSize(container.clientWidth, container.clientHeight);
     container.appendChild(renderer.domElement);

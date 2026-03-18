@@ -15,6 +15,9 @@
   - Prefer detailed visual meshes/profiles for silhouette-critical parts.
   - Do not simplify visuals down to boxes/cylinders just to silence conservative overlap warnings.
   - Preserve correct joint axes, limits, origins, and overall articulation behavior.
+  - For `ArticulationType.REVOLUTE` and `ArticulationType.PRISMATIC`, always set `motion_limits=MotionLimits(effort=..., velocity=..., lower=..., upper=...)`.
+  - For `ArticulationType.CONTINUOUS`, always set `motion_limits=MotionLimits(effort=..., velocity=...)` and never set `lower` or `upper`.
+  - Do not omit `motion_limits` for continuous joints; export and strict validation require explicit `effort` and `velocity`.
   - If forced to trade off, keep the realistic-looking visual model and fix geometry/joints/tests before reducing visible fidelity.
   - For curved tubular members such as hooks, handles, loops, rails, guards, whisk wires, cages, and bent support frames, do not default to chained primitive cylinders.
   - If the real part should read as one continuously bent member, prefer spline- or path-based tube geometry such as `tube_from_spline_points(...)`, `sweep_profile_along_spline(...)`, or `WirePath`.
@@ -43,6 +46,7 @@ Your tests are not a formality. They are the primary mechanism to prevent visual
 ## Principles
 - Prefer **many small checks** over a few broad ones. Each check encodes a single invariant.
 - Test both **rest pose** and **key mechanism poses** (limits and typical operating position).
+- For `ArticulationType.CONTINUOUS`, use explicit sampled angles such as `0`, `pi / 2`, and `pi` instead of lower/upper limit poses.
 - Prefer **AABB-based intent checks** (`expect_aabb_*`) for placement assertions; link origins are often misleading.
 - Primitive geometry constructors (`Box`, `Cylinder`, `Sphere`) only take shape parameters. Put transforms on `visual(..., origin=...)` or `Inertial.from_geometry(..., origin=...)`.
 - Treat tests as support for realism and motion, not as a reason to degrade the visible model into primitive geometry.
@@ -76,4 +80,4 @@ Your tests are not a formality. They are the primary mechanism to prevent visual
 1) Sanity: `check_model_valid`, `check_mesh_files_exist`, `check_articulation_origin_near_geometry`, `check_part_geometry_connected`
 2) Geometry backstop: `check_no_overlaps(max_pose_samples=..., ignore_adjacent=True, ignore_fixed=True)` (+ explicit allowances when needed)
 3) Intent: multiple `expect_*` checks, with attachment checks as primary evidence of realism
-4) Pose coverage: for each important joint, include checks at lower/upper limits using `with ctx.pose({"joint_name": value}): ...` or `with ctx.pose(joint_name=value): ...`
+4) Pose coverage: for each important joint, include checks at lower/upper limits using `with ctx.pose({"joint_name": value}): ...` or `with ctx.pose(joint_name=value): ...`; for continuous joints, use explicit sampled angles instead of lower/upper limits

@@ -23,11 +23,11 @@ function formatDate(value: string | null | undefined): string {
   return date.toLocaleString();
 }
 
-function Field({ label, children }: { label: string; children: React.ReactNode }): JSX.Element {
+function SectionLabel({ children }: { children: React.ReactNode }): JSX.Element {
   return (
-    <div className="bg-white px-2.5 py-[7px]">
-      <dt className="text-[10px] font-medium uppercase tracking-[0.04em] text-[#aaa]">{label}</dt>
-      <dd className="mt-px whitespace-normal break-words text-[12px] text-[#1e1e1e]">{children}</dd>
+    <div className="flex items-center gap-2 pb-2">
+      <span className="text-[10px] font-medium uppercase tracking-[0.05em] text-[var(--text-tertiary)]">{children}</span>
+      <div className="h-px flex-1 bg-[var(--border-subtle)]" />
     </div>
   );
 }
@@ -107,7 +107,7 @@ export function MetadataPanel(): JSX.Element {
   if (!selectedRecordId) {
     return (
       <div className="flex h-32 items-center justify-center">
-        <p className="text-[11px] text-[#bbb]">Select a record</p>
+        <p className="text-[11px] text-[var(--text-quaternary)]">Select a record</p>
       </div>
     );
   }
@@ -115,45 +115,71 @@ export function MetadataPanel(): JSX.Element {
   if (!record) {
     return (
       <div className="flex h-32 items-center justify-center">
-        <p className="text-[11px] text-[#bbb]">Record not found</p>
+        <p className="text-[11px] text-[var(--text-quaternary)]">Record not found</p>
       </div>
     );
   }
 
   return (
     <ScrollArea className="h-full">
-      <div className="space-y-2 pb-1">
-        <div>
-          <p className="text-[10px] font-medium uppercase tracking-[0.04em] text-[#aaa]">Info</p>
-          <p className="mt-1 text-[12px] leading-[1.45] text-[#666]">
-            Secondary record diagnostics, provenance hints, and compile artifacts.
-          </p>
-        </div>
+      <div className="space-y-5 pb-3">
+        {/* Identity */}
+        <section>
+          <SectionLabel>Identity</SectionLabel>
+          <div className="space-y-0">
+            <div className="prop-row">
+              <span className="prop-label">Record ID</span>
+              <span className="prop-value font-mono text-[10px]">{record.record_id}</span>
+            </div>
+            <div className="prop-row">
+              <span className="prop-label">Run ID</span>
+              <span className="prop-value font-mono text-[10px]">{record.run_id ?? "--"}</span>
+            </div>
+            <div className="prop-row">
+              <span className="prop-label">Created</span>
+              <span className="prop-value">{formatDate(record.created_at)}</span>
+            </div>
+            <div className="prop-row">
+              <span className="prop-label">Updated</span>
+              <span className="prop-value">{formatDate(record.updated_at)}</span>
+            </div>
+          </div>
+        </section>
 
-        <div className="grid grid-cols-2 gap-px overflow-hidden rounded-sm border border-[#e8e8e8] bg-[#e8e8e8]">
-          <Field label="Record ID">{record.record_id}</Field>
-          <Field label="Run ID">{record.run_id ?? "--"}</Field>
-          <Field label="Created">{formatDate(record.created_at)}</Field>
-          <Field label="Updated">{formatDate(record.updated_at)}</Field>
-        </div>
+        {/* Status */}
+        <section>
+          <SectionLabel>Status</SectionLabel>
+          <div className="flex flex-wrap items-center gap-1.5">
+            <Badge variant={statusVariant(run?.status)}>Run: {run?.status ?? "unknown"}</Badge>
+            <Badge variant={statusVariant(compileStatus)}>Compile: {compileStatus ?? "unknown"}</Badge>
+            <Badge variant={statusVariant(record.materialization_status)}>
+              Assets: {record.materialization_status ?? "unknown"}
+            </Badge>
+          </div>
+        </section>
 
-        <div className="flex flex-wrap items-center gap-2">
-          <span className="text-[10px] font-medium uppercase tracking-[0.04em] text-[#aaa]">Statuses</span>
-          <Badge variant={statusVariant(run?.status)}>{`Run: ${run?.status ?? "unknown"}`}</Badge>
-          <Badge variant={statusVariant(compileStatus)}>{`Compile: ${compileStatus ?? "unknown"}`}</Badge>
-          <Badge variant={statusVariant(record.materialization_status)}>
-            {`Assets: ${record.materialization_status ?? "unknown"}`}
-          </Badge>
-        </div>
-
-        <div className="grid grid-cols-2 gap-px overflow-hidden rounded-sm border border-[#e8e8e8] bg-[#e8e8e8]">
-          <Field label="Collections">{record.collections.join(", ") || "--"}</Field>
-          <Field label="Turns">{record.turn_count != null ? String(record.turn_count) : "--"}</Field>
-          <Field label="Cost">{record.total_cost_usd != null ? `$${record.total_cost_usd.toFixed(4)}` : "--"}</Field>
-          <Field label="Assets">
-            {record.materialization_status ?? "unknown"}
-          </Field>
-        </div>
+        {/* Metrics */}
+        <section>
+          <SectionLabel>Metrics</SectionLabel>
+          <div className="space-y-0">
+            <div className="prop-row">
+              <span className="prop-label">Collections</span>
+              <span className="prop-value">{record.collections.join(", ") || "--"}</span>
+            </div>
+            <div className="prop-row">
+              <span className="prop-label">Turns</span>
+              <span className="prop-value font-mono">{record.turn_count != null ? String(record.turn_count) : "--"}</span>
+            </div>
+            <div className="prop-row">
+              <span className="prop-label">Cost</span>
+              <span className="prop-value font-mono">{record.total_cost_usd != null ? `$${record.total_cost_usd.toFixed(4)}` : "--"}</span>
+            </div>
+            <div className="prop-row">
+              <span className="prop-label">Assets</span>
+              <span className="prop-value">{record.materialization_status ?? "unknown"}</span>
+            </div>
+          </div>
+        </section>
 
         {loadingExtras && (
           <div className="space-y-1.5">
@@ -162,20 +188,21 @@ export function MetadataPanel(): JSX.Element {
           </div>
         )}
 
+        {/* Compile Report */}
         {!loadingExtras && compileReport && (
-          <div>
-            <p className="mb-1.5 text-[10px] font-medium uppercase tracking-[0.04em] text-[#aaa]">Compile Report</p>
-            <div className="space-y-px overflow-hidden rounded-sm border border-[#e8e8e8]">
+          <section>
+            <SectionLabel>Compile Report</SectionLabel>
+            <div className="space-y-0">
               {Object.entries(compileReport).map(([key, val]) => (
-                <div key={key} className="flex flex-col gap-px bg-[#fafafa] px-2.5 py-[6px]">
-                  <dt className="font-mono text-[10px] text-[#999]">{key}</dt>
-                  <dd className="whitespace-normal break-all font-mono text-[11px] text-[#1e1e1e]">
+                <div key={key} className="prop-row">
+                  <span className="prop-label font-mono">{key}</span>
+                  <span className="prop-value font-mono text-[10px]">
                     {typeof val === "object" ? JSON.stringify(val) : String(val)}
-                  </dd>
+                  </span>
                 </div>
               ))}
             </div>
-          </div>
+          </section>
         )}
 
         {!loadingExtras && <TracePanel cost={cost} traceText={traceText} />}

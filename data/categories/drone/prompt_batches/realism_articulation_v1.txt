@@ -1,0 +1,1 @@
+A realistic, highly detailed quadcopter drone with a compact central body, four rigid arms, exposed propeller hubs, landing skids, and a believable consumer or prosumer aircraft character. The propellers and any standard underslung camera gimbal articulate naturally, and the assembly should feel like real flight hardware with clean support and proportions.

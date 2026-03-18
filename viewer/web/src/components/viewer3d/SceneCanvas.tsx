@@ -2,11 +2,14 @@ import { useRef, useEffect, type JSX } from 'react';
 import * as THREE from 'three';
 import { useThreeScene } from './useThreeScene';
 import { useUrdfLoader } from './useUrdfLoader';
-import { useJointController } from './useJointController';
 import { createEdgeLines } from './materials';
 import { createEnvironmentMap } from './lighting';
+import { attachJointOverlay, disposeOverlayObjects } from './joint-overlay';
 import type { RenderOptions } from '@/components/inspector/RenderOptionsPanel';
+import { updateUrlSearchParams } from '@/lib/url';
 import type { UrdfSpec } from './urdf-parser';
+
+const CAMERA_QUERY_PARAM = 'cam';
 
 export interface SceneCanvasProps {
   recordId: string | null;
@@ -18,7 +21,7 @@ export function SceneCanvas({ recordId, renderOptions, onUrdfSpecChange }: Scene
   const containerRef = useRef<HTMLDivElement | null>(null);
 
   const { scene, camera, renderer, controls, gridGroup, axisGroup, sceneReady } = useThreeScene(containerRef);
-  const { urdfSpec, jointNodes, loading, error } = useUrdfLoader(
+  const { urdfSpec, jointNodes, jointFrames, loading, error } = useUrdfLoader(
     recordId,
     scene,
     camera,
@@ -27,14 +30,19 @@ export function SceneCanvas({ recordId, renderOptions, onUrdfSpecChange }: Scene
     axisGroup,
   );
 
-  useJointController(jointNodes, urdfSpec);
-
   useEffect(() => {
     onUrdfSpecChange?.(urdfSpec, jointNodes);
   }, [urdfSpec, jointNodes, onUrdfSpecChange]);
 
+  useEffect(() => {
+    updateUrlSearchParams((params) => {
+      params.delete(CAMERA_QUERY_PARAM);
+    });
+  }, []);
+
   const edgeLinesRef = useRef<THREE.LineSegments[]>([]);
   const envMapRef = useRef<THREE.Texture | null>(null);
+  const jointOverlayRef = useRef<THREE.Object3D[]>([]);
 
   // Show/hide grid
   useEffect(() => {
@@ -79,12 +87,17 @@ export function SceneCanvas({ recordId, renderOptions, onUrdfSpecChange }: Scene
     robot.traverse((obj) => {
       if (obj instanceof THREE.Mesh) {
         const mat = obj.material;
+        const side = obj.userData.articraftCollision === true || renderOptions.doubleSided
+          ? THREE.DoubleSide
+          : THREE.FrontSide;
         if (Array.isArray(mat)) {
           for (const m of mat) {
-            m.side = renderOptions.doubleSided ? THREE.DoubleSide : THREE.FrontSide;
+            m.side = side;
+            m.needsUpdate = true;
           }
         } else if (mat) {
-          mat.side = renderOptions.doubleSided ? THREE.DoubleSide : THREE.FrontSide;
+          mat.side = side;
+          mat.needsUpdate = true;
         }
       }
     });
@@ -119,6 +132,29 @@ export function SceneCanvas({ recordId, renderOptions, onUrdfSpecChange }: Scene
       }
     });
   }, [scene, renderOptions.showCollisions, urdfSpec]);
+
+  useEffect(() => {
+    disposeOverlayObjects(jointOverlayRef.current);
+    jointOverlayRef.current = [];
+
+    if (!renderOptions.showJointOverlay || !urdfSpec || !jointFrames || !scene) {
+      return;
+    }
+
+    const robot = scene.getObjectByName('__articraft_robot__');
+    if (!robot) {
+      return;
+    }
+
+    const size = new THREE.Box3().setFromObject(robot).getSize(new THREE.Vector3());
+    const extent = Math.max(size.x, size.y, size.z, 0.6);
+    jointOverlayRef.current = attachJointOverlay(urdfSpec, jointFrames, extent);
+
+    return () => {
+      disposeOverlayObjects(jointOverlayRef.current);
+      jointOverlayRef.current = [];
+    };
+  }, [jointFrames, renderOptions.showJointOverlay, scene, urdfSpec]);
 
   return (
     <div className="relative h-full w-full">

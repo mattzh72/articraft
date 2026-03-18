@@ -3,21 +3,20 @@ from __future__ import annotations
 import sys
 from pathlib import Path
 
-
 if __package__ in {None, ""}:
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
 
-from agent.runner import (
+from agent.prompts import (
     DESIGNER_PROMPT_NAME,
     GEMINI_DESIGNER_PROMPT_NAME,
-    HYBRID_OPENAI_DESIGNER_PROMPT_NAME,
     HYBRID_GEMINI_DESIGNER_PROMPT_NAME,
+    HYBRID_OPENAI_DESIGNER_PROMPT_NAME,
     OPENAI_DESIGNER_PROMPT_NAME,
-    build_provider_payload_preview,
     load_system_prompt_text,
     resolve_system_prompt_path,
 )
+from agent.runner import build_provider_payload_preview
 
 
 def main() -> None:
@@ -56,9 +55,9 @@ def main() -> None:
     instructions = payload["instructions"]
     docs_message = payload["input"][0]["content"][0]["text"]
 
-    assert "Use ONLY `read_file`, `write_code`, and `apply_patch`" in instructions
+    assert "Use ONLY `read_file` and `apply_patch`" in instructions
     assert "FREEFORM tool" in instructions
-    assert "write_code" in instructions
+    assert "write_code" not in instructions
     assert "Do NOT provide `file_path`" in instructions
     assert "## sdk/_docs/common/00_quickstart.md" in docs_message
     assert "## sdk/_docs/common/80_testing.md" in docs_message
@@ -99,8 +98,9 @@ def main() -> None:
         system_prompt_path=DESIGNER_PROMPT_NAME,
     )
     gemini_instructions = gemini_payload["config"]["system_instruction"]
-    assert "Use ONLY `read_file`, `edit_code`, and `write_code`" in gemini_instructions
-    assert "line_numbers=false" in gemini_instructions
+    assert "Use ONLY `read_code` and `edit_code`" in gemini_instructions
+    assert 'old_string=""' in gemini_instructions
+    assert "write_code" not in gemini_instructions
 
 
 if __name__ == "__main__":

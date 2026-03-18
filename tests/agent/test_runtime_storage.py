@@ -7,7 +7,6 @@ from pathlib import Path
 from tempfile import TemporaryDirectory
 from types import SimpleNamespace
 
-
 if __package__ in {None, ""}:
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
@@ -126,6 +125,62 @@ def main() -> None:
             assert json.loads(results_lines[0])["record_id"] == record_dir.name
 
             assert not (repo_root / "outputs").exists()
+
+        with TemporaryDirectory() as tmpdir:
+            repo_root = Path(tmpdir)
+            exit_code = asyncio.run(
+                runner.run_from_input(
+                    "make a tower crane",
+                    prompt_text="make a tower crane",
+                    display_prompt="make a tower crane",
+                    repo_root=repo_root,
+                    image_path=None,
+                    provider="openai",
+                    thinking_level="high",
+                    max_turns=30,
+                    system_prompt_path=runner.DESIGNER_PROMPT_NAME,
+                    sdk_package="sdk",
+                    sdk_docs_mode="full",
+                    collection="dataset",
+                    category_slug="crane_tower",
+                    dataset_id="ds_crane_tower_0001",
+                )
+            )
+            assert exit_code == 0
+
+            records_root = repo_root / "data" / "records"
+            record_dirs = [path for path in records_root.iterdir() if path.is_dir()]
+            assert len(record_dirs) == 1
+            record_dir = record_dirs[0]
+
+            record = json.loads((record_dir / "record.json").read_text(encoding="utf-8"))
+            assert record["collections"] == ["dataset"]
+            assert record["category_slug"] == "crane_tower"
+
+            dataset_entry = json.loads(
+                (record_dir / "dataset_entry.json").read_text(encoding="utf-8")
+            )
+            assert dataset_entry["dataset_id"] == "ds_crane_tower_0001"
+            assert dataset_entry["category_slug"] == "crane_tower"
+
+            manifest = json.loads(
+                (repo_root / "data" / "cache" / "manifests" / "dataset.json").read_text(
+                    encoding="utf-8"
+                )
+            )
+            assert manifest["generated"] == [
+                {"name": "ds_crane_tower_0001", "record_id": record_dir.name}
+            ]
+
+            assert not (repo_root / "data" / "local" / "workbench.json").exists()
+
+            runs_root = repo_root / "data" / "cache" / "runs"
+            run_dirs = [path for path in runs_root.iterdir() if path.is_dir()]
+            assert len(run_dirs) == 1
+            run_metadata = json.loads((run_dirs[0] / "run.json").read_text(encoding="utf-8"))
+            assert run_metadata["status"] == "success"
+            assert run_metadata["collection"] == "dataset"
+            assert run_metadata["run_mode"] == "dataset_single"
     finally:
         runner.ArticraftAgent = original_agent
 

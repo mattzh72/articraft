@@ -1,0 +1,2 @@
+A branching mechanism with one base structure feeding two separate revolute arms, each branch moving independently with its own hinge chain.
+A Y-shaped mechanical tree with two independent rotary branches, straight structural members, and simple joint hubs.

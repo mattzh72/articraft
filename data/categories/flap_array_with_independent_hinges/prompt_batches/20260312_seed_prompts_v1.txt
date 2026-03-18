@@ -1,0 +1,2 @@
+A panel with multiple flap elements, each mounted on its own independent hinge axis, arranged in a uniform mechanical array.
+A rectangular frame carrying several independently hinged flaps, with repeated revolute joints and clean sheet-metal-like geometry.

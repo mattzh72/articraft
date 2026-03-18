@@ -1,0 +1,2 @@
+A cantilevered articulated arm extending from one side support, with serial revolute joints and stout structural links sized like industrial hardware.
+An overhung mechanical arm with a fixed pedestal and multiple rotary joints reaching outward, using boxed beams and compact actuator housings.

@@ -1,0 +1,2 @@
+A robotic palm block carrying several uncoupled finger chains, each articulated by its own revolute joints and arranged in a practical mechanical layout.
+A multi-finger end-effector with a rigid central palm and multiple independent hinge-linked fingers, using flat plates and compact pin joints.

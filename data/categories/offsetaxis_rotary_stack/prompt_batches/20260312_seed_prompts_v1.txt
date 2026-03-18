@@ -1,0 +1,2 @@
+An offset-axis rotary stack with serial revolute modules whose axes are parallel but laterally displaced, using bracketed spacers and rigid side plates.
+A multi-stage rotary assembly with staggered offset axes, machined connector links, and compact actuator housings.

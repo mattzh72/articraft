@@ -1,0 +1,2 @@
+A service manipulator with a rotary base joint, mid-span telescoping slide, and rotary wrist hinge, modeled as a tidy CAD assembly with simple housings.
+A folding inspection boom with one revolute root joint, one prismatic extension stage, and a rotary end joint, using straight members and mechanical stops.

@@ -14,10 +14,10 @@ export interface MaterialSpec {
  */
 export function resolveVisualMaterialSpec(visual: UrdfVisual): MaterialSpec {
   const defaultSpec: MaterialSpec = {
-    color: new THREE.Color(0.7, 0.7, 0.7),
+    color: new THREE.Color(0.75, 0.75, 0.75),
     opacity: 1.0,
-    metalness: 0.1,
-    roughness: 0.8,
+    metalness: 0.05,
+    roughness: 0.48,
   };
 
   if (!visual.material) {
@@ -43,14 +43,20 @@ export function createMaterial(spec: MaterialSpec, options?: {
   transparent?: boolean;
   side?: THREE.Side;
 }): THREE.MeshStandardMaterial {
+  const transparent = options?.transparent ?? (spec.opacity < 0.999);
+  const side = options?.side ?? THREE.FrontSide;
+
   return new THREE.MeshStandardMaterial({
     color: spec.color,
     opacity: spec.opacity,
     metalness: spec.metalness,
     roughness: spec.roughness,
-    transparent: options?.transparent ?? (spec.opacity < 1.0),
+    envMapIntensity: 0.8,
+    transparent,
+    depthWrite: options?.transparent ? false : spec.opacity >= 0.999,
+    forceSinglePass: transparent,
     wireframe: options?.wireframe ?? false,
-    side: options?.side ?? THREE.FrontSide,
+    side,
   });
 }
 

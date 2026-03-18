@@ -9,12 +9,25 @@ class HealthResponse(BaseModel):
     status: str
 
 
+class DeleteRecordResponse(BaseModel):
+    status: str
+    record_id: str
+
+
+class OpenRecordFolderResponse(BaseModel):
+    status: str
+    record_id: str
+    path: str
+
+
 class RecordSummaryResponse(BaseModel):
     record_id: str
     title: str
     prompt_preview: str
+    rating: int | None = None
     created_at: str | None = None
     updated_at: str | None = None
+    sdk_package: str | None = None
     provider: str | None = None
     model_id: str | None = None
     turn_count: int | None = None
@@ -79,6 +92,16 @@ class RecordDetailResponse(BaseModel):
     compile_report: dict[str, Any] | None = None
     provenance: dict[str, Any] | None = None
     cost: dict[str, Any] | None = None
+
+
+class RecordRatingRequest(BaseModel):
+    rating: int = Field(ge=1, le=5)
+
+
+class RecordRatingResponse(BaseModel):
+    record_id: str
+    rating: int
+    updated_at: str | None = None
 
 
 class RunDetailResponse(BaseModel):

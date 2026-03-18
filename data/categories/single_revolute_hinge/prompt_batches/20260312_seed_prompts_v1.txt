@@ -1,0 +1,2 @@
+A wall-mounted cabinet with a single side-hinged door and a slim pull handle, modeled as one clean revolute hinge.
+A garden gate with one rectangular swinging leaf on a single hinge axis, simple frame construction, and latch detail.

@@ -56,6 +56,13 @@ def decode_text(path: Path) -> str | None:
     return content.decode("utf-8", errors="replace")
 
 
+def requires_trailing_newline(path: Path) -> bool:
+    normalized = path.as_posix()
+    # Generated dataset artifacts are often emitted without a final newline.
+    # Keep the stricter rule for source/docs while relaxing it for data payloads.
+    return not normalized.startswith("data/")
+
+
 def detect_secrets(paths: list[str]) -> int:
     findings: list[str] = []
     for path in iter_existing_files(paths):
@@ -83,7 +90,7 @@ def detect_hygiene(paths: list[str]) -> int:
         if b"\x00" in content:
             continue
         text = content.decode("utf-8", errors="replace")
-        if content and not content.endswith(b"\n"):
+        if requires_trailing_newline(path) and content and not content.endswith(b"\n"):
             findings.append(f"{path}: missing trailing newline")
         for line_number, line in enumerate(text.splitlines(), start=1):
             stripped = line.rstrip("\r\n")

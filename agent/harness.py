@@ -21,19 +21,25 @@ from agent.models import AgentResult, CompileReport, TerminateReason
 from agent.prompts import (
     load_sdk_docs_reference,
     load_system_prompt_text,
+)
+from agent.prompts import (
     normalize_sdk_docs_mode as _normalize_sdk_docs_mode,
+)
+from agent.prompts import (
     normalize_sdk_package as _normalize_sdk_package,
 )
 from agent.providers.gemini import GeminiLLM
 from agent.providers.openai import OpenAILLM
 from agent.tools import (
     build_first_turn_messages as _build_first_turn_messages,
+)
+from agent.tools import (
     build_tool_registry,
     provider_system_prompt_suffix,
 )
-from agent.traces import TraceWriter
 from agent.tools.base import ToolResult
 from agent.tools.code_region import extract_editable_code
+from agent.traces import TraceWriter
 from agent.tui.single_run import SingleRunDisplay
 from sdk._profiles import get_sdk_profile
 
@@ -167,7 +173,10 @@ class ArticraftAgent:
             if not isinstance(warning, str):
                 continue
             if (
-                "visual connectivity check failed" in warning
+                "IMPORTANT:" in warning
+                or "non-finite or absurd geometry dimensions detected" in warning
+                or "geometry outlier dimensions detected" in warning
+                or "visual connectivity check failed" in warning
                 or "cwd-relative asset paths detected" in warning
                 or "isolated parts detected" in warning
             ):
@@ -177,7 +186,9 @@ class ArticraftAgent:
             return False
 
         try:
-            sig_src = json.dumps(interesting, sort_keys=False, separators=(",", ":")).encode("utf-8")
+            sig_src = json.dumps(interesting, sort_keys=False, separators=(",", ":")).encode(
+                "utf-8"
+            )
             sig = hashlib.sha1(sig_src).hexdigest()
         except Exception:
             sig = None
@@ -188,7 +199,7 @@ class ArticraftAgent:
             self._seen_compile_warning_sigs.add(sig)
 
         content = (
-            "WARNING: The harness detected issues that will likely look wrong in the viewer "
+            "WARNING: The harness detected IMPORTANT issues that will likely look wrong in the viewer "
             "(even if collision-based checks pass). Please fix these in code:\n\n"
             + "\n\n".join(interesting)
             + "\n\nDo not ignore these warnings; fix geometry placement, joint placement, and mesh axis/origin issues rather than weakening tests."
@@ -225,9 +236,7 @@ class ArticraftAgent:
                 "content": (
                     "Your last edit_code failed because `old_string` did not match the file exactly. "
                     "Do NOT guess. Call `read_code` again, then pick a smaller exact snippet from the "
-                    "current file as `old_string` and retry. Keep edits surgical. "
-                    "Use `write_code` only as a last resort (for the initial scaffold fill, "
-                    "or after repeated edit_code failures)."
+                    "current file as `old_string` and retry. Keep edits surgical."
                 ),
             }
             conversation.append(msg)
@@ -356,30 +365,27 @@ class ArticraftAgent:
             return (
                 "Do not paste code in your response. "
                 "Use tools to apply your changes. "
-                "Use write_code for the initial scaffold fill, then read_file plus apply_patch for edits. "
+                "Use read_file to fetch exact current lines, then apply_patch for edits. "
                 "Do not provide file_path."
             )
         return (
             "Do not paste code in your response. "
             "Use tools to apply your changes. "
-            "Use read_file with line_numbers=false to copy exact current text for edit_code. "
-            "Use write_code only for the initial scaffold fill or when edit_code "
-            "has repeatedly failed."
+            "Use read_code to fetch exact current text, then edit_code for edits. "
+            'If the editable section is empty, initialize it with edit_code using old_string="".'
         )
 
     def _first_turn_tool_nudge_text(self) -> str:
         if self.provider == "openai":
             return (
                 "Begin with a tool call. "
-                "Because the editable section starts empty, prefer write_code first. "
-                "After that, use read_file first to inspect the file, then apply_patch for changes. "
+                "Use read_file first to inspect the file, then apply_patch for changes. "
                 "Do not provide file_path."
             )
         return (
-            "Begin with a tool call. Prefer write_code first because the editable "
-            "section starts empty. After the first write, prefer read_file with "
-            "line_numbers=false plus edit_code for incremental edits. "
-            "Reserve write_code for necessary full rewrites only."
+            "Begin with a tool call. Use read_code first to inspect the editable "
+            "section, then use edit_code for changes. If the editable section is "
+            'empty, initialize it with edit_code using old_string="".'
         )
 
     def _tool_call_name(self, tool_call: dict) -> str:
@@ -497,35 +503,43 @@ class ArticraftAgent:
         func_args.pop("file_path", None)
         func_args["file_path"] = self.file_path
 
-        if func_name == "edit_code" and func_args.get("old_string") == "":
-            result = ToolResult(
-                error=(
-                    "old_string cannot be empty. Use read_file with line_numbers=false to copy the exact "
-                    "existing text and replace it."
-                ),
-                tool_call_id=tool_id,
-            )
-            tool_message = {
-                "role": "tool",
-                "tool_call_id": tool_id,
-                "name": func_name,
-                "content": json.dumps(
-                    {k: v for k, v in result.to_dict().items() if k != "tool_call_id"}
-                ),
-            }
-            if thought_signature:
-                tool_message["thought_signature"] = thought_signature
-            return result, tool_message
-
         if func_name == "edit_code":
             try:
                 editable = extract_editable_code(Path(self.file_path).read_text(encoding="utf-8"))
             except Exception:
                 editable = None
-            if editable is not None and editable.strip() == "":
+            if (
+                func_args.get("old_string") == ""
+                and editable is not None
+                and editable.strip() != ""
+            ):
                 result = ToolResult(
                     error=(
-                        "Editable code section is empty. Use write_code to create the initial "
+                        "old_string cannot be empty unless the editable code section is empty. "
+                        "Call read_code to copy exact current text and retry."
+                    ),
+                    tool_call_id=tool_id,
+                )
+                tool_message = {
+                    "role": "tool",
+                    "tool_call_id": tool_id,
+                    "name": func_name,
+                    "content": json.dumps(
+                        {k: v for k, v in result.to_dict().items() if k != "tool_call_id"}
+                    ),
+                }
+                if thought_signature:
+                    tool_message["thought_signature"] = thought_signature
+                return result, tool_message
+            if (
+                editable is not None
+                and editable.strip() == ""
+                and func_args.get("old_string") != ""
+            ):
+                result = ToolResult(
+                    error=(
+                        "Editable code section is empty. Initialize it with edit_code using "
+                        'old_string="" and new_string containing the initial '
                         "build_object_model() and run_tests() implementation."
                     ),
                     tool_call_id=tool_id,
@@ -563,9 +577,7 @@ class ArticraftAgent:
                 errors = exc.errors()
                 missing = [err["loc"][0] for err in errors if err["type"] == "missing"]
                 invalid = [
-                    f"{err['loc'][0]}: {err['msg']}"
-                    for err in errors
-                    if err["type"] != "missing"
+                    f"{err['loc'][0]}: {err['msg']}" for err in errors if err["type"] != "missing"
                 ]
 
                 parts = [f"Invalid parameters for {func_name}."]
@@ -698,8 +710,7 @@ class ArticraftAgent:
 
             assistant_message = self._build_assistant_message(response)
             has_assistant_payload = any(
-                key in assistant_message
-                for key in ("content", "tool_calls", "thought_summary")
+                key in assistant_message for key in ("content", "tool_calls", "thought_summary")
             )
             if has_assistant_payload:
                 conversation.append(assistant_message)
@@ -722,9 +733,7 @@ class ArticraftAgent:
             if isinstance(thinking, str) and thinking.strip():
                 self.display.add_thinking_summary(thinking)
 
-            is_empty_response = (
-                not has_assistant_payload and not tool_calls and not text.strip()
-            )
+            is_empty_response = not has_assistant_payload and not tool_calls and not text.strip()
             if is_empty_response:
                 if had_successful_compile and isinstance(last_successful_urdf_xml, str):
                     logger.info("Empty response after successful compile; terminating run.")

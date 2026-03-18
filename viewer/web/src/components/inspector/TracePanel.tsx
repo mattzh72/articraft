@@ -257,51 +257,56 @@ export function TracePanel({ cost, traceText }: TracePanelProps): JSX.Element | 
   };
 
   return (
-    <div className="space-y-2.5">
-      <div>
-        <p className="mb-1.5 text-[10px] font-medium uppercase tracking-[0.04em] text-[#aaa]">Agent Trace</p>
-        <div className="grid grid-cols-2 gap-px overflow-hidden rounded-sm border border-[#e8e8e8] bg-[#e8e8e8]">
-          <div className="bg-white px-2.5 py-[7px]">
-            <dt className="text-[10px] font-medium uppercase tracking-[0.04em] text-[#aaa]">Total Cost</dt>
-            <dd className="mt-px text-[12px] text-[#1e1e1e]">{formatUsd(totalCosts?.total)}</dd>
+    <div className="space-y-4">
+      {/* Summary metrics */}
+      <section>
+        <div className="flex items-center gap-2 pb-2">
+          <span className="text-[10px] font-medium uppercase tracking-[0.05em] text-[var(--text-tertiary)]">Agent Trace</span>
+          <div className="h-px flex-1 bg-[var(--border-subtle)]" />
+        </div>
+        <div className="space-y-0">
+          <div className="prop-row">
+            <span className="prop-label">Total Cost</span>
+            <span className="prop-value font-mono">{formatUsd(totalCosts?.total)}</span>
           </div>
-          <div className="bg-white px-2.5 py-[7px]">
-            <dt className="text-[10px] font-medium uppercase tracking-[0.04em] text-[#aaa]">Total Tokens</dt>
-            <dd className="mt-px text-[12px] text-[#1e1e1e]">{formatCount(totalTokens?.total_tokens)}</dd>
+          <div className="prop-row">
+            <span className="prop-label">Total Tokens</span>
+            <span className="prop-value font-mono">{formatCount(totalTokens?.total_tokens)}</span>
           </div>
-          <div className="bg-white px-2.5 py-[7px]">
-            <dt className="text-[10px] font-medium uppercase tracking-[0.04em] text-[#aaa]">Turns</dt>
-            <dd className="mt-px text-[12px] text-[#1e1e1e]">{turns.length}</dd>
+          <div className="prop-row">
+            <span className="prop-label">Turns</span>
+            <span className="prop-value font-mono">{turns.length}</span>
           </div>
-          <div className="bg-white px-2.5 py-[7px]">
-            <dt className="text-[10px] font-medium uppercase tracking-[0.04em] text-[#aaa]">Model</dt>
-            <dd className="mt-px break-all text-[12px] text-[#1e1e1e]">{modelId ?? "--"}</dd>
+          <div className="prop-row">
+            <span className="prop-label">Model</span>
+            <span className="prop-value font-mono text-[10px]">{modelId ?? "--"}</span>
           </div>
         </div>
-      </div>
+      </section>
 
-      <div className="space-y-2">
+      {/* Turn-by-turn */}
+      <div className="space-y-1.5">
         {turns.map((turn) => {
           const turnTokens = asRecord(turn.cost?.tokens);
           const turnCosts = asRecord(turn.cost?.costs_usd);
           const isOpen = openTurns.has(turn.index);
 
           return (
-            <div key={turn.index} className="overflow-hidden rounded-sm border border-[#e8e8e8] bg-white">
+            <div key={turn.index} className="overflow-hidden rounded-lg border border-[var(--border-default)]">
               <button
                 type="button"
                 onClick={() => toggleTurn(turn.index)}
-                className="flex w-full items-start justify-between gap-3 bg-[#fafafa] px-2.5 py-2 text-left transition-colors hover:bg-[#f6f6f6]"
+                className="flex w-full items-start justify-between gap-2 bg-[var(--surface-1)] px-3 py-2.5 text-left transition-colors duration-100 hover:bg-[var(--surface-2)]"
                 aria-expanded={isOpen}
               >
                 <div className="min-w-0 flex-1">
                   <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
-                    <p className="font-mono text-[11px] text-[#1e1e1e]">Turn {turn.index}</p>
-                    <p className="text-[10px] text-[#999]">
+                    <p className="font-mono text-[11px] text-[var(--text-primary)]">Turn {turn.index}</p>
+                    <p className="text-[10px] text-[var(--text-tertiary)]">
                       {turn.events.length > 0 ? `${turn.events.length} event${turn.events.length === 1 ? "" : "s"}` : "No events"}
                     </p>
                   </div>
-                  <p className="mt-1 pr-2 text-[11px] leading-[1.45] text-[#666]">
+                  <p className="mt-1 pr-2 text-[11px] leading-[1.45] text-[var(--text-secondary)]">
                     {turnSummary(turn)}
                   </p>
                 </div>
@@ -309,24 +314,24 @@ export function TracePanel({ cost, traceText }: TracePanelProps): JSX.Element | 
                   <Badge variant="success">{formatUsd(turnCosts?.total)}</Badge>
                   <Badge variant="secondary">{`${formatCount(turnTokens?.total_tokens)} tok`}</Badge>
                   <ChevronDown
-                    className={`mt-[1px] size-3.5 text-[#999] transition-transform ${isOpen ? "rotate-180" : ""}`}
+                    className={`mt-[1px] size-3 text-[var(--text-tertiary)] transition-transform duration-150 ${isOpen ? "rotate-180" : ""}`}
                   />
                 </div>
               </button>
 
               {isOpen ? (
-                <div className="space-y-2 border-t border-[#efefef] px-2.5 py-2.5">
+                <div className="space-y-1.5 border-t border-[var(--border-subtle)] px-3 py-3">
                   {turn.events.length > 0 ? (
                     turn.events.map((event, eventIndex) => {
                       const body = renderEventBody(event);
                       return (
-                        <div key={`${turn.index}-${eventIndex}`} className="rounded-sm border border-[#ededed] bg-[#fcfcfc] px-2.5 py-2">
+                        <div key={`${turn.index}-${eventIndex}`} className="rounded-lg bg-[var(--surface-1)] px-3 py-2">
                           <div className="flex flex-wrap items-center gap-2">
                             <Badge variant={messageVariant(event.role)}>{event.role}</Badge>
-                            <p className="text-[11px] text-[#1e1e1e]">{renderEventTitle(event)}</p>
+                            <p className="text-[11px] text-[var(--text-primary)]">{renderEventTitle(event)}</p>
                           </div>
                           {body ? (
-                            <pre className="mt-1.5 overflow-x-auto whitespace-pre-wrap break-words font-mono text-[10px] leading-[1.55] text-[#666]">
+                            <pre className="mt-1.5 overflow-x-auto whitespace-pre-wrap break-words font-mono text-[10px] leading-[1.55] text-[var(--text-secondary)]">
                               {body}
                             </pre>
                           ) : null}
@@ -334,7 +339,7 @@ export function TracePanel({ cost, traceText }: TracePanelProps): JSX.Element | 
                       );
                     })
                   ) : (
-                    <div className="rounded-sm border border-dashed border-[#e4e4e4] bg-[#fcfcfc] px-2.5 py-2 text-[10px] text-[#999]">
+                    <div className="py-2 text-center text-[10px] text-[var(--text-quaternary)]">
                       Trace unavailable for this turn.
                     </div>
                   )}

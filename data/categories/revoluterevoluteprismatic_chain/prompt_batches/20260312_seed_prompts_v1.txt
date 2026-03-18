@@ -1,0 +1,2 @@
+A compact bench-mounted manipulator with two serial rotary joints followed by a telescoping end slide, aluminum link plates, exposed bearing housings, and simple CAD-like geometry.
+An industrial inspection arm with a rotary shoulder, rotary elbow, and prismatic tool extension, built from box-section links and linear guide hardware.

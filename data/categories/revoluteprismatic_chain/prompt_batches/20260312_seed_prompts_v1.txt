@@ -1,0 +1,2 @@
+A hinged work light with one base tilt joint and one telescoping extension segment on the lamp arm.
+A pivoting inspection arm mounted on one revolute base hinge followed by a single linear extension stage.

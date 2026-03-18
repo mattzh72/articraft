@@ -86,6 +86,26 @@ def run_tests() -> TestReport:
     return ctx.report()
 ```
 
+Joint-limit rules are the same as the base SDK:
+
+- `ArticulationType.REVOLUTE` and `ArticulationType.PRISMATIC` require `MotionLimits` with `effort`, `velocity`, `lower`, and `upper`.
+- `ArticulationType.CONTINUOUS` requires `MotionLimits(effort=..., velocity=...)` and must not set `lower` or `upper`.
+- `ArticulationType.FIXED` and `ArticulationType.FLOATING` should not set `motion_limits`.
+
+Example continuous articulation:
+
+```python
+model.articulation(
+    "base_to_pan_head",
+    ArticulationType.CONTINUOUS,
+    parent="base",
+    child="pan_head",
+    origin=Origin(xyz=(0.0, 0.0, 0.4)),
+    axis=(0.0, 0.0, 1.0),
+    motion_limits=MotionLimits(effort=6.0, velocity=1.2),
+)
+```
+
 ## Units
 
 CadQuery is unitless. For `sdk_hybrid`, keep the same unit system as the rest of the repository: meters and radians.
