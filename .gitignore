@@ -18,6 +18,8 @@ downloads/
 eggs/
 .eggs/
 lib/
+!viewer/web/src/lib/
+!viewer/web/src/lib/**
 lib64/
 parts/
 sdist/
