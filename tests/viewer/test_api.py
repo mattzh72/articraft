@@ -576,6 +576,86 @@ def test_viewer_api_ensures_record_assets_on_demand(
     assert provenance["materialization"]["fingerprint_inputs"]["model_urdf_sha256"]
 
 
+def test_viewer_api_serves_canonical_assets_when_legacy_paths_exist(tmp_path: Path) -> None:
+    repo = StorageRepo(tmp_path)
+    repo.ensure_layout()
+    record_store = RecordStore(repo)
+
+    record = Record(
+        schema_version=1,
+        record_id="rec_shadowed_001",
+        created_at="2026-03-19T10:00:00Z",
+        updated_at="2026-03-19T10:00:00Z",
+        rating=None,
+        kind="generated_model",
+        prompt_kind="single_prompt",
+        category_slug="hinges",
+        source=SourceRef(run_id="run_shadowed_001"),
+        sdk_package="sdk",
+        provider="openai",
+        model_id="gpt-5.4",
+        display=DisplayMetadata(
+            title="Shadowed assets model",
+            prompt_preview="record with both canonical and legacy asset paths",
+        ),
+        artifacts=RecordArtifacts(
+            prompt_txt="prompt.txt",
+            prompt_series_json=None,
+            model_py="model.py",
+            model_urdf="model.urdf",
+            compile_report_json="compile_report.json",
+            provenance_json="provenance.json",
+            cost_json=None,
+        ),
+        collections=["workbench"],
+    )
+    record_store.write_record(record)
+    record_dir = repo.layout.record_dir("rec_shadowed_001")
+    (record_dir / "prompt.txt").write_text("shadowed assets", encoding="utf-8")
+    (record_dir / "model.py").write_text("from __future__ import annotations\n", encoding="utf-8")
+    (record_dir / "model.urdf").write_text(
+        "<robot name='shadowed'><link name='base'><visual><geometry><mesh filename='meshes/part.obj'/></geometry></visual></link></robot>",
+        encoding="utf-8",
+    )
+    repo.write_json(
+        record_dir / "compile_report.json",
+        {
+            "schema_version": 1,
+            "record_id": "rec_shadowed_001",
+            "status": "success",
+            "urdf_path": "model.urdf",
+            "warnings": [],
+            "checks_run": ["compile_urdf"],
+            "metrics": {},
+        },
+    )
+    repo.write_json(
+        record_dir / "provenance.json",
+        {
+            "schema_version": 1,
+            "record_id": "rec_shadowed_001",
+            "materialization": {
+                "fingerprint_inputs": {
+                    "model_py_sha256": None,
+                    "model_urdf_sha256": None,
+                }
+            },
+        },
+    )
+    legacy_meshes_dir = record_dir / "meshes"
+    legacy_meshes_dir.mkdir(parents=True, exist_ok=True)
+    (legacy_meshes_dir / "part.obj").write_text("legacy mesh\n", encoding="utf-8")
+    canonical_meshes_dir = repo.layout.record_asset_meshes_dir("rec_shadowed_001")
+    canonical_meshes_dir.mkdir(parents=True, exist_ok=True)
+    (canonical_meshes_dir / "part.obj").write_text("canonical mesh\n", encoding="utf-8")
+
+    client = TestClient(create_app(repo_root=tmp_path))
+
+    mesh_response = client.get("/api/records/rec_shadowed_001/files/meshes/part.obj")
+    assert mesh_response.status_code == 200
+    assert mesh_response.text == "canonical mesh\n"
+
+
 def test_viewer_api_rebuilds_missing_assets_even_with_successful_urdf(
     tmp_path: Path,
     monkeypatch,
@@ -678,3 +758,97 @@ def test_viewer_api_rebuilds_missing_assets_even_with_successful_urdf(
     assert mesh_response.status_code == 200
     assert "v 1 0 0" in mesh_response.text
     assert compile_calls == [record_dir / "model.py"]
+
+
+def test_viewer_api_migrates_legacy_record_root_assets_without_recompile(
+    tmp_path: Path,
+    monkeypatch,
+) -> None:
+    repo = StorageRepo(tmp_path)
+    repo.ensure_layout()
+    record_store = RecordStore(repo)
+
+    record = Record(
+        schema_version=1,
+        record_id="rec_legacy_assets_001",
+        created_at="2026-03-19T10:00:00Z",
+        updated_at="2026-03-19T10:00:00Z",
+        rating=None,
+        kind="generated_model",
+        prompt_kind="single_prompt",
+        category_slug="hinges",
+        source=SourceRef(run_id="run_legacy_assets_001"),
+        sdk_package="sdk",
+        provider="openai",
+        model_id="gpt-5.4",
+        display=DisplayMetadata(
+            title="Legacy assets model",
+            prompt_preview="record with only legacy record-root meshes",
+        ),
+        artifacts=RecordArtifacts(
+            prompt_txt="prompt.txt",
+            prompt_series_json=None,
+            model_py="model.py",
+            model_urdf="model.urdf",
+            compile_report_json="compile_report.json",
+            provenance_json="provenance.json",
+            cost_json=None,
+        ),
+        collections=["workbench"],
+    )
+    record_store.write_record(record)
+    record_dir = repo.layout.record_dir("rec_legacy_assets_001")
+    (record_dir / "prompt.txt").write_text("legacy assets", encoding="utf-8")
+    (record_dir / "model.py").write_text("from __future__ import annotations\n", encoding="utf-8")
+    (record_dir / "model.urdf").write_text(
+        "<robot name='legacy'><link name='base'><visual><geometry><mesh filename='meshes/part.obj'/></geometry></visual></link></robot>",
+        encoding="utf-8",
+    )
+    repo.write_json(
+        record_dir / "compile_report.json",
+        {
+            "schema_version": 1,
+            "record_id": "rec_legacy_assets_001",
+            "status": "success",
+            "urdf_path": "model.urdf",
+            "warnings": [],
+            "checks_run": ["compile_urdf"],
+            "metrics": {},
+        },
+    )
+    repo.write_json(
+        record_dir / "provenance.json",
+        {
+            "schema_version": 1,
+            "record_id": "rec_legacy_assets_001",
+            "materialization": {
+                "fingerprint_inputs": {
+                    "model_py_sha256": None,
+                    "model_urdf_sha256": None,
+                }
+            },
+        },
+    )
+    legacy_meshes_dir = record_dir / "meshes"
+    legacy_meshes_dir.mkdir(parents=True, exist_ok=True)
+    (legacy_meshes_dir / "part.obj").write_text("legacy mesh\n", encoding="utf-8")
+
+    compile_calls: list[Path] = []
+
+    def fake_compile(script_path: Path, *, sdk_package: str = "sdk") -> SimpleNamespace:
+        compile_calls.append(script_path)
+        return SimpleNamespace(urdf_xml="", warnings=[])
+
+    monkeypatch.setattr(
+        "agent.compiler.compile_urdf_report_maybe_timeout",
+        fake_compile,
+    )
+
+    client = TestClient(create_app(repo_root=tmp_path))
+
+    mesh_response = client.get("/api/records/rec_legacy_assets_001/files/meshes/part.obj")
+    assert mesh_response.status_code == 200
+    assert mesh_response.text == "legacy mesh\n"
+    assert compile_calls == []
+    assert not legacy_meshes_dir.exists()
+    assert (repo.layout.record_asset_meshes_dir("rec_legacy_assets_001") / "part.obj").exists()

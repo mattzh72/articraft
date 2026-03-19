@@ -116,9 +116,7 @@ def create_app(*, repo_root: Path | None = None) -> FastAPI:
             raise HTTPException(status_code=400, detail="Invalid file path")
 
         direct_target = (record_dir / requested_path).resolve()
-        if direct_target.exists():
-            target = direct_target
-        elif requested_path.parts and requested_path.parts[0] in {"meshes", "glb", "viewer"}:
+        if requested_path.parts and requested_path.parts[0] in {"meshes", "glb", "viewer"}:
             target = (record_dir / "assets" / requested_path).resolve()
         else:
             target = direct_target

@@ -355,8 +355,11 @@ export default function ViewerShell(): JSX.Element {
     }
     return findRecordInBootstrap(bootstrap, selection.recordId);
   }, [bootstrap, selection]);
-  const assetRevisionKey =
-    selection?.kind === "staging" ? selectedStagingEntry?.checkpoint_updated_at ?? null : null;
+  const assetRevisionKey = selection
+    ? selection.kind === "staging"
+      ? selectedStagingEntry?.checkpoint_updated_at ?? selectedStagingEntry?.updated_at ?? null
+      : selectedRecord?.updated_at ?? null
+    : null;
   const selectionKey = selection
     ? selection.kind === "record"
       ? selection.recordId

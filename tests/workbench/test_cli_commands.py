@@ -117,6 +117,61 @@ def test_workbench_rerun_record_command_accepts_legacy_sdk_docs_mode(
     assert "search_index=" in captured
 
 
+def test_workbench_rerun_record_command_removes_legacy_record_root_assets(
+    fake_agent: None,
+    tmp_path: Path,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    repo_root = tmp_path
+    exit_code = asyncio.run(
+        runner.run_from_input(
+            "make a remote turret",
+            prompt_text="make a remote turret",
+            display_prompt="make a remote turret",
+            repo_root=repo_root,
+            image_path=None,
+            provider="openai",
+            thinking_level="high",
+            max_turns=30,
+            system_prompt_path="designer_system_prompt.txt",
+            sdk_package="sdk",
+            sdk_docs_mode="full",
+            label="turret rerun",
+            tags=["turret"],
+        )
+    )
+    assert exit_code == 0
+    capsys.readouterr()
+
+    record_dir = next((repo_root / "data" / "records").iterdir())
+    legacy_meshes_dir = record_dir / "meshes"
+    legacy_glb_dir = record_dir / "glb"
+    legacy_viewer_dir = record_dir / "viewer"
+    legacy_meshes_dir.mkdir(parents=True, exist_ok=True)
+    legacy_glb_dir.mkdir(parents=True, exist_ok=True)
+    legacy_viewer_dir.mkdir(parents=True, exist_ok=True)
+    (legacy_meshes_dir / "stale.obj").write_text("# stale\n", encoding="utf-8")
+    (legacy_glb_dir / "stale.glb").write_bytes(b"stale")
+    (legacy_viewer_dir / "stale.json").write_text("{}", encoding="utf-8")
+
+    assert (
+        workbench_main(
+            [
+                "--repo-root",
+                str(repo_root),
+                "rerun-record",
+                str(record_dir),
+            ]
+        )
+        == 0
+    )
+
+    assert not legacy_meshes_dir.exists()
+    assert not legacy_glb_dir.exists()
+    assert not legacy_viewer_dir.exists()
+    assert (record_dir / "assets" / "meshes" / "part.obj").exists()
+
+
 def test_workbench_init_record_command(
     tmp_path: Path,
     capsys: pytest.CaptureFixture[str],

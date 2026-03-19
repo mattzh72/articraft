@@ -340,6 +340,10 @@ class ViewerStore:
         if not isinstance(record, dict):
             raise FileNotFoundError(f"Record not found: {record_id}")
 
+        # Legacy records may still have derived assets at the record root; move them
+        # into the canonical assets tree before deciding whether more work is needed.
+        self._normalize_derived_asset_dirs(record_id)
+
         model_path, urdf_path, compile_path, provenance_path = self._record_compile_paths(
             record_id,
             record,

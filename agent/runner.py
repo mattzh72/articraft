@@ -302,6 +302,11 @@ def _replace_tree_from_source(source: Path, destination: Path) -> None:
         shutil.copytree(source, destination)
 
 
+def _remove_tree_if_exists(path: Path) -> None:
+    if path.exists():
+        shutil.rmtree(path)
+
+
 def _first_string(value: Any, default: str) -> str:
     text = str(value or "").strip()
     return text or default
@@ -634,6 +639,8 @@ def _write_success_record(
     )
     if context.trace_dir.exists():
         shutil.rmtree(context.trace_dir)
+    for legacy_dir in ("meshes", "glb", "viewer"):
+        _remove_tree_if_exists(context.record_dir / legacy_dir)
     _replace_tree_from_source(
         context.staging_dir / "meshes",
         storage_repo.layout.record_asset_meshes_dir(context.record_id),
