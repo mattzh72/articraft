@@ -34,7 +34,7 @@ lint:
     uv run ruff check .
 
 smoke-tests:
-    find tests -name 'test_*.py' -type f | sort | xargs -I{} uv run python {}
+    uv run --group dev pytest -q
 
 wb prompt model_arg="model=gpt-5.4" thinking_arg="thinking=high":
     #!/usr/bin/env bash
@@ -142,6 +142,9 @@ dataset-delete-record record_path:
 
 search-index:
     uv run articraft-workbench --repo-root . rebuild-search-index
+
+rerun record:
+    uv run articraft-workbench --repo-root . rerun-record {{ quote(record) }}
 
 viewer mode="prod" api_host=host api_port=port:
     #!/usr/bin/env bash

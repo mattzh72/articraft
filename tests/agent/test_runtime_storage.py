@@ -138,6 +138,74 @@ def main() -> None:
 
             assert not (repo_root / "outputs").exists()
 
+            original_record = json.loads((record_dir / "record.json").read_text(encoding="utf-8"))
+            original_run_id = original_record["source"]["run_id"]
+            original_created_at = original_record["created_at"]
+
+            workbench_path = repo_root / "data" / "local" / "workbench.json"
+            workbench["entries"][0]["archived"] = True
+            workbench_path.write_text(json.dumps(workbench, indent=2) + "\n", encoding="utf-8")
+
+            (record_dir / "model.py").write_text("# stale\n", encoding="utf-8")
+            (record_dir / "cost.json").write_text('{"stale": true}\n', encoding="utf-8")
+            (record_dir / "traces" / "stale.txt").write_text("stale\n", encoding="utf-8")
+            stale_glb_dir = record_dir / "assets" / "glb"
+            stale_glb_dir.mkdir(parents=True, exist_ok=True)
+            (stale_glb_dir / "stale.glb").write_text("stale\n", encoding="utf-8")
+            stale_viewer_dir = record_dir / "assets" / "viewer"
+            stale_viewer_dir.mkdir(parents=True, exist_ok=True)
+            (stale_viewer_dir / "index.html").write_text("stale\n", encoding="utf-8")
+
+            rerun_exit_code = asyncio.run(
+                runner.rerun_record_in_place(
+                    repo_root=repo_root,
+                    record_id=record_dir.name,
+                )
+            )
+            assert rerun_exit_code == 0
+
+            record_dirs = [path for path in records_root.iterdir() if path.is_dir()]
+            assert [path.name for path in record_dirs] == [record_dir.name]
+            updated_record = json.loads((record_dir / "record.json").read_text(encoding="utf-8"))
+            assert updated_record["record_id"] == record_dir.name
+            assert updated_record["created_at"] == original_created_at
+            assert updated_record["source"]["run_id"] != original_run_id
+            assert (
+                (record_dir / "model.py")
+                .read_text(encoding="utf-8")
+                .startswith("from __future__ import annotations")
+            )
+            assert (
+                json.loads((record_dir / "cost.json").read_text(encoding="utf-8"))["total"][
+                    "costs_usd"
+                ]["total"]
+                == 0.123456
+            )
+            assert (record_dir / "traces" / "conversation.jsonl").exists()
+            assert not (record_dir / "traces" / "stale.txt").exists()
+            assert not (record_dir / "assets" / "glb").exists()
+            assert not (record_dir / "assets" / "viewer").exists()
+            assert (record_dir / "assets" / "meshes" / "part.obj").exists()
+
+            workbench = json.loads(workbench_path.read_text(encoding="utf-8"))
+            assert len(workbench["entries"]) == 1
+            assert workbench["entries"][0]["record_id"] == record_dir.name
+            assert workbench["entries"][0]["label"] == "gearbox try"
+            assert workbench["entries"][0]["tags"] == ["gear", "test"]
+            assert workbench["entries"][0]["archived"] is True
+
+            run_dirs = sorted(path for path in runs_root.iterdir() if path.is_dir())
+            assert len(run_dirs) == 2
+            latest_run_metadata = json.loads(
+                (run_dirs[-1] / "run.json").read_text(encoding="utf-8")
+            )
+            assert latest_run_metadata["status"] == "success"
+            latest_results = (
+                (run_dirs[-1] / "results.jsonl").read_text(encoding="utf-8").splitlines()
+            )
+            assert len(latest_results) == 1
+            assert json.loads(latest_results[0])["record_id"] == record_dir.name
+
         with TemporaryDirectory() as tmpdir:
             repo_root = Path(tmpdir)
             exit_code = asyncio.run(
@@ -193,6 +261,54 @@ def main() -> None:
             assert run_metadata["status"] == "success"
             assert run_metadata["collection"] == "dataset"
             assert run_metadata["run_mode"] == "dataset_single"
+
+            original_run_id = record["source"]["run_id"]
+            original_promoted_at = dataset_entry["promoted_at"]
+            (record_dir / "model.py").write_text("# stale dataset\n", encoding="utf-8")
+
+            rerun_exit_code = asyncio.run(
+                runner.rerun_record_in_place(
+                    repo_root=repo_root,
+                    record_id=record_dir.name,
+                )
+            )
+            assert rerun_exit_code == 0
+
+            record = json.loads((record_dir / "record.json").read_text(encoding="utf-8"))
+            assert record["record_id"] == record_dir.name
+            assert record["source"]["run_id"] != original_run_id
+            assert record["collections"] == ["dataset"]
+            assert record["category_slug"] == "crane_tower"
+            assert (
+                (record_dir / "model.py")
+                .read_text(encoding="utf-8")
+                .startswith("from __future__ import annotations")
+            )
+
+            dataset_entry = json.loads(
+                (record_dir / "dataset_entry.json").read_text(encoding="utf-8")
+            )
+            assert dataset_entry["dataset_id"] == "ds_crane_tower_0001"
+            assert dataset_entry["category_slug"] == "crane_tower"
+            assert dataset_entry["promoted_at"] == original_promoted_at
+
+            manifest = json.loads(
+                (repo_root / "data" / "cache" / "manifests" / "dataset.json").read_text(
+                    encoding="utf-8"
+                )
+            )
+            assert manifest["generated"] == [
+                {"name": "ds_crane_tower_0001", "record_id": record_dir.name}
+            ]
+
+            run_dirs = sorted(path for path in runs_root.iterdir() if path.is_dir())
+            assert len(run_dirs) == 2
+            latest_run_metadata = json.loads(
+                (run_dirs[-1] / "run.json").read_text(encoding="utf-8")
+            )
+            assert latest_run_metadata["status"] == "success"
+            assert latest_run_metadata["collection"] == "dataset"
+            assert latest_run_metadata["run_mode"] == "dataset_single"
     finally:
         runner.ArticraftAgent = original_agent
 

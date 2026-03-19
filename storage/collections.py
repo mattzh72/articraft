@@ -71,6 +71,60 @@ class CollectionStore:
         self.save_workbench(updated)
         return updated.to_dict()
 
+    def upsert_workbench_entry(
+        self,
+        *,
+        record_id: str,
+        added_at: str,
+        label: str | None = None,
+        tags: list[str] | None = None,
+        archived: bool = False,
+    ) -> dict:
+        current = self.ensure_workbench()
+        entries = list(current.get("entries", []))
+        updated_entries: list[WorkbenchEntry] = []
+        replaced = False
+        for entry in entries:
+            if str(entry.get("record_id", "")) == record_id:
+                updated_entries.append(
+                    WorkbenchEntry(
+                        record_id=record_id,
+                        added_at=added_at,
+                        label=label,
+                        tags=list(tags or []),
+                        archived=archived,
+                    )
+                )
+                replaced = True
+                continue
+            updated_entries.append(
+                WorkbenchEntry(
+                    record_id=str(entry["record_id"]),
+                    added_at=str(entry["added_at"]),
+                    label=entry.get("label"),
+                    tags=list(entry.get("tags", [])),
+                    archived=bool(entry.get("archived", False)),
+                )
+            )
+        if not replaced:
+            updated_entries.append(
+                WorkbenchEntry(
+                    record_id=record_id,
+                    added_at=added_at,
+                    label=label,
+                    tags=list(tags or []),
+                    archived=archived,
+                )
+            )
+        updated = WorkbenchCollection(
+            schema_version=int(current.get("schema_version", 1)),
+            collection="workbench",
+            updated_at=_utc_now(),
+            entries=updated_entries,
+        )
+        self.save_workbench(updated)
+        return updated.to_dict()
+
     def remove_workbench_entries(self, record_id: str) -> bool:
         current = self.load_workbench()
         if current is None:

@@ -56,6 +56,7 @@ from storage.models import (
 )
 from storage.models import (
     CompileWarning,
+    DerivedAssets,
     DisplayMetadata,
     EnvironmentSettings,
     GenerationSettings,
@@ -142,7 +143,7 @@ def _timestamp_token(now: datetime | None = None) -> str:
     current = now or datetime.now(timezone.utc)
     if current.tzinfo is None:
         current = current.replace(tzinfo=timezone.utc)
-    return current.astimezone(timezone.utc).strftime("%Y%m%d_%H%M%S")
+    return current.astimezone(timezone.utc).strftime("%Y%m%d_%H%M%S_%f")
 
 
 def _sha256_text(text: str) -> str:
@@ -227,6 +228,7 @@ def _build_single_run_context(
     repo_root: Path,
     prompt: str,
     storage_repo: StorageRepo,
+    record_id: str | None = None,
     now: datetime | None = None,
 ) -> SingleRunContext:
     created_at = _utc_now(now)
@@ -234,16 +236,16 @@ def _build_single_run_context(
     prompt_slug = _build_single_run_slug(prompt)[:48]
     digest = hashlib.sha1(prompt.encode("utf-8")).hexdigest()[:8]
     run_id = f"run_{token}_{digest}"
-    record_id = f"rec_{prompt_slug}_{token}_{digest}"
+    resolved_record_id = record_id or f"rec_{prompt_slug}_{token}_{digest}"
     run_dir = storage_repo.layout.run_dir(run_id)
-    staging_dir = storage_repo.layout.run_staging_dir(run_id) / record_id
+    staging_dir = storage_repo.layout.run_staging_dir(run_id) / resolved_record_id
     staging_dir.mkdir(parents=True, exist_ok=True)
-    record_dir = storage_repo.layout.record_dir(record_id)
+    record_dir = storage_repo.layout.record_dir(resolved_record_id)
     return SingleRunContext(
         repo_root=repo_root.resolve(),
         created_at=created_at,
         run_id=run_id,
-        record_id=record_id,
+        record_id=resolved_record_id,
         run_dir=run_dir,
         staging_dir=staging_dir,
         script_path=staging_dir / "model.py",
@@ -271,6 +273,142 @@ def _copytree_if_exists(source: Path, destination: Path) -> None:
     if destination.exists():
         shutil.rmtree(destination)
     shutil.copytree(source, destination)
+
+
+def _replace_file_from_source(source: Path, destination: Path) -> None:
+    if destination.exists():
+        destination.unlink()
+    if source.exists():
+        destination.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(source, destination)
+
+
+def _replace_tree_from_source(source: Path, destination: Path) -> None:
+    if destination.exists():
+        shutil.rmtree(destination)
+    if source.exists():
+        destination.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copytree(source, destination)
+
+
+def _first_string(value: Any, default: str) -> str:
+    text = str(value or "").strip()
+    return text or default
+
+
+def _optional_string(value: Any) -> str | None:
+    text = str(value or "").strip()
+    return text or None
+
+
+def _normalize_prompt_kind(value: Any) -> str:
+    prompt_kind = str(value or "single_prompt")
+    if prompt_kind not in {"single_prompt", "prompt_series"}:
+        return "single_prompt"
+    return prompt_kind
+
+
+def _normalize_collection_names(values: Any, fallback: str) -> list[str]:
+    normalized: list[str] = []
+    if isinstance(values, list):
+        for value in values:
+            text = str(value or "").strip()
+            if text in {"dataset", "workbench"} and text not in normalized:
+                normalized.append(text)
+    if not normalized:
+        normalized.append(fallback)
+    return normalized
+
+
+def _build_record_display(
+    *,
+    existing_record: dict | None,
+    display_prompt: str,
+    label: str | None,
+) -> DisplayMetadata:
+    if isinstance(existing_record, dict):
+        existing_display = existing_record.get("display")
+        if isinstance(existing_display, dict):
+            return DisplayMetadata(
+                title=_first_string(
+                    existing_display.get("title"), _display_title(display_prompt, label=label)
+                ),
+                prompt_preview=_first_string(
+                    existing_display.get("prompt_preview"),
+                    _prompt_preview(display_prompt),
+                ),
+            )
+    return DisplayMetadata(
+        title=_display_title(display_prompt, label=label),
+        prompt_preview=_prompt_preview(display_prompt),
+    )
+
+
+def _build_record_artifacts(
+    *,
+    existing_record: dict | None,
+    has_cost_file: bool,
+) -> RecordArtifacts:
+    existing_artifacts = (
+        existing_record.get("artifacts") if isinstance(existing_record, dict) else None
+    )
+    if not isinstance(existing_artifacts, dict):
+        existing_artifacts = {}
+    return RecordArtifacts(
+        prompt_txt=_optional_string(existing_artifacts.get("prompt_txt")) or "prompt.txt",
+        prompt_series_json=_optional_string(existing_artifacts.get("prompt_series_json")),
+        model_py=_first_string(existing_artifacts.get("model_py"), "model.py"),
+        model_urdf=_first_string(existing_artifacts.get("model_urdf"), "model.urdf"),
+        compile_report_json=_first_string(
+            existing_artifacts.get("compile_report_json"),
+            "compile_report.json",
+        ),
+        provenance_json=_first_string(existing_artifacts.get("provenance_json"), "provenance.json"),
+        cost_json="cost.json" if has_cost_file else None,
+        inputs_dir=_optional_string(existing_artifacts.get("inputs_dir")) or "inputs",
+        assets_dir=_optional_string(existing_artifacts.get("assets_dir")) or "assets",
+    )
+
+
+def _build_record_derived_assets(existing_record: dict | None) -> DerivedAssets:
+    existing_derived = (
+        existing_record.get("derived_assets") if isinstance(existing_record, dict) else None
+    )
+    if not isinstance(existing_derived, dict):
+        existing_derived = {}
+    materialization_status = str(existing_derived.get("materialization_status") or "missing")
+    if materialization_status not in {"missing", "available", "stale"}:
+        materialization_status = "missing"
+    return DerivedAssets(
+        assets_dir=_first_string(existing_derived.get("assets_dir"), "assets"),
+        materialization_status=materialization_status,
+    )
+
+
+def _resolve_input_image_for_record(
+    storage_repo: StorageRepo,
+    *,
+    record_id: str,
+    provider: str,
+) -> Path | None:
+    inputs_dir = storage_repo.layout.record_inputs_dir(record_id)
+    if not inputs_dir.exists():
+        return None
+    files = sorted(path for path in inputs_dir.iterdir() if path.is_file())
+    if not files:
+        return None
+    if len(files) > 1:
+        raise ValueError(f"Record {record_id} has multiple input files; rerun supports one image.")
+    return _resolve_image_path(str(files[0]), provider=provider)
+
+
+def _load_workbench_entry(collections: CollectionStore, *, record_id: str) -> dict | None:
+    workbench = collections.load_workbench() or {}
+    entries = workbench.get("entries", []) if isinstance(workbench, dict) else []
+    for entry in entries:
+        if isinstance(entry, dict) and str(entry.get("record_id") or "") == record_id:
+            return entry
+    return None
 
 
 def _write_success_record(
@@ -304,6 +442,9 @@ def _write_success_record(
     collection: str,
     category_slug: str | None,
     dataset_id: str | None,
+    existing_record: dict | None = None,
+    workbench_entry: dict | None = None,
+    dataset_entry: dict | None = None,
 ) -> Path:
     record_store.ensure_record_dirs(context.record_id)
     storage_repo.write_text(context.record_prompt_path, prompt_text)
@@ -313,18 +454,21 @@ def _write_success_record(
     if image_path is not None:
         record_store.copy_input_image(context.record_id, image_path)
 
-    _copy_if_exists(context.cost_path, context.record_dir / "cost.json")
-    _copytree_if_exists(context.trace_dir, storage_repo.layout.record_traces_dir(context.record_id))
+    _replace_file_from_source(context.cost_path, context.record_dir / "cost.json")
+    _replace_tree_from_source(
+        context.trace_dir,
+        storage_repo.layout.record_traces_dir(context.record_id),
+    )
     if context.trace_dir.exists():
         shutil.rmtree(context.trace_dir)
-    _copytree_if_exists(
+    _replace_tree_from_source(
         context.staging_dir / "meshes",
         storage_repo.layout.record_asset_meshes_dir(context.record_id),
     )
-    _copytree_if_exists(
+    _replace_tree_from_source(
         context.staging_dir / "glb", storage_repo.layout.record_asset_glb_dir(context.record_id)
     )
-    _copytree_if_exists(
+    _replace_tree_from_source(
         context.staging_dir / "viewer",
         storage_repo.layout.record_asset_viewer_dir(context.record_id),
     )
@@ -392,44 +536,76 @@ def _write_success_record(
     record = Record(
         schema_version=1,
         record_id=context.record_id,
-        created_at=context.created_at,
+        created_at=(
+            _first_string(existing_record.get("created_at"), context.created_at)
+            if isinstance(existing_record, dict)
+            else context.created_at
+        ),
         updated_at=_utc_now(),
-        rating=None,
-        kind="generated_model",
-        prompt_kind="single_prompt",
+        rating=(existing_record.get("rating") if isinstance(existing_record, dict) else None),
+        kind=(
+            _first_string(existing_record.get("kind"), "generated_model")
+            if isinstance(existing_record, dict)
+            else "generated_model"
+        ),
+        prompt_kind=(
+            _normalize_prompt_kind(existing_record.get("prompt_kind"))
+            if isinstance(existing_record, dict)
+            else "single_prompt"
+        ),
         category_slug=category_slug,
         source=SourceRef(run_id=context.run_id),
         sdk_package=sdk_package,
         provider=provider,
         model_id=model_id,
-        display=DisplayMetadata(
-            title=_display_title(display_prompt, label=label),
-            prompt_preview=_prompt_preview(display_prompt),
+        display=_build_record_display(
+            existing_record=existing_record,
+            display_prompt=display_prompt,
+            label=label,
         ),
-        artifacts=RecordArtifacts(
-            prompt_txt="prompt.txt",
-            prompt_series_json=None,
-            model_py="model.py",
-            model_urdf="model.urdf",
-            compile_report_json="compile_report.json",
-            provenance_json="provenance.json",
-            cost_json="cost.json" if (context.record_dir / "cost.json").exists() else None,
+        artifacts=_build_record_artifacts(
+            existing_record=existing_record,
+            has_cost_file=(context.record_dir / "cost.json").exists(),
         ),
         hashes=RecordHashes(
             prompt_sha256=prompt_sha,
             model_py_sha256=model_py_sha,
             model_urdf_sha256=model_urdf_sha,
         ),
-        collections=[collection],
+        derived_assets=_build_record_derived_assets(existing_record),
+        collections=(
+            _normalize_collection_names(existing_record.get("collections"), collection)
+            if isinstance(existing_record, dict)
+            else [collection]
+        ),
     )
     record_store.write_record(record)
-    if collection == "workbench":
+    if workbench_entry is not None:
+        collections.upsert_workbench_entry(
+            record_id=context.record_id,
+            added_at=_first_string(workbench_entry.get("added_at"), _utc_now()),
+            label=_optional_string(workbench_entry.get("label")),
+            tags=[
+                str(tag)
+                for tag in (
+                    workbench_entry.get("tags", []) if isinstance(workbench_entry, dict) else []
+                )
+            ],
+            archived=bool(workbench_entry.get("archived", False)),
+        )
+    elif collection == "workbench":
         collections.append_workbench_entry(
             record_id=context.record_id,
             added_at=_utc_now(),
             label=label,
             tags=tags,
         )
+    if dataset_entry is not None:
+        storage_repo.write_json(
+            storage_repo.layout.record_dataset_entry_path(context.record_id),
+            dataset_entry,
+        )
+        datasets.write_dataset_manifest()
     elif collection == "dataset":
         if not dataset_id:
             raise ValueError("dataset_id is required when collection=dataset")
@@ -440,7 +616,7 @@ def _write_success_record(
             promoted_at=_utc_now(),
         )
         datasets.write_dataset_manifest()
-    else:
+    elif collection != "workbench":
         raise ValueError(f"Unsupported collection: {collection}")
     return context.record_dir
 
@@ -828,6 +1004,385 @@ async def run_from_input(
     logger.info("Wrote record to %s", record_dir)
     logger.info("Wrote URDF to %s", context.record_urdf_path)
 
+    return 0
+
+
+async def rerun_record_in_place(
+    *,
+    repo_root: Path,
+    record_id: str,
+    display_enabled: Optional[bool] = None,
+) -> int:
+    resolved_repo_root = repo_root.resolve()
+    storage_repo = StorageRepo(resolved_repo_root)
+    storage_repo.ensure_layout()
+    record_store = RecordStore(storage_repo)
+    collections = CollectionStore(storage_repo)
+    datasets = DatasetStore(storage_repo)
+    run_store = RunStore(storage_repo)
+
+    existing_record = record_store.load_record(record_id)
+    if not isinstance(existing_record, dict):
+        logger.error("Record not found: %s", record_id)
+        return 1
+
+    prompt_path = storage_repo.layout.record_dir(record_id) / "prompt.txt"
+    if not prompt_path.exists():
+        logger.error("Missing prompt.txt for record %s", record_id)
+        return 1
+    prompt_text = prompt_path.read_text(encoding="utf-8")
+
+    provenance_path = storage_repo.layout.record_dir(record_id) / "provenance.json"
+    provenance = storage_repo.read_json(provenance_path)
+    if not isinstance(provenance, dict):
+        logger.error("Missing provenance.json for record %s", record_id)
+        return 1
+
+    generation = provenance.get("generation")
+    prompting = provenance.get("prompting")
+    sdk = provenance.get("sdk")
+    if (
+        not isinstance(generation, dict)
+        or not isinstance(prompting, dict)
+        or not isinstance(sdk, dict)
+    ):
+        logger.error("Invalid provenance.json for record %s", record_id)
+        return 1
+
+    provider = _first_string(generation.get("provider"), existing_record.get("provider"))
+    model_id = _optional_string(generation.get("model_id"))
+    openai_transport = _first_string(generation.get("openai_transport"), "http")
+    thinking_level = _first_string(generation.get("thinking_level"), "high")
+    max_turns = int(generation.get("max_turns") or 30)
+    openai_reasoning_summary = (
+        _optional_string(generation.get("openai_reasoning_summary")) or "auto"
+    )
+    system_prompt_path = _first_string(
+        prompting.get("system_prompt_file"),
+        "designer_system_prompt.txt",
+    )
+    sdk_docs_mode = _first_string(prompting.get("sdk_docs_mode"), "full")
+    sdk_package = _first_string(sdk.get("sdk_package"), existing_record.get("sdk_package"))
+
+    try:
+        image_path = _resolve_input_image_for_record(
+            storage_repo,
+            record_id=record_id,
+            provider=provider,
+        )
+    except Exception as exc:
+        logger.error("Failed to load input image for %s: %s", record_id, exc)
+        return 1
+
+    user_content = _build_initial_user_content(prompt_text, image_path=image_path)
+    workbench_entry = _load_workbench_entry(collections, record_id=record_id)
+    dataset_entry = datasets.load_entry(record_id)
+
+    collections_value = existing_record.get("collections")
+    normalized_collections = _normalize_collection_names(
+        collections_value,
+        "dataset" if isinstance(dataset_entry, dict) else "workbench",
+    )
+    collection = normalized_collections[0]
+    if collection not in {"dataset", "workbench"}:
+        logger.error("Unsupported collection for record %s: %s", record_id, collection)
+        return 1
+    run_mode = "dataset_single" if collection == "dataset" else "workbench_single"
+    category_slug = _optional_string(existing_record.get("category_slug"))
+    if isinstance(dataset_entry, dict):
+        category_slug = _optional_string(dataset_entry.get("category_slug")) or category_slug
+    dataset_id = (
+        _optional_string(dataset_entry.get("dataset_id"))
+        if isinstance(dataset_entry, dict)
+        else None
+    )
+
+    context = _build_single_run_context(
+        repo_root=resolved_repo_root,
+        prompt=prompt_text,
+        storage_repo=storage_repo,
+        record_id=record_id,
+    )
+    selected_model_id = _default_model_id(
+        provider=provider,
+        model_id=model_id,
+        thinking_level=thinking_level,
+        openai_transport=openai_transport,
+        openai_reasoning_summary=openai_reasoning_summary,
+    )
+    run_store.write_run(
+        RunRecord(
+            schema_version=1,
+            run_id=context.run_id,
+            run_mode=run_mode,
+            collection=collection,
+            created_at=context.created_at,
+            updated_at=context.created_at,
+            provider=provider,
+            model_id=selected_model_id,
+            sdk_package=sdk_package,
+            status="running",
+            category_slug=category_slug,
+            prompt_count=1,
+        )
+    )
+
+    actual_model_id = selected_model_id
+    loaded_system_prompt_path = resolve_system_prompt_path(
+        system_prompt_path,
+        provider=provider,
+        sdk_package=sdk_package,
+        repo_root=resolved_repo_root,
+    )
+    try:
+        async with ArticraftAgent(
+            file_path=str(context.script_path),
+            provider=provider,
+            model_id=model_id,
+            openai_transport=openai_transport,
+            thinking_level=thinking_level,
+            max_turns=max_turns,
+            system_prompt_path=system_prompt_path,
+            trace_dir=str(context.trace_dir),
+            display_enabled=display_enabled,
+            checkpoint_urdf_path=context.checkpoint_urdf_path,
+            sdk_package=sdk_package,
+            sdk_docs_mode=sdk_docs_mode,
+            openai_reasoning_summary=openai_reasoning_summary,
+        ) as agent:
+            logger.info("Using system prompt: %s", agent.loaded_system_prompt_path)
+            loaded_system_prompt_path = Path(agent.loaded_system_prompt_path)
+            result = await agent.run(user_content)
+            actual_model_id = agent.llm.model_id
+    except Exception as exc:
+        finished_at = _utc_now()
+        run_store.write_run(
+            RunRecord(
+                schema_version=1,
+                run_id=context.run_id,
+                run_mode=run_mode,
+                collection=collection,
+                created_at=context.created_at,
+                updated_at=finished_at,
+                provider=provider,
+                model_id=actual_model_id,
+                sdk_package=sdk_package,
+                status="failed",
+                category_slug=category_slug,
+                prompt_count=1,
+            )
+        )
+        run_store.append_result(
+            context.run_id,
+            {
+                "record_id": context.record_id,
+                "status": "failed",
+                "message": f"Runtime error: {exc}",
+                "staging_dir": _relative_to_repo(context.staging_dir, resolved_repo_root),
+            },
+        )
+        logger.exception("Agent runtime failed")
+        return 2
+
+    if not result.success:
+        finished_at = _utc_now()
+        run_store.write_run(
+            RunRecord(
+                schema_version=1,
+                run_id=context.run_id,
+                run_mode=run_mode,
+                collection=collection,
+                created_at=context.created_at,
+                updated_at=finished_at,
+                provider=provider,
+                model_id=actual_model_id,
+                sdk_package=sdk_package,
+                status="failed",
+                category_slug=category_slug,
+                prompt_count=1,
+            )
+        )
+        run_store.append_result(
+            context.run_id,
+            {
+                "record_id": context.record_id,
+                "status": "failed",
+                "message": result.message,
+                "turn_count": result.turn_count,
+                "tool_call_count": result.tool_call_count,
+                "compile_attempt_count": result.compile_attempt_count,
+                "staging_dir": _relative_to_repo(context.staging_dir, resolved_repo_root),
+            },
+        )
+        logger.error("Agent failed: %s", result.message)
+        return 2
+
+    if result.usage:
+        logger.info("Total tokens: %s", result.usage)
+        try:
+            if context.cost_path.exists():
+                with open(context.cost_path, encoding="utf-8") as file:
+                    cost_data = json.load(file)
+                    total_cost = cost_data.get("total", {}).get("costs_usd", {}).get("total", 0.0)
+                    logger.info("Total cost: $%.6f", total_cost)
+        except Exception:
+            pass
+
+    if result.urdf_xml is not None:
+        urdf_xml = result.urdf_xml
+        compile_warnings = list(result.compile_warnings)
+    else:
+        try:
+            report = await asyncio.to_thread(
+                compile_urdf_report_maybe_timeout,
+                context.script_path,
+                sdk_package=sdk_package,
+            )
+            for warning in report.warnings:
+                logger.warning("%s", warning)
+            urdf_xml = report.urdf_xml
+            compile_warnings = list(report.warnings)
+        except Exception as exc:
+            finished_at = _utc_now()
+            run_store.write_run(
+                RunRecord(
+                    schema_version=1,
+                    run_id=context.run_id,
+                    run_mode=run_mode,
+                    collection=collection,
+                    created_at=context.created_at,
+                    updated_at=finished_at,
+                    provider=provider,
+                    model_id=actual_model_id,
+                    sdk_package=sdk_package,
+                    status="failed",
+                    category_slug=category_slug,
+                    prompt_count=1,
+                )
+            )
+            run_store.append_result(
+                context.run_id,
+                {
+                    "record_id": context.record_id,
+                    "status": "failed",
+                    "message": f"Failed to compile URDF: {exc}",
+                    "turn_count": result.turn_count,
+                    "tool_call_count": result.tool_call_count,
+                    "compile_attempt_count": result.compile_attempt_count,
+                    "staging_dir": _relative_to_repo(context.staging_dir, resolved_repo_root),
+                },
+            )
+            logger.error("Failed to compile URDF: %s", exc)
+            return 3
+    final_code = result.final_code
+    if final_code is None:
+        final_code = context.script_path.read_text(encoding="utf-8")
+
+    try:
+        record_dir = _write_success_record(
+            repo_root=resolved_repo_root,
+            storage_repo=storage_repo,
+            record_store=record_store,
+            collections=collections,
+            datasets=datasets,
+            context=context,
+            prompt_text=prompt_text,
+            display_prompt=prompt_text,
+            image_path=image_path,
+            provider=provider,
+            model_id=actual_model_id,
+            openai_transport=openai_transport,
+            thinking_level=thinking_level,
+            max_turns=max_turns,
+            system_prompt_path=loaded_system_prompt_path,
+            sdk_package=sdk_package,
+            sdk_docs_mode=sdk_docs_mode,
+            openai_reasoning_summary=openai_reasoning_summary,
+            final_code=final_code,
+            urdf_xml=urdf_xml,
+            compile_warnings=compile_warnings,
+            turn_count=result.turn_count,
+            tool_call_count=result.tool_call_count,
+            compile_attempt_count=result.compile_attempt_count,
+            label=_optional_string(workbench_entry.get("label"))
+            if isinstance(workbench_entry, dict)
+            else None,
+            tags=[
+                str(tag)
+                for tag in (
+                    workbench_entry.get("tags", []) if isinstance(workbench_entry, dict) else []
+                )
+            ],
+            collection=collection,
+            category_slug=category_slug,
+            dataset_id=dataset_id,
+            existing_record=existing_record,
+            workbench_entry=workbench_entry,
+            dataset_entry=dataset_entry if isinstance(dataset_entry, dict) else None,
+        )
+    except Exception as exc:
+        finished_at = _utc_now()
+        run_store.write_run(
+            RunRecord(
+                schema_version=1,
+                run_id=context.run_id,
+                run_mode=run_mode,
+                collection=collection,
+                created_at=context.created_at,
+                updated_at=finished_at,
+                provider=provider,
+                model_id=actual_model_id,
+                sdk_package=sdk_package,
+                status="failed",
+                category_slug=category_slug,
+                prompt_count=1,
+            )
+        )
+        run_store.append_result(
+            context.run_id,
+            {
+                "record_id": context.record_id,
+                "status": "failed",
+                "message": f"Failed to persist record: {exc}",
+                "turn_count": result.turn_count,
+                "tool_call_count": result.tool_call_count,
+                "compile_attempt_count": result.compile_attempt_count,
+                "staging_dir": _relative_to_repo(context.staging_dir, resolved_repo_root),
+            },
+        )
+        logger.error("Failed to persist record: %s", exc)
+        return 4
+
+    finished_at = _utc_now()
+    run_store.write_run(
+        RunRecord(
+            schema_version=1,
+            run_id=context.run_id,
+            run_mode=run_mode,
+            collection=collection,
+            created_at=context.created_at,
+            updated_at=finished_at,
+            provider=provider,
+            model_id=actual_model_id,
+            sdk_package=sdk_package,
+            status="success",
+            category_slug=category_slug,
+            prompt_count=1,
+        )
+    )
+    run_store.append_result(
+        context.run_id,
+        {
+            "record_id": context.record_id,
+            "status": "success",
+            "record_dir": _relative_to_repo(record_dir, resolved_repo_root),
+            "turn_count": result.turn_count,
+            "tool_call_count": result.tool_call_count,
+            "compile_attempt_count": result.compile_attempt_count,
+        },
+    )
+    logger.info("Wrote record to %s", record_dir)
+    logger.info("Wrote URDF to %s", context.record_urdf_path)
     return 0
 
 
