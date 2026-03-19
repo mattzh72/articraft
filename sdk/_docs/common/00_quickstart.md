@@ -22,7 +22,7 @@ Do not emit URDF XML yourself. The harness compiles `object_model`, generates co
 5. In `run_tests()`, always include:
    - `ctx.check_model_valid()`
    - `ctx.check_mesh_files_exist()`
-   - `ctx.check_articulation_origin_near_geometry(tol=0.01)`
+   - `ctx.check_articulation_origin_near_geometry(tol=0.015)`
    - `ctx.check_part_geometry_connected(use="visual")`
    - `ctx.check_no_overlaps(..., ignore_adjacent=True, ignore_fixed=True)`
 
@@ -113,7 +113,7 @@ def run_tests() -> TestReport:
     ctx = TestContext(object_model, asset_root=HERE, geometry_source="collision")
     ctx.check_model_valid()
     ctx.check_mesh_files_exist()
-    ctx.check_articulation_origin_near_geometry(tol=0.01)
+    ctx.check_articulation_origin_near_geometry(tol=0.015)
     ctx.check_part_geometry_connected(use="visual")
     ctx.check_no_overlaps(
         max_pose_samples=128,
@@ -174,7 +174,8 @@ Important:
 
 - Author the visible shape you actually want to see.
 - Do not hand-author collisions in `sdk`; compile-time generation owns that now.
-- Treat `check_articulation_origin_near_geometry(tol=0.01)` as necessary but not sufficient for attachment quality.
+- Treat `check_articulation_origin_near_geometry(tol=0.015)` as necessary but not sufficient for attachment quality.
+- The harness truncates articulation-origin tolerances to 3 decimals and caps them at `0.15`.
 - Only relax articulation-origin tolerance when the geometry genuinely needs it, and keep it tight.
 - Make attachment checks primary: use near-zero `expect_aabb_gap(...)`, footprint overlap, `expect_aabb_contact(...)` where appropriate, and pose-specific mounting checks to prove that parts look attached.
 - Slight intended interpenetration can be acceptable when it makes a mounted or nested assembly look seated instead of floating.

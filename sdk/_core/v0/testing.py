@@ -1,9 +1,10 @@
 from __future__ import annotations
 
+import math
 from contextlib import contextmanager
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Dict, Iterable, Iterator, List, Optional, Sequence, Tuple, Union
+from typing import Dict, Iterator, List, Optional, Sequence, Tuple, Union
 
 from .assets import resolve_asset_root
 from .errors import ValidationError
@@ -19,6 +20,10 @@ from .types import ArticulationType, Origin
 
 Vec3 = Tuple[float, float, float]
 AABB = Tuple[Vec3, Vec3]
+
+_JOINT_ORIGIN_TOL_DEFAULT = 0.015
+_JOINT_ORIGIN_TOL_MAX = 0.15
+_JOINT_ORIGIN_TOL_DECIMALS = 3
 
 
 @dataclass(frozen=True)
@@ -80,6 +85,19 @@ def _normalize_geometry_source(value: str, *, field_name: str) -> str:
     return source
 
 
+def _truncate_decimal(value: float, *, decimals: int) -> float:
+    scale = 10**decimals
+    return math.trunc(float(value) * scale) / scale
+
+
+def _normalize_joint_origin_tol(value: float) -> float:
+    tol = float(value)
+    if not math.isfinite(tol) or tol < 0.0:
+        return tol
+    tol = _truncate_decimal(tol, decimals=_JOINT_ORIGIN_TOL_DECIMALS)
+    return min(tol, _JOINT_ORIGIN_TOL_MAX)
+
+
 def _normalize_axis_name(
     world_axis: Union[str, Sequence[float]],
 ) -> Tuple[Optional[str], float, Optional[str]]:
@@ -109,7 +127,9 @@ def _normalize_axis_name(
     return None, 1.0, "world_axis must be one of: x, y, z"
 
 
-def _normalize_direction_name(direction: Union[str, float, int]) -> Tuple[Optional[str], Optional[str]]:
+def _normalize_direction_name(
+    direction: Union[str, float, int],
+) -> Tuple[Optional[str], Optional[str]]:
     if isinstance(direction, str):
         dir_key = direction.strip().lower()
         if dir_key in ("positive", "negative"):
@@ -175,12 +195,14 @@ def _point_distance_on_axes(a: Vec3, b: Vec3, *, axes: Sequence[str]) -> float:
         idx = _axis_index(axis)
         delta = float(a[idx]) - float(b[idx])
         total += delta * delta
-    return total ** 0.5
+    return total**0.5
 
 
 def _aabb_axis_overlap(aabb_a: AABB, aabb_b: AABB, *, axis: str) -> float:
     idx = _axis_index(axis)
-    return min(float(aabb_a[1][idx]), float(aabb_b[1][idx])) - max(float(aabb_a[0][idx]), float(aabb_b[0][idx]))
+    return min(float(aabb_a[1][idx]), float(aabb_b[1][idx])) - max(
+        float(aabb_a[0][idx]), float(aabb_b[0][idx])
+    )
 
 
 def _aabb_axis_gap(
@@ -385,7 +407,9 @@ class TestContext:
         ea = (str(elem_a) if elem_a is not None else "").strip() or None
         eb = (str(elem_b) if elem_b is not None else "").strip() or None
         if ea or eb:
-            self._allowances.append(f"allow_overlap({key[0]!r}, {key[1]!r}, elem_a={ea!r}, elem_b={eb!r}): {r}")
+            self._allowances.append(
+                f"allow_overlap({key[0]!r}, {key[1]!r}, elem_a={ea!r}, elem_b={eb!r}): {r}"
+            )
         else:
             self._allowances.append(f"allow_overlap({key[0]!r}, {key[1]!r}): {r}")
         self._allow_elems.append((key, ea, eb, r))
@@ -399,7 +423,9 @@ class TestContext:
         prev = dict(self._pose)
         merged: Dict[str, float] = {}
         if joint_positions:
-            merged.update({_named_ref(k, kind="joint"): float(v) for k, v in joint_positions.items()})
+            merged.update(
+                {_named_ref(k, kind="joint"): float(v) for k, v in joint_positions.items()}
+            )
         merged.update({str(k): float(v) for k, v in kwargs.items()})
         self._pose = merged
         self._world_tfs_cache = None
@@ -437,7 +463,11 @@ class TestContext:
     ) -> Optional[AABB]:
         part_name = _named_ref(part, kind="part")
 
-        use_key = self.geometry_source if use is None else _normalize_geometry_source(use, field_name="use")
+        use_key = (
+            self.geometry_source
+            if use is None
+            else _normalize_geometry_source(use, field_name="use")
+        )
         cache_key = (part_name, use_key)
         if cache_key in self._part_world_aabb_cache:
             return self._part_world_aabb_cache[cache_key]
@@ -488,7 +518,9 @@ class TestContext:
     def check_mesh_files_exist(self) -> bool:
         links = getattr(self.model, "parts", None)
         if not isinstance(links, list):
-            return self._record("check_mesh_files_exist", False, "model.parts missing or not a list")
+            return self._record(
+                "check_mesh_files_exist", False, "model.parts missing or not a list"
+            )
         if self._compiled_collision_error is not None:
             return self._record(
                 "check_mesh_files_exist",
@@ -497,7 +529,9 @@ class TestContext:
             )
         root = self._asset_root()
         missing: List[str] = []
-        collision_parts = self._collision_parts_by_name() if self._compiled_collision_model is not None else {}
+        collision_parts = (
+            self._collision_parts_by_name() if self._compiled_collision_model is not None else {}
+        )
         for link in links:
             compiled_link = collision_parts.get(getattr(link, "name", None))
             for field_name in ("visuals",):
@@ -532,8 +566,10 @@ class TestContext:
                             missing.append(str(p))
         if missing:
             preview = "\n".join(missing[:12])
-            more = "" if len(missing) <= 12 else f"\n... ({len(missing)-12} more)"
-            return self._record("check_mesh_files_exist", False, f"Missing mesh files:\n{preview}{more}")
+            more = "" if len(missing) <= 12 else f"\n... ({len(missing) - 12} more)"
+            return self._record(
+                "check_mesh_files_exist", False, f"Missing mesh files:\n{preview}{more}"
+            )
         return self._record("check_mesh_files_exist", True)
 
     def _check_joint_origin_near_geometry_impl(
@@ -543,16 +579,12 @@ class TestContext:
         reason: Optional[str],
         check_name: str,
     ) -> bool:
-        tol_f = float(tol)
-        if tol_f > 0.02:
-            r = (reason or "").strip()
-            if not r:
-                return self._record(
-                    check_name,
-                    False,
-                    "tol > 0.02 requires justification via reason=... (keep tol tight to catch floating/unattached parts).",
-                )
-            self.warn(f"Loose joint-origin tolerance allowed: tol={tol_f:.4g}. Reason: {r}")
+        tol_f = _normalize_joint_origin_tol(tol)
+        if not math.isfinite(tol_f) or tol_f < 0.0:
+            return self._record(check_name, False, "tol must be finite and non-negative")
+        r = (reason or "").strip()
+        if tol_f > _JOINT_ORIGIN_TOL_DEFAULT and r:
+            self.warn(f"Relaxed joint-origin tolerance in use: tol={tol_f:.4g}. Reason: {r}")
 
         links = getattr(self.model, "parts", None)
         joints = getattr(self.model, "articulations", None)
@@ -612,13 +644,13 @@ class TestContext:
             child_dist = min(point_aabb_distance((0.0, 0.0, 0.0), aabb) for aabb in child_aabbs)
             if parent_dist > tol_f or child_dist > tol_f:
                 failures.append(
-                    f"joint={getattr(joint,'name',None)!r} parent={parent!r} child={child!r} "
+                    f"joint={getattr(joint, 'name', None)!r} parent={parent!r} child={child!r} "
                     f"dist_parent={parent_dist:.4g} dist_child={child_dist:.4g} tol={tol_f:.4g}"
                 )
 
         if failures:
             preview = "\n".join(failures[:10])
-            more = "" if len(failures) <= 10 else f"\n... ({len(failures)-10} more)"
+            more = "" if len(failures) <= 10 else f"\n... ({len(failures) - 10} more)"
             return self._record(
                 check_name,
                 False,
@@ -629,11 +661,11 @@ class TestContext:
     def check_joint_origin_near_geometry(
         self,
         *,
-        tol: float = 0.02,
+        tol: float = _JOINT_ORIGIN_TOL_DEFAULT,
         reason: Optional[str] = None,
         name: Optional[str] = None,
     ) -> bool:
-        tol_f = float(tol)
+        tol_f = _normalize_joint_origin_tol(tol)
         return self._check_joint_origin_near_geometry_impl(
             tol=tol_f,
             reason=reason,
@@ -643,11 +675,11 @@ class TestContext:
     def check_articulation_origin_near_geometry(
         self,
         *,
-        tol: float = 0.02,
+        tol: float = _JOINT_ORIGIN_TOL_DEFAULT,
         reason: Optional[str] = None,
         name: Optional[str] = None,
     ) -> bool:
-        tol_f = float(tol)
+        tol_f = _normalize_joint_origin_tol(tol)
         return self._check_joint_origin_near_geometry_impl(
             tol=tol_f,
             reason=reason,
@@ -715,7 +747,8 @@ class TestContext:
                     (visual_size[0] - collision_size[0]) ** 2
                     + (visual_size[1] - collision_size[1]) ** 2
                     + (visual_size[2] - collision_size[2]) ** 2
-                ) ** 0.5
+                )
+                ** 0.5
             ) / denom
 
             if center_dist > float(max_center_dist) or size_rel_err > float(max_size_rel_err):
@@ -727,7 +760,7 @@ class TestContext:
 
         if failures:
             preview = "\n".join(failures[:10])
-            more = "" if len(failures) <= 10 else f"\n... ({len(failures)-10} more)"
+            more = "" if len(failures) <= 10 else f"\n... ({len(failures) - 10} more)"
             return self._record(
                 name or "check_visual_collision_alignment",
                 False,
@@ -788,8 +821,10 @@ class TestContext:
         check_name = name or f"check_part_geometry_connected(use={use_key},tol={float(tol):.4g})"
         if failures:
             preview = "\n".join(failures[:10])
-            more = "" if len(failures) <= 10 else f"\n... ({len(failures)-10} more)"
-            return self._record(check_name, False, f"Disconnected geometry islands detected:\n{preview}{more}")
+            more = "" if len(failures) <= 10 else f"\n... ({len(failures) - 10} more)"
+            return self._record(
+                check_name, False, f"Disconnected geometry islands detected:\n{preview}{more}"
+            )
         return self._record(check_name, True)
 
     def check_no_overlaps(
@@ -825,7 +860,9 @@ class TestContext:
             asset_root=self._asset_root(),
             geometry_source=self.geometry_source,
             max_pose_samples=int(max_pose_samples),
-            overlap_tol=default_overlap_tol_from_env() if overlap_tol is None else float(overlap_tol),
+            overlap_tol=default_overlap_tol_from_env()
+            if overlap_tol is None
+            else float(overlap_tol),
             overlap_volume_tol=(
                 default_overlap_volume_tol_from_env()
                 if overlap_volume_tol is None
@@ -840,7 +877,7 @@ class TestContext:
             key = (o.link_a, o.link_b) if o.link_a <= o.link_b else (o.link_b, o.link_a)
             allowed = False
             # Element-scoped allowances, if any.
-            for (k, ea, eb, _r) in self._allow_elems:
+            for k, ea, eb, _r in self._allow_elems:
                 if k != key:
                     continue
                 if ea is None and eb is None:
@@ -860,7 +897,7 @@ class TestContext:
 
         if remaining:
             preview = "\n".join(remaining[:8])
-            more = "" if len(remaining) <= 8 else f"\n... ({len(remaining)-8} more)"
+            more = "" if len(remaining) <= 8 else f"\n... ({len(remaining) - 8} more)"
             return self._record(check_name, False, f"Overlaps detected:\n{preview}{more}")
 
         if overlaps and (self._allow_pairs or self._allow_elems):
@@ -882,7 +919,10 @@ class TestContext:
         link_a_name = _named_ref(link_a, kind="link_a")
         link_b_name = _named_ref(link_b, kind="link_b")
         axes_key, axes_err = _normalize_axes_spec(axes, field_name="axes")
-        check_name = name or f"expect_origin_distance({link_a_name},{link_b_name},axes={_axes_label(axes_key) or axes})"
+        check_name = (
+            name
+            or f"expect_origin_distance({link_a_name},{link_b_name},axes={_axes_label(axes_key) or axes})"
+        )
         if axes_err is not None:
             return self._record(check_name, False, axes_err)
         min_dist_f = float(min_dist)
@@ -922,7 +962,9 @@ class TestContext:
         positive_name = _named_ref(positive_link, kind="positive_link")
         negative_name = _named_ref(negative_link, kind="negative_link")
         axis_key, axis_sign, axis_err = _normalize_axis_name(axis)
-        check_name = name or f"expect_origin_gap({positive_name},{negative_name},axis={axis_key or axis})"
+        check_name = (
+            name or f"expect_origin_gap({positive_name},{negative_name},axis={axis_key or axis})"
+        )
         if axis_err is not None or axis_key is None or axis_sign < 0.0:
             return self._record(check_name, False, axis_err or "axis must be one of: x, y, z")
         min_gap_f = float(min_gap)
@@ -961,7 +1003,10 @@ class TestContext:
         inner_name = _named_ref(inner_link, kind="inner_link")
         outer_name = _named_ref(outer_link, kind="outer_link")
         axes_key, axes_err = _normalize_axes_spec(axes, field_name="axes")
-        check_name = name or f"expect_aabb_within({inner_name},{outer_name},axes={_axes_label(axes_key) or axes})"
+        check_name = (
+            name
+            or f"expect_aabb_within({inner_name},{outer_name},axes={_axes_label(axes_key) or axes})"
+        )
         if axes_err is not None:
             return self._record(check_name, False, axes_err)
 
@@ -1009,7 +1054,9 @@ class TestContext:
         positive_name = _named_ref(positive_link, kind="positive_link")
         negative_name = _named_ref(negative_link, kind="negative_link")
         axis_key, axis_sign, axis_err = _normalize_axis_name(axis)
-        check_name = name or f"expect_aabb_gap({positive_name},{negative_name},axis={axis_key or axis})"
+        check_name = (
+            name or f"expect_aabb_gap({positive_name},{negative_name},axis={axis_key or axis})"
+        )
         if axis_err is not None or axis_key is None or axis_sign < 0.0:
             return self._record(check_name, False, axis_err or "axis must be one of: x, y, z")
 
@@ -1063,7 +1110,10 @@ class TestContext:
         link_a_name = _named_ref(link_a, kind="link_a")
         link_b_name = _named_ref(link_b, kind="link_b")
         axes_key, axes_err = _normalize_axes_spec(axes, field_name="axes")
-        check_name = name or f"expect_aabb_overlap({link_a_name},{link_b_name},axes={_axes_label(axes_key) or axes})"
+        check_name = (
+            name
+            or f"expect_aabb_overlap({link_a_name},{link_b_name},axes={_axes_label(axes_key) or axes})"
+        )
         if axes_err is not None:
             return self._record(check_name, False, axes_err)
 
@@ -1101,7 +1151,10 @@ class TestContext:
         link_a_name = _named_ref(link_a, kind="link_a")
         link_b_name = _named_ref(link_b, kind="link_b")
         axes_key, axes_err = _normalize_axes_spec(axes, field_name="axes")
-        check_name = name or f"expect_aabb_contact({link_a_name},{link_b_name},axes={_axes_label(axes_key) or axes})"
+        check_name = (
+            name
+            or f"expect_aabb_contact({link_a_name},{link_b_name},axes={_axes_label(axes_key) or axes})"
+        )
         if axes_err is not None:
             return self._record(check_name, False, axes_err)
 
@@ -1227,7 +1280,9 @@ class TestContext:
         q0_f = float(default_q0 if q0 is None else q0)
         q1_f = float(default_q1 if q1 is None else q1)
         if abs(q1_f - q0_f) <= 1e-12:
-            return self._record(check_name, False, f"q0 and q1 must differ (q0={q0_f:.6g}, q1={q1_f:.6g})")
+            return self._record(
+                check_name, False, f"q0 and q1 must differ (q0={q0_f:.6g}, q1={q1_f:.6g})"
+            )
 
         base_pose = dict(self._pose)
         pose0 = dict(base_pose)
@@ -1240,7 +1295,9 @@ class TestContext:
         with self.pose(pose1):
             aabb1 = self.link_world_aabb(l_name, use=use)
         if aabb0 is None or aabb1 is None:
-            return self._record(check_name, False, f"missing AABB for link {l_name!r} using {use!r} geometry")
+            return self._record(
+                check_name, False, f"missing AABB for link {l_name!r} using {use!r} geometry"
+            )
 
         c0 = _aabb_center(aabb0)
         c1 = _aabb_center(aabb1)

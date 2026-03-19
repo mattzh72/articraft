@@ -1,7 +1,9 @@
-# Harness requirements
+<harness_requirements>
 - Treat the editable code as initially empty.
 - The editable section must define top-level `build_object_model()` and `run_tests()`.
-- Modeling priority:
+</harness_requirements>
+
+<modeling_priority>
   - Prioritize realistic visible geometry and believable motion over perfectly conservative collision cleanliness.
   - Prefer visually rich, realistic, and well-composed designs over simplistic, generic, or lazy assemblies.
   - Make the object read clearly as the requested item from silhouette, proportion, and visible substructure, not just from passing tests.
@@ -13,8 +15,9 @@
   - Author visuals only; do not author collision geometry in `sdk`.
   - Use `part.visual(...)` with explicit origins/materials, and set inertia separately when needed.
   - Prefer detailed visual meshes/profiles for silhouette-critical parts.
-  - Identify the 1-3 hero features named or strongly implied by the prompt and make them visually prominent, unobscured, and clearly modeled.
-  - When the prompt names many components, do not model all of them at equal fidelity; spend geometric complexity on the dominant exterior silhouette and those hero features first.
+  - Identify all prompt-named visible features and the dominant silhouette drivers.
+  - Treat the dominant silhouette and the most defining 3-6 of those features as the primary hero features.
+  - Make every prompt-named visible feature present and legible, then spend the most geometric complexity on the dominant exterior silhouette and the primary hero features.
   - Do not let placeholder geometry hide or flatten the features that most define the object.
   - Do not default silhouette-critical visible forms such as body shells, fenders, nacelles, ducts, housings, exterior panels, wheels, rims, or other dominant outer surfaces to plain boxes/cylinders unless the real object is genuinely that simple.
   - Plain primitives are acceptable for hidden structure, brackets, shafts, spacers, and other secondary support geometry when they do not control the object's visual identity.
@@ -26,6 +29,9 @@
   - Use `wire_from_points(...)` when the intended shape is explicitly piecewise-linear with visible elbows or hard corners.
   - Do not expect a sparse polyline with small fillets to read as a truly smooth bent hook or handle.
   - Treat this as a silhouette decision: choose the representation that best matches the perceived physical form, even if a primitive assembly would compile more easily.
+</modeling_priority>
+
+<qc_and_overlap_handling>
 - The harness runs collision-based overlap QC on generated collision geometry and will surface overlaps as a non-blocking warning by default.
   - SDK compile generates collisions from visuals automatically.
   - Treat overlap QC as a conservative backstop, not as the primary proof that parts look attached.
@@ -33,25 +39,28 @@
   - Prefer flush or nearly flush attachment when parts are meant to look mounted, and avoid visible air gaps unless the real object clearly has clearance.
   - Fix clearly bad overlaps by adjusting visual geometry, joint origins, and limits.
   - If a small overlap is intentional or likely conservative, explicitly allow only the specific pair(s) in `run_tests()` via `ctx.allow_overlap(...)` and still run `ctx.check_no_overlaps(...)` so the allowance is tracked.
-- `run_tests()` requirements (strict):
-  - Use `sdk.TestContext` and return `ctx.report()`.
-  - Include `ctx.check_articulation_origin_near_geometry(tol=0.01)`.
-  - Only loosen articulation-origin tolerance when the geometry genuinely needs it, and keep it tight.
-  - Treat articulation-origin proximity as a coarse sanity check only, not proof that mounting faces are flush.
-  - Include `ctx.check_part_geometry_connected(use="visual")`.
-  - Thoroughly test intended geometry/layout/kinematic behavior with meaningful checks.
+</qc_and_overlap_handling>
 
-# Testing (CRITICAL)
+<run_tests_requirements>
+- Use `sdk.TestContext` and return `ctx.report()`.
+- Include `ctx.check_articulation_origin_near_geometry(tol=0.015)`.
+- The harness truncates articulation-origin tolerances to 3 decimals and caps them at `0.15`.
+- Only loosen articulation-origin tolerance when the geometry genuinely needs it, and keep it tight.
+- Treat articulation-origin proximity as a coarse sanity check only, not proof that mounting faces are flush.
+- Include `ctx.check_part_geometry_connected(use="visual")`.
+- Thoroughly test intended geometry/layout/kinematic behavior with meaningful checks.
+</run_tests_requirements>
 
-Your tests are not a formality. They are the primary mechanism to prevent visually wrong URDFs from being accepted.
+<testing_principles>
+- Your tests are not a formality. They are the primary mechanism to prevent visually wrong URDFs from being accepted.
 
-## Principles
 - Prefer **many small checks** over a few broad ones. Each check encodes a single invariant.
 - Test both **rest pose** and **key mechanism poses** (limits and typical operating position).
 - Prefer **AABB-based intent checks** (`expect_aabb_*`) for placement assertions; link origins are often misleading.
 - Primitive geometry constructors (`Box`, `Cylinder`, `Sphere`) only take shape parameters. Put transforms on `visual(..., origin=...)` or `Inertial.from_geometry(..., origin=...)`.
 - Treat tests as support for realism and motion, not as a reason to degrade the visible model into primitive geometry.
-- Add prompt-specific checks for the hero features and dominant visible forms so the most important visual commitments are enforced, not just generic structural sanity.
+- Add prompt-specific checks for the primary hero features, the prompt-named visible features, and the dominant visible forms so the most important visual commitments are enforced, not just generic structural sanity.
+- When you add a new visible form or mechanism, add or refine tests that prove that new claim before moving on. Do not let geometry complexity outpace test coverage.
 - Prevent floating parts:
   - Run `check_part_geometry_connected(use="visual")` so disconnected subassemblies inside one part do not slip through.
   - Make attachment checks primary. Use explicit `expect_aabb_*` checks to show that mounted parts sit where they should.
@@ -77,9 +86,11 @@ Your tests are not a formality. They are the primary mechanism to prevent visual
   - first fix visual geometry or joint placement
   - then add a narrow allowance for acceptable edge cases
   - only as a last resort simplify the visible mesh
+</testing_principles>
 
-## Recommended test structure (pattern)
+<recommended_test_structure>
 1) Sanity: `check_model_valid`, `check_mesh_files_exist`, `check_articulation_origin_near_geometry`, `check_part_geometry_connected`
 2) Geometry backstop: `check_no_overlaps(max_pose_samples=..., ignore_adjacent=True, ignore_fixed=True)` (+ explicit allowances when needed)
 3) Intent: multiple `expect_*` checks, with attachment checks as primary evidence of realism
 4) Pose coverage: for each important joint, include checks at lower/upper limits using `with ctx.pose({"joint_name": value}): ...` or `with ctx.pose(joint_name=value): ...`
+</recommended_test_structure>

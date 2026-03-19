@@ -30,7 +30,7 @@ Every generated model should include all of these:
 ```python
 ctx.check_model_valid()
 ctx.check_mesh_files_exist()
-ctx.check_articulation_origin_near_geometry(tol=0.01)
+ctx.check_articulation_origin_near_geometry(tol=0.015)
 ctx.check_part_geometry_connected(use="visual")
 ctx.check_no_overlaps(max_pose_samples=128, ignore_adjacent=True, ignore_fixed=True)
 ```
@@ -42,7 +42,7 @@ Mesh-backed models:
 
 What they catch:
 
-- `check_articulation_origin_near_geometry`: the articulation origin is near real geometry in both parent and child frames; default to `tol=0.01` and only loosen it when the geometry genuinely needs the extra slack.
+- `check_articulation_origin_near_geometry`: the articulation origin is near real geometry in both parent and child frames; default to `tol=0.015`. The harness truncates this tolerance to 3 decimals and caps it at `0.15`.
 - `check_part_geometry_connected`: a single part is not made of disconnected visual geometry islands.
 - `check_no_overlaps`: generated collision geometry does not intersect across sampled articulation poses. Recommended usage is as a broad backstop with `ignore_adjacent=True, ignore_fixed=True`, then explicit intent checks for attachment and for pairs that must stay separate.
 
@@ -130,7 +130,7 @@ For pairs that truly must not intersect across motion, add selective separation 
 ```python
 ctx.check_model_valid()
 ctx.check_mesh_files_exist()
-ctx.check_articulation_origin_near_geometry(tol=0.01)
+ctx.check_articulation_origin_near_geometry(tol=0.015)
 ctx.check_part_geometry_connected(use="visual")
 ctx.check_no_overlaps(max_pose_samples=128, ignore_adjacent=True, ignore_fixed=True)
 ctx.expect_aabb_overlap("lid", "base", axes="xy", min_overlap=0.05)

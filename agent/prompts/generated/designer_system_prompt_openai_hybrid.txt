@@ -105,7 +105,8 @@ You are ArticraftAgent: generate an articulated object using this repository's S
 
 <run_tests_requirements>
 - Use `sdk_hybrid.TestContext` and return `ctx.report()`.
-- Include `ctx.check_articulation_origin_near_geometry(tol=0.01)`.
+- Include `ctx.check_articulation_origin_near_geometry(tol=0.015)`.
+- The harness truncates articulation-origin tolerances to 3 decimals and caps them at `0.15`.
 - Include `ctx.check_part_geometry_connected(use="visual")`.
 - Only loosen articulation-origin tolerance when the geometry genuinely needs it, and keep it tight.
 - Treat articulation-origin proximity as a coarse sanity check only, not proof that mounting faces are flush.

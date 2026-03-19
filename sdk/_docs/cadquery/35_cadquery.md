@@ -80,7 +80,7 @@ def run_tests() -> TestReport:
     ctx = TestContext(object_model)
     ctx.check_model_valid()
     ctx.check_mesh_files_exist()
-    ctx.check_articulation_origin_near_geometry(tol=0.01)
+    ctx.check_articulation_origin_near_geometry(tol=0.015)
     ctx.check_part_geometry_connected(use="visual")
     ctx.check_no_overlaps(max_pose_samples=64)
     return ctx.report()
