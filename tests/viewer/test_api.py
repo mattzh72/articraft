@@ -564,17 +564,6 @@ def test_viewer_api_ensures_record_assets_on_demand(
     assert "v 1 0 0" in mesh_response.text
     assert compile_calls == [repo.layout.record_dir("rec_lazy_001") / "model.py"]
 
-    ensure_response = client.post("/api/records/rec_lazy_001/ensure-assets")
-    assert ensure_response.status_code == 200
-    assert ensure_response.json() == {
-        "record_id": "rec_lazy_001",
-        "status": "available",
-        "compiled": False,
-        "compile_status": "success",
-        "materialization_status": "available",
-        "warnings": [],
-    }
-
     compile_report = repo.read_json(repo.layout.record_dir("rec_lazy_001") / "compile_report.json")
     assert compile_report["status"] == "success"
     assert compile_report["warnings"] == [{"code": "warning", "message": "warning: lazy compile"}]
@@ -585,3 +574,107 @@ def test_viewer_api_ensures_record_assets_on_demand(
 
     provenance = repo.read_json(repo.layout.record_dir("rec_lazy_001") / "provenance.json")
     assert provenance["materialization"]["fingerprint_inputs"]["model_urdf_sha256"]
+
+
+def test_viewer_api_rebuilds_missing_assets_even_with_successful_urdf(
+    tmp_path: Path,
+    monkeypatch,
+) -> None:
+    repo = StorageRepo(tmp_path)
+    repo.ensure_layout()
+    record_store = RecordStore(repo)
+
+    record = Record(
+        schema_version=1,
+        record_id="rec_missing_assets_001",
+        created_at="2026-03-19T10:00:00Z",
+        updated_at="2026-03-19T10:00:00Z",
+        rating=None,
+        kind="generated_model",
+        prompt_kind="single_prompt",
+        category_slug="hinges",
+        source=SourceRef(run_id="run_missing_assets_001"),
+        sdk_package="sdk",
+        provider="openai",
+        model_id="gpt-5.4",
+        display=DisplayMetadata(
+            title="Missing assets model",
+            prompt_preview="record with urdf but no meshes",
+        ),
+        artifacts=RecordArtifacts(
+            prompt_txt="prompt.txt",
+            prompt_series_json=None,
+            model_py="model.py",
+            model_urdf="model.urdf",
+            compile_report_json="compile_report.json",
+            provenance_json="provenance.json",
+            cost_json=None,
+        ),
+        collections=["workbench"],
+    )
+    record_store.write_record(record)
+    record_dir = repo.layout.record_dir("rec_missing_assets_001")
+    (record_dir / "prompt.txt").write_text("record with urdf but no meshes", encoding="utf-8")
+    (record_dir / "model.py").write_text(
+        "from __future__ import annotations\n",
+        encoding="utf-8",
+    )
+    (record_dir / "model.urdf").write_text("<robot name='stale'/>", encoding="utf-8")
+    repo.write_json(
+        record_dir / "compile_report.json",
+        {
+            "schema_version": 1,
+            "record_id": "rec_missing_assets_001",
+            "status": "success",
+            "urdf_path": "model.urdf",
+            "warnings": [],
+            "checks_run": ["compile_urdf"],
+            "metrics": {},
+        },
+    )
+    repo.write_json(
+        record_dir / "provenance.json",
+        {
+            "schema_version": 1,
+            "record_id": "rec_missing_assets_001",
+            "materialization": {
+                "fingerprint_inputs": {
+                    "model_py_sha256": None,
+                    "model_urdf_sha256": None,
+                }
+            },
+        },
+    )
+
+    compile_calls: list[Path] = []
+
+    def fake_compile(script_path: Path, *, sdk_package: str = "sdk") -> SimpleNamespace:
+        compile_calls.append(script_path)
+        meshes_dir = script_path.parent / "meshes"
+        meshes_dir.mkdir(parents=True, exist_ok=True)
+        (meshes_dir / "part.obj").write_text(
+            "o tri\nv 0 0 0\nv 1 0 0\nv 0 1 0\nf 1 2 3\n",
+            encoding="utf-8",
+        )
+        return SimpleNamespace(
+            urdf_xml=(
+                "<robot name='rebuilt'>"
+                "<link name='base'>"
+                "<visual><geometry><mesh filename='meshes/part.obj'/></geometry></visual>"
+                "</link>"
+                "</robot>"
+            ),
+            warnings=[],
+        )
+
+    monkeypatch.setattr(
+        "agent.compiler.compile_urdf_report_maybe_timeout",
+        fake_compile,
+    )
+
+    client = TestClient(create_app(repo_root=tmp_path))
+
+    mesh_response = client.get("/api/records/rec_missing_assets_001/files/meshes/part.obj")
+    assert mesh_response.status_code == 200
+    assert "v 1 0 0" in mesh_response.text
+    assert compile_calls == [record_dir / "model.py"]

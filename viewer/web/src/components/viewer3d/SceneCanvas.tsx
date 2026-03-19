@@ -181,7 +181,6 @@ function findLinkName(object: THREE.Object3D | null): string | null {
 
 export interface SceneCanvasProps {
   baseFileUrl: string | null;
-  persistedRecordId?: string | null;
   assetRevisionKey: string | null;
   selectionKey: string | null;
   renderOptions: RenderOptions;
@@ -202,7 +201,6 @@ function isMissingArtifactsError(error: string | null): boolean {
 
 export function SceneCanvas({
   baseFileUrl,
-  persistedRecordId = null,
   assetRevisionKey,
   selectionKey,
   renderOptions,
@@ -221,7 +219,6 @@ export function SceneCanvas({
   const { scene, camera, renderer, controls, gridGroup, axisGroup, sceneReady } = useThreeScene(containerRef);
   const { urdfSpec, jointNodes, jointFrames, loading, error } = useUrdfLoader(
     baseFileUrl,
-    persistedRecordId,
     assetRevisionKey,
     scene,
     camera,

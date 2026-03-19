@@ -222,12 +222,33 @@ search-index:
     uv run articraft-workbench --repo-root . rebuild-search-index
 
 rerun record:
-    uv run articraft-workbench --repo-root . rerun-record {{ quote(record) }}
+    #!/usr/bin/env bash
+    set -euo pipefail
+    record={{ quote(record) }}
+    model_override={{ quote(model) }}
+    thinking_override={{ quote(thinking) }}
+    cmd=(
+      uv run articraft-workbench
+      --repo-root .
+      rerun-record
+      "$record"
+    )
+    if [ -n "$model_override" ]; then
+      cmd+=(--model-id "$model_override")
+    fi
+    if [ -n "$thinking_override" ]; then
+      cmd+=(--thinking-level "$thinking_override")
+    fi
+    exec "${cmd[@]}"
 
-viewer:
+viewer mode_arg='':
     #!/usr/bin/env bash
     set -euo pipefail
     viewer_target={{ quote(viewer_target) }}
+    mode_value={{ quote(mode) }}
+    if [ -n {{ quote(mode_arg) }} ]; then
+      mode_value={{ quote(mode_arg) }}
+    fi
     if ! command -v npm >/dev/null 2>&1; then
       echo "npm is required for viewer/web. Install Node.js and npm first."
       exit 1
@@ -238,7 +259,7 @@ viewer:
     uv run articraft-dataset --repo-root . validate
     uv run articraft-dataset --repo-root . build-manifest
     uv run articraft-workbench --repo-root . rebuild-search-index
-    case "{{mode}}" in
+    case "$mode_value" in
       prod)
         npm --prefix viewer/web run build
         (
@@ -268,13 +289,13 @@ viewer:
         ARTICRAFT_VIEWER_API_HOST={{api_host}} ARTICRAFT_VIEWER_API_PORT={{api_port}} exec npm --prefix viewer/web run dev
         ;;
       *)
-        echo "Unknown viewer mode: {{mode}}. Expected 'prod' or 'dev'." >&2
+        echo "Unknown viewer mode: $mode_value. Expected 'prod' or 'dev'." >&2
         exit 1
         ;;
     esac
 
 viewer-dev:
-    exec just mode=dev api_host={{ quote(api_host) }} api_port={{ quote(api_port) }} viewer
+    exec just api_host={{ quote(api_host) }} api_port={{ quote(api_port) }} viewer dev
 
 view record:
     #!/usr/bin/env bash
@@ -310,7 +331,7 @@ view record:
     raise SystemExit(f"Record not found: {os.environ['RECORD_REF']}")
     PY
     )"
-    viewer_target="/?record=${record_id}"
+    viewer_target="/viewer?record=${record_id}"
     case "{{mode}}" in
       prod)
         viewer_url="http://{{api_host}}:{{api_port}}${viewer_target}"

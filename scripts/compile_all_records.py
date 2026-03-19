@@ -35,6 +35,15 @@ def _record_artifact_path(record_dir: Path, record: dict | None, key: str, defau
     return record_dir / default
 
 
+def _record_assets_available(repo: StorageRepo, record_id: str) -> bool:
+    assets_root = repo.layout.record_assets_dir(record_id)
+    for child_name in ("meshes", "glb", "viewer"):
+        child = assets_root / child_name
+        if child.exists() and any(child.iterdir()):
+            return True
+    return False
+
+
 def _collect_candidates(repo_root: Path, *, force: bool) -> tuple[list[CompileCandidate], int]:
     repo = StorageRepo(repo_root)
     records_root = repo.layout.records_root
@@ -70,10 +79,21 @@ def _collect_candidates(repo_root: Path, *, force: bool) -> tuple[list[CompileCa
             if isinstance(compile_report, dict) and isinstance(compile_report.get("status"), str)
             else None
         )
+        assets_available = _record_assets_available(repo, record_id)
 
         if not urdf_path.exists():
             candidates.append(
                 CompileCandidate(record_id=record_id, reason="missing model.urdf", force=False)
+            )
+            continue
+
+        if not assets_available:
+            candidates.append(
+                CompileCandidate(
+                    record_id=record_id,
+                    reason="missing generated assets",
+                    force=False,
+                )
             )
             continue
 
@@ -195,7 +215,7 @@ def main() -> int:
                 description=f"Compiling {candidate.record_id} ({candidate.reason})",
             )
             try:
-                result = viewer_store.ensure_record_assets(
+                result = viewer_store.materialize_record_assets(
                     candidate.record_id, force=candidate.force
                 )
             except Exception as exc:

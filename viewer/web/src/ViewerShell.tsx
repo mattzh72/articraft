@@ -20,6 +20,8 @@ import { Button } from "@/components/ui/button";
 import { useRenderOptions } from "@/components/viewer3d/useRenderOptions";
 import { useJointController } from "@/components/viewer3d/useJointController";
 import type { UrdfJoint, UrdfSpec } from "@/components/viewer3d/urdf-parser";
+import { findRecordInBootstrap } from "@/lib/record-summary";
+import { MissingArtifactsOverlay } from "@/components/layout/MissingArtifactsOverlay";
 
 const JOINT_POSE_QUERY_PARAM = "pose";
 const INSPECTOR_QUERY_PARAM = "inspector";
@@ -209,6 +211,15 @@ export default function ViewerShell(): JSX.Element {
   const [jointNodes, setJointNodes] = useState<Map<string, THREE.Object3D> | null>(null);
   const [previewJointValues, setPreviewJointValues] = useState<Map<string, number>>(new Map());
   const [inspectorCollapsed, setInspectorCollapsed] = useState(readInspectorCollapsedFromUrl);
+  const [modelLoadState, setModelLoadState] = useState<{
+    loading: boolean;
+    error: string | null;
+    missingArtifacts: boolean;
+  }>({
+    loading: false,
+    error: null,
+    missingArtifacts: false,
+  });
   const inspectorPanelRef = useRef<PanelImperativeHandle | null>(null);
   const initialInspectorCollapsedRef = useRef(inspectorCollapsed);
 
@@ -338,17 +349,48 @@ export default function ViewerShell(): JSX.Element {
       ) ?? null
     );
   }, [bootstrap, selection]);
+  const selectedRecord = useMemo(() => {
+    if (selection?.kind !== "record") {
+      return null;
+    }
+    return findRecordInBootstrap(bootstrap, selection.recordId);
+  }, [bootstrap, selection]);
   const assetRevisionKey =
     selection?.kind === "staging" ? selectedStagingEntry?.checkpoint_updated_at ?? null : null;
-  const persistedRecordId = selection?.kind === "record" ? selection.recordId : null;
   const selectionKey = selection
     ? selection.kind === "record"
       ? selection.recordId
       : `staging:${selection.runId}:${selection.recordId}`
     : null;
+  const missingArtifactsState = useMemo(() => {
+    if (selection?.kind !== "record" || !selectedRecord) {
+      return null;
+    }
+    if (!modelLoadState.missingArtifacts) {
+      return null;
+    }
+
+    const detail = modelLoadState.error
+      ? `Viewer request failed: ${modelLoadState.error}`
+      : "Materialized files are not currently available for this persisted record.";
+
+    return {
+      recordId: selectedRecord.record_id,
+      hasCompileReport: selectedRecord.has_compile_report,
+      detail,
+    };
+  }, [modelLoadState.error, modelLoadState.missingArtifacts, selectedRecord, selection]);
 
   const inspectorUrdfSpec = urdfSpec ? { joints: urdfSpec.joints } : null;
   const displayedJointValues = renderOptions.autoAnimate ? previewJointValues : jointValues;
+
+  useEffect(() => {
+    setModelLoadState({
+      loading: false,
+      error: null,
+      missingArtifacts: false,
+    });
+  }, [selectionKey]);
 
   return (
     <div className="relative min-h-0 flex-1">
@@ -362,11 +404,20 @@ export default function ViewerShell(): JSX.Element {
         <ResizablePanel defaultSize="55%" className="min-w-0">
           <ViewportPanel
             baseFileUrl={baseFileUrl}
-            persistedRecordId={persistedRecordId}
             assetRevisionKey={assetRevisionKey}
             selectionKey={selectionKey}
             renderOptions={renderOptions}
             onUrdfSpecChange={handleUrdfSpecChange}
+            onLoadStateChange={setModelLoadState}
+            disabledOverlay={
+              missingArtifactsState ? (
+                <MissingArtifactsOverlay
+                  recordId={missingArtifactsState.recordId}
+                  hasCompileReport={missingArtifactsState.hasCompileReport}
+                  detail={missingArtifactsState.detail}
+                />
+              ) : undefined
+            }
           />
         </ResizablePanel>
         <ResizableHandle withHandle />
@@ -379,7 +430,18 @@ export default function ViewerShell(): JSX.Element {
           panelRef={inspectorPanelRef}
           onResize={handleInspectorResize}
         >
-          <Inspector>
+          <Inspector
+            disabledOverlay={
+              missingArtifactsState ? (
+                <MissingArtifactsOverlay
+                  recordId={missingArtifactsState.recordId}
+                  hasCompileReport={missingArtifactsState.hasCompileReport}
+                  detail={missingArtifactsState.detail}
+                  compact
+                />
+              ) : undefined
+            }
+          >
             <InspectorTabs
               urdfSpec={inspectorUrdfSpec}
               jointValues={displayedJointValues}

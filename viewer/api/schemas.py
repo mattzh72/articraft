@@ -33,15 +33,6 @@ class OpenStagingFolderResponse(BaseModel):
     path: str
 
 
-class EnsureRecordAssetsResponse(BaseModel):
-    record_id: str
-    status: str
-    compiled: bool = False
-    compile_status: str | None = None
-    materialization_status: str | None = None
-    warnings: list[str] = Field(default_factory=list)
-
-
 class RecordSummaryResponse(BaseModel):
     record_id: str
     title: str

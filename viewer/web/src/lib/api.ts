@@ -21,15 +21,6 @@ export interface RecordTextFileResult {
   preview_byte_limit: number | null;
 }
 
-export interface EnsureRecordAssetsResult {
-  record_id: string;
-  status: string;
-  compiled: boolean;
-  compile_status: string | null;
-  materialization_status: string | null;
-  warnings: string[];
-}
-
 async function readErrorMessage(response: Response): Promise<string> {
   const fallback = `${response.status} ${response.statusText}`;
   const contentType = response.headers.get("content-type") ?? "";
@@ -143,16 +134,6 @@ export async function openRecordFolder(recordId: string): Promise<OpenRecordFold
     throw new Error(await readErrorMessage(response));
   }
   return (await response.json()) as OpenRecordFolderResult;
-}
-
-export async function ensureRecordAssets(recordId: string): Promise<EnsureRecordAssetsResult> {
-  const response = await fetch(`/api/records/${encodeURIComponent(recordId)}/ensure-assets`, {
-    method: "POST",
-  });
-  if (!response.ok) {
-    throw new Error(await readErrorMessage(response));
-  }
-  return (await response.json()) as EnsureRecordAssetsResult;
 }
 
 export async function fetchRunDetail(runId: string): Promise<RunDetail> {

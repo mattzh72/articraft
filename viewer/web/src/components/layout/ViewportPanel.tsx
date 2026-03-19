@@ -1,26 +1,33 @@
-import { type JSX } from "react";
+import { type JSX, type ReactNode } from "react";
 import type * as THREE from "three";
 
 import { SceneCanvas } from "@/components/viewer3d/SceneCanvas";
 import type { RenderOptions } from "@/components/viewer3d/useRenderOptions";
 import type { UrdfSpec } from "@/components/viewer3d/urdf-parser";
+import { cn } from "@/lib/utils";
 
 interface ViewportPanelProps {
   baseFileUrl: string | null;
-  persistedRecordId: string | null;
   assetRevisionKey: string | null;
   selectionKey: string | null;
   renderOptions: RenderOptions;
   onUrdfSpecChange: (spec: UrdfSpec | null, jointNodes: Map<string, THREE.Object3D> | null) => void;
+  onLoadStateChange?: (state: {
+    loading: boolean;
+    error: string | null;
+    missingArtifacts: boolean;
+  }) => void;
+  disabledOverlay?: ReactNode;
 }
 
 export function ViewportPanel({
   baseFileUrl,
-  persistedRecordId,
   assetRevisionKey,
   selectionKey,
   renderOptions,
   onUrdfSpecChange,
+  onLoadStateChange,
+  disabledOverlay,
 }: ViewportPanelProps): JSX.Element {
   // Map from useRenderOptions format to RenderOptionsPanel format for SceneCanvas
   const sceneRenderOptions = {
@@ -36,14 +43,22 @@ export function ViewportPanel({
 
   return (
     <section className="relative h-full w-full min-w-0 overflow-hidden bg-[var(--surface-2)]">
-      <SceneCanvas
-        baseFileUrl={baseFileUrl}
-        persistedRecordId={persistedRecordId}
-        assetRevisionKey={assetRevisionKey}
-        selectionKey={selectionKey}
-        renderOptions={sceneRenderOptions}
-        onUrdfSpecChange={onUrdfSpecChange}
-      />
+      <div
+        className={cn(
+          "h-full w-full transition duration-200",
+          disabledOverlay ? "pointer-events-none select-none blur-[8px] saturate-50 opacity-35" : "",
+        )}
+      >
+        <SceneCanvas
+          baseFileUrl={baseFileUrl}
+          assetRevisionKey={assetRevisionKey}
+          selectionKey={selectionKey}
+          renderOptions={sceneRenderOptions}
+          onUrdfSpecChange={onUrdfSpecChange}
+          onLoadStateChange={onLoadStateChange}
+        />
+      </div>
+      {disabledOverlay ? <div className="absolute inset-0 z-10">{disabledOverlay}</div> : null}
     </section>
   );
 }

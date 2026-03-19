@@ -174,7 +174,7 @@ def _replace_tree_from_source(source: Path, destination: Path) -> None:
 
 
 @dataclass(slots=True, frozen=True)
-class EnsureRecordAssetsResult:
+class MaterializeRecordAssetsResult:
     record_id: str
     status: str
     compiled: bool
@@ -330,12 +330,12 @@ class ViewerStore:
 
         return materialization_status
 
-    def ensure_record_assets(
+    def materialize_record_assets(
         self,
         record_id: str,
         *,
         force: bool = False,
-    ) -> EnsureRecordAssetsResult:
+    ) -> MaterializeRecordAssetsResult:
         record = self.records.load_record(record_id)
         if not isinstance(record, dict):
             raise FileNotFoundError(f"Record not found: {record_id}")
@@ -350,13 +350,19 @@ class ViewerStore:
             if isinstance(compile_report, dict) and isinstance(compile_report.get("status"), str)
             else None
         )
-        if urdf_path.exists() and not force and existing_compile_status == "success":
-            return EnsureRecordAssetsResult(
+        materialization_status = self._materialization_status_for_record(record_id)
+        if (
+            urdf_path.exists()
+            and not force
+            and existing_compile_status == "success"
+            and materialization_status == "available"
+        ):
+            return MaterializeRecordAssetsResult(
                 record_id=record_id,
                 status="available",
                 compiled=False,
                 compile_status=existing_compile_status,
-                materialization_status=self._materialization_status_for_record(record_id),
+                materialization_status=materialization_status,
             )
 
         if not model_path.exists():
@@ -379,13 +385,19 @@ class ViewerStore:
                 and isinstance(compile_report.get("status"), str)
                 else None
             )
-            if urdf_path.exists() and not force and existing_compile_status == "success":
-                return EnsureRecordAssetsResult(
+            materialization_status = self._materialization_status_for_record(record_id)
+            if (
+                urdf_path.exists()
+                and not force
+                and existing_compile_status == "success"
+                and materialization_status == "available"
+            ):
+                return MaterializeRecordAssetsResult(
                     record_id=record_id,
                     status="available",
                     compiled=False,
                     compile_status=existing_compile_status,
-                    materialization_status=self._materialization_status_for_record(record_id),
+                    materialization_status=materialization_status,
                 )
 
             from agent.compiler import compile_urdf_report_maybe_timeout
@@ -434,7 +446,7 @@ class ViewerStore:
                 urdf_path=urdf_path,
                 provenance_path=provenance_path,
             )
-            return EnsureRecordAssetsResult(
+            return MaterializeRecordAssetsResult(
                 record_id=record_id,
                 status="compiled",
                 compiled=True,
