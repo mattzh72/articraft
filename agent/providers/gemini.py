@@ -13,12 +13,14 @@ import os
 import random
 import threading
 import uuid
+from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Optional, Union
 
 try:
     from dotenv import load_dotenv  # type: ignore
 except Exception:  # pragma: no cover
+
     def load_dotenv(*args: Any, **kwargs: Any) -> None:  # type: ignore
         return None
 
@@ -50,12 +52,15 @@ class GeminiLLM:
             self._next_client_index = 0
         else:
             load_dotenv()
-            api_keys = gemini_api_keys_from_env()
-            if not api_keys:
-                raise ValueError("GEMINI_API_KEYS environment variable is not set")
+            config = gemini_client_config_from_env()
             from google import genai  # type: ignore
 
-            self._clients = [genai.Client(api_key=key) for key in api_keys]
+            if config.backend == "api_key":
+                self._clients = [genai.Client(api_key=key) for key in config.api_keys]
+            else:
+                self._clients = [
+                    genai.Client(vertexai=True, project=config.project, location=config.location)
+                ]
             self._client_lock = threading.Lock()
             self._next_client_index = random.randrange(len(self._clients))
             # Keep the legacy attribute for compatibility with any external callers.
@@ -231,9 +236,7 @@ class GeminiLLM:
             parameters = func_def.get("parameters")
             if parameters and isinstance(parameters, dict):
                 parameters = {
-                    key: value
-                    for key, value in parameters.items()
-                    if key != "additionalProperties"
+                    key: value for key, value in parameters.items() if key != "additionalProperties"
                 }
 
             declarations.append(
@@ -331,9 +334,7 @@ class GeminiLLM:
             signature = message.get("thought_signature")
             if signature is None:
                 signature = (
-                    message.get("extra_content", {})
-                    .get("google", {})
-                    .get("thought_signature")
+                    message.get("extra_content", {}).get("google", {}).get("thought_signature")
                 )
             parts.append(
                 Part(
@@ -477,13 +478,10 @@ class GeminiLLM:
                 )
                 tool_calls.append(
                     {
-                        "id": getattr(function_call, "id", None)
-                        or f"call_{uuid.uuid4().hex}",
+                        "id": getattr(function_call, "id", None) or f"call_{uuid.uuid4().hex}",
                         "type": "function",
                         "thought_signature": encoded_signature,
-                        "extra_content": {
-                            "google": {"thought_signature": encoded_signature}
-                        }
+                        "extra_content": {"google": {"thought_signature": encoded_signature}}
                         if encoded_signature
                         else {},
                         "function": {
@@ -566,6 +564,14 @@ def _decode_signature(signature: Optional[Union[str, bytes]]) -> Optional[bytes]
 _logger = logging.getLogger(__name__)
 
 
+@dataclass(frozen=True)
+class GeminiClientConfig:
+    backend: str
+    api_keys: tuple[str, ...] = ()
+    project: Optional[str] = None
+    location: str = "global"
+
+
 def gemini_api_keys_from_env(env: Optional[dict[str, str]] = None) -> list[str]:
     values = os.environ if env is None else env
 
@@ -586,6 +592,40 @@ def gemini_api_keys_from_env(env: Optional[dict[str, str]] = None) -> list[str]:
         seen.add(key)
 
     return unique_keys
+
+
+def gemini_client_config_from_env(env: Optional[dict[str, str]] = None) -> GeminiClientConfig:
+    values = os.environ if env is None else env
+
+    api_keys = gemini_api_keys_from_env(values)
+    project = values.get("GOOGLE_CLOUD_PROJECT", "").strip() or _project_from_credentials_file(
+        values.get("GOOGLE_APPLICATION_CREDENTIALS")
+    )
+    location = values.get("GOOGLE_CLOUD_LOCATION", "").strip() or "global"
+
+    if project:
+        return GeminiClientConfig(backend="vertex", project=project, location=location)
+
+    if api_keys:
+        return GeminiClientConfig(backend="api_key", api_keys=tuple(api_keys))
+
+    raise ValueError(
+        "Gemini configuration not found. Set GEMINI_API_KEYS for the Gemini API, "
+        "or configure Vertex AI with GOOGLE_CLOUD_PROJECT. "
+        "Authentication should come from GOOGLE_APPLICATION_CREDENTIALS. "
+        "GOOGLE_CLOUD_LOCATION defaults to global."
+    )
+
+
+def _project_from_credentials_file(raw_path: Optional[str]) -> Optional[str]:
+    if not raw_path:
+        return None
+    try:
+        payload = json.loads(Path(raw_path).expanduser().read_text(encoding="utf-8"))
+    except Exception:
+        return None
+    project = payload.get("project_id")
+    return project.strip() if isinstance(project, str) and project.strip() else None
 
 
 def _env_int(name: str, default: int) -> int:
