@@ -52,6 +52,7 @@ from agent.tools import (
 )
 from storage.collections import CollectionStore
 from storage.datasets import DatasetStore
+from storage.materialize import ensure_record_artifacts_exist, infer_materialization_status
 from storage.models import (
     CompileReport as StorageCompileReport,
 )
@@ -415,13 +416,16 @@ def _build_record_artifacts(
     )
 
 
-def _build_record_derived_assets(existing_record: dict | None) -> DerivedAssets:
+def _build_record_derived_assets(
+    existing_record: dict | None,
+    *,
+    materialization_status: str,
+) -> DerivedAssets:
     existing_derived = (
         existing_record.get("derived_assets") if isinstance(existing_record, dict) else None
     )
     if not isinstance(existing_derived, dict):
         existing_derived = {}
-    materialization_status = str(existing_derived.get("materialization_status") or "missing")
     if materialization_status not in {"missing", "available"}:
         materialization_status = "missing"
     return DerivedAssets(
@@ -744,6 +748,7 @@ def _write_success_record(
         ),
     )
     record_store.write_provenance(context.record_id, provenance)
+    materialization_status = infer_materialization_status(storage_repo, context.record_id)
 
     record = Record(
         schema_version=1,
@@ -790,7 +795,10 @@ def _write_success_record(
             model_py_sha256=model_py_sha,
             model_urdf_sha256=model_urdf_sha,
         ),
-        derived_assets=_build_record_derived_assets(existing_record),
+        derived_assets=_build_record_derived_assets(
+            existing_record,
+            materialization_status=materialization_status,
+        ),
         collections=(
             _normalize_collection_names(existing_record.get("collections"), collection)
             if isinstance(existing_record, dict)
@@ -798,6 +806,12 @@ def _write_success_record(
         ),
     )
     record_store.write_record(record)
+    ensure_record_artifacts_exist(
+        storage_repo,
+        context.record_id,
+        record=record.to_dict(),
+        required=("model_py", "model_urdf", "compile_report_json", "provenance_json"),
+    )
     if workbench_entry is not None:
         collections.upsert_workbench_entry(
             record_id=context.record_id,

@@ -22,6 +22,12 @@ PromptBatchStore = importlib.import_module("storage.prompt_batches").PromptBatch
 RecordStore = importlib.import_module("storage.records").RecordStore
 StorageRepo = importlib.import_module("storage.repo").StorageRepo
 RunStore = importlib.import_module("storage.runs").RunStore
+ensure_record_artifacts_exist = importlib.import_module(
+    "storage.materialize"
+).ensure_record_artifacts_exist
+infer_materialization_status = importlib.import_module(
+    "storage.materialize"
+).infer_materialization_status
 
 storage_models = importlib.import_module("storage.models")
 CategoryRecord = storage_models.CategoryRecord
@@ -930,6 +936,7 @@ def _import_item(
         ),
     )
     records.write_provenance(item.canonical_record_id, provenance)
+    materialization_status = infer_materialization_status(repo, item.canonical_record_id)
 
     record = Record(
         schema_version=1,
@@ -967,11 +974,17 @@ def _import_item(
             model_urdf_sha256=urdf_sha,
         ),
         derived_assets=DerivedAssets(
-            materialization_status="available" if item.meshes_dir is not None else "missing",
+            materialization_status=materialization_status,
         ),
         collections=["dataset"],
     )
     records.write_record(record)
+    ensure_record_artifacts_exist(
+        repo,
+        item.canonical_record_id,
+        record=record.to_dict(),
+        required=("model_py", "model_urdf", "compile_report_json", "provenance_json"),
+    )
 
 
 def _import_runs(

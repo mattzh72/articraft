@@ -164,3 +164,35 @@ def test_collect_candidates_queues_mesh_backed_records_missing_assets(tmp_path) 
     assert len(candidates) == 1
     assert candidates[0].record_id == record_id
     assert candidates[0].reason == "missing generated assets"
+
+
+def test_collect_candidates_queues_broken_success_records_missing_model_script(tmp_path) -> None:
+    repo = StorageRepo(tmp_path)
+    repo.ensure_layout()
+
+    record_id = "rec_missing_model"
+    record_dir = repo.layout.record_dir(record_id)
+    record_dir.mkdir(parents=True, exist_ok=True)
+    (record_dir / "record.json").write_text(
+        json.dumps(
+            {
+                "artifacts": {
+                    "model_py": "model.py",
+                    "model_urdf": "model.urdf",
+                    "compile_report_json": "compile_report.json",
+                }
+            }
+        ),
+        encoding="utf-8",
+    )
+    (record_dir / "compile_report.json").write_text(
+        json.dumps({"status": "success"}),
+        encoding="utf-8",
+    )
+
+    candidates, skipped_missing_script = _collect_candidates(tmp_path, force=False)
+
+    assert skipped_missing_script == 0
+    assert len(candidates) == 1
+    assert candidates[0].record_id == record_id
+    assert candidates[0].reason == "missing model.py"

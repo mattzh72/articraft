@@ -16,7 +16,7 @@ from rich.progress import (
 )
 from rich.table import Table
 
-from storage.materialize import infer_materialization_status
+from storage.materialize import infer_materialization_status, record_artifact_paths
 from storage.repo import StorageRepo
 from viewer.api.store import ViewerStore
 
@@ -43,15 +43,6 @@ _GEOMETRY_QC_MARKERS = (
 )
 
 
-def _record_artifact_path(record_dir: Path, record: dict | None, key: str, default: str) -> Path:
-    artifacts = record.get("artifacts") if isinstance(record, dict) else None
-    if isinstance(artifacts, dict):
-        value = artifacts.get(key)
-        if isinstance(value, str) and value.strip():
-            return record_dir / value
-    return record_dir / default
-
-
 def _collect_candidates(repo_root: Path, *, force: bool) -> tuple[list[CompileCandidate], int]:
     repo = StorageRepo(repo_root)
     records_root = repo.layout.records_root
@@ -64,22 +55,10 @@ def _collect_candidates(repo_root: Path, *, force: bool) -> tuple[list[CompileCa
     for record_dir in sorted(path for path in records_root.iterdir() if path.is_dir()):
         record_id = record_dir.name
         record = repo.read_json(repo.layout.record_metadata_path(record_id))
-        script_path = _record_artifact_path(record_dir, record, "model_py", "model.py")
-        urdf_path = _record_artifact_path(record_dir, record, "model_urdf", "model.urdf")
-        compile_report_path = _record_artifact_path(
-            record_dir,
-            record,
-            "compile_report_json",
-            "compile_report.json",
-        )
-
-        if not script_path.exists():
-            skipped_missing_script += 1
-            continue
-
-        if force:
-            candidates.append(CompileCandidate(record_id=record_id, reason="forced", force=True))
-            continue
+        artifact_paths = record_artifact_paths(repo, record_id, record=record)
+        script_path = artifact_paths["model_py"]
+        urdf_path = artifact_paths["model_urdf"]
+        compile_report_path = artifact_paths["compile_report_json"]
 
         compile_report = repo.read_json(compile_report_path)
         compile_status = (
@@ -87,6 +66,20 @@ def _collect_candidates(repo_root: Path, *, force: bool) -> tuple[list[CompileCa
             if isinstance(compile_report, dict) and isinstance(compile_report.get("status"), str)
             else None
         )
+
+        if not script_path.exists():
+            if isinstance(record, dict) or compile_status is not None or urdf_path.exists():
+                candidates.append(
+                    CompileCandidate(record_id=record_id, reason="missing model.py", force=False)
+                )
+                continue
+            skipped_missing_script += 1
+            continue
+
+        if force:
+            candidates.append(CompileCandidate(record_id=record_id, reason="forced", force=True))
+            continue
+
         materialization_status = infer_materialization_status(repo, record_id, record=record)
 
         if not urdf_path.exists():

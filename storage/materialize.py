@@ -53,6 +53,49 @@ def _record_artifact_path(
     return record_dir / default
 
 
+def record_artifact_paths(
+    repo: StorageRepo,
+    record_id: str,
+    *,
+    record: dict[str, Any] | None = None,
+) -> dict[str, Path]:
+    record_dir = repo.layout.record_dir(record_id)
+    return {
+        "model_py": _record_artifact_path(record_dir, record, "model_py", "model.py"),
+        "model_urdf": _record_artifact_path(record_dir, record, "model_urdf", "model.urdf"),
+        "compile_report_json": _record_artifact_path(
+            record_dir,
+            record,
+            "compile_report_json",
+            "compile_report.json",
+        ),
+        "provenance_json": _record_artifact_path(
+            record_dir,
+            record,
+            "provenance_json",
+            "provenance.json",
+        ),
+    }
+
+
+def ensure_record_artifacts_exist(
+    repo: StorageRepo,
+    record_id: str,
+    *,
+    record: dict[str, Any] | None = None,
+    required: tuple[str, ...],
+) -> None:
+    paths = record_artifact_paths(repo, record_id, record=record)
+    missing = [name for name in required if not paths[name].exists()]
+    if not missing:
+        return
+
+    missing_labels = ", ".join(missing)
+    raise FileNotFoundError(
+        f"Record {record_id} is missing canonical artifact(s): {missing_labels}"
+    )
+
+
 def _has_nonempty_dir(path: Path) -> bool:
     return path.exists() and path.is_dir() and any(path.iterdir())
 
