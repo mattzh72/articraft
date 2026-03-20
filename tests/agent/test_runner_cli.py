@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+from pathlib import Path
 
 import pytest
 
@@ -62,3 +63,29 @@ def test_runner_dump_provider_payload_supports_hybrid_sdk(
     docs_message = payload["input"][0]["content"][0]["text"]
     assert "The selected SDK package for this run is `sdk_hybrid`." in docs_message
     assert "## sdk/_docs/cadquery/35_cadquery.md" in docs_message
+
+
+def test_runner_accepts_openai_api_keys_env(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+) -> None:
+    async def _fake_run_from_input(*args, **kwargs) -> int:  # type: ignore[no-untyped-def]
+        return 0
+
+    monkeypatch.setattr(runner, "run_from_input", _fake_run_from_input)
+    monkeypatch.setattr(runner, "load_dotenv", lambda: None)
+    monkeypatch.delenv("OPENAI_API_KEY", raising=False)
+    monkeypatch.setenv("OPENAI_API_KEYS", "sk-first,sk-second")
+
+    exit_code = runner.main(
+        [
+            "--prompt",
+            "test prompt",
+            "--provider",
+            "openai",
+            "--repo-root",
+            str(tmp_path),
+        ]
+    )
+
+    assert exit_code == 0

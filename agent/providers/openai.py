@@ -31,6 +31,35 @@ except Exception:  # pragma: no cover
 logger = logging.getLogger(__name__)
 
 
+def openai_api_keys_from_env(env: dict[str, str] | None = None) -> list[str]:
+    values = os.environ if env is None else env
+
+    def _split(raw: str | None) -> list[str]:
+        if not raw:
+            return []
+        return [token.strip() for token in raw.replace("\n", ",").split(",") if token.strip()]
+
+    keys: list[str] = []
+    primary_key = values.get("OPENAI_API_KEY")
+    if primary_key and primary_key.strip():
+        keys.append(primary_key.strip())
+    keys.extend(_split(values.get("OPENAI_API_KEYS")))
+
+    unique_keys: list[str] = []
+    seen: set[str] = set()
+    for key in keys:
+        if key in seen:
+            continue
+        unique_keys.append(key)
+        seen.add(key)
+    return unique_keys
+
+
+def openai_api_key_from_env(env: dict[str, str] | None = None) -> str | None:
+    keys = openai_api_keys_from_env(env)
+    return random.choice(keys) if keys else None
+
+
 class OpenAILLM:
     """Minimal OpenAI Responses API client for tool-calling workflows."""
 
@@ -67,9 +96,11 @@ class OpenAILLM:
             self._client_is_async = False
         else:
             load_dotenv()
-            api_key = os.environ.get("OPENAI_API_KEY")
+            api_key = openai_api_key_from_env()
             if not api_key:
-                raise ValueError("OPENAI_API_KEY environment variable is not set")
+                raise ValueError(
+                    "OpenAI credentials not found. Set OPENAI_API_KEY or OPENAI_API_KEYS."
+                )
             self._api_key = api_key
 
             self._client: Any

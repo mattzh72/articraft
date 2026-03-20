@@ -20,11 +20,7 @@ name := ""
 
 setup:
     # Create a local env template once; never overwrite an existing secrets file.
-    @if [ ! -f .env ]; then \
-        cp .env.example .env; \
-        echo "Created .env from .env.example"; \
-        echo "Set OPENAI_API_KEYS or OPENAI_API_KEY and/or GEMINI_API_KEYS in .env before running the agent harness."; \
-    fi
+    python3 scripts/bootstrap_env.py .
     uv sync --group dev
     uv run pre-commit install --hook-type pre-commit --hook-type pre-push
     @if command -v npm >/dev/null 2>&1; then \

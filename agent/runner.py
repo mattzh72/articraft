@@ -9,7 +9,6 @@ import asyncio
 import hashlib
 import json
 import logging
-import os
 import platform
 import shutil
 import subprocess
@@ -40,7 +39,7 @@ from agent.prompts import (
     resolve_system_prompt_path,
 )
 from agent.providers.gemini import GeminiLLM, gemini_client_config_from_env
-from agent.providers.openai import OpenAILLM
+from agent.providers.openai import OpenAILLM, openai_api_key_from_env
 from agent.tools import (
     build_first_turn_messages as _build_first_turn_messages,
 )
@@ -2035,8 +2034,11 @@ def main(argv: list[str] | None = None) -> int:
             print(str(exc), file=sys.stderr)
             return 1
     elif args.provider == "openai":
-        if not os.environ.get("OPENAI_API_KEY"):
-            print("OPENAI_API_KEY environment variable is required.", file=sys.stderr)
+        if not openai_api_key_from_env():
+            print(
+                "OpenAI credentials are required. Set OPENAI_API_KEY or OPENAI_API_KEYS.",
+                file=sys.stderr,
+            )
             return 1
 
     model_id = args.model

@@ -32,7 +32,7 @@ just setup
 
 This does the initial local setup:
 
-- creates `.env` from `.env.example` if `.env` does not exist yet
+- creates `.env` from `.env.example` if `.env` does not exist yet, seeding supported provider env vars from your current shell when present
 - installs Python dev dependencies, including `pre-commit` and `ruff`
 - installs `viewer/web` dependencies when `npm` is available
 - installs the git `pre-commit` and `pre-push` hooks
