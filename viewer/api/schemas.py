@@ -151,7 +151,8 @@ class RecordRatingResponse(BaseModel):
 
 
 class PromoteRecordRequest(BaseModel):
-    category_title: str = Field(min_length=1)
+    category_title: str | None = Field(default=None, min_length=1)
+    category_slug: str | None = Field(default=None, min_length=1)
     dataset_id: str | None = None
 
 

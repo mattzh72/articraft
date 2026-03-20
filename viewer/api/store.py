@@ -734,12 +734,14 @@ class ViewerStore:
         self,
         record_id: str,
         *,
-        category_title: str,
+        category_title: str | None = None,
+        category_slug: str | None = None,
         dataset_id: str | None = None,
     ) -> DatasetEntryResponse:
-        normalized_category_title = category_title.strip()
-        if not normalized_category_title:
-            raise ValueError("Category title is required.")
+        normalized_category_title = category_title.strip() if category_title else None
+        normalized_category_slug = category_slug.strip() if category_slug else None
+        if not normalized_category_title and not normalized_category_slug:
+            raise ValueError("Category title or category slug is required.")
 
         normalized_dataset_id = dataset_id.strip() if dataset_id else None
         entry, _, _, _ = promote_record_workflow(
@@ -748,6 +750,7 @@ class ViewerStore:
             StorageQueries(self.repo),
             record_id=record_id,
             category_title=normalized_category_title,
+            category_slug=normalized_category_slug,
             dataset_id=normalized_dataset_id or None,
             promoted_at=_utc_now(),
         )

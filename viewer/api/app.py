@@ -307,6 +307,7 @@ def create_app(*, repo_root: Path | None = None) -> FastAPI:
                 app.state.viewer_store.promote_record_to_dataset,
                 record_id,
                 category_title=payload.category_title,
+                category_slug=payload.category_slug,
                 dataset_id=payload.dataset_id,
             )
         except ValueError as exc:

@@ -189,7 +189,8 @@ def promote_record_workflow(
     queries: StorageQueries,
     *,
     record_id: str,
-    category_title: str,
+    category_title: str | None,
+    category_slug: str | None = None,
     dataset_id: str | None,
     promoted_at: str,
 ) -> tuple[dict, dict, dict, SearchIndexStats]:
@@ -200,7 +201,23 @@ def promote_record_workflow(
     if not isinstance(record, dict):
         raise ValueError(f"Missing record.json for {record_id}")
 
-    category_slug = slugify_category_title(category_title)
+    normalized_category_slug = str(category_slug or "").strip()
+    normalized_category_title = str(category_title or "").strip()
+    if normalized_category_slug:
+        category_slug = normalized_category_slug
+        if not normalized_category_title:
+            existing_category = CategoryStore(repo).load(category_slug)
+            normalized_category_title = (
+                str((existing_category or {}).get("title") or "").strip()
+                if isinstance(existing_category, dict)
+                else ""
+            ) or category_title_from_slug(category_slug)
+    else:
+        if not normalized_category_title:
+            raise ValueError("Category title or category slug is required.")
+        category_slug = slugify_category_title(normalized_category_title)
+    category_title = normalized_category_title
+
     existing_entry = datasets.load_entry(record_id)
     used_sequence: int | None = None
     resolved_dataset_id = dataset_id

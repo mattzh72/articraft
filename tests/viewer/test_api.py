@@ -520,7 +520,6 @@ def test_viewer_api_end_to_end(tmp_path: Path) -> None:
         "average_rating": 2.0,
         "average_cost_usd": 0.15,
     }
-
     invalid_rating = client.put("/api/records/rec_001/rating", json={"rating": 7})
     assert invalid_rating.status_code == 422
 
@@ -582,6 +581,93 @@ def test_viewer_api_end_to_end(tmp_path: Path) -> None:
 
     missing = client.get("/api/runs/run_missing")
     assert missing.status_code == 404
+
+
+def test_viewer_api_promote_uses_category_slug_not_display_title(tmp_path: Path) -> None:
+    repo = StorageRepo(tmp_path)
+    repo.ensure_layout()
+
+    CategoryStore(repo).save(
+        CategoryRecord(
+            schema_version=1,
+            slug="screwin_light_bulb_with_socket",
+            title="Screw-in light bulb with socket",
+            current_count=0,
+            last_item_index=0,
+            run_count=0,
+        )
+    )
+    RecordStore(repo).write_record(
+        Record(
+            schema_version=1,
+            record_id="rec_light_001",
+            created_at="2026-03-19T14:44:36Z",
+            updated_at="2026-03-19T14:44:36Z",
+            rating=None,
+            kind="generated_model",
+            prompt_kind="single_prompt",
+            category_slug=None,
+            source=SourceRef(run_id="run_light_001"),
+            sdk_package="sdk",
+            provider="openai",
+            model_id="gpt-5.4",
+            display=DisplayMetadata(
+                title="Swivel bulb",
+                prompt_preview="A screw-in light bulb with socket articulation.",
+            ),
+            artifacts=RecordArtifacts(
+                prompt_txt="prompt.txt",
+                prompt_series_json=None,
+                model_py="model.py",
+                model_urdf="model.urdf",
+                compile_report_json="compile_report.json",
+                provenance_json="provenance.json",
+                cost_json=None,
+            ),
+            collections=["workbench"],
+        )
+    )
+    CollectionStore(repo).append_workbench_entry(
+        record_id="rec_light_001",
+        added_at="2026-03-19T14:44:36Z",
+    )
+    RunStore(repo).write_run(
+        RunRecord(
+            schema_version=1,
+            run_id="run_light_001",
+            run_mode="workbench",
+            collection="workbench",
+            created_at="2026-03-19T14:44:36Z",
+            updated_at="2026-03-19T14:44:36Z",
+            provider="openai",
+            model_id="gpt-5.4",
+            sdk_package="sdk",
+            status="success",
+            category_slug=None,
+            prompt_count=1,
+        )
+    )
+
+    client = TestClient(create_app(repo_root=tmp_path))
+    promote_response = client.post(
+        "/api/records/rec_light_001/promote",
+        json={
+            "category_slug": "screwin_light_bulb_with_socket",
+            "category_title": "Screw-in light bulb with socket",
+        },
+    )
+
+    assert promote_response.status_code == 200
+    assert promote_response.json()["category_slug"] == "screwin_light_bulb_with_socket"
+    assert promote_response.json()["dataset_id"] == "ds_screwin_light_bulb_with_socket_0001"
+
+    promoted_record = repo.read_json(repo.layout.record_metadata_path("rec_light_001"))
+    assert promoted_record["category_slug"] == "screwin_light_bulb_with_socket"
+    assert promoted_record["collections"] == ["dataset"]
+
+    category = repo.read_json(repo.layout.category_metadata_path("screwin_light_bulb_with_socket"))
+    assert category["title"] == "Screw-in light bulb with socket"
+    assert not repo.layout.category_metadata_path("screw_in_light_bulb_with_socket").exists()
 
 
 def test_viewer_api_ensures_record_assets_on_demand(

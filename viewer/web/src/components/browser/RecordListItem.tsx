@@ -407,6 +407,7 @@ export function RecordListItem({ record, multiSelectActive, isMultiSelected, onM
 
     try {
       await promoteRecordToDataset(record.record_id, {
+        categorySlug: selectedCategoryOption.slug,
         categoryTitle: selectedCategoryOption.title,
         datasetId: promoteDatasetId,
       });

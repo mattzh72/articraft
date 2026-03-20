@@ -119,7 +119,8 @@ export async function deleteRecord(recordId: string): Promise<DeleteRecordResult
 export async function promoteRecordToDataset(
   recordId: string,
   params: {
-    categoryTitle: string;
+    categorySlug: string;
+    categoryTitle?: string | null;
     datasetId?: string | null;
   },
 ): Promise<DatasetEntry> {
@@ -129,7 +130,8 @@ export async function promoteRecordToDataset(
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      category_title: params.categoryTitle,
+      category_slug: params.categorySlug.trim(),
+      category_title: params.categoryTitle?.trim() ? params.categoryTitle.trim() : null,
       dataset_id: params.datasetId?.trim() ? params.datasetId.trim() : null,
     }),
   });
