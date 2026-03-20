@@ -5,14 +5,96 @@ from types import SimpleNamespace
 
 from fastapi.testclient import TestClient
 
+from storage.categories import CategoryStore
 from storage.collections import CollectionStore
 from storage.datasets import DatasetStore
-from storage.models import DisplayMetadata, Record, RecordArtifacts, RunRecord, SourceRef
+from storage.models import (
+    CategoryRecord,
+    DisplayMetadata,
+    Record,
+    RecordArtifacts,
+    RunRecord,
+    SourceRef,
+)
 from storage.records import RecordStore
 from storage.repo import StorageRepo
 from storage.runs import RunStore
 from viewer.api.app import create_app
 from viewer.api.store import ViewerStore
+
+
+def test_viewer_store_delete_record_removes_empty_ad_hoc_category(tmp_path: Path) -> None:
+    repo = StorageRepo(tmp_path)
+    repo.ensure_layout()
+
+    CategoryStore(repo).save(
+        CategoryRecord(
+            schema_version=1,
+            slug="internet_router",
+            title="Internet Router",
+            current_count=1,
+            last_item_index=1,
+            run_count=1,
+        )
+    )
+    RecordStore(repo).write_record(
+        Record(
+            schema_version=1,
+            record_id="rec_router_001",
+            created_at="2026-03-19T14:44:36Z",
+            updated_at="2026-03-19T14:44:36Z",
+            rating=None,
+            kind="generated_model",
+            prompt_kind="single_prompt",
+            category_slug="internet_router",
+            source=SourceRef(run_id="run_router_001"),
+            sdk_package="sdk",
+            provider="openai",
+            model_id="gpt-5.4",
+            display=DisplayMetadata(
+                title="Router",
+                prompt_preview="A realistic model of an internet router.",
+            ),
+            artifacts=RecordArtifacts(
+                prompt_txt="prompt.txt",
+                prompt_series_json=None,
+                model_py="model.py",
+                model_urdf="model.urdf",
+                compile_report_json="compile_report.json",
+                provenance_json="provenance.json",
+                cost_json=None,
+            ),
+            collections=["dataset"],
+        )
+    )
+    DatasetStore(repo).promote_record(
+        record_id="rec_router_001",
+        dataset_id="ds_internet_router_0001",
+        promoted_at="2026-03-19T14:45:00Z",
+    )
+    RunStore(repo).write_run(
+        RunRecord(
+            schema_version=1,
+            run_id="run_router_001",
+            run_mode="dataset_single",
+            collection="dataset",
+            created_at="2026-03-19T14:44:36Z",
+            updated_at="2026-03-19T14:45:00Z",
+            provider="openai",
+            model_id="gpt-5.4",
+            sdk_package="sdk",
+            status="success",
+            category_slug="internet_router",
+            prompt_count=1,
+        )
+    )
+
+    deleted = ViewerStore(tmp_path).delete_record("rec_router_001")
+
+    assert deleted is True
+    assert not repo.layout.record_dir("rec_router_001").exists()
+    assert not repo.layout.category_metadata_path("internet_router").exists()
+    assert DatasetStore(repo).list_entries() == []
 
 
 def test_viewer_api_end_to_end(tmp_path: Path) -> None:

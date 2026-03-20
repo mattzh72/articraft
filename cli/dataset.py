@@ -12,6 +12,9 @@ from cli.common import add_data_root_argument
 from storage.categories import CategoryStore
 from storage.collections import CollectionStore
 from storage.dataset_workflow import (
+    category_title_from_slug as _shared_category_title_from_slug,
+)
+from storage.dataset_workflow import (
     next_dataset_id as _shared_next_dataset_id,
 )
 from storage.dataset_workflow import (
@@ -19,6 +22,9 @@ from storage.dataset_workflow import (
 )
 from storage.dataset_workflow import (
     promote_record_workflow as _shared_promote_record_workflow,
+)
+from storage.dataset_workflow import (
+    reconcile_category_metadata as _shared_reconcile_category_metadata,
 )
 from storage.dataset_workflow import (
     sdk_package_to_target_sdk_version as _shared_sdk_package_to_target_sdk_version,
@@ -129,6 +135,10 @@ def _sdk_package_to_target_sdk_version(sdk_package: str) -> str | None:
     return _shared_sdk_package_to_target_sdk_version(sdk_package)
 
 
+def _category_title_from_slug(category_slug: str) -> str:
+    return _shared_category_title_from_slug(category_slug)
+
+
 def _parse_canonical_dataset_sequence(dataset_id: str, category_slug: str) -> int | None:
     return _shared_parse_canonical_dataset_sequence(dataset_id, category_slug)
 
@@ -159,6 +169,27 @@ def _upsert_category_metadata(
         category_title=category_title,
         category_slug=category_slug,
         now=now,
+        sequence=sequence,
+    )
+
+
+def _reconcile_category_metadata(
+    repo: StorageRepo,
+    queries: StorageQueries,
+    *,
+    category_slug: str,
+    now: str,
+    category_title: str | None = None,
+    record: dict | None = None,
+    sequence: int | None = None,
+) -> dict | None:
+    return _shared_reconcile_category_metadata(
+        repo,
+        queries,
+        category_slug=category_slug,
+        now=now,
+        category_title=category_title,
+        record=record,
         sequence=sequence,
     )
 
@@ -380,6 +411,7 @@ def _delete_record(
 ) -> tuple[dict, object]:
     collections = CollectionStore(repo)
     records = RecordStore(repo)
+    queries = StorageQueries(repo)
 
     collections.remove_workbench_entries(preview.record_id)
 
@@ -392,6 +424,16 @@ def _delete_record(
                 shutil.rmtree(path)
 
     records.delete_record(preview.record_id)
+    if preview.category_slug:
+        _reconcile_category_metadata(
+            repo,
+            queries,
+            category_slug=preview.category_slug,
+            category_title=None,
+            record=None,
+            now=_utc_now(),
+            sequence=None,
+        )
     manifest = datasets.write_dataset_manifest()
     search_stats = SearchIndex(repo).rebuild()
     return manifest, search_stats
@@ -585,6 +627,20 @@ def main(argv: list[str] | None = None) -> int:
         except ValueError as exc:
             print(str(exc))
             return 1
+        record = repo.read_json(repo.layout.record_metadata_path(entry["record_id"]))
+        if isinstance(record, dict):
+            _reconcile_category_metadata(
+                repo,
+                queries,
+                record=record,
+                category_title=_category_title_from_slug(entry["category_slug"]),
+                category_slug=entry["category_slug"],
+                now=args.promoted_at or _utc_now(),
+                sequence=_parse_canonical_dataset_sequence(
+                    entry["dataset_id"],
+                    entry["category_slug"],
+                ),
+            )
         print(
             "Promoted "
             f"record_id={entry['record_id']} dataset_id={entry['dataset_id']} "

@@ -12,7 +12,7 @@ from pathlib import Path
 from typing import Any
 
 from storage.collections import CollectionStore
-from storage.dataset_workflow import promote_record_workflow
+from storage.dataset_workflow import promote_record_workflow, reconcile_category_metadata
 from storage.datasets import DatasetStore
 from storage.materialize import infer_materialization_status
 from storage.models import CompileReport as StorageCompileReport
@@ -1084,6 +1084,7 @@ class ViewerStore:
         if not isinstance(record, dict):
             return False
 
+        category_slug = str(record.get("category_slug") or "").strip()
         source = record.get("source")
         run_id = source.get("run_id") if isinstance(source, dict) else None
 
@@ -1099,6 +1100,16 @@ class ViewerStore:
 
         deleted = self.records.delete_record(record_id)
         if deleted:
+            if category_slug:
+                reconcile_category_metadata(
+                    self.repo,
+                    StorageQueries(self.repo),
+                    category_slug=category_slug,
+                    category_title=None,
+                    record=None,
+                    now=_utc_now(),
+                    sequence=None,
+                )
             self.datasets.write_dataset_manifest()
             self.search.rebuild()
         return deleted

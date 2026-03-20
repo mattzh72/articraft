@@ -88,6 +88,7 @@ def test_dataset_cli_commands_cover_promote_delete_and_prune(tmp_path: Path) -> 
             schema_version=1,
             slug="hinges",
             title="Hinges",
+            prompt_batch_ids=["seed_batch"],
         )
     )
 
@@ -157,6 +158,10 @@ def test_dataset_cli_commands_cover_promote_delete_and_prune(tmp_path: Path) -> 
             )
             == 0
         )
+        category = json.loads(
+            repo.layout.category_metadata_path("hinges").read_text(encoding="utf-8")
+        )
+        assert category["current_count"] == 1
         assert dataset_main(["--repo-root", str(repo_root), "validate"]) == 0
         assert dataset_main(["--repo-root", str(repo_root), "build-manifest"]) == 0
         assert dataset_main(["--repo-root", str(repo_root), "status"]) == 0
@@ -205,6 +210,11 @@ def test_dataset_cli_commands_cover_promote_delete_and_prune(tmp_path: Path) -> 
             == 0
         )
         assert not repo.layout.record_dir("rec_cli").exists()
+        category = json.loads(
+            repo.layout.category_metadata_path("hinges").read_text(encoding="utf-8")
+        )
+        assert category["prompt_batch_ids"] == ["seed_batch"]
+        assert category["current_count"] == 0
         assert repo.layout.run_metadata_path("run_cli").exists()
         assert repo.layout.search_index_path().exists()
         assert (CollectionStore(repo).load_workbench() or {}).get("entries", []) == []

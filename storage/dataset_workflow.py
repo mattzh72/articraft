@@ -29,6 +29,13 @@ def slugify_category_title(title: str) -> str:
     return slug
 
 
+def category_title_from_slug(category_slug: str) -> str:
+    words = category_slug.replace("-", " ").replace("_", " ").split()
+    if not words:
+        return category_slug
+    return " ".join(words).title()
+
+
 def parse_canonical_dataset_sequence(dataset_id: str, category_slug: str) -> int | None:
     prefix = f"ds_{category_slug}_"
     if not dataset_id.startswith(prefix):
@@ -70,36 +77,49 @@ def next_dataset_id(
     return dataset_id, sequence
 
 
-def upsert_category_metadata(
+def reconcile_category_metadata(
     repo: StorageRepo,
     queries: StorageQueries,
     *,
-    record: dict,
-    category_title: str,
     category_slug: str,
     now: str,
-    sequence: int | None,
-) -> dict:
+    sequence: int | None = None,
+    category_title: str | None = None,
+    record: dict | None = None,
+) -> dict | None:
     categories = CategoryStore(repo)
     existing = categories.load(category_slug)
     record_category_count = len(queries.list_record_ids_for_category(category_slug))
     run_count = len(queries.list_run_ids_for_category(category_slug))
+    existing_prompt_batch_ids = (
+        [
+            str(batch_id)
+            for batch_id in existing.get("prompt_batch_ids", [])
+            if str(batch_id).strip()
+        ]
+        if isinstance(existing, dict)
+        else []
+    )
+
+    # Empty ad hoc categories are taxonomy drift. Seeded categories remain in place.
+    if record_category_count == 0 and not existing_prompt_batch_ids:
+        if isinstance(existing, dict):
+            categories.delete(category_slug)
+        return None
 
     if isinstance(existing, dict):
         category = CategoryRecord(
             schema_version=int(existing.get("schema_version", 1)),
             slug=category_slug,
-            title=str(existing.get("title") or category_title),
+            title=str(
+                existing.get("title") or category_title or category_title_from_slug(category_slug)
+            ),
             description=str(existing.get("description") or ""),
-            prompt_batch_ids=[
-                str(batch_id)
-                for batch_id in existing.get("prompt_batch_ids", [])
-                if str(batch_id).strip()
-            ],
+            prompt_batch_ids=existing_prompt_batch_ids,
             target_sdk_version=(
                 str(existing.get("target_sdk_version"))
                 if existing.get("target_sdk_version") is not None
-                else sdk_package_to_target_sdk_version(str(record.get("sdk_package") or ""))
+                else sdk_package_to_target_sdk_version(str((record or {}).get("sdk_package") or ""))
             ),
             current_count=record_category_count,
             last_item_index=max(
@@ -123,11 +143,11 @@ def upsert_category_metadata(
         category = CategoryRecord(
             schema_version=1,
             slug=category_slug,
-            title=category_title,
+            title=category_title or category_title_from_slug(category_slug),
             description="",
             prompt_batch_ids=[],
             target_sdk_version=sdk_package_to_target_sdk_version(
-                str(record.get("sdk_package") or "")
+                str((record or {}).get("sdk_package") or "")
             ),
             current_count=record_category_count,
             last_item_index=sequence,
@@ -137,6 +157,30 @@ def upsert_category_metadata(
         )
     categories.save(category)
     return category.to_dict()
+
+
+def upsert_category_metadata(
+    repo: StorageRepo,
+    queries: StorageQueries,
+    *,
+    record: dict,
+    category_title: str,
+    category_slug: str,
+    now: str,
+    sequence: int | None,
+) -> dict:
+    category = reconcile_category_metadata(
+        repo,
+        queries,
+        record=record,
+        category_title=category_title,
+        category_slug=category_slug,
+        now=now,
+        sequence=sequence,
+    )
+    if not isinstance(category, dict):
+        raise ValueError(f"Failed to reconcile category metadata for {category_slug}")
+    return category
 
 
 def promote_record_workflow(

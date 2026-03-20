@@ -51,6 +51,10 @@ from agent.tools import (
     resolve_image_path as _resolve_image_path,
 )
 from storage.collections import CollectionStore
+from storage.dataset_workflow import (
+    parse_canonical_dataset_sequence,
+    reconcile_category_metadata,
+)
 from storage.datasets import DatasetStore
 from storage.materialize import ensure_record_artifacts_exist, infer_materialization_status
 from storage.models import (
@@ -73,6 +77,7 @@ from storage.models import (
     SdkSettings,
     SourceRef,
 )
+from storage.queries import StorageQueries
 from storage.records import RecordStore
 from storage.repo import StorageRepo
 from storage.runs import RunStore
@@ -1283,6 +1288,24 @@ async def _run_from_input_impl(
             category_slug=category_slug,
             dataset_id=dataset_id,
         )
+        if collection == "dataset" and category_slug:
+            persisted_record = await asyncio.to_thread(record_store.load_record, context.record_id)
+            if not isinstance(persisted_record, dict):
+                raise ValueError(f"Failed to load persisted record {context.record_id}")
+            await asyncio.to_thread(
+                reconcile_category_metadata,
+                storage_repo,
+                StorageQueries(storage_repo),
+                category_slug=category_slug,
+                category_title=None,
+                record=persisted_record,
+                now=_utc_now(),
+                sequence=(
+                    parse_canonical_dataset_sequence(dataset_id, category_slug)
+                    if dataset_id
+                    else None
+                ),
+            )
     except Exception as exc:
         finished_at = _utc_now()
         result_row = {
@@ -1697,6 +1720,23 @@ async def rerun_record_in_place(
             workbench_entry=workbench_entry,
             dataset_entry=dataset_entry if isinstance(dataset_entry, dict) else None,
         )
+        if collection == "dataset" and category_slug:
+            persisted_record = record_store.load_record(context.record_id)
+            if not isinstance(persisted_record, dict):
+                raise ValueError(f"Failed to load persisted record {context.record_id}")
+            reconcile_category_metadata(
+                storage_repo,
+                StorageQueries(storage_repo),
+                category_slug=category_slug,
+                category_title=None,
+                record=persisted_record,
+                now=_utc_now(),
+                sequence=(
+                    parse_canonical_dataset_sequence(dataset_id, category_slug)
+                    if dataset_id
+                    else None
+                ),
+            )
     except Exception as exc:
         finished_at = _utc_now()
         run_store.write_run(
