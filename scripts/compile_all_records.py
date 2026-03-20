@@ -24,6 +24,7 @@ from rich.progress import (
 )
 from rich.table import Table
 
+from agent.mp_utils import get_mp_context
 from storage.materialize import infer_materialization_status, record_artifact_paths
 from storage.repo import StorageRepo
 
@@ -616,7 +617,7 @@ def _run_compile_pool(
     worker_timeout_seconds: float,
     console: Console,
 ) -> tuple[int, list[tuple[str, str]]]:
-    ctx = mp.get_context("spawn")
+    ctx = get_mp_context()
     result_queue = ctx.Queue()
     workers: dict[int, WorkerState] = {}
     pending: deque[CompileCandidate] = deque(_sort_candidates_for_compile(candidates))

@@ -6,7 +6,6 @@ import inspect
 import json
 import logging
 import math
-import multiprocessing as mp
 import os
 import re
 import runpy
@@ -18,6 +17,7 @@ from typing import Any
 
 from agent.feedback import build_compile_signal_bundle
 from agent.models import CompileReport, CompileSignalBundle
+from agent.mp_utils import get_mp_context
 from agent.prompts import normalize_sdk_package
 
 logger = logging.getLogger(__name__)
@@ -508,7 +508,7 @@ def compile_urdf_report_maybe_timeout(
             target=target,
         )
 
-    ctx = mp.get_context("spawn")
+    ctx = get_mp_context()
     parent_conn, child_conn = ctx.Pipe(duplex=False)
     proc = ctx.Process(
         target=_compile_worker,
