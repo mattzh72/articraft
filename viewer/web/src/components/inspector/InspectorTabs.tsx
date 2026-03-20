@@ -20,6 +20,12 @@ type InspectorTabsProps = {
   onResetAll?: () => void;
   renderOptions?: RenderOptions;
   onRenderOptionChange?: <K extends keyof RenderOptions>(key: K, value: RenderOptions[K]) => void;
+  collisionSupport?: {
+    available: boolean;
+    summary: string;
+    detail: string;
+    compileCommand: string | null;
+  } | null;
 };
 
 export function InspectorTabs({
@@ -29,6 +35,7 @@ export function InspectorTabs({
   onResetAll = () => {},
   renderOptions,
   onRenderOptionChange,
+  collisionSupport = null,
 }: InspectorTabsProps): JSX.Element {
   const { selectedInspectorTab, selection } = useViewer();
   const dispatch = useViewerDispatch();
@@ -76,7 +83,11 @@ export function InspectorTabs({
       </TabsContent>
 
       <TabsContent value="render" className="min-h-0 flex-1 overflow-hidden px-3 pb-3 pt-3">
-        <RenderOptionsPanel options={activeOptions} onOptionChange={handleOptionChange} />
+        <RenderOptionsPanel
+          options={activeOptions}
+          onOptionChange={handleOptionChange}
+          collisionSupport={collisionSupport}
+        />
       </TabsContent>
 
       <TabsContent value="code" className="min-h-0 flex-1 overflow-hidden px-3 pb-3 pt-3">

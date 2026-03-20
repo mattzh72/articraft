@@ -53,7 +53,37 @@ or:
 Set `GEMINI_API_KEYS` to your Gemini keys in `.env`
 ```
 
-## 4. Generate Your First Object
+## 4. Open The Viewer Fast
+
+If you just cloned the repo and want to browse saved records with meshes as quickly as possible, precompile the visual artifacts first:
+
+```bash
+just compile-all-visual
+```
+
+This is the recommended fast path for viewer use. It materializes viewer-ready visual meshes for saved records without doing the full collision-oriented compile.
+
+If you want the full artifact path instead, including collision geometry, use:
+
+```bash
+just compile-all
+```
+
+If you want the slower validation-heavy variant of the full path, use:
+
+```bash
+just compile-all-strict
+```
+
+Then open the viewer:
+
+```bash
+just viewer
+```
+
+This starts the local API, builds the web app if needed, and opens the viewer.
+
+## 5. Generate Your First Object
 
 Run:
 
@@ -63,13 +93,6 @@ just wb "Create a realistic articulated desk lamp with a weighted base, two hing
 
 This saves a generated record into the local workbench.
 
-Optional `just` overrides go before the recipe name:
-
-```bash
-just model=gemini-3-flash-preview wb "Create a compact tabletop fan with an oscillating head and tilt adjustment."
-just image=reference.png wb "Create a weighted desk lamp with articulated arms."
-```
-
 If you do not pass overrides, `just wb` defaults to:
 
 ```bash
@@ -78,81 +101,7 @@ thinking=high
 sdk=sdk
 ```
 
-## 5. Try Another Model
-
-Examples:
-
-```bash
-just model=gpt-5.4 wb "Create a folding office chair with rolling casters and a reclining backrest."
-just model=gemini-3-flash-preview wb "Create a compact tabletop fan with an oscillating head and tilt adjustment."
-just model=gpt-5.4 thinking=high image=reference.png wb "Create a tower crane with a rotating top and suspended hook."
-```
-
-## 6. Open the Viewer
-
-After you have generated something:
-
-```bash
-just viewer
-```
-
-This starts the local API, builds the web app if needed, and opens the viewer.
-
-If you just cloned the repo and want to avoid first-click compile pauses in the viewer, precompile saved records first:
-
-```bash
-just compile-all
-```
-
-This walks the saved records, quickly materializes viewer-ready `model.urdf` + mesh assets for the ones that still need generated artifacts, and shows a progress bar while it runs.
-
-If you want the slower validation-heavy path instead, use:
-
-```bash
-just compile-all-strict
-```
-
-For live frontend development:
-
-```bash
-just viewer-dev
-just api_host=0.0.0.0 api_port=9000 viewer-dev
-```
-
-## 7. A Few Useful Commands
-
-List commands:
-
-```bash
-just
-```
-
-Rebuild the viewer search index:
-
-```bash
-just search-index
-```
-
-Recompile a saved record:
-
-```bash
-just compile data/records/<record-id>
-just sdk_package=sdk_hybrid compile data/records/<record-id>
-```
-
-Precompile all saved records that are still missing generated artifacts:
-
-```bash
-just compile-all
-```
-
-Run the validation-heavy bulk path:
-
-```bash
-just compile-all-strict
-```
-
-## 8. Run A Dataset Batch From CSV
+## 6. Run A Dataset Batch From CSV
 
 Tracked dataset batch specs live under `data/batch_specs/`. Each CSV row defines one dataset generation job, including its own model settings.
 
@@ -196,3 +145,64 @@ just spec=data/batch_specs/<batch-id>.csv concurrency=8 dataset-batch
 ```
 
 Batch rows run concurrently up to the requested limit, successful outputs are promoted into canonical dataset storage under `data/records/`, and resumable batch state is stored under `data/cache/runs/<run_id>/`.
+
+## 7. Reference
+
+List commands:
+
+```bash
+just
+```
+
+Open the viewer in frontend dev mode:
+
+```bash
+just viewer-dev
+just api_host=0.0.0.0 api_port=9000 viewer-dev
+```
+
+Rebuild the viewer search index:
+
+```bash
+just search-index
+```
+
+Recompile one saved record:
+
+```bash
+just compile-visual data/records/<record-id>
+just compile data/records/<record-id>
+just compile-strict data/records/<record-id>
+just sdk_package=sdk_hybrid compile data/records/<record-id>
+```
+
+Bulk compile variants:
+
+```bash
+just compile-all-visual
+just compile-all
+just compile-all-strict
+just force-compile-all-visual
+just force-compile-all
+```
+
+Rerun generation for an existing record:
+
+```bash
+just rerun data/records/<record-id>
+```
+
+Generate with overrides:
+
+```bash
+just model=gemini-3-flash-preview wb "Create a compact tabletop fan with an oscillating head and tilt adjustment."
+just image=reference.png wb "Create a weighted desk lamp with articulated arms."
+just model=gpt-5.4 thinking=high image=reference.png wb "Create a tower crane with a rotating top and suspended hook."
+```
+
+Run a batch directly with `uv`:
+
+```bash
+uv run articraft-dataset --repo-root . run-batch data/batch_specs/<batch-id>.csv --concurrency 8
+uv run articraft-dataset --repo-root . run-batch data/batch_specs/<batch-id>.csv --concurrency 8 --resume
+```

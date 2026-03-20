@@ -17,6 +17,7 @@ interface ViewportPanelProps {
     error: string | null;
     missingArtifacts: boolean;
   }) => void;
+  overlayNotice?: ReactNode;
   disabledOverlay?: ReactNode;
 }
 
@@ -27,6 +28,7 @@ export function ViewportPanel({
   renderOptions,
   onUrdfSpecChange,
   onLoadStateChange,
+  overlayNotice,
   disabledOverlay,
 }: ViewportPanelProps): JSX.Element {
   // Map from useRenderOptions format to RenderOptionsPanel format for SceneCanvas
@@ -42,22 +44,25 @@ export function ViewportPanel({
   };
 
   return (
-    <section className="relative h-full w-full min-w-0 overflow-hidden bg-[var(--surface-2)]">
-      <div
-        className={cn(
-          "h-full w-full transition duration-200",
-          disabledOverlay ? "pointer-events-none select-none blur-[8px] saturate-50 opacity-35" : "",
-        )}
-      >
-        <SceneCanvas
-          baseFileUrl={baseFileUrl}
-          assetRevisionKey={assetRevisionKey}
-          selectionKey={selectionKey}
-          renderOptions={sceneRenderOptions}
-          onUrdfSpecChange={onUrdfSpecChange}
-          onLoadStateChange={onLoadStateChange}
-        />
+    <section className="relative h-full w-full min-w-0 bg-[var(--surface-2)]">
+      <div className="absolute inset-0 overflow-hidden">
+        <div
+          className={cn(
+            "h-full w-full transition duration-200",
+            disabledOverlay ? "pointer-events-none select-none blur-[8px] saturate-50 opacity-35" : "",
+          )}
+        >
+          <SceneCanvas
+            baseFileUrl={baseFileUrl}
+            assetRevisionKey={assetRevisionKey}
+            selectionKey={selectionKey}
+            renderOptions={sceneRenderOptions}
+            onUrdfSpecChange={onUrdfSpecChange}
+            onLoadStateChange={onLoadStateChange}
+          />
+        </div>
       </div>
+      {overlayNotice ? <div className="absolute inset-x-0 bottom-0 z-[5] p-3">{overlayNotice}</div> : null}
       {disabledOverlay ? <div className="absolute inset-0 z-10">{disabledOverlay}</div> : null}
     </section>
   );

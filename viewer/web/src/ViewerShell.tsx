@@ -1,5 +1,5 @@
 import { startTransition, useState, useCallback, useEffect, useMemo, useRef, type JSX } from "react";
-import { ChevronLeft } from "lucide-react";
+import { AlertTriangle, ChevronLeft } from "lucide-react";
 import type { PanelImperativeHandle, PanelSize } from "react-resizable-panels";
 import * as THREE from "three";
 
@@ -31,6 +31,13 @@ const PREVIEW_UI_SYNC_MS = 100;
 type JointPoseSnapshot = {
   recordId: string;
   values: Record<string, number>;
+};
+
+type CollisionSupportState = {
+  available: boolean;
+  summary: string;
+  detail: string;
+  compileCommand: string | null;
 };
 
 function readInspectorCollapsedFromUrl(): boolean {
@@ -404,6 +411,55 @@ export default function ViewerShell(): JSX.Element {
 
   const inspectorUrdfSpec = urdfSpec ? { joints: urdfSpec.joints } : null;
   const displayedJointValues = renderOptions.autoAnimate ? previewJointValues : jointValues;
+  const collisionSupport = useMemo<CollisionSupportState | null>(() => {
+    if (!selection || !urdfSpec || modelLoadState.loading || modelLoadState.error) {
+      return null;
+    }
+
+    const collisionCount = urdfSpec.links.reduce((total, link) => total + link.collisions.length, 0);
+    if (collisionCount > 0) {
+      return {
+        available: true,
+        summary: `${collisionCount} collision ${collisionCount === 1 ? "mesh" : "meshes"} available`,
+        detail: "Collision geometry is available for this asset.",
+        compileCommand: null,
+      };
+    }
+
+    const compileRecordId =
+      selection.kind === "record"
+        ? selection.recordId
+        : selectedStagingEntry?.persisted_record?.record_id ?? null;
+
+    return {
+      available: false,
+      summary: "No collision geometry in this URDF",
+      detail: "This asset currently shows visual meshes only.",
+      compileCommand: compileRecordId ? `just compile data/records/${compileRecordId}` : null,
+    };
+  }, [modelLoadState.error, modelLoadState.loading, selectedStagingEntry?.persisted_record?.record_id, selection, urdfSpec]);
+
+  useEffect(() => {
+    if (!collisionSupport || collisionSupport.available || !renderOptions.showCollisions) {
+      return;
+    }
+    setRenderOption("showCollisions", false);
+  }, [collisionSupport, renderOptions.showCollisions, setRenderOption]);
+
+  const collisionNotice = collisionSupport && !collisionSupport.available && !missingArtifactsState ? (
+    <div className="group relative inline-flex cursor-default">
+      <div
+        className="inline-flex items-center gap-1.5 rounded-md bg-amber-500/[0.08] px-2.5 py-1 text-[11px] font-medium text-amber-600 shadow-sm backdrop-blur-sm"
+        aria-label="Missing collisions. See Render Tab on the right."
+      >
+        <AlertTriangle className="size-3 shrink-0 opacity-70" />
+        <span>Missing Collisions</span>
+      </div>
+      <span className="pointer-events-none absolute bottom-full left-1/2 z-50 mb-1.5 min-w-max -translate-x-1/2 -translate-y-0.5 rounded-md bg-amber-500/[0.08] px-2.5 py-1.5 text-[11px] font-medium text-amber-600 opacity-0 shadow-sm backdrop-blur-sm transition duration-150 ease-out group-hover:translate-y-0 group-hover:opacity-100">
+        See Render Tab on the right
+      </span>
+    </div>
+  ) : null;
 
   useEffect(() => {
     setModelLoadState({
@@ -430,6 +486,7 @@ export default function ViewerShell(): JSX.Element {
             renderOptions={renderOptions}
             onUrdfSpecChange={handleUrdfSpecChange}
             onLoadStateChange={setModelLoadState}
+            overlayNotice={collisionNotice}
             disabledOverlay={
               missingArtifactsState ? (
                 <MissingArtifactsOverlay
@@ -470,6 +527,7 @@ export default function ViewerShell(): JSX.Element {
               onResetAll={resetAll}
               renderOptions={inspectorRenderOptions}
               onRenderOptionChange={handleRenderOptionChange}
+              collisionSupport={collisionSupport}
             />
           </Inspector>
         </ResizablePanel>
