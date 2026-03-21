@@ -439,7 +439,7 @@ export function RecordListItem({ record, multiSelectActive, isMultiSelected, onM
             isMultiSelected
               ? "bg-[var(--accent-soft)]"
               : isSelected
-                ? "border-l-2 border-l-[var(--accent)] bg-[var(--accent-soft)] pl-2"
+                ? "bg-[var(--accent-soft)]"
                 : "hover:bg-[var(--surface-1)]",
           )}
           onClick={handleRowClick}
