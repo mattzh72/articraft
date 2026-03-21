@@ -1,18 +1,25 @@
 # Category Selection Requirements
 
-This document defines the bar for adding new categories to `datasets/final_10k`.
+This document defines the bar for adding or keeping categories in the current
+repo taxonomy under `data/categories/`.
 
-The goal is not just to add interesting ideas. New categories must be:
+A category is not just an interesting prompt idea.
+It is a durable taxonomy entry that should support repeated prompt batches,
+multiple believable records, and a clear `target_sdk_version`.
 
-- representable as a believable articulated object in URDF
-- implementable with this repository's SDK stack
-- distinct enough to justify a separate category in the taxonomy
+## Core Standard
 
-## Hard Requirements
+A good category should be:
 
-Every proposed category should satisfy all of the following.
+- representable as a believable articulated object with explicit URDF joints
+- buildable reliably with `sdk` or `sdk_hybrid`
+- specific enough to have a clear object identity
+- broad enough to support more than a single one-off design
+- distinct from categories we already have
 
-### 1. URDF-Valid Representation
+If a category fails any of those tests, it is probably the wrong taxonomy unit.
+
+## 1. Articulation Fit
 
 The category must map cleanly to the articulation model supported by this repo:
 
@@ -20,120 +27,146 @@ The category must map cleanly to the articulation model supported by this repo:
 - `revolute`, `continuous`, `prismatic`, or `fixed` motion
 - tree-structured kinematics
 
-Categories should be rejected if their core behavior depends on mechanisms that URDF does not represent honestly or directly, such as:
+Reject categories whose defining behavior depends on mechanisms we cannot
+represent honestly with explicit tree joints, including:
 
-- closed kinematic loops
-- cable or belt coupling
+- closed kinematic loops when the loop is essential
+- cable, belt, or chain coupling
 - pulley routing
-- helical screw motion as the primary mechanism
-- contact-driven motion
-- ratcheting, indexing, or intermittent locking behavior
-- gear-train coupling that requires linked motion constraints
+- gear coupling that requires linked motion constraints
+- helical screw motion as the primary defining mechanism
+- ratcheting, indexing, or intermittent locking as the main behavior
+- contact-driven motion that only works through simulation tricks
 
-Examples of risky categories:
+Examples of risky or usually bad fits:
 
-- cable-and-pulley lifts
+- true four-bar or scissor mechanisms when the closed loop is the whole point
+- ratchet-and-pawl devices
 - Geneva drives
-- ratchet-and-pawl mechanisms
+- cable-and-pulley lifts
 - differentials
 - true cam-follower systems
-- true four-bar or scissor mechanisms if the closed loop is essential
 
-If the defining mechanism cannot be represented faithfully without faking the behavior, the category is not a good fit.
+If we would need to fake the defining motion, it should not be a category.
 
-### 2. Implementable In Our SDK
+## 2. SDK Fit
 
-The category must be practical to author with `sdk` or `sdk_hybrid`.
+The category must be practical to author with the tools and geometry patterns
+the repo already supports.
 
-For `hybrid_cad` categories, prefer:
+Good fits usually have:
 
-- hard-surface geometry
-- explicit rigid members, brackets, rails, hubs, and housings
-- simple joint topology with clear parent/child structure
-- parts that benefit from CAD-style dimensional modeling
+- explicit rigid members, housings, shells, rails, hubs, brackets, forks,
+  yokes, arms, trays, panels, or frames
+- hard-surface geometry with clear support relationships
+- readable parent/child structure
+- geometry that can be built from primitives, profiles, sweeps, revolves,
+  booleans, and straightforward CadQuery solids
 
-Avoid categories that require:
+Bad fits usually depend on:
 
 - soft-body behavior
-- deformable materials as the main visual identity
-- simulation-only constraints
-- complex mechanical coupling not expressible through explicit authored joints
+- cloth, cables, springs, chains, or deformable materials as the main identity
+- highly organic freeform surfacing
+- exotic lofted bodywork or compound sculpted shells as the main visual story
+- mechanisms that only work with special hacks or coupled constraints
 
-If a category would require unusual hacks to pass validation or would be consistently fragile in QC, it should not be added.
+If a category would be fragile in compile, QC, or testing even when prompted
+well, it is not a good category for this repo.
 
-### 3. Taxonomically Distinct
+## 3. Category Scope
 
-A new category must not be just a thin variant of an existing one.
+A category should be a stable object class or mechanism class, not a vague
+umbrella and not a microscopic variant.
 
-Reject categories that are only:
+Good category scope:
+
+- clearly names one coherent class of object or mechanism
+- has a recognizably shared structure across examples
+- supports multiple prompt variants without changing the core identity
+- has a predictable set of common-sense articulations
+
+Bad category scope:
+
+- too broad: mixes several object families that want different prompts and
+  structures
+- too narrow: basically one exact design instance disguised as a category
+- too ambiguous: the likely outputs would vary wildly in topology or support
+  structure
+
+If you cannot picture several believable examples that still read as the same
+category, the scope is wrong.
+
+## 4. Distinctness
+
+A new category must earn its place in the taxonomy.
+It should not just be a rename or a thin extension of something we already
+cover.
+
+Usually reject categories that are only:
 
 - an existing category with one extra joint
-- a subset of an existing category
 - a count variant of an existing topology
+- a subset of an existing category
 - an attachment variant of an existing mechanism
 - a relabeling of an already-covered object class
+- an umbrella name that overlaps heavily with several existing categories
 
-Examples of weak additions:
-
-- adding another revolute-chain category only because it has one more segment
-- adding a stage category that is just `Orthogonal XY stage` plus a small head
-- adding a finger or branching-tree category that differs only by count
-
-New categories should introduce at least one of:
+A strong addition usually introduces at least one of:
 
 - a meaningfully different articulation topology
 - a meaningfully different support structure
 - a meaningfully different mechanism archetype
 - a clearly different object identity
+- a different prompt regime that deserves its own durable category
 
-## Placement Rules
+## 5. Current Repo Placement
 
-### Mechanism-First Block
+Think in terms of current category metadata, not legacy tracker blocks.
 
-The top block of the tracker is reserved for mechanism/topology categories.
+When a category is accepted, it should be reasonable to assign:
 
-These should usually be:
+- a stable slug
+- a readable title
+- a coherent prompt batch strategy
+- a `target_sdk_version`
 
-- abstract or semi-abstract mechanical structures
-- structurally legible without relying on product styling
-- strong fits for `hybrid_cad`
+Current default mapping:
 
-Examples already in this family:
+- use `base` for object-first categories where product identity, housing, body
+  shell, and visible finished form matter more than CAD-style mechanism detail
+- use `hybrid_cad` for mechanism-first categories or categories whose geometry
+  is best expressed through explicit hard-surface members, brackets, rails,
+  hubs, and dimensional CAD structure
 
-- joint chains
-- gimbal modules
-- telescoping slides
-- Cartesian stages
-- branching articulated structures
-
-### Object Categories
-
-Object-like categories belong later in the tracker, even if they contain articulation.
-
-Examples:
-
-- appliances
-- furniture
-- vehicles
-- consumer products
-- lighting fixtures
-
-For example, `Ceiling fan` belongs in the object section, not the mechanism block.
+Do not choose `hybrid_cad` just because something is mechanical.
+Do not choose `base` if the category really wants CAD-like member structure and
+precise rigid hardware.
 
 ## Decision Checklist
 
 Before adding a category, check:
 
-1. Is the core motion representable with explicit URDF joints and tree kinematics?
-2. Can we build it cleanly with `sdk` or `sdk_hybrid` without special hacks?
-3. Is it meaningfully different from the categories already in `10k_dataset_tracker.csv`?
-4. Does it belong in the mechanism block or the object block?
-5. Is the chosen `target sdk version` aligned with the category's geometry style?
+1. Is the defining motion representable with explicit URDF joints and tree
+   kinematics?
+2. Can we build multiple believable examples cleanly with `sdk` or
+   `sdk_hybrid`?
+3. Is the category scope stable and coherent?
+4. Is it meaningfully distinct from the categories already under
+   `data/categories/`?
+5. Can we assign a clear `target_sdk_version` based on how the geometry should
+   actually be authored?
+6. Would this category still make sense after several prompt batches and
+   several accepted records, not just one prompt?
 
-If any of these answers is "no" or "not really", the category should usually be rejected or renamed.
+If any answer is no, the category should usually be rejected, merged into an
+existing category, or renamed to a better taxonomy unit.
 
 ## Practical Defaults
 
-- Use `hybrid_cad` for mechanism-first categories with hard-surface, CAD-friendly geometry.
-- Use `base` for object categories where canonical product identity matters more than abstract mechanism topology.
-- Initialize newly added categories with `Count=0` unless accepted items already exist.
+- Prefer durable object or mechanism classes over clever one-off concepts.
+- Prefer categories with clear support structure and common-sense articulation.
+- Prefer categories that can produce several good prompts, not one lucky prompt.
+- Prefer categories whose main geometry is achievable with the current SDK
+  stack.
+- When in doubt, choose the simpler, clearer category boundary.
