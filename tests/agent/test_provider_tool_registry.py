@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-from agent.examples import load_example_documents
 from agent.tools import build_tool_registry
 
 
@@ -44,9 +43,7 @@ def test_provider_tool_registry_schemas() -> None:
     assert (
         "not a general api search tool" in find_examples_schema["function"]["description"].lower()
     )
-    assert "available example titles:\n-" in find_examples_schema["function"]["description"].lower()
+    assert "available example titles" not in find_examples_schema["function"]["description"].lower()
     assert "short lexical query" in (
         find_examples_schema["function"]["parameters"]["properties"]["query"]["description"].lower()
     )
-    for document in load_example_documents("sdk_hybrid"):
-        assert document.title in find_examples_schema["function"]["description"]

@@ -4,7 +4,7 @@ from pathlib import Path
 
 from pydantic import BaseModel
 
-from agent.examples import load_example_documents, search_example_documents
+from agent.examples import search_example_documents
 from agent.tools.base import BaseDeclarativeTool, BaseToolInvocation, ToolResult, make_tool_schema
 
 
@@ -54,10 +54,6 @@ class FindExamplesInvocation(BaseToolInvocation[FindExamplesParams, list[dict[st
 class FindExamplesTool(BaseDeclarativeTool):
     def __init__(self, *, sdk_package: str) -> None:
         self.sdk_package = sdk_package
-        available_titles = [doc.title for doc in load_example_documents(sdk_package)]
-        titles_block = "Available example titles:\n" + "\n".join(
-            f"- {title}" for title in available_titles
-        )
         schema = make_tool_schema(
             name="find_examples",
             description=(
@@ -69,8 +65,7 @@ class FindExamplesTool(BaseDeclarativeTool):
                 "titles.\n\n"
                 "This does not search SDK docs, tests, test helper APIs, or arbitrary "
                 "repository code. It is not a general API search tool.\n\n"
-                "If relevance is weak, the search may return fewer than limit results.\n\n"
-                f"{titles_block}"
+                "If relevance is weak, the search may return fewer than limit results."
             ),
             parameters={
                 "query": {
