@@ -70,6 +70,32 @@ export function RecordList({ onVisibleIdsChange, onCountsChange }: RecordListPro
   const [searchedRecords, setSearchedRecords] = useState<RecordSummary[] | null>(null);
   const [searchPending, setSearchPending] = useState(false);
 
+  const sourceRecords = useMemo(() => {
+    if (!bootstrap) return [];
+
+    const seen = new Map<string, RecordSummary>();
+    const addRecord = (recordId: string, record: RecordSummary | null) => {
+      if (!record || seen.has(recordId)) {
+        return;
+      }
+      seen.set(recordId, record);
+    };
+
+    if (sourceFilter === "workbench") {
+      for (const entry of bootstrap.workbench_entries) {
+        addRecord(entry.record_id, entry.record);
+      }
+    }
+
+    if (sourceFilter === "dataset") {
+      for (const entry of bootstrap.dataset_entries) {
+        addRecord(entry.record_id, entry.record);
+      }
+    }
+
+    return Array.from(seen.values());
+  }, [bootstrap, sourceFilter]);
+
   useEffect(() => {
     if (!deferredSearchQuery) {
       setSearchedRecords(null);
@@ -113,28 +139,7 @@ export function RecordList({ onVisibleIdsChange, onCountsChange }: RecordListPro
   const records = useMemo(() => {
     if (!bootstrap) return [];
 
-    const seen = new Map<string, RecordSummary>();
-
-    const addRecord = (recordId: string, record: RecordSummary | null) => {
-      if (!record) return;
-      if (!seen.has(recordId)) {
-        seen.set(recordId, record);
-      }
-    };
-
-    if (sourceFilter === "workbench") {
-      for (const entry of bootstrap.workbench_entries) {
-        addRecord(entry.record_id, entry.record);
-      }
-    }
-
-    if (sourceFilter === "dataset") {
-      for (const entry of bootstrap.dataset_entries) {
-        addRecord(entry.record_id, entry.record);
-      }
-    }
-
-    let list = deferredSearchQuery ? searchedRecords ?? [] : Array.from(seen.values());
+    let list = deferredSearchQuery ? searchedRecords ?? [] : sourceRecords;
 
     if (!deferredSearchQuery && selectedRunId) {
       list = list.filter((r) => r.run_id === selectedRunId);
@@ -172,6 +177,7 @@ export function RecordList({ onVisibleIdsChange, onCountsChange }: RecordListPro
     ratingFilter,
     searchedRecords,
     selectedRunId,
+    sourceRecords,
     sourceFilter,
     timeFilter,
   ]);
@@ -186,13 +192,8 @@ export function RecordList({ onVisibleIdsChange, onCountsChange }: RecordListPro
       return;
     }
 
-    const totalRecords =
-      sourceFilter === "dataset"
-        ? new Set(bootstrap.dataset_entries.map((entry) => entry.record_id)).size
-        : new Set(bootstrap.workbench_entries.map((entry) => entry.record_id)).size;
-
-    onCountsChange?.({ visible: records.length, total: totalRecords });
-  }, [bootstrap, onCountsChange, records.length, sourceFilter]);
+    onCountsChange?.({ visible: records.length, total: sourceRecords.length });
+  }, [bootstrap, onCountsChange, records.length, sourceRecords.length]);
 
   useEffect(() => {
     if (selectedRecordId !== previousSelectedRecordIdRef.current) {

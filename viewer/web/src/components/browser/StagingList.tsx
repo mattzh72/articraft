@@ -429,9 +429,9 @@ export function StagingList({
   useEffect(() => {
     onCountsChange?.({
       visible: visibleEntries.length,
-      total: bootstrap?.staging_entries.length ?? 0,
+      total: entries.length,
     });
-  }, [bootstrap, onCountsChange, visibleEntries.length]);
+  }, [entries.length, onCountsChange, visibleEntries.length]);
 
   if (!bootstrap && loading) {
     return (
