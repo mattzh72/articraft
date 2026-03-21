@@ -33,9 +33,9 @@ function withinCostFilter(totalCostUsd: number | null, filter: CostFilter): bool
 }
 
 function withinRatingFilter(rating: number | null, filter: RatingFilter): boolean {
-  if (filter === "any") return true;
-  if (filter === "unrated") return rating == null;
-  return rating === Number(filter);
+  if (filter.length === 0) return true;
+  if (rating == null) return filter.includes("unrated");
+  return filter.includes(String(rating) as Exclude<(typeof filter)[number], "unrated">);
 }
 
 function recordSortTimestamp(record: RecordSummary): number {
@@ -45,9 +45,10 @@ function recordSortTimestamp(record: RecordSummary): number {
 
 interface RecordListProps {
   onVisibleIdsChange?: (ids: string[]) => void;
+  onCountsChange?: (counts: { visible: number; total: number }) => void;
 }
 
-export function RecordList({ onVisibleIdsChange }: RecordListProps): JSX.Element {
+export function RecordList({ onVisibleIdsChange, onCountsChange }: RecordListProps): JSX.Element {
   const {
     bootstrap,
     searchQuery,
@@ -178,6 +179,20 @@ export function RecordList({ onVisibleIdsChange }: RecordListProps): JSX.Element
   useEffect(() => {
     onVisibleIdsChange?.(records.map((r) => r.record_id));
   }, [records, onVisibleIdsChange]);
+
+  useEffect(() => {
+    if (!bootstrap) {
+      onCountsChange?.({ visible: 0, total: 0 });
+      return;
+    }
+
+    const totalRecords =
+      sourceFilter === "dataset"
+        ? new Set(bootstrap.dataset_entries.map((entry) => entry.record_id)).size
+        : new Set(bootstrap.workbench_entries.map((entry) => entry.record_id)).size;
+
+    onCountsChange?.({ visible: records.length, total: totalRecords });
+  }, [bootstrap, onCountsChange, records.length, sourceFilter]);
 
   useEffect(() => {
     if (selectedRecordId !== previousSelectedRecordIdRef.current) {

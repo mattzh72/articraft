@@ -2,7 +2,7 @@ import { useEffect, useMemo, useRef, useState, type JSX } from "react";
 import { createPortal } from "react-dom";
 import { Check, ChevronDown, Search } from "lucide-react";
 
-import type { CostFilter, RatingFilter, RecordSummary, TimeFilter } from "@/lib/types";
+import type { CostFilter, RatingFilter, RatingFilterValue, RecordSummary, TimeFilter } from "@/lib/types";
 import { useViewer, useViewerDispatch } from "@/lib/viewer-context";
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
@@ -23,8 +23,7 @@ const timeOptions: Array<{ value: TimeFilter; label: string }> = [
   { value: "90d", label: "Last 90 days" },
 ];
 
-const ratingOptions: Array<{ value: RatingFilter; label: string }> = [
-  { value: "any", label: "Any rating" },
+const ratingOptions: Array<{ value: RatingFilterValue; label: string }> = [
   { value: "5", label: "5 stars" },
   { value: "4", label: "4 stars" },
   { value: "3", label: "3 stars" },
@@ -85,14 +84,22 @@ function filterTriggerClass(active: boolean, className?: string): string {
   );
 }
 
-function CategoryMultiSelect({
+function MultiSelectFilter({
   options,
   selectedValues,
   onChange,
+  title,
+  searchPlaceholder,
+  noMatchLabel,
+  triggerLabel,
 }: {
   options: CategoryOption[];
   selectedValues: string[];
   onChange: (nextValues: string[]) => void;
+  title: string;
+  searchPlaceholder: string;
+  noMatchLabel: string;
+  triggerLabel: (options: CategoryOption[], selectedValues: string[]) => string;
 }): JSX.Element {
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState("");
@@ -137,7 +144,7 @@ function CategoryMultiSelect({
   }, [open]);
 
   const selectedSet = useMemo(() => new Set(selectedValues), [selectedValues]);
-  const triggerLabel = categoryTriggerLabel(options, selectedValues);
+  const resolvedTriggerLabel = triggerLabel(options, selectedValues);
 
   const filteredOptions = useMemo(() => {
     const query = search.trim().toLowerCase();
@@ -167,7 +174,7 @@ function CategoryMultiSelect({
           !hasActiveFilter && "focus-visible:border-[var(--accent)]",
         )}
       >
-        <span className="truncate">{triggerLabel}</span>
+        <span className="truncate">{resolvedTriggerLabel}</span>
         <ChevronDown
           className={cn(
             "size-3 transition-transform duration-150",
@@ -180,7 +187,7 @@ function CategoryMultiSelect({
       {open ? (
         <div className="absolute left-0 top-[calc(100%+0.375rem)] z-50 w-64 rounded-lg border border-[var(--border-default)] bg-[var(--surface-0)] p-1 shadow-[0_4px_16px_rgba(0,0,0,0.08),0_0_0_1px_rgba(0,0,0,0.02)]">
           <div className="flex items-center justify-between px-2 py-1">
-            <span className="text-[10px] font-medium uppercase tracking-[0.04em] text-[var(--text-tertiary)]">Categories</span>
+            <span className="text-[10px] font-medium uppercase tracking-[0.04em] text-[var(--text-tertiary)]">{title}</span>
             {selectedValues.length > 0 ? (
               <button
                 type="button"
@@ -200,7 +207,7 @@ function CategoryMultiSelect({
                 type="text"
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                placeholder="Search categories…"
+                placeholder={searchPlaceholder}
                 className="w-full rounded-md border border-[var(--border-default)] bg-[var(--surface-1)] py-1 pl-7 pr-2 text-[12px] text-[var(--text-primary)] placeholder:text-[var(--text-tertiary)] outline-none transition-colors focus:border-[var(--accent)]"
               />
             </div>
@@ -209,7 +216,7 @@ function CategoryMultiSelect({
           <div role="listbox" aria-multiselectable="true" className="max-h-64 overflow-y-auto">
             {filteredOptions.length === 0 ? (
               <div className="px-2.5 py-3 text-center text-[11px] text-[var(--text-tertiary)]">
-                No categories match
+                {noMatchLabel}
               </div>
             ) : null}
             {filteredOptions.map((option) => {
@@ -242,6 +249,16 @@ function CategoryMultiSelect({
       ) : null}
     </div>
   );
+}
+
+function ratingTriggerLabel(options: CategoryOption[], selectedValues: string[]): string {
+  if (selectedValues.length === 0) {
+    return "Any rating";
+  }
+  if (selectedValues.length === 1) {
+    return options.find((option) => option.value === selectedValues[0])?.label ?? selectedValues[0];
+  }
+  return `${selectedValues.length} ratings`;
 }
 
 function formatCostValue(value: number): string {
@@ -504,7 +521,7 @@ export function ExplorerFilters(): JSX.Element | null {
 
   const costFilterActive = costFilter.min != null || costFilter.max != null;
   const timeFilterActive = timeFilter !== "any";
-  const ratingFilterActive = ratingFilter !== "any";
+  const ratingFilterActive = ratingFilter.length > 0;
   const modelFilterActive = modelFilter !== null;
   const categoryFilterActive = sourceFilter === "dataset" && categoryFilters.length > 0;
 
@@ -557,7 +574,7 @@ export function ExplorerFilters(): JSX.Element | null {
             onClick={() => {
               dispatch({ type: "SET_TIME_FILTER", payload: "any" });
               dispatch({ type: "SET_COST_FILTER", payload: { min: null, max: null } });
-              dispatch({ type: "SET_RATING_FILTER", payload: "any" });
+              dispatch({ type: "SET_RATING_FILTER", payload: [] });
               dispatch({ type: "SET_MODEL_FILTER", payload: null });
               dispatch({ type: "SET_CATEGORY_FILTERS", payload: [] });
             }}
@@ -588,18 +605,15 @@ export function ExplorerFilters(): JSX.Element | null {
           onChange={(nextValue) => dispatch({ type: "SET_COST_FILTER", payload: nextValue })}
         />
 
-        <Select value={ratingFilter} onValueChange={(value) => dispatch({ type: "SET_RATING_FILTER", payload: value as RatingFilter })}>
-          <SelectTrigger size="sm" className={filterTriggerClass(ratingFilterActive)}>
-            <SelectValue placeholder="Any rating" />
-          </SelectTrigger>
-          <SelectContent>
-            {ratingOptions.map((option) => (
-              <SelectItem key={option.value} value={option.value}>
-                {option.label}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+        <MultiSelectFilter
+          options={ratingOptions}
+          selectedValues={ratingFilter}
+          onChange={(nextValues) => dispatch({ type: "SET_RATING_FILTER", payload: nextValues as RatingFilter })}
+          title="Ratings"
+          searchPlaceholder="Search ratings…"
+          noMatchLabel="No ratings match"
+          triggerLabel={ratingTriggerLabel}
+        />
 
         <Select
           value={modelFilter ?? "all"}
@@ -624,10 +638,14 @@ export function ExplorerFilters(): JSX.Element | null {
         </Select>
 
         {sourceFilter === "dataset" && availableCategories.length > 0 ? (
-          <CategoryMultiSelect
+          <MultiSelectFilter
             options={availableCategories}
             selectedValues={categoryFilters}
             onChange={(nextValues) => dispatch({ type: "SET_CATEGORY_FILTERS", payload: nextValues })}
+            title="Categories"
+            searchPlaceholder="Search categories…"
+            noMatchLabel="No categories match"
+            triggerLabel={categoryTriggerLabel}
           />
         ) : null}
       </div>

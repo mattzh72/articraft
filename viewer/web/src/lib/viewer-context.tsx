@@ -16,6 +16,7 @@ import type {
   CostFilter,
   InspectorTab,
   RatingFilter,
+  RatingFilterValue,
   RecordSummary,
   SourceFilter,
   TimeFilter,
@@ -45,7 +46,7 @@ const INSPECTOR_TABS = ["inspect", "render", "code", "metadata"] as const satisf
 const BROWSER_TABS = ["workbench", "dataset", "staging"] as const satisfies readonly BrowserTab[];
 const SOURCE_FILTERS = ["workbench", "dataset"] as const satisfies readonly SourceFilter[];
 const TIME_FILTERS = ["any", "24h", "7d", "30d", "90d"] as const satisfies readonly TimeFilter[];
-const RATING_FILTERS = ["any", "1", "2", "3", "4", "5", "unrated"] as const satisfies readonly RatingFilter[];
+const RATING_FILTERS = ["1", "2", "3", "4", "5", "unrated"] as const satisfies readonly RatingFilterValue[];
 
 const STAGING_POLL_INTERVAL_MS = 3000;
 
@@ -76,7 +77,7 @@ const defaultViewerUrlState: ViewerUrlState = {
   modelFilter: null,
   categoryFilters: [],
   costFilter: { min: null, max: null },
-  ratingFilter: "any",
+  ratingFilter: [],
   selectedRunId: null,
 };
 
@@ -136,6 +137,18 @@ function normalizeOptionalQueryParam(value: string | null): string | null {
   return normalizedValue ? normalizedValue : null;
 }
 
+function normalizeRatingFilter(values: string[]): RatingFilter {
+  return Array.from(
+    new Set(
+      values
+        .map((value) => value.trim())
+        .filter((value): value is RatingFilterValue =>
+          RATING_FILTERS.includes(value as RatingFilterValue),
+        ),
+    ),
+  );
+}
+
 function readViewerUrlState(): ViewerUrlState {
   if (typeof window === "undefined") {
     return defaultViewerUrlState;
@@ -191,11 +204,7 @@ function readViewerUrlState(): ViewerUrlState {
       min: parseCostBoundParam(params.get(URL_QUERY_PARAMS.costMin)),
       max: parseCostBoundParam(params.get(URL_QUERY_PARAMS.costMax)),
     });
-    const ratingFilter = parseEnumParam(
-      params.get(URL_QUERY_PARAMS.rating),
-      RATING_FILTERS,
-      defaultViewerUrlState.ratingFilter,
-    );
+    const ratingFilter = normalizeRatingFilter(params.getAll(URL_QUERY_PARAMS.rating));
     const selectedRunId = normalizeOptionalQueryParam(params.get(URL_QUERY_PARAMS.run));
 
     return {
@@ -287,10 +296,11 @@ function syncViewerStateToUrl(state: ViewerUrlState): void {
     url.searchParams.delete(URL_QUERY_PARAMS.costMax);
   }
 
-  if (state.browserTab !== "staging" && state.ratingFilter !== defaultViewerUrlState.ratingFilter) {
-    url.searchParams.set(URL_QUERY_PARAMS.rating, state.ratingFilter);
-  } else {
-    url.searchParams.delete(URL_QUERY_PARAMS.rating);
+  url.searchParams.delete(URL_QUERY_PARAMS.rating);
+  if (state.browserTab !== "staging") {
+    for (const ratingFilter of [...state.ratingFilter].sort((left, right) => left.localeCompare(right))) {
+      url.searchParams.append(URL_QUERY_PARAMS.rating, ratingFilter);
+    }
   }
 
   if (state.browserTab !== "staging" && state.selectedRunId) {
@@ -546,7 +556,7 @@ function viewerReducer(state: ViewerState, action: ViewerAction): ViewerState {
     case "SET_COST_FILTER":
       return { ...state, costFilter: normalizeCostFilter(action.payload) };
     case "SET_RATING_FILTER":
-      return { ...state, ratingFilter: action.payload };
+      return { ...state, ratingFilter: normalizeRatingFilter(action.payload) };
     case "SET_RUN_FILTER":
       return { ...state, selectedRunId: action.payload };
     case "TOGGLE_MULTI_SELECT": {
