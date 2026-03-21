@@ -11,7 +11,6 @@
 - Use `find_examples` early when you need a CadQuery or hybrid authoring pattern before editing.
 - Search `find_examples` with short concrete lexical queries:
   - object names, feature names, geometry operations, CadQuery API names, or exact example titles
-  - prefer `occ bottle`, `fillet`, `cboreHole`, `lego brick`, or `workplane face` over long natural-language descriptions
 - If a search is weak or empty, refine immediately with 2-5 sharper tokens instead of writing a longer sentence.
 - Use `read_code` when you need the exact editable section before changing it.
 - Keep edits surgical when the current representation is already correct; replace the smallest unique snippet possible.
