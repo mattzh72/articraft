@@ -421,7 +421,7 @@ def create_app(*, repo_root: Path | None = None) -> FastAPI:
         category: list[str] | None = Query(default=None),
         cost_min: float | None = None,
         cost_max: float | None = None,
-        rating: str | None = None,
+        rating: list[str] | None = Query(default=None),
         limit: int = 200,
     ) -> list[RecordSummaryResponse]:
         return app.state.viewer_store.search_records(

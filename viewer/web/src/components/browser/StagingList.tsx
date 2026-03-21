@@ -410,7 +410,11 @@ function StagingListItem({ entry }: { entry: StagingEntry }): JSX.Element {
   );
 }
 
-export function StagingList(): JSX.Element {
+export function StagingList({
+  onCountsChange,
+}: {
+  onCountsChange?: (counts: { visible: number; total: number }) => void;
+}): JSX.Element {
   const { bootstrap, loading, searchQuery } = useViewer();
 
   const entries = useMemo(
@@ -421,6 +425,13 @@ export function StagingList(): JSX.Element {
     () => entries.filter((entry) => matchesSearch(entry, searchQuery.trim())),
     [entries, searchQuery],
   );
+
+  useEffect(() => {
+    onCountsChange?.({
+      visible: visibleEntries.length,
+      total: bootstrap?.staging_entries.length ?? 0,
+    });
+  }, [bootstrap, onCountsChange, visibleEntries.length]);
 
   if (!bootstrap && loading) {
     return (

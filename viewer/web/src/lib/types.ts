@@ -183,7 +183,8 @@ export type CostFilter = {
   min: number | null;
   max: number | null;
 };
-export type RatingFilter = "any" | "1" | "2" | "3" | "4" | "5" | "unrated";
+export type RatingFilterValue = "1" | "2" | "3" | "4" | "5" | "unrated";
+export type RatingFilter = RatingFilterValue[];
 export type InspectorTab = "inspect" | "render" | "code" | "metadata";
 
 export type ViewerState = {

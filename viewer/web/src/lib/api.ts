@@ -9,6 +9,7 @@ import type {
   RecordRatingResponse,
   RecordSummary,
   RepoStats,
+  RatingFilter,
   RunDetail,
   StagingEntry,
   ViewerBootstrap,
@@ -73,7 +74,7 @@ export async function searchRecords(params: {
   modelFilter: string | null;
   categoryFilters: string[];
   costFilter: CostFilter;
-  ratingFilter: "any" | "1" | "2" | "3" | "4" | "5" | "unrated";
+  ratingFilter: RatingFilter;
   limit?: number;
 }): Promise<RecordSummary[]> {
   const searchParams = new URLSearchParams();
@@ -97,8 +98,8 @@ export async function searchRecords(params: {
   if (params.costFilter.max != null) {
     searchParams.set("cost_max", String(params.costFilter.max));
   }
-  if (params.ratingFilter !== "any") {
-    searchParams.set("rating", params.ratingFilter);
+  for (const ratingFilter of params.ratingFilter) {
+    searchParams.append("rating", ratingFilter);
   }
   if (params.limit) {
     searchParams.set("limit", String(params.limit));

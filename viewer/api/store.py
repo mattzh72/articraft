@@ -103,15 +103,18 @@ def _within_cost_filter(
     return True
 
 
-def _within_rating_filter(rating: int | None, filter_value: str | None) -> bool:
-    if filter_value in {None, "", "any"}:
+def _within_rating_filter(rating: int | None, filter_value: list[str] | None) -> bool:
+    if not filter_value:
         return True
-    if filter_value == "unrated":
-        return rating is None
-    try:
-        return rating == int(filter_value)
-    except ValueError:
+
+    normalized = {
+        value.strip() for value in filter_value if value and value.strip() and value != "any"
+    }
+    if not normalized:
         return True
+    if rating is None:
+        return "unrated" in normalized
+    return str(rating) in normalized
 
 
 def _within_category_filters(category_slug: str | None, filter_values: list[str] | None) -> bool:
@@ -925,7 +928,7 @@ class ViewerStore:
         category_filters: list[str] | None = None,
         cost_min: float | None = None,
         cost_max: float | None = None,
-        rating_filter: str | None = None,
+        rating_filter: list[str] | None = None,
         limit: int = 200,
     ) -> list[RecordSummaryResponse]:
         if not query.strip():
