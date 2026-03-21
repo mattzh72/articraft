@@ -902,6 +902,8 @@ class ArticraftAgent:
                     args=func_args,
                     success=result.is_success(),
                     duration=tool_duration,
+                    result=result.output if result.is_success() else None,
+                    compilation=result.compilation,
                     error=result.error if not result.is_success() else None,
                 )
 

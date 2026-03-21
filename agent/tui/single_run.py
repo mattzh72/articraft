@@ -1,17 +1,17 @@
-"""Single run display — minimal log lines, no panels or live widgets."""
+"""Single run display - minimal log lines, no panels or live widgets."""
 
-import time
 import threading
-from typing import Optional
+import time
+from typing import Any, Optional
 
 from rich.console import Console
 from rich.text import Text
 
 from agent.tui.formatters import (
     format_cost,
+    format_duration,
     format_timestamp,
     format_tokens,
-    format_duration,
     format_tool_args,
     truncate_text,
 )
@@ -214,6 +214,8 @@ class SingleRunDisplay:
         args,
         success: bool,
         duration: float,
+        result: Any = None,
+        compilation: Optional[dict[str, Any]] = None,
         error: Optional[str] = None,
     ):
         if not self.enabled:
@@ -238,6 +240,31 @@ class SingleRunDisplay:
             detail.append("            ", style="dim")
             detail.append(truncate_text(", ".join(formatted), 80), style="dim")
             self.console.print(detail)
+
+        if result is not None:
+            result_line = Text()
+            result_line.append("            ", style="dim")
+            result_line.append(truncate_text(f"result: {result}", 120), style="green")
+            self.console.print(result_line)
+
+        if compilation:
+            status = compilation.get("status", "unknown")
+            comp_line = Text()
+            comp_line.append("            ", style="dim")
+            comp_line.append(
+                truncate_text(f"compilation.status: {status}", 120),
+                style="green" if status == "success" else "red",
+            )
+            self.console.print(comp_line)
+            comp_error = compilation.get("error")
+            if comp_error:
+                comp_error_line = Text()
+                comp_error_line.append("            ", style="dim")
+                comp_error_line.append(
+                    truncate_text(f"compilation.error: {comp_error}", 120),
+                    style="red",
+                )
+                self.console.print(comp_error_line)
 
         if error:
             err = Text()
