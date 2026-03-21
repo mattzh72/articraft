@@ -56,7 +56,6 @@ def _minimal_scaffold_text(*, sdk_package: str = "sdk") -> str:
     _normalize_sdk_package(sdk_package)
     return """from __future__ import annotations
 
-# The harness only exposes the editable block to the model.
 # User code should import every SDK/stdlib symbol it uses instead of relying on
 # hidden scaffold imports.
 

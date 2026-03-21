@@ -63,6 +63,7 @@ extend-exclude = ["data"]
 [tool.ruff.lint]
 select = ["E", "F", "I"]
 ignore = ["E501"]
+per-file-ignores = { "scaffold.py" = ["F821"], "scaffold_hybrid.py" = ["F821"] }
 
 [tool.ruff.format]
 quote-style = "double"
