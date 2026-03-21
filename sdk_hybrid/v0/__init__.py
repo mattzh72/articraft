@@ -58,6 +58,27 @@ from .types import (
     Visual,
 )
 
+_GEAR_EXPORTS = {
+    "GearBase",
+    "SpurGear",
+    "HerringboneGear",
+    "RingGear",
+    "HerringboneRingGear",
+    "PlanetaryGearset",
+    "HerringbonePlanetaryGearset",
+    "BevelGear",
+    "BevelGearPair",
+    "RackGear",
+    "HerringboneRackGear",
+    "Worm",
+    "CrossedHelicalGear",
+    "CrossedGearPair",
+    "HyperbolicGear",
+    "HyperbolicGearPair",
+    "gear",
+    "addGear",
+}
+
 Link = Part
 Joint = Articulation
 JointType = ArticulationType
@@ -108,6 +129,24 @@ __all__ = [
     "surface_frame",
     "wrap_profile_onto_surface",
     "wrap_mesh_onto_surface",
+    "GearBase",
+    "SpurGear",
+    "HerringboneGear",
+    "RingGear",
+    "HerringboneRingGear",
+    "PlanetaryGearset",
+    "HerringbonePlanetaryGearset",
+    "BevelGear",
+    "BevelGearPair",
+    "RackGear",
+    "HerringboneRackGear",
+    "Worm",
+    "CrossedHelicalGear",
+    "CrossedGearPair",
+    "HyperbolicGear",
+    "HyperbolicGearPair",
+    "gear",
+    "addGear",
     "Box",
     "Cylinder",
     "MotionProperties",
@@ -123,3 +162,17 @@ __all__ = [
     "Sphere",
     "Visual",
 ]
+
+
+def __getattr__(name: str):
+    if name in _GEAR_EXPORTS:
+        from . import gears as _gears
+
+        value = getattr(_gears, name)
+        globals()[name] = value
+        return value
+    raise AttributeError(f"module {__name__!r} has no attribute {name!r}")
+
+
+def __dir__() -> list[str]:
+    return sorted(set(globals()) | set(__all__))

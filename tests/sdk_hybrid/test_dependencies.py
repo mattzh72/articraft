@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import importlib
+import sys
 
 import pytest
 
@@ -33,3 +34,27 @@ def test_ensure_sdk_hybrid_dependencies_requires_cadquery(
 
     with pytest.raises(RuntimeError, match="`sdk_hybrid` missing cadquery"):
         ensure_sdk_hybrid_dependencies()
+
+
+def test_sdk_hybrid_gear_exports_are_lazy(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    real_import_module = importlib.import_module
+
+    def fake_import_module(name: str, package: str | None = None):
+        if name == "cadquery":
+            raise ModuleNotFoundError("No module named 'cadquery'")
+        return real_import_module(name, package)
+
+    monkeypatch.setattr(importlib, "import_module", fake_import_module)
+
+    for name in list(sys.modules):
+        if name == "sdk_hybrid" or name.startswith("sdk_hybrid."):
+            sys.modules.pop(name, None)
+
+    module = importlib.import_module("sdk_hybrid")
+
+    assert "SpurGear" not in module.__dict__
+
+    with pytest.raises(RuntimeError, match=r"Run `uv sync --group dev`"):
+        getattr(module, "SpurGear")

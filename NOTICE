@@ -1,0 +1,7 @@
+This product includes source code adapted from `cq_gears`
+([github.com/meadiode/cq_gears](https://github.com/meadiode/cq_gears)),
+copyright 2021 meadiode@github.
+
+The vendored implementation lives under `sdk_hybrid/v0/gears.py` and is
+distributed under the Apache License, Version 2.0, consistent with the
+upstream license.

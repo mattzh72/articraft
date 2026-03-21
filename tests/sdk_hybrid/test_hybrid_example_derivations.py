@@ -17,8 +17,15 @@ _EXAMPLE_PATHS = (
     "sdk/_examples/hybrid/parametric_pin_header.md",
     "sdk/_examples/hybrid/rj45_surface_mount_jack.md",
     "sdk/_examples/hybrid/din_rail_clip.md",
+    "sdk/_examples/hybrid/mecanum_wheel.md",
     "sdk/_examples/hybrid/raspberry_pi_3_model_b_assembly.md",
     "sdk/_examples/hybrid/pitray_clip.md",
+    "sdk/_examples/hybrid/spur_helical_herringbone_gears.md",
+    "sdk/_examples/hybrid/ring_gears_and_planetary_gearsets.md",
+    "sdk/_examples/hybrid/bevel_gears.md",
+    "sdk/_examples/hybrid/rack_and_pinion.md",
+    "sdk/_examples/hybrid/worm_gear.md",
+    "sdk/_examples/hybrid/crossed_and_hyperbolic_gears.md",
 )
 
 

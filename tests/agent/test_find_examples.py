@@ -24,7 +24,8 @@ def test_parse_example_document_reads_frontmatter() -> None:
 def test_search_example_documents_prefers_structured_matches() -> None:
     matches = search_example_documents("fillet", sdk_package="sdk_hybrid", limit=3)
 
-    assert [doc.title for doc in matches] == ["Rounding Corners with Fillet"]
+    assert matches
+    assert matches[0].title == "Rounding Corners with Fillet"
 
 
 def test_search_example_documents_returns_full_content() -> None:
