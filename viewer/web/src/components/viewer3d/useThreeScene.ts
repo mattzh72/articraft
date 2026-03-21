@@ -1,4 +1,4 @@
-import { useRef, useEffect, useState } from 'react';
+import { useRef, useEffect, useState, useCallback } from 'react';
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { createLightingRig, createGridHelper, createAxisHelper } from './lighting';
@@ -10,11 +10,13 @@ export interface ThreeSceneState {
   controls: OrbitControls | null;
   gridGroup: THREE.Group | null;
   axisGroup: THREE.Group | null;
+  invalidate: () => void;
   sceneReady: boolean;
 }
 
 export interface ThreeSceneOptions {
   maxPixelRatio?: number;
+  continuousRender?: boolean;
 }
 
 /**
@@ -29,6 +31,9 @@ export function useThreeScene(
   options: ThreeSceneOptions = {},
 ): ThreeSceneState {
   const [sceneReady, setSceneReady] = useState(false);
+  const invalidate = useCallback(() => {
+    invalidateRef.current();
+  }, []);
 
   // Mutable refs for scene objects so they persist without triggering re-renders.
   const sceneRef = useRef<THREE.Scene | null>(null);
@@ -38,6 +43,9 @@ export function useThreeScene(
   const gridGroupRef = useRef<THREE.Group | null>(null);
   const axisGroupRef = useRef<THREE.Group | null>(null);
   const frameIdRef = useRef<number>(0);
+  const lastFrameTimeRef = useRef<number | null>(null);
+  const continuousRenderRef = useRef(Boolean(options.continuousRender));
+  const invalidateRef = useRef<() => void>(() => {});
 
   useEffect(() => {
     const container = containerRef.current;
@@ -49,6 +57,7 @@ export function useThreeScene(
     renderer.toneMappingExposure = 1.3;
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, options.maxPixelRatio ?? 2));
     renderer.setSize(container.clientWidth, container.clientHeight);
+    renderer.domElement.style.display = 'block';
     container.appendChild(renderer.domElement);
     rendererRef.current = renderer;
 
@@ -85,13 +94,46 @@ export function useThreeScene(
     scene.add(axisGroup);
     axisGroupRef.current = axisGroup;
 
-    // --- Render loop ---
-    const tick = () => {
-      controls.update();
+    const renderScene = () => {
       renderer.render(scene, camera);
-      frameIdRef.current = requestAnimationFrame(tick);
     };
-    tick();
+
+    const requestFrame = () => {
+      if (frameIdRef.current === 0) {
+        frameIdRef.current = requestAnimationFrame(renderFrame);
+      }
+    };
+
+    const renderFrame = (now: number) => {
+      frameIdRef.current = 0;
+
+      const deltaSeconds =
+        lastFrameTimeRef.current == null ? null : (now - lastFrameTimeRef.current) / 1000;
+      lastFrameTimeRef.current = now;
+
+      const controlsChanged = controls.update(deltaSeconds ?? undefined);
+      if (continuousRenderRef.current || controlsChanged) {
+        renderScene();
+      }
+
+      if (continuousRenderRef.current || controlsChanged) {
+        requestFrame();
+        return;
+      }
+
+      lastFrameTimeRef.current = null;
+    };
+
+    const invalidate = () => {
+      renderScene();
+      if (continuousRenderRef.current || controls.enableDamping) {
+        requestFrame();
+      }
+    };
+
+    invalidateRef.current = invalidate;
+    controls.addEventListener('change', invalidate);
+    invalidate();
 
     // --- ResizeObserver ---
     const resizeObserver = new ResizeObserver((entries) => {
@@ -101,6 +143,7 @@ export function useThreeScene(
         camera.aspect = width / height;
         camera.updateProjectionMatrix();
         renderer.setSize(width, height);
+        invalidate();
       }
     });
     resizeObserver.observe(container);
@@ -112,6 +155,7 @@ export function useThreeScene(
       setSceneReady(false);
       cancelAnimationFrame(frameIdRef.current);
       resizeObserver.disconnect();
+      controls.removeEventListener('change', invalidate);
       controls.dispose();
       renderer.domElement.remove();
       renderer.dispose();
@@ -135,6 +179,8 @@ export function useThreeScene(
       controlsRef.current = null;
       gridGroupRef.current = null;
       axisGroupRef.current = null;
+      lastFrameTimeRef.current = null;
+      invalidateRef.current = () => {};
     };
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -147,7 +193,13 @@ export function useThreeScene(
 
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, options.maxPixelRatio ?? 2));
     renderer.setSize(container.clientWidth, container.clientHeight, false);
+    invalidateRef.current();
   }, [containerRef, options.maxPixelRatio, sceneReady]);
+
+  useEffect(() => {
+    continuousRenderRef.current = Boolean(options.continuousRender);
+    invalidateRef.current();
+  }, [options.continuousRender]);
 
   return {
     scene: sceneRef.current,
@@ -156,6 +208,7 @@ export function useThreeScene(
     controls: controlsRef.current,
     gridGroup: gridGroupRef.current,
     axisGroup: axisGroupRef.current,
+    invalidate,
     sceneReady,
   };
 }

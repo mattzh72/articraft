@@ -1,15 +1,31 @@
 import { useState, useEffect, useRef } from 'react';
 import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { originToMatrix4, parseUrdf, rewriteAbsoluteMeshFilenames } from './urdf-parser';
 import type { UrdfSpec } from './urdf-parser';
 import { buildRobotSceneGraph, collisionColorForIndex } from './scene-graph-builder';
-import { computeFit, preserveViewAcrossModelSwitch } from './camera-utils';
+import { computeFit, preserveViewAcrossModelSwitch, updateCameraClipping } from './camera-utils';
 import { positionGroundHelpers } from './lighting';
 import { loadGeometryObject } from './geometry-loader';
 import { resolveVisualMaterialSpec } from './materials';
 
 /** Sentinel name attached to the robot group so we can find and remove it later. */
 const ROBOT_GROUP_NAME = '__articraft_robot__';
+
+function buildClippingTargets(
+  robotGroup: THREE.Object3D,
+  gridGroup: THREE.Group | null,
+  axisGroup: THREE.Group | null,
+): THREE.Object3D[] {
+  const targets: THREE.Object3D[] = [robotGroup];
+  if (gridGroup) {
+    targets.push(gridGroup);
+  }
+  if (axisGroup) {
+    targets.push(axisGroup);
+  }
+  return targets;
+}
 
 export interface UrdfLoaderState {
   urdfSpec: UrdfSpec | null;
@@ -33,11 +49,13 @@ export interface UrdfLoaderState {
 export function useUrdfLoader(
   baseFileUrl: string | null,
   assetRevisionKey: string | null,
+  jointPoseSignal: Map<string, number>,
   scene: THREE.Scene | null,
   camera: THREE.PerspectiveCamera | null,
-  controls: { target: THREE.Vector3; update: () => void } | null,
+  controls: OrbitControls | null,
   gridGroup: THREE.Group | null,
   axisGroup: THREE.Group | null,
+  invalidate: () => void,
 ): UrdfLoaderState {
   const [urdfSpec, setUrdfSpec] = useState<UrdfSpec | null>(null);
   const [jointNodes, setJointNodes] = useState<Map<string, THREE.Object3D> | null>(null);
@@ -125,6 +143,10 @@ export function useUrdfLoader(
         if (gridGroup && axisGroup) {
           positionGroundHelpers(gridGroup, axisGroup, robotGroup);
         }
+        if (camera) {
+          updateCameraClipping(camera, buildClippingTargets(robotGroup, gridGroup, axisGroup));
+        }
+        invalidate();
 
         if (!cancelled) {
           setUrdfSpec(spec);
@@ -150,7 +172,38 @@ export function useUrdfLoader(
     return () => {
       cancelled = true;
     };
-  }, [baseFileUrl, assetRevisionKey, scene, camera, controls, gridGroup, axisGroup]);
+  }, [baseFileUrl, assetRevisionKey, scene, camera, controls, gridGroup, axisGroup, invalidate]);
+
+  useEffect(() => {
+    if (!camera || !controls || !urdfSpec || !robotGroupRef.current) {
+      return;
+    }
+
+    const robotGroup = robotGroupRef.current;
+    const refreshClipping = () => {
+      updateCameraClipping(camera, buildClippingTargets(robotGroup, gridGroup, axisGroup));
+      invalidate();
+    };
+
+    refreshClipping();
+    controls.addEventListener('change', refreshClipping);
+
+    return () => {
+      controls.removeEventListener('change', refreshClipping);
+    };
+  }, [camera, controls, urdfSpec, gridGroup, axisGroup, invalidate]);
+
+  useEffect(() => {
+    if (!camera || !urdfSpec || !robotGroupRef.current) {
+      return;
+    }
+
+    updateCameraClipping(
+      camera,
+      buildClippingTargets(robotGroupRef.current, gridGroup, axisGroup),
+    );
+    invalidate();
+  }, [camera, urdfSpec, gridGroup, axisGroup, jointPoseSignal, invalidate]);
 
   return { urdfSpec, jointNodes, jointFrames, loading, error };
 }

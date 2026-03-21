@@ -10,6 +10,7 @@ interface ViewportPanelProps {
   baseFileUrl: string | null;
   assetRevisionKey: string | null;
   selectionKey: string | null;
+  jointPoseSignal: Map<string, number>;
   renderOptions: RenderOptions;
   onUrdfSpecChange: (spec: UrdfSpec | null, jointNodes: Map<string, THREE.Object3D> | null) => void;
   onLoadStateChange?: (state: {
@@ -25,6 +26,7 @@ export function ViewportPanel({
   baseFileUrl,
   assetRevisionKey,
   selectionKey,
+  jointPoseSignal,
   renderOptions,
   onUrdfSpecChange,
   onLoadStateChange,
@@ -56,6 +58,7 @@ export function ViewportPanel({
             baseFileUrl={baseFileUrl}
             assetRevisionKey={assetRevisionKey}
             selectionKey={selectionKey}
+            jointPoseSignal={jointPoseSignal}
             renderOptions={sceneRenderOptions}
             onUrdfSpecChange={onUrdfSpecChange}
             onLoadStateChange={onLoadStateChange}

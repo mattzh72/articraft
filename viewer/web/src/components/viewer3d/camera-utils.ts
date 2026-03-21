@@ -7,6 +7,44 @@ export interface FitResult {
   far: number;
 }
 
+const MIN_NEAR = 0.001;
+const MIN_FAR_GAP = 1;
+const DEFAULT_CLIP_FAR = 1000;
+
+function getBoundingBox(
+  object: THREE.Object3D | readonly THREE.Object3D[],
+): THREE.Box3 | null {
+  const objects = Array.isArray(object) ? object : [object];
+  const box = new THREE.Box3();
+
+  for (const entry of objects) {
+    if (!entry.visible) {
+      continue;
+    }
+    box.expandByObject(entry);
+  }
+
+  return box.isEmpty() ? null : box;
+}
+
+function computeClipPlanesForBox(
+  camera: THREE.PerspectiveCamera,
+  box: THREE.Box3,
+): { near: number; far: number } {
+  camera.updateMatrixWorld(true);
+
+  const sphere = box.getBoundingSphere(new THREE.Sphere());
+  const centerDepth = -sphere.center.clone().applyMatrix4(camera.matrixWorldInverse).z;
+  const nearPadding = Math.max(sphere.radius * 0.1, 0.02);
+  const farPadding = Math.max(sphere.radius * 0.5, 0.5);
+
+  // A bounding sphere produces stable clip planes even when the model bounds
+  // straddle the camera plane during pans or close orbit moves.
+  const near = Math.max(MIN_NEAR, centerDepth - sphere.radius - nearPadding);
+  const far = Math.max(near + MIN_FAR_GAP, centerDepth + sphere.radius + farPadding);
+  return { near, far };
+}
+
 /**
  * Compute a camera position that fits the given object within the camera's field of view.
  * Returns the ideal position, target (center of bounding box), and clipping planes.
@@ -15,7 +53,16 @@ export function computeFit(
   camera: THREE.PerspectiveCamera,
   object: THREE.Object3D,
 ): FitResult {
-  const box = new THREE.Box3().setFromObject(object);
+  const box = getBoundingBox(object);
+  if (!box) {
+    return {
+      position: camera.position.clone(),
+      target: new THREE.Vector3(),
+      near: camera.near,
+      far: camera.far || DEFAULT_CLIP_FAR,
+    };
+  }
+
   const center = box.getCenter(new THREE.Vector3());
   const size = box.getSize(new THREE.Vector3());
 
@@ -34,10 +81,10 @@ export function computeFit(
   }
 
   const position = center.clone().add(direction.multiplyScalar(distance));
-
-  const diagonal = maxDim * Math.sqrt(3);
-  const near = Math.max(0.001, distance - diagonal);
-  const far = distance + diagonal * 2;
+  const fitCamera = camera.clone();
+  fitCamera.position.copy(position);
+  fitCamera.lookAt(center);
+  const { near, far } = computeClipPlanesForBox(fitCamera, box);
 
   return { position, target: center, near, far };
 }
@@ -82,17 +129,15 @@ export function preserveViewAcrossModelSwitch(
  */
 export function updateCameraClipping(
   camera: THREE.PerspectiveCamera,
-  object: THREE.Object3D,
+  object: THREE.Object3D | readonly THREE.Object3D[],
 ): void {
-  const box = new THREE.Box3().setFromObject(object);
-  const size = box.getSize(new THREE.Vector3());
-  const center = box.getCenter(new THREE.Vector3());
+  const box = getBoundingBox(object);
+  if (!box) {
+    return;
+  }
 
-  const maxDim = Math.max(size.x, size.y, size.z);
-  const distance = camera.position.distanceTo(center);
-  const diagonal = maxDim * Math.sqrt(3);
-
-  camera.near = Math.max(0.001, (distance - diagonal) * 0.5);
-  camera.far = (distance + diagonal) * 2.5;
+  const { near, far } = computeClipPlanesForBox(camera, box);
+  camera.near = near;
+  camera.far = far;
   camera.updateProjectionMatrix();
 }

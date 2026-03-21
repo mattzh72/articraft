@@ -483,6 +483,7 @@ export default function ViewerShell(): JSX.Element {
             baseFileUrl={baseFileUrl}
             assetRevisionKey={assetRevisionKey}
             selectionKey={selectionKey}
+            jointPoseSignal={jointValues}
             renderOptions={renderOptions}
             onUrdfSpecChange={handleUrdfSpecChange}
             onLoadStateChange={setModelLoadState}

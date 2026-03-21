@@ -183,6 +183,7 @@ export interface SceneCanvasProps {
   baseFileUrl: string | null;
   assetRevisionKey: string | null;
   selectionKey: string | null;
+  jointPoseSignal: Map<string, number>;
   renderOptions: RenderOptions;
   onUrdfSpecChange?: (spec: UrdfSpec | null, jointNodes: Map<string, THREE.Object3D> | null) => void;
   onLoadStateChange?: (state: {
@@ -203,6 +204,7 @@ export function SceneCanvas({
   baseFileUrl,
   assetRevisionKey,
   selectionKey,
+  jointPoseSignal,
   renderOptions,
   onUrdfSpecChange,
   onLoadStateChange,
@@ -216,20 +218,23 @@ export function SceneCanvas({
   const [selectedPartName, setSelectedPartName] = useState<string | null>(null);
   const isStagingSelection = selectionKey?.startsWith("staging:") ?? false;
 
-  const { scene, camera, renderer, controls, gridGroup, axisGroup, sceneReady } = useThreeScene(
+  const { scene, camera, renderer, controls, gridGroup, axisGroup, invalidate, sceneReady } = useThreeScene(
     containerRef,
     {
       maxPixelRatio: renderOptions.autoAnimate ? PREVIEW_MAX_PIXEL_RATIO : DEFAULT_MAX_PIXEL_RATIO,
+      continuousRender: renderOptions.autoAnimate,
     },
   );
   const { urdfSpec, jointNodes, jointFrames, loading, error } = useUrdfLoader(
     baseFileUrl,
     assetRevisionKey,
+    jointPoseSignal,
     scene,
     camera,
     controls,
     gridGroup,
     axisGroup,
+    invalidate,
   );
 
   const partLegendItems = useMemo<PartLegendItem[]>(
@@ -573,6 +578,27 @@ export function SceneCanvas({
       jointOverlayRef.current = [];
     };
   }, [jointFrames, renderOptions.showJointOverlay, scene, urdfSpec]);
+
+  useEffect(() => {
+    if (!sceneReady) {
+      return;
+    }
+    invalidate();
+  }, [
+    invalidate,
+    jointPoseSignal,
+    renderOptions.doubleSided,
+    renderOptions.environmentLighting,
+    renderOptions.showCollisions,
+    renderOptions.showEdges,
+    renderOptions.showGrid,
+    renderOptions.showJointOverlay,
+    renderOptions.showSegmentColors,
+    sceneReady,
+    selectedPartName,
+    shouldShowPartLegend,
+    urdfSpec,
+  ]);
 
   return (
     <div className="relative h-full w-full">
