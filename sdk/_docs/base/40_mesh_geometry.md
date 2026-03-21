@@ -128,8 +128,8 @@ LoftGeometry(profiles, cap=True, closed=True)
 - Area validation is done in the XY projection, so profiles like `(x_i, y_const, z_i)` or `(x_const, y_i, z_i)` collapse and fail.
 - If you want an XZ- or YZ-oriented section, author the loop in XY first, then rotate the resulting mesh.
 - If `cap=True` and `closed=True`, the first and last profiles are capped. Caps require planar profiles (constant z within a small tolerance).
-- When available, cap triangulation uses the manifold triangulation backend for
-  better robustness on concave outlines.
+- Cap triangulation uses the `manifold3d` triangulation backend for better
+  robustness on concave outlines.
 
 ### `ExtrudeGeometry`
 
@@ -340,7 +340,7 @@ Adds an “opening throat” by lofting side walls inward from an AABB face.
 - This does **not** boolean-subtract material.
 - It merges the new wall geometry into `shell_geometry`.
 
-## Boolean operations (optional dependency)
+## Boolean operations
 
 Import:
 
@@ -358,7 +358,7 @@ boolean_intersection(a: MeshGeometry, b: MeshGeometry) -> MeshGeometry
 
 Notes:
 
-- These require the optional dependency `manifold3d`.
+- These require `manifold3d`.
 - Both inputs must be manifold solids; the helper will raise if the mesh is not a valid solid for boolean ops.
 
 ## Writing meshes and referencing them in compiled exports

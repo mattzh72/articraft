@@ -6,6 +6,7 @@ from math import acos, asin, atan2, cos, isfinite, pi, sin, sqrt, tan
 from pathlib import Path
 from typing import Iterable, List, Optional, Sequence, Tuple, Union
 
+import manifold3d as _m3d
 import numpy as np
 
 from .types import Box, Collision, Cylinder, Mesh, Origin, Sphere
@@ -18,11 +19,6 @@ _EPS = 1e-9
 _OBJ_COORD_DECIMALS = 6
 _OBJ_QUANT_STEP = 10.0 ** (-_OBJ_COORD_DECIMALS)
 _BRIDGE_EPSILON = 0.1 * _OBJ_QUANT_STEP
-
-try:
-    import manifold3d as _m3d
-except Exception:  # pragma: no cover - optional backend
-    _m3d = None
 
 
 def _identity_mat4() -> Mat4:
@@ -1156,8 +1152,6 @@ def _point_in_triangle(p: Vec2, a: Vec2, b: Vec2, c: Vec2) -> bool:
 
 
 def _manifold_triangulate_polygons(polygons: Sequence[List[Vec2]]) -> Optional[List[Face]]:
-    if _m3d is None:
-        return None
     if not polygons:
         return []
     try:
@@ -3399,17 +3393,7 @@ def cut_opening_on_face(
     return shell_geometry
 
 
-def _require_manifold3d() -> None:
-    if _m3d is None:
-        raise RuntimeError(
-            "boolean operations require optional dependency 'manifold3d'. "
-            "Install with: uv add manifold3d"
-        )
-
-
 def _manifold_from_geometry(geometry: MeshGeometry, *, name: str = "geometry"):
-    _require_manifold3d()
-    assert _m3d is not None
     if not isinstance(geometry, MeshGeometry):
         raise TypeError(f"{name} must be MeshGeometry")
 
@@ -3431,8 +3415,6 @@ def _manifold_from_geometry(geometry: MeshGeometry, *, name: str = "geometry"):
 
 
 def _geometry_from_manifold(manifold) -> MeshGeometry:
-    _require_manifold3d()
-    assert _m3d is not None
     if manifold is None or manifold.is_empty():
         return MeshGeometry()
 
@@ -3459,8 +3441,6 @@ def boolean_union(a: MeshGeometry, b: MeshGeometry) -> MeshGeometry:
 
 
 def _boolean_union_many(geometries: Sequence[MeshGeometry]) -> MeshGeometry:
-    _require_manifold3d()
-    assert _m3d is not None
     combined = _m3d.Manifold()
     for idx, geometry in enumerate(geometries):
         combined = combined + _manifold_from_geometry(geometry, name=f"geometry[{idx}]")
