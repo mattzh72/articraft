@@ -27,7 +27,7 @@ def test_compiled_openai_prompt_keeps_tool_policy_and_design_charter() -> None:
         assert "wrong geometric representation" in text
         assert "wrong overall composition" in text
         assert "warn_if_articulation_origin_near_geometry" in text
-        assert "warn_if_part_geometry_connected" in text
+        assert "warn_if_part_geometry_disconnected" in text
         assert "deliberately dumb static sensors" in text
         assert "semantic regression" in text
         assert "Do not preserve a scaffold just because parts of it compile" in text

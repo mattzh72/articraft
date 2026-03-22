@@ -55,7 +55,7 @@
 - Use `sdk_hybrid.TestContext` and return `ctx.report()`.
 - Use `ctx.warn_if_articulation_origin_near_geometry(tol=0.015)` as the default articulation-origin sensor.
 - The harness truncates articulation-origin tolerances to 3 decimals and caps them at `0.15`.
-- Use `ctx.warn_if_part_geometry_connected(use="visual")` as the default disconnected-geometry sensor.
+- Use `ctx.warn_if_part_geometry_disconnected(use="visual")` as the default disconnected-geometry sensor.
 - On models with `REVOLUTE`, `PRISMATIC`, or `CONTINUOUS` articulations, use `ctx.check_articulation_overlaps(max_pose_samples=...)` as the default joint-clearance check.
 - Use `ctx.warn_if_coplanar_surfaces(use="visual", ignore_adjacent=True, ignore_fixed=True)` only when it is likely to add value for the current object.
 - Use `ctx.warn_if_overlaps(max_pose_samples=..., ignore_adjacent=True, ignore_fixed=True)` as the broad warning-tier overlap sensor.
@@ -80,7 +80,7 @@
 - Prefer AABB-based intent checks (`expect_aabb_*`) for placement assertions; link origins are often misleading.
 - Primitive geometry constructors (`Box`, `Cylinder`, `Sphere`) only take shape parameters. Put transforms on `visual(..., origin=...)` or `Inertial.from_geometry(..., origin=...)`.
 - Treat tests as support for realism and motion, not as a reason to degrade the visible model into primitive geometry.
-- Treat `warn_if_articulation_origin_near_geometry(...)` and `warn_if_part_geometry_connected(...)` as deliberately dumb static sensors.
+- Treat `warn_if_articulation_origin_near_geometry(...)` and `warn_if_part_geometry_disconnected(...)` as deliberately dumb static sensors.
 - Treat `check_articulation_overlaps(...)` differently: it is a targeted failure-tier clearance check for non-fixed articulated parent/child pairs.
 - Treat `warn_if_coplanar_surfaces(...)` the same way: it is a deliberately noisy flush-surface sensor, not semantic proof.
 - A coplanar warning alone is not a reason to add visible air gaps or distort a legitimate mounted panel.
@@ -90,7 +90,7 @@
 - When hollowness, cavities, vents, liners, baffles, ribs, or other internal structures are important to the object, add checks that prove those claims instead of leaving them implicit.
 - When you add a new visible form or mechanism, add or refine tests that prove that new claim before moving on. Do not let geometry complexity outpace test coverage.
 - Prevent floating parts:
-  - Use `warn_if_part_geometry_connected(use="visual")` when it is a helpful sensor for disconnected subassemblies inside one part.
+  - Use `warn_if_part_geometry_disconnected(use="visual")` when it is a helpful sensor for disconnected subassemblies inside one part.
   - Make attachment checks primary. Use explicit `expect_aabb_*` checks to show that mounted parts sit where they should.
   - Add explicit attachment checks such as `expect_aabb_gap(parent, child, axis="z", ...)` for joints that should touch or insert.
   - Preferred signatures:
@@ -115,7 +115,7 @@
 <recommended_test_structure>
 1) Sanity: `check_model_valid`, `check_mesh_files_exist`
 2) Joint clearance: on models with non-fixed articulations, include `check_articulation_overlaps(max_pose_samples=...)`
-3) Broad warning sensors: include `warn_if_overlaps`, and include `warn_if_coplanar_surfaces` / `warn_if_articulation_origin_near_geometry` / `warn_if_part_geometry_connected` when they are useful
+3) Broad warning sensors: include `warn_if_overlaps`, and include `warn_if_coplanar_surfaces` / `warn_if_articulation_origin_near_geometry` / `warn_if_part_geometry_disconnected` when they are useful
 4) Geometry warning backstop: `warn_if_overlaps(max_pose_samples=..., ignore_adjacent=True, ignore_fixed=True)`
 5) Intent: multiple prompt-specific `expect_*` semantic regression checks, with attachment checks as primary evidence of realism
 6) Pose coverage: for each important joint, include checks at lower/upper limits using `with ctx.pose({"joint_name": value}): ...` or `with ctx.pose(joint_name=value): ...`; for continuous joints, use explicit sampled angles instead of lower/upper limits

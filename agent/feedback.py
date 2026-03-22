@@ -483,7 +483,12 @@ def _overlap_warning_signal(parsed: ParsedTestWarning) -> CompileSignal | None:
 
 
 def _disconnected_geometry_signal(parsed: ParsedTestWarning) -> CompileSignal | None:
-    if not parsed.check_name.startswith("warn_if_part_geometry_connected("):
+    if not parsed.check_name.startswith(
+        (
+            "warn_if_part_geometry_connected(",
+            "warn_if_part_geometry_disconnected(",
+        )
+    ):
         return None
     summary = "Disconnected geometry islands detected within a part."
     if (

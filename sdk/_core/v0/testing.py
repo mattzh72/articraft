@@ -961,6 +961,22 @@ class TestContext:
             tol=tol,
             check_name=name,
             warn_only=True,
+            warn_prefix="warn_if_part_geometry_connected",
+        )
+
+    def warn_if_part_geometry_disconnected(
+        self,
+        *,
+        use: str = "visual",
+        tol: float = 0.005,
+        name: Optional[str] = None,
+    ) -> bool:
+        return self._check_part_geometry_connected_impl(
+            use=use,
+            tol=tol,
+            check_name=name,
+            warn_only=True,
+            warn_prefix="warn_if_part_geometry_disconnected",
         )
 
     def _check_part_geometry_connected_impl(
@@ -970,13 +986,12 @@ class TestContext:
         tol: float,
         check_name: Optional[str],
         warn_only: bool,
+        warn_prefix: str = "warn_if_part_geometry_connected",
     ) -> bool:
         record = self._record_warning_check if warn_only else self._record
         use_key = _normalize_geometry_source(use, field_name="use")
         if float(tol) < 0.0:
-            prefix = (
-                "warn_if_part_geometry_connected" if warn_only else "check_part_geometry_connected"
-            )
+            prefix = warn_prefix if warn_only else "check_part_geometry_connected"
             return record(
                 check_name or f"{prefix}(use={use_key},tol={float(tol):.4g})",
                 False,
@@ -985,9 +1000,7 @@ class TestContext:
 
         links = getattr(self.model, "parts", None)
         if not isinstance(links, list):
-            prefix = (
-                "warn_if_part_geometry_connected" if warn_only else "check_part_geometry_connected"
-            )
+            prefix = warn_prefix if warn_only else "check_part_geometry_connected"
             return record(
                 check_name or f"{prefix}(use={use_key},tol={float(tol):.4g})",
                 False,
@@ -1021,7 +1034,7 @@ class TestContext:
                     f"part={part_name!r} connected={len(visited)}/{len(aabbs)} use={use_key}"
                 )
 
-        prefix = "warn_if_part_geometry_connected" if warn_only else "check_part_geometry_connected"
+        prefix = warn_prefix if warn_only else "check_part_geometry_connected"
         resolved_name = check_name or f"{prefix}(use={use_key},tol={float(tol):.4g})"
         if failures:
             preview = "\n".join(failures[:10])

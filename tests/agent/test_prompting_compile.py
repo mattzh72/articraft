@@ -26,7 +26,8 @@ def test_prompt_outputs_are_current() -> None:
         in compiled_by_name["designer_system_prompt_openai.txt"]
     )
     assert (
-        "warn_if_part_geometry_connected" in compiled_by_name["designer_system_prompt_openai.txt"]
+        "warn_if_part_geometry_disconnected"
+        in compiled_by_name["designer_system_prompt_openai.txt"]
     )
     assert (
         "deliberately dumb static sensors" in compiled_by_name["designer_system_prompt_openai.txt"]
@@ -64,7 +65,8 @@ def test_prompt_outputs_are_current() -> None:
         in compiled_by_name["designer_system_prompt_gemini.txt"]
     )
     assert (
-        "warn_if_part_geometry_connected" in compiled_by_name["designer_system_prompt_gemini.txt"]
+        "warn_if_part_geometry_disconnected"
+        in compiled_by_name["designer_system_prompt_gemini.txt"]
     )
     assert (
         "deliberately dumb static sensors" in compiled_by_name["designer_system_prompt_gemini.txt"]

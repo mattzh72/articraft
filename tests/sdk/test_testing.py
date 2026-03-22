@@ -190,7 +190,21 @@ def test_warn_if_articulation_origin_near_geometry_records_warning_only() -> Non
     assert "Articulation origin(s) far from geometry" in report.warnings[0]
 
 
-def test_warn_if_part_geometry_connected_records_warning_only() -> None:
+def test_warn_if_part_geometry_disconnected_records_warning_only() -> None:
+    ctx = SDKTestContext(_build_disconnected_part_model(), geometry_source="visual")
+
+    assert not ctx.warn_if_part_geometry_disconnected(use="visual")
+
+    report = ctx.report()
+    assert report.passed
+    assert report.failures == ()
+    assert report.checks == ("warn_if_part_geometry_disconnected(use=visual,tol=0.005)",)
+    assert len(report.warnings) == 1
+    assert "warn_if_part_geometry_disconnected(use=visual,tol=0.005)" in report.warnings[0]
+    assert "Disconnected geometry islands detected" in report.warnings[0]
+
+
+def test_warn_if_part_geometry_connected_keeps_legacy_alias() -> None:
     ctx = SDKTestContext(_build_disconnected_part_model(), geometry_source="visual")
 
     assert not ctx.warn_if_part_geometry_connected(use="visual")

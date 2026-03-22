@@ -23,7 +23,7 @@ Do not emit URDF XML yourself. The harness compiles `object_model`, generates co
    - `ctx.check_model_valid()`
    - `ctx.check_mesh_files_exist()`
    - `ctx.warn_if_articulation_origin_near_geometry(tol=0.015)`
-   - `ctx.warn_if_part_geometry_connected(use="visual")`
+   - `ctx.warn_if_part_geometry_disconnected(use="visual")`
    - `ctx.check_articulation_overlaps(...)` when the model has non-fixed articulations
    - `ctx.warn_if_coplanar_surfaces(use="visual", ignore_adjacent=True, ignore_fixed=True)` when it is useful
    - `ctx.warn_if_overlaps(..., ignore_adjacent=True, ignore_fixed=True)` as a broad warning-tier backstop
@@ -118,7 +118,7 @@ def run_tests() -> TestReport:
     ctx.check_model_valid()
     ctx.check_mesh_files_exist()
     ctx.warn_if_articulation_origin_near_geometry(tol=0.015)
-    ctx.warn_if_part_geometry_connected(use="visual")
+    ctx.warn_if_part_geometry_disconnected(use="visual")
     ctx.check_articulation_overlaps(
         max_pose_samples=128,
         overlap_tol=0.005,
@@ -184,7 +184,7 @@ Important:
 
 - Author the visible shape you actually want to see.
 - Do not hand-author collisions in `sdk`; compile-time generation owns that now.
-- Treat `warn_if_articulation_origin_near_geometry(tol=0.015)`, `warn_if_part_geometry_connected(use="visual")`, and `warn_if_coplanar_surfaces(use="visual")` as deliberately dumb static sensors.
+- Treat `warn_if_articulation_origin_near_geometry(tol=0.015)`, `warn_if_part_geometry_disconnected(use="visual")`, and `warn_if_coplanar_surfaces(use="visual")` as deliberately dumb static sensors.
 - These broad checks use static AABB relationships, so they may or may not be useful for a given object.
 - They can surface suspicious composition, but they do not prove realism, attachment quality, or correct motion.
 - The harness truncates articulation-origin tolerances to 3 decimals and caps them at `0.15`.

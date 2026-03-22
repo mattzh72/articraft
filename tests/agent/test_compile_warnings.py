@@ -85,7 +85,7 @@ def test_compile_signal_bundle_parses_common_broad_qc_warning_families() -> None
             checks_run=4,
             checks=(
                 "warn_if_overlaps",
-                "warn_if_part_geometry_connected",
+                "warn_if_part_geometry_disconnected",
                 "warn_if_articulation_origin_near_geometry",
                 "warn_if_coplanar_surfaces",
             ),
@@ -95,7 +95,7 @@ def test_compile_signal_bundle_parses_common_broad_qc_warning_families() -> None
                 "Overlaps detected (geometry_source=collision, overlap_tol=0.001, overlap_volume_tol=0):\n"
                 "relation=adjacent-revolute pair=('body','door') pose_index=0 depth=(0.01,0.02,0.03) "
                 "min_depth=0.01 vol=6e-06 elem_a=#0 'hinge_leaf':Box elem_b=#1 'door_shell':Box pose={}",
-                "warn_if_part_geometry_connected(use=visual,tol=0.005): "
+                "warn_if_part_geometry_disconnected(use=visual,tol=0.005): "
                 "Disconnected geometry islands detected:\n"
                 "part='frame' connected=2/3 use=visual",
                 "warn_if_articulation_origin_near_geometry(tol=0.015): "
@@ -133,6 +133,29 @@ def test_compile_signal_bundle_parses_common_broad_qc_warning_families() -> None
     assert allowed_signal.severity == "note"
 
     assert any(signal.kind == "test_warning" for signal in bundle.signals)
+
+
+def test_compile_signal_bundle_accepts_legacy_part_geometry_warning_name() -> None:
+    bundle = build_compile_signal_bundle(
+        status="success",
+        test_report=SDKTestReport(
+            passed=True,
+            checks_run=1,
+            checks=("warn_if_part_geometry_connected",),
+            failures=(),
+            warnings=(
+                "warn_if_part_geometry_connected(use=visual,tol=0.005): "
+                "Disconnected geometry islands detected:\n"
+                "part='frame' connected=2/3 use=visual",
+            ),
+            allowances=(),
+        ),
+    )
+
+    disconnected_signal = next(
+        signal for signal in bundle.signals if signal.kind == "disconnected_geometry"
+    )
+    assert disconnected_signal.summary == "Disconnected geometry islands detected within a part."
 
 
 def test_compile_signal_bundle_downgrades_low_risk_coplanar_warning_to_note() -> None:

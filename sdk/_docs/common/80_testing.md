@@ -31,7 +31,7 @@ Every generated model should start from these broad sensors and backstops:
 ctx.check_model_valid()
 ctx.check_mesh_files_exist()
 ctx.warn_if_articulation_origin_near_geometry(tol=0.015)
-ctx.warn_if_part_geometry_connected(use="visual")
+ctx.warn_if_part_geometry_disconnected(use="visual")
 ctx.check_articulation_overlaps(max_pose_samples=128)
 ctx.warn_if_coplanar_surfaces(use="visual", ignore_adjacent=True, ignore_fixed=True)
 ctx.warn_if_overlaps(max_pose_samples=128, ignore_adjacent=True, ignore_fixed=True)
@@ -45,7 +45,7 @@ Mesh-backed models:
 What they catch:
 
 - `warn_if_articulation_origin_near_geometry`: a deliberately dumb static heuristic that checks whether the articulation origin is near real geometry in both parent and child frames; default `tol=0.015`. The harness truncates this tolerance to 3 decimals and caps it at `0.15`.
-- `warn_if_part_geometry_connected`: a deliberately dumb static heuristic that checks whether a single part appears to contain disconnected visual geometry islands.
+- `warn_if_part_geometry_disconnected`: a deliberately dumb static heuristic that checks whether a single part appears to contain disconnected visual geometry islands.
 - `warn_if_coplanar_surfaces`: a deliberately noisy visual heuristic that looks for nearly coplanar element AABB faces with strong in-plane overlap. Flush mounts, bezels, grilles, and panel seams can trigger it even when the model is acceptable.
 - `check_articulation_overlaps`: a failure-tier overlap gate for non-fixed articulation-linked parent/child pairs. It is the recommended way to prove that `REVOLUTE`, `PRISMATIC`, and `CONTINUOUS` joints do not interpenetrate.
 - `warn_if_overlaps`: a deliberately broad overlap sensor over generated collision geometry. It relies on generated collisions, AABB reasoning, and convex decomposition, so it can be noisy for thin wires, thin blades, concave shells, and other awkward geometry.
@@ -169,7 +169,7 @@ For pairs that truly must not intersect across motion, add selective separation 
 ctx.check_model_valid()
 ctx.check_mesh_files_exist()
 ctx.warn_if_articulation_origin_near_geometry(tol=0.015)
-ctx.warn_if_part_geometry_connected(use="visual")
+ctx.warn_if_part_geometry_disconnected(use="visual")
 ctx.check_articulation_overlaps(max_pose_samples=128)
 ctx.warn_if_coplanar_surfaces(use="visual", ignore_adjacent=True, ignore_fixed=True)
 ctx.warn_if_overlaps(max_pose_samples=128, ignore_adjacent=True, ignore_fixed=True)
