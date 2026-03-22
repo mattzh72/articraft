@@ -327,6 +327,67 @@ def _default_model_id(
     raise ValueError(f"Unsupported provider: {provider}")
 
 
+def _single_run_settings_summary(
+    *,
+    provider: str,
+    model_id: str,
+    thinking_level: str,
+    max_turns: int,
+    system_prompt_path: str,
+    sdk_package: str,
+    sdk_docs_mode: str,
+    openai_transport: str,
+    openai_reasoning_summary: str | None,
+) -> dict[str, Any]:
+    summary: dict[str, Any] = {
+        "provider": provider,
+        "model_id": model_id,
+        "thinking_level": thinking_level,
+        "max_turns": max_turns,
+        "system_prompt_path": system_prompt_path,
+        "sdk_package": sdk_package,
+        "sdk_docs_mode": sdk_docs_mode,
+    }
+    if provider == "openai":
+        summary["openai_transport"] = openai_transport
+        summary["openai_reasoning_summary"] = openai_reasoning_summary
+    return summary
+
+
+def _thinking_level_from_run_parameters(
+    storage_repo: StorageRepo,
+    *,
+    run_id: str | None,
+    record_id: str,
+) -> str | None:
+    normalized_run_id = _optional_string(run_id)
+    if not normalized_run_id:
+        return None
+
+    run_metadata = storage_repo.read_json(storage_repo.layout.run_metadata_path(normalized_run_id))
+    if isinstance(run_metadata, dict):
+        settings_summary = run_metadata.get("settings_summary")
+        if isinstance(settings_summary, dict):
+            thinking_level = _optional_string(settings_summary.get("thinking_level"))
+            if thinking_level:
+                return thinking_level
+            thinking_levels = settings_summary.get("thinking_levels")
+            if isinstance(thinking_levels, list) and len(thinking_levels) == 1:
+                return _optional_string(thinking_levels[0])
+
+    allocations = storage_repo.read_json(storage_repo.layout.run_allocations_path(normalized_run_id))
+    rows = allocations.get("rows") if isinstance(allocations, dict) else None
+    if not isinstance(rows, list):
+        return None
+    for row in rows:
+        if not isinstance(row, dict):
+            continue
+        if _optional_string(row.get("record_id")) != record_id:
+            continue
+        return _optional_string(row.get("thinking_level"))
+    return None
+
+
 def _build_single_run_context(
     *,
     repo_root: Path,
@@ -1096,6 +1157,17 @@ async def _execute_single_run(
                     status="failed",
                     category_slug=category_slug,
                     prompt_count=1,
+                    settings_summary=_single_run_settings_summary(
+                        provider=provider,
+                        model_id=actual_model_id,
+                        thinking_level=thinking_level,
+                        max_turns=max_turns,
+                        system_prompt_path=system_prompt_path,
+                        sdk_package=sdk_package,
+                        sdk_docs_mode=sdk_docs_mode,
+                        openai_transport=openai_transport,
+                        openai_reasoning_summary=openai_reasoning_summary,
+                    ),
                 ),
             )
         if persist_run_result:
@@ -1131,6 +1203,17 @@ async def _execute_single_run(
                 status="running",
                 category_slug=category_slug,
                 prompt_count=1,
+                settings_summary=_single_run_settings_summary(
+                    provider=provider,
+                    model_id=selected_model_id,
+                    thinking_level=thinking_level,
+                    max_turns=max_turns,
+                    system_prompt_path=system_prompt_path,
+                    sdk_package=sdk_package,
+                    sdk_docs_mode=sdk_docs_mode,
+                    openai_transport=openai_transport,
+                    openai_reasoning_summary=openai_reasoning_summary,
+                ),
             ),
         )
     await asyncio.to_thread(
@@ -1347,6 +1430,17 @@ async def _execute_single_run(
                 status="success",
                 category_slug=category_slug,
                 prompt_count=1,
+                settings_summary=_single_run_settings_summary(
+                    provider=provider,
+                    model_id=actual_model_id,
+                    thinking_level=thinking_level,
+                    max_turns=max_turns,
+                    system_prompt_path=system_prompt_path,
+                    sdk_package=sdk_package,
+                    sdk_docs_mode=sdk_docs_mode,
+                    openai_transport=openai_transport,
+                    openai_reasoning_summary=openai_reasoning_summary,
+                ),
             ),
         )
     if persist_run_result:
@@ -1511,10 +1605,20 @@ async def rerun_record_in_place(
         logger.error("Invalid provenance.json for record %s", record_id)
         return 1
 
+    source = existing_record.get("source") if isinstance(existing_record.get("source"), dict) else {}
+    source_run_id = source.get("run_id") if isinstance(source, dict) else None
+
     provider = _first_string(generation.get("provider"), existing_record.get("provider"))
     stored_model_id = _optional_string(generation.get("model_id"))
     openai_transport = _first_string(generation.get("openai_transport"), "http")
-    stored_thinking_level = _first_string(generation.get("thinking_level"), "high")
+    stored_thinking_level = _first_string(
+        _thinking_level_from_run_parameters(
+            storage_repo,
+            run_id=source_run_id if isinstance(source_run_id, str) else None,
+            record_id=record_id,
+        ),
+        _first_string(generation.get("thinking_level"), "high"),
+    )
     max_turns = int(generation.get("max_turns") or 30)
     openai_reasoning_summary = (
         _optional_string(generation.get("openai_reasoning_summary")) or "auto"

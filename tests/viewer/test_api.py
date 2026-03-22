@@ -260,7 +260,11 @@ def test_viewer_api_end_to_end(tmp_path: Path) -> None:
         {
             "schema_version": 1,
             "record_id": "rec_001",
-            "generation": {"provider": "openai", "model_id": "gpt-5.4"},
+            "generation": {
+                "provider": "openai",
+                "model_id": "gpt-5.4",
+                "thinking_level": "high",
+            },
             "prompting": {
                 "system_prompt_file": "designer_system_prompt.txt",
                 "system_prompt_sha256": "prompt-sha-001",
@@ -441,6 +445,7 @@ def test_viewer_api_end_to_end(tmp_path: Path) -> None:
             sdk_package="sdk",
             status="running",
             prompt_count=1,
+            settings_summary={"thinking_level": "low"},
         )
     )
     live_stage_dir = repo.layout.run_staging_dir("run_live_001") / "rec_stage_001"
@@ -504,6 +509,7 @@ def test_viewer_api_end_to_end(tmp_path: Path) -> None:
         == "prototype folding chair with a partially refined frame"
     )
     assert bootstrap["staging_entries"][0]["turn_count"] == 2
+    assert bootstrap["staging_entries"][0]["thinking_level"] == "low"
     assert bootstrap["staging_entries"][0]["has_checkpoint_urdf"] is True
     assert bootstrap["staging_entries"][0]["checkpoint_updated_at"] is not None
     assert bootstrap["staging_entries"][0]["model_script_updated_at"] is not None
@@ -514,6 +520,7 @@ def test_viewer_api_end_to_end(tmp_path: Path) -> None:
         item["record"]["record_id"]: item for item in workbench if item.get("record")
     }
     assert workbench_by_id["rec_001"]["record"]["rating"] is None
+    assert workbench_by_id["rec_001"]["record"]["thinking_level"] == "high"
 
     dataset = client.get("/api/collections/dataset").json()
     assert [item["dataset_id"] for item in dataset] == ["dj_dataset_001", "hinge_dataset_001"]

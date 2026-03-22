@@ -43,6 +43,7 @@ class RecordSummaryResponse(BaseModel):
     sdk_package: str | None = None
     provider: str | None = None
     model_id: str | None = None
+    thinking_level: str | None = None
     turn_count: int | None = None
     total_cost_usd: float | None = None
     category_slug: str | None = None
@@ -89,6 +90,7 @@ class StagingEntryResponse(BaseModel):
     category_slug: str | None = None
     provider: str | None = None
     model_id: str | None = None
+    thinking_level: str | None = None
     sdk_package: str | None = None
     turn_count: int | None = None
     tool_call_count: int | None = None

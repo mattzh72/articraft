@@ -126,6 +126,62 @@ def test_workbench_rerun_record_command_accepts_model_and_thinking_overrides(
     assert "search_index=" in captured
 
 
+def test_workbench_rerun_record_command_prefers_source_run_thinking_parameters(
+    fake_agent: None,
+    tmp_path: Path,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    repo_root = tmp_path
+    exit_code = asyncio.run(
+        runner.run_from_input(
+            "make a midi keyboard",
+            prompt_text="make a midi keyboard",
+            display_prompt="make a midi keyboard",
+            repo_root=repo_root,
+            image_path=None,
+            provider="openai",
+            model_id="gpt-5.4",
+            thinking_level="low",
+            max_turns=30,
+            system_prompt_path="designer_system_prompt.txt",
+            sdk_package="sdk",
+            sdk_docs_mode="full",
+            label="keyboard rerun",
+            tags=["keyboard"],
+        )
+    )
+    assert exit_code == 0
+    capsys.readouterr()
+
+    record_dir = next((repo_root / "data" / "records").iterdir())
+    record = json.loads((record_dir / "record.json").read_text(encoding="utf-8"))
+    source_run_id = record["source"]["run_id"]
+    run_metadata_path = repo_root / "data" / "cache" / "runs" / source_run_id / "run.json"
+    run_metadata = json.loads(run_metadata_path.read_text(encoding="utf-8"))
+    run_metadata["settings_summary"]["thinking_level"] = "low"
+    run_metadata_path.write_text(json.dumps(run_metadata, indent=2) + "\n", encoding="utf-8")
+
+    provenance_path = record_dir / "provenance.json"
+    provenance = json.loads(provenance_path.read_text(encoding="utf-8"))
+    provenance["generation"]["thinking_level"] = "high"
+    provenance_path.write_text(json.dumps(provenance, indent=2) + "\n", encoding="utf-8")
+
+    assert (
+        workbench_main(
+            [
+                "--repo-root",
+                str(repo_root),
+                "rerun-record",
+                str(record_dir),
+            ]
+        )
+        == 0
+    )
+
+    updated_provenance = json.loads((record_dir / "provenance.json").read_text(encoding="utf-8"))
+    assert updated_provenance["generation"]["thinking_level"] == "low"
+
+
 def test_workbench_rerun_record_command_accepts_sdk_override(
     fake_agent: None,
     tmp_path: Path,

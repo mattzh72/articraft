@@ -8,6 +8,7 @@ export type RecordSummary = {
   sdk_package: string | null;
   provider: string | null;
   model_id: string | null;
+  thinking_level: string | null;
   turn_count: number | null;
   total_cost_usd: number | null;
   category_slug: string | null;
@@ -54,6 +55,7 @@ export type StagingEntry = {
   category_slug: string | null;
   provider: string | null;
   model_id: string | null;
+  thinking_level: string | null;
   sdk_package: string | null;
   turn_count: number | null;
   tool_call_count: number | null;

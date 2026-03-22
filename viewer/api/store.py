@@ -67,6 +67,22 @@ def _coerce_float(value: Any) -> float | None:
     return None
 
 
+def _coerce_string(value: Any) -> str | None:
+    if isinstance(value, str):
+        stripped = value.strip()
+        return stripped or None
+    return None
+
+
+def _thinking_level_from_provenance(provenance: Any) -> str | None:
+    if not isinstance(provenance, dict):
+        return None
+    generation = provenance.get("generation")
+    if not isinstance(generation, dict):
+        return None
+    return _coerce_string(generation.get("thinking_level"))
+
+
 def _within_time_filter(created_at: str | None, filter_value: str | None) -> bool:
     if filter_value in {None, "", "any"}:
         return True
@@ -535,6 +551,36 @@ class ViewerStore:
             return fallback
         return _mtime_to_utc(latest_mtime)
 
+    def _thinking_level_from_run_metadata(
+        self,
+        run_id: str,
+        run_metadata: dict[str, Any],
+        *,
+        record_id: str | None = None,
+    ) -> str | None:
+        settings_summary = run_metadata.get("settings_summary")
+        if isinstance(settings_summary, dict):
+            thinking_level = _coerce_string(settings_summary.get("thinking_level"))
+            if thinking_level:
+                return thinking_level
+            thinking_levels = settings_summary.get("thinking_levels")
+            if isinstance(thinking_levels, list) and len(thinking_levels) == 1:
+                return _coerce_string(thinking_levels[0])
+
+        if not record_id:
+            return None
+        allocations = self.repo.read_json(self.repo.layout.run_allocations_path(run_id))
+        rows = allocations.get("rows") if isinstance(allocations, dict) else None
+        if not isinstance(rows, list):
+            return None
+        for row in rows:
+            if not isinstance(row, dict):
+                continue
+            if _coerce_string(row.get("record_id")) != record_id:
+                continue
+            return _coerce_string(row.get("thinking_level"))
+        return None
+
     def _record_summary(
         self,
         record_id: str,
@@ -564,10 +610,12 @@ class ViewerStore:
         materialization_status = self._materialization_status_for_record(record_id)
 
         turn_count: int | None = None
+        thinking_level: str | None = None
         if isinstance(provenance, dict):
             run_summary = provenance.get("run_summary")
             if isinstance(run_summary, dict):
                 turn_count = _coerce_int(run_summary.get("turn_count"))
+            thinking_level = _thinking_level_from_provenance(provenance)
 
         total_cost_usd: float | None = None
         if isinstance(cost, dict):
@@ -587,6 +635,7 @@ class ViewerStore:
             sdk_package=record.get("sdk_package"),
             provider=record.get("provider"),
             model_id=record.get("model_id"),
+            thinking_level=thinking_level,
             turn_count=turn_count,
             total_cost_usd=total_cost_usd,
             category_slug=record.get("category_slug"),
@@ -809,6 +858,13 @@ class ViewerStore:
                     staging_dir,
                     str(run_metadata.get("updated_at")) if run_metadata.get("updated_at") else None,
                 )
+                thinking_level = self._thinking_level_from_run_metadata(
+                    run_id,
+                    run_metadata,
+                    record_id=record_id,
+                )
+                if thinking_level is None and persisted_record is not None:
+                    thinking_level = persisted_record.thinking_level
 
                 entries.append(
                     StagingEntryResponse(
@@ -830,6 +886,7 @@ class ViewerStore:
                         category_slug=run_metadata.get("category_slug"),
                         provider=run_metadata.get("provider"),
                         model_id=run_metadata.get("model_id"),
+                        thinking_level=thinking_level,
                         sdk_package=run_metadata.get("sdk_package"),
                         turn_count=(
                             result_turn_count

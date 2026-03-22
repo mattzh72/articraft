@@ -473,6 +473,10 @@ export function InspectPanel({
                   <span className="prop-value font-mono text-[10px]">{stagingEntry.model_id || "--"}</span>
                 </div>
                 <div className="prop-row">
+                  <span className="prop-label">Thinking</span>
+                  <span className="prop-value">{stagingEntry.thinking_level || "--"}</span>
+                </div>
+                <div className="prop-row">
                   <span className="prop-label">SDK</span>
                   <span className="prop-value font-mono text-[10px]">{stagingEntry.sdk_package || "--"}</span>
                 </div>
@@ -687,6 +691,10 @@ export function InspectPanel({
               <div className="prop-row">
                 <span className="prop-label">Model</span>
                 <span className="prop-value font-mono text-[10px]">{record.model_id || "--"}</span>
+              </div>
+              <div className="prop-row">
+                <span className="prop-label">Thinking</span>
+                <span className="prop-value">{record.thinking_level || "--"}</span>
               </div>
               <div className="prop-row">
                 <span className="prop-label">Category</span>
