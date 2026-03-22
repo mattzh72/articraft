@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import asyncio
+import logging
 import os
 import subprocess
 import sys
@@ -46,6 +47,8 @@ from viewer.api.schemas import (
     WorkbenchEntryResponse,
 )
 from viewer.api.store import ViewerStore
+
+logger = logging.getLogger(__name__)
 
 
 def _resolve_repo_root(repo_root: Path | None) -> Path:
@@ -221,9 +224,23 @@ def create_app(*, repo_root: Path | None = None) -> FastAPI:
                 target = repo.layout.system_prompt_path(prompt_sha)
                 if target.exists() and target.is_file():
                     return target, "text/plain"
+                logger.warning(
+                    "Canonical system prompt missing for record_id=%s sha=%s requested_name=%s prompt_name=%s; refusing trace-local fallback",
+                    record_id,
+                    prompt_sha,
+                    requested_name,
+                    prompt_name,
+                )
+                raise HTTPException(status_code=404, detail=f"Trace file not found: {file_path}")
             fallback_name = prompt_name or requested_name
             target = (trace_root / Path(fallback_name).name).resolve()
             if target.exists() and target.is_file():
+                logger.warning(
+                    "Serving trace-local system prompt fallback for record_id=%s requested_name=%s prompt_name=%s",
+                    record_id,
+                    requested_name,
+                    prompt_name,
+                )
                 return target, "text/plain"
             raise HTTPException(status_code=404, detail=f"Trace file not found: {file_path}")
 

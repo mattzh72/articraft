@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import logging
 import os
 from dataclasses import dataclass, field
 from math import acos, asin, atan2, cos, isfinite, pi, sin, sqrt, tan
@@ -19,6 +20,7 @@ _EPS = 1e-9
 _OBJ_COORD_DECIMALS = 6
 _OBJ_QUANT_STEP = 10.0 ** (-_OBJ_COORD_DECIMALS)
 _BRIDGE_EPSILON = 0.1 * _OBJ_QUANT_STEP
+logger = logging.getLogger(__name__)
 
 
 def _identity_mat4() -> Mat4:
@@ -3264,7 +3266,14 @@ def tube_network_from_paths(
 
     try:
         out = _boolean_union_many(solids)
-    except Exception:
+    except Exception as exc:
+        if not _is_expected_boolean_fallback_error(exc):
+            raise
+        logger.warning(
+            "tube_network_from_paths falling back to visual mesh after boolean union failure: %s: %s",
+            type(exc).__name__,
+            exc,
+        )
         out = _tube_network_visual_mesh_from_paths(
             path_list,
             radius=radius,
@@ -3427,6 +3436,13 @@ def _geometry_from_manifold(manifold) -> MeshGeometry:
     verts: List[Vec3] = [(float(v[0]), float(v[1]), float(v[2])) for v in vp]
     faces: List[Face] = [(int(f[0]), int(f[1]), int(f[2])) for f in tri]
     return MeshGeometry(vertices=verts, faces=faces)
+
+
+def _is_expected_boolean_fallback_error(exc: BaseException) -> bool:
+    if isinstance(exc, (ValueError, RuntimeError)):
+        return True
+    module_name = type(exc).__module__.lower()
+    return module_name.startswith("manifold")
 
 
 def boolean_union(a: MeshGeometry, b: MeshGeometry) -> MeshGeometry:

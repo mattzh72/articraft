@@ -199,10 +199,17 @@ class OpenAILLM:
                     incremental_request_payload=incremental_request_payload,
                     fallback_request_payload=fallback_request_payload,
                 )
-            except Exception:
+            except Exception as exc:
                 reasoning = request_payload.get("reasoning")
                 if not (isinstance(reasoning, dict) and "summary" in reasoning):
                     raise
+                if not _is_reasoning_summary_unsupported_error(exc):
+                    raise
+                logger.warning(
+                    "OpenAI request rejected reasoning.summary for model=%s; retrying without it: %s",
+                    self.model_id,
+                    _format_retry_exception(exc),
+                )
                 return await self._request_with_transport(
                     request_payload=_payload_without_reasoning_summary(request_payload),
                     incremental_request_payload=_payload_without_reasoning_summary(
@@ -319,15 +326,28 @@ class OpenAILLM:
                     )
                 except _OpenAIWebSocketError as retry_exc:
                     if retry_exc.code == "previous_response_not_found":
+                        self._log_websocket_full_context_fallback(
+                            reason="previous_response_not_found_after_reconnect"
+                        )
                         return await self._send_websocket_request(
                             request_payload=fallback_request_payload, force_reconnect=True
                         )
                     raise
             if exc.code == "previous_response_not_found":
+                self._log_websocket_full_context_fallback(reason="previous_response_not_found")
                 return await self._send_websocket_request(
                     request_payload=fallback_request_payload, force_reconnect=True
                 )
             raise
+
+    def _log_websocket_full_context_fallback(self, *, reason: str) -> None:
+        logger.warning(
+            "OpenAI websocket full-context fallback triggered: model=%s reason=%s previous_response_id=%s input_items=%s",
+            self.model_id,
+            reason,
+            self._previous_response_id,
+            len(self._input_items),
+        )
 
     async def _send_websocket_request(
         self,
@@ -981,6 +1001,44 @@ def _extract_http_status(exc: BaseException) -> Optional[int]:
         if isinstance(status, int) and 100 <= status <= 599:
             return status
     return None
+
+
+def _is_reasoning_summary_unsupported_error(exc: BaseException) -> bool:
+    status = _extract_http_status(exc)
+    if status is not None and status not in {400, 422}:
+        return False
+
+    message = str(exc).strip().lower()
+    if not message:
+        return False
+
+    if "reasoning.summary" in message:
+        return any(
+            needle in message
+            for needle in (
+                "unsupported",
+                "not supported",
+                "invalid",
+                "unknown parameter",
+                "not allowed",
+                "unrecognized",
+            )
+        )
+
+    if "reasoning" not in message or "summary" not in message:
+        return False
+
+    return any(
+        needle in message
+        for needle in (
+            "unsupported",
+            "not supported",
+            "invalid",
+            "unknown parameter",
+            "not allowed",
+            "unrecognized",
+        )
+    )
 
 
 def _should_retry_openai_exception(exc: BaseException) -> bool:

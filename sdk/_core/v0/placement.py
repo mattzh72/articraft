@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import logging
 import math
 from dataclasses import dataclass
 from pathlib import Path
@@ -35,6 +36,7 @@ MeshSubject = Union[MeshGeometry, Mesh]
 SurfaceWrapMapping = Literal["auto", "intrinsic", "nearest"]
 _EPS = 1e-9
 _TRIMESH_CACHE: dict[Path, tuple[tuple[int, int], object]] = {}
+logger = logging.getLogger(__name__)
 
 
 @dataclass(frozen=True)
@@ -1507,7 +1509,8 @@ def wrap_profile_onto_surface(
     local ``z=0`` and thickness extending inward along ``-z``. This matches the
     common "sticker" or "thin plaque" case without requiring callers to build
     and remesh a solid themselves. ``hole_profiles`` can be used for through-cut
-    features such as badges, vents, or label windows.
+    features such as badges, vents, or label windows. Hole profiles currently
+    take the extrude-based fallback path directly instead of the planar-cap path.
     """
     thickness_value = float(thickness)
     if thickness_value <= 0.0:
@@ -1519,6 +1522,11 @@ def wrap_profile_onto_surface(
     points = _normalize_profile_points(profile)
     holes = _normalize_hole_profiles(hole_profiles)
     if holes:
+        logger.warning(
+            "wrap_profile_onto_surface using extrude fallback because hole_profiles were provided: hole_count=%s thickness=%.6g",
+            len(holes),
+            thickness_value,
+        )
         fallback = _fallback_profile_solid(
             points,
             hole_profiles=holes,
@@ -1563,6 +1571,10 @@ def wrap_profile_onto_surface(
         message = str(exc)
         if "profile mesh boundary" not in message:
             raise
+        logger.warning(
+            "wrap_profile_onto_surface using extrude fallback after planar cap reconstruction failed: %s",
+            message,
+        )
 
     fallback = _fallback_profile_solid(
         points,

@@ -1,10 +1,12 @@
 from __future__ import annotations
 
+import logging
 from math import pi
 
 import pytest
 
 import sdk
+from sdk._core.v0 import mesh as mesh_module
 
 
 def _bounds(
@@ -158,3 +160,32 @@ def test_closed_bezier_spline_requires_closed_curve() -> None:
             spline="bezier",
             closed_spline=True,
         )
+
+
+def test_tube_network_from_paths_logs_visual_mesh_fallback(
+    monkeypatch: pytest.MonkeyPatch,
+    caplog: pytest.LogCaptureFixture,
+) -> None:
+    sentinel = sdk.MeshGeometry(
+        vertices=[(0.0, 0.0, 0.0), (0.1, 0.0, 0.0), (0.0, 0.1, 0.0)],
+        faces=[(0, 1, 2)],
+    )
+
+    def fail_boolean_union(_geometries):
+        raise ValueError("geometry[0] is not a valid manifold solid")
+
+    monkeypatch.setattr(mesh_module, "_boolean_union_many", fail_boolean_union)
+    monkeypatch.setattr(
+        mesh_module,
+        "_tube_network_visual_mesh_from_paths",
+        lambda *args, **kwargs: sentinel,
+    )
+
+    with caplog.at_level(logging.WARNING):
+        geometry = mesh_module.tube_network_from_paths(
+            [[(0.0, 0.0, 0.0), (0.0, 0.0, 0.2)]],
+            radius=0.02,
+        )
+
+    assert geometry is sentinel
+    assert "falling back to visual mesh" in caplog.text

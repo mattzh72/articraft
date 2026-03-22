@@ -1,9 +1,11 @@
 from __future__ import annotations
 
+import logging
 import os
 from pathlib import Path
 from types import SimpleNamespace
 
+import pytest
 from fastapi.testclient import TestClient
 
 from storage.categories import CategoryStore
@@ -143,6 +145,68 @@ def test_viewer_store_delete_record_removes_empty_ad_hoc_category(tmp_path: Path
     assert not repo.layout.record_dir("rec_router_001").exists()
     assert not repo.layout.category_metadata_path("internet_router").exists()
     assert DatasetStore(repo).list_entries() == []
+
+
+def test_record_trace_system_prompt_requires_canonical_prompt_when_sha_is_recorded(
+    tmp_path: Path,
+    caplog: pytest.LogCaptureFixture,
+) -> None:
+    repo = StorageRepo(tmp_path)
+    repo.ensure_layout()
+
+    RecordStore(repo).write_record(
+        Record(
+            schema_version=1,
+            record_id="rec_prompt_001",
+            created_at="2026-03-22T09:00:00Z",
+            updated_at="2026-03-22T09:00:00Z",
+            rating=None,
+            kind="generated_model",
+            prompt_kind="single_prompt",
+            category_slug=None,
+            source=SourceRef(run_id="run_prompt_001"),
+            sdk_package="sdk",
+            provider="openai",
+            model_id="gpt-5.4",
+            display=DisplayMetadata(
+                title="Prompt Record",
+                prompt_preview="inspect prompt fallback",
+            ),
+            artifacts=RecordArtifacts(
+                prompt_txt="prompt.txt",
+                prompt_series_json=None,
+                model_py="model.py",
+                provenance_json="provenance.json",
+                cost_json=None,
+            ),
+        )
+    )
+    record_dir = repo.layout.record_dir("rec_prompt_001")
+    repo.write_json(
+        record_dir / "provenance.json",
+        {
+            "schema_version": 1,
+            "record_id": "rec_prompt_001",
+            "prompting": {
+                "system_prompt_file": "designer_system_prompt.txt",
+                "system_prompt_sha256": "missing-prompt-sha",
+            },
+        },
+    )
+    trace_dir = repo.layout.record_traces_dir("rec_prompt_001")
+    trace_dir.mkdir(parents=True, exist_ok=True)
+    (trace_dir / "designer_system_prompt.txt").write_text(
+        "trace-local fallback prompt\n",
+        encoding="utf-8",
+    )
+
+    client = TestClient(create_app(repo_root=tmp_path))
+
+    with caplog.at_level(logging.WARNING):
+        response = client.get("/api/records/rec_prompt_001/traces/designer_system_prompt.txt")
+
+    assert response.status_code == 404
+    assert "refusing trace-local fallback" in caplog.text
 
 
 def test_viewer_api_end_to_end(tmp_path: Path) -> None:

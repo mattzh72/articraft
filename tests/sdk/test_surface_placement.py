@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import logging
 import math
 from pathlib import Path
 
@@ -435,7 +436,9 @@ def test_wrap_profile_onto_surface_subdivides_only_profile_cap() -> None:
         assert _radius(centroid) >= 0.998
 
 
-def test_wrap_profile_onto_surface_supports_hole_profiles() -> None:
+def test_wrap_profile_onto_surface_supports_hole_profiles(
+    caplog: pytest.LogCaptureFixture,
+) -> None:
     outer = [
         (-0.04, -0.04),
         (0.04, -0.04),
@@ -453,16 +456,17 @@ def test_wrap_profile_onto_surface_supports_hole_profiles() -> None:
         direction=(1.0, 0.0, 0.0),
     )
 
-    wrapped = wrap_profile_onto_surface(
-        outer,
-        Sphere(radius=1.0),
-        thickness=0.015,
-        hole_profiles=[hole],
-        direction=(1.0, 0.0, 0.0),
-        mapping="intrinsic",
-        visible_relief=0.0,
-        surface_max_edge=0.03,
-    )
+    with caplog.at_level(logging.WARNING):
+        wrapped = wrap_profile_onto_surface(
+            outer,
+            Sphere(radius=1.0),
+            thickness=0.015,
+            hole_profiles=[hole],
+            direction=(1.0, 0.0, 0.0),
+            mapping="intrinsic",
+            visible_relief=0.0,
+            surface_max_edge=0.03,
+        )
 
     visible_points = [
         _spherical_log_map(vertex, center=(0.0, 0.0, 0.0), radius=1.0, frame=frame)
@@ -480,6 +484,36 @@ def test_wrap_profile_onto_surface_supports_hole_profiles() -> None:
             )
             <= 1e-6
         )
+    assert "hole_profiles were provided" in caplog.text
+
+
+def test_wrap_profile_onto_surface_logs_boundary_fallback(
+    monkeypatch: pytest.MonkeyPatch,
+    caplog: pytest.LogCaptureFixture,
+) -> None:
+    def fail_planar_cap(*args, **kwargs):
+        raise ValidationError("profile mesh boundary could not be reconstructed")
+
+    monkeypatch.setattr(placement_module, "_solid_from_planar_profile_cap", fail_planar_cap)
+
+    with caplog.at_level(logging.WARNING):
+        wrapped = wrap_profile_onto_surface(
+            [
+                (-0.04, -0.04),
+                (0.04, -0.04),
+                (0.04, 0.04),
+                (-0.04, 0.04),
+            ],
+            Sphere(radius=1.0),
+            thickness=0.015,
+            direction=(1.0, 0.0, 0.0),
+            mapping="intrinsic",
+            visible_relief=0.0,
+            surface_max_edge=0.03,
+        )
+
+    assert wrapped.vertices
+    assert "after planar cap reconstruction failed" in caplog.text
 
 
 def test_wrap_profile_onto_surface_handles_complex_profile_robustly() -> None:
