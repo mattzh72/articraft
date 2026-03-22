@@ -173,7 +173,28 @@ def test_build_concurrency_message_for_visual_auto_shows_throughput_mode(monkeyp
     assert "Using 264 workers" in message
     assert "target=visual" in message
     assert "queued records=264" in message
-    assert "visual auto mode=throughput-first" in message
+    assert "auto mode=throughput-first" in message
+    assert "hard cap 512" in message
+    assert "budget" not in message
+
+
+def test_build_concurrency_message_for_full_auto_shows_throughput_mode(monkeypatch) -> None:
+    monkeypatch.setattr("scripts.compile_all_records._logical_cpu_count", lambda: 14)
+    monkeypatch.setattr("scripts.compile_all_records._open_file_worker_cap", lambda: None)
+
+    message = _build_concurrency_message(
+        requested="auto",
+        resolved_workers=264,
+        target="full",
+        candidate_count=264,
+        reserve_mem_gb=2.0,
+        mem_per_worker_gb=3.0,
+    )
+
+    assert "Using 264 workers" in message
+    assert "target=full" in message
+    assert "queued records=264" in message
+    assert "auto mode=throughput-first" in message
     assert "hard cap 512" in message
     assert "budget" not in message
 
@@ -310,19 +331,7 @@ def test_resolve_worker_count_max_means_maximum_fanout(monkeypatch) -> None:
     assert resolved == 20
 
 
-def test_resolve_worker_count_auto_for_full_uses_memory_cap(monkeypatch) -> None:
-    monkeypatch.setattr(
-        "scripts.compile_all_records._logical_cpu_count",
-        lambda: 12,
-    )
-    monkeypatch.setattr(
-        "scripts.compile_all_records._total_memory_bytes",
-        lambda: 9 * 1024**3,
-    )
-    monkeypatch.setattr(
-        "scripts.compile_all_records._available_memory_bytes",
-        lambda: 3 * 1024**3,
-    )
+def test_resolve_worker_count_auto_for_full_uses_throughput_first_fanout(monkeypatch) -> None:
     monkeypatch.setattr("scripts.compile_all_records._open_file_worker_cap", lambda: None)
 
     resolved = _resolve_worker_count(
@@ -333,35 +342,32 @@ def test_resolve_worker_count_auto_for_full_uses_memory_cap(monkeypatch) -> None
         target="full",
     )
 
-    assert resolved == 1
+    assert resolved == 20
 
 
-def test_resolve_worker_count_auto_falls_back_to_total_memory_when_available_unknown(
-    monkeypatch,
-) -> None:
+def test_resolve_worker_count_auto_for_full_uses_open_file_cap(monkeypatch) -> None:
+    from scripts.compile_all_records import OpenFileWorkerCap
+
     monkeypatch.setattr(
-        "scripts.compile_all_records._logical_cpu_count",
-        lambda: 12,
+        "scripts.compile_all_records._open_file_worker_cap",
+        lambda: OpenFileWorkerCap(
+            worker_cap=23,
+            soft_limit=256,
+            open_files=18,
+            reserve_files=64,
+            per_worker_budget=8,
+        ),
     )
-    monkeypatch.setattr(
-        "scripts.compile_all_records._total_memory_bytes",
-        lambda: 10 * 1024**3,
-    )
-    monkeypatch.setattr(
-        "scripts.compile_all_records._available_memory_bytes",
-        lambda: None,
-    )
-    monkeypatch.setattr("scripts.compile_all_records._open_file_worker_cap", lambda: None)
 
     resolved = _resolve_worker_count(
         "auto",
-        candidate_count=20,
+        candidate_count=264,
         reserve_mem_gb=2.0,
         mem_per_worker_gb=2.0,
         target="full",
     )
 
-    assert resolved == 4
+    assert resolved == 23
 
 
 def test_resolve_worker_count_visual_auto_is_clamped_by_open_file_limit(monkeypatch) -> None:

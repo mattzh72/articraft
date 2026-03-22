@@ -570,7 +570,6 @@ def _resolve_worker_count(
         raise ValueError("Memory per worker must be greater than zero.")
 
     normalized = str(raw_value).strip().lower()
-    cpu_count = _logical_cpu_count()
     open_file_cap = _open_file_worker_cap()
     if normalized == "max":
         resolved = max(1, candidate_count)
@@ -579,22 +578,10 @@ def _resolve_worker_count(
         return resolved
 
     if normalized == "auto":
-        if target == "visual":
-            # Visual compile throughput is dominated by interpreter/module startup and
-            # many records are lightweight. Favor aggressive fan-out here; explicit
-            # numeric overrides still win if the caller wants something different.
-            resolved = max(1, min(candidate_count, _VISUAL_AUTO_WORKER_HARD_CAP))
-            if open_file_cap is not None:
-                resolved = min(resolved, open_file_cap.worker_cap)
-            return resolved
-        memory_cap = _auto_worker_memory_cap(
-            reserve_mem_gb=reserve_mem_gb,
-            mem_per_worker_gb=mem_per_worker_gb,
-        )
-        if memory_cap is None:
-            resolved = max(1, min(candidate_count, cpu_count))
-        else:
-            resolved = max(1, min(candidate_count, cpu_count, memory_cap))
+        # Align auto behavior across compile-all variants for speed-first throughput.
+        # This mirrors compile-visual's fan-out policy and is intentionally
+        # independent of compile target to avoid unexpectedly conservative defaults.
+        resolved = max(1, min(candidate_count, _VISUAL_AUTO_WORKER_HARD_CAP))
         if open_file_cap is not None:
             resolved = min(resolved, open_file_cap.worker_cap)
         return resolved
@@ -638,8 +625,8 @@ def _build_concurrency_message(
         f"(`--concurrency={requested}`, target={target}, queued records={candidate_count}, "
         f"{cpu_count} logical CPUs"
     )
-    if normalized == "auto" and target == "visual":
-        message += f", visual auto mode=throughput-first, hard cap {_VISUAL_AUTO_WORKER_HARD_CAP}"
+    if normalized == "auto":
+        message += f", auto mode=throughput-first, hard cap {_VISUAL_AUTO_WORKER_HARD_CAP}"
         if open_file_cap is not None:
             message += (
                 f", open files soft limit {open_file_cap.soft_limit}, "
