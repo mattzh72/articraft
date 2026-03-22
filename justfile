@@ -14,7 +14,6 @@ api_port := port
 sdk_package := "sdk"
 sdk_override := ""
 viewer_target := "/"
-spec := ""
 concurrency := "auto"
 limit := ""
 name := ""
@@ -225,12 +224,8 @@ dataset-promote record_ref category_title:
 dataset-batch spec_path="":
     #!/usr/bin/env bash
     set -euo pipefail
-    spec_path_arg={{ quote(spec_path) }}
-    spec_path={{ quote(spec) }}
+    spec_path={{ quote(spec_path) }}
     concurrency_value={{ quote(concurrency) }}
-    if [ -n "$spec_path_arg" ]; then
-      spec_path="$spec_path_arg"
-    fi
     if [ -z "$spec_path" ]; then
       echo "Usage: just concurrency=<n> dataset-batch path/to/batch.csv" >&2
       exit 1
