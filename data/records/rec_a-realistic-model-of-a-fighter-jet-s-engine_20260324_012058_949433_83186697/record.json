@@ -1,0 +1,39 @@
+{
+  "schema_version": 2,
+  "record_id": "rec_a-realistic-model-of-a-fighter-jet-s-engine_20260324_012058_949433_83186697",
+  "created_at": "2026-03-24T01:20:58Z",
+  "updated_at": "2026-03-24T01:33:23Z",
+  "rating": null,
+  "kind": "generated_model",
+  "prompt_kind": "single_prompt",
+  "category_slug": null,
+  "source": {
+    "run_id": "run_20260324_012058_949433_83186697",
+    "prompt_batch_id": null,
+    "batch_spec_id": null,
+    "row_id": null,
+    "prompt_index": null
+  },
+  "sdk_package": "sdk",
+  "provider": "openai",
+  "model_id": "gpt-5.4",
+  "display": {
+    "title": "A realistic model of a fighter jet's engine",
+    "prompt_preview": "A realistic model of a fighter jet's engine"
+  },
+  "artifacts": {
+    "prompt_txt": "prompt.txt",
+    "prompt_series_json": null,
+    "model_py": "model.py",
+    "provenance_json": "provenance.json",
+    "cost_json": "cost.json",
+    "inputs_dir": "inputs"
+  },
+  "hashes": {
+    "prompt_sha256": "e0f66a4dc83f4eed19e84418e0d596772a40e53e77fe916f83e3cd307db80375",
+    "model_py_sha256": "f26491d2d3d5fca31eb20267f8ea3c4bd52872ecb1b0854c07be79b672f21b9f"
+  },
+  "collections": [
+    "workbench"
+  ]
+}
