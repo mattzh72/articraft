@@ -20,7 +20,28 @@ def test_compiled_openai_prompt_keeps_compact_contract_and_visual_test_gate() ->
         assert "<verification_contract>" in text
         assert "<repair_strategy>" in text
         assert "Use ONLY `read_file` and `apply_patch`" in text
+        assert (
+            "First infer the object's major parts, moving mechanisms, dominant silhouette, and hero features"
+            in text
+        )
+        assert (
+            "Choose an implementation order that anchors primary structure and articulation" in text
+        )
+        assert (
+            "Before coding, identify the major part groups and choose the representation for each"
+            in text
+        )
+        assert (
+            "Build in this order: anchor frame, articulation axes/origins, and mount relationships first"
+            in text
+        )
         assert "Use the injected SDK docs for exact helper signatures" in text
+        assert (
+            "Each substantial new visible geometry or motion claim must be matched by exact tests"
+            in text
+        )
+        assert "Passing compile alone is insufficient" in text
+        assert "attachment realism, and key poses are explicitly proved" in text
         assert (
             "The model is not done until every applicable visual coverage category is proved"
             in text

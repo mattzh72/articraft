@@ -28,6 +28,37 @@ def _assert_shared_contract(text: str, *, budget: int) -> None:
         assert tag in text
     assert _opening_tag_count(text) == 5
     assert "<compile_signals>" in text
+    assert (
+        "First infer the object's major parts, moving mechanisms, dominant silhouette, and hero features"
+        in text
+    )
+    assert "Choose an implementation order that anchors primary structure and articulation" in text
+    assert (
+        "Treat the object as incomplete until those parts, features, and behaviors are implemented and proved."
+        in text
+    )
+    assert (
+        "Before coding, identify the major part groups and choose the representation for each"
+        in text
+    )
+    assert (
+        "Build in this order: anchor frame, articulation axes/origins, and mount relationships first"
+        in text
+    )
+    assert (
+        "After each substantial geometry or mechanism change, use compile output, QC, and tests as evidence before moving on."
+        in text
+    )
+    assert (
+        "Each substantial new visible geometry or motion claim must be matched by exact tests"
+        in text
+    )
+    assert "Passing compile alone is insufficient" in text
+    assert "attachment realism, and key poses are explicitly proved" in text
+    assert (
+        "If failures or warnings show the wrong representation or composition, rewrite that region instead of tuning around it."
+        in text
+    )
     assert 'Do not optimize for "passing" in the abstract' in text
     assert "Use the injected SDK docs for exact helper signatures" in text
     assert "The model is not done until every applicable visual coverage category is proved" in text
