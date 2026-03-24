@@ -11,6 +11,7 @@ export type RenderOptions = {
   showGrid: boolean;
   showCollisions: boolean;
   showSegmentColors: boolean;
+  showSurfaceSamples: boolean;
   doubleSided: boolean;
   environmentLighting: boolean;
   autoAnimate: boolean;
@@ -22,6 +23,7 @@ export const defaultRenderOptions: RenderOptions = {
   showGrid: true,
   showCollisions: false,
   showSegmentColors: false,
+  showSurfaceSamples: false,
   doubleSided: true,
   environmentLighting: false,
   autoAnimate: false,
@@ -69,6 +71,12 @@ const optionRows: OptionRow[] = [
     key: "showSegmentColors",
     label: "Part colors",
     description: "High-contrast colors for each segmented part",
+    section: "display",
+  },
+  {
+    key: "showSurfaceSamples",
+    label: "Surface samples",
+    description: "Sample point clouds across visible mesh surfaces",
     section: "display",
   },
   {

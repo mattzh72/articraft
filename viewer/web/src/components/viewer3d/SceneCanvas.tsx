@@ -6,6 +6,7 @@ import { useUrdfLoader } from './useUrdfLoader';
 import { createEdgeLines } from './materials';
 import { createEnvironmentMap } from './lighting';
 import { attachJointOverlay, disposeOverlayObjects } from './joint-overlay';
+import { createSurfaceSamplePoints, disposeSurfaceSamplePoints } from './surface-sampling';
 import type { RenderOptions } from '@/components/inspector/RenderOptionsPanel';
 import type { UrdfSpec } from './urdf-parser';
 
@@ -37,6 +38,7 @@ type MaterialWithColor = THREE.Material & {
   metalness?: number;
   roughness?: number;
   depthWrite?: boolean;
+  colorWrite?: boolean;
 };
 
 type SegmentMaterialSnapshot = {
@@ -49,6 +51,7 @@ type SegmentMaterialSnapshot = {
   transparent: boolean;
   opacity: number;
   depthWrite?: boolean;
+  colorWrite?: boolean;
 };
 
 type SegmentEmphasis = 'default' | 'selected' | 'dimmed';
@@ -74,11 +77,48 @@ function storeSegmentMaterialSnapshot(material: MaterialWithColor): void {
     transparent: material.transparent,
     opacity: material.opacity,
     depthWrite: material.depthWrite,
+    colorWrite: material.colorWrite,
   } satisfies SegmentMaterialSnapshot;
 }
 
 function applySegmentColor(material: MaterialWithColor, color: THREE.Color, emphasis: SegmentEmphasis): void {
   storeSegmentMaterialSnapshot(material);
+  const snapshot = material.userData[SEGMENTATION_SNAPSHOT_KEY] as SegmentMaterialSnapshot | undefined;
+  if (!snapshot) {
+    return;
+  }
+
+  if (material.color && snapshot.color) {
+    material.color.copy(snapshot.color);
+  }
+  if (material.emissive) {
+    if (snapshot.emissive) {
+      material.emissive.copy(snapshot.emissive);
+    } else {
+      material.emissive.setRGB(0, 0, 0);
+    }
+  }
+  if ('map' in material) {
+    material.map = snapshot.map ?? null;
+  }
+  if ('emissiveMap' in material) {
+    material.emissiveMap = snapshot.emissiveMap ?? null;
+  }
+  if ('metalness' in material && typeof snapshot.metalness === 'number') {
+    material.metalness = snapshot.metalness;
+  }
+  if ('roughness' in material && typeof snapshot.roughness === 'number') {
+    material.roughness = snapshot.roughness;
+  }
+  material.transparent = snapshot.transparent;
+  material.opacity = snapshot.opacity;
+  if ('depthWrite' in material && typeof snapshot.depthWrite === 'boolean') {
+    material.depthWrite = snapshot.depthWrite;
+  }
+  if ('colorWrite' in material && typeof snapshot.colorWrite === 'boolean') {
+    material.colorWrite = snapshot.colorWrite;
+  }
+
   const tint = color.clone();
 
   if (emphasis === 'dimmed') {
@@ -113,6 +153,22 @@ function applySegmentColor(material: MaterialWithColor, color: THREE.Color, emph
   material.opacity = emphasis === 'dimmed' ? 0.1 : 1;
   if ('depthWrite' in material) {
     material.depthWrite = emphasis !== 'dimmed';
+  }
+  if ('colorWrite' in material) {
+    material.colorWrite = true;
+  }
+  material.needsUpdate = true;
+}
+
+function applySurfaceSampleMeshPresentation(material: MaterialWithColor): void {
+  storeSegmentMaterialSnapshot(material);
+  material.transparent = true;
+  material.opacity = 0;
+  if ('depthWrite' in material) {
+    material.depthWrite = false;
+  }
+  if ('colorWrite' in material) {
+    material.colorWrite = false;
   }
   material.needsUpdate = true;
 }
@@ -150,6 +206,9 @@ function restoreSegmentMaterial(material: MaterialWithColor): void {
   if ('depthWrite' in material && typeof snapshot.depthWrite === 'boolean') {
     material.depthWrite = snapshot.depthWrite;
   }
+  if ('colorWrite' in material && typeof snapshot.colorWrite === 'boolean') {
+    material.colorWrite = snapshot.colorWrite;
+  }
   material.needsUpdate = true;
   delete material.userData[SEGMENTATION_SNAPSHOT_KEY];
 }
@@ -177,6 +236,32 @@ function findLinkName(object: THREE.Object3D | null): string | null {
   }
 
   return null;
+}
+
+function forEachOwnLinkVisualMesh(
+  linkGroup: THREE.Object3D,
+  visit: (mesh: THREE.Mesh) => void,
+): void {
+  const stack = [...linkGroup.children];
+
+  while (stack.length > 0) {
+    const current = stack.pop();
+    if (!current) {
+      continue;
+    }
+
+    if (current.name.startsWith('link:')) {
+      continue;
+    }
+
+    if (current instanceof THREE.Mesh && current.userData.articraftVisual === true) {
+      visit(current);
+    }
+
+    for (let index = current.children.length - 1; index >= 0; index -= 1) {
+      stack.push(current.children[index]);
+    }
+  }
 }
 
 export interface SceneCanvasProps {
@@ -216,6 +301,7 @@ export function SceneCanvas({
   const envMapRef = useRef<THREE.Texture | null>(null);
   const jointOverlayRef = useRef<THREE.Object3D[]>([]);
   const partHighlightRef = useRef<THREE.LineSegments[]>([]);
+  const surfaceSampleRef = useRef<THREE.Points[]>([]);
   const pointerDownRef = useRef<{ x: number; y: number; pointerId: number } | null>(null);
   const [selectedPartName, setSelectedPartName] = useState<string | null>(null);
   const isStagingSelection = selectionKey?.startsWith("staging:") ?? false;
@@ -256,7 +342,7 @@ export function SceneCanvas({
   );
   const shouldShowPartLegend =
     Boolean(selectionKey) &&
-    renderOptions.showSegmentColors &&
+    (renderOptions.showSegmentColors || renderOptions.showSurfaceSamples) &&
     !renderOptions.showCollisions &&
     partLegendItems.length > 0 &&
     !loading &&
@@ -294,12 +380,12 @@ export function SceneCanvas({
   }, [partLegendItems, selectedPartName]);
 
   useEffect(() => {
-    if (renderOptions.showSegmentColors && !renderOptions.showCollisions) {
+    if ((renderOptions.showSegmentColors || renderOptions.showSurfaceSamples) && !renderOptions.showCollisions) {
       return;
     }
 
     setSelectedPartName(null);
-  }, [renderOptions.showCollisions, renderOptions.showSegmentColors]);
+  }, [renderOptions.showCollisions, renderOptions.showSegmentColors, renderOptions.showSurfaceSamples]);
 
   // Show/hide grid
   useEffect(() => {
@@ -319,7 +405,7 @@ export function SceneCanvas({
     }
     edgeLinesRef.current = [];
 
-    if (!renderOptions.showEdges || renderOptions.showCollisions) return;
+    if (!renderOptions.showEdges || renderOptions.showCollisions || renderOptions.showSurfaceSamples) return;
 
     const robot = scene.getObjectByName(ROBOT_GROUP_NAME);
     if (!robot) return;
@@ -333,7 +419,7 @@ export function SceneCanvas({
       }
     });
     edgeLinesRef.current = newLines;
-  }, [scene, renderOptions.showEdges, renderOptions.showCollisions, urdfSpec]);
+  }, [scene, renderOptions.showEdges, renderOptions.showCollisions, renderOptions.showSurfaceSamples, urdfSpec]);
 
   // Double-sided materials
   useEffect(() => {
@@ -391,6 +477,77 @@ export function SceneCanvas({
   }, [scene, renderOptions.showCollisions, urdfSpec]);
 
   useEffect(() => {
+    disposeSurfaceSamplePoints(surfaceSampleRef.current);
+    surfaceSampleRef.current = [];
+
+    if (!scene || !urdfSpec || !renderOptions.showSurfaceSamples || renderOptions.showCollisions) {
+      return;
+    }
+
+    const robot = scene.getObjectByName(ROBOT_GROUP_NAME);
+    if (!robot) {
+      return;
+    }
+
+    robot.updateMatrixWorld(true);
+
+    const nextSurfaceSamples: THREE.Points[] = [];
+    for (const [index, link] of urdfSpec.links.entries()) {
+      const linkGroup = robot.getObjectByName(`link:${link.name}`);
+      if (!linkGroup) {
+        continue;
+      }
+
+      const linkColor = segmentColorForIndex(index);
+      forEachOwnLinkVisualMesh(linkGroup, (obj) => {
+        const points = createSurfaceSamplePoints(obj, linkColor, link.name);
+        if (!points) {
+          return;
+        }
+
+        obj.add(points);
+        nextSurfaceSamples.push(points);
+      });
+    }
+
+    surfaceSampleRef.current = nextSurfaceSamples;
+
+    return () => {
+      disposeSurfaceSamplePoints(nextSurfaceSamples);
+      if (surfaceSampleRef.current === nextSurfaceSamples) {
+        surfaceSampleRef.current = [];
+      }
+    };
+  }, [scene, renderOptions.showCollisions, renderOptions.showSurfaceSamples, urdfSpec]);
+
+  useEffect(() => {
+    if (!scene) {
+      return;
+    }
+
+    const robot = scene.getObjectByName(ROBOT_GROUP_NAME);
+    if (!robot) {
+      return;
+    }
+
+    robot.traverse((obj) => {
+      if (!(obj instanceof THREE.Points) || obj.userData.articraftSurfaceSample !== true) {
+        return;
+      }
+
+      const linkName =
+        typeof obj.userData.articraftLinkName === 'string'
+          ? obj.userData.articraftLinkName
+          : findLinkName(obj);
+
+      obj.visible =
+        renderOptions.showSurfaceSamples &&
+        !renderOptions.showCollisions &&
+        (selectedPartName == null || linkName === selectedPartName);
+    });
+  }, [scene, renderOptions.showCollisions, renderOptions.showSurfaceSamples, selectedPartName, urdfSpec]);
+
+  useEffect(() => {
     if (!scene || !urdfSpec) {
       return;
     }
@@ -407,11 +564,7 @@ export function SceneCanvas({
       }
 
       const linkColor = segmentColorForIndex(index);
-      linkGroup.traverse((obj) => {
-        if (!(obj instanceof THREE.Mesh) || obj.userData.articraftVisual !== true) {
-          return;
-        }
-
+      forEachOwnLinkVisualMesh(linkGroup, (obj) => {
         const emphasis: SegmentEmphasis =
           selectedPartName == null
             ? 'default'
@@ -422,8 +575,12 @@ export function SceneCanvas({
         withMeshMaterials(obj, (material) => {
           if (renderOptions.showSegmentColors) {
             applySegmentColor(material, linkColor, emphasis);
-          } else {
+          } else if (!renderOptions.showSurfaceSamples) {
             restoreSegmentMaterial(material);
+          }
+
+          if (renderOptions.showSurfaceSamples) {
+            applySurfaceSampleMeshPresentation(material);
           }
         });
       });
@@ -436,18 +593,14 @@ export function SceneCanvas({
           continue;
         }
 
-        linkGroup.traverse((obj) => {
-          if (!(obj instanceof THREE.Mesh) || obj.userData.articraftVisual !== true) {
-            return;
-          }
-
+        forEachOwnLinkVisualMesh(linkGroup, (obj) => {
           withMeshMaterials(obj, (material) => {
             restoreSegmentMaterial(material);
           });
         });
       }
     };
-  }, [scene, renderOptions.showSegmentColors, selectedPartName, urdfSpec]);
+  }, [scene, renderOptions.showSegmentColors, renderOptions.showSurfaceSamples, selectedPartName, urdfSpec]);
 
   useEffect(() => {
     for (const highlight of partHighlightRef.current) {
@@ -457,7 +610,7 @@ export function SceneCanvas({
     }
     partHighlightRef.current = [];
 
-    if (!scene || !selectedPartName || !shouldShowPartLegend) {
+    if (!scene || !selectedPartName || !shouldShowPartLegend || renderOptions.showSurfaceSamples) {
       return;
     }
 
@@ -468,8 +621,8 @@ export function SceneCanvas({
     }
 
     const nextHighlights: THREE.LineSegments[] = [];
-    linkGroup.traverse((obj) => {
-      if (!(obj instanceof THREE.Mesh) || obj.userData.articraftVisual !== true || !obj.visible) {
+    forEachOwnLinkVisualMesh(linkGroup, (obj) => {
+      if (!obj.visible) {
         return;
       }
 
@@ -493,7 +646,7 @@ export function SceneCanvas({
         partHighlightRef.current = [];
       }
     };
-  }, [scene, selectedPartName, shouldShowPartLegend, urdfSpec]);
+  }, [scene, renderOptions.showSurfaceSamples, selectedPartName, shouldShowPartLegend, urdfSpec]);
 
   useEffect(() => {
     if (!scene || !camera || !renderer || !shouldShowPartLegend) {
@@ -604,6 +757,7 @@ export function SceneCanvas({
     renderOptions.showGrid,
     renderOptions.showJointOverlay,
     renderOptions.showSegmentColors,
+    renderOptions.showSurfaceSamples,
     sceneReady,
     selectedPartName,
     shouldShowPartLegend,

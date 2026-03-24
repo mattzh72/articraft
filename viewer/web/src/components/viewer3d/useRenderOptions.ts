@@ -7,6 +7,7 @@ export interface RenderOptions {
   showGrid: boolean;
   showCollisions: boolean;
   showSegmentColors: boolean;
+  showSurfaceSamples: boolean;
   doubleSided: boolean;
   envLighting: boolean;
   autoAnimate: boolean;
@@ -14,7 +15,7 @@ export interface RenderOptions {
 }
 
 const STORAGE_KEY = 'articraft-render-options';
-const STORAGE_SCHEMA_VERSION = 3;
+const STORAGE_SCHEMA_VERSION = 4;
 const RENDER_QUERY_PARAM = 'render';
 const RENDER_OPTION_KEYS: Array<keyof RenderOptions> = [
   'showEdges',
@@ -25,6 +26,7 @@ const RENDER_OPTION_KEYS: Array<keyof RenderOptions> = [
   'envLighting',
   'autoAnimate',
   'showJointOverlay',
+  'showSurfaceSamples',
 ];
 
 const DEFAULT_OPTIONS: RenderOptions = {
@@ -32,6 +34,7 @@ const DEFAULT_OPTIONS: RenderOptions = {
   showGrid: true,
   showCollisions: false,
   showSegmentColors: false,
+  showSurfaceSamples: false,
   doubleSided: true,
   envLighting: false,
   autoAnimate: false,
@@ -93,12 +96,22 @@ function serializeOptions(options: RenderOptions): string {
 }
 
 function parseOptions(value: string | null): RenderOptions | null {
-  if (!value || value.length !== RENDER_OPTION_KEYS.length) {
+  if (!value) {
     return null;
   }
 
   const nextOptions = { ...DEFAULT_OPTIONS };
-  for (const [index, key] of RENDER_OPTION_KEYS.entries()) {
+  const keys =
+    value.length === RENDER_OPTION_KEYS.length
+      ? RENDER_OPTION_KEYS
+      : value.length === RENDER_OPTION_KEYS.length - 1
+        ? RENDER_OPTION_KEYS.slice(0, -1)
+        : null;
+  if (!keys) {
+    return null;
+  }
+
+  for (const [index, key] of keys.entries()) {
     const bit = value[index];
     if (bit !== '0' && bit !== '1') {
       return null;

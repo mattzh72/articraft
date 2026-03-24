@@ -41,6 +41,7 @@ export function ViewportPanel({
     showGrid: renderOptions.showGrid,
     showCollisions: renderOptions.showCollisions,
     showSegmentColors: renderOptions.showSegmentColors,
+    showSurfaceSamples: renderOptions.showSurfaceSamples,
     doubleSided: renderOptions.doubleSided,
     environmentLighting: renderOptions.envLighting,
     autoAnimate: renderOptions.autoAnimate,

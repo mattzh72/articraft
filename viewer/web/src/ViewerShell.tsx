@@ -360,6 +360,7 @@ export default function ViewerShell(): JSX.Element {
     showGrid: renderOptions.showGrid,
     showCollisions: renderOptions.showCollisions,
     showSegmentColors: renderOptions.showSegmentColors,
+    showSurfaceSamples: renderOptions.showSurfaceSamples,
     doubleSided: renderOptions.doubleSided,
     environmentLighting: renderOptions.envLighting,
     autoAnimate: renderOptions.autoAnimate,
