@@ -1,0 +1,15 @@
+{
+  "schema_version": 1,
+  "slug": "parabolic_dish_on_azimuth_elevation_mount",
+  "title": "Parabolic dish on azimuth-elevation mount",
+  "description": "",
+  "prompt_batch_ids": [
+    "realism_articulation_v1"
+  ],
+  "target_sdk_version": "base",
+  "current_count": 3,
+  "last_item_index": 3,
+  "created_at": "2026-03-13T13:55:18Z",
+  "updated_at": "2026-03-24T21:10:09Z",
+  "run_count": 3
+}
