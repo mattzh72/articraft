@@ -30,6 +30,7 @@ from agent.compiler import (
 from agent.compiler import (
     compile_urdf_report_maybe_timeout as _compile_urdf_report_maybe_timeout,
 )
+from agent.defaults import DEFAULT_MAX_TURNS
 from agent.harness import ArticraftAgent, build_openai_prompt_cache_settings
 from agent.models import CompileReport as AgentCompileReport
 from agent.prompts import (
@@ -597,7 +598,7 @@ def create_workbench_draft_record(
     model_id: str | None = None,
     openai_transport: str = "http",
     thinking_level: str = "high",
-    max_turns: int = 30,
+    max_turns: int = DEFAULT_MAX_TURNS,
     system_prompt_path: str = "designer_system_prompt.txt",
     sdk_package: str = "sdk",
     sdk_docs_mode: str = "full",
@@ -1656,7 +1657,7 @@ async def rerun_record_in_place(
         ),
         _first_string(generation.get("thinking_level"), "high"),
     )
-    max_turns = int(generation.get("max_turns") or 30)
+    max_turns = int(generation.get("max_turns") or DEFAULT_MAX_TURNS)
     openai_reasoning_summary = (
         _optional_string(generation.get("openai_reasoning_summary")) or "auto"
     )
@@ -1848,7 +1849,7 @@ def main(argv: list[str] | None = None) -> int:
         choices=["low", "med", "high"],
         help="Thinking budget level.",
     )
-    parser.add_argument("--max-turns", type=int, default=30)
+    parser.add_argument("--max-turns", type=int, default=DEFAULT_MAX_TURNS)
     parser.add_argument(
         "--system-prompt",
         default="designer_system_prompt.txt",

@@ -5,6 +5,7 @@ import asyncio
 from datetime import datetime, timezone
 from pathlib import Path
 
+from agent.defaults import DEFAULT_MAX_TURNS
 from agent.prompts import normalize_sdk_package
 from agent.runner import create_workbench_draft_record, rerun_record_in_place
 from agent.tools import resolve_image_path
@@ -86,7 +87,7 @@ def _build_parser() -> argparse.ArgumentParser:
     init_record.add_argument(
         "--max-turns",
         type=int,
-        default=30,
+        default=DEFAULT_MAX_TURNS,
         help="Max-turns metadata to attach to the draft provenance.",
     )
     init_record.add_argument(

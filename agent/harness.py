@@ -17,6 +17,7 @@ from agent.compiler import (
     persist_compile_success_artifacts,
 )
 from agent.cost import CostTracker, pricing_for_provider_model
+from agent.defaults import DEFAULT_MAX_TURNS
 from agent.feedback import (
     compile_signal_bundle_from_exception,
     contains_code_in_text,
@@ -284,7 +285,7 @@ class ArticraftAgent:
         model_id: Optional[str] = None,
         openai_transport: str = "http",
         thinking_level: str = "high",
-        max_turns: int = 30,
+        max_turns: int = DEFAULT_MAX_TURNS,
         system_prompt_path: str = "designer_system_prompt.txt",
         trace_dir: Optional[str] = None,
         display_enabled: Optional[bool] = None,

@@ -7,6 +7,7 @@ from pathlib import Path
 import pytest
 
 from agent import runner
+from agent.defaults import DEFAULT_MAX_TURNS
 from cli.workbench import main as workbench_main
 from tests.helpers import FakeAgent
 
@@ -409,6 +410,7 @@ def test_workbench_init_record_command(
     provenance = json.loads((record_dir / "provenance.json").read_text(encoding="utf-8"))
     assert provenance["generation"]["provider"] == "openai"
     assert provenance["generation"]["model_id"] == "gpt-5.4"
+    assert provenance["generation"]["max_turns"] == DEFAULT_MAX_TURNS
     assert provenance["run_summary"]["final_status"] == "draft"
 
     workbench = json.loads(
