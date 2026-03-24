@@ -68,6 +68,46 @@ def _write_probe_fixture(script_path: Path, *, include_object_model: bool = True
     script_path.write_text("\n".join(lines) + "\n", encoding="utf-8")
 
 
+def _write_nested_joint_probe_fixture(script_path: Path) -> None:
+    lines = [
+        "from __future__ import annotations",
+        "",
+        "from pathlib import Path",
+        "",
+        "from sdk import ArticulatedObject, ArticulationType, Box, Origin, TestContext",
+        "",
+        "HERE = Path(__file__).resolve().parent",
+        "model = ArticulatedObject(name='nested_probe_fixture')",
+        "base = model.part('base')",
+        "base.visual(Box((1.0, 1.0, 1.0)), origin=Origin(xyz=(0.0, 0.0, 0.5)), name='base_body')",
+        "arm = model.part('arm')",
+        "arm.visual(Box((1.0, 0.2, 0.2)), origin=Origin(xyz=(0.5, 0.0, 0.1)), name='arm_body')",
+        "forearm = model.part('forearm')",
+        "forearm.visual(Box((1.0, 0.2, 0.2)), origin=Origin(xyz=(0.5, 0.0, 0.1)), name='forearm_body')",
+        "model.articulation(",
+        "    'base_to_arm',",
+        "    ArticulationType.REVOLUTE,",
+        "    parent=base,",
+        "    child=arm,",
+        "    origin=Origin(xyz=(1.0, 0.0, 1.0)),",
+        "    axis=(0.0, 0.0, 1.0),",
+        ")",
+        "model.articulation(",
+        "    'arm_to_forearm',",
+        "    ArticulationType.FIXED,",
+        "    parent=arm,",
+        "    child=forearm,",
+        "    origin=Origin(xyz=(1.0, 0.0, 0.0)),",
+        ")",
+        "object_model = model",
+        "",
+        "def run_tests():",
+        "    ctx = TestContext(object_model, asset_root=HERE)",
+        "    return ctx.report()",
+    ]
+    script_path.write_text("\n".join(lines) + "\n", encoding="utf-8")
+
+
 async def _run_probe(
     script_path: Path,
     code: str,
@@ -185,6 +225,17 @@ def test_probe_model_timeout_fails_clearly(tmp_path: Path) -> None:
     assert output["error"]["type"] == "timeout"
 
 
+def test_probe_model_runner_crash_returns_structured_error(tmp_path: Path) -> None:
+    script_path = tmp_path / "model.py"
+    _write_probe_fixture(script_path)
+
+    output = asyncio.run(_run_probe(script_path, "import os\nos._exit(7)"))
+
+    assert output["ok"] is False
+    assert output["error"]["type"] == "runner_process_error"
+    assert "code 7" in output["error"]["message"]
+
+
 def test_probe_model_missing_object_model_fails_clearly(tmp_path: Path) -> None:
     script_path = tmp_path / "model.py"
     _write_probe_fixture(script_path, include_object_model=False)
@@ -245,3 +296,38 @@ def test_probe_model_supports_layout_and_pose_sampling(tmp_path: Path) -> None:
     poses = result["poses"]
     assert poses
     assert isinstance(poses, list)
+
+
+def test_probe_model_joint_position_is_world_space(tmp_path: Path) -> None:
+    script_path = tmp_path / "model.py"
+    _write_nested_joint_probe_fixture(script_path)
+
+    output = asyncio.run(
+        _run_probe(
+            script_path,
+            "\n".join(
+                [
+                    "with pose(base_to_arm=1.57079632679):",
+                    "    emit({",
+                    "        'joint_pos': position(joint('arm_to_forearm')),",
+                    "        'child_pos': position(part('forearm')),",
+                    "    })",
+                ]
+            ),
+        )
+    )
+
+    assert output["ok"] is True
+    result = output["result"]
+    assert isinstance(result, dict)
+    joint_pos = result["joint_pos"]
+    child_pos = result["child_pos"]
+    assert isinstance(joint_pos, list)
+    assert isinstance(child_pos, list)
+    assert len(joint_pos) == 3
+    assert len(child_pos) == 3
+    for joint_value, child_value in zip(joint_pos, child_pos, strict=False):
+        assert abs(float(joint_value) - float(child_value)) < 1e-6
+    assert abs(float(joint_pos[0]) - 1.0) < 1e-6
+    assert abs(float(joint_pos[1]) - 1.0) < 1e-6
+    assert abs(float(joint_pos[2]) - 1.0) < 1e-6

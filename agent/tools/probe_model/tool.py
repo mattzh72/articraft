@@ -78,18 +78,39 @@ class ProbeModelInvocation(BaseToolInvocation[ProbeModelParams, dict[str, object
         stdout_text = stdout_bytes.decode("utf-8", errors="replace").strip()
         stderr_text = stderr_bytes.decode("utf-8", errors="replace").strip()
         elapsed_ms = (asyncio.get_running_loop().time() - started) * 1000.0
-        try:
-            payload = json.loads(stdout_text) if stdout_text else {}
-        except json.JSONDecodeError:
+        if process.returncode not in (0, None):
             payload = {
                 "ok": False,
                 "error": {
-                    "type": "invalid_runner_output",
-                    "message": "probe_model runner returned invalid JSON",
+                    "type": "runner_process_error",
+                    "message": f"probe_model runner exited with code {process.returncode}",
                 },
                 "runner_stdout": stdout_text,
                 "runner_stderr": stderr_text,
             }
+        elif not stdout_text:
+            payload = {
+                "ok": False,
+                "error": {
+                    "type": "invalid_runner_output",
+                    "message": "probe_model runner returned no JSON output",
+                },
+                "runner_stdout": stdout_text,
+                "runner_stderr": stderr_text,
+            }
+        else:
+            try:
+                payload = json.loads(stdout_text)
+            except json.JSONDecodeError:
+                payload = {
+                    "ok": False,
+                    "error": {
+                        "type": "invalid_runner_output",
+                        "message": "probe_model runner returned invalid JSON",
+                    },
+                    "runner_stdout": stdout_text,
+                    "runner_stderr": stderr_text,
+                }
         if not isinstance(payload, dict):
             payload = {
                 "ok": False,
@@ -97,6 +118,18 @@ class ProbeModelInvocation(BaseToolInvocation[ProbeModelParams, dict[str, object
                     "type": "invalid_runner_output",
                     "message": "probe_model runner did not return a JSON object",
                 },
+                "runner_stdout": stdout_text,
+                "runner_stderr": stderr_text,
+            }
+        elif not isinstance(payload.get("ok"), bool):
+            payload = {
+                "ok": False,
+                "error": {
+                    "type": "invalid_runner_output",
+                    "message": "probe_model runner returned malformed JSON payload",
+                },
+                "runner_stdout": stdout_text,
+                "runner_stderr": stderr_text,
             }
         payload.setdefault("elapsed_ms", float(elapsed_ms))
         if stderr_text and "stderr" not in payload:

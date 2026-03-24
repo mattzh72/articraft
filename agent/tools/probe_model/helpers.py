@@ -49,6 +49,20 @@ def _aabb_dims(aabb: Any) -> list[float] | None:
     ]
 
 
+def _transform_point(tf: Any, point: Sequence[float]) -> list[float] | None:
+    try:
+        x = float(point[0])
+        y = float(point[1])
+        z = float(point[2])
+        return [
+            float(tf[0][0]) * x + float(tf[0][1]) * y + float(tf[0][2]) * z + float(tf[0][3]),
+            float(tf[1][0]) * x + float(tf[1][1]) * y + float(tf[1][2]) * z + float(tf[1][3]),
+            float(tf[2][0]) * x + float(tf[2][1]) * y + float(tf[2][2]) * z + float(tf[2][3]),
+        ]
+    except Exception:
+        return None
+
+
 def _normalize_axes(value: str | Sequence[str]) -> list[str]:
     if isinstance(value, str):
         raw = [char for char in value if char.strip()]
@@ -216,11 +230,7 @@ class ProbeSession:
 
     def position(self, obj: object) -> list[float] | None:
         if self._is_joint(obj):
-            origin = getattr(obj, "origin", None)
-            xyz = getattr(origin, "xyz", None)
-            if isinstance(xyz, (tuple, list)) and len(xyz) == 3:
-                return _as_list3(xyz)
-            return None
+            return self._joint_world_position(obj)
         target = self._resolve_target(obj)
         if target["visual"] is None:
             pos = self.ctx.part_world_position(target["part"])
@@ -821,6 +831,31 @@ class ProbeSession:
         if isinstance(part_name, str) and part_name in self._part_by_name:
             return self._part_by_name[part_name]
         raise ProbeLookupError(f"Expected a part or visual, got {type(value).__name__}")
+
+    def _resolve_joint(self, value: object) -> object:
+        if isinstance(value, str):
+            joint = self._joint_by_name.get(value)
+            if joint is not None:
+                return joint
+        if value in self._joints:
+            return value
+        joint_name = getattr(value, "name", None)
+        if isinstance(joint_name, str) and joint_name in self._joint_by_name:
+            return self._joint_by_name[joint_name]
+        raise ProbeLookupError(f"Expected an articulation, got {type(value).__name__}")
+
+    def _joint_world_position(self, value: object) -> list[float] | None:
+        joint = self._resolve_joint(value)
+        origin = getattr(joint, "origin", None)
+        xyz = getattr(origin, "xyz", None)
+        if not isinstance(xyz, (tuple, list)) or len(xyz) != 3:
+            return None
+        parent = getattr(joint, "parent", None)
+        if parent is None:
+            return None
+        parent_part = self._resolve_part(parent)
+        parent_tf = self.ctx._world_tfs().get(self.name(parent_part))
+        return None if parent_tf is None else _transform_point(parent_tf, xyz)
 
     def _resolve_visual_ref(self, part: object, elem: object | None) -> object | None:
         if elem is None:
