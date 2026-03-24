@@ -81,12 +81,43 @@ def _compute_vertex_normals(vertices: np.ndarray, faces: np.ndarray) -> np.ndarr
     return normals.astype(np.float32, copy=False)
 
 
+def _cleanup_triangles_for_viewer(
+    vertices: np.ndarray,
+    faces: np.ndarray,
+) -> tuple[np.ndarray, np.ndarray]:
+    if vertices.size == 0 or faces.size == 0:
+        return vertices, faces
+
+    try:
+        import trimesh
+    except Exception:
+        return vertices, faces
+
+    mesh = trimesh.Trimesh(
+        vertices=np.asarray(vertices, dtype=np.float64),
+        faces=np.asarray(faces, dtype=np.int64),
+        process=False,
+        validate=False,
+    )
+    mesh.process(validate=False)
+    mesh.update_faces(mesh.unique_faces() & mesh.nondegenerate_faces())
+    mesh.remove_unreferenced_vertices()
+    mesh.fix_normals(multibody=False)
+
+    cleaned_vertices = np.asarray(mesh.vertices, dtype=np.float32)
+    cleaned_faces = np.asarray(mesh.faces, dtype=np.uint32)
+    if cleaned_vertices.size == 0 or cleaned_faces.size == 0:
+        return vertices, faces
+    return cleaned_vertices, cleaned_faces
+
+
 def build_glb_bytes(vertices: np.ndarray, faces: np.ndarray) -> bytes:
     if vertices.ndim != 2 or vertices.shape[1] != 3:
         raise ValueError("Vertices must have shape (N, 3)")
     if faces.ndim != 2 or faces.shape[1] != 3:
         raise ValueError("Faces must have shape (M, 3)")
 
+    vertices, faces = _cleanup_triangles_for_viewer(vertices, faces)
     vertices = np.ascontiguousarray(vertices, dtype=np.float32)
     normals = np.ascontiguousarray(_compute_vertex_normals(vertices, faces), dtype=np.float32)
     indices = np.ascontiguousarray(faces.reshape(-1), dtype=np.uint32)

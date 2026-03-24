@@ -25,6 +25,7 @@ from agent.compiler import (
 )
 from agent.compiler import (
     compile_urdf_report,
+    rewrite_visual_meshes_to_glb,
 )
 from agent.compiler import (
     compile_urdf_report_maybe_timeout as _compile_urdf_report_maybe_timeout,
@@ -142,9 +143,18 @@ object_model = build_object_model()
 """
 
 
-def compile_urdf(script_path: Path, *, sdk_package: str = "sdk") -> str:
+def compile_urdf(
+    script_path: Path,
+    *,
+    sdk_package: str = "sdk",
+    rewrite_visual_glb: bool = True,
+) -> str:
     """Compatibility export for legacy imports from agent.runner."""
-    return _compile_urdf(script_path, sdk_package=sdk_package)
+    return _compile_urdf(
+        script_path,
+        sdk_package=sdk_package,
+        rewrite_visual_glb=rewrite_visual_glb,
+    )
 
 
 def compile_urdf_report_maybe_timeout(
@@ -154,6 +164,7 @@ def compile_urdf_report_maybe_timeout(
     run_checks: bool = True,
     ignore_geom_qc: bool = False,
     target: str = "full",
+    rewrite_visual_glb: bool = True,
 ) -> AgentCompileReport:
     """Compatibility export for legacy imports from agent.runner."""
     return _compile_urdf_report_maybe_timeout(
@@ -162,6 +173,7 @@ def compile_urdf_report_maybe_timeout(
         run_checks=run_checks,
         ignore_geom_qc=ignore_geom_qc,
         target=target,
+        rewrite_visual_glb=rewrite_visual_glb,
     )
 
 
@@ -756,10 +768,17 @@ def _write_success_record(
     update_dataset_manifest: bool = True,
 ) -> Path:
     materializations = MaterializationStore(storage_repo)
+    persisted_warnings = list(compile_warnings)
+    persisted_urdf_xml = rewrite_visual_meshes_to_glb(
+        urdf_xml,
+        sdk_package=sdk_package,
+        asset_root=context.staging_dir,
+        warnings=persisted_warnings,
+    )
     record_store.ensure_record_dirs(context.record_id)
     storage_repo.write_text(context.record_prompt_path, prompt_text)
     storage_repo.write_text(context.record_model_path, final_code)
-    storage_repo.write_text(context.record_urdf_path, urdf_xml)
+    storage_repo.write_text(context.record_urdf_path, persisted_urdf_xml)
     system_prompt_sha = _ensure_shared_system_prompt(storage_repo, system_prompt_path)
     stale_record_urdf_path = context.record_dir / "model.urdf"
     if stale_record_urdf_path.exists():
@@ -798,7 +817,9 @@ def _write_success_record(
         record_id=context.record_id,
         status="success",
         urdf_path="model.urdf",
-        warnings=[CompileWarning(code="warning", message=warning) for warning in compile_warnings],
+        warnings=[
+            CompileWarning(code="warning", message=warning) for warning in persisted_warnings
+        ],
         checks_run=["compile_urdf"],
         metrics={
             "turn_count": turn_count,

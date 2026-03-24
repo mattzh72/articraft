@@ -7,7 +7,7 @@ import { buildRobotSceneGraph, collisionColorForIndex } from './scene-graph-buil
 import { computeFit, preserveViewAcrossModelSwitch, updateCameraClipping } from './camera-utils';
 import { positionGroundHelpers } from './lighting';
 import { loadGeometryObject } from './geometry-loader';
-import { resolveVisualMaterialSpec } from './materials';
+import { depthBiasForOrdinal, resolveVisualMaterialSpec } from './materials';
 
 /** Sentinel name attached to the robot group so we can find and remove it later. */
 const ROBOT_GROUP_NAME = '__articraft_robot__';
@@ -216,6 +216,7 @@ async function attachMeshGeometry(
 ): Promise<void> {
   const pending: Array<Promise<void>> = [];
   let collisionIndex = 0;
+  let visualIndex = 0;
 
   for (const link of spec.links) {
     const linkGroup = linkNodes.get(link.name);
@@ -224,6 +225,8 @@ async function attachMeshGeometry(
     }
 
     for (const visual of link.visuals) {
+      const depthBias = depthBiasForOrdinal(visualIndex);
+      visualIndex += 1;
       if (visual.geometry.type !== 'mesh') {
         continue;
       }
@@ -232,6 +235,7 @@ async function attachMeshGeometry(
         loadGeometryObject(visual.geometry, baseUrl, {
           kind: 'visual',
           assetRevisionKey,
+          depthBias,
           materialSpec: resolveVisualMaterialSpec(visual),
         }).then((meshGroup) => {
           if (visual.origin) {
@@ -244,7 +248,9 @@ async function attachMeshGeometry(
     }
 
     for (const collision of link.collisions) {
+      const depthBias = depthBiasForOrdinal(collisionIndex);
       if (collision.geometry.type !== 'mesh') {
+        collisionIndex += 1;
         continue;
       }
 
@@ -254,6 +260,7 @@ async function attachMeshGeometry(
         loadGeometryObject(collision.geometry, baseUrl, {
           kind: 'collision',
           assetRevisionKey,
+          depthBias,
           materialSpec: {
             name: 'collision_debug',
             color,

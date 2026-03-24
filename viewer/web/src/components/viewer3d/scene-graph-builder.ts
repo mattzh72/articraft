@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import type { UrdfSpec, UrdfLink } from './urdf-parser';
 import { findRootLink, originToMatrix4 } from './urdf-parser';
-import { resolveVisualMaterialSpec } from './materials';
+import { depthBiasForOrdinal, resolveVisualMaterialSpec } from './materials';
 import { buildPrimitiveMesh } from './geometry-loader';
 
 export interface SceneGraphOptions {
@@ -39,12 +39,18 @@ export function collisionColorForIndex(index: number): THREE.Color {
   return new THREE.Color(COLLISION_DEBUG_PALETTE[index % COLLISION_DEBUG_PALETTE.length]);
 }
 
-function createCollisionMaterial(color: THREE.Color): THREE.MeshBasicMaterial {
+function createCollisionMaterial(
+  color: THREE.Color,
+  depthBias: number,
+): THREE.MeshBasicMaterial {
   return new THREE.MeshBasicMaterial({
     color,
     transparent: true,
     opacity: 0.88,
     side: THREE.DoubleSide,
+    polygonOffset: true,
+    polygonOffsetFactor: 0,
+    polygonOffsetUnits: depthBias,
   });
 }
 
@@ -88,6 +94,7 @@ export function buildRobotSceneGraph(
 
   // Create a group for each link and populate with visual meshes
   let collisionIndex = 0;
+  let visualIndex = 0;
   for (const link of urdfSpec.links) {
     const linkGroup = new THREE.Group();
     linkGroup.name = `link:${link.name}`;
@@ -99,7 +106,10 @@ export function buildRobotSceneGraph(
           matSpec.opacity = opacity;
         }
 
-        const mesh = buildPrimitiveMesh(visual.geometry, matSpec);
+        const mesh = buildPrimitiveMesh(visual.geometry, matSpec, {
+          depthBias: depthBiasForOrdinal(visualIndex),
+        });
+        visualIndex += 1;
         if (mesh) {
           // Apply visual-level origin transform
           if (visual.origin) {
@@ -114,6 +124,7 @@ export function buildRobotSceneGraph(
 
     if (showCollisions) {
       for (const collision of link.collisions) {
+        const depthBias = depthBiasForOrdinal(collisionIndex);
         const debugColor = collisionColorForIndex(collisionIndex);
         collisionIndex += 1;
         const mesh = buildPrimitiveMesh(collision.geometry, {
@@ -128,12 +139,14 @@ export function buildRobotSceneGraph(
           clearcoat: 0,
           clearcoatRoughness: 0.2,
           envMapIntensity: 0.8,
+        }, {
+          depthBias,
         });
         if (mesh) {
           if (collision.origin) {
             mesh.applyMatrix4(originToMatrix4(collision.origin));
           }
-          const mat = createCollisionMaterial(debugColor);
+          const mat = createCollisionMaterial(debugColor, depthBias);
           mesh.material = mat;
           mesh.visible = false;
           mesh.userData[COLLISION_USER_DATA_KEY] = true;

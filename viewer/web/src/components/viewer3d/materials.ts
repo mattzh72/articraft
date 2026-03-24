@@ -15,6 +15,10 @@ export interface MaterialSpec {
   envMapIntensity: number;
 }
 
+export function depthBiasForOrdinal(ordinal: number): number {
+  return 1 + ordinal * 0.25;
+}
+
 /**
  * Resolve visual material specification from URDF data
  * Defaults to a neutral gray if no material specified
@@ -133,9 +137,11 @@ export function createMaterial(spec: MaterialSpec, options?: {
   wireframe?: boolean;
   transparent?: boolean;
   side?: THREE.Side;
+  depthBias?: number;
 }): THREE.MeshPhysicalMaterial {
   const transparent = options?.transparent ?? (spec.opacity < 0.999 || spec.transmission > 0.01);
   const side = options?.side ?? THREE.FrontSide;
+  const depthBias = options?.depthBias ?? 0;
 
   return new THREE.MeshPhysicalMaterial({
     color: spec.color,
@@ -153,6 +159,9 @@ export function createMaterial(spec: MaterialSpec, options?: {
     forceSinglePass: transparent,
     wireframe: options?.wireframe ?? false,
     side,
+    polygonOffset: depthBias !== 0,
+    polygonOffsetFactor: 0,
+    polygonOffsetUnits: depthBias,
   });
 }
 

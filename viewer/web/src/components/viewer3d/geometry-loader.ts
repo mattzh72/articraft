@@ -9,6 +9,7 @@ export interface LoadGeometryOptions {
   kind?: 'visual' | 'collision';
   materialSpec?: MaterialSpec;
   doubleSided?: boolean;
+  depthBias?: number;
   assetRevisionKey?: string | null;
 }
 
@@ -28,6 +29,7 @@ function appendRevisionParam(url: string, assetRevisionKey: string | null | unde
 export function buildPrimitiveMesh(
   geometry: UrdfVisualGeometry,
   materialSpec: MaterialSpec,
+  options: Pick<LoadGeometryOptions, 'doubleSided' | 'depthBias'> = {},
 ): THREE.Mesh | null {
   let bufferGeometry: THREE.BufferGeometry;
 
@@ -54,7 +56,10 @@ export function buildPrimitiveMesh(
       return null;
   }
 
-  const material = createMaterial(materialSpec);
+  const material = createMaterial(materialSpec, {
+    side: options.doubleSided ? THREE.DoubleSide : THREE.FrontSide,
+    depthBias: options.depthBias,
+  });
   const mesh = new THREE.Mesh(bufferGeometry, material);
   mesh.castShadow = true;
   mesh.receiveShadow = true;
@@ -111,6 +116,7 @@ function applyLoadedMeshPresentation(root: THREE.Object3D, options: LoadGeometry
   const kind = options.kind ?? 'visual';
   const materialSpec = options.materialSpec;
   const side = options.doubleSided ? THREE.DoubleSide : THREE.FrontSide;
+  const depthBias = options.depthBias;
 
   root.traverse((child) => {
     if (!(child instanceof THREE.Mesh)) {
@@ -126,9 +132,11 @@ function applyLoadedMeshPresentation(root: THREE.Object3D, options: LoadGeometry
         ? createMaterial(materialSpec, {
             side,
             transparent: true,
+            depthBias,
           })
         : createMaterial(materialSpec, {
             side,
+            depthBias,
           });
     }
 

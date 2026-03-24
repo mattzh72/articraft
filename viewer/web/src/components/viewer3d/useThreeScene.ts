@@ -19,6 +19,20 @@ export interface ThreeSceneOptions {
   continuousRender?: boolean;
 }
 
+function resolveDepthBufferOptions(): Pick<
+  THREE.WebGLRendererParameters,
+  'logarithmicDepthBuffer' | 'reversedDepthBuffer'
+> {
+  const canvas = document.createElement('canvas');
+  const context = canvas.getContext('webgl2');
+  const supportsReversedDepth = context?.getExtension('EXT_clip_control') != null;
+  context?.getExtension('WEBGL_lose_context')?.loseContext();
+
+  return supportsReversedDepth
+    ? { reversedDepthBuffer: true }
+    : { logarithmicDepthBuffer: true };
+}
+
 /**
  * Hook that manages the Three.js renderer lifecycle.
  *
@@ -52,7 +66,11 @@ export function useThreeScene(
     if (!container) return;
 
     // --- Renderer ---
-    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false });
+    const renderer = new THREE.WebGLRenderer({
+      antialias: true,
+      alpha: false,
+      ...resolveDepthBufferOptions(),
+    });
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
     renderer.toneMappingExposure = 1.3;
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, options.maxPixelRatio ?? 2));

@@ -26,6 +26,10 @@ logger = logging.getLogger(__name__)
 _COMPILE_TARGETS = {"full", "visual"}
 
 _EXCEPTION_PREFIX_RE = re.compile(r"^(?:[A-Za-z_][A-Za-z0-9_]*(?:Error|Exception)):\s*")
+_VISUAL_OBJ_MESH_RE = re.compile(
+    r"<visual\b[\s\S]*?<mesh\b[^>]*filename=['\"][^'\"]+\.obj['\"]",
+    re.IGNORECASE,
+)
 _GEOMETRY_QC_MARKERS = (
     "isolated parts detected",
     "geometry overlap check reported overlaps",
@@ -93,6 +97,7 @@ def compile_urdf(
     run_checks: bool = True,
     ignore_geom_qc: bool = False,
     target: str = "full",
+    rewrite_visual_glb: bool = True,
 ) -> str:
     """Execute a generated script and return the exported XML payload."""
     report = compile_urdf_report_maybe_timeout(
@@ -101,6 +106,7 @@ def compile_urdf(
         run_checks=run_checks,
         ignore_geom_qc=ignore_geom_qc,
         target=target,
+        rewrite_visual_glb=rewrite_visual_glb,
     )
     for warning in report.warnings:
         logger.warning("%s", warning)
@@ -211,6 +217,7 @@ def compile_urdf_report(
     run_checks: bool = True,
     ignore_geom_qc: bool = False,
     target: str = "full",
+    rewrite_visual_glb: bool = True,
 ) -> CompileReport:
     """Execute a generated script and return export XML plus non-blocking warnings."""
     globals_dict = load_model_globals(script_path, sdk_package=sdk_package)
@@ -280,6 +287,13 @@ def compile_urdf_report(
     )
     if not isinstance(urdf_xml, str):
         raise ValueError("object_model must compile into an exportable XML payload")
+    if rewrite_visual_glb:
+        urdf_xml = rewrite_visual_meshes_to_glb(
+            urdf_xml,
+            sdk_package=sdk_package,
+            asset_root=script_path.parent,
+            warnings=warnings,
+        )
     signal_bundle = build_compile_signal_bundle(
         status="success",
         warnings=warnings,
@@ -290,6 +304,32 @@ def compile_urdf_report(
         warnings=warnings,
         signal_bundle=signal_bundle,
     )
+
+
+def rewrite_visual_meshes_to_glb(
+    urdf_xml: str,
+    *,
+    sdk_package: str,
+    asset_root: Path,
+    warnings: list[str],
+) -> str:
+    if _VISUAL_OBJ_MESH_RE.search(urdf_xml) is None:
+        return urdf_xml
+    try:
+        convert_urdf_visual_meshes_to_glb = getattr(
+            _import_sdk_module(sdk_package, ".v0.viewer_assets"),
+            "convert_urdf_visual_meshes_to_glb",
+        )
+        converted_xml, conversion_warnings = convert_urdf_visual_meshes_to_glb(
+            urdf_xml,
+            asset_root=asset_root,
+        )
+    except Exception as exc:
+        warnings.append(f"Viewer mesh conversion warning: {exc}")
+        return urdf_xml
+
+    warnings.extend(str(item) for item in conversion_warnings)
+    return converted_xml
 
 
 def load_model_globals(
@@ -499,6 +539,7 @@ def _compile_worker(
     run_checks: bool,
     ignore_geom_qc: bool,
     target: str,
+    rewrite_visual_glb: bool,
     conn: object,
 ) -> None:
     try:
@@ -508,6 +549,7 @@ def _compile_worker(
             run_checks=run_checks,
             ignore_geom_qc=ignore_geom_qc,
             target=target,
+            rewrite_visual_glb=rewrite_visual_glb,
         )
         payload = {
             "ok": True,
@@ -546,6 +588,7 @@ def compile_urdf_report_maybe_timeout(
     run_checks: bool = True,
     ignore_geom_qc: bool = False,
     target: str = "full",
+    rewrite_visual_glb: bool = True,
 ) -> CompileReport:
     """
     Run `compile_urdf_report` with a hard timeout to prevent indefinite hangs.
@@ -560,13 +603,22 @@ def compile_urdf_report_maybe_timeout(
             run_checks=run_checks,
             ignore_geom_qc=ignore_geom_qc,
             target=target,
+            rewrite_visual_glb=rewrite_visual_glb,
         )
 
     ctx = get_mp_context()
     parent_conn, child_conn = ctx.Pipe(duplex=False)
     proc = ctx.Process(
         target=_compile_worker,
-        args=(str(script_path), sdk_package, run_checks, ignore_geom_qc, target, child_conn),
+        args=(
+            str(script_path),
+            sdk_package,
+            run_checks,
+            ignore_geom_qc,
+            target,
+            rewrite_visual_glb,
+            child_conn,
+        ),
         daemon=True,
     )
     proc.start()

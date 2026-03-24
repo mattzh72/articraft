@@ -490,6 +490,7 @@ class ArticraftAgent:
             compile_urdf_report,
             Path(self.file_path),
             sdk_package=self.sdk_package,
+            rewrite_visual_glb=False,
         )
 
     async def _persist_compile_success_checkpoint_async(self, urdf_xml: str) -> None:

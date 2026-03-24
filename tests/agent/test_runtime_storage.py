@@ -7,6 +7,7 @@ from pathlib import Path
 import pytest
 
 from agent import runner
+from agent.models import AgentResult, TerminateReason
 from agent.prompts import DESIGNER_PROMPT_NAME
 from tests.helpers import FakeAgent
 
@@ -27,6 +28,60 @@ class DeletingImageAgent(FakeAgent):
                     Path(image_path).unlink()
                     break
         return await super().run(user_content)
+
+
+class MeshVisualAgent(FakeAgent):
+    async def run(self, user_content: object):  # type: ignore[override]
+        self.file_path.parent.mkdir(parents=True, exist_ok=True)
+        self.file_path.write_text(
+            "from __future__ import annotations\n\nobject_model = None\n",
+            encoding="utf-8",
+        )
+        meshes_dir = self.file_path.parent / "assets" / "meshes"
+        meshes_dir.mkdir(parents=True, exist_ok=True)
+        (meshes_dir / "part.obj").write_text(
+            "\n".join(
+                [
+                    "o part",
+                    "v 0 0 0",
+                    "v 1 0 0",
+                    "v 0 1 0",
+                    "f 1 2 3",
+                    "",
+                ]
+            ),
+            encoding="utf-8",
+        )
+        cost_path = self.file_path.parent / "cost.json"
+        cost_path.write_text(
+            json.dumps({"total": {"costs_usd": {"total": 0.123456}}}, indent=2),
+            encoding="utf-8",
+        )
+        if self.trace_dir is not None:
+            self.trace_dir.mkdir(parents=True, exist_ok=True)
+            (self.trace_dir / "trajectory.jsonl").write_text(
+                '{"type":"message","message":{"role":"assistant","content":"done"}}\n',
+                encoding="utf-8",
+            )
+        return AgentResult(
+            success=True,
+            reason=TerminateReason.CODE_VALID,
+            message="done",
+            conversation=[{"role": "user", "content": user_content}],
+            final_code=self.file_path.read_text(encoding="utf-8"),
+            urdf_xml=(
+                "<robot name='mesh_visual'>"
+                "<link name='base'>"
+                "<visual><geometry><mesh filename='assets/meshes/part.obj'/></geometry></visual>"
+                "</link>"
+                "</robot>"
+            ),
+            compile_warnings=[],
+            turn_count=3,
+            tool_call_count=5,
+            compile_attempt_count=2,
+            usage={"prompt_tokens": 10, "candidates_tokens": 5, "total_tokens": 15},
+        )
 
 
 def test_workbench_run_and_rerun_persist_runtime_artifacts(
@@ -158,6 +213,44 @@ def test_workbench_run_and_rerun_persist_runtime_artifacts(
     assert len(latest_results) == 1
     assert json.loads(latest_results[0])["record_id"] == record_dir.name
     assert not (run_dirs[-1] / "staging" / record_dir.name).exists()
+
+
+def test_successful_run_rewrites_visual_meshes_to_glb(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+) -> None:
+    monkeypatch.setattr(runner, "ArticraftAgent", MeshVisualAgent)
+
+    exit_code = asyncio.run(
+        runner.run_from_input(
+            "make a mesh part",
+            prompt_text="make a mesh part",
+            display_prompt="make a mesh part",
+            repo_root=tmp_path,
+            image_path=None,
+            provider="openai",
+            thinking_level="high",
+            max_turns=30,
+            system_prompt_path=DESIGNER_PROMPT_NAME,
+            sdk_package="sdk",
+            sdk_docs_mode="full",
+            label=None,
+            tags=[],
+        )
+    )
+
+    assert exit_code == 0
+
+    records_root = tmp_path / "data" / "records"
+    record_dirs = [path for path in records_root.iterdir() if path.is_dir()]
+    assert len(record_dirs) == 1
+    record_dir = record_dirs[0]
+    materialization_dir = tmp_path / "data" / "cache" / "record_materialization" / record_dir.name
+
+    assert "assets/meshes/part.glb" in (materialization_dir / "model.urdf").read_text(
+        encoding="utf-8"
+    )
+    assert (materialization_dir / "assets" / "meshes" / "part.glb").exists()
 
 
 def test_dataset_run_and_rerun_preserve_dataset_metadata(

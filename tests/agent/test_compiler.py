@@ -444,6 +444,80 @@ def test_compile_urdf_report_visual_target_omits_collision_entries(tmp_path: Pat
     assert report.signal_bundle.status == "success"
 
 
+def test_compile_urdf_report_rewrites_visual_obj_meshes_to_glb(tmp_path: Path) -> None:
+    script_path = tmp_path / "model.py"
+    script_path.write_text(
+        "\n".join(
+            [
+                "from __future__ import annotations",
+                "",
+                "from pathlib import Path",
+                "",
+                "from sdk import ArticulatedObject, BoxGeometry, Mesh, Origin, mesh_from_geometry",
+                "",
+                "HERE = Path(__file__).resolve().parent",
+                "mesh_from_geometry(",
+                "    BoxGeometry((0.1, 0.1, 0.1)),",
+                "    HERE / 'assets' / 'meshes' / 'part.obj',",
+                ")",
+                "object_model = ArticulatedObject(name='mesh_visual')",
+                "base = object_model.part('base')",
+                "base.visual(",
+                "    Mesh(filename='assets/meshes/part.obj'),",
+                "    origin=Origin(xyz=(0.0, 0.0, 0.0)),",
+                ")",
+            ]
+        ),
+        encoding="utf-8",
+    )
+
+    report = compile_urdf_report(script_path, run_checks=False, target="visual")
+
+    assert "assets/meshes/part.glb" in report.urdf_xml
+    assert (tmp_path / "assets" / "meshes" / "part.glb").exists()
+    assert report.signal_bundle.status == "success"
+
+
+def test_compile_urdf_report_can_skip_visual_glb_rewrite(tmp_path: Path) -> None:
+    script_path = tmp_path / "model.py"
+    script_path.write_text(
+        "\n".join(
+            [
+                "from __future__ import annotations",
+                "",
+                "from pathlib import Path",
+                "",
+                "from sdk import ArticulatedObject, BoxGeometry, Mesh, Origin, mesh_from_geometry",
+                "",
+                "HERE = Path(__file__).resolve().parent",
+                "mesh_from_geometry(",
+                "    BoxGeometry((0.1, 0.1, 0.1)),",
+                "    HERE / 'assets' / 'meshes' / 'part.obj',",
+                ")",
+                "object_model = ArticulatedObject(name='mesh_visual')",
+                "base = object_model.part('base')",
+                "base.visual(",
+                "    Mesh(filename='assets/meshes/part.obj'),",
+                "    origin=Origin(xyz=(0.0, 0.0, 0.0)),",
+                ")",
+            ]
+        ),
+        encoding="utf-8",
+    )
+
+    report = compile_urdf_report(
+        script_path,
+        run_checks=False,
+        target="visual",
+        rewrite_visual_glb=False,
+    )
+
+    assert "assets/meshes/part.obj" in report.urdf_xml
+    assert "assets/meshes/part.glb" not in report.urdf_xml
+    assert not (tmp_path / "assets" / "meshes" / "part.glb").exists()
+    assert report.signal_bundle.status == "success"
+
+
 def test_compile_urdf_report_rejects_removed_collision_target(tmp_path: Path) -> None:
     script_path = tmp_path / "model.py"
     script_path.write_text(
