@@ -38,9 +38,6 @@ return ctx.report()
 - `failures`: blocking `TestFailure(name, details)` entries
 - `warnings`: non-blocking warning strings
 - `allowances`: recorded `allow_*` justifications
-- `allowed_isolated_parts`: part names explicitly allowed to remain isolated
-
-`allowed_isolated_parts` is consumed by the compile-time isolated-part QC pass. If you intentionally allow a freestanding part in `run_tests()`, that allowance must be visible in the returned `TestReport`.
 
 ## Resolve once, assert many
 
@@ -52,17 +49,14 @@ Prefer object-first tests:
 - After that, pass only objects into `ctx.expect_*`, `ctx.allow_*`, and `ctx.pose({joint: value})`.
 - Use string names only at the lookup boundary. Avoid global `REFS` bags or string-driven test calls as the main pattern.
 
-## Default sensors and backstops
+## Default scaffold gates
 
-The scaffolded `run_tests()` starts from these default checks:
+The scaffolded `run_tests()` starts from these hard gates:
 
 ```python
 ctx.check_model_valid()
 ctx.check_mesh_files_exist()
-ctx.warn_if_articulation_origin_near_geometry(tol=0.015)
-ctx.warn_if_part_geometry_disconnected()
-ctx.check_articulation_overlaps(max_pose_samples=128)
-ctx.warn_if_overlaps(max_pose_samples=128, ignore_adjacent=True, ignore_fixed=True)
+ctx.check_part_geometry_connected()
 ```
 
 Mesh-backed models:
@@ -72,39 +66,34 @@ Mesh-backed models:
 
 What they catch:
 
-- `warn_if_articulation_origin_near_geometry`: an exact point-to-geometry distance warning for joint placement in parent and child frames; default `tol=0.015`. The harness truncates this tolerance to 3 decimals and caps it at `0.15`.
-- `warn_if_part_geometry_disconnected`: an exact within-part connectivity warning that checks whether authored visuals form disconnected geometry islands.
-- `check_articulation_overlaps`: a failure-tier overlap gate for non-fixed articulation-linked parent/child pairs. It is the recommended way to prove that `REVOLUTE`, `PRISMATIC`, and `CONTINUOUS` joints do not interpenetrate.
-- `warn_if_overlaps`: a deliberately broad exact-geometry overlap sensor over mirrored visual geometry. It can still be noisy for thin wires, thin blades, concave shells, and other awkward geometry.
+- `check_model_valid`: structural SDK/model validation.
+- `check_mesh_files_exist`: missing mesh references.
+- `check_part_geometry_connected`: a blocking exact within-part connectivity gate that checks whether authored visuals form disconnected geometry islands.
 
-These broad checks are warning-tier sensors, not semantic proof. Add prompt-specific `expect_*` assertions as the actual regression tests for silhouette, structure, proportions, attachment, and mechanism behavior.
+These scaffold checks are blocking gates, not semantic proof. Add prompt-specific `expect_*` assertions as the actual regression tests for silhouette, structure, proportions, attachment, and mechanism behavior.
 
 Recommended default:
 
-- Keep the scaffolded broad-check block unless parameter tuning is justified.
-- Include `warn_if_overlaps(...)` on every generated model as a broad warning-tier sensor, even when you do not want overlap findings to fail the run.
-- Include `check_articulation_overlaps(...)` on articulated models with non-fixed joints when joint clearance is a real requirement.
+- Keep the scaffolded hard-gate block.
+- If the object has a mounted subassembly, write explicit `expect_contact(...)`, `expect_gap(...)`, `expect_overlap(...)`, and `expect_within(...)` checks against the relevant local features.
+- If support or floating is ambiguous, use `probe_model` helpers first, then encode the real invariant in `run_tests()`.
+- If a warning-tier heuristic fires, investigate it with `probe_model` before editing geometry or relaxing thresholds.
+- Add `warn_if_articulation_overlaps(...)` only when joint clearance is genuinely uncertain or mechanically important.
 
 Important:
 
+- `warn_if_articulation_origin_near_geometry(...)` and `warn_if_overlaps(...)` are deprecated as blanket scaffold defaults in new generated code.
 - `warn_if_articulation_origin_near_geometry(...)` is not scale-aware; its tolerance is a fixed metric distance in meters.
 - A tolerance that is sensible for a compact consumer object may be too strict, too loose, or simply irrelevant for a very large assembly.
 - For large objects, treat it as a loose warning sensor or omit it, then use prompt-specific `expect_*` checks to prove the actual mounting and placement claims you care about.
 
-The harness also runs automatic isolated-part checks at compile time:
+## Optional warning heuristics
 
-- it checks multi-part objects for parts that are not contacting any other part in the checked pose
-- isolated-part findings are blocking by default because the part still does not touch anything
-- an isolated-part failure should usually be treated as a real floating-geometry or bad-mount bug
+Use broad warning heuristics only when they answer a concrete uncertainty that your exact tests do not already cover.
 
-If a part is intentionally freestanding in the checked pose, justify it explicitly:
-
-```python
-accent = object_model.get_part("accent")
-ctx.allow_isolated_part(accent, reason="intentionally freestanding accent")
-```
-
-Use this narrowly. `ctx.allow_isolated_part(...)` records the justification in `report.allowances` and exposes the part name in `report.allowed_isolated_parts` so compile-time isolated-part QC can treat that specific case as allowed instead of blocking.
+- `warn_if_articulation_overlaps(...)` is useful when joint clearance is uncertain or mechanically important.
+- `warn_if_articulation_origin_near_geometry(...)` can still be useful as an opt-in point-to-geometry sanity check, but it is no longer recommended as a blanket default because it is fixed-scale and often noisy.
+- `warn_if_overlaps(...)` can still be useful as an opt-in broad overlap sensor, but it is no longer recommended as a blanket default because it is noisy and underconstrained for attachment quality.
 
 ## Allowances
 
@@ -115,26 +104,27 @@ body = object_model.get_part("body")
 ctx.allow_overlap(door, body, reason="hinge barrel nests around the pin")
 ```
 
-Use allowances narrowly. Slight intended interpenetration can be acceptable when it makes a mounted or nested assembly look attached instead of floating. For articulated mechanisms, use `ctx.allow_overlap(...)` only for specific justified cases such as bearing sleeves, hinge barrels, or enclosed hubs. Still call `ctx.warn_if_overlaps(...)` so the allowance is tracked.
+Use allowances narrowly. Slight intended interpenetration can be acceptable when it makes a mounted or nested assembly look attached instead of floating. For articulated mechanisms, use `ctx.allow_overlap(...)` only for specific justified cases such as bearing sleeves, hinge barrels, or enclosed hubs.
 
 Prefer these allowance entry points in new code:
 
 - `ctx.allow_overlap(...)` for legitimate nested or sleeve-like overlap
-- `ctx.allow_isolated_part(...)` for intentionally freestanding parts in the checked pose
 
 ## Canonical helper names
 
 Prefer this naming and helper set in new generated tests:
 
-- use articulation terminology consistently: `object_model.get_articulation(...)`, `check_articulation_overlaps(...)`, and `warn_if_articulation_origin_near_geometry(...)`
-- use `warn_if_part_geometry_disconnected(...)` for disconnected within-part geometry islands
+- use articulation terminology consistently: `object_model.get_articulation(...)`, `warn_if_articulation_overlaps(...)`, `check_articulation_overlaps(...)`, and `warn_if_articulation_origin_near_geometry(...)`
+- use `check_part_geometry_connected(...)` as the default scaffold geometry gate
 - use exact `expect_within(...)`, `expect_gap(...)`, `expect_overlap(...)`, and `expect_contact(...)` as the primary intent checks
+- use `warn_if_articulation_overlaps(...)` only when joint clearance is genuinely uncertain or mechanically important
 - use pose-specific exact checks instead of direction-only motion probes
 
 Legacy aliases and deprecated helpers still exist for backward compatibility, but do not use them in new generated code:
 
 - prefer `warn_if_articulation_origin_near_geometry(...)` over `warn_if_joint_origin_near_geometry(...)`
 - prefer `check_articulation_origin_near_geometry(...)` over `check_joint_origin_near_geometry(...)`
+- prefer `check_part_geometry_connected(...)` over warning-tier disconnected-geometry helpers when floating within-part geometry should block
 - prefer `warn_if_part_geometry_disconnected(...)` over the legacy alias `warn_if_part_geometry_connected(...)`
 - prefer exact `expect_*` helpers over deprecated `expect_aabb_*` helpers
 - prefer pose-specific exact checks over deprecated `expect_joint_motion_axis(...)`
@@ -142,19 +132,19 @@ Legacy aliases and deprecated helpers still exist for backward compatibility, bu
 ## Articulation-overlap QC
 
 ```python
-ctx.check_articulation_overlaps(
+ctx.warn_if_articulation_overlaps(
     max_pose_samples=128,
     overlap_tol=0.001,
     overlap_volume_tol=0.0,
 )
 ```
 
-Use this as the failure-tier QC gate for non-fixed articulation-linked pairs.
+Use this as an opt-in warning-tier QC sensor for non-fixed articulation-linked pairs when joint clearance is genuinely uncertain or mechanically important.
 
 - It checks only parent/child pairs connected by `REVOLUTE`, `PRISMATIC`, or `CONTINUOUS` articulations.
 - It does not check `FIXED` or `FLOATING` pairs in v1.
 - It respects `ctx.allow_overlap(...)`, which is the intended escape hatch for legitimate nested mechanisms.
-- It complements rather than replaces broad `warn_if_overlaps(...)` sensing.
+- It complements rather than replaces prompt-specific exact checks on the local mounting features that matter.
 
 ## Pose-aware queries
 
@@ -196,7 +186,7 @@ Use these to encode the intended layout and motion:
 - `ctx.expect_overlap(...)`
 - `ctx.expect_contact(...)`
 
-Treat these intent checks as primary. They should carry the burden of proving that mounted parts look attached and that moving parts stay believable across key poses, while `check_articulation_overlaps(...)` enforces non-fixed joint clearance and `warn_if_overlaps(...)` remains the global backstop.
+Treat these intent checks as primary. They should carry the burden of proving that mounted parts look attached and that moving parts stay believable across key poses, while optional warning heuristics remain secondary sensors.
 
 Preferred signatures:
 
@@ -267,10 +257,7 @@ frame_leaf = frame.get_visual("frame_leaf")
 
 ctx.check_model_valid()
 ctx.check_mesh_files_exist()
-ctx.warn_if_articulation_origin_near_geometry(tol=0.015)
-ctx.warn_if_part_geometry_disconnected()
-ctx.check_articulation_overlaps(max_pose_samples=128)
-ctx.warn_if_overlaps(max_pose_samples=128, ignore_adjacent=True, ignore_fixed=True)
+ctx.check_part_geometry_connected()
 ctx.expect_overlap(lid, base, axes="xy", min_overlap=0.05)
 ctx.expect_origin_distance(lid, base, axes="xy", max_dist=0.02)
 ctx.expect_gap(lid, base, axis="z", max_gap=0.001, max_penetration=0.0)
@@ -287,3 +274,5 @@ ctx.expect_contact(lid, frame, elem_a=hinge_leaf, elem_b=frame_leaf)
 with ctx.pose({lid_hinge: 1.0}):
     ctx.expect_overlap(lid, base, axes="xy", min_overlap=0.02)
 ```
+
+If that hinge still has uncertain clearance after the exact checks are in place, add `ctx.warn_if_articulation_overlaps(...)` as an extra sensor and investigate any warning with `probe_model` before changing geometry.

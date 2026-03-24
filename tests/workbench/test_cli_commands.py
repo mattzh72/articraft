@@ -391,14 +391,18 @@ def test_workbench_init_record_command(
     assert "Draft scaffold created by `articraft-workbench init-record`." in model_text
     assert "def build_object_model() -> ArticulatedObject:" in model_text
     assert "def run_tests() -> TestReport:" in model_text
-    assert "ctx.warn_if_articulation_origin_near_geometry(tol=0.015)" in model_text
-    assert "ctx.warn_if_part_geometry_disconnected()" in model_text
-    assert "ctx.check_articulation_overlaps(max_pose_samples=128)" in model_text
+    assert "ctx.check_model_valid()" in model_text
+    assert "ctx.check_mesh_files_exist()" in model_text
+    assert "ctx.check_part_geometry_connected()" in model_text
+    assert "ctx.warn_if_articulation_origin_near_geometry" not in model_text
+    assert "ctx.warn_if_articulation_overlaps(max_pose_samples=128)" not in model_text
     assert (
         "ctx.warn_if_overlaps(max_pose_samples=128, ignore_adjacent=True, ignore_fixed=True)"
-        in model_text
+        not in model_text
     )
-    assert "Default exact visual sensor for joint mounting" in model_text
+    assert "Default exact visual connectivity gate" in model_text
+    assert "If you add a warning-tier heuristic and it fires" in model_text
+    assert "Add `ctx.warn_if_articulation_overlaps(...)` only when joint clearance is" in model_text
     assert 'hinge_leaf = lid.get_visual("hinge_leaf")' in model_text
     assert 'ctx.expect_gap(lid, body, axis="z", max_gap=0.001, max_penetration=0.0)' in model_text
     assert "ctx.expect_contact(lid, body, elem_a=hinge_leaf, elem_b=body_leaf)" in model_text

@@ -182,11 +182,12 @@ OVERLAP_WARNING_SPEC = SignalSpec(
     group="qc",
 )
 DISCONNECTED_GEOMETRY_SPEC = SignalSpec(
-    severity="warning",
+    severity="failure",
     kind="disconnected_geometry",
-    code="WARN_DISCONNECTED_GEOMETRY",
+    code="TEST_DISCONNECTED_GEOMETRY",
     source="tests",
     group="qc",
+    blocking=True,
 )
 ARTICULATION_ORIGIN_SPEC = SignalSpec(
     severity="warning",
@@ -478,11 +479,17 @@ def _allowed_overlap_signal(parsed: ParsedTestWarning) -> CompileSignal | None:
 
 
 def _overlap_warning_signal(parsed: ParsedTestWarning) -> CompileSignal | None:
-    if not parsed.check_name.startswith("warn_if_overlaps("):
+    if not parsed.check_name.startswith(("warn_if_overlaps(", "warn_if_articulation_overlaps(")):
         return None
-    summary = "Broad overlap sensor reported overlap pair(s)."
+    if parsed.check_name.startswith("warn_if_articulation_overlaps("):
+        summary = "Articulation overlap sensor reported overlap pair(s)."
+    else:
+        summary = "Broad overlap sensor reported overlap pair(s)."
     if parsed.detail_text and "overlaps detected" not in parsed.detail_text.lower():
-        summary = "Broad overlap sensor reported a warning."
+        if parsed.check_name.startswith("warn_if_articulation_overlaps("):
+            summary = "Articulation overlap sensor reported a warning."
+        else:
+            summary = "Broad overlap sensor reported a warning."
     return _signal_from_spec(
         OVERLAP_WARNING_SPEC,
         summary=summary,
@@ -533,6 +540,13 @@ def _articulation_origin_signal(parsed: ParsedTestWarning) -> CompileSignal | No
 
 
 def _deprecated_test_api_signal(parsed: ParsedTestWarning) -> CompileSignal | None:
+    if parsed.lower.startswith("deprecated as default:"):
+        return _signal_from_spec(
+            DEPRECATED_TEST_API_SPEC,
+            summary="Deprecated default scaffold heuristic used; switch to exact checks or targeted probe-backed sensors.",
+            details=parsed.text,
+            check_name=parsed.check_name,
+        )
     if not parsed.lower.startswith("deprecated:"):
         return None
     if "aabb-envelope semantics" not in parsed.lower and "legacy aabb" not in parsed.lower:

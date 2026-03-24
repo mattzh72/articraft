@@ -587,6 +587,16 @@ class TestContext:
             f"Use {replacement} for exact visual-geometry checks."
         )
 
+    def _warn_deprecated_default_helper(self, helper_name: str, guidance: str) -> None:
+        key = f"default:{helper_name}"
+        if key in self._warned_deprecations:
+            return
+        self._warned_deprecations.add(key)
+        self.warn(
+            f"DEPRECATED AS DEFAULT: {helper_name} is no longer recommended as a blanket "
+            f"scaffold heuristic. {guidance}"
+        )
+
     def _mesh_vertices(self, geometry: Mesh) -> Tuple[Vec3, ...]:
         mesh_path = resolve_mesh_path(geometry.filename, assets=self._asset_root())
         cached = self._mesh_vertex_cache.get(mesh_path)
@@ -1033,6 +1043,11 @@ class TestContext:
         reason: Optional[str] = None,
         name: Optional[str] = None,
     ) -> bool:
+        self._warn_deprecated_default_helper(
+            "warn_if_articulation_origin_near_geometry(...)",
+            "Use prompt-specific exact `expect_*` checks for mount/placement realism, "
+            "and investigate any finding with `probe_model` before relaxing thresholds.",
+        )
         tol_f = _normalize_joint_origin_tol(tol)
         return self._check_joint_origin_near_geometry_impl(
             tol=tol_f,
@@ -1159,6 +1174,26 @@ class TestContext:
             default_prefix="check_articulation_overlaps",
         )
 
+    def warn_if_articulation_overlaps(
+        self,
+        *,
+        max_pose_samples: int = 128,
+        overlap_tol: Optional[float] = None,
+        overlap_volume_tol: Optional[float] = None,
+        name: Optional[str] = None,
+    ) -> bool:
+        return self._check_overlaps_impl(
+            max_pose_samples=max_pose_samples,
+            overlap_tol=overlap_tol,
+            overlap_volume_tol=overlap_volume_tol,
+            ignore_adjacent=False,
+            ignore_fixed=False,
+            check_name=name,
+            warn_only=True,
+            pair_scope=self._articulation_overlap_pair_scope(),
+            default_prefix="warn_if_articulation_overlaps",
+        )
+
     def warn_if_overlaps(
         self,
         *,
@@ -1169,6 +1204,11 @@ class TestContext:
         ignore_fixed: bool = True,
         name: Optional[str] = None,
     ) -> bool:
+        self._warn_deprecated_default_helper(
+            "warn_if_overlaps(...)",
+            "Use prompt-specific exact `expect_*` checks for attachment and clearance first; "
+            "add this only when a broad overlap sensor answers a specific uncertainty.",
+        )
         return self._check_overlaps_impl(
             max_pose_samples=max_pose_samples,
             overlap_tol=overlap_tol,

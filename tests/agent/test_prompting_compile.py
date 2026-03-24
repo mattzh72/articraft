@@ -38,6 +38,11 @@ def _assert_shared_contract(text: str, *, budget: int) -> None:
     assert "complexity is a feature, not a bug" in text
     assert "Do not cap a visible opening with a solid placeholder primitive." in text
     assert "Broad `warn_if_*` checks are sensors, not proof." in text
+    assert "keep the scaffolded hard gates" in text
+    assert "If the object has a mounted subassembly" in text
+    assert "If a warning-tier heuristic fires, investigate it with `probe_model`" in text
+    assert "If support/floating is ambiguous, use `probe_model` helpers first" in text
+    assert "Deprecated as default scaffold heuristics in new generated code" in text
     for fragment in DISALLOWED_FRAGMENTS:
         assert fragment not in text
     assert len(text.splitlines()) <= budget

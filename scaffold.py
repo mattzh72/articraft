@@ -18,16 +18,14 @@ def run_tests() -> TestReport:
     ctx.check_model_valid()
     ctx.check_mesh_files_exist()
 
-    # Default exact visual sensor for joint mounting; keep unless scale makes it irrelevant.
-    ctx.warn_if_articulation_origin_near_geometry(tol=0.015)
-    # Default exact visual sensor for floating/disconnected subassemblies inside one part.
-    ctx.warn_if_part_geometry_disconnected()
-    # Default articulated-joint clearance gate; adapt only if the model is not articulated.
-    ctx.check_articulation_overlaps(max_pose_samples=128)
-    # Default broad overlap warning backstop; conservative and non-blocking by default.
-    ctx.warn_if_overlaps(max_pose_samples=128, ignore_adjacent=True, ignore_fixed=True)
+    # Default exact visual connectivity gate for floating/disconnected subassemblies inside one part.
+    ctx.check_part_geometry_connected()
 
-    # Use prompt-specific exact visual checks as the real completion criteria.
+    # Encode the actual visual/mechanical claims with prompt-specific exact checks.
+    # If you add a warning-tier heuristic and it fires, investigate it with
+    # `probe_model` before editing geometry or relaxing thresholds.
+    # Add `ctx.warn_if_articulation_overlaps(...)` only when joint clearance is
+    # genuinely uncertain or mechanically important.
     # Cover each applicable category before returning:
     # - hero features are present and legible
     # - mounted parts are connected/seated, not floating
@@ -46,7 +44,10 @@ def run_tests() -> TestReport:
     # ctx.expect_overlap(lid, body, axes="xy", min_overlap=0.05)
     # ctx.expect_gap(lid, body, axis="z", max_gap=0.001, max_penetration=0.0)
     # ctx.expect_contact(lid, body, elem_a=hinge_leaf, elem_b=body_leaf)
-    # Add prompt-specific exact visual checks below; broad warn_if_* checks are not enough.
+    # If the object has a mounted subassembly, prefer exact `expect_contact(...)`,
+    # `expect_gap(...)`, `expect_overlap(...)`, and `expect_within(...)` checks on
+    # named local features over broad warning-tier heuristics.
+    # Add prompt-specific exact visual checks below; optional warning heuristics are not enough.
     return ctx.report()
 
 

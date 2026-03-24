@@ -93,6 +93,9 @@ def test_openai_prompt_resolution_and_payload_preview() -> None:
         in instructions
     )
     assert "important parts are in the right place" in instructions
+    assert "keep the scaffolded hard gates" in instructions
+    assert "If a warning-tier heuristic fires, investigate it with `probe_model`" in instructions
+    assert "Deprecated as default scaffold heuristics in new generated code" in instructions
     assert payload["prompt_cache_key"].startswith("ac1:")
     assert len(payload["prompt_cache_key"]) <= 64
     assert payload["prompt_cache_retention"] == "24h"

@@ -221,9 +221,11 @@ def test_warn_if_articulation_origin_near_geometry_records_warning_only() -> Non
     assert report.passed
     assert report.failures == ()
     assert report.checks == ("warn_if_articulation_origin_near_geometry(tol=0.015)",)
-    assert len(report.warnings) == 1
-    assert "warn_if_articulation_origin_near_geometry(tol=0.015)" in report.warnings[0]
-    assert "Articulation origin(s) far from geometry" in report.warnings[0]
+    assert len(report.warnings) == 2
+    assert report.warnings[0].startswith("DEPRECATED AS DEFAULT: ")
+    assert "warn_if_articulation_origin_near_geometry(...)" in report.warnings[0]
+    assert "warn_if_articulation_origin_near_geometry(tol=0.015)" in report.warnings[1]
+    assert "Articulation origin(s) far from geometry" in report.warnings[1]
 
 
 def test_warn_if_part_geometry_disconnected_records_warning_only() -> None:
@@ -276,17 +278,37 @@ def test_warn_if_overlaps_records_warning_only() -> None:
     assert report.passed
     assert report.failures == ()
     assert report.checks == ("warn_if_overlaps(samples=8,ignore_adjacent=False,ignore_fixed=True)",)
-    assert len(report.warnings) == 1
+    assert len(report.warnings) == 2
+    assert report.warnings[0].startswith("DEPRECATED AS DEFAULT: ")
+    assert "warn_if_overlaps(...)" in report.warnings[0]
     assert (
-        "warn_if_overlaps(samples=8,ignore_adjacent=False,ignore_fixed=True)" in report.warnings[0]
+        "warn_if_overlaps(samples=8,ignore_adjacent=False,ignore_fixed=True)" in report.warnings[1]
     )
-    assert "Overlaps detected" in report.warnings[0]
-    assert "overlap_tol=0.001" in report.warnings[0]
-    assert "overlap_volume_tol=0" in report.warnings[0]
-    assert "relation=unrelated" in report.warnings[0]
-    assert "depth=(0.2,0.2,0.2)" in report.warnings[0]
-    assert "elem_a=#0 'base_box':Box" in report.warnings[0]
-    assert "elem_b=#0 'child_box':Box" in report.warnings[0]
+    assert "Overlaps detected" in report.warnings[1]
+    assert "overlap_tol=0.001" in report.warnings[1]
+    assert "overlap_volume_tol=0" in report.warnings[1]
+    assert "relation=unrelated" in report.warnings[1]
+    assert "depth=(0.2,0.2,0.2)" in report.warnings[1]
+    assert "elem_a=#0 'base_box':Box" in report.warnings[1]
+    assert "elem_b=#0 'child_box':Box" in report.warnings[1]
+
+
+def test_deprecated_default_helper_warning_emits_once_per_helper() -> None:
+    ctx = SDKTestContext(_build_joint_origin_model(joint_z=0.2))
+
+    assert not ctx.warn_if_articulation_origin_near_geometry(tol=0.015)
+    assert not ctx.warn_if_articulation_origin_near_geometry(tol=0.015)
+
+    report = ctx.report()
+    assert (
+        sum(
+            warning.startswith(
+                "DEPRECATED AS DEFAULT: warn_if_articulation_origin_near_geometry(...)"
+            )
+            for warning in report.warnings
+        )
+        == 1
+    )
 
 
 def test_check_articulation_overlaps_fails_for_revolute_pair() -> None:
@@ -302,6 +324,22 @@ def test_check_articulation_overlaps_fails_for_revolute_pair() -> None:
     assert len(report.failures) == 1
     assert report.failures[0].name == "check_articulation_overlaps(samples=8)"
     assert "pair=('base','child')" in report.failures[0].details
+
+
+def test_warn_if_articulation_overlaps_records_warning_only() -> None:
+    ctx = SDKTestContext(
+        _build_articulation_overlap_model(joint_type=ArticulationType.REVOLUTE),
+    )
+
+    assert not ctx.warn_if_articulation_overlaps(max_pose_samples=8)
+
+    report = ctx.report()
+    assert report.passed
+    assert report.failures == ()
+    assert report.checks == ("warn_if_articulation_overlaps(samples=8)",)
+    assert len(report.warnings) == 1
+    assert report.warnings[0].startswith("warn_if_articulation_overlaps(samples=8): ")
+    assert "pair=('base','child')" in report.warnings[0]
 
 
 def test_check_articulation_overlaps_fails_for_prismatic_pair() -> None:

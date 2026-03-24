@@ -117,6 +117,8 @@ def test_compile_signal_bundle_parses_common_broad_qc_warning_families() -> None
     disconnected_signal = next(
         signal for signal in bundle.signals if signal.kind == "disconnected_geometry"
     )
+    assert disconnected_signal.severity == "failure"
+    assert disconnected_signal.blocking is True
     assert (
         disconnected_signal.summary
         == "Exact visual connectivity check found disconnected geometry within a part."
@@ -181,6 +183,28 @@ def test_compile_signal_bundle_surfaces_deprecated_aabb_test_helpers() -> None:
     signal = next(signal for signal in bundle.signals if signal.kind == "deprecated_test_api")
     assert signal.code == "WARN_DEPRECATED_TEST_API"
     assert "Deprecated AABB-based test helper used" in signal.summary
+
+
+def test_compile_signal_bundle_surfaces_deprecated_default_heuristics() -> None:
+    bundle = build_compile_signal_bundle(
+        status="success",
+        test_report=SDKTestReport(
+            passed=True,
+            checks_run=1,
+            checks=("warn_if_overlaps(samples=8,ignore_adjacent=True,ignore_fixed=True)",),
+            failures=(),
+            warnings=(
+                "DEPRECATED AS DEFAULT: warn_if_overlaps(...) is no longer recommended as a blanket scaffold heuristic. "
+                "Use prompt-specific exact `expect_*` checks for attachment and clearance first; "
+                "add this only when a broad overlap sensor answers a specific uncertainty.",
+            ),
+            allowances=(),
+        ),
+    )
+
+    signal = next(signal for signal in bundle.signals if signal.kind == "deprecated_test_api")
+    assert signal.code == "WARN_DEPRECATED_TEST_API"
+    assert "Deprecated default scaffold heuristic used" in signal.summary
 
 
 def test_compile_signal_bundle_downgrades_low_risk_coplanar_warning_to_note() -> None:
@@ -265,6 +289,30 @@ def test_compile_signal_bundle_skips_duplicate_raw_test_warnings() -> None:
 
     assert len(overlap_signals) == 1
     assert compiler_signals == []
+
+
+def test_compile_signal_bundle_parses_articulation_overlap_warning_family() -> None:
+    bundle = build_compile_signal_bundle(
+        status="success",
+        test_report=SDKTestReport(
+            passed=True,
+            checks_run=1,
+            checks=("warn_if_articulation_overlaps(samples=8)",),
+            failures=(),
+            warnings=(
+                "warn_if_articulation_overlaps(samples=8): "
+                "Overlaps detected (overlap_tol=0.001, overlap_volume_tol=0):\n"
+                "relation=adjacent-revolute pair=('body','door') pose_index=0 depth=(0.01,0.02,0.03) "
+                "min_depth=0.01 vol=6e-06 elem_a=#0 'hinge_leaf':Box elem_b=#1 'door_shell':Box pose={}",
+            ),
+            allowances=(),
+        ),
+    )
+
+    signal = next(signal for signal in bundle.signals if signal.kind == "overlap_warning")
+    assert signal.severity == "warning"
+    assert signal.summary == "Articulation overlap sensor reported overlap pair(s)."
+    assert signal.check_name == "warn_if_articulation_overlaps(samples=8)"
 
 
 def test_runtime_error_failure_omits_location_lines() -> None:

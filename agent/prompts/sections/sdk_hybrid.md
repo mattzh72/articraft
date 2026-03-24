@@ -23,15 +23,19 @@
 </modeling_charter>
 
 <verification_contract>
-- Use `sdk_hybrid.TestContext`, keep the scaffolded broad checks unless there is a clear reason to tune them, and return `ctx.report()`.
+- Use `sdk_hybrid.TestContext`, keep the scaffolded hard gates, and return `ctx.report()`.
 - Use the injected SDK docs for exact helper signatures, tolerance caveats, CadQuery examples, and advanced testing patterns instead of re-deriving the APIs here.
 - Broad `warn_if_*` checks are sensors, not proof. Use prompt-specific exact visual checks as the main regression tests.
 - Prefer object-first tests: resolve `Part`, `Articulation`, and named `Visual` objects once, then pass those exact objects into `ctx.expect_*`, `ctx.allow_*`, and `ctx.pose(...)`.
 - Prefer many small exact visual checks such as `expect_contact(...)`, `expect_gap(...)`, `expect_overlap(...)`, and `expect_within(...)` over a few vague assertions.
+- If the object has a mounted subassembly, write explicit `expect_contact(...)`, `expect_gap(...)`, `expect_overlap(...)`, and `expect_within(...)` checks against the relevant local features.
 - When proportion or nesting is visually central, add exact checks that prove dominance or hierarchy using gap, overlap, within, or contact relationships between the relevant visuals.
 - Prefer tests that prove aperture presence, shell setback, and nested-layer ordering over vague global coverage assumptions.
 - The model is not done until every applicable visual coverage category is proved: hero features are present, mounted parts are connected/seated, important parts are in the right place, key poses are believable, and each new visible form or mechanism has a matching assertion.
 - Test both rest pose and meaningful operating poses. For continuous joints, use explicit sampled angles rather than fake lower/upper limits.
-- For articulated models, keep `ctx.check_articulation_overlaps(...)` as the main joint-clearance gate.
+- Use `ctx.warn_if_articulation_overlaps(...)` only when joint clearance is genuinely uncertain or mechanically important.
+- If a warning-tier heuristic fires, investigate it with `probe_model` before editing geometry or relaxing thresholds.
+- If support/floating is ambiguous, use `probe_model` helpers first, then encode the real invariant in `run_tests()`.
+- Deprecated as default scaffold heuristics in new generated code: `warn_if_articulation_origin_near_geometry(...)`, `warn_if_overlaps(...)`, and blanket `warn_if_articulation_overlaps(...)`. Add them only with specific justification.
 - Make attachment checks primary evidence of realism. Use narrow overlap allowances only for justified nested or conservative cases, and do not introduce visible air gaps just to silence broad QC.
 </verification_contract>

@@ -19,14 +19,13 @@ Do not emit URDF XML yourself. The harness compiles `object_model`, derives exac
 2. Author visuals with `part.visual(...)`.
 3. Use `Inertial.from_geometry(...)` for primitive inertials when needed.
 4. Add motion with `model.articulation(...)`.
-5. The scaffolded `run_tests()` already includes the default broad checks:
+5. The scaffolded `run_tests()` already includes the default hard gates:
    - `ctx.check_model_valid()`
    - `ctx.check_mesh_files_exist()`
-   - `ctx.warn_if_articulation_origin_near_geometry(tol=0.015)`
-   - `ctx.warn_if_part_geometry_disconnected()`
-   - `ctx.check_articulation_overlaps(...)` when the model has non-fixed articulations
-   - `ctx.warn_if_overlaps(..., ignore_adjacent=True, ignore_fixed=True)` as a broad warning-tier backstop
-   Keep that block unless parameter tuning is justified, and extend `run_tests()` with prompt-specific exact `expect_*` checks.
+   - `ctx.check_part_geometry_connected()`
+   Keep that block, then extend `run_tests()` with prompt-specific exact `expect_*` checks.
+   If the object has a mounted subassembly, make the mount explicit with `expect_contact(...)`, `expect_gap(...)`, `expect_overlap(...)`, and `expect_within(...)`.
+   If you add a warning-tier heuristic and it fires, investigate it with `probe_model` before editing geometry or relaxing thresholds.
 6. In `run_tests()`, resolve the exact `Part`, `Articulation`, and named `Visual` objects you need from `object_model` once at the top, then pass those objects into `ctx.*`. Use names only at the lookup boundary, not as the main test-call style. For named visual features, prefer `part.get_visual("feature_name")`.
 
 Joint authoring rules:
@@ -41,8 +40,6 @@ Collisions are derived automatically at compile time:
 - collision geometry mirrors the visual geometry exactly
 - overlap and contact QC run on collisions derived mechanically from visuals, not authored ones
 - overlap QC is conservative; use exact attachment checks as the primary realism checks
-- compile also checks isolated parts in multi-part objects and treats them as blocking failures by default
-- if a part is intentionally freestanding in the checked pose, justify it in `run_tests()` with `ctx.allow_isolated_part(part, reason=...)`
 
 ## Recommended imports
 
@@ -123,20 +120,7 @@ def run_tests() -> TestReport:
 
     ctx.check_model_valid()
     ctx.check_mesh_files_exist()
-    ctx.warn_if_articulation_origin_near_geometry(tol=0.015)
-    ctx.warn_if_part_geometry_disconnected()
-    ctx.check_articulation_overlaps(
-        max_pose_samples=128,
-        overlap_tol=0.005,
-        overlap_volume_tol=0.0,
-    )
-    ctx.warn_if_overlaps(
-        max_pose_samples=128,
-        overlap_tol=0.005,
-        overlap_volume_tol=0.0,
-        ignore_adjacent=True,
-        ignore_fixed=True,
-    )
+    ctx.check_part_geometry_connected()
     ctx.expect_overlap(lid, base, axes="xy", min_overlap=0.05)
     ctx.expect_origin_distance(lid, base, axes="xy", max_dist=0.02)
     ctx.expect_gap(lid, base, axis="z", max_gap=0.001, max_penetration=0.0)
@@ -148,7 +132,7 @@ def run_tests() -> TestReport:
 object_model = build_object_model()
 ```
 
-`ctx.report()` returns the required `TestReport`. Treat `failures` as blocking, `warnings` as non-blocking QC/design evidence, `allowances` as the audit trail for justified exceptions, and `allowed_isolated_parts` as the explicit handoff to compile-time isolated-part QC.
+`ctx.report()` returns the required `TestReport`. Treat `failures` as blocking, `warnings` as non-blocking QC/design evidence, and `allowances` as the audit trail for justified exceptions.
 
 Continuous-joint example:
 
@@ -193,22 +177,16 @@ Important:
 
 - Author the visible shape you actually want to see.
 - Do not hand-author collisions in `sdk`; compile-time exact-collision derivation owns that now.
-- Treat `warn_if_articulation_origin_near_geometry(tol=0.015)` and `warn_if_part_geometry_disconnected()` as conservative warning-tier sensors.
-- These broad checks can surface suspicious composition, but they do not prove realism, attachment quality, or correct motion.
-- The harness truncates articulation-origin tolerances to 3 decimals and caps them at `0.15`.
-- `warn_if_articulation_origin_near_geometry(...)` is not scale-aware; its tolerance is a fixed metric distance in meters.
-- A tolerance that is sensible for a compact hinge may be meaningless for a vehicle-sized or aircraft-sized assembly.
-- Only relax articulation-origin tolerance when the geometry genuinely needs it, and keep it tight.
-- Use `ctx.check_articulation_overlaps(...)` as the failure-tier QC gate for `REVOLUTE`, `PRISMATIC`, and `CONTINUOUS` parent/child pairs when you need to prove non-fixed joint clearance.
+- Treat `check_part_geometry_connected()` as a blocking sensor for within-part floating geometry.
+- Broad warning heuristics can surface suspicious composition, but they do not prove realism, attachment quality, or correct motion.
 - Use prompt-specific `expect_*` assertions as the real regression tests for visible structure, proportions, and mechanism behavior.
 - Make attachment checks primary: use near-zero `expect_gap(...)`, exact footprint overlap, `expect_contact(...)` where appropriate, and pose-specific mounting checks to prove that parts look attached.
 - When the whole part is too broad for a small mount or hinge seat, resolve named local features from the part with `part.get_visual(...)` and pass those `Visual` objects into the exact `expect_*` helpers.
-- In new code, prefer the articulation-spelled helpers and the exact `expect_*` family: `warn_if_articulation_origin_near_geometry(...)`, `check_articulation_overlaps(...)`, `warn_if_part_geometry_disconnected(...)`, `expect_gap(...)`, `expect_overlap(...)`, `expect_contact(...)`, and `expect_within(...)`.
+- In new code, prefer the articulation-spelled helpers and the exact `expect_*` family: `check_part_geometry_connected(...)`, `expect_gap(...)`, `expect_overlap(...)`, `expect_contact(...)`, and `expect_within(...)`.
 - Avoid legacy or deprecated helpers in new generated code: `check_joint_origin_near_geometry(...)`, `warn_if_joint_origin_near_geometry(...)`, `warn_if_part_geometry_connected(...)`, `expect_aabb_*`, and `expect_joint_motion_axis(...)`.
+- Deprecated as blanket scaffold defaults in new generated code: `warn_if_articulation_origin_near_geometry(...)` and `warn_if_overlaps(...)`. Add them only with specific justification.
+- Use `ctx.warn_if_articulation_overlaps(...)` only when joint clearance is genuinely uncertain or mechanically important.
+- If support or floating is ambiguous, use `probe_model` first, then encode the exact invariant in `run_tests()`.
 - Slight intended interpenetration can be acceptable when it makes a mounted or nested assembly look seated instead of floating.
-- Use `ctx.allow_overlap(...)` narrowly for legitimate nested mechanisms such as bearing sleeves, hinge barrels, or enclosed hubs, and still call `ctx.warn_if_overlaps(...)` so the allowance is tracked.
-- Use `ctx.warn_if_overlaps(..., ignore_adjacent=True, ignore_fixed=True)` as a conservative warning-tier backstop for non-joint overlap issues, not as proof that attachment quality is good.
-- The harness also runs automatic isolated-part checks at compile time.
-- isolated-part findings fail by default because the part still does not touch anything, which is usually a real floating-geometry or bad-mount bug.
-- If a part must remain isolated in the checked pose, justify it explicitly with `ctx.allow_isolated_part(part, reason=...)`.
+- Use `ctx.allow_overlap(...)` narrowly for legitimate nested mechanisms such as bearing sleeves, hinge barrels, or enclosed hubs.
 - Add selective separation checks only for pairs that truly must remain clear across motion.
