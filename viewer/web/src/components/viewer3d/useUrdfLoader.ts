@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
-import { originToMatrix4, parseUrdf, rewriteAbsoluteMeshFilenames } from './urdf-parser';
+import { describeLinkVisuals, originToMatrix4, parseUrdf, rewriteAbsoluteMeshFilenames } from './urdf-parser';
 import type { UrdfSpec } from './urdf-parser';
 import { buildRobotSceneGraph, collisionColorForIndex } from './scene-graph-builder';
 import { computeFit, preserveViewAcrossModelSwitch, updateCameraClipping } from './camera-utils';
@@ -223,14 +223,16 @@ async function attachMeshGeometry(
     if (!linkGroup) {
       continue;
     }
+    const visualDescriptors = describeLinkVisuals(link);
 
-    for (const visual of link.visuals) {
+    for (const [visualIndexWithinLink, visual] of link.visuals.entries()) {
       const depthBias = depthBiasForOrdinal(visualIndex);
       visualIndex += 1;
       if (visual.geometry.type !== 'mesh') {
         continue;
       }
 
+      const visualDescriptor = visualDescriptors[visualIndexWithinLink];
       pending.push(
         loadGeometryObject(visual.geometry, baseUrl, {
           kind: 'visual',
@@ -241,6 +243,9 @@ async function attachMeshGeometry(
           if (visual.origin) {
             meshGroup.applyMatrix4(originToMatrix4(visual.origin));
           }
+          meshGroup.userData.articraftLinkName = link.name;
+          meshGroup.userData.articraftVisualKey = visualDescriptor.key;
+          meshGroup.userData.articraftVisualLabel = visualDescriptor.label;
           meshGroup.name = visual.name ?? `visual:${link.name}`;
           linkGroup.add(meshGroup);
         }),

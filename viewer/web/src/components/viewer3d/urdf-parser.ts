@@ -55,6 +55,12 @@ export interface UrdfSpec {
   joints: UrdfJoint[];
 }
 
+export interface UrdfVisualDescriptor {
+  key: string;
+  label: string;
+  index: number;
+}
+
 /**
  * Parse a vec3 string like "1 2 3" or "1.0 2.0 3.0"
  */
@@ -80,6 +86,61 @@ export function parseVec4(str: string | undefined): [number, number, number, num
     Number.isFinite(parts[2]) ? parts[2] : 1,
     Number.isFinite(parts[3]) ? parts[3] : 1,
   ];
+}
+
+export function buildUrdfVisualKey(linkName: string, visualIndex: number): string {
+  return `${linkName}::visual:${visualIndex}`;
+}
+
+function meshFilenameStem(filename: string | undefined): string | null {
+  if (!filename) {
+    return null;
+  }
+
+  const normalized = filename.split(/[?#]/, 1)[0] ?? '';
+  const basename = normalized.split('/').at(-1)?.trim() ?? '';
+  if (!basename) {
+    return null;
+  }
+
+  const stem = basename.replace(/\.[^.]+$/, '');
+  return stem || null;
+}
+
+function baseVisualLabel(visual: UrdfVisual, index: number): string {
+  const explicitName = visual.name?.trim();
+  if (explicitName) {
+    return explicitName;
+  }
+
+  if (visual.geometry.type === 'mesh') {
+    const stem = meshFilenameStem(visual.geometry.filename);
+    if (stem) {
+      return stem;
+    }
+  }
+
+  return `${visual.geometry.type} ${index + 1}`;
+}
+
+export function describeLinkVisuals(link: UrdfLink): UrdfVisualDescriptor[] {
+  const baseLabels = link.visuals.map((visual, index) => baseVisualLabel(visual, index));
+  const labelTotals = new Map<string, number>();
+  for (const label of baseLabels) {
+    labelTotals.set(label, (labelTotals.get(label) ?? 0) + 1);
+  }
+
+  const seenLabels = new Map<string, number>();
+  return baseLabels.map((baseLabel, index) => {
+    const nextCount = (seenLabels.get(baseLabel) ?? 0) + 1;
+    seenLabels.set(baseLabel, nextCount);
+
+    return {
+      key: buildUrdfVisualKey(link.name, index),
+      label: (labelTotals.get(baseLabel) ?? 0) > 1 ? `${baseLabel} ${nextCount}` : baseLabel,
+      index,
+    };
+  });
 }
 
 /**

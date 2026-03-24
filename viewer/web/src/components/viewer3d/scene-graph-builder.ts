@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import type { UrdfSpec, UrdfLink } from './urdf-parser';
-import { findRootLink, originToMatrix4 } from './urdf-parser';
+import { describeLinkVisuals, findRootLink, originToMatrix4 } from './urdf-parser';
 import { depthBiasForOrdinal, resolveVisualMaterialSpec } from './materials';
 import { buildPrimitiveMesh } from './geometry-loader';
 
@@ -98,14 +98,16 @@ export function buildRobotSceneGraph(
   for (const link of urdfSpec.links) {
     const linkGroup = new THREE.Group();
     linkGroup.name = `link:${link.name}`;
+    const visualDescriptors = describeLinkVisuals(link);
 
     if (showVisuals) {
-      for (const visual of link.visuals) {
+      for (const [visualIndexWithinLink, visual] of link.visuals.entries()) {
         const matSpec = resolveVisualMaterialSpec(visual);
         if (opacity !== undefined) {
           matSpec.opacity = opacity;
         }
 
+        const visualDescriptor = visualDescriptors[visualIndexWithinLink];
         const mesh = buildPrimitiveMesh(visual.geometry, matSpec, {
           depthBias: depthBiasForOrdinal(visualIndex),
         });
@@ -116,6 +118,9 @@ export function buildRobotSceneGraph(
             mesh.applyMatrix4(originToMatrix4(visual.origin));
           }
           mesh.userData[VISUAL_USER_DATA_KEY] = true;
+          mesh.userData.articraftLinkName = link.name;
+          mesh.userData.articraftVisualKey = visualDescriptor.key;
+          mesh.userData.articraftVisualLabel = visualDescriptor.label;
           mesh.name = visual.name ?? `visual:${link.name}`;
           linkGroup.add(mesh);
         }

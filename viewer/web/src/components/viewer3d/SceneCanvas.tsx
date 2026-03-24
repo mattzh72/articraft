@@ -1,6 +1,6 @@
 import { useRef, useEffect, useMemo, useState, type JSX } from 'react';
 import * as THREE from 'three';
-import { PartLegend, type PartLegendItem } from './PartLegend';
+import { PartLegend, type PartLegendItem, type PartLegendSelection } from './PartLegend';
 import { useThreeScene } from './useThreeScene';
 import { useUrdfLoader } from './useUrdfLoader';
 import { createEdgeLines } from './materials';
@@ -8,7 +8,7 @@ import { createEnvironmentMap } from './lighting';
 import { attachJointOverlay, disposeOverlayObjects } from './joint-overlay';
 import { createSurfaceSamplePoints, disposeSurfaceSamplePoints } from './surface-sampling';
 import type { RenderOptions } from '@/components/inspector/RenderOptionsPanel';
-import type { UrdfSpec } from './urdf-parser';
+import { describeLinkVisuals, type UrdfSpec } from './urdf-parser';
 
 const ROBOT_GROUP_NAME = '__articraft_robot__';
 const CLICK_MOVE_THRESHOLD_PX = 5;
@@ -238,6 +238,40 @@ function findLinkName(object: THREE.Object3D | null): string | null {
   return null;
 }
 
+function findVisualKey(object: THREE.Object3D | null): string | null {
+  let current = object;
+
+  while (current) {
+    const visualKey = current.userData.articraftVisualKey;
+    if (typeof visualKey === 'string' && visualKey.length > 0) {
+      return visualKey;
+    }
+    current = current.parent;
+  }
+
+  return null;
+}
+
+function objectMatchesPartSelection(
+  object: THREE.Object3D | null,
+  selection: PartLegendSelection | null,
+): boolean {
+  if (!selection) {
+    return true;
+  }
+
+  const linkName = findLinkName(object);
+  if (linkName !== selection.partName) {
+    return false;
+  }
+
+  if (selection.subpartKey == null) {
+    return true;
+  }
+
+  return findVisualKey(object) === selection.subpartKey;
+}
+
 function forEachOwnLinkVisualMesh(
   linkGroup: THREE.Object3D,
   visit: (mesh: THREE.Mesh) => void,
@@ -303,7 +337,7 @@ export function SceneCanvas({
   const partHighlightRef = useRef<THREE.LineSegments[]>([]);
   const surfaceSampleRef = useRef<THREE.Points[]>([]);
   const pointerDownRef = useRef<{ x: number; y: number; pointerId: number } | null>(null);
-  const [selectedPartName, setSelectedPartName] = useState<string | null>(null);
+  const [selectedPartSelection, setSelectedPartSelection] = useState<PartLegendSelection | null>(null);
   const isStagingSelection = selectionKey?.startsWith("staging:") ?? false;
 
   const { scene, camera, renderer, controls, gridGroup, axisGroup, invalidate, sceneReady } = useThreeScene(
@@ -333,9 +367,14 @@ export function SceneCanvas({
               name: link.name,
               color: `#${segmentColorForIndex(index).getHexString()}`,
               visualCount: link.visuals.length,
+              subparts: describeLinkVisuals(link).map((subpart) => ({
+                key: subpart.key,
+                name: subpart.label,
+                color: `#${segmentColorForIndex(index).getHexString()}`,
+              })),
             }))
             .filter((item) => item.visualCount > 0)
-            .map(({ name, color }) => ({ name, color }))
+            .map(({ name, color, subparts }) => ({ name, color, subparts }))
         : []
     ),
     [urdfSpec],
@@ -370,21 +409,37 @@ export function SceneCanvas({
   }, [error, loading, onLoadStateChange]);
 
   useEffect(() => {
-    setSelectedPartName(null);
+    setSelectedPartSelection(null);
   }, [selectionKey]);
 
   useEffect(() => {
-    if (selectedPartName && !partLegendItems.some((item) => item.name === selectedPartName)) {
-      setSelectedPartName(null);
+    if (!selectedPartSelection) {
+      return;
     }
-  }, [partLegendItems, selectedPartName]);
+
+    const selectedPart = partLegendItems.find((item) => item.name === selectedPartSelection.partName);
+    if (!selectedPart) {
+      setSelectedPartSelection(null);
+      return;
+    }
+
+    if (
+      selectedPartSelection.subpartKey != null
+      && !selectedPart.subparts.some((subpart) => subpart.key === selectedPartSelection.subpartKey)
+    ) {
+      setSelectedPartSelection({
+        partName: selectedPart.name,
+        subpartKey: null,
+      });
+    }
+  }, [partLegendItems, selectedPartSelection]);
 
   useEffect(() => {
     if ((renderOptions.showSegmentColors || renderOptions.showSurfaceSamples) && !renderOptions.showCollisions) {
       return;
     }
 
-    setSelectedPartName(null);
+    setSelectedPartSelection(null);
   }, [renderOptions.showCollisions, renderOptions.showSegmentColors, renderOptions.showSurfaceSamples]);
 
   // Show/hide grid
@@ -505,6 +560,10 @@ export function SceneCanvas({
           return;
         }
 
+        const visualKey = findVisualKey(obj);
+        if (visualKey) {
+          points.userData.articraftVisualKey = visualKey;
+        }
         obj.add(points);
         nextSurfaceSamples.push(points);
       });
@@ -543,9 +602,10 @@ export function SceneCanvas({
       obj.visible =
         renderOptions.showSurfaceSamples &&
         !renderOptions.showCollisions &&
-        (selectedPartName == null || linkName === selectedPartName);
+        linkName != null &&
+        objectMatchesPartSelection(obj, selectedPartSelection);
     });
-  }, [scene, renderOptions.showCollisions, renderOptions.showSurfaceSamples, selectedPartName, urdfSpec]);
+  }, [scene, renderOptions.showCollisions, renderOptions.showSurfaceSamples, selectedPartSelection, urdfSpec]);
 
   useEffect(() => {
     if (!scene || !urdfSpec) {
@@ -566,9 +626,9 @@ export function SceneCanvas({
       const linkColor = segmentColorForIndex(index);
       forEachOwnLinkVisualMesh(linkGroup, (obj) => {
         const emphasis: SegmentEmphasis =
-          selectedPartName == null
+          selectedPartSelection == null
             ? 'default'
-            : link.name === selectedPartName
+            : objectMatchesPartSelection(obj, selectedPartSelection)
               ? 'selected'
               : 'dimmed';
 
@@ -600,7 +660,7 @@ export function SceneCanvas({
         });
       }
     };
-  }, [scene, renderOptions.showSegmentColors, renderOptions.showSurfaceSamples, selectedPartName, urdfSpec]);
+  }, [scene, renderOptions.showSegmentColors, renderOptions.showSurfaceSamples, selectedPartSelection, urdfSpec]);
 
   useEffect(() => {
     for (const highlight of partHighlightRef.current) {
@@ -610,19 +670,19 @@ export function SceneCanvas({
     }
     partHighlightRef.current = [];
 
-    if (!scene || !selectedPartName || !shouldShowPartLegend || renderOptions.showSurfaceSamples) {
+    if (!scene || !selectedPartSelection || !shouldShowPartLegend || renderOptions.showSurfaceSamples) {
       return;
     }
 
     const robot = scene.getObjectByName(ROBOT_GROUP_NAME);
-    const linkGroup = robot?.getObjectByName(`link:${selectedPartName}`);
+    const linkGroup = robot?.getObjectByName(`link:${selectedPartSelection.partName}`);
     if (!linkGroup) {
       return;
     }
 
     const nextHighlights: THREE.LineSegments[] = [];
     forEachOwnLinkVisualMesh(linkGroup, (obj) => {
-      if (!obj.visible) {
+      if (!obj.visible || !objectMatchesPartSelection(obj, selectedPartSelection)) {
         return;
       }
 
@@ -646,7 +706,7 @@ export function SceneCanvas({
         partHighlightRef.current = [];
       }
     };
-  }, [scene, renderOptions.showSurfaceSamples, selectedPartName, shouldShowPartLegend, urdfSpec]);
+  }, [scene, renderOptions.showSurfaceSamples, selectedPartSelection, shouldShowPartLegend, urdfSpec]);
 
   useEffect(() => {
     if (!scene || !camera || !renderer || !shouldShowPartLegend) {
@@ -704,7 +764,11 @@ export function SceneCanvas({
         return;
       }
 
-      setSelectedPartName((current) => (current === linkName ? null : linkName));
+      setSelectedPartSelection((current) => (
+        current?.partName === linkName && current.subpartKey == null
+          ? null
+          : { partName: linkName, subpartKey: null }
+      ));
     };
 
     renderer.domElement.addEventListener('pointerdown', handlePointerDown);
@@ -759,7 +823,7 @@ export function SceneCanvas({
     renderOptions.showSegmentColors,
     renderOptions.showSurfaceSamples,
     sceneReady,
-    selectedPartName,
+    selectedPartSelection,
     shouldShowPartLegend,
     urdfSpec,
   ]);
@@ -771,8 +835,8 @@ export function SceneCanvas({
       {shouldShowPartLegend ? (
         <PartLegend
           items={partLegendItems}
-          selectedPartName={selectedPartName}
-          onSelectPart={setSelectedPartName}
+          selection={selectedPartSelection}
+          onSelectPart={setSelectedPartSelection}
         />
       ) : null}
 
