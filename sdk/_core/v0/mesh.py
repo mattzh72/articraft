@@ -974,6 +974,17 @@ def _profile_points_2d(profile: Iterable[Tuple[float, float]]) -> List[Vec2]:
     return cleaned
 
 
+def _polyline_points_2d(profile: Iterable[Tuple[float, float]]) -> List[Vec2]:
+    points = [(float(x), float(y)) for (x, y) in profile]
+    cleaned: List[Vec2] = []
+    for pt in points:
+        if not cleaned or not _points_match_2d(cleaned[-1], pt):
+            cleaned.append(pt)
+    if len(cleaned) < 2:
+        raise ValueError("Profile must have at least 2 unique points")
+    return cleaned
+
+
 def _profile_points_3d(profile: Iterable[Tuple[float, float, float]]) -> List[Vec3]:
     points = [(float(x), float(y), float(z)) for (x, y, z) in profile]
     cleaned: List[Vec3] = []
@@ -1748,32 +1759,57 @@ class LatheGeometry(MeshGeometry):
         profile: Iterable[Tuple[float, float]],
         *,
         segments: int = 32,
+        closed: bool = True,
     ):
         super().__init__()
-        points = [(float(r), float(z)) for (r, z) in profile]
-        if len(points) < 2:
-            raise ValueError("Lathe profile must have at least 2 points")
         segments = max(3, int(segments))
+        points = _profile_points_2d(profile) if closed else _polyline_points_2d(profile)
+        if closed:
+            points = _ensure_ccw(points)
 
-        ring_count = len(points)
-        for i in range(segments):
-            theta = 2 * pi * i / segments
-            c = cos(theta)
-            s = sin(theta)
-            for r, z in points:
-                x = r * c
-                y = r * s
-                self.add_vertex(x, y, z)
+        normalized_points: List[Vec2] = []
+        for r, z in points:
+            if r < -_EPS:
+                raise ValueError("Lathe profile radii must be non-negative")
+            normalized_points.append((0.0 if abs(r) <= _EPS else float(r), float(z)))
+        points = normalized_points
 
-        for i in range(segments):
-            i2 = (i + 1) % segments
-            for j in range(ring_count - 1):
-                a = i * ring_count + j
-                b = i2 * ring_count + j
-                c = i2 * ring_count + (j + 1)
-                d = i * ring_count + (j + 1)
-                self.add_face(a, b, d)
-                self.add_face(b, c, d)
+        ring_indices: List[List[int]] = []
+        for r, z in points:
+            if r <= _EPS:
+                axis_vertex = self.add_vertex(0.0, 0.0, z)
+                ring_indices.append([axis_vertex] * segments)
+                continue
+
+            ring: List[int] = []
+            for i in range(segments):
+                theta = 2 * pi * i / segments
+                ring.append(self.add_vertex(r * cos(theta), r * sin(theta), z))
+            ring_indices.append(ring)
+
+        def add_face_if_non_degenerate(a: int, b: int, c: int) -> None:
+            if a == b or b == c or c == a:
+                return
+            self.add_face(a, b, c)
+
+        edge_count = len(points) if closed else len(points) - 1
+        for j in range(edge_count):
+            j2 = (j + 1) % len(points)
+            r0 = points[j][0]
+            r1 = points[j2][0]
+            if r0 <= _EPS and r1 <= _EPS:
+                continue
+
+            ring0 = ring_indices[j]
+            ring1 = ring_indices[j2]
+            for i in range(segments):
+                i2 = (i + 1) % segments
+                a = ring0[i]
+                b = ring0[i2]
+                c = ring1[i2]
+                d = ring1[i]
+                add_face_if_non_degenerate(a, b, d)
+                add_face_if_non_degenerate(b, c, d)
 
 
 class LoftGeometry(MeshGeometry):

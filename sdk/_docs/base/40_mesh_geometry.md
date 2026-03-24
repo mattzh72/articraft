@@ -106,11 +106,49 @@ from sdk import (
 ### `LatheGeometry`
 
 ```python
-LatheGeometry(profile, segments=32)
+LatheGeometry(profile, segments=32, closed=True)
 ```
 
 - `profile` is an iterable of `(r, z)` points.
-- The profile is revolved around the Z axis.
+- Radii must be non-negative.
+- With `closed=True` (default), the profile is treated as a closed loop in the
+  `(r, z)` half-plane and revolved into a closed solid around the Z axis.
+- Profiles that touch the axis are welded into shared apex/axis vertices so the
+  resulting mesh is suitable for solid booleans.
+- Pass `closed=False` for the legacy open surface-of-revolution behavior.
+
+Open-front hollow shade example:
+
+```python
+from sdk import LatheGeometry
+
+shade = LatheGeometry(
+    [
+        (0.0, -0.030),   # rear centerline
+        (0.018, -0.030), # outer rear wall
+        (0.023, -0.022),
+        (0.027, -0.010),
+        (0.031, 0.010),
+        (0.036, 0.027),
+        (0.039, 0.040),  # front rim outer edge
+        (0.033, 0.0385), # front rim inner edge
+        (0.027, 0.018),
+        (0.022, -0.002),
+        (0.018, -0.015),
+        (0.014, -0.021),
+        (0.014, -0.025), # inner rear wall
+        (0.0, -0.025),   # back to centerline only at the rear
+    ],
+    segments=44,
+)
+```
+
+- This pattern creates a thin-walled cone-like shade with an open front and a
+  hollow interior.
+- For shade-like forms, prefer one closed wall loop like this over
+  `boolean_difference(outer, inner)` when both revolved profiles would otherwise
+  run to the axis at the open end, because that produces a capped nose instead
+  of an aperture.
 
 ### `LoftGeometry`
 

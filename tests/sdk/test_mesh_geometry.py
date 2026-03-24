@@ -83,6 +83,73 @@ def test_rotate_supports_custom_origin() -> None:
     assert z == pytest.approx(0.0, abs=1e-9)
 
 
+def test_lathe_geometry_builds_closed_manifold_solid() -> None:
+    geom = sdk.LatheGeometry(
+        [
+            (0.0, -0.20),
+            (0.05, -0.20),
+            (0.05, 0.20),
+            (0.0, 0.20),
+        ],
+        segments=24,
+    )
+
+    mesh_module._manifold_from_geometry(geom, name="lathe")
+
+    mins, maxs = _bounds(geom)
+    assert mins[0] <= -0.049
+    assert maxs[0] >= 0.049
+    assert mins[1] <= -0.049
+    assert maxs[1] >= 0.049
+    assert mins[2] == pytest.approx(-0.20, abs=1e-6)
+    assert maxs[2] == pytest.approx(0.20, abs=1e-6)
+
+
+def test_lathe_geometry_supports_boolean_difference() -> None:
+    outer = sdk.LatheGeometry(
+        [
+            (0.0, -0.20),
+            (0.06, -0.20),
+            (0.06, 0.20),
+            (0.0, 0.20),
+        ],
+        segments=28,
+    )
+    inner = sdk.LatheGeometry(
+        [
+            (0.0, -0.16),
+            (0.03, -0.16),
+            (0.03, 0.16),
+            (0.0, 0.16),
+        ],
+        segments=28,
+    )
+
+    shell = sdk.boolean_difference(outer, inner)
+
+    mesh_module._manifold_from_geometry(shell, name="lathe_shell")
+
+    mins, maxs = _bounds(shell)
+    assert mins[0] <= -0.059
+    assert maxs[0] >= 0.059
+    assert mins[2] == pytest.approx(-0.20, abs=1e-6)
+    assert maxs[2] == pytest.approx(0.20, abs=1e-6)
+
+
+def test_lathe_geometry_closed_false_preserves_open_surface_mode() -> None:
+    geom = sdk.LatheGeometry(
+        [
+            (0.04, -0.10),
+            (0.04, 0.10),
+        ],
+        segments=20,
+        closed=False,
+    )
+
+    with pytest.raises(ValueError, match="not a valid manifold solid"):
+        mesh_module._manifold_from_geometry(geom, name="open_lathe")
+
+
 def test_mesh_from_geometry_preserves_general_rotation_transform(tmp_path) -> None:
     mesh = sdk.mesh_from_geometry(
         sdk.BoxGeometry((0.20, 0.10, 0.06)).rotate((0.0, 0.0, 1.0), pi / 2.0),
