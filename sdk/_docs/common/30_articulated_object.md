@@ -109,7 +109,7 @@ This checks:
 
 Use `TestContext` inside `run_tests()` for geometry and articulation QC.
 
-- Keep `ctx.check_model_valid()`, `ctx.check_mesh_files_exist()`, and `ctx.check_part_geometry_connected()` as the default scaffold gates.
+- Keep `ctx.check_model_valid()`, `ctx.check_mesh_files_exist()`, `ctx.check_part_geometry_connected()`, and `ctx.check_no_part_overlaps()` as the default scaffold gates.
 - Use prompt-specific `expect_*` assertions as the primary proof that parts are attached and the mechanism behaves correctly.
 - Add `ctx.warn_if_articulation_overlaps(...)` only when joint clearance is genuinely uncertain or mechanically important.
 - `ctx.warn_if_articulation_origin_near_geometry(...)` and `ctx.warn_if_overlaps(...)` are deprecated as blanket scaffold defaults in new generated code.

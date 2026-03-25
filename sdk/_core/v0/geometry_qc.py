@@ -808,23 +808,23 @@ def generate_pose_samples(
     return poses
 
 
-def _find_collision_overlaps_fcl(
-    model: object,
+def _find_collision_overlaps_fcl_for_poses(
+    compiled_model: object,
     *,
     asset_root: Optional[Path],
-    max_pose_samples: int,
+    source_model: Optional[object] = None,
+    poses: Sequence[Dict[str, float]],
     overlap_tol: float,
     overlap_volume_tol: float,
     allowed_pairs: Optional[Iterable[Tuple[str, str]]],
-    seed: int,
 ) -> List[GeometryOverlap]:
     import fcl
 
-    compiled_model = compile_object_model_with_exact_collisions(
-        model,  # type: ignore[arg-type]
-        asset_root=asset_root,
+    resolved_asset_root = resolve_asset_root(
+        asset_root,
+        compiled_model,
+        source_model if source_model is not None else compiled_model,
     )
-    resolved_asset_root = resolve_asset_root(asset_root, compiled_model, model)
     links = getattr(compiled_model, "parts", None)
     joints = getattr(compiled_model, "articulations", None)
     if not isinstance(links, list) or not isinstance(joints, list):
@@ -836,7 +836,6 @@ def _find_collision_overlaps_fcl(
             allowed.add((a, b))
             allowed.add((b, a))
 
-    poses = generate_pose_samples(compiled_model, max_samples=max_pose_samples, seed=int(seed))
     overlaps: list[GeometryOverlap] = []
     obj_cache: Dict[Path, AABB] = {}
     mesh_cache: Dict[tuple[Path, Optional[Vec3]], object] = {}
@@ -922,6 +921,32 @@ def _find_collision_overlaps_fcl(
                             )
                         )
     return overlaps
+
+
+def _find_collision_overlaps_fcl(
+    model: object,
+    *,
+    asset_root: Optional[Path],
+    max_pose_samples: int,
+    overlap_tol: float,
+    overlap_volume_tol: float,
+    allowed_pairs: Optional[Iterable[Tuple[str, str]]],
+    seed: int,
+) -> List[GeometryOverlap]:
+    compiled_model = compile_object_model_with_exact_collisions(
+        model,  # type: ignore[arg-type]
+        asset_root=asset_root,
+    )
+    poses = generate_pose_samples(compiled_model, max_samples=max_pose_samples, seed=int(seed))
+    return _find_collision_overlaps_fcl_for_poses(
+        compiled_model,
+        asset_root=asset_root,
+        source_model=model,
+        poses=poses,
+        overlap_tol=overlap_tol,
+        overlap_volume_tol=overlap_volume_tol,
+        allowed_pairs=allowed_pairs,
+    )
 
 
 def _resolve_model_links_and_joints(model: object) -> tuple[list[object], list[object]]:
@@ -1312,6 +1337,32 @@ def find_geometry_overlaps(
         overlap_volume_tol=overlap_volume_tol,
         allowed_pairs=allowed_pairs,
         seed=seed,
+    )
+
+
+def find_geometry_overlaps_in_poses(
+    model: object,
+    *,
+    poses: Sequence[Dict[str, float]],
+    asset_root: Optional[Path] = None,
+    overlap_tol: float = 1e-3,
+    overlap_volume_tol: float = 0.0,
+    allowed_pairs: Optional[Iterable[Tuple[str, str]]] = None,
+) -> List[GeometryOverlap]:
+    if not poses:
+        return []
+    compiled_model = compile_object_model_with_exact_collisions(
+        model,  # type: ignore[arg-type]
+        asset_root=asset_root,
+    )
+    return _find_collision_overlaps_fcl_for_poses(
+        compiled_model,
+        asset_root=asset_root,
+        source_model=model,
+        poses=poses,
+        overlap_tol=overlap_tol,
+        overlap_volume_tol=overlap_volume_tol,
+        allowed_pairs=allowed_pairs,
     )
 
 

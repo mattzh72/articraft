@@ -394,6 +394,7 @@ def test_workbench_init_record_command(
     assert "ctx.check_model_valid()" in model_text
     assert "ctx.check_mesh_files_exist()" in model_text
     assert "ctx.check_part_geometry_connected()" in model_text
+    assert "ctx.check_no_part_overlaps()" in model_text
     assert "ctx.warn_if_articulation_origin_near_geometry" not in model_text
     assert "ctx.warn_if_articulation_overlaps(max_pose_samples=128)" not in model_text
     assert (
@@ -401,6 +402,8 @@ def test_workbench_init_record_command(
         not in model_text
     )
     assert "Default exact visual connectivity gate" in model_text
+    assert "Default broad part-level rest-pose backstop" in model_text
+    assert "justify it with `ctx.allow_overlap(...)`" in model_text
     assert "If you add a warning-tier heuristic and it fires" in model_text
     assert "Add `ctx.warn_if_articulation_overlaps(...)` only when joint clearance is" in model_text
     assert 'hinge_leaf = lid.get_visual("hinge_leaf")' in model_text

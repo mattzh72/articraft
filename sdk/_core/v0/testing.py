@@ -10,6 +10,7 @@ from .assets import resolve_asset_root, resolve_mesh_path
 from .errors import ValidationError
 from .exact_collisions import compile_object_model_with_exact_collisions
 from .geometry_qc import (
+    GeometryOverlap,
     _collision_object_from_geometry,
     _identity4,
     _mat4_mul,
@@ -18,6 +19,7 @@ from .geometry_qc import (
     default_overlap_tol_from_env,
     default_overlap_volume_tol_from_env,
     find_geometry_overlaps,
+    find_geometry_overlaps_in_poses,
     find_joint_origin_distance_findings,
     find_part_geometry_connectivity_findings,
     generate_pose_samples,
@@ -113,6 +115,20 @@ def _aabbs_touch_or_overlap(a: AABB, b: AABB, *, tol: float) -> bool:
         if b[1][axis] + tol < a[0][axis]:
             return False
     return True
+
+
+def _format_overlap_element(index: int, name: Optional[str], geometry: Optional[str]) -> str:
+    geometry_name = geometry or "?"
+    if isinstance(name, str) and name:
+        return f"#{index} {name!r}:{geometry_name}"
+    return f"#{index} <unnamed>:{geometry_name}"
+
+
+def _overlap_rank(overlap: GeometryOverlap) -> tuple[float, float]:
+    return (
+        float(min(overlap.overlap_depth[0], overlap.overlap_depth[1], overlap.overlap_depth[2])),
+        float(overlap.overlap_volume),
+    )
 
 
 def _truncate_decimal(value: float, *, decimals: int) -> float:
@@ -377,6 +393,18 @@ class TestContext:
     def warn(self, text: str) -> None:
         if text:
             self._warnings.append(str(text))
+
+    def _overlap_is_allowed(self, overlap: GeometryOverlap) -> bool:
+        key = _pair_key(overlap.link_a, overlap.link_b)
+        for allowed_key, elem_a, elem_b, _reason in self._allow_elems:
+            if allowed_key != key:
+                continue
+            if elem_a is None and elem_b is None:
+                return True
+            names = (overlap.elem_a_name, overlap.elem_b_name)
+            if (elem_a in names) and (elem_b in names):
+                return True
+        return False
 
     def _asset_root(self) -> Path:
         resolved = resolve_asset_root(self.asset_root, self.model)
@@ -1135,6 +1163,85 @@ class TestContext:
             )
         return record(resolved_name, True)
 
+    def check_no_part_overlaps(
+        self,
+        *,
+        overlap_tol: Optional[float] = None,
+        overlap_volume_tol: Optional[float] = None,
+        name: Optional[str] = None,
+    ) -> bool:
+        resolved_overlap_tol = (
+            default_overlap_tol_from_env() if overlap_tol is None else float(overlap_tol)
+        )
+        resolved_overlap_volume_tol = (
+            default_overlap_volume_tol_from_env()
+            if overlap_volume_tol is None
+            else float(overlap_volume_tol)
+        )
+        if name is not None:
+            resolved_name = name
+        elif overlap_tol is None and overlap_volume_tol is None:
+            resolved_name = "check_no_part_overlaps()"
+        else:
+            resolved_name = (
+                "check_no_part_overlaps("
+                f"overlap_tol={resolved_overlap_tol:.4g},"
+                f"overlap_volume_tol={resolved_overlap_volume_tol:.4g})"
+            )
+
+        overlaps = find_geometry_overlaps_in_poses(
+            self.model,
+            asset_root=self._asset_root(),
+            poses=[dict(self._pose)],
+            overlap_tol=resolved_overlap_tol,
+            overlap_volume_tol=resolved_overlap_volume_tol,
+        )
+
+        representative_by_pair: Dict[Tuple[str, str], GeometryOverlap] = {}
+        allowed_pairs: Set[Tuple[str, str]] = set()
+        allowed_overlap_count = 0
+
+        for overlap in overlaps:
+            key = _pair_key(overlap.link_a, overlap.link_b)
+            if self._overlap_is_allowed(overlap):
+                allowed_pairs.add(key)
+                allowed_overlap_count += 1
+                continue
+            current = representative_by_pair.get(key)
+            if current is None or _overlap_rank(overlap) > _overlap_rank(current):
+                representative_by_pair[key] = overlap
+
+        if representative_by_pair:
+            details = []
+            for key in sorted(representative_by_pair.keys()):
+                overlap = representative_by_pair[key]
+                details.append(
+                    f"pair=({key[0]!r},{key[1]!r}) "
+                    f"depth=({overlap.overlap_depth[0]:.4g},{overlap.overlap_depth[1]:.4g},{overlap.overlap_depth[2]:.4g}) "
+                    f"min_depth={min(overlap.overlap_depth):.4g} vol={overlap.overlap_volume:.4g} "
+                    f"elem_a={_format_overlap_element(overlap.elem_a, overlap.elem_a_name, overlap.elem_a_geometry)} "
+                    f"elem_b={_format_overlap_element(overlap.elem_b, overlap.elem_b_name, overlap.elem_b_geometry)} "
+                    f"pose={overlap.pose}"
+                )
+
+            preview = "\n".join(details[:8])
+            more = "" if len(details) <= 8 else f"\n... ({len(details) - 8} more)"
+            return self._record(
+                resolved_name,
+                False,
+                "Part overlaps detected "
+                f"(overlap_tol={resolved_overlap_tol:.4g}, "
+                f"overlap_volume_tol={resolved_overlap_volume_tol:.4g}):\n"
+                f"{preview}{more}",
+            )
+
+        if allowed_overlap_count > 0:
+            self.warn(
+                "Overlaps detected but allowed by justification: "
+                f"{allowed_overlap_count} overlaps across {len(allowed_pairs)} part pair(s)."
+            )
+        return self._record(resolved_name, True)
+
     def check_no_overlaps(
         self,
         *,
@@ -1313,12 +1420,6 @@ class TestContext:
                 else:
                     pair_relations[key] = "adjacent"
 
-        def format_element(index: int, name: Optional[str], geometry: Optional[str]) -> str:
-            geometry_name = geometry or "?"
-            if isinstance(name, str) and name:
-                return f"#{index} {name!r}:{geometry_name}"
-            return f"#{index} <unnamed>:{geometry_name}"
-
         overlaps = find_geometry_overlaps(
             self.model,
             asset_root=self._asset_root(),
@@ -1339,29 +1440,16 @@ class TestContext:
 
         remaining: List[str] = []
         for o in relevant_overlaps:
-            key = (o.link_a, o.link_b) if o.link_a <= o.link_b else (o.link_b, o.link_a)
-            allowed = False
-            # Element-scoped allowances, if any.
-            for k, ea, eb, _r in self._allow_elems:
-                if k != key:
-                    continue
-                if ea is None and eb is None:
-                    allowed = True
-                    break
-                # Commutative match on element names when present.
-                names = (o.elem_a_name, o.elem_b_name)
-                if (ea in names) and (eb in names):
-                    allowed = True
-                    break
-            if allowed:
+            key = _pair_key(o.link_a, o.link_b)
+            if self._overlap_is_allowed(o):
                 continue
             relation = pair_relations.get(key, "unrelated")
             remaining.append(
                 f"relation={relation} pair=({o.link_a!r},{o.link_b!r}) pose_index={o.pose_index} "
                 f"depth=({o.overlap_depth[0]:.4g},{o.overlap_depth[1]:.4g},{o.overlap_depth[2]:.4g}) "
                 f"min_depth={min(o.overlap_depth):.4g} vol={o.overlap_volume:.4g} "
-                f"elem_a={format_element(o.elem_a, o.elem_a_name, o.elem_a_geometry)} "
-                f"elem_b={format_element(o.elem_b, o.elem_b_name, o.elem_b_geometry)} "
+                f"elem_a={_format_overlap_element(o.elem_a, o.elem_a_name, o.elem_a_geometry)} "
+                f"elem_b={_format_overlap_element(o.elem_b, o.elem_b_name, o.elem_b_geometry)} "
                 f"pose={o.pose}"
             )
 

@@ -23,10 +23,11 @@ Do not emit URDF XML yourself. The harness compiles `object_model`, derives exac
    - `ctx.check_model_valid()`
    - `ctx.check_mesh_files_exist()`
    - `ctx.check_part_geometry_connected()`
+   - `ctx.check_no_part_overlaps()`
    Keep that block, then extend `run_tests()` with prompt-specific exact `expect_*` checks.
    If the object has a mounted subassembly, make the mount explicit with `expect_contact(...)`, `expect_gap(...)`, `expect_overlap(...)`, and `expect_within(...)`.
    If you add a warning-tier heuristic and it fires, investigate it with `probe_model` before editing geometry or relaxing thresholds.
-6. In `run_tests()`, resolve the exact `Part`, `Articulation`, and named `Visual` objects you need from `object_model` once at the top, then pass those objects into `ctx.*`. Use names only at the lookup boundary, not as the main test-call style. For named visual features, prefer `part.get_visual("feature_name")`.
+6. In `run_tests()`, resolve the exact `Part`, `Articulation`, and named `Visual` objects you need from `object_model` once at the top, then pass those objects into `ctx.*`. Use names only at the lookup boundary, not as the main test-call style. For named visual features, prefer `part.get_visual("feature_name")`. For exact `expect_*` helpers, keep the first body/link arguments as the owning `Part` objects. If you want to target a local feature, still pass the owning part as the body argument and pass the `Visual` via `elem_a=`, `elem_b=`, `positive_elem=`, `negative_elem=`, `inner_elem=`, or `outer_elem=` instead of passing the `Visual` as a standalone link argument.
 
 Joint authoring rules:
 
@@ -121,6 +122,7 @@ def run_tests() -> TestReport:
     ctx.check_model_valid()
     ctx.check_mesh_files_exist()
     ctx.check_part_geometry_connected()
+    ctx.check_no_part_overlaps()
     ctx.expect_overlap(lid, base, axes="xy", min_overlap=0.05)
     ctx.expect_origin_distance(lid, base, axes="xy", max_dist=0.02)
     ctx.expect_gap(lid, base, axis="z", max_gap=0.001, max_penetration=0.0)
@@ -178,10 +180,12 @@ Important:
 - Author the visible shape you actually want to see.
 - Do not hand-author collisions in `sdk`; compile-time exact-collision derivation owns that now.
 - Treat `check_part_geometry_connected()` as a blocking sensor for within-part floating geometry.
+- Treat `check_no_part_overlaps()` as a blocking rest-pose backstop for broad top-level part interpenetration.
 - Broad warning heuristics can surface suspicious composition, but they do not prove realism, attachment quality, or correct motion.
 - Use prompt-specific `expect_*` assertions as the real regression tests for visible structure, proportions, and mechanism behavior.
 - Make attachment checks primary: use near-zero `expect_gap(...)`, exact footprint overlap, `expect_contact(...)` where appropriate, and pose-specific mounting checks to prove that parts look attached.
-- When the whole part is too broad for a small mount or hinge seat, resolve named local features from the part with `part.get_visual(...)` and pass those `Visual` objects into the exact `expect_*` helpers.
+- In exact `expect_*` helpers, the positional body arguments name the parts being compared. Do not replace those part arguments with a `Visual`.
+- When the whole part is too broad for a small mount or hinge seat, resolve named local features from the part with `part.get_visual(...)` and pass those `Visual` objects only through the matching narrowing kwargs such as `elem_a=`, `elem_b=`, `positive_elem=`, `negative_elem=`, `inner_elem=`, or `outer_elem=`.
 - In new code, prefer the articulation-spelled helpers and the exact `expect_*` family: `check_part_geometry_connected(...)`, `expect_gap(...)`, `expect_overlap(...)`, `expect_contact(...)`, and `expect_within(...)`.
 - Avoid legacy or deprecated helpers in new generated code: `check_joint_origin_near_geometry(...)`, `warn_if_joint_origin_near_geometry(...)`, `warn_if_part_geometry_connected(...)`, `expect_aabb_*`, and `expect_joint_motion_axis(...)`.
 - Deprecated as blanket scaffold defaults in new generated code: `warn_if_articulation_origin_near_geometry(...)` and `warn_if_overlaps(...)`. Add them only with specific justification.
@@ -189,4 +193,5 @@ Important:
 - If support or floating is ambiguous, use `probe_model` first, then encode the exact invariant in `run_tests()`.
 - Slight intended interpenetration can be acceptable when it makes a mounted or nested assembly look seated instead of floating.
 - Use `ctx.allow_overlap(...)` narrowly for legitimate nested mechanisms such as bearing sleeves, hinge barrels, or enclosed hubs.
+- If a seated or nested fit is intentional, keep the rest-pose backstop and justify the exception with `ctx.allow_overlap(...)`.
 - Add selective separation checks only for pairs that truly must remain clear across motion.

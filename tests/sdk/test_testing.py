@@ -70,6 +70,28 @@ def _build_overlapping_parts_model() -> ArticulatedObject:
     return model
 
 
+def _build_multi_element_overlapping_parts_model() -> ArticulatedObject:
+    model = ArticulatedObject(name="multi_element_overlapping_parts")
+
+    base = model.part("base")
+    base.visual(Box((0.14, 0.14, 0.14)), origin=Origin(xyz=(-0.04, 0.0, 0.07)), name="base_left")
+    base.visual(Box((0.14, 0.14, 0.14)), origin=Origin(xyz=(0.04, 0.0, 0.07)), name="base_right")
+
+    child = model.part("child")
+    child.visual(
+        Box((0.14, 0.14, 0.14)),
+        origin=Origin(xyz=(-0.04, 0.0, 0.07)),
+        name="child_left",
+    )
+    child.visual(
+        Box((0.14, 0.14, 0.14)),
+        origin=Origin(xyz=(0.04, 0.0, 0.07)),
+        name="child_right",
+    )
+
+    return model
+
+
 def _build_articulation_overlap_model(*, joint_type: ArticulationType) -> ArticulatedObject:
     model = ArticulatedObject(name=f"articulation_overlap_{joint_type.value.lower()}")
 
@@ -130,6 +152,27 @@ def _build_non_articulation_overlap_only_model() -> ArticulatedObject:
         origin=Origin(xyz=(0.22, 0.0, 0.0)),
         axis=(0.0, 1.0, 0.0),
         motion_limits=MotionLimits(effort=1.0, velocity=1.0, lower=-0.2, upper=0.2),
+    )
+    return model
+
+
+def _build_pose_specific_part_overlap_model() -> ArticulatedObject:
+    model = ArticulatedObject(name="pose_specific_part_overlap")
+
+    base = model.part("base")
+    base.visual(Box((0.2, 0.2, 0.2)), origin=Origin(xyz=(0.0, 0.0, 0.1)), name="base_box")
+
+    slider = model.part("slider")
+    slider.visual(Box((0.2, 0.2, 0.2)), origin=Origin(xyz=(0.25, 0.0, 0.1)), name="slider_box")
+
+    model.articulation(
+        "base_to_slider",
+        ArticulationType.PRISMATIC,
+        parent=base,
+        child=slider,
+        origin=Origin(),
+        axis=(1.0, 0.0, 0.0),
+        motion_limits=MotionLimits(effort=1.0, velocity=1.0, lower=-0.2, upper=0.0),
     )
     return model
 
@@ -291,6 +334,72 @@ def test_warn_if_overlaps_records_warning_only() -> None:
     assert "depth=(0.2,0.2,0.2)" in report.warnings[1]
     assert "elem_a=#0 'base_box':Box" in report.warnings[1]
     assert "elem_b=#0 'child_box':Box" in report.warnings[1]
+
+
+def test_check_no_part_overlaps_fails_for_rest_pose_part_overlap() -> None:
+    ctx = SDKTestContext(_build_overlapping_parts_model())
+
+    assert not ctx.check_no_part_overlaps(overlap_tol=0.001, overlap_volume_tol=0.0)
+
+    report = ctx.report()
+    assert not report.passed
+    assert report.checks == ("check_no_part_overlaps(overlap_tol=0.001,overlap_volume_tol=0)",)
+    assert len(report.failures) == 1
+    assert (
+        report.failures[0].name == "check_no_part_overlaps(overlap_tol=0.001,overlap_volume_tol=0)"
+    )
+    assert "Part overlaps detected" in report.failures[0].details
+    assert "pair=('base','child')" in report.failures[0].details
+    assert "depth=(0.2,0.2,0.2)" in report.failures[0].details
+    assert "elem_a=#0 'base_box':Box" in report.failures[0].details
+    assert "elem_b=#0 'child_box':Box" in report.failures[0].details
+    assert "pose={}" in report.failures[0].details
+
+
+def test_check_no_part_overlaps_uses_current_pose_only() -> None:
+    model = _build_pose_specific_part_overlap_model()
+    articulation = model.get_articulation("base_to_slider")
+    ctx = SDKTestContext(model)
+
+    assert ctx.check_no_part_overlaps(overlap_tol=0.001, overlap_volume_tol=0.0)
+    with ctx.pose({articulation: -0.1}):
+        assert not ctx.check_no_part_overlaps(overlap_tol=0.001, overlap_volume_tol=0.0)
+
+    report = ctx.report()
+    assert report.checks == (
+        "check_no_part_overlaps(overlap_tol=0.001,overlap_volume_tol=0)",
+        "check_no_part_overlaps(overlap_tol=0.001,overlap_volume_tol=0)",
+    )
+    assert len(report.failures) == 1
+    assert "pair=('base','slider')" in report.failures[0].details
+    assert "pose={'base_to_slider': -0.1}" in report.failures[0].details
+
+
+def test_check_no_part_overlaps_aggregates_to_one_failure_per_part_pair() -> None:
+    ctx = SDKTestContext(_build_multi_element_overlapping_parts_model())
+
+    assert not ctx.check_no_part_overlaps(overlap_tol=0.001, overlap_volume_tol=0.0)
+
+    report = ctx.report()
+    assert len(report.failures) == 1
+    assert report.failures[0].details.count("pair=('base','child')") == 1
+
+
+def test_allow_overlap_suppresses_check_no_part_overlaps() -> None:
+    ctx = SDKTestContext(_build_overlapping_parts_model())
+    ctx.allow_overlap("base", "child", reason="bowl nests into the seated opening")
+
+    assert ctx.check_no_part_overlaps(overlap_tol=0.001, overlap_volume_tol=0.0)
+
+    report = ctx.report()
+    assert report.passed
+    assert report.failures == ()
+    assert report.checks == ("check_no_part_overlaps(overlap_tol=0.001,overlap_volume_tol=0)",)
+    assert report.allowances == (
+        "allow_overlap('base', 'child'): bowl nests into the seated opening",
+    )
+    assert len(report.warnings) == 1
+    assert "Overlaps detected but allowed by justification" in report.warnings[0]
 
 
 def test_deprecated_default_helper_warning_emits_once_per_helper() -> None:

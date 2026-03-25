@@ -81,6 +81,9 @@ def run_tests() -> TestReport:
 
     # Default exact visual connectivity gate for floating/disconnected subassemblies inside one part.
     ctx.check_part_geometry_connected()
+    # Default broad part-level rest-pose backstop for top-level interpenetration.
+    # If a seated or nested fit is intentional, justify it with `ctx.allow_overlap(...)`.
+    ctx.check_no_part_overlaps()
 
     # Encode the actual visual/mechanical claims with prompt-specific exact checks.
     # If you add a warning-tier heuristic and it fires, investigate it with
@@ -95,6 +98,8 @@ def run_tests() -> TestReport:
     # - each new visible form or mechanism has a matching assertion
     # Resolve exact Part / Articulation / named Visual objects once here, then
     # pass those objects into ctx.expect_*, ctx.allow_*, and ctx.pose({joint: value}).
+    # For ctx.expect_* helpers, keep the first body/link arguments as Part objects.
+    # Named Visuals belong only in elem_a/elem_b/positive_elem/negative_elem/inner_elem/outer_elem.
     # Prefer this object-first pattern over raw string test calls or global REFS bags.
     # Example:
     # lid = object_model.get_part("lid")
@@ -107,7 +112,7 @@ def run_tests() -> TestReport:
     # ctx.expect_contact(lid, body, elem_a=hinge_leaf, elem_b=body_leaf)
     # If the object has a mounted subassembly, prefer exact `expect_contact(...)`,
     # `expect_gap(...)`, `expect_overlap(...)`, and `expect_within(...)` checks on
-    # named local features over broad warning-tier heuristics.
+    # named local features over the broad rest-pose overlap backstop.
     # Add prompt-specific exact visual checks below; optional warning heuristics are not enough.
     return ctx.report()
 
@@ -138,6 +143,9 @@ def run_tests() -> TestReport:
 
     # Default exact visual connectivity gate for floating/disconnected subassemblies inside one part.
     ctx.check_part_geometry_connected()
+    # Default broad part-level rest-pose backstop for top-level interpenetration.
+    # If a seated or nested fit is intentional, justify it with `ctx.allow_overlap(...)`.
+    ctx.check_no_part_overlaps()
 
     # Encode the actual visual/mechanical claims with prompt-specific exact checks.
     # If you add a warning-tier heuristic and it fires, investigate it with
@@ -152,6 +160,8 @@ def run_tests() -> TestReport:
     # - each new visible form or mechanism has a matching assertion
     # Resolve exact Part / Articulation / named Visual objects once here, then
     # pass those objects into ctx.expect_*, ctx.allow_*, and ctx.pose({joint: value}).
+    # For ctx.expect_* helpers, keep the first body/link arguments as Part objects.
+    # Named Visuals belong only in elem_a/elem_b/positive_elem/negative_elem/inner_elem/outer_elem.
     # Prefer this object-first pattern over raw string test calls or global REFS bags.
     # Example:
     # lid = object_model.get_part("lid")
@@ -164,7 +174,7 @@ def run_tests() -> TestReport:
     # ctx.expect_contact(lid, body, elem_a=hinge_leaf, elem_b=body_leaf)
     # If the object has a mounted subassembly, prefer exact `expect_contact(...)`,
     # `expect_gap(...)`, `expect_overlap(...)`, and `expect_within(...)` checks on
-    # named local features over broad warning-tier heuristics.
+    # named local features over the broad rest-pose overlap backstop.
     # Add prompt-specific exact visual checks below; optional warning heuristics are not enough.
     return ctx.report()
 

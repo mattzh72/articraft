@@ -47,6 +47,7 @@ Prefer object-first tests:
 - Resolve each needed `Articulation` with `object_model.get_articulation(...)`.
 - Resolve named local features from those parts with `part.get_visual(...)`, then pass the resulting `Visual` objects into `elem_a=`, `elem_b=`, `positive_elem=`, `negative_elem=`, `inner_elem=`, or `outer_elem=`.
 - After that, pass only objects into `ctx.expect_*`, `ctx.allow_*`, and `ctx.pose({joint: value})`.
+- For `ctx.expect_*`, keep the first body/link arguments as `Part` objects. Do not pass a `Visual` as `link_a`, `link_b`, `positive_link`, `negative_link`, `inner`, or `outer`.
 - Use string names only at the lookup boundary. Avoid global `REFS` bags or string-driven test calls as the main pattern.
 
 ## Default scaffold gates
@@ -57,6 +58,7 @@ The scaffolded `run_tests()` starts from these hard gates:
 ctx.check_model_valid()
 ctx.check_mesh_files_exist()
 ctx.check_part_geometry_connected()
+ctx.check_no_part_overlaps()
 ```
 
 Mesh-backed models:
@@ -69,12 +71,14 @@ What they catch:
 - `check_model_valid`: structural SDK/model validation.
 - `check_mesh_files_exist`: missing mesh references.
 - `check_part_geometry_connected`: a blocking exact within-part connectivity gate that checks whether authored visuals form disconnected geometry islands.
+- `check_no_part_overlaps`: a blocking current-pose part-level overlap gate for broad top-level interpenetration. In the default scaffold, this means the rest pose.
 
 These scaffold checks are blocking gates, not semantic proof. Add prompt-specific `expect_*` assertions as the actual regression tests for silhouette, structure, proportions, attachment, and mechanism behavior.
 
 Recommended default:
 
 - Keep the scaffolded hard-gate block.
+- Use `allow_overlap(...)` only when a seated or nested part overlap is intentional and justified.
 - If the object has a mounted subassembly, write explicit `expect_contact(...)`, `expect_gap(...)`, `expect_overlap(...)`, and `expect_within(...)` checks against the relevant local features.
 - If support or floating is ambiguous, use `probe_model` helpers first, then encode the real invariant in `run_tests()`.
 - If a warning-tier heuristic fires, investigate it with `probe_model` before editing geometry or relaxing thresholds.
@@ -203,6 +207,27 @@ ctx.expect_overlap(lid, frame, axes="xy", min_overlap=0.05)
 ctx.expect_within(bracket, frame, axes="xy")
 ```
 
+The exact helpers use a two-level target pattern:
+
+- The first body/link arguments identify the owning parts being compared.
+- The optional `elem_*` / `positive_elem` / `negative_elem` / `inner_elem` / `outer_elem` kwargs narrow those part-level comparisons to specific named visuals.
+
+Do this:
+
+```python
+base = object_model.get_part("base")
+bowl = object_model.get_part("bowl")
+foot_shell = base.get_visual("foot_shell")
+
+ctx.expect_overlap(bowl, base, axes="xy", min_overlap=0.10, elem_b=foot_shell)
+```
+
+Not this:
+
+```python
+ctx.expect_overlap(bowl, foot_shell, axes="xy", min_overlap=0.10)
+```
+
 `expect_gap(...)` is directional: it measures the signed gap from the positive-side geometry minimum to the negative-side geometry maximum along the chosen axis. When whole-link geometry is too broad, resolve the named `Visual` objects from the part with `part.get_visual(...)` and pass those objects directly:
 
 ```python
@@ -222,12 +247,12 @@ ctx.expect_gap(
 
 Argument guide:
 
-- `positive_link`, `negative_link`: the two bodies being compared, ordered by the positive-axis convention; prefer passing `Part` objects
+- `positive_link`, `negative_link`: the two owning bodies being compared, ordered by the positive-axis convention; pass the `Part` objects here, not `Visual` objects
 - `axis`: the positive world axis to measure along; use `"x"`, `"y"`, or `"z"`
 - `min_gap`: lower bound on the signed gap; use this when you want to allow or require a specific amount of separation
 - `max_gap`: upper bound on the signed gap; use this for "must stay visually seated" style checks
 - `max_penetration`: shorthand for how much overlap is allowed when `min_gap` is omitted
-- `positive_elem`, `negative_elem`: optional named local features to test instead of the whole part; prefer passing the exact `Visual` objects
+- `positive_elem`, `negative_elem`: optional named local features on those owning parts; prefer passing the exact `Visual` objects here rather than replacing the owning part arguments
 - `name`: override the recorded check name when the default is too generic
 
 Practical defaults:

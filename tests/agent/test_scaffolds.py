@@ -19,6 +19,7 @@ def test_base_scaffold_matches_harness_fallback() -> None:
     assert "ctx.check_model_valid()" in scaffold_text
     assert "ctx.check_mesh_files_exist()" in scaffold_text
     assert "ctx.check_part_geometry_connected()" in scaffold_text
+    assert "ctx.check_no_part_overlaps()" in scaffold_text
     assert "ctx.warn_if_articulation_origin_near_geometry" not in scaffold_text
     assert "ctx.warn_if_articulation_overlaps(max_pose_samples=128)" not in scaffold_text
     assert (
@@ -26,6 +27,8 @@ def test_base_scaffold_matches_harness_fallback() -> None:
         not in scaffold_text
     )
     assert "Default exact visual connectivity gate" in scaffold_text
+    assert "Default broad part-level rest-pose backstop" in scaffold_text
+    assert "justify it with `ctx.allow_overlap(...)`" in scaffold_text
     assert "hero features are present and legible" in scaffold_text
     assert "mounted parts are connected/seated, not floating" in scaffold_text
     assert "important parts are in the right place" in scaffold_text
@@ -62,6 +65,7 @@ def test_hybrid_scaffold_matches_harness_fallback() -> None:
     assert "ctx.check_model_valid()" in scaffold_text
     assert "ctx.check_mesh_files_exist()" in scaffold_text
     assert "ctx.check_part_geometry_connected()" in scaffold_text
+    assert "ctx.check_no_part_overlaps()" in scaffold_text
     assert "ctx.warn_if_articulation_origin_near_geometry" not in scaffold_text
     assert "ctx.warn_if_articulation_overlaps(max_pose_samples=128)" not in scaffold_text
     assert (
@@ -69,6 +73,8 @@ def test_hybrid_scaffold_matches_harness_fallback() -> None:
         not in scaffold_text
     )
     assert "Default exact visual connectivity gate" in scaffold_text
+    assert "Default broad part-level rest-pose backstop" in scaffold_text
+    assert "justify it with `ctx.allow_overlap(...)`" in scaffold_text
     assert "hero features are present and legible" in scaffold_text
     assert "mounted parts are connected/seated, not floating" in scaffold_text
     assert "important parts are in the right place" in scaffold_text
