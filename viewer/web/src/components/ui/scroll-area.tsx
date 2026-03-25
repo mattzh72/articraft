@@ -16,7 +16,7 @@ const ScrollArea = React.forwardRef<
     >
       <ScrollAreaPrimitive.Viewport
         data-slot="scroll-area-viewport"
-        className="size-full min-w-0 overflow-x-hidden rounded-[inherit] outline-none"
+        className="size-full min-w-0 max-h-[inherit] overflow-x-hidden rounded-[inherit] outline-none"
       >
         {children}
       </ScrollAreaPrimitive.Viewport>
