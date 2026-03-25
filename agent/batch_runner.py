@@ -370,7 +370,6 @@ class BatchRunConfig:
     keyboard_pause_enabled: bool
     qc_blurb_text: str | None = None
     post_success_design_audit: bool = True
-    keep_awake: bool = True
 
 
 def _read_csv_rows(spec_path: Path) -> list[dict[str, str]]:
@@ -415,8 +414,6 @@ def _load_batch_rows(
         provider = raw.get("provider", "").lower()
         model_id = raw.get("model_id", "")
         thinking_level = raw.get("thinking_level", "").lower()
-        if thinking_level == "medium":
-            thinking_level = "med"
         max_turns_text = raw.get("max_turns", "")
         sdk_package = raw.get("sdk_package", "")
         category_title = raw.get("category_title") or None
