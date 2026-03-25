@@ -147,6 +147,20 @@ def test_search_example_documents_returns_base_sdk_midi_keyboard_example() -> No
     assert matches[0].title == "MIDI Keyboard with Articulated Keys, Knobs, and Pads"
 
 
+def test_search_example_documents_returns_base_sdk_stand_mixer_example() -> None:
+    matches = search_example_documents(
+        "artisan stand mixer tilt head balloon whisk speed slider",
+        sdk_package="sdk",
+        limit=3,
+    )
+
+    assert matches
+    assert (
+        matches[0].title
+        == "Artisan Stand Mixer with Tilt Head, Balloon Whisk, and Articulated Controls"
+    )
+
+
 def test_find_examples_tool_supports_base_sdk_examples() -> None:
     async def _run() -> list[dict[str, object]]:
         tool = FindExamplesTool(sdk_package="sdk")

@@ -11,6 +11,7 @@ _PYTHON_FENCE_RE = re.compile(r"```python\n(.*?)```", re.DOTALL)
 _EXAMPLE_PATHS = (
     "sdk/_examples/base/jet_engine_with_smooth_nacelle_dense_front_fan.md",
     "sdk/_examples/base/atv_quad_bike_with_front_steering_and_suspension.md",
+    "sdk/_examples/base/artisan_stand_mixer_with_tilt_head_balloon_whisk_and_articulated_controls.md",
 )
 
 
