@@ -9,13 +9,12 @@ export interface RenderOptions {
   showSegmentColors: boolean;
   showSurfaceSamples: boolean;
   doubleSided: boolean;
-  envLighting: boolean;
   autoAnimate: boolean;
   showJointOverlay: boolean;
 }
 
 const STORAGE_KEY = 'articraft-render-options';
-const STORAGE_SCHEMA_VERSION = 4;
+const STORAGE_SCHEMA_VERSION = 5;
 const RENDER_QUERY_PARAM = 'render';
 const RENDER_OPTION_KEYS: Array<keyof RenderOptions> = [
   'showEdges',
@@ -23,7 +22,6 @@ const RENDER_OPTION_KEYS: Array<keyof RenderOptions> = [
   'showCollisions',
   'showSegmentColors',
   'doubleSided',
-  'envLighting',
   'autoAnimate',
   'showJointOverlay',
   'showSurfaceSamples',
@@ -36,7 +34,6 @@ const DEFAULT_OPTIONS: RenderOptions = {
   showSegmentColors: false,
   showSurfaceSamples: false,
   doubleSided: true,
-  envLighting: false,
   autoAnimate: false,
   showJointOverlay: false,
 };

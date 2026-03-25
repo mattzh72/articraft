@@ -71,8 +71,8 @@ export function useThreeScene(
       alpha: false,
       ...resolveDepthBufferOptions(),
     });
-    renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 1.3;
+    renderer.toneMapping = THREE.LinearToneMapping;
+    renderer.toneMappingExposure = 1.0;
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, options.maxPixelRatio ?? 2));
     renderer.setSize(container.clientWidth, container.clientHeight);
     renderer.domElement.style.display = 'block';

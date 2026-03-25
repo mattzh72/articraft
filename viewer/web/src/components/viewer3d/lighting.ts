@@ -9,15 +9,15 @@ export function createLightingRig(): THREE.Group {
   const group = new THREE.Group();
   group.name = 'lighting-rig';
 
-  // Hemisphere light for soft ambient illumination
-  const hemiLight = new THREE.HemisphereLight(0xf4f5ff, 0x62676f, 0.75);
+  // Bright hemisphere light for strong ambient illumination (studio style)
+  const hemiLight = new THREE.HemisphereLight(0xffffff, 0xd4d4d4, 0.95);
   hemiLight.name = 'hemisphere-light';
   group.add(hemiLight);
 
-  // Key directional light with shadows
-  const keyLight = new THREE.DirectionalLight(0xffffff, 0.9);
+  // Key directional light with softer shadows
+  const keyLight = new THREE.DirectionalLight(0xfff5e6, 0.75);
   keyLight.name = 'key-light';
-  keyLight.position.set(5, 10, 7);
+  keyLight.position.set(6, 12, 8);
   keyLight.castShadow = true;
   keyLight.shadow.mapSize.width = 2048;
   keyLight.shadow.mapSize.height = 2048;
@@ -29,22 +29,22 @@ export function createLightingRig(): THREE.Group {
   keyLight.shadow.camera.bottom = -10;
   group.add(keyLight);
 
-  // Fill light (slightly blue tint, softer)
-  const fillLight = new THREE.DirectionalLight(0xaab8ff, 0.45);
+  // Strong fill light from opposite side (neutral, bright)
+  const fillLight = new THREE.DirectionalLight(0xf0f4ff, 0.65);
   fillLight.name = 'fill-light';
-  fillLight.position.set(-5, 3, -5);
+  fillLight.position.set(-6, 5, -6);
   group.add(fillLight);
 
   // Rim light (behind, for edge definition)
-  const rimLight = new THREE.DirectionalLight(0xffffff, 0.28);
+  const rimLight = new THREE.DirectionalLight(0xffffff, 0.35);
   rimLight.name = 'rim-light';
-  rimLight.position.set(0, -5, 10);
+  rimLight.position.set(0, -6, 10);
   group.add(rimLight);
 
-  // Low frontal fill to keep dark front-facing panels readable.
-  const frontFillLight = new THREE.DirectionalLight(0xfff7ef, 0.22);
+  // Strong frontal fill to keep front-facing surfaces bright
+  const frontFillLight = new THREE.DirectionalLight(0xfff9f0, 0.5);
   frontFillLight.name = 'front-fill-light';
-  frontFillLight.position.set(0, 4, 8);
+  frontFillLight.position.set(0, 6, 10);
   group.add(frontFillLight);
 
   return group;

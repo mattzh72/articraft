@@ -4,7 +4,6 @@ import { PartLegend, type PartLegendItem, type PartLegendSelection } from './Par
 import { useThreeScene } from './useThreeScene';
 import { useUrdfLoader } from './useUrdfLoader';
 import { createEdgeLines } from './materials';
-import { createEnvironmentMap } from './lighting';
 import { attachJointOverlay, disposeOverlayObjects } from './joint-overlay';
 import { createSurfaceSamplePoints, disposeSurfaceSamplePoints } from './surface-sampling';
 import type { RenderOptions } from '@/components/inspector/RenderOptionsPanel';
@@ -332,7 +331,6 @@ export function SceneCanvas({
 }: SceneCanvasProps): JSX.Element {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const edgeLinesRef = useRef<THREE.LineSegments[]>([]);
-  const envMapRef = useRef<THREE.Texture | null>(null);
   const jointOverlayRef = useRef<THREE.Object3D[]>([]);
   const partHighlightRef = useRef<THREE.LineSegments[]>([]);
   const surfaceSampleRef = useRef<THREE.Points[]>([]);
@@ -500,20 +498,6 @@ export function SceneCanvas({
       }
     });
   }, [scene, renderOptions.doubleSided, urdfSpec]);
-
-  // Environment lighting
-  useEffect(() => {
-    if (!scene || !renderer) return;
-
-    if (renderOptions.environmentLighting) {
-      if (!envMapRef.current) {
-        envMapRef.current = createEnvironmentMap(renderer);
-      }
-      scene.environment = envMapRef.current;
-    } else {
-      scene.environment = null;
-    }
-  }, [scene, renderer, renderOptions.environmentLighting]);
 
   // Show collisions
   useEffect(() => {
@@ -815,7 +799,6 @@ export function SceneCanvas({
     invalidate,
     jointPoseSignal,
     renderOptions.doubleSided,
-    renderOptions.environmentLighting,
     renderOptions.showCollisions,
     renderOptions.showEdges,
     renderOptions.showGrid,

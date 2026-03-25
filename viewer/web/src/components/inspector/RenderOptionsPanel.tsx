@@ -13,7 +13,6 @@ export type RenderOptions = {
   showSegmentColors: boolean;
   showSurfaceSamples: boolean;
   doubleSided: boolean;
-  environmentLighting: boolean;
   autoAnimate: boolean;
   showJointOverlay: boolean;
 };
@@ -25,7 +24,6 @@ export const defaultRenderOptions: RenderOptions = {
   showSegmentColors: false,
   showSurfaceSamples: false,
   doubleSided: true,
-  environmentLighting: false,
   autoAnimate: false,
   showJointOverlay: false,
 };
@@ -83,12 +81,6 @@ const optionRows: OptionRow[] = [
     key: "doubleSided",
     label: "Double-sided",
     description: "Render front & back faces",
-    section: "display",
-  },
-  {
-    key: "environmentLighting",
-    label: "Environment",
-    description: "HDR environment lighting",
     section: "display",
   },
   {

@@ -247,11 +247,6 @@ export default function ViewerShell(): JSX.Element {
 
   const handleRenderOptionChange = useCallback(
     <K extends keyof InspectorRenderOptions>(key: K, value: InspectorRenderOptions[K]) => {
-      if (key === "environmentLighting") {
-        setRenderOption("envLighting", value);
-        return;
-      }
-
       setRenderOption(key, value);
     },
     [setRenderOption],
@@ -362,7 +357,6 @@ export default function ViewerShell(): JSX.Element {
     showSegmentColors: renderOptions.showSegmentColors,
     showSurfaceSamples: renderOptions.showSurfaceSamples,
     doubleSided: renderOptions.doubleSided,
-    environmentLighting: renderOptions.envLighting,
     autoAnimate: renderOptions.autoAnimate,
     showJointOverlay: renderOptions.showJointOverlay,
   };
