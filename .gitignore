@@ -224,3 +224,7 @@ viewer/web/dist/
 marimo/_static/
 marimo/_lsp/
 __marimo__/
+
+assets/
+
+.npm-cache/

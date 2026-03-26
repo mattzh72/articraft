@@ -5,9 +5,9 @@
   "description": "",
   "prompt_batch_ids": [],
   "target_sdk_version": "base",
-  "current_count": 1,
-  "last_item_index": 1,
+  "current_count": 3,
+  "last_item_index": 3,
   "created_at": "2026-03-21T00:07:57Z",
-  "updated_at": "2026-03-21T00:07:57Z",
-  "run_count": 3
+  "updated_at": "2026-03-26T14:35:32Z",
+  "run_count": 1
 }
