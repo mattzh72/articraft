@@ -55,9 +55,10 @@ silhouette and the parts that move — not every sub-detail.
 
 ### 3. Articulation spec (required — 1-2 sentences)
 
-Joint types (revolute, prismatic, continuous), which parts they connect, axis
-directions, and range of motion. **This is the most important section.** Be
-explicit about every joint. Tie every motion to a physical support.
+Joint types (revolute, prismatic, continuous), which parts they connect, and
+axis directions. **This is the most important section.** Be explicit about
+every joint. Tie every motion to a physical support. Do not specify numeric
+range-of-motion values — the agent will choose mechanically plausible limits.
 
 ### 4. Scale or proportion hint (optional — 1 sentence)
 
