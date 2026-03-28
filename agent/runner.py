@@ -235,6 +235,7 @@ class RunExecutionOutcome:
     turn_count: int | None = None
     tool_call_count: int | None = None
     compile_attempt_count: int | None = None
+    context_reset_count: int | None = None
     provider: str | None = None
     model_id: str | None = None
     sdk_package: str | None = None
@@ -378,6 +379,11 @@ def _default_model_id(
     raise ValueError(f"Unsupported provider: {provider}")
 
 
+def _validate_small_context_loop(*, provider: str, small_context_loop: bool) -> None:
+    if small_context_loop and (provider or "").strip().lower() != "openai":
+        raise ValueError("small_context_loop is currently supported only with provider=openai.")
+
+
 def _single_run_settings_summary(
     *,
     provider: str,
@@ -390,6 +396,7 @@ def _single_run_settings_summary(
     openai_transport: str,
     openai_reasoning_summary: str | None,
     post_success_design_audit: bool,
+    small_context_loop: bool,
 ) -> dict[str, Any]:
     summary: dict[str, Any] = {
         "provider": provider,
@@ -400,6 +407,7 @@ def _single_run_settings_summary(
         "sdk_package": sdk_package,
         "sdk_docs_mode": sdk_docs_mode,
         "post_success_design_audit": post_success_design_audit,
+        "small_context_loop": small_context_loop,
     }
     if provider == "openai":
         summary["openai_transport"] = openai_transport
@@ -647,6 +655,7 @@ def create_workbench_draft_record(
     sdk_docs_mode: str = "full",
     openai_reasoning_summary: str | None = "auto",
     post_success_design_audit: bool = True,
+    small_context_loop: bool = False,
     label: str | None = None,
     tags: Optional[list[str]] = None,
     record_id: str | None = None,
@@ -654,6 +663,7 @@ def create_workbench_draft_record(
     normalized_prompt = prompt_text.strip()
     if not normalized_prompt:
         raise ValueError("Prompt is required.")
+    _validate_small_context_loop(provider=provider, small_context_loop=small_context_loop)
 
     resolved_repo_root = repo_root.resolve()
     storage_repo = StorageRepo(resolved_repo_root)
@@ -711,6 +721,7 @@ def create_workbench_draft_record(
             system_prompt_sha256=system_prompt_sha,
             sdk_docs_mode=sdk_docs_mode,
             post_success_design_audit=post_success_design_audit,
+            small_context_loop=small_context_loop,
         ),
         sdk=SdkSettings(
             sdk_package=sdk_package,
@@ -727,6 +738,7 @@ def create_workbench_draft_record(
             turn_count=0,
             tool_call_count=0,
             compile_attempt_count=0,
+            context_reset_count=0,
             final_status="draft",
         ),
     )
@@ -794,12 +806,14 @@ def _write_success_record(
     sdk_docs_mode: str,
     openai_reasoning_summary: str | None,
     post_success_design_audit: bool,
+    small_context_loop: bool,
     final_code: str,
     urdf_xml: str,
     compile_warnings: list[str],
     turn_count: int,
     tool_call_count: int,
     compile_attempt_count: int,
+    context_reset_count: int,
     label: str | None,
     tags: list[str],
     collection: str,
@@ -900,6 +914,7 @@ def _write_success_record(
             system_prompt_sha256=system_prompt_sha,
             sdk_docs_mode=sdk_docs_mode,
             post_success_design_audit=post_success_design_audit,
+            small_context_loop=small_context_loop,
         ),
         sdk=SdkSettings(
             sdk_package=sdk_package,
@@ -916,6 +931,7 @@ def _write_success_record(
             turn_count=turn_count,
             tool_call_count=tool_call_count,
             compile_attempt_count=compile_attempt_count,
+            context_reset_count=context_reset_count,
             final_status="success",
         ),
     )
@@ -1031,7 +1047,9 @@ def build_provider_payload_preview(
     sdk_package: str = "sdk",
     sdk_docs_mode: str = "full",
     openai_reasoning_summary: Optional[str] = "auto",
+    small_context_loop: bool = False,
 ) -> dict:
+    _validate_small_context_loop(provider=provider, small_context_loop=small_context_loop)
     repo_root = Path(__file__).resolve().parents[1]
 
     _, system_prompt = load_system_prompt_text(
@@ -1052,6 +1070,7 @@ def build_provider_payload_preview(
     conversation = _build_first_turn_messages(
         user_content,
         sdk_docs_context=docs,
+        small_context_loop=small_context_loop,
     )
     tools = build_tool_registry(provider, sdk_package=sdk_package).get_tool_schemas()
 
@@ -1108,6 +1127,7 @@ async def run_from_input(
     sdk_docs_mode: str = "full",
     openai_reasoning_summary: Optional[str] = "auto",
     post_success_design_audit: bool = True,
+    small_context_loop: bool = False,
     label: str | None = None,
     tags: Optional[list[str]] = None,
     collection: str = "workbench",
@@ -1136,6 +1156,7 @@ async def run_from_input(
         sdk_docs_mode=sdk_docs_mode,
         openai_reasoning_summary=openai_reasoning_summary,
         post_success_design_audit=post_success_design_audit,
+        small_context_loop=small_context_loop,
         label=label,
         tags=tags,
         collection=collection,
@@ -1173,6 +1194,7 @@ async def _execute_single_run(
     sdk_docs_mode: str = "full",
     openai_reasoning_summary: Optional[str] = "auto",
     post_success_design_audit: bool = True,
+    small_context_loop: bool = False,
     label: str | None = None,
     tags: Optional[list[str]] = None,
     collection: str = "workbench",
@@ -1219,6 +1241,7 @@ async def _execute_single_run(
         turn_count: int | None = None,
         tool_call_count: int | None = None,
         compile_attempt_count: int | None = None,
+        context_reset_count: int | None = None,
     ) -> RunExecutionOutcome:
         finished_at = _utc_now()
         result_row = {
@@ -1233,6 +1256,8 @@ async def _execute_single_run(
             result_row["tool_call_count"] = tool_call_count
         if compile_attempt_count is not None:
             result_row["compile_attempt_count"] = compile_attempt_count
+        if context_reset_count is not None:
+            result_row["context_reset_count"] = context_reset_count
         if persist_run_metadata:
             await asyncio.to_thread(
                 run_store.write_run,
@@ -1260,6 +1285,7 @@ async def _execute_single_run(
                         openai_transport=openai_transport,
                         openai_reasoning_summary=openai_reasoning_summary,
                         post_success_design_audit=post_success_design_audit,
+                        small_context_loop=small_context_loop,
                     ),
                 ),
             )
@@ -1275,6 +1301,7 @@ async def _execute_single_run(
             turn_count=turn_count,
             tool_call_count=tool_call_count,
             compile_attempt_count=compile_attempt_count,
+            context_reset_count=context_reset_count,
             provider=provider,
             model_id=actual_model_id,
             sdk_package=sdk_package,
@@ -1307,6 +1334,7 @@ async def _execute_single_run(
                     openai_transport=openai_transport,
                     openai_reasoning_summary=openai_reasoning_summary,
                     post_success_design_audit=post_success_design_audit,
+                    small_context_loop=small_context_loop,
                 ),
             ),
         )
@@ -1338,6 +1366,7 @@ async def _execute_single_run(
             sdk_docs_mode=sdk_docs_mode,
             openai_reasoning_summary=openai_reasoning_summary,
             post_success_design_audit=post_success_design_audit,
+            small_context_loop=small_context_loop,
             runtime_limits=runtime_limits,
         ) as agent:
             logger.info("Using system prompt: %s", agent.loaded_system_prompt_path)
@@ -1361,6 +1390,7 @@ async def _execute_single_run(
             turn_count=result.turn_count,
             tool_call_count=result.tool_call_count,
             compile_attempt_count=result.compile_attempt_count,
+            context_reset_count=result.context_reset_count,
         )
 
     if result.usage:
@@ -1398,6 +1428,7 @@ async def _execute_single_run(
                 turn_count=result.turn_count,
                 tool_call_count=result.tool_call_count,
                 compile_attempt_count=result.compile_attempt_count,
+                context_reset_count=result.context_reset_count,
             )
 
     final_code = result.final_code
@@ -1450,12 +1481,14 @@ async def _execute_single_run(
             sdk_docs_mode=sdk_docs_mode,
             openai_reasoning_summary=openai_reasoning_summary,
             post_success_design_audit=post_success_design_audit,
+            small_context_loop=small_context_loop,
             final_code=final_code,
             urdf_xml=urdf_xml,
             compile_warnings=compile_warnings,
             turn_count=result.turn_count,
             tool_call_count=result.tool_call_count,
             compile_attempt_count=result.compile_attempt_count,
+            context_reset_count=result.context_reset_count,
             label=label,
             tags=list(tags or []),
             collection=collection,
@@ -1501,6 +1534,7 @@ async def _execute_single_run(
             turn_count=result.turn_count,
             tool_call_count=result.tool_call_count,
             compile_attempt_count=result.compile_attempt_count,
+            context_reset_count=result.context_reset_count,
         )
 
     finished_at = _utc_now()
@@ -1511,6 +1545,7 @@ async def _execute_single_run(
         "turn_count": result.turn_count,
         "tool_call_count": result.tool_call_count,
         "compile_attempt_count": result.compile_attempt_count,
+        "context_reset_count": result.context_reset_count,
     }
     if persist_run_metadata:
         await asyncio.to_thread(
@@ -1539,6 +1574,7 @@ async def _execute_single_run(
                     openai_transport=openai_transport,
                     openai_reasoning_summary=openai_reasoning_summary,
                     post_success_design_audit=post_success_design_audit,
+                    small_context_loop=small_context_loop,
                 ),
             ),
         )
@@ -1557,6 +1593,7 @@ async def _execute_single_run(
         turn_count=result.turn_count,
         tool_call_count=result.tool_call_count,
         compile_attempt_count=result.compile_attempt_count,
+        context_reset_count=result.context_reset_count,
         provider=provider,
         model_id=actual_model_id,
         sdk_package=sdk_package,
@@ -1582,6 +1619,7 @@ async def _run_from_input_impl(
     sdk_docs_mode: str = "full",
     openai_reasoning_summary: Optional[str] = "auto",
     post_success_design_audit: bool = True,
+    small_context_loop: bool = False,
     label: str | None = None,
     tags: Optional[list[str]] = None,
     collection: str = "workbench",
@@ -1595,6 +1633,7 @@ async def _run_from_input_impl(
     resolved_repo_root = repo_root.resolve()
     storage_repo = StorageRepo(resolved_repo_root)
     await asyncio.to_thread(storage_repo.ensure_layout)
+    _validate_small_context_loop(provider=provider, small_context_loop=small_context_loop)
     record_store = RecordStore(storage_repo)
     collections = CollectionStore(storage_repo)
     datasets = DatasetStore(storage_repo)
@@ -1618,6 +1657,7 @@ async def _run_from_input_impl(
                 record_id=record_id or existing_record_id,
                 status="failed",
                 message=message,
+                context_reset_count=0,
                 provider=provider,
                 model_id=model_id,
                 sdk_package=sdk_package,
@@ -1648,6 +1688,7 @@ async def _run_from_input_impl(
         sdk_docs_mode=sdk_docs_mode,
         openai_reasoning_summary=openai_reasoning_summary,
         post_success_design_audit=post_success_design_audit,
+        small_context_loop=small_context_loop,
         label=label,
         tags=tags,
         collection=collection,
@@ -1669,6 +1710,7 @@ async def rerun_record_in_place(
     thinking_level: str | None = None,
     sdk_package: str | None = None,
     post_success_design_audit: bool | None = None,
+    small_context_loop: bool | None = None,
     display_enabled: Optional[bool] = None,
 ) -> int:
     resolved_repo_root = repo_root.resolve()
@@ -1738,6 +1780,7 @@ async def rerun_record_in_place(
         else _first_string(sdk.get("sdk_package"), existing_record.get("sdk_package"))
     )
     stored_post_success_design_audit = _optional_bool(prompting.get("post_success_design_audit"))
+    stored_small_context_loop = _optional_bool(prompting.get("small_context_loop"))
     post_success_design_audit = (
         bool(post_success_design_audit)
         if post_success_design_audit is not None
@@ -1750,6 +1793,21 @@ async def rerun_record_in_place(
     model_id = _optional_string(model_id) or stored_model_id
     thinking_level = _optional_string(thinking_level) or stored_thinking_level
     provider = _infer_provider_from_model_id(model_id) or provider
+    resolved_small_context_loop = (
+        bool(small_context_loop)
+        if small_context_loop is not None
+        else (stored_small_context_loop if stored_small_context_loop is not None else False)
+    )
+    if resolved_small_context_loop and provider != "openai":
+        if small_context_loop is None:
+            logger.error(
+                "Record %s stored small_context_loop=true, but provider resolved to %s. Re-run with --no-small-context-loop to disable it for this rerun.",
+                record_id,
+                provider,
+            )
+        else:
+            logger.error("small_context_loop is currently supported only with provider=openai.")
+        return 1
 
     try:
         image_path = _resolve_input_image_for_record(
@@ -1812,6 +1870,7 @@ async def rerun_record_in_place(
         sdk_docs_mode=sdk_docs_mode,
         openai_reasoning_summary=openai_reasoning_summary,
         post_success_design_audit=post_success_design_audit,
+        small_context_loop=resolved_small_context_loop,
         label=(
             _optional_string(workbench_entry.get("label"))
             if isinstance(workbench_entry, dict)
@@ -1967,6 +2026,12 @@ def main(argv: list[str] | None = None) -> int:
         default=True,
         help="Enable or disable post-success design-audit injection.",
     )
+    parser.add_argument(
+        "--small-context-loop",
+        action=argparse.BooleanOptionalAction,
+        default=False,
+        help="Enable or disable the experimental OpenAI small-context loop.",
+    )
     args = parser.parse_args(argv)
     if args.collection == "dataset":
         if not args.dataset_id:
@@ -1986,6 +2051,12 @@ def main(argv: list[str] | None = None) -> int:
 
     if args.provider != "openai" and args.openai_transport != "http":
         print("--openai-transport is only supported for --provider openai.", file=sys.stderr)
+        return 1
+    if args.small_context_loop and args.provider != "openai":
+        print(
+            "small_context_loop is currently supported only with provider=openai.",
+            file=sys.stderr,
+        )
         return 1
 
     repo_root = args.repo_root.resolve()
@@ -2023,6 +2094,7 @@ def main(argv: list[str] | None = None) -> int:
             sdk_package=sdk_package,
             sdk_docs_mode=SDK_DOCS_MODE_FULL,
             openai_reasoning_summary=openai_reasoning_summary,
+            small_context_loop=args.small_context_loop,
         )
         text = json.dumps(payload, indent=args.dump_provider_payload_indent, ensure_ascii=False)
         if args.dump_provider_payload_out:
@@ -2068,6 +2140,7 @@ def main(argv: list[str] | None = None) -> int:
             sdk_docs_mode=SDK_DOCS_MODE_FULL,
             openai_reasoning_summary=openai_reasoning_summary,
             post_success_design_audit=args.design_audit,
+            small_context_loop=args.small_context_loop,
             label=args.label,
             tags=list(args.tag or []),
             collection=args.collection,

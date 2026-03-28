@@ -278,6 +278,7 @@ def _run_single_category_workflow(
     system_prompt_path: str,
     sdk_package: str,
     design_audit: bool,
+    small_context_loop: bool,
     dataset_id: str | None,
     record_id: str | None,
 ) -> tuple[str, str, dict, object]:
@@ -320,6 +321,7 @@ def _run_single_category_workflow(
             sdk_package=sdk_package,
             sdk_docs_mode="full",
             post_success_design_audit=design_audit,
+            small_context_loop=small_context_loop,
             collection="dataset",
             category_slug=normalized_category_slug,
             dataset_id=resolved_dataset_id,
@@ -697,6 +699,12 @@ def _build_parser() -> argparse.ArgumentParser:
         help="Enable or disable post-success design-audit injection.",
     )
     run_single.add_argument(
+        "--small-context-loop",
+        action=argparse.BooleanOptionalAction,
+        default=False,
+        help="Enable or disable the experimental OpenAI small-context loop.",
+    )
+    run_single.add_argument(
         "--dataset-id",
         default=None,
         help="Optional dataset ID override. Defaults to an auto-generated ds_<slug>_<token> ID.",
@@ -1015,6 +1023,7 @@ def main(argv: list[str] | None = None) -> int:
                 system_prompt_path=args.system_prompt_path,
                 sdk_package=sdk_package,
                 design_audit=args.design_audit,
+                small_context_loop=args.small_context_loop,
                 dataset_id=args.dataset_id,
                 record_id=args.record_id,
             )

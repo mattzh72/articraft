@@ -68,15 +68,29 @@ def provider_system_prompt_suffix(provider: str, *, sdk_package: str = "sdk") ->
     return ""
 
 
+def small_context_loop_mode_hint_text() -> str:
+    return (
+        "<small_context_loop>\n"
+        "- Small-context loop is enabled for this run.\n"
+        "- After successful apply_patch turns, prior turn transcript is discarded.\n"
+        "- The file on disk is the source of truth.\n"
+        "- Re-read the current file before editing; do not rely on prior tool outputs remaining in context.\n"
+        "</small_context_loop>"
+    )
+
+
 def build_first_turn_messages(
     user_content: Any,
     *,
     sdk_docs_context: str,
+    small_context_loop: bool = False,
 ) -> list[dict[str, Any]]:
     messages: list[dict[str, Any]] = []
     if sdk_docs_context:
         messages.append({"role": "user", "content": sdk_docs_context})
     messages.append({"role": "user", "content": user_content})
+    if small_context_loop:
+        messages.append({"role": "user", "content": small_context_loop_mode_hint_text()})
     return messages
 
 
@@ -154,6 +168,7 @@ __all__ = [
     "SUPPORTED_IMAGE_MIME_TYPES_BY_PROVIDER",
     "build_tool_registry",
     "provider_system_prompt_suffix",
+    "small_context_loop_mode_hint_text",
     "build_first_turn_messages",
     "build_initial_user_content",
     "resolve_image_path",

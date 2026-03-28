@@ -29,6 +29,7 @@ class AgentResult:
     turn_count: int = 0
     tool_call_count: int = 0
     compile_attempt_count: int = 0
+    context_reset_count: int = 0
     usage: dict[str, int] | None = None
 
 

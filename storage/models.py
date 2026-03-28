@@ -112,6 +112,7 @@ class PromptingSettings:
     system_prompt_sha256: str | None
     sdk_docs_mode: str
     post_success_design_audit: bool = True
+    small_context_loop: bool = False
 
     def to_dict(self) -> dict[str, Any]:
         return asdict(self)
@@ -143,6 +144,7 @@ class RunSummary:
     turn_count: int | None = None
     tool_call_count: int | None = None
     compile_attempt_count: int | None = None
+    context_reset_count: int | None = None
     final_status: str = "success"
 
     def to_dict(self) -> dict[str, Any]:

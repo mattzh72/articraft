@@ -439,6 +439,125 @@ def test_workbench_init_record_command(
     assert f"initialized record_id={record_dir.name}" in captured
 
 
+def test_workbench_init_record_command_persists_small_context_loop(
+    tmp_path: Path,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    repo_root = tmp_path
+
+    assert (
+        workbench_main(
+            [
+                "--repo-root",
+                str(repo_root),
+                "init-record",
+                "build a folding reading lamp",
+                "--provider",
+                "openai",
+                "--small-context-loop",
+            ]
+        )
+        == 0
+    )
+
+    record_dir = next((repo_root / "data" / "records").iterdir())
+    provenance = json.loads((record_dir / "provenance.json").read_text(encoding="utf-8"))
+
+    assert provenance["prompting"]["small_context_loop"] is True
+    assert provenance["run_summary"]["context_reset_count"] == 0
+    assert f"initialized record_id={record_dir.name}" in capsys.readouterr().out
+
+
+def test_workbench_rerun_record_requires_explicit_small_context_opt_out_for_gemini(
+    fake_agent: None,
+    tmp_path: Path,
+    caplog: pytest.LogCaptureFixture,
+) -> None:
+    repo_root = tmp_path
+    exit_code = asyncio.run(
+        runner.run_from_input(
+            "make a cabinet hinge",
+            prompt_text="make a cabinet hinge",
+            display_prompt="make a cabinet hinge",
+            repo_root=repo_root,
+            image_path=None,
+            provider="openai",
+            thinking_level="high",
+            max_turns=30,
+            system_prompt_path="designer_system_prompt.txt",
+            sdk_package="sdk",
+            sdk_docs_mode="full",
+            small_context_loop=True,
+        )
+    )
+    assert exit_code == 0
+
+    record_dir = next((repo_root / "data" / "records").iterdir())
+
+    with caplog.at_level("ERROR"):
+        exit_code = workbench_main(
+            [
+                "--repo-root",
+                str(repo_root),
+                "rerun-record",
+                str(record_dir),
+                "--model-id",
+                "gemini-3-flash-preview",
+            ]
+        )
+
+    assert exit_code == 1
+    assert "--no-small-context-loop" in caplog.text
+
+
+def test_workbench_rerun_record_can_disable_inherited_small_context_loop(
+    fake_agent: None,
+    tmp_path: Path,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    repo_root = tmp_path
+    exit_code = asyncio.run(
+        runner.run_from_input(
+            "make a cabinet hinge",
+            prompt_text="make a cabinet hinge",
+            display_prompt="make a cabinet hinge",
+            repo_root=repo_root,
+            image_path=None,
+            provider="openai",
+            thinking_level="high",
+            max_turns=30,
+            system_prompt_path="designer_system_prompt.txt",
+            sdk_package="sdk",
+            sdk_docs_mode="full",
+            small_context_loop=True,
+        )
+    )
+    assert exit_code == 0
+    capsys.readouterr()
+
+    record_dir = next((repo_root / "data" / "records").iterdir())
+
+    assert (
+        workbench_main(
+            [
+                "--repo-root",
+                str(repo_root),
+                "rerun-record",
+                str(record_dir),
+                "--model-id",
+                "gemini-3-flash-preview",
+                "--no-small-context-loop",
+            ]
+        )
+        == 0
+    )
+
+    provenance = json.loads((record_dir / "provenance.json").read_text(encoding="utf-8"))
+    assert provenance["generation"]["provider"] == "gemini"
+    assert provenance["generation"]["model_id"] == "gemini-3-flash-preview"
+    assert provenance["prompting"]["small_context_loop"] is False
+
+
 def test_workbench_rerun_record_command_accepts_design_audit_override(
     fake_agent: None,
     tmp_path: Path,

@@ -18,6 +18,7 @@ row_concurrency := ""
 subprocess_concurrency := ""
 local_work_concurrency := ""
 design_audit := ""
+small_context := ""
 resume := ""
 resume_policy := ""
 allow_resume_spec_mismatch := ""
@@ -64,6 +65,7 @@ wb prompt:
     sdk={{ quote(sdk) }}
     image={{ quote(image) }}
     design_audit={{ quote(design_audit) }}
+    small_context={{ quote(small_context) }}
     if [ -z "$model" ]; then
       model="gpt-5.4"
     fi
@@ -108,6 +110,11 @@ wb prompt:
     elif [ "$design_audit" = "true" ]; then
       cmd+=(--design-audit)
     fi
+    if [ "$small_context" = "false" ]; then
+      cmd+=(--no-small-context-loop)
+    elif [ "$small_context" = "true" ]; then
+      cmd+=(--small-context-loop)
+    fi
     if [ -n "$image" ]; then
       cmd+=(--image "$image")
     fi
@@ -121,6 +128,7 @@ wb-init prompt:
     sdk={{ quote(sdk) }}
     image={{ quote(image) }}
     design_audit={{ quote(design_audit) }}
+    small_context={{ quote(small_context) }}
     if [ -z "$model" ]; then
       model="gpt-5.4"
     fi
@@ -169,6 +177,11 @@ wb-init prompt:
     elif [ "$design_audit" = "true" ]; then
       cmd+=(--design-audit)
     fi
+    if [ "$small_context" = "false" ]; then
+      cmd+=(--no-small-context-loop)
+    elif [ "$small_context" = "true" ]; then
+      cmd+=(--small-context-loop)
+    fi
     exec "${cmd[@]}"
 
 wb-category prompt:
@@ -179,6 +192,7 @@ wb-category prompt:
     sdk={{ quote(sdk) }}
     image={{ quote(image) }}
     design_audit={{ quote(design_audit) }}
+    small_context={{ quote(small_context) }}
     category={{ quote(category) }}
     dataset_id={{ quote(dataset_id) }}
     if [ -z "$category" ]; then
@@ -236,6 +250,11 @@ wb-category prompt:
       cmd+=(--no-design-audit)
     elif [ "$design_audit" = "true" ]; then
       cmd+=(--design-audit)
+    fi
+    if [ "$small_context" = "false" ]; then
+      cmd+=(--no-small-context-loop)
+    elif [ "$small_context" = "true" ]; then
+      cmd+=(--small-context-loop)
     fi
     exec "${cmd[@]}"
 
@@ -441,6 +460,7 @@ rerun record:
     model_override={{ quote(model) }}
     thinking_override={{ quote(thinking) }}
     sdk={{ quote(sdk) }}
+    small_context={{ quote(small_context) }}
     case "$sdk" in
       "")
         sdk_package=""
@@ -470,6 +490,11 @@ rerun record:
     fi
     if [ -n "$sdk_package" ]; then
       cmd+=(--sdk-package "$sdk_package")
+    fi
+    if [ "$small_context" = "false" ]; then
+      cmd+=(--no-small-context-loop)
+    elif [ "$small_context" = "true" ]; then
+      cmd+=(--small-context-loop)
     fi
     exec "${cmd[@]}"
 

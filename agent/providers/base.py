@@ -3,7 +3,6 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Any, Protocol
 
-
 ToolSchema = dict[str, Any]
 ConversationMessage = dict[str, Any]
 ProviderResponse = dict[str, Any]
@@ -28,6 +27,8 @@ class ProviderClient(Protocol):
         messages: list[ConversationMessage],
         tools: list[ToolSchema],
     ) -> ProviderResponse: ...
+
+    def reset_context(self) -> None: ...
 
     async def close(self) -> None: ...
 

@@ -19,6 +19,8 @@ def test_runner_help_text(capsys: pytest.CaptureFixture[str]) -> None:
     assert "--design-audit" in help_text
     assert "--openai-transport {http,websocket}" in help_text
     assert "--sdk-package SDK_PACKAGE" in help_text
+    assert "--small-context-loop" in help_text
+    assert "--no-small-context-loop" in help_text
     assert "--collection {workbench,dataset}" in help_text
     assert "--dataset-id DATASET_ID" in help_text
     assert "--flash" not in help_text
@@ -87,3 +89,23 @@ def test_runner_accepts_openai_api_keys_env(
     )
 
     assert exit_code == 0
+
+
+def test_runner_rejects_small_context_loop_for_gemini(
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    exit_code = runner.main(
+        [
+            "--prompt",
+            "test prompt",
+            "--provider",
+            "gemini",
+            "--small-context-loop",
+        ]
+    )
+
+    assert exit_code == 1
+    assert (
+        "small_context_loop is currently supported only with provider=openai."
+        in capsys.readouterr().err
+    )

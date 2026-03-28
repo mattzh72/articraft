@@ -716,6 +716,48 @@ def test_run_single_reuses_existing_category_and_allocates_next_dataset_id(
     assert "dataset_id=ds_internet_router_0002" in captured
 
 
+def test_run_single_persists_small_context_loop(
+    fake_agent: None,
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    _patch_dataset_tokens(monkeypatch, "0001")
+    repo = StorageRepo(tmp_path)
+    repo.ensure_layout()
+
+    assert (
+        dataset_main(
+            [
+                "--repo-root",
+                str(tmp_path),
+                "run-single",
+                "Create a compact home router with a vented body and two hinged antennas.",
+                "--category-slug",
+                "internet_router",
+                "--provider",
+                "openai",
+                "--small-context-loop",
+                "--record-id",
+                "rec_router_small_context",
+            ]
+        )
+        == 0
+    )
+
+    provenance = json.loads(
+        (repo.layout.record_dir("rec_router_small_context") / "provenance.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    assert provenance["prompting"]["small_context_loop"] is True
+
+    run_id = json.loads(
+        repo.layout.record_metadata_path("rec_router_small_context").read_text(encoding="utf-8")
+    )["source"]["run_id"]
+    run_metadata = json.loads(repo.layout.run_metadata_path(run_id).read_text(encoding="utf-8"))
+    assert run_metadata["settings_summary"]["small_context_loop"] is True
+
+
 def test_supercategory_cli_commands_cover_list_mutation_and_delete(tmp_path: Path) -> None:
     repo = StorageRepo(tmp_path)
     repo.ensure_layout()

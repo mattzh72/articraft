@@ -24,6 +24,7 @@ def _build_openai_preview(
     system_prompt_path: str = DESIGNER_PROMPT_NAME,
     sdk_package: str = "sdk",
     sdk_docs_mode: str = "full",
+    small_context_loop: bool = False,
 ) -> dict:
     return build_provider_payload_preview(
         user_content,
@@ -33,6 +34,7 @@ def _build_openai_preview(
         system_prompt_path=system_prompt_path,
         sdk_package=sdk_package,
         sdk_docs_mode=sdk_docs_mode,
+        small_context_loop=small_context_loop,
     )
 
 
@@ -248,6 +250,24 @@ def test_openai_prompt_cache_retention_can_be_disabled_by_env(
     assert "prompt_cache_retention" not in payload
     assert payload["prompt_cache_key"].startswith("ac1:")
     assert len(payload["prompt_cache_key"]) <= 64
+
+
+def test_openai_payload_preview_includes_small_context_loop_hint() -> None:
+    payload = _build_openai_preview(small_context_loop=True)
+
+    hint_messages = [
+        item["content"][0]["text"]
+        for item in payload["input"]
+        if item.get("role") == "user"
+        and isinstance(item.get("content"), list)
+        and item["content"]
+        and isinstance(item["content"][0], dict)
+        and isinstance(item["content"][0].get("text"), str)
+        and "<small_context_loop>" in item["content"][0]["text"]
+    ]
+
+    assert len(hint_messages) == 1
+    assert "Small-context loop is enabled for this run." in hint_messages[0]
 
 
 def test_openai_prompt_cache_key_stays_within_length_limit_with_prefix(

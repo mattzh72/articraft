@@ -135,3 +135,16 @@ def test_request_with_websocket_logs_full_context_fallback(
         ({"input": [{"type": "message"}]}, True),
     ]
     assert "full-context fallback triggered" in caplog.text
+
+
+def test_reset_context_clears_incremental_openai_state() -> None:
+    provider = OpenAILLM(dry_run=True, transport="websocket")
+    provider._input_items = [{"type": "message"}]
+    provider._last_message_count = 7
+    provider._previous_response_id = "resp_123"
+
+    provider.reset_context()
+
+    assert provider._input_items == []
+    assert provider._last_message_count == 0
+    assert provider._previous_response_id is None

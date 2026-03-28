@@ -145,6 +145,9 @@ class GeminiLLM:
         """Close any underlying resources (no-op for now)."""
         return None
 
+    def reset_context(self) -> None:
+        return None
+
     def _next_client(self) -> Any:
         if not self._clients:
             raise RuntimeError("Gemini client is not initialized")

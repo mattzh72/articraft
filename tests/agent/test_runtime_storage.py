@@ -84,6 +84,13 @@ class MeshVisualAgent(FakeAgent):
         )
 
 
+class ContextResetAgent(FakeAgent):
+    async def run(self, user_content: object):  # type: ignore[override]
+        result = await super().run(user_content)
+        result.context_reset_count = 2
+        return result
+
+
 def test_workbench_run_and_rerun_persist_runtime_artifacts(
     fake_agent: None,
     tmp_path: Path,
@@ -412,6 +419,44 @@ def test_dataset_run_and_rerun_preserve_dataset_metadata(
     assert latest_run_metadata["collection"] == "dataset"
     assert latest_run_metadata["run_mode"] == "dataset_single"
     assert not (run_dirs[-1] / "staging" / record_dir.name).exists()
+
+
+def test_small_context_loop_persists_reset_counts_and_settings(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+) -> None:
+    monkeypatch.setattr(runner, "ArticraftAgent", ContextResetAgent)
+
+    exit_code = asyncio.run(
+        runner.run_from_input(
+            "make a vice",
+            prompt_text="make a vice",
+            display_prompt="make a vice",
+            repo_root=tmp_path,
+            image_path=None,
+            provider="openai",
+            thinking_level="high",
+            max_turns=30,
+            system_prompt_path=DESIGNER_PROMPT_NAME,
+            sdk_package="sdk",
+            sdk_docs_mode="full",
+            small_context_loop=True,
+        )
+    )
+    assert exit_code == 0
+
+    record_dir = next((tmp_path / "data" / "records").iterdir())
+    provenance = json.loads((record_dir / "provenance.json").read_text(encoding="utf-8"))
+    assert provenance["prompting"]["small_context_loop"] is True
+    assert provenance["run_summary"]["context_reset_count"] == 2
+
+    run_dir = next((tmp_path / "data" / "cache" / "runs").iterdir())
+    run_metadata = json.loads((run_dir / "run.json").read_text(encoding="utf-8"))
+    assert run_metadata["settings_summary"]["small_context_loop"] is True
+
+    results = (run_dir / "results.jsonl").read_text(encoding="utf-8").splitlines()
+    assert len(results) == 1
+    assert json.loads(results[0])["context_reset_count"] == 2
 
 
 def test_workbench_run_succeeds_when_persisted_input_image_disappears(

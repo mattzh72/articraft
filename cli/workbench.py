@@ -107,6 +107,12 @@ def _build_parser() -> argparse.ArgumentParser:
         help="Enable or disable post-success design-audit injection for this draft and reruns.",
     )
     init_record.add_argument(
+        "--small-context-loop",
+        action=argparse.BooleanOptionalAction,
+        default=False,
+        help="Enable or disable the experimental OpenAI small-context loop for this draft.",
+    )
+    init_record.add_argument(
         "--label",
         default=None,
         help="Optional workbench label and display title override.",
@@ -152,6 +158,12 @@ def _build_parser() -> argparse.ArgumentParser:
         action=argparse.BooleanOptionalAction,
         default=True,
         help="Enable or disable post-success design-audit injection for this rerun.",
+    )
+    rerun.add_argument(
+        "--small-context-loop",
+        action=argparse.BooleanOptionalAction,
+        default=None,
+        help="Enable or disable the experimental OpenAI small-context loop for this rerun.",
     )
     subparsers.add_parser("status", help="Show workbench storage status.")
     return parser
@@ -205,6 +217,7 @@ def main(argv: list[str] | None = None) -> int:
                 sdk_package=args.sdk_package,
                 openai_reasoning_summary=args.openai_reasoning_summary,
                 post_success_design_audit=args.design_audit,
+                small_context_loop=args.small_context_loop,
                 label=args.label,
                 tags=args.tags,
                 record_id=args.record_id,
@@ -253,6 +266,7 @@ def main(argv: list[str] | None = None) -> int:
                 thinking_level=args.thinking_level,
                 sdk_package=sdk_package,
                 post_success_design_audit=args.design_audit,
+                small_context_loop=args.small_context_loop,
             )
         )
         if exit_code != 0:

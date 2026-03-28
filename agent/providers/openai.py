@@ -249,6 +249,11 @@ class OpenAILLM:
             await result
         return None
 
+    def reset_context(self) -> None:
+        self._input_items = []
+        self._last_message_count = 0
+        self._previous_response_id = None
+
     def _build_request_payload(
         self,
         *,

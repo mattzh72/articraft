@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import asyncio
 import base64
+import copy
 import hashlib
 import json
 import logging
@@ -187,6 +188,7 @@ class ArticraftAgent:
         sdk_docs_mode: str = "full",
         openai_reasoning_summary: Optional[str] = "auto",
         post_success_design_audit: bool = True,
+        small_context_loop: bool = False,
         runtime_limits: BatchRuntimeLimits | None = None,
     ):
         self.file_path = file_path
@@ -194,6 +196,9 @@ class ArticraftAgent:
         self.sdk_package = _normalize_sdk_package(sdk_package)
         self.sdk_docs_mode = _normalize_sdk_docs_mode(sdk_docs_mode)
         self.runtime_limits = runtime_limits
+        self._small_context_loop_enabled = bool(small_context_loop)
+        self._context_reset_count = 0
+        self._base_conversation: list[dict[str, Any]] = []
         self._seen_compile_signal_sigs: set[str] = set()
         self._seen_tool_error_sigs: set[str] = set()
         self._seen_find_example_paths: set[str] = set()
@@ -211,6 +216,8 @@ class ArticraftAgent:
 
         provider_norm = (provider or "openai").strip().lower()
         self.provider = provider_norm
+        if self._small_context_loop_enabled and provider_norm != "openai":
+            raise ValueError("small_context_loop is currently supported only with provider=openai.")
         if provider_norm == "gemini":
             if model_id is not None:
                 self.llm = GeminiLLM(model_id=model_id, thinking_level=thinking_level)
@@ -470,6 +477,55 @@ class ArticraftAgent:
         if usage:
             msg["usage"] = usage
         return msg
+
+    def _copy_message(self, message: dict[str, Any]) -> dict[str, Any]:
+        return copy.deepcopy(message)
+
+    def _copy_conversation(self, conversation: list[dict[str, Any]]) -> list[dict[str, Any]]:
+        return [self._copy_message(message) for message in conversation]
+
+    def _small_context_resume_message(self) -> dict[str, str]:
+        return {
+            "role": "user",
+            "content": (
+                "<small_context_resume>\n"
+                "- The last patch compiled cleanly.\n"
+                "- Small-context loop discarded the prior turn transcript.\n"
+                "- Continue from the file on disk.\n"
+                "- Re-read the current file before editing or relying on exact prior context.\n"
+                "</small_context_resume>"
+            ),
+        }
+
+    def _small_context_compaction_triggered(
+        self,
+        *,
+        tool_calls: list[dict],
+        tool_results: list[ToolResult],
+    ) -> bool:
+        for tool_call, result in zip(tool_calls, tool_results, strict=False):
+            if self._tool_call_name(tool_call) != "apply_patch":
+                continue
+            if not result.is_success():
+                continue
+            compilation = result.compilation or {}
+            if compilation.get("status") == "success":
+                return True
+        return False
+
+    def _apply_small_context_compaction(
+        self,
+        *,
+        carryover_message: dict[str, Any] | None,
+    ) -> list[dict[str, Any]]:
+        next_conversation = self._copy_conversation(getattr(self, "_base_conversation", []))
+        if carryover_message is not None:
+            next_conversation.append(self._copy_message(carryover_message))
+        self._seed_find_examples_cache_from_conversation(next_conversation)
+        self._seen_compile_signal_sigs = set()
+        self.llm.reset_context()
+        self._context_reset_count = getattr(self, "_context_reset_count", 0) + 1
+        return next_conversation
 
     def _code_paste_nudge_text(self) -> str:
         if self.provider == "openai":
@@ -782,23 +838,21 @@ class ArticraftAgent:
     ) -> AgentResult:
         self._ensure_code_file()
         self.display.start()
-        conversation = initial_conversation or []
-        self._seed_find_examples_cache_from_conversation(conversation)
-        if not conversation:
-            conversation.extend(
-                _build_first_turn_messages(
-                    user_message,
-                    sdk_docs_context=self.sdk_docs_context,
-                )
+        if initial_conversation is None:
+            conversation = _build_first_turn_messages(
+                user_message,
+                sdk_docs_context=self.sdk_docs_context,
+                small_context_loop=getattr(self, "_small_context_loop_enabled", False),
             )
+            self._base_conversation = self._copy_conversation(conversation)
+            self._seed_find_examples_cache_from_conversation(conversation)
             if self.trace_writer:
                 for message in conversation:
                     self.trace_writer.write_message(message)
         else:
-            user_entry = {"role": "user", "content": user_message}
-            conversation.append(user_entry)
-            if self.trace_writer:
-                self.trace_writer.write_message(user_entry)
+            conversation = self._copy_conversation(initial_conversation)
+            self._base_conversation = self._copy_conversation(conversation)
+        self._seed_find_examples_cache_from_conversation(conversation)
 
         usage_totals: dict[str, int] = {}
         completed_turns = 0
@@ -846,6 +900,7 @@ class ArticraftAgent:
                     turn_count=completed_turns,
                     tool_call_count=tool_call_count,
                     compile_attempt_count=compile_attempt_count,
+                    context_reset_count=getattr(self, "_context_reset_count", 0),
                 )
             finally:
                 self.display.stop_llm_wait()
@@ -917,6 +972,7 @@ class ArticraftAgent:
                         turn_count=completed_turns,
                         tool_call_count=tool_call_count,
                         compile_attempt_count=compile_attempt_count,
+                        context_reset_count=getattr(self, "_context_reset_count", 0),
                         usage=usage_totals or None,
                     )
 
@@ -1029,10 +1085,12 @@ class ArticraftAgent:
                     turn_count=completed_turns,
                     tool_call_count=tool_call_count,
                     compile_attempt_count=compile_attempt_count,
+                    context_reset_count=getattr(self, "_context_reset_count", 0),
                     usage=usage_totals or None,
                 )
 
             turn_tool_results: list[ToolResult] = []
+            small_context_carryover_message: dict[str, Any] | None = None
             tool_call_count += len(tool_calls)
             for tool_call in tool_calls:
                 func_name = self._tool_call_name(tool_call)
@@ -1069,6 +1127,14 @@ class ArticraftAgent:
                 tool_results=turn_tool_results,
             )
 
+            compact_after_turn = bool(
+                getattr(self, "_small_context_loop_enabled", False)
+                and self._small_context_compaction_triggered(
+                    tool_calls=tool_calls,
+                    tool_results=turn_tool_results,
+                )
+            )
+
             if self._is_code_valid(turn_tool_results):
                 try:
                     compile_attempt_count += 1
@@ -1091,8 +1157,19 @@ class ArticraftAgent:
                         conversation,
                         bundle=report.signal_bundle,
                     )
+                    if compact_after_turn and report.signal_bundle.signals:
+                        small_context_carryover_message = {
+                            "role": "user",
+                            "content": render_compile_signals(report.signal_bundle),
+                        }
                     if not injected:
-                        self._maybe_inject_post_success_design_audit(conversation)
+                        if self._maybe_inject_post_success_design_audit(conversation):
+                            if compact_after_turn:
+                                small_context_carryover_message = self._copy_message(
+                                    conversation[-1]
+                                )
+                        elif compact_after_turn and small_context_carryover_message is None:
+                            small_context_carryover_message = self._small_context_resume_message()
                 except TimeoutError as exc:
                     bundle = compile_signal_bundle_from_exception(exc)
                     _log_compile_signals(bundle)
@@ -1106,6 +1183,8 @@ class ArticraftAgent:
                         duration=compile_duration,
                         error=retry_message,
                     )
+                    if compact_after_turn:
+                        small_context_carryover_message = self._copy_message(conversation[-1])
                 except Exception as exc:
                     await self._persist_compile_failure_checkpoint_async(exc)
                     bundle = compile_signal_bundle_from_exception(exc)
@@ -1120,9 +1199,16 @@ class ArticraftAgent:
                         duration=compile_duration,
                         error=retry_message,
                     )
+                    if compact_after_turn:
+                        small_context_carryover_message = self._copy_message(conversation[-1])
 
             if self._is_code_valid(turn_tool_results):
                 logger.info("Code validation passed")
+
+            if compact_after_turn:
+                conversation = self._apply_small_context_compaction(
+                    carryover_message=small_context_carryover_message,
+                )
 
             self.display.end_turn(success=True)
 
@@ -1153,6 +1239,7 @@ class ArticraftAgent:
             turn_count=completed_turns,
             tool_call_count=tool_call_count,
             compile_attempt_count=compile_attempt_count,
+            context_reset_count=getattr(self, "_context_reset_count", 0),
             usage=usage_totals or None,
         )
 
