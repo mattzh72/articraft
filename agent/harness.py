@@ -381,17 +381,15 @@ class ArticraftAgent:
             return False
 
         content = (
-            "Compile passed — no overlaps or structural violations remain. "
-            "Do a final design audit before concluding.\n\n"
+            "Compile passed. Do one brief final visual audit before concluding.\n\n"
             "<design_audit>\n"
-            "- Scan each part: where a crude box or cylinder stands in for something that "
-            "should be curved, tapered, or sculpted, upgrade it with lofts, sweeps, or booleans.\n"
-            "- Check the overall silhouette and proportions — do they read as the real object?\n"
-            "- Verify the prompt's defining features are prominent, not afterthoughts.\n"
-            "- Confirm materials and colors are realistic, not placeholder defaults.\n"
+            "- Focus on visual realism first: silhouette, proportions, and the prompt's defining features.\n"
+            "- Upgrade geometry only where an obvious placeholder box/cylinder should read as curved, tapered, or sculpted.\n"
+            "- Check materials and colors only if they still read as placeholder defaults.\n"
+            "- Do not add more tests or `probe_model` calls unless something looks clearly wrong or ambiguous.\n"
             "</design_audit>\n\n"
             "<instructions>\n"
-            "If any of the above are weak, revise now. Otherwise you may conclude.\n"
+            "If you see a clear visual weakness, revise it now. If the object already looks convincing, conclude immediately.\n"
             "</instructions>"
         )
         msg = {"role": "user", "content": content}

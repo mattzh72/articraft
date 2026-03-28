@@ -15,11 +15,11 @@ def test_post_success_design_audit_injected_once() -> None:
     assert injected is True
     assert conversation
     content = conversation[0]["content"]
-    assert "Compile passed — no overlaps or structural violations remain." in content
+    assert "Compile passed. Do one brief final visual audit before concluding." in content
     assert "<design_audit>" in content
-    assert "Scan each part" in content
-    assert "overall silhouette and proportions" in content
-    assert "prompt's defining features" in content
+    assert "Focus on visual realism first" in content
+    assert "Do not add more tests or `probe_model` calls" in content
+    assert "conclude immediately" in content
 
     injected_again = agent._maybe_inject_post_success_design_audit(conversation)
     assert injected_again is False
