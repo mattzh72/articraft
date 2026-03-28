@@ -6,6 +6,7 @@ import { useUrdfLoader } from './useUrdfLoader';
 import { createEdgeLines } from './materials';
 import { attachJointOverlay, disposeOverlayObjects } from './joint-overlay';
 import { createSurfaceSamplePoints, disposeSurfaceSamplePoints } from './surface-sampling';
+import { updateCameraClipping } from './camera-utils';
 import type { RenderOptions } from '@/components/inspector/RenderOptionsPanel';
 import { describeLinkVisuals, type UrdfSpec } from './urdf-parser';
 
@@ -26,8 +27,15 @@ const SEGMENTATION_PALETTE = [
   '#ff3d77',
 ] as const;
 const SEGMENTATION_SNAPSHOT_KEY = '__articraftSegmentColorSnapshot__';
+const EXPLODED_TRANSFORM_SNAPSHOT_KEY = '__articraftExplodedTransformSnapshot__';
+const EXPLODED_TARGET_POSITION_KEY = '__articraftExplodedTargetPosition__';
 const PREVIEW_MAX_PIXEL_RATIO = 1.25;
 const DEFAULT_MAX_PIXEL_RATIO = 2;
+const EXPLODED_VIEW_BASE_FACTOR = 0.01;
+const EXPLODED_VIEW_PART_FACTOR = 0.35;
+const MIN_EXPLODED_DISTANCE = 0.02;
+const EXPLODED_CENTER_EPSILON = 1e-6;
+const EXPLODED_ANIMATION_DURATION_MS = 420;
 
 type MaterialWithColor = THREE.Material & {
   color?: THREE.Color;
@@ -54,6 +62,10 @@ type SegmentMaterialSnapshot = {
 };
 
 type SegmentEmphasis = 'default' | 'selected' | 'dimmed';
+
+type ExplodedTransformSnapshot = {
+  position: THREE.Vector3;
+};
 
 function segmentColorForIndex(index: number): THREE.Color {
   const base = new THREE.Color(SEGMENTATION_PALETTE[index % SEGMENTATION_PALETTE.length]);
@@ -297,6 +309,92 @@ function forEachOwnLinkVisualMesh(
   }
 }
 
+function forEachOwnLinkVisualRoot(
+  linkGroup: THREE.Object3D,
+  visit: (object: THREE.Object3D) => void,
+): void {
+  const stack = [...linkGroup.children];
+
+  while (stack.length > 0) {
+    const current = stack.pop();
+    if (!current) {
+      continue;
+    }
+
+    if (current.name.startsWith('link:')) {
+      continue;
+    }
+
+    // Exploded-view transforms operate on the top-level segmented-part root only.
+    // Once we find that root, we do not descend into its children so sub-meshes stay attached.
+    if (typeof current.userData.articraftVisualKey === 'string' && current.userData.articraftVisualKey.length > 0) {
+      visit(current);
+      continue;
+    }
+
+    for (let index = current.children.length - 1; index >= 0; index -= 1) {
+      stack.push(current.children[index]);
+    }
+  }
+}
+
+function collectOwnLinkVisualRoots(linkGroup: THREE.Object3D): THREE.Object3D[] {
+  const roots: THREE.Object3D[] = [];
+  forEachOwnLinkVisualRoot(linkGroup, (object) => {
+    roots.push(object);
+  });
+  return roots;
+}
+
+function unionBounds(objects: THREE.Object3D[]): THREE.Box3 {
+  const bounds = new THREE.Box3().makeEmpty();
+
+  for (const object of objects) {
+    const objectBounds = new THREE.Box3().setFromObject(object);
+    if (!objectBounds.isEmpty()) {
+      bounds.union(objectBounds);
+    }
+  }
+
+  return bounds;
+}
+
+function storeExplodedTransformSnapshot(object: THREE.Object3D): void {
+  if (object.userData[EXPLODED_TRANSFORM_SNAPSHOT_KEY]) {
+    return;
+  }
+
+  object.userData[EXPLODED_TRANSFORM_SNAPSHOT_KEY] = {
+    position: object.position.clone(),
+  } satisfies ExplodedTransformSnapshot;
+}
+
+function setExplodedTargetPosition(object: THREE.Object3D, targetPosition: THREE.Vector3): void {
+  object.userData[EXPLODED_TARGET_POSITION_KEY] = targetPosition.clone();
+}
+
+function getExplodedTargetPosition(object: THREE.Object3D): THREE.Vector3 | null {
+  const target = object.userData[EXPLODED_TARGET_POSITION_KEY];
+  return target instanceof THREE.Vector3 ? target : null;
+}
+
+function buildExplodedTargetPosition(
+  object: THREE.Object3D,
+  parent: THREE.Object3D,
+  worldOffset: THREE.Vector3,
+): THREE.Vector3 | null {
+  storeExplodedTransformSnapshot(object);
+  const snapshot = object.userData[EXPLODED_TRANSFORM_SNAPSHOT_KEY] as ExplodedTransformSnapshot | undefined;
+  if (!snapshot) {
+    return null;
+  }
+
+  const parentQuaternion = new THREE.Quaternion();
+  parent.getWorldQuaternion(parentQuaternion);
+  const localOffset = worldOffset.clone().applyQuaternion(parentQuaternion.invert());
+  return snapshot.position.clone().add(localOffset);
+}
+
 export interface SceneCanvasProps {
   baseFileUrl: string | null;
   assetRevisionKey: string | null;
@@ -335,6 +433,7 @@ export function SceneCanvas({
   const partHighlightRef = useRef<THREE.LineSegments[]>([]);
   const surfaceSampleRef = useRef<THREE.Points[]>([]);
   const pointerDownRef = useRef<{ x: number; y: number; pointerId: number } | null>(null);
+  const explodedAnimationFrameRef = useRef<number>(0);
   const [selectedPartSelection, setSelectedPartSelection] = useState<PartLegendSelection | null>(null);
   const isStagingSelection = selectionKey?.startsWith("staging:") ?? false;
 
@@ -514,6 +613,214 @@ export function SceneCanvas({
       }
     });
   }, [scene, renderOptions.showCollisions, urdfSpec]);
+
+  useEffect(() => {
+    if (!scene || !urdfSpec) {
+      return;
+    }
+
+    const robot = scene.getObjectByName(ROBOT_GROUP_NAME);
+    if (!robot) {
+      return;
+    }
+
+    for (const link of urdfSpec.links) {
+      const linkGroup = robot.getObjectByName(`link:${link.name}`);
+      if (!linkGroup) {
+        continue;
+      }
+
+      forEachOwnLinkVisualRoot(linkGroup, (visualRoot) => {
+        storeExplodedTransformSnapshot(visualRoot);
+      });
+    }
+
+    robot.updateMatrixWorld(true);
+
+    const robotBox = new THREE.Box3().setFromObject(robot);
+    const robotCenter = robotBox.getCenter(new THREE.Vector3());
+    const robotSize = robotBox.getSize(new THREE.Vector3());
+    const modelExtent = Math.max(robotSize.x, robotSize.y, robotSize.z, 0.25);
+    const linkCenters = new Map<string, THREE.Vector3>();
+    const linkSizes = new Map<string, THREE.Vector3>();
+
+    for (const link of urdfSpec.links) {
+      const linkGroup = robot.getObjectByName(`link:${link.name}`);
+      if (!linkGroup) {
+        continue;
+      }
+
+      const visualRoots = collectOwnLinkVisualRoots(linkGroup);
+      const linkBox = unionBounds(visualRoots);
+      if (!linkBox.isEmpty()) {
+        linkCenters.set(link.name, linkBox.getCenter(new THREE.Vector3()));
+        linkSizes.set(link.name, linkBox.getSize(new THREE.Vector3()));
+      }
+    }
+
+    for (const link of urdfSpec.links) {
+      const linkGroup = robot.getObjectByName(`link:${link.name}`);
+      if (!linkGroup) {
+        continue;
+      }
+
+      const visualRoots = collectOwnLinkVisualRoots(linkGroup);
+      const linkCenter = linkCenters.get(link.name) ?? null;
+      const linkSize = linkSizes.get(link.name) ?? new THREE.Vector3();
+
+      if (visualRoots.length === 0) {
+        continue;
+      }
+
+      const partCenter = linkCenter ?? linkGroup.getWorldPosition(new THREE.Vector3());
+      const radialDistance = partCenter.distanceTo(robotCenter);
+
+      let direction = partCenter.clone().sub(robotCenter);
+      if (radialDistance <= EXPLODED_CENTER_EPSILON) {
+        direction.set(0, 0, 0);
+      } else {
+        direction.normalize();
+      }
+
+      const radialWeight = THREE.MathUtils.clamp(
+        radialDistance / Math.max(modelExtent * 0.5, MIN_EXPLODED_DISTANCE),
+        0,
+        1,
+      );
+      const partExtent = Math.max(linkSize.x, linkSize.y, linkSize.z, 0);
+      const explodedDistance = radialDistance <= EXPLODED_CENTER_EPSILON
+        ? 0
+        : Math.max(
+            (modelExtent * EXPLODED_VIEW_BASE_FACTOR + partExtent * EXPLODED_VIEW_PART_FACTOR) * radialWeight,
+            MIN_EXPLODED_DISTANCE,
+          );
+      const worldOffset = direction.multiplyScalar(explodedDistance);
+
+      for (const visualRoot of visualRoots) {
+        const snapshot = visualRoot.userData[EXPLODED_TRANSFORM_SNAPSHOT_KEY] as ExplodedTransformSnapshot | undefined;
+        if (!snapshot) {
+          continue;
+        }
+
+        if (!renderOptions.showExplodedView || renderOptions.showCollisions) {
+          setExplodedTargetPosition(visualRoot, snapshot.position);
+          continue;
+        }
+
+        const parent = visualRoot.parent;
+        if (!parent) {
+          setExplodedTargetPosition(visualRoot, snapshot.position);
+          continue;
+        }
+
+        const targetPosition = buildExplodedTargetPosition(visualRoot, parent, worldOffset);
+        setExplodedTargetPosition(visualRoot, targetPosition ?? snapshot.position);
+      }
+    }
+
+    if (explodedAnimationFrameRef.current !== 0) {
+      cancelAnimationFrame(explodedAnimationFrameRef.current);
+      explodedAnimationFrameRef.current = 0;
+    }
+
+    let animationStart: number | null = null;
+    const animateExplodedView = (timestamp: number) => {
+      if (animationStart == null) {
+        animationStart = timestamp;
+      }
+
+      const elapsed = timestamp - animationStart;
+      const progress = THREE.MathUtils.clamp(elapsed / EXPLODED_ANIMATION_DURATION_MS, 0, 1);
+      const easedProgress = 1 - Math.pow(1 - progress, 3);
+      let hasActiveMotion = false;
+
+      for (const link of urdfSpec.links) {
+        const linkGroup = robot.getObjectByName(`link:${link.name}`);
+        if (!linkGroup) {
+          continue;
+        }
+
+        forEachOwnLinkVisualRoot(linkGroup, (visualRoot) => {
+          const targetPosition = getExplodedTargetPosition(visualRoot);
+          if (!targetPosition) {
+            return;
+          }
+
+          const nextPosition = visualRoot.position.clone().lerp(targetPosition, easedProgress);
+          if (nextPosition.distanceToSquared(targetPosition) > 1e-8) {
+            hasActiveMotion = true;
+          }
+          visualRoot.position.copy(nextPosition);
+        });
+      }
+
+      robot.updateMatrixWorld(true);
+      if (camera) {
+        updateCameraClipping(
+          camera,
+          [robot, gridGroup, axisGroup].filter((target): target is THREE.Object3D => target != null),
+        );
+      }
+      invalidate();
+
+      if (hasActiveMotion && progress < 1) {
+        explodedAnimationFrameRef.current = requestAnimationFrame(animateExplodedView);
+        return;
+      }
+
+      for (const link of urdfSpec.links) {
+        const linkGroup = robot.getObjectByName(`link:${link.name}`);
+        if (!linkGroup) {
+          continue;
+        }
+
+        forEachOwnLinkVisualRoot(linkGroup, (visualRoot) => {
+          const targetPosition = getExplodedTargetPosition(visualRoot);
+          if (targetPosition) {
+            visualRoot.position.copy(targetPosition);
+          }
+        });
+      }
+
+      robot.updateMatrixWorld(true);
+      if (camera) {
+        updateCameraClipping(
+          camera,
+          [robot, gridGroup, axisGroup].filter((target): target is THREE.Object3D => target != null),
+        );
+      }
+      invalidate();
+      explodedAnimationFrameRef.current = 0;
+    };
+
+    explodedAnimationFrameRef.current = requestAnimationFrame(animateExplodedView);
+
+    return () => {
+      if (explodedAnimationFrameRef.current !== 0) {
+        cancelAnimationFrame(explodedAnimationFrameRef.current);
+        explodedAnimationFrameRef.current = 0;
+      }
+    };
+  }, [
+    axisGroup,
+    camera,
+    gridGroup,
+    jointPoseSignal,
+    renderOptions.showCollisions,
+    renderOptions.showExplodedView,
+    scene,
+    urdfSpec,
+    invalidate,
+  ]);
+
+  useEffect(() => (
+    () => {
+      if (explodedAnimationFrameRef.current !== 0) {
+        cancelAnimationFrame(explodedAnimationFrameRef.current);
+        explodedAnimationFrameRef.current = 0;
+      }
+    }
+  ), []);
 
   useEffect(() => {
     disposeSurfaceSamplePoints(surfaceSampleRef.current);
@@ -801,6 +1108,7 @@ export function SceneCanvas({
     renderOptions.doubleSided,
     renderOptions.showCollisions,
     renderOptions.showEdges,
+    renderOptions.showExplodedView,
     renderOptions.showGrid,
     renderOptions.showJointOverlay,
     renderOptions.showSegmentColors,
