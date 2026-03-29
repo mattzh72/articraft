@@ -92,6 +92,23 @@ type DisplayRow = SupercategoryRow & {
   share: number;
 };
 
+function formatRecordCount(value: number | null | undefined): string {
+  return typeof value === "number" && Number.isFinite(value) ? value.toLocaleString() : "--";
+}
+
+function isDisplayRow(value: unknown): value is DisplayRow {
+  if (typeof value !== "object" || value == null) return false;
+  const row = value as Partial<DisplayRow>;
+  return (
+    typeof row.slug === "string"
+    && typeof row.title === "string"
+    && typeof row.color === "string"
+    && typeof row.categoryCount === "number"
+    && typeof row.recordCount === "number"
+    && typeof row.share === "number"
+  );
+}
+
 function computeRows(
   supercategories: SupercategoryOption[],
   categoryStats: Record<string, CategoryStats>,
@@ -188,8 +205,10 @@ function CustomTooltip({
   payload?: Array<{ payload: DisplayRow }>;
 }): JSX.Element | null {
   if (!active || !payload || payload.length === 0) return null;
-
-  const row = payload[0].payload;
+  const row = payload
+    .map((entry) => entry?.payload)
+    .find((entry): entry is DisplayRow => isDisplayRow(entry));
+  if (!row) return null;
 
   return (
     <div className="rounded-md border border-[var(--border-default)] bg-[var(--surface-0)] px-3 py-2 shadow-md">
@@ -205,7 +224,7 @@ function CustomTooltip({
       </div>
       <div className="mt-1 space-y-0.5 text-[10px] text-[var(--text-tertiary)]">
         <div>
-          {row.recordCount.toLocaleString()} records across {row.categoryCount} categories
+          {formatRecordCount(row.recordCount)} records across {row.categoryCount} categories
         </div>
         <div>
           Avg stars: {formatRating(row.avgRating)} · Avg cost: {formatCost(row.avgCost)}
@@ -432,8 +451,8 @@ export function SupercategoriesSection({
                       }
 
                       const centerValue = activeRow
-                        ? activeRow.recordCount.toLocaleString()
-                        : totalRecords.toLocaleString();
+                        ? formatRecordCount(activeRow.recordCount)
+                        : formatRecordCount(totalRecords);
                       const centerLabel = activeRow
                         ? formatShare(activeRow.share)
                         : "records";
