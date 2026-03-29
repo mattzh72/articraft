@@ -176,16 +176,16 @@ adjectives swapped.
 
 ## SDK Fit
 
-Category prompts must stay inside what the SDK stack can model reliably.
+Category prompts must stay inside what the SDK stack can model reliably. The SDK enforces a **strict tree structure**: every part has exactly one
+parent, and no cycles are allowed.
 
 Good fits: rigid housings, shells, frames, rails, brackets, hubs, forks,
 yokes, arms, trays, drawers, wheels, panels — hard-surface products and
 mechanisms built from primitives, profiles, sweeps, revolves, booleans, and
 CadQuery solids.
 
-Bad fits: soft goods, cloth, cables, belts, springs, chains, highly organic
-freeform surfacing, compound sculpted shells, mechanisms whose behavior depends
-on coupled constraints.
+Bad fits: scissor linkages, four-bar linkages, parallel linkages, differential gearsets, soft goods, cloth, cables, belts, springs, chains, highly organic
+freeform surfacing, compound sculpted shells, mechanisms whose behavior depends on coupled constraints.
 
 ## Checklist
 
