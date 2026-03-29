@@ -206,6 +206,7 @@ Listed roughly from most to least reliable:
 - **Sequential link chains** — telescoping stages, robot arm segments, folding
   arm links. Arbitrary depth, fully supported.
 
+
 ### Geometry: what models poorly
 
 - **Organic freeform surfaces** — compound-curved housings (car body panels,
@@ -215,9 +216,6 @@ Listed roughly from most to least reliable:
 - **Thin-wall shells without a clear inner/outer profile** — must be authored
   explicitly; no automatic offset. If the wall thickness is not a meaningful
   design feature, describe the part as solid.
-- **Gear teeth, chain links, thread detail** — high-frequency surface detail
-  inflates mesh cost with no articulation benefit. Describe gears as smooth
-  cylinders; the agent will not model individual teeth.
 - **Soft goods and flexible elements** — cloth, rubber seals, belts, cables,
   springs, and chains have no representation in URDF. Describe only the rigid
   structural parts.
