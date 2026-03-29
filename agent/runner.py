@@ -13,6 +13,7 @@ import platform
 import shutil
 import subprocess
 import sys
+import xml.etree.ElementTree as ET
 from dataclasses import dataclass
 from datetime import datetime, timezone
 from pathlib import Path
@@ -534,6 +535,70 @@ def _replace_tree_from_source(source: Path, destination: Path) -> None:
         shutil.copytree(source, destination)
 
 
+def _normalize_materialization_asset_ref(filename: str) -> tuple[str, Path] | None:
+    raw = str(filename or "").strip()
+    if not raw:
+        return None
+    path = Path(raw)
+    if path.is_absolute() or ".." in path.parts:
+        return None
+
+    if raw.startswith("assets/meshes/"):
+        relative = Path(*path.parts[2:])
+        return ("meshes", relative) if relative.parts else None
+    if raw.startswith("meshes/"):
+        relative = Path(*path.parts[1:])
+        return ("meshes", relative) if relative.parts else None
+    if raw.startswith("assets/glb/"):
+        relative = Path(*path.parts[2:])
+        return ("glb", relative) if relative.parts else None
+    if raw.startswith("glb/"):
+        relative = Path(*path.parts[1:])
+        return ("glb", relative) if relative.parts else None
+    return None
+
+
+def _referenced_materialization_assets(urdf_xml: str) -> dict[str, set[Path]]:
+    try:
+        root = ET.fromstring(urdf_xml)
+    except ET.ParseError as exc:
+        raise ValueError(f"Failed to parse persisted URDF for asset collection: {exc}") from exc
+
+    referenced: dict[str, set[Path]] = {"meshes": set(), "glb": set()}
+    for mesh_el in root.findall(".//mesh"):
+        filename = mesh_el.attrib.get("filename")
+        if not isinstance(filename, str):
+            continue
+        normalized = _normalize_materialization_asset_ref(filename)
+        if normalized is None:
+            continue
+        group, relative_path = normalized
+        referenced[group].add(relative_path)
+    return referenced
+
+
+def _replace_selected_files_from_source(
+    source_root: Path,
+    destination_root: Path,
+    relative_paths: set[Path],
+) -> None:
+    if destination_root.exists():
+        shutil.rmtree(destination_root)
+    if not relative_paths:
+        return
+    if not source_root.exists():
+        raise FileNotFoundError(f"Referenced asset source root is missing: {source_root}")
+
+    destination_root.parent.mkdir(parents=True, exist_ok=True)
+    for relative_path in sorted(relative_paths, key=lambda path: path.as_posix()):
+        source = source_root / relative_path
+        if not source.exists() or not source.is_file():
+            raise FileNotFoundError(f"Referenced asset is missing: {source}")
+        destination = destination_root / relative_path
+        destination.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(source, destination)
+
+
 def _remove_tree_if_exists(path: Path) -> None:
     if path.exists():
         shutil.rmtree(path)
@@ -859,6 +924,7 @@ def _write_success_record(
             warnings=persisted_warnings,
         )
     record_store.ensure_record_dirs(context.record_id)
+    referenced_assets = _referenced_materialization_assets(persisted_urdf_xml)
     storage_repo.write_text(context.record_prompt_path, prompt_text)
     storage_repo.write_text(context.record_model_path, final_code)
     storage_repo.write_text(context.record_urdf_path, persisted_urdf_xml)
@@ -882,13 +948,15 @@ def _write_success_record(
     canonicalize_record_trace_dir(storage_repo, context.record_id)
     if context.trace_dir.exists():
         shutil.rmtree(context.trace_dir)
-    _replace_tree_from_source(
+    _replace_selected_files_from_source(
         context.staging_dir / "assets" / "meshes",
         storage_repo.layout.record_materialization_asset_meshes_dir(context.record_id),
+        referenced_assets["meshes"],
     )
-    _replace_tree_from_source(
+    _replace_selected_files_from_source(
         context.staging_dir / "assets" / "glb",
         storage_repo.layout.record_materialization_asset_glb_dir(context.record_id),
+        referenced_assets["glb"],
     )
     _replace_tree_from_source(
         context.staging_dir / "assets" / "viewer",

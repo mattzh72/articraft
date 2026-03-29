@@ -31,6 +31,10 @@ def _sha256_file(path: Path) -> str:
     return _sha256_bytes(path.read_bytes())
 
 
+def _short_digest(digest: str) -> str:
+    return digest[:12]
+
+
 def _normalize_mesh_subdir(mesh_subdir: str) -> str:
     normalized = str(mesh_subdir or _DEFAULT_MESH_SUBDIR).strip().strip("/\\")
     if not normalized:
@@ -108,7 +112,7 @@ class AssetSession:
     root: Path
     inputs_root: Path | None = None
     mesh_subdir: str = _DEFAULT_MESH_SUBDIR
-    _managed_meshes: dict[str, ManagedMeshInfo] = field(
+    _managed_meshes: dict[tuple[str, str], ManagedMeshInfo] = field(
         default_factory=dict, init=False, repr=False
     )
     _refs: dict[str, ManagedMeshInfo] = field(default_factory=dict, init=False, repr=False)
@@ -195,6 +199,98 @@ class AssetSession:
         path = (self.root / ref).resolve()
         return ref, path, slug
 
+    def _managed_mesh_info(
+        self,
+        logical_name: str,
+        *,
+        slug: str,
+        ref: str,
+        path: Path,
+        digest: str,
+    ) -> ManagedMeshInfo:
+        return ManagedMeshInfo(
+            logical_name=logical_name,
+            slug=slug,
+            ref=ref,
+            path=path,
+            digest=digest,
+        )
+
+    def _managed_mesh_conflict_candidates(
+        self,
+        slug: str,
+        digest: str,
+        *,
+        suffix: str = ".obj",
+    ) -> Iterator[tuple[str, Path, int]]:
+        seen_lengths: set[int] = set()
+        for length in (12, 16, 20, len(digest)):
+            resolved_length = min(length, len(digest))
+            if resolved_length in seen_lengths:
+                continue
+            seen_lengths.add(resolved_length)
+            ref = f"{self.mesh_subdir}/{slug}--{digest[:resolved_length]}{suffix}"
+            yield ref, (self.root / ref).resolve(), resolved_length
+
+    def _resolve_managed_mesh_target(
+        self,
+        logical_name: str,
+        *,
+        slug: str,
+        digest: str,
+        payload: bytes,
+        suffix: str = ".obj",
+    ) -> tuple[str, Path]:
+        base_ref = f"{self.mesh_subdir}/{slug}{suffix}"
+        base_path = (self.root / base_ref).resolve()
+        ref_owner = self._refs.get(base_ref)
+        if ref_owner is not None:
+            if ref_owner.digest == digest:
+                return base_ref, base_path
+        else:
+            if base_path.exists():
+                existing_digest = _sha256_file(base_path)
+                if existing_digest == digest:
+                    return base_ref, base_path
+                # Treat on-disk conflicts without an in-session owner as stale prior-run files.
+                base_path.parent.mkdir(parents=True, exist_ok=True)
+                base_path.write_bytes(payload)
+                return base_ref, base_path
+            base_path.parent.mkdir(parents=True, exist_ok=True)
+            base_path.write_bytes(payload)
+            return base_ref, base_path
+
+        for ref, path, digest_length in self._managed_mesh_conflict_candidates(
+            slug,
+            digest,
+            suffix=suffix,
+        ):
+            ref_owner = self._refs.get(ref)
+            if ref_owner is not None:
+                if ref_owner.digest == digest:
+                    return ref, path
+                continue
+            if path.exists():
+                existing_digest = _sha256_file(path)
+                if existing_digest == digest:
+                    return ref, path
+                if digest_length < len(digest):
+                    continue
+                raise ValidationError(
+                    "Managed mesh content-addressed path conflict for "
+                    f"{logical_name!r}: ref={ref!r} path={path} "
+                    f"existing_digest={_short_digest(existing_digest)} "
+                    f"new_digest={_short_digest(digest)}"
+                )
+            path.parent.mkdir(parents=True, exist_ok=True)
+            path.write_bytes(payload)
+            return ref, path
+
+        raise ValidationError(
+            f"Failed to allocate managed mesh path for {logical_name!r}: "
+            f"slug={slug!r} digest={_short_digest(digest)}"
+        )
+
     def _dedupe_or_write(
         self,
         logical_name: str,
@@ -206,38 +302,27 @@ class AssetSession:
             raise ValidationError(f"Managed meshes must use .obj payloads (got: {suffix!r})")
 
         digest = _sha256_bytes(payload)
-        existing = self._managed_meshes.get(logical_name)
+        existing = self._managed_meshes.get((logical_name, digest))
         if existing is not None:
-            if existing.digest != digest:
-                raise ValidationError(
-                    f"Managed mesh name {logical_name!r} was reused with different geometry"
-                )
             return existing
 
-        ref, path, slug = self._managed_mesh_path(logical_name, suffix=suffix)
-        ref_owner = self._refs.get(ref)
-        if ref_owner is not None and ref_owner.digest != digest:
-            raise ValidationError(
-                f"Managed mesh slug collision for {logical_name!r} and {ref_owner.logical_name!r}"
-            )
-
-        if path.exists():
-            existing_digest = _sha256_file(path)
-            if existing_digest != digest:
-                raise ValidationError(f"Managed mesh path conflict for {logical_name!r}: {path}")
-        else:
-            path.parent.mkdir(parents=True, exist_ok=True)
-            path.write_bytes(payload)
-
-        info = ManagedMeshInfo(
-            logical_name=logical_name,
+        _base_ref, _base_path, slug = self._managed_mesh_path(logical_name, suffix=suffix)
+        ref, path = self._resolve_managed_mesh_target(
+            logical_name,
+            slug=slug,
+            digest=digest,
+            payload=payload,
+            suffix=suffix,
+        )
+        info = self._managed_mesh_info(
+            logical_name,
             slug=slug,
             ref=ref,
             path=path,
             digest=digest,
         )
-        self._managed_meshes[logical_name] = info
-        self._refs[ref] = info
+        self._managed_meshes[(logical_name, digest)] = info
+        self._refs.setdefault(ref, info)
         return info
 
     def register_mesh_text(

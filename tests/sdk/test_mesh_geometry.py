@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import hashlib
 import logging
 from math import pi
 from pathlib import Path
@@ -18,6 +19,10 @@ def _bounds(
     ys = [v[1] for v in geom.vertices]
     zs = [v[2] for v in geom.vertices]
     return (min(xs), min(ys), min(zs)), (max(xs), max(ys), max(zs))
+
+
+def _managed_mesh_suffix(geometry: sdk.MeshGeometry) -> str:
+    return hashlib.sha256(geometry.to_obj().encode("utf-8")).hexdigest()[:12]
 
 
 def test_dome_geometry_builds_closed_hemisphere() -> None:
@@ -276,12 +281,96 @@ def test_mesh_from_input_uses_managed_input_catalog(tmp_path) -> None:
     assert Path(mesh.materialized_path).exists()
 
 
-def test_mesh_from_geometry_rejects_reusing_a_name_for_different_geometry(tmp_path) -> None:
+def test_mesh_from_geometry_dedupes_same_logical_name_and_geometry_in_session(tmp_path) -> None:
     session = AssetSession(tmp_path)
     with activate_asset_session(session):
+        first = sdk.mesh_from_geometry(sdk.BoxGeometry((0.20, 0.10, 0.06)), "shared_name")
+        second = sdk.mesh_from_geometry(sdk.BoxGeometry((0.20, 0.10, 0.06)), "shared_name")
+
+    assert first.filename == "assets/meshes/shared_name.obj"
+    assert second.filename == first.filename
+    assert second.materialized_path == first.materialized_path
+
+
+def test_mesh_from_geometry_allocates_suffix_for_same_name_different_geometry_in_session(
+    tmp_path,
+) -> None:
+    base_geometry = sdk.BoxGeometry((0.20, 0.10, 0.06))
+    alternate_geometry = sdk.BoxGeometry((0.30, 0.10, 0.06))
+    expected_suffix = _managed_mesh_suffix(alternate_geometry)
+
+    session = AssetSession(tmp_path)
+    with activate_asset_session(session):
+        base_mesh = sdk.mesh_from_geometry(base_geometry, "shared_name")
+        alternate_mesh = sdk.mesh_from_geometry(alternate_geometry, "shared_name")
+
+    assert base_mesh.filename == "assets/meshes/shared_name.obj"
+    assert alternate_mesh.filename == f"assets/meshes/shared_name--{expected_suffix}.obj"
+    assert alternate_mesh.materialized_path is not None
+    assert Path(str(alternate_mesh.materialized_path)).exists()
+
+
+def test_mesh_from_geometry_dedupes_same_slug_and_geometry_across_logical_names(tmp_path) -> None:
+    session = AssetSession(tmp_path)
+    with activate_asset_session(session):
+        first = sdk.mesh_from_geometry(sdk.BoxGeometry((0.20, 0.10, 0.06)), "door panel")
+        second = sdk.mesh_from_geometry(sdk.BoxGeometry((0.20, 0.10, 0.06)), "door-panel")
+
+    assert first.filename == "assets/meshes/door-panel.obj"
+    assert second.filename == first.filename
+    assert second.materialized_path == first.materialized_path
+    assert first.name == "door panel"
+    assert second.name == "door-panel"
+
+
+def test_mesh_from_geometry_allocates_suffix_for_same_slug_different_geometry(tmp_path) -> None:
+    alternate_geometry = sdk.BoxGeometry((0.30, 0.10, 0.06))
+    expected_suffix = _managed_mesh_suffix(alternate_geometry)
+
+    session = AssetSession(tmp_path)
+    with activate_asset_session(session):
+        base_mesh = sdk.mesh_from_geometry(sdk.BoxGeometry((0.20, 0.10, 0.06)), "door panel")
+        alternate_mesh = sdk.mesh_from_geometry(alternate_geometry, "door-panel")
+
+    assert base_mesh.filename == "assets/meshes/door-panel.obj"
+    assert alternate_mesh.filename == f"assets/meshes/door-panel--{expected_suffix}.obj"
+
+
+def test_mesh_from_geometry_overwrites_stale_managed_mesh_from_prior_session(tmp_path) -> None:
+    first_session = AssetSession(tmp_path)
+    with activate_asset_session(first_session):
+        first_mesh = sdk.mesh_from_geometry(sdk.BoxGeometry((0.20, 0.10, 0.06)), "shared_name")
+
+    mesh_path = Path(str(first_mesh.materialized_path))
+    first_bytes = mesh_path.read_bytes()
+
+    second_session = AssetSession(tmp_path)
+    with activate_asset_session(second_session):
+        second_mesh = sdk.mesh_from_geometry(sdk.BoxGeometry((0.30, 0.10, 0.06)), "shared_name")
+
+    assert second_mesh.filename == "assets/meshes/shared_name.obj"
+    assert Path(str(second_mesh.materialized_path)) == mesh_path
+    assert mesh_path.read_bytes() != first_bytes
+
+
+def test_mesh_from_geometry_allocates_deterministic_suffix_for_same_payload(tmp_path) -> None:
+    geometry = sdk.BoxGeometry((0.30, 0.10, 0.06))
+
+    first_session = AssetSession(tmp_path / "a")
+    with activate_asset_session(first_session):
         sdk.mesh_from_geometry(sdk.BoxGeometry((0.20, 0.10, 0.06)), "shared_name")
-        with pytest.raises(sdk.ValidationError, match="reused with different geometry"):
-            sdk.mesh_from_geometry(sdk.BoxGeometry((0.30, 0.10, 0.06)), "shared_name")
+        first_conflict = sdk.mesh_from_geometry(geometry, "shared_name")
+
+    second_session = AssetSession(tmp_path / "b")
+    with activate_asset_session(second_session):
+        sdk.mesh_from_geometry(sdk.BoxGeometry((0.20, 0.10, 0.06)), "shared_name")
+        second_conflict = sdk.mesh_from_geometry(geometry, "shared_name")
+
+    assert first_conflict.filename == second_conflict.filename
+    assert (
+        first_conflict.filename
+        == f"assets/meshes/shared_name--{_managed_mesh_suffix(geometry)}.obj"
+    )
 
 
 def test_tube_from_spline_points_supports_bezier_paths() -> None:

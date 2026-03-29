@@ -499,18 +499,17 @@ def export_cadquery_mesh(
     logical_name = os.fspath(name)
     legacy_mode = _looks_like_legacy_export_name(logical_name)
     asset_ctx = resolve_asset_context(assets)
-    mesh_ref: str
     if legacy_mode:
         path = _resolve_export_path(logical_name, assets=asset_ctx)
         mesh_ref = _export_friendly_mesh_filename(path.as_posix())
         mesh_name = Path(logical_name).stem if Path(logical_name).stem else None
         asset_owner: AssetContextLike | None = asset_ctx
+        cache_probe_path = path
     else:
         session = _managed_export_session(assets)
-        mesh_ref = session.managed_mesh_ref(logical_name)
-        path = session.mesh_path(mesh_ref)
         mesh_name = logical_name
         asset_owner = session
+        cache_probe_path = session.mesh_path("__cadquery_cache_probe__.obj", ensure_dir=False)
     cq = _require_cadquery()
     shape = _coerce_shape(model, cq)
     cache_key = _cadquery_mesh_cache_key(
@@ -520,26 +519,7 @@ def export_cadquery_mesh(
         unit_scale=unit_scale,
         cq=cq,
     )
-    destination_metadata_path = _export_metadata_path(path)
-    destination_metadata = _read_cache_metadata(destination_metadata_path)
-    if (
-        path.exists()
-        and destination_metadata is not None
-        and destination_metadata.cache_key == cache_key
-    ):
-        local_aabb = destination_metadata.local_aabb
-        return CadQueryMeshExport(
-            mesh=Mesh(
-                filename=mesh_ref,
-                name=mesh_name,
-                materialized_path=path.as_posix(),
-            ),
-            local_aabb=local_aabb,
-            center_xyz=_aabb_center(local_aabb),
-            size_xyz=_aabb_size(local_aabb),
-        )
-
-    cache_root = _cache_root_for_export(path, assets=asset_owner)
+    cache_root = _cache_root_for_export(cache_probe_path, assets=asset_owner)
     cache_mesh_path = _cache_mesh_path(cache_root, cache_key)
     cache_metadata_path = _cache_metadata_path(cache_root, cache_key)
     cached_metadata = _read_cache_metadata(cache_metadata_path)
@@ -548,41 +528,65 @@ def export_cadquery_mesh(
         and cached_metadata is not None
         and cached_metadata.cache_key == cache_key
     ):
+        metadata = cached_metadata
+    else:
+        vertices, triangles = _tessellate_cadquery_shape(
+            shape,
+            tolerance=tolerance,
+            angular_tolerance=angular_tolerance,
+            unit_scale=unit_scale,
+        )
+        _write_obj(cache_mesh_path, vertices=vertices, triangles=triangles)
+        local_aabb = _local_aabb_from_vertices(vertices)
+        metadata = _CadQueryMeshCacheMetadata(cache_key=cache_key, local_aabb=local_aabb)
+        _write_cache_metadata(cache_metadata_path, metadata)
+
+    if legacy_mode:
+        destination_metadata_path = _export_metadata_path(path)
+        destination_metadata = _read_cache_metadata(destination_metadata_path)
+        if (
+            path.exists()
+            and destination_metadata is not None
+            and destination_metadata.cache_key == cache_key
+        ):
+            local_aabb = destination_metadata.local_aabb
+            return CadQueryMeshExport(
+                mesh=Mesh(
+                    filename=mesh_ref,
+                    name=mesh_name,
+                    materialized_path=path.as_posix(),
+                ),
+                local_aabb=local_aabb,
+                center_xyz=_aabb_center(local_aabb),
+                size_xyz=_aabb_size(local_aabb),
+            )
         _copy_cached_mesh(cache_mesh_path, path)
-        _write_cache_metadata(destination_metadata_path, cached_metadata)
-        local_aabb = cached_metadata.local_aabb
+        _write_cache_metadata(destination_metadata_path, metadata)
         return CadQueryMeshExport(
             mesh=Mesh(
                 filename=mesh_ref,
                 name=mesh_name,
                 materialized_path=path.as_posix(),
             ),
-            local_aabb=local_aabb,
-            center_xyz=_aabb_center(local_aabb),
-            size_xyz=_aabb_size(local_aabb),
+            local_aabb=metadata.local_aabb,
+            center_xyz=_aabb_center(metadata.local_aabb),
+            size_xyz=_aabb_size(metadata.local_aabb),
         )
 
-    vertices, triangles = _tessellate_cadquery_shape(
-        shape,
-        tolerance=tolerance,
-        angular_tolerance=angular_tolerance,
-        unit_scale=unit_scale,
-    )
-    _write_obj(cache_mesh_path, vertices=vertices, triangles=triangles)
-    local_aabb = _local_aabb_from_vertices(vertices)
-    metadata = _CadQueryMeshCacheMetadata(cache_key=cache_key, local_aabb=local_aabb)
-    _write_cache_metadata(cache_metadata_path, metadata)
-    _copy_cached_mesh(cache_mesh_path, path)
-    _write_cache_metadata(destination_metadata_path, metadata)
+    info = session.register_mesh_file(logical_name, cache_mesh_path)
+    destination_metadata_path = _export_metadata_path(info.path)
+    destination_metadata = _read_cache_metadata(destination_metadata_path)
+    if destination_metadata is None or destination_metadata.cache_key != cache_key:
+        _write_cache_metadata(destination_metadata_path, metadata)
     return CadQueryMeshExport(
         mesh=Mesh(
-            filename=mesh_ref,
+            filename=info.ref,
             name=mesh_name,
-            materialized_path=path.as_posix(),
+            materialized_path=info.path.as_posix(),
         ),
-        local_aabb=local_aabb,
-        center_xyz=_aabb_center(local_aabb),
-        size_xyz=_aabb_size(local_aabb),
+        local_aabb=metadata.local_aabb,
+        center_xyz=_aabb_center(metadata.local_aabb),
+        size_xyz=_aabb_size(metadata.local_aabb),
     )
 
 

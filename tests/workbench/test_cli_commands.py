@@ -341,7 +341,7 @@ def test_workbench_rerun_record_command_replaces_cached_materialization_outputs(
     assert not (canonical_glb_dir / "stale.glb").exists()
     assert not (canonical_viewer_dir / "stale.json").exists()
     materialization_dir = repo_root / "data" / "cache" / "record_materialization" / record_dir.name
-    assert (materialization_dir / "assets" / "meshes" / "part.obj").exists()
+    assert not (materialization_dir / "assets" / "meshes").exists()
 
 
 def test_workbench_init_record_command(

@@ -495,6 +495,39 @@ def test_compile_urdf_report_rewrites_visual_obj_meshes_to_glb(tmp_path: Path) -
     assert report.signal_bundle.status == "success"
 
 
+def test_compile_urdf_report_auto_suffixes_managed_mesh_name_conflicts(tmp_path: Path) -> None:
+    script_path = tmp_path / "model.py"
+    script_path.write_text(
+        "\n".join(
+            [
+                "from __future__ import annotations",
+                "",
+                "from sdk import ArticulatedObject, BoxGeometry, Origin, mesh_from_geometry",
+                "",
+                "mesh_a = mesh_from_geometry(BoxGeometry((0.1, 0.1, 0.1)), 'shared_name')",
+                "mesh_b = mesh_from_geometry(BoxGeometry((0.2, 0.1, 0.1)), 'shared_name')",
+                "object_model = ArticulatedObject(name='managed_mesh_conflict')",
+                "base = object_model.part('base')",
+                "base.visual(mesh_a, origin=Origin())",
+                "base.visual(mesh_b, origin=Origin(xyz=(0.2, 0.0, 0.0)))",
+            ]
+        ),
+        encoding="utf-8",
+    )
+
+    report = compile_urdf_report(
+        script_path,
+        run_checks=False,
+        target="visual",
+        rewrite_visual_glb=False,
+    )
+
+    assert "assets/meshes/shared_name.obj" in report.urdf_xml
+    assert "assets/meshes/shared_name--" in report.urdf_xml
+    assert len(list((tmp_path / "assets" / "meshes").glob("shared_name*.obj"))) == 2
+    assert report.signal_bundle.status == "success"
+
+
 def test_compile_urdf_report_can_skip_visual_glb_rewrite(tmp_path: Path) -> None:
     script_path = tmp_path / "model.py"
     script_path.write_text(

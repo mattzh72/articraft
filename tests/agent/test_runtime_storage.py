@@ -84,6 +84,24 @@ class MeshVisualAgent(FakeAgent):
         )
 
 
+class MeshVisualWithUnusedAssetsAgent(MeshVisualAgent):
+    async def run(self, user_content: object):  # type: ignore[override]
+        result = await super().run(user_content)
+        meshes_dir = self.file_path.parent / "assets" / "meshes"
+        (meshes_dir / "orphan.obj").write_text("# orphan\n", encoding="utf-8")
+        glb_dir = self.file_path.parent / "assets" / "glb"
+        glb_dir.mkdir(parents=True, exist_ok=True)
+        (glb_dir / "orphan.glb").write_bytes(b"orphan")
+        return result
+
+
+class ContextResetAgent(FakeAgent):
+    async def run(self, user_content: object):  # type: ignore[override]
+        result = await super().run(user_content)
+        result.context_reset_count = 2
+        return result
+
+
 def test_workbench_run_and_rerun_persist_runtime_artifacts(
     fake_agent: None,
     tmp_path: Path,
@@ -126,7 +144,7 @@ def test_workbench_run_and_rerun_persist_runtime_artifacts(
         encoding="utf-8"
     ) == "<robot name='test'/>"
     assert (materialization_dir / "compile_report.json").exists()
-    assert (materialization_dir / "assets" / "meshes" / "part.obj").exists()
+    assert not (materialization_dir / "assets" / "meshes").exists()
 
     workbench_path = repo_root / "data" / "local" / "workbench.json"
     workbench = json.loads(workbench_path.read_text(encoding="utf-8"))
@@ -205,7 +223,7 @@ def test_workbench_run_and_rerun_persist_runtime_artifacts(
     assert not (record_dir / "traces" / "stale.txt").exists()
     assert not (record_dir / "assets" / "glb").exists()
     assert not (record_dir / "assets" / "viewer").exists()
-    assert (materialization_dir / "assets" / "meshes" / "part.obj").exists()
+    assert not (materialization_dir / "assets" / "meshes").exists()
 
     workbench = json.loads(workbench_path.read_text(encoding="utf-8"))
     assert len(workbench["entries"]) == 1
@@ -260,6 +278,46 @@ def test_successful_run_rewrites_visual_meshes_to_glb(
         encoding="utf-8"
     )
     assert (materialization_dir / "assets" / "meshes" / "part.glb").exists()
+
+
+def test_successful_run_copies_only_referenced_mesh_assets(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+) -> None:
+    monkeypatch.setattr(runner, "ArticraftAgent", MeshVisualWithUnusedAssetsAgent)
+
+    exit_code = asyncio.run(
+        runner.run_from_input(
+            "make a mesh part with extras",
+            prompt_text="make a mesh part with extras",
+            display_prompt="make a mesh part with extras",
+            repo_root=tmp_path,
+            image_path=None,
+            provider="openai",
+            thinking_level="high",
+            max_turns=30,
+            system_prompt_path=DESIGNER_PROMPT_NAME,
+            sdk_package="sdk",
+            sdk_docs_mode="full",
+            label=None,
+            tags=[],
+        )
+    )
+
+    assert exit_code == 0
+
+    records_root = tmp_path / "data" / "records"
+    record_dirs = [path for path in records_root.iterdir() if path.is_dir()]
+    assert len(record_dirs) == 1
+    record_dir = record_dirs[0]
+    materialization_dir = tmp_path / "data" / "cache" / "record_materialization" / record_dir.name
+
+    assert "assets/meshes/part.glb" in (materialization_dir / "model.urdf").read_text(
+        encoding="utf-8"
+    )
+    assert (materialization_dir / "assets" / "meshes" / "part.glb").exists()
+    assert not (materialization_dir / "assets" / "meshes" / "orphan.obj").exists()
+    assert not (materialization_dir / "assets" / "glb").exists()
 
 
 def test_successful_hybrid_run_keeps_visual_meshes_as_obj(
