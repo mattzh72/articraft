@@ -176,8 +176,7 @@ adjectives swapped.
 
 ## SDK Fit
 
-Category prompts must stay inside what the SDK stack can model reliably. The SDK enforces a **strict tree structure**: every part has exactly one
-parent, and no cycles are allowed.
+Category prompts must stay inside what the SDK stack can model reliably. The SDK enforces a **strict tree structure**: every part has exactly one parent, and no cycles are allowed.
 
 Good fits: rigid housings, shells, frames, rails, brackets, hubs, forks,
 yokes, arms, trays, drawers, wheels, panels — hard-surface products and
