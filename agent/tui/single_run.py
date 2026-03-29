@@ -320,3 +320,37 @@ class SingleRunDisplay:
                 warn.append("            ", style="dim")
                 warn.append(truncate_text(w, 80), style="yellow")
                 self.console.print(warn)
+
+    def add_small_context_handoff(
+        self,
+        *,
+        reset_count: int,
+        carryover_message: dict[str, Any] | None,
+    ) -> None:
+        if not self.enabled:
+            return
+
+        line = Text()
+        line.append("  handoff ", style="yellow")
+        line.append("next agent", style="bold yellow")
+        line.append(f"  reset #{reset_count}", style="dim")
+        self.console.print(line)
+
+        label = Text()
+        label.append("            ", style="dim")
+        label.append("FULL handoff message:", style="bold yellow")
+        self.console.print(label)
+
+        if not isinstance(carryover_message, dict):
+            self._print_indented_block("(none)", style="dim")
+            return
+
+        role = str(carryover_message.get("role") or "unknown")
+        content = carryover_message.get("content")
+        rendered = content if isinstance(content, str) else str(content)
+
+        role_line = Text()
+        role_line.append("            ", style="dim")
+        role_line.append(f"role: {role}", style="dim")
+        self.console.print(role_line)
+        self._print_indented_block(rendered, style="yellow")

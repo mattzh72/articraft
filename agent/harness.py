@@ -1206,6 +1206,10 @@ class ArticraftAgent:
                 logger.info("Code validation passed")
 
             if compact_after_turn:
+                self.display.add_small_context_handoff(
+                    reset_count=getattr(self, "_context_reset_count", 0) + 1,
+                    carryover_message=small_context_carryover_message,
+                )
                 conversation = self._apply_small_context_compaction(
                     carryover_message=small_context_carryover_message,
                 )

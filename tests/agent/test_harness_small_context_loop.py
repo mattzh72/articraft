@@ -15,6 +15,9 @@ from agent.tools.base import ToolResult
 class _FakeDisplay:
     current_turn = 0
 
+    def __init__(self) -> None:
+        self.handoffs: list[tuple[int, dict | None]] = []
+
     def start(self) -> None:
         return None
 
@@ -61,6 +64,14 @@ class _FakeDisplay:
         error: str | None = None,
     ) -> None:
         return None
+
+    def add_small_context_handoff(
+        self,
+        *,
+        reset_count: int,
+        carryover_message: dict | None,
+    ) -> None:
+        self.handoffs.append((reset_count, copy.deepcopy(carryover_message)))
 
 
 class _FakeToolRegistry:
@@ -291,6 +302,22 @@ def test_small_context_loop_resumes_from_base_plus_carryover_only(tmp_path: Path
     assert result.context_reset_count == 1
     assert agent.llm.reset_calls == 1
     assert len(agent.llm.calls) == 2
+    assert agent.display.handoffs == [
+        (
+            1,
+            {
+                "role": "user",
+                "content": (
+                    "<small_context_resume>\n"
+                    "- The last patch compiled cleanly.\n"
+                    "- Small-context loop discarded the prior turn transcript.\n"
+                    "- Continue from the file on disk.\n"
+                    "- Re-read the current file before editing or relying on exact prior context.\n"
+                    "</small_context_resume>"
+                ),
+            },
+        )
+    ]
     assert [message["role"] for message in agent.llm.calls[1]] == ["user", "user", "user", "user"]
     assert agent.llm.calls[1][-1]["content"].startswith("<small_context_resume>")
     assert "Re-read the current file before editing" in agent.llm.calls[1][-1]["content"]

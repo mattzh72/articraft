@@ -98,3 +98,28 @@ def test_add_tool_call_marks_weakly_relevant_find_example_titles() -> None:
 
     output = buffer.getvalue()
     assert "- PiTray Clip [weakly relevant]" in output
+
+
+def test_add_small_context_handoff_shows_full_message() -> None:
+    display, buffer = _make_display()
+
+    display.add_small_context_handoff(
+        reset_count=2,
+        carryover_message={
+            "role": "user",
+            "content": (
+                "<small_context_resume>\n"
+                "- The last patch compiled cleanly.\n"
+                "- Re-read the current file before editing.\n"
+                "</small_context_resume>"
+            ),
+        },
+    )
+
+    output = buffer.getvalue()
+    assert "handoff next agent  reset #2" in output
+    assert "FULL handoff message:" in output
+    assert "role: user" in output
+    assert "<small_context_resume>" in output
+    assert "- The last patch compiled cleanly." in output
+    assert "- Re-read the current file before editing." in output
