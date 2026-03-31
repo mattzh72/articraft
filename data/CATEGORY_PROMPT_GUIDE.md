@@ -176,16 +176,80 @@ adjectives swapped.
 
 ## SDK Fit
 
-Category prompts must stay inside what the SDK stack can model reliably.
+Category prompts must stay inside what the SDK stack can model reliably. Two
+hard constraints shape everything below:
 
-Good fits: rigid housings, shells, frames, rails, brackets, hubs, forks,
-yokes, arms, trays, drawers, wheels, panels — hard-surface products and
-mechanisms built from primitives, profiles, sweeps, revolves, booleans, and
-CadQuery solids.
+1. **Strict tree structure** — every part has exactly one parent joint and no
+   cycles. Any mechanism requiring a part to be driven by two independent paths
+   (a closed kinematic chain) cannot be modeled.
+2. **URDF joint model** — every joint is single-axis (one revolute, one
+   prismatic, or one continuous). There is no built-in concept of one joint
+   driving another; coupled or geared motions are not expressible.
 
-Bad fits: soft goods, cloth, cables, belts, springs, chains, highly organic
-freeform surfacing, compound sculpted shells, mechanisms whose behavior depends
-on coupled constraints.
+### Geometry: what models well
+
+Listed roughly from most to least reliable:
+
+- **Box, cylinder, sphere primitives** — exported directly as URDF primitives
+  (most compact, exact, zero risk of mesh errors). Use these wherever the shape
+  permits.
+- **Extruded profiles and panels** — flat plates, L-brackets, C-channels,
+  panels with rectangular cutouts or slots. Reliable and common.
+- **Revolved / lathe shapes** — any axisymmetric part: knobs, handles, caps,
+  barrels, nozzles, turret domes. Efficient and exact.
+- **Boolean-carved primitives** — cylinders subtracted from cylinders (hinge
+  knuckles, bored shafts), boxes with rectangular cutouts. Solid and
+  well-tested.
+- **Multi-branch tree assemblies** — one parent with several independent
+  children (multi-drawer cabinet, fan hub with blades, robot torso with two
+  arms). Each branch is independent; they do not couple.
+- **Sequential link chains** — telescoping stages, robot arm segments, folding
+  arm links. Arbitrary depth, fully supported.
+
+
+### Geometry: what models poorly
+
+- **Organic freeform surfaces** — compound-curved housings (car body panels,
+  ergonomic grip shells) require `section_loft` with many guide curves and are
+  fragile. Stick to objects with identifiable flat faces, cylinders, or
+  revolved profiles.
+- **Thin-wall shells without a clear inner/outer profile** — must be authored
+  explicitly; no automatic offset. If the wall thickness is not a meaningful
+  design feature, describe the part as solid.
+- **Soft goods and flexible elements** — cloth, rubber seals, belts, cables,
+  springs, and chains have no representation in URDF. Describe only the rigid
+  structural parts.
+- **Surface finish and texture** — URDF supports color (RGBA) only. Describing
+  knurling, brushed metal, or embossed logos is wasted tokens.
+
+### Kinematics: what URDF cannot represent
+
+These patterns appear reasonable but fail at the model level — avoid prompting
+objects whose core function depends on them:
+
+| Pattern | Why it fails | Usable stand-in |
+|---|---|---|
+| **Scissor / crossed linkages** (scissor jack, lazy tongs, pantograph arms, scissor lift) | Crossed bars must share both the center pivot *and* the end pivots — a closed chain | Telescoping prismatic column, or a simple two-link fold arm |
+| **Four-bar and parallel linkages** (parallelogram arms, parallel-jaw gripper with two driven jaws) | Coupler link has two parents | Model one moving jaw as prismatic child; fix the mirror jaw to the body |
+| **Coupled / synchronized joints** (rack-and-pinion driving a second part, cable-driven gripper, worm gear + output gear) | URDF has no joint-drives-joint semantics; each joint moves independently | Describe only the output member's motion, omit the transmission |
+| **Differential gearsets** (spider + two side gears sharing a carrier) | Carrier is both parent and child of side gears | Not modeled; pick an object with independent joints |
+| **Spring/damper return mechanisms** (cam + spring-loaded follower) | Springs have no URDF primitive; cam geometry produces no kinematics | Omit the return spring; describe only the joint axis |
+
+### Articulation types
+
+- **Revolute** — bounded rotation about one axis. Use for hinges, flaps, lids,
+  arm joints. Always has motion limits.
+- **Prismatic** — bounded translation along one axis. Use for drawers, slides,
+  telescoping stages, jaws.
+- **Continuous** — unbounded rotation (no limits). Use for wheels, fans,
+  turntables, and any part that spins freely. *Do not use revolute for a
+  freely-spinning wheel.*
+- **Fixed** — zero-DOF rigid connection. Use to attach sub-parts that never
+  move relative to their parent (mounting flanges, caps, trim rings).
+
+Every joint is single-axis. A ball-and-socket wrist needs three separate
+revolute joints stacked in a chain (yaw → pitch → roll links). State each axis
+separately in the articulation spec.
 
 ## Checklist
 
