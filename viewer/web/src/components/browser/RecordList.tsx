@@ -80,6 +80,7 @@ export function RecordList({ onVisibleIdsChange, onCountsChange }: RecordListPro
     categoryFilters,
     costFilter,
     ratingFilter,
+    secondaryRatingFilter,
     selectedRunId,
     selectedRecordId,
     multiSelection,
@@ -143,6 +144,7 @@ export function RecordList({ onVisibleIdsChange, onCountsChange }: RecordListPro
       categoryFilters: sourceFilter === "dataset" ? categoryFilters : [],
       costFilter,
       ratingFilter,
+      secondaryRatingFilter,
       limit: 200,
     })
       .then((results) => {
@@ -161,7 +163,7 @@ export function RecordList({ onVisibleIdsChange, onCountsChange }: RecordListPro
     return () => {
       cancelled = true;
     };
-  }, [authorFilters, categoryFilters, costFilter, deferredSearchQuery, modelFilter, ratingFilter, selectedRunId, sourceFilter, timeFilter]);
+  }, [authorFilters, categoryFilters, costFilter, deferredSearchQuery, modelFilter, ratingFilter, secondaryRatingFilter, selectedRunId, sourceFilter, timeFilter]);
 
   const records = useMemo(() => {
     if (!bootstrap) return [];
@@ -188,6 +190,7 @@ export function RecordList({ onVisibleIdsChange, onCountsChange }: RecordListPro
       list = list.filter((record) => withinTimeFilter(record.created_at, timeFilter));
       list = list.filter((record) => withinCostFilter(record.total_cost_usd, costFilter));
       list = list.filter((record) => withinRatingFilter(record.effective_rating, ratingFilter));
+      list = list.filter((record) => withinRatingFilter(record.secondary_rating ?? null, secondaryRatingFilter));
       if (modelFilter) {
         list = list.filter((record) => record.model_id === modelFilter);
       }
@@ -214,6 +217,7 @@ export function RecordList({ onVisibleIdsChange, onCountsChange }: RecordListPro
     modelFilter,
     sdkFilter,
     ratingFilter,
+    secondaryRatingFilter,
     searchedRecords,
     selectedRunId,
     sourceRecordById,

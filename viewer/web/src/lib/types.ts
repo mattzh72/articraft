@@ -234,6 +234,7 @@ export type ViewerState = {
   categoryFilters: string[];
   costFilter: CostFilter;
   ratingFilter: RatingFilter;
+  secondaryRatingFilter: RatingFilter;
   selectedRunId: string | null;
   multiSelection: Set<string>;
 };
@@ -256,6 +257,7 @@ export type ViewerAction =
         categoryFilters: string[];
         costFilter: CostFilter;
         ratingFilter: RatingFilter;
+        secondaryRatingFilter: RatingFilter;
         selectedRunId: string | null;
       };
     }
@@ -282,6 +284,7 @@ export type ViewerAction =
   | { type: "SET_CATEGORY_FILTERS"; payload: string[] }
   | { type: "SET_COST_FILTER"; payload: CostFilter }
   | { type: "SET_RATING_FILTER"; payload: RatingFilter }
+  | { type: "SET_SECONDARY_RATING_FILTER"; payload: RatingFilter }
   | { type: "SET_RUN_FILTER"; payload: string | null }
   | { type: "TOGGLE_MULTI_SELECT"; payload: string }
   | { type: "RANGE_MULTI_SELECT"; payload: { targetId: string; visibleIds: string[] } }

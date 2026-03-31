@@ -754,7 +754,7 @@ function CostRangeFilter({
 }
 
 export function ExplorerFilters(): JSX.Element | null {
-  const { bootstrap, sourceFilter, timeFilter, modelFilter, sdkFilter, authorFilters, categoryFilters, costFilter, ratingFilter, selectedRunId } =
+  const { bootstrap, sourceFilter, timeFilter, modelFilter, sdkFilter, authorFilters, categoryFilters, costFilter, ratingFilter, secondaryRatingFilter, selectedRunId } =
     useViewer();
   const dispatch = useViewerDispatch();
 
@@ -794,6 +794,7 @@ export function ExplorerFilters(): JSX.Element | null {
   const costFilterActive = costFilter.min != null || costFilter.max != null;
   const timeFilterActive = timeFilter.oldest != null || timeFilter.newest != null;
   const ratingFilterActive = ratingFilter.length > 0;
+  const secondaryRatingFilterActive = secondaryRatingFilter.length > 0;
   const modelFilterActive = modelFilter !== null;
   const sdkFilterActive = sdkFilter !== null;
   const authorFilterActive = sourceFilter === "dataset" && authorFilters.length > 0;
@@ -867,6 +868,7 @@ export function ExplorerFilters(): JSX.Element | null {
     timeFilterActive ||
     costFilterActive ||
     ratingFilterActive ||
+    secondaryRatingFilterActive ||
     modelFilterActive ||
     sdkFilterActive ||
     authorFilterActive ||
@@ -885,6 +887,7 @@ export function ExplorerFilters(): JSX.Element | null {
               dispatch({ type: "SET_TIME_FILTER", payload: { oldest: null, newest: null } });
               dispatch({ type: "SET_COST_FILTER", payload: { min: null, max: null } });
               dispatch({ type: "SET_RATING_FILTER", payload: [] });
+              dispatch({ type: "SET_SECONDARY_RATING_FILTER", payload: [] });
               dispatch({ type: "SET_MODEL_FILTER", payload: null });
               dispatch({ type: "SET_SDK_FILTER", payload: null });
               dispatch({ type: "SET_AUTHOR_FILTERS", payload: [] });
@@ -917,6 +920,20 @@ export function ExplorerFilters(): JSX.Element | null {
           searchPlaceholder="Search ratings…"
           noMatchLabel="No ratings match"
           triggerLabel={ratingTriggerLabel}
+        />
+
+        <MultiSelectFilter
+          options={ratingOptions}
+          selectedValues={secondaryRatingFilter}
+          onChange={(nextValues) => dispatch({ type: "SET_SECONDARY_RATING_FILTER", payload: nextValues as RatingFilter })}
+          title="Secondary Ratings"
+          searchPlaceholder="Search ratings…"
+          noMatchLabel="No ratings match"
+          triggerLabel={(options, selectedValues) =>
+            selectedValues.length === 0
+              ? "Any secondary rating"
+              : ratingTriggerLabel(options, selectedValues).replace("ratings", "secondary ratings")
+          }
         />
 
         <Select

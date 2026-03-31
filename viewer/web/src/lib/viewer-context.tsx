@@ -43,6 +43,7 @@ const URL_QUERY_PARAMS = {
   costMin: "cost_min",
   costMax: "cost_max",
   rating: "rating",
+  secondaryRating: "secondary_rating",
   run: "run",
 } as const;
 
@@ -80,6 +81,7 @@ type ViewerUrlState = Pick<
   | "categoryFilters"
   | "costFilter"
   | "ratingFilter"
+  | "secondaryRatingFilter"
   | "selectedRunId"
 >;
 
@@ -97,6 +99,7 @@ const defaultViewerUrlState: ViewerUrlState = {
   categoryFilters: [],
   costFilter: { min: null, max: null },
   ratingFilter: [],
+  secondaryRatingFilter: [],
   selectedRunId: null,
 };
 
@@ -237,6 +240,7 @@ function readViewerUrlState(): ViewerUrlState {
       max: parseCostBoundParam(params.get(URL_QUERY_PARAMS.costMax)),
     });
     const ratingFilter = normalizeRatingFilter(params.getAll(URL_QUERY_PARAMS.rating));
+    const secondaryRatingFilter = normalizeRatingFilter(params.getAll(URL_QUERY_PARAMS.secondaryRating));
     const selectedRunId = normalizeOptionalQueryParam(params.get(URL_QUERY_PARAMS.run));
 
     return {
@@ -253,6 +257,7 @@ function readViewerUrlState(): ViewerUrlState {
       categoryFilters,
       costFilter,
       ratingFilter,
+      secondaryRatingFilter,
       selectedRunId,
     };
   } catch {
@@ -352,6 +357,13 @@ function syncViewerStateToUrl(state: ViewerUrlState): void {
   if (state.browserTab !== "staging") {
     for (const ratingFilter of [...state.ratingFilter].sort((left, right) => left.localeCompare(right))) {
       url.searchParams.append(URL_QUERY_PARAMS.rating, ratingFilter);
+    }
+  }
+
+  url.searchParams.delete(URL_QUERY_PARAMS.secondaryRating);
+  if (state.browserTab !== "staging") {
+    for (const secondaryRatingFilter of [...state.secondaryRatingFilter].sort((left, right) => left.localeCompare(right))) {
+      url.searchParams.append(URL_QUERY_PARAMS.secondaryRating, secondaryRatingFilter);
     }
   }
 
@@ -642,6 +654,8 @@ function viewerReducer(state: ViewerState, action: ViewerAction): ViewerState {
       return { ...state, costFilter: normalizeCostFilter(action.payload) };
     case "SET_RATING_FILTER":
       return { ...state, ratingFilter: normalizeRatingFilter(action.payload) };
+    case "SET_SECONDARY_RATING_FILTER":
+      return { ...state, secondaryRatingFilter: normalizeRatingFilter(action.payload) };
     case "SET_RUN_FILTER":
       return { ...state, selectedRunId: action.payload };
     case "TOGGLE_MULTI_SELECT": {
@@ -772,6 +786,7 @@ export function ViewerProvider({ children }: { children: ReactNode }): JSX.Eleme
       categoryFilters: state.categoryFilters,
       costFilter: state.costFilter,
       ratingFilter: state.ratingFilter,
+      secondaryRatingFilter: state.secondaryRatingFilter,
       selectedRunId: state.selectedRunId,
     });
   }, [
@@ -781,6 +796,7 @@ export function ViewerProvider({ children }: { children: ReactNode }): JSX.Eleme
     state.sdkFilter,
     state.authorFilters,
     state.ratingFilter,
+    state.secondaryRatingFilter,
     state.browserTab,
     state.searchQuery,
     state.selectedInspectorTab,

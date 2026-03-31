@@ -78,6 +78,7 @@ export async function searchRecords(params: {
   categoryFilters: string[];
   costFilter: CostFilter;
   ratingFilter: RatingFilter;
+  secondaryRatingFilter: RatingFilter;
   limit?: number;
 }): Promise<RecordSummary[]> {
   const searchParams = new URLSearchParams();
@@ -106,6 +107,9 @@ export async function searchRecords(params: {
   }
   for (const ratingFilter of params.ratingFilter) {
     searchParams.append("rating", ratingFilter);
+  }
+  for (const secondaryRatingFilter of params.secondaryRatingFilter) {
+    searchParams.append("secondary_rating", secondaryRatingFilter);
   }
   if (params.limit) {
     searchParams.set("limit", String(params.limit));

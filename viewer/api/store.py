@@ -1127,6 +1127,7 @@ class ViewerStore:
         cost_min: float | None = None,
         cost_max: float | None = None,
         rating_filter: list[str] | None = None,
+        secondary_rating_filter: list[str] | None = None,
         limit: int = 200,
     ) -> list[RecordSummaryResponse]:
         if not query.strip():
@@ -1156,6 +1157,8 @@ class ViewerStore:
             if not _within_cost_filter(summary.total_cost_usd, cost_min, cost_max):
                 continue
             if not _within_rating_filter(summary.effective_rating, rating_filter):
+                continue
+            if not _within_rating_filter(summary.secondary_rating, secondary_rating_filter):
                 continue
             results.append(summary)
             if len(results) >= limit:
