@@ -105,6 +105,13 @@ export function RecordListItem({ record, multiSelectActive, isMultiSelected, onM
     formatCost(record.total_cost_usd),
     formatDate(record.updated_at ?? record.created_at),
   ].filter((item): item is string => Boolean(item));
+  const effectiveRating = record.effective_rating;
+  const effectiveRatingLabel =
+    effectiveRating == null
+      ? null
+      : Number.isInteger(effectiveRating)
+        ? effectiveRating.toFixed(0)
+        : effectiveRating.toFixed(1);
   const selectedCategoryOption = useMemo(
     () => promoteCategoryOptions.find((option) => option.slug === promoteCategorySlug) ?? null,
     [promoteCategoryOptions, promoteCategorySlug],
@@ -483,17 +490,17 @@ export function RecordListItem({ record, multiSelectActive, isMultiSelected, onM
               {summaryText}
             </p>
 
-            {(metadata.length > 0 || record.rating) ? (
+            {(metadata.length > 0 || effectiveRating != null) ? (
               <div className="mt-1 flex flex-wrap items-center gap-x-1 gap-y-0.5 text-[9.5px] text-[var(--text-tertiary)]">
-                {record.rating ? (
+                {effectiveRatingLabel ? (
                   <span className="flex items-center gap-x-0.5">
                     <Star className="size-[9px] fill-[#e0a100] text-[#e0a100]" />
-                    <span className="text-[#c89400]">{record.rating}</span>
+                    <span className="text-[#c89400]">{effectiveRatingLabel}</span>
                   </span>
                 ) : null}
                 {metadata.map((item, index) => (
                   <span key={`${record.record_id}-${item}`} className="flex items-center gap-x-1">
-                    {(index > 0 || record.rating) ? <span className="text-[var(--border-strong)]">·</span> : null}
+                    {(index > 0 || effectiveRatingLabel) ? <span className="text-[var(--border-strong)]">·</span> : null}
                     <span>{item}</span>
                   </span>
                 ))}

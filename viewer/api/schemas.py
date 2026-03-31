@@ -39,6 +39,7 @@ class RecordSummaryResponse(BaseModel):
     prompt_preview: str
     rating: int | None = None
     secondary_rating: int | None = None
+    effective_rating: float | None = None
     author: str | None = None
     rated_by: str | None = None
     secondary_rated_by: str | None = None
@@ -167,12 +168,12 @@ class RecordRatingResponse(BaseModel):
 
 
 class RecordSecondaryRatingRequest(BaseModel):
-    secondary_rating: int = Field(ge=1, le=5)
+    secondary_rating: int | None = Field(default=None, ge=1, le=5)
 
 
 class RecordSecondaryRatingResponse(BaseModel):
     record_id: str
-    secondary_rating: int
+    secondary_rating: int | None = None
     updated_at: str | None = None
 
 

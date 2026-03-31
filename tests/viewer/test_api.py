@@ -25,7 +25,7 @@ from storage.repo import StorageRepo
 from storage.runs import RunStore
 from storage.trajectories import compress_trajectory_file
 from viewer.api.app import create_app
-from viewer.api.store import ViewerStore
+from viewer.api.store import ViewerStore, _effective_rating, _within_rating_filter
 
 
 def _patch_dataset_tokens(monkeypatch: pytest.MonkeyPatch, *tokens: str) -> None:
@@ -213,6 +213,12 @@ def test_record_trace_system_prompt_requires_canonical_prompt_when_sha_is_record
 
     assert response.status_code == 404
     assert "refusing trace-local fallback" in caplog.text
+
+
+def test_effective_rating_filter_uses_bucket_ranges() -> None:
+    assert _effective_rating(5, 4) == 4.5
+    assert _within_rating_filter(4.5, ["4"]) is True
+    assert _within_rating_filter(4.5, ["5"]) is False
 
 
 def test_viewer_api_end_to_end(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
@@ -531,10 +537,12 @@ def test_viewer_api_end_to_end(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) 
     }
     assert workbench_by_id["rec_001"]["record"]["rating"] is None
     assert workbench_by_id["rec_001"]["record"]["secondary_rating"] is None
+    assert workbench_by_id["rec_001"]["record"]["effective_rating"] is None
     assert workbench_by_id["rec_001"]["record"]["author"] == "mattzh72"
     assert workbench_by_id["rec_001"]["record"]["rated_by"] == "RuiningLi"
     assert workbench_by_id["rec_001"]["record"]["secondary_rated_by"] is None
     assert workbench_by_id["rec_001"]["record"]["thinking_level"] == "high"
+    assert workbench_by_id["rec_bike_001"]["record"]["effective_rating"] == 2.0
 
     dataset = client.get("/api/collections/dataset").json()
     assert [item["dataset_id"] for item in dataset] == ["dj_dataset_001", "hinge_dataset_001"]
@@ -566,6 +574,7 @@ def test_viewer_api_end_to_end(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) 
     assert run_detail["records"][0]["summary"]["rated_by"] == "RuiningLi"
     assert run_detail["records"][0]["summary"]["rating"] is None
     assert run_detail["records"][0]["summary"]["secondary_rating"] is None
+    assert run_detail["records"][0]["summary"]["effective_rating"] is None
     assert run_detail["records"][0]["summary"]["secondary_rated_by"] is None
 
     live_run_detail = client.get("/api/runs/run_live_001").json()
@@ -620,6 +629,7 @@ def test_viewer_api_end_to_end(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) 
         item["record"]["record_id"]: item for item in updated_workbench if item.get("record")
     }
     assert updated_workbench_by_id["rec_001"]["record"]["rating"] == 4
+    assert updated_workbench_by_id["rec_001"]["record"]["effective_rating"] == 4.0
     assert updated_workbench_by_id["rec_001"]["record"]["rated_by"] is None
     persisted_record = repo.read_json(repo.layout.record_metadata_path("rec_001"))
     assert persisted_record["rating"] == 4
@@ -637,10 +647,21 @@ def test_viewer_api_end_to_end(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) 
         item["record"]["record_id"]: item for item in updated_workbench if item.get("record")
     }
     assert updated_workbench_by_id["rec_001"]["record"]["secondary_rating"] == 3
+    assert updated_workbench_by_id["rec_001"]["record"]["effective_rating"] == 3.5
     assert updated_workbench_by_id["rec_001"]["record"]["secondary_rated_by"] is None
     persisted_record = repo.read_json(repo.layout.record_metadata_path("rec_001"))
     assert persisted_record["secondary_rating"] == 3
     assert persisted_record["secondary_rated_by"] is None
+
+    effective_rating_search = client.get(
+        "/api/records/search?q=hinge&source=workbench&rating=3"
+    ).json()
+    assert [item["record_id"] for item in effective_rating_search] == ["rec_001"]
+
+    mismatched_effective_rating_search = client.get(
+        "/api/records/search?q=hinge&source=workbench&rating=4"
+    ).json()
+    assert mismatched_effective_rating_search == []
 
     promote_response = client.post(
         "/api/records/rec_bike_001/promote",
@@ -681,7 +702,7 @@ def test_viewer_api_end_to_end(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) 
     assert stats_payload["category_stats"]["hinges"] == {
         "count": 1,
         "sdk_package": "sdk",
-        "average_rating": 4.0,
+        "average_rating": 3.5,
         "average_cost_usd": 0.05,
     }
     assert stats_payload["category_stats"]["dj_equipment"] == {
@@ -696,6 +717,46 @@ def test_viewer_api_end_to_end(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) 
         "average_rating": 2.0,
         "average_cost_usd": 0.15,
     }
+    assert stats_payload["rating_distribution"] == {
+        "2": 1,
+        "3": 1,
+        "unrated": 1,
+    }
+
+    clear_secondary_rating = client.put(
+        "/api/records/rec_001/secondary-rating",
+        json={"secondary_rating": None},
+    )
+    assert clear_secondary_rating.status_code == 200
+    assert clear_secondary_rating.json()["secondary_rating"] is None
+
+    updated_workbench_after_clear = client.get("/api/collections/workbench").json()
+    updated_workbench_after_clear_by_id = {
+        item["record"]["record_id"]: item
+        for item in updated_workbench_after_clear
+        if item.get("record")
+    }
+    assert updated_workbench_after_clear_by_id["rec_001"]["record"]["secondary_rating"] is None
+    assert updated_workbench_after_clear_by_id["rec_001"]["record"]["effective_rating"] == 4.0
+    persisted_record = repo.read_json(repo.layout.record_metadata_path("rec_001"))
+    assert persisted_record["secondary_rating"] is None
+    assert persisted_record["secondary_rated_by"] is None
+
+    refreshed_stats = client.get("/api/stats")
+    assert refreshed_stats.status_code == 200
+    refreshed_stats_payload = refreshed_stats.json()
+    assert refreshed_stats_payload["category_stats"]["hinges"] == {
+        "count": 1,
+        "sdk_package": "sdk",
+        "average_rating": 4.0,
+        "average_cost_usd": 0.05,
+    }
+    assert refreshed_stats_payload["rating_distribution"] == {
+        "2": 1,
+        "4": 1,
+        "unrated": 1,
+    }
+
     invalid_rating = client.put("/api/records/rec_001/rating", json={"rating": 7})
     assert invalid_rating.status_code == 422
     invalid_secondary_rating = client.put(

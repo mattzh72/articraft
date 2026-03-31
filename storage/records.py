@@ -68,7 +68,7 @@ class RecordStore:
         *,
         rating_field: str,
         rated_by_field: str,
-        rating: int,
+        rating: int | None,
     ) -> dict | None:
         record = self.load_record(record_id)
         if not isinstance(record, dict):
@@ -88,7 +88,7 @@ class RecordStore:
             rating=rating,
         )
 
-    def update_secondary_rating(self, record_id: str, rating: int) -> dict | None:
+    def update_secondary_rating(self, record_id: str, rating: int | None) -> dict | None:
         return self._update_rating_field(
             record_id,
             rating_field="secondary_rating",

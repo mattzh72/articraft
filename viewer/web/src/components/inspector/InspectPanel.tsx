@@ -67,6 +67,7 @@ type EditableRatingSectionProps = {
   error: string | null;
   onHoveredRatingChange: (value: number | null) => void;
   onSelect: (value: number) => void;
+  onClear?: () => void;
 };
 
 function EditableRatingSection({
@@ -78,6 +79,7 @@ function EditableRatingSection({
   error,
   onHoveredRatingChange,
   onSelect,
+  onClear,
 }: EditableRatingSectionProps): JSX.Element {
   return (
     <section>
@@ -109,20 +111,34 @@ function EditableRatingSection({
             );
           })}
         </div>
-        <span className="text-[10px] text-[var(--text-tertiary)]">
-          {saving ? (
-            "Saving…"
-          ) : (
-            <>
-              {rating ? `${rating} / 5` : "Unrated"}
-              {ratedBy ? (
-                <>
-                  {" "}by <span className="font-semibold text-[var(--text-secondary)]">{ratedBy}</span>
-                </>
-              ) : null}
-            </>
-          )}
-        </span>
+        <div className="flex items-center gap-2">
+          <span className="text-[10px] text-[var(--text-tertiary)]">
+            {saving ? (
+              "Saving…"
+            ) : (
+              <>
+                {rating ? `${rating} / 5` : "Unrated"}
+                {ratedBy ? (
+                  <>
+                    {" "}by <span className="font-semibold text-[var(--text-secondary)]">{ratedBy}</span>
+                  </>
+                ) : null}
+              </>
+            )}
+          </span>
+          {onClear && rating != null ? (
+            <Button
+              type="button"
+              variant="ghost"
+              size="sm"
+              disabled={saving}
+              onClick={onClear}
+              className="h-5 px-1.5 text-[10px] text-[var(--text-tertiary)] hover:text-[var(--text-secondary)]"
+            >
+              Clear
+            </Button>
+          ) : null}
+        </div>
       </div>
       {error ? <p className="mt-1.5 text-[10px] text-[var(--destructive)]">{error}</p> : null}
     </section>
@@ -420,7 +436,7 @@ export function InspectPanel({
     }
   }, [dispatch, record, savingRating, selectedRecordId]);
 
-  const handleSecondaryRatingSelect = useCallback(async (nextRating: number): Promise<void> => {
+  const handleSecondaryRatingSelect = useCallback(async (nextRating: number | null): Promise<void> => {
     if (!selectedRecordId || !record || savingSecondaryRating) {
       return;
     }
@@ -729,6 +745,7 @@ export function InspectPanel({
           error={secondaryRatingError}
           onHoveredRatingChange={setHoveredSecondaryRating}
           onSelect={(starValue) => void handleSecondaryRatingSelect(starValue)}
+          onClear={() => void handleSecondaryRatingSelect(null)}
         />
 
         {/* Record context */}

@@ -63,6 +63,27 @@ def _coerce_rating(value: Any) -> int | None:
     return None
 
 
+def _effective_rating(primary_rating: int | None, secondary_rating: int | None) -> float | None:
+    ratings = [float(value) for value in (primary_rating, secondary_rating) if value is not None]
+    if not ratings:
+        return None
+    return sum(ratings) / len(ratings)
+
+
+def _effective_rating_bucket(value: float | None) -> str:
+    if value is None:
+        return "unrated"
+    if value < 2.0:
+        return "1"
+    if value < 3.0:
+        return "2"
+    if value < 4.0:
+        return "3"
+    if value < 5.0:
+        return "4"
+    return "5"
+
+
 def _coerce_float(value: Any) -> float | None:
     if isinstance(value, (int, float)):
         return float(value)
@@ -121,7 +142,7 @@ def _within_cost_filter(
     return True
 
 
-def _within_rating_filter(rating: int | None, filter_value: list[str] | None) -> bool:
+def _within_rating_filter(rating: float | None, filter_value: list[str] | None) -> bool:
     if not filter_value:
         return True
 
@@ -130,9 +151,7 @@ def _within_rating_filter(rating: int | None, filter_value: list[str] | None) ->
     }
     if not normalized:
         return True
-    if rating is None:
-        return "unrated" in normalized
-    return str(rating) in normalized
+    return _effective_rating_bucket(rating) in normalized
 
 
 def _within_category_filters(category_slug: str | None, filter_values: list[str] | None) -> bool:
@@ -675,12 +694,15 @@ class ViewerStore:
                 run_status = _coerce_string(run_result.get("status")) or run_status
                 run_message = _coerce_string(run_result.get("message"))
 
+        primary_rating = _coerce_rating(record.get("rating"))
+        secondary_rating = _coerce_rating(record.get("secondary_rating"))
         summary = RecordSummaryResponse(
             record_id=record_id,
             title=str(display.get("title") or record_id),
             prompt_preview=str(display.get("prompt_preview") or ""),
-            rating=_coerce_rating(record.get("rating")),
-            secondary_rating=_coerce_rating(record.get("secondary_rating")),
+            rating=primary_rating,
+            secondary_rating=secondary_rating,
+            effective_rating=_effective_rating(primary_rating, secondary_rating),
             author=_coerce_string(record.get("author")),
             rated_by=_coerce_string(record.get("rated_by")),
             secondary_rated_by=_coerce_string(record.get("secondary_rated_by")),
@@ -1133,7 +1155,7 @@ class ViewerStore:
                 continue
             if not _within_cost_filter(summary.total_cost_usd, cost_min, cost_max):
                 continue
-            if not _within_rating_filter(summary.rating, rating_filter):
+            if not _within_rating_filter(summary.effective_rating, rating_filter):
                 continue
             results.append(summary)
             if len(results) >= limit:
@@ -1170,6 +1192,9 @@ class ViewerStore:
 
     _stats_cache: tuple[float, RepoStatsResponse] | None = None
     _STATS_TTL = 30.0
+
+    def invalidate_stats_cache(self) -> None:
+        self._stats_cache = None
 
     def compute_stats(self) -> RepoStatsResponse:
         now = time.monotonic()
@@ -1220,9 +1245,9 @@ class ViewerStore:
                 sdk_package = _coerce_string(s.sdk_package)
                 if sdk_package:
                     category_record_sdk_packages.setdefault(category, set()).add(sdk_package)
-                if s.rating is not None:
+                if s.effective_rating is not None:
                     category_rating_totals[category] = (
-                        category_rating_totals.get(category, 0.0) + s.rating
+                        category_rating_totals.get(category, 0.0) + s.effective_rating
                     )
                     category_rating_counts[category] = category_rating_counts.get(category, 0) + 1
                 if s.total_cost_usd is not None:
@@ -1234,7 +1259,7 @@ class ViewerStore:
                 model_counts[s.model_id] = model_counts.get(s.model_id, 0) + 1
             if s.provider:
                 provider_counts[s.provider] = provider_counts.get(s.provider, 0) + 1
-            rating_key = str(s.rating) if s.rating is not None else "unrated"
+            rating_key = _effective_rating_bucket(s.effective_rating)
             rating_distribution[rating_key] = rating_distribution.get(rating_key, 0) + 1
 
         data_size = self._compute_data_size()

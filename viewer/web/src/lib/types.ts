@@ -4,6 +4,7 @@ export type RecordSummary = {
   prompt_preview: string;
   rating: number | null;
   secondary_rating: number | null;
+  effective_rating: number | null;
   author: string | null;
   rated_by: string | null;
   secondary_rated_by: string | null;
@@ -129,7 +130,7 @@ export type RecordRatingResponse = {
 
 export type RecordSecondaryRatingResponse = {
   record_id: string;
-  secondary_rating: number;
+  secondary_rating: number | null;
   updated_at: string | null;
 };
 
@@ -266,7 +267,7 @@ export type ViewerAction =
   | { type: "UPDATE_RECORD_RATING"; payload: { recordId: string; rating: number; updatedAt: string | null } }
   | {
       type: "UPDATE_RECORD_SECONDARY_RATING";
-      payload: { recordId: string; secondaryRating: number; updatedAt: string | null };
+      payload: { recordId: string; secondaryRating: number | null; updatedAt: string | null };
     }
   | { type: "TOGGLE_INSPECTOR" }
   | { type: "SET_LOADING"; payload: boolean }

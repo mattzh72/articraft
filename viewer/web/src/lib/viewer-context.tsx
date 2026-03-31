@@ -54,6 +54,17 @@ const RATING_FILTERS = ["1", "2", "3", "4", "5", "unrated"] as const satisfies r
 
 const STAGING_POLL_INTERVAL_MS = 3000;
 
+function computeEffectiveRating(
+  rating: number | null | undefined,
+  secondaryRating: number | null | undefined,
+): number | null {
+  const values = [rating, secondaryRating].filter((value): value is number => value != null);
+  if (values.length === 0) {
+    return null;
+  }
+  return values.reduce((sum, value) => sum + value, 0) / values.length;
+}
+
 type ViewerUrlState = Pick<
   ViewerState,
   | "selection"
@@ -418,15 +429,22 @@ function updateRecordSummaryFields(
   summary: RecordSummary | null,
   recordId: string,
   updates: Partial<
-    Pick<RecordSummary, "rating" | "secondary_rating" | "rated_by" | "secondary_rated_by" | "updated_at">
+    Pick<
+      RecordSummary,
+      "rating" | "secondary_rating" | "effective_rating" | "rated_by" | "secondary_rated_by" | "updated_at"
+    >
   >,
 ): RecordSummary | null {
   if (!summary || summary.record_id !== recordId) {
     return summary;
   }
-  return {
+  const nextSummary: RecordSummary = {
     ...summary,
     ...updates,
+  };
+  return {
+    ...nextSummary,
+    effective_rating: computeEffectiveRating(nextSummary.rating, nextSummary.secondary_rating),
   };
 }
 
@@ -434,7 +452,10 @@ function updateBootstrapRecordFields(
   bootstrap: ViewerBootstrap | null,
   recordId: string,
   updates: Partial<
-    Pick<RecordSummary, "rating" | "secondary_rating" | "rated_by" | "secondary_rated_by" | "updated_at">
+    Pick<
+      RecordSummary,
+      "rating" | "secondary_rating" | "effective_rating" | "rated_by" | "secondary_rated_by" | "updated_at"
+    >
   >,
 ): ViewerBootstrap | null {
   if (!bootstrap) {

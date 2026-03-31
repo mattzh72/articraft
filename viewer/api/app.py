@@ -571,6 +571,7 @@ def create_app(*, repo_root: Path | None = None) -> FastAPI:
         updated = RecordStore(repo).update_rating(record_id, payload.rating)
         if not isinstance(updated, dict):
             raise HTTPException(status_code=404, detail=f"Record not found: {record_id}")
+        app.state.viewer_store.invalidate_stats_cache()
 
         return RecordRatingResponse(
             record_id=record_id,
@@ -595,6 +596,7 @@ def create_app(*, repo_root: Path | None = None) -> FastAPI:
         updated = RecordStore(repo).update_secondary_rating(record_id, payload.secondary_rating)
         if not isinstance(updated, dict):
             raise HTTPException(status_code=404, detail=f"Record not found: {record_id}")
+        app.state.viewer_store.invalidate_stats_cache()
 
         return RecordSecondaryRatingResponse(
             record_id=record_id,

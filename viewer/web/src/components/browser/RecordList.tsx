@@ -51,7 +51,11 @@ function withinCostFilter(totalCostUsd: number | null, filter: CostFilter): bool
 function withinRatingFilter(rating: number | null, filter: RatingFilter): boolean {
   if (filter.length === 0) return true;
   if (rating == null) return filter.includes("unrated");
-  return filter.includes(String(rating) as Exclude<(typeof filter)[number], "unrated">);
+  if (rating < 2) return filter.includes("1");
+  if (rating < 3) return filter.includes("2");
+  if (rating < 4) return filter.includes("3");
+  if (rating < 5) return filter.includes("4");
+  return filter.includes("5");
 }
 
 function recordSortTimestamp(record: RecordSummary): number {
@@ -113,6 +117,10 @@ export function RecordList({ onVisibleIdsChange, onCountsChange }: RecordListPro
 
     return Array.from(seen.values());
   }, [bootstrap, sourceFilter]);
+  const sourceRecordById = useMemo(
+    () => new Map(sourceRecords.map((record) => [record.record_id, record])),
+    [sourceRecords],
+  );
 
   useEffect(() => {
     if (!deferredSearchQuery) {
@@ -158,7 +166,9 @@ export function RecordList({ onVisibleIdsChange, onCountsChange }: RecordListPro
   const records = useMemo(() => {
     if (!bootstrap) return [];
 
-    let list = deferredSearchQuery ? searchedRecords ?? [] : sourceRecords;
+    let list = deferredSearchQuery
+      ? (searchedRecords ?? []).map((record) => sourceRecordById.get(record.record_id) ?? record)
+      : sourceRecords;
 
     if (!deferredSearchQuery && selectedRunId) {
       list = list.filter((r) => r.run_id === selectedRunId);
@@ -177,7 +187,7 @@ export function RecordList({ onVisibleIdsChange, onCountsChange }: RecordListPro
     if (!deferredSearchQuery) {
       list = list.filter((record) => withinTimeFilter(record.created_at, timeFilter));
       list = list.filter((record) => withinCostFilter(record.total_cost_usd, costFilter));
-      list = list.filter((record) => withinRatingFilter(record.rating, ratingFilter));
+      list = list.filter((record) => withinRatingFilter(record.effective_rating, ratingFilter));
       if (modelFilter) {
         list = list.filter((record) => record.model_id === modelFilter);
       }
@@ -206,6 +216,7 @@ export function RecordList({ onVisibleIdsChange, onCountsChange }: RecordListPro
     ratingFilter,
     searchedRecords,
     selectedRunId,
+    sourceRecordById,
     sourceRecords,
     sourceFilter,
     timeFilter,

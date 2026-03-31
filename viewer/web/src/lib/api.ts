@@ -288,7 +288,7 @@ export async function saveRecordRating(recordId: string, rating: number): Promis
 
 export async function saveRecordSecondaryRating(
   recordId: string,
-  secondaryRating: number,
+  secondaryRating: number | null,
 ): Promise<RecordSecondaryRatingResponse> {
   const response = await fetch(`/api/records/${encodeURIComponent(recordId)}/secondary-rating`, {
     method: "PUT",
