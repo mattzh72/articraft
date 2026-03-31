@@ -1,7 +1,10 @@
 from __future__ import annotations
 
 import asyncio
+import io
 import json
+import subprocess
+from contextlib import redirect_stdout
 from pathlib import Path
 
 import pytest
@@ -9,12 +12,17 @@ import pytest
 from agent import runner
 from agent.defaults import DEFAULT_MAX_TURNS
 from cli.workbench import main as workbench_main
+from scripts import git_hooks
 from tests.helpers import FakeAgent
 
 
 @pytest.fixture
 def fake_agent(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setattr(runner, "ArticraftAgent", FakeAgent)
+
+
+def _init_git_repo(repo_root: Path) -> None:
+    subprocess.run(["git", "init"], cwd=repo_root, check=True, capture_output=True, text=True)
 
 
 def test_workbench_rerun_record_command(
@@ -701,3 +709,104 @@ def test_workbench_init_record_command_persists_input_image(
 
     captured = capsys.readouterr().out
     assert f"initialized record_id={record_dir.name}" in captured
+
+
+def test_workbench_init_record_warns_when_post_commit_hook_missing(tmp_path: Path) -> None:
+    _init_git_repo(tmp_path)
+    git_hooks.install_post_commit_hook(tmp_path)
+    (tmp_path / ".git" / "hooks" / "post-commit").unlink()
+
+    output = io.StringIO()
+    with redirect_stdout(output):
+        assert (
+            workbench_main(
+                [
+                    "--repo-root",
+                    str(tmp_path),
+                    "init-record",
+                    "build a folding reading lamp",
+                    "--provider",
+                    "openai",
+                ]
+            )
+            == 0
+        )
+
+    captured = output.getvalue()
+    assert "Warning: managed post-commit hook is missing" in captured
+    assert "just setup" in captured
+    assert "just hooks-install" in captured
+    assert "install-post-commit" in captured
+
+
+def test_workbench_rerun_record_warns_when_post_commit_hook_missing(
+    fake_agent: None,
+    tmp_path: Path,
+) -> None:
+    repo_root = tmp_path
+    _init_git_repo(repo_root)
+    git_hooks.install_post_commit_hook(repo_root)
+    (repo_root / ".git" / "hooks" / "post-commit").unlink()
+    exit_code = asyncio.run(
+        runner.run_from_input(
+            "make a cabinet hinge",
+            prompt_text="make a cabinet hinge",
+            display_prompt="make a cabinet hinge",
+            repo_root=repo_root,
+            image_path=None,
+            provider="openai",
+            thinking_level="high",
+            max_turns=30,
+            system_prompt_path="designer_system_prompt.txt",
+            sdk_package="sdk",
+            sdk_docs_mode="full",
+            label="hinge rerun",
+            tags=["hinge"],
+        )
+    )
+    assert exit_code == 0
+
+    record_dir = next((repo_root / "data" / "records").iterdir())
+    output = io.StringIO()
+    with redirect_stdout(output):
+        assert workbench_main(["--repo-root", str(repo_root), "rerun-record", str(record_dir)]) == 0
+
+    assert "Warning: managed post-commit hook is missing" in output.getvalue()
+
+
+def test_workbench_init_record_does_not_warn_when_post_commit_hook_installed(
+    tmp_path: Path,
+) -> None:
+    _init_git_repo(tmp_path)
+    git_hooks.install_post_commit_hook(tmp_path)
+
+    output = io.StringIO()
+    with redirect_stdout(output):
+        assert (
+            workbench_main(
+                [
+                    "--repo-root",
+                    str(tmp_path),
+                    "init-record",
+                    "build a folding reading lamp",
+                    "--provider",
+                    "openai",
+                ]
+            )
+            == 0
+        )
+
+    assert "Warning: managed post-commit hook" not in output.getvalue()
+
+
+def test_workbench_status_does_not_warn_when_post_commit_hook_missing(
+    tmp_path: Path,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    _init_git_repo(tmp_path)
+    git_hooks.install_post_commit_hook(tmp_path)
+    (tmp_path / ".git" / "hooks" / "post-commit").unlink()
+
+    assert workbench_main(["--repo-root", str(tmp_path), "status"]) == 0
+
+    assert "Warning: managed post-commit hook" not in capsys.readouterr().out

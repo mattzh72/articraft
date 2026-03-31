@@ -10,7 +10,7 @@ from agent.defaults import DEFAULT_MAX_TURNS
 from agent.prompts import normalize_sdk_package
 from agent.runner import create_workbench_draft_record, rerun_record_in_place
 from agent.tools import resolve_image_path
-from cli.common import add_data_root_argument
+from cli.common import add_data_root_argument, warn_if_post_commit_hook_missing
 from sdk._profiles import DEFAULT_SCAFFOLD_MODE, normalize_scaffold_mode
 from storage.collections import CollectionStore
 from storage.models import WorkbenchCollection
@@ -212,6 +212,7 @@ def main(argv: list[str] | None = None) -> int:
         return 0
 
     if args.command == "init-record":
+        warn_if_post_commit_hook_missing(args.repo_root)
         try:
             image_path = resolve_image_path(args.image, provider=args.provider)
         except Exception as exc:
@@ -273,6 +274,7 @@ def main(argv: list[str] | None = None) -> int:
 
     if args.command == "rerun-record":
         repo.ensure_layout()
+        warn_if_post_commit_hook_missing(args.repo_root)
         try:
             record_id = _resolve_record_reference(repo, args.record)
             sdk_package = (

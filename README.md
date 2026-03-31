@@ -39,8 +39,17 @@ This does the initial local setup:
 - installs Python dev dependencies, including `pre-commit` and `ruff`
 - installs `viewer/web` dependencies when `npm` is available
 - installs the git `pre-commit` and `pre-push` hooks
+- installs the managed git `post-commit` hook used to auto-sync record metadata such as `author` and `rated_by`
 - initializes local storage under `data/`
 - builds the dataset manifest used by the viewer
+
+You can verify the hook setup with:
+
+```bash
+uv run python scripts/git_hooks.py check-post-commit
+```
+
+If you skip `just setup` and install pieces manually, record metadata will not auto-sync after commits until the managed post-commit hook is installed.
 
 ## 3. Add Your API Key
 

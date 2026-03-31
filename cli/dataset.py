@@ -13,7 +13,7 @@ from agent.defaults import DEFAULT_MAX_TURNS
 from agent.prompts import normalize_sdk_package
 from agent.runner import run_from_input
 from agent.tools import build_initial_user_content, resolve_image_path
-from cli.common import add_data_root_argument
+from cli.common import add_data_root_argument, warn_if_post_commit_hook_missing
 from sdk._profiles import DEFAULT_SCAFFOLD_MODE, normalize_scaffold_mode
 from storage.categories import CategoryStore
 from storage.collections import CollectionStore
@@ -1039,6 +1039,7 @@ def main(argv: list[str] | None = None) -> int:
 
     if args.command == "run-single":
         repo.ensure_layout()
+        warn_if_post_commit_hook_missing(args.repo_root)
         try:
             sdk_package = normalize_sdk_package(args.sdk_package)
             scaffold_mode = normalize_scaffold_mode(args.scaffold_mode)
@@ -1403,6 +1404,7 @@ def main(argv: list[str] | None = None) -> int:
     if args.command == "run-batch":
         from agent.batch_runner import build_batch_config, keep_system_awake, run_dataset_batch
 
+        warn_if_post_commit_hook_missing(args.repo_root)
         try:
             config = build_batch_config(
                 repo_root=args.repo_root,

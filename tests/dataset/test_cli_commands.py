@@ -2,6 +2,9 @@ from __future__ import annotations
 
 import io
 import json
+import subprocess
+import sys
+import types
 from contextlib import redirect_stdout
 from pathlib import Path
 
@@ -9,6 +12,7 @@ import pytest
 
 from agent import runner
 from cli.dataset import main as dataset_main
+from scripts import git_hooks
 from storage import dataset_workflow
 from storage.categories import CategoryStore
 from storage.collections import CollectionStore
@@ -31,6 +35,10 @@ from tests.helpers import FakeAgent
 @pytest.fixture
 def fake_agent(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setattr(runner, "ArticraftAgent", FakeAgent)
+
+
+def _init_git_repo(repo_root: Path) -> None:
+    subprocess.run(["git", "init"], cwd=repo_root, check=True, capture_output=True, text=True)
 
 
 def _create_workbench_record(
@@ -733,6 +741,151 @@ def test_run_single_reuses_existing_category_and_allocates_next_dataset_id(
 
     captured = capsys.readouterr().out
     assert "dataset_id=ds_internet_router_0002" in captured
+
+
+def test_run_single_warns_when_post_commit_hook_missing(
+    fake_agent: None,
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    _patch_dataset_tokens(monkeypatch, "0001")
+    _init_git_repo(tmp_path)
+    git_hooks.install_post_commit_hook(tmp_path)
+    (tmp_path / ".git" / "hooks" / "post-commit").unlink()
+
+    output = io.StringIO()
+    with redirect_stdout(output):
+        assert (
+            dataset_main(
+                [
+                    "--repo-root",
+                    str(tmp_path),
+                    "run-single",
+                    "Create a compact home router with a vented body and two hinged antennas.",
+                    "--category-slug",
+                    "internet_router",
+                    "--provider",
+                    "openai",
+                    "--model-id",
+                    "gpt-5.4",
+                    "--thinking-level",
+                    "high",
+                    "--sdk-package",
+                    "sdk",
+                    "--record-id",
+                    "rec_router_single",
+                ]
+            )
+            == 0
+        )
+
+    captured = output.getvalue()
+    assert "Warning: managed post-commit hook is missing" in captured
+    assert "just setup" in captured
+
+
+def test_status_does_not_warn_when_post_commit_hook_missing(
+    tmp_path: Path,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    _init_git_repo(tmp_path)
+    git_hooks.install_post_commit_hook(tmp_path)
+    (tmp_path / ".git" / "hooks" / "post-commit").unlink()
+
+    assert dataset_main(["--repo-root", str(tmp_path), "status"]) == 0
+
+    captured = capsys.readouterr().out
+    assert "Warning: managed post-commit hook" not in captured
+
+
+def test_run_batch_warns_when_post_commit_hook_missing(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    _init_git_repo(tmp_path)
+    git_hooks.install_post_commit_hook(tmp_path)
+    (tmp_path / ".git" / "hooks" / "post-commit").unlink()
+
+    class _NoopAwake:
+        def __enter__(self) -> None:
+            return None
+
+        def __exit__(self, exc_type, exc, tb) -> bool:
+            return False
+
+    def _fake_build_batch_config(**kwargs: object) -> object:
+        assert kwargs["repo_root"] == tmp_path
+        return type("Config", (), {"keep_awake": False})()
+
+    async def _fake_run_dataset_batch(config: object) -> dict[str, object]:
+        return {
+            "run_id": "run_batch_001",
+            "status": "success",
+            "success_count": 1,
+            "failed_count": 0,
+        }
+
+    fake_module = types.ModuleType("agent.batch_runner")
+    fake_module.build_batch_config = _fake_build_batch_config
+    fake_module.keep_system_awake = lambda enabled: _NoopAwake()
+    fake_module.run_dataset_batch = _fake_run_dataset_batch
+    monkeypatch.setitem(sys.modules, "agent.batch_runner", fake_module)
+
+    output = io.StringIO()
+    with redirect_stdout(output):
+        assert (
+            dataset_main(
+                [
+                    "--repo-root",
+                    str(tmp_path),
+                    "run-batch",
+                    "data/batch_specs/example.csv",
+                ]
+            )
+            == 0
+        )
+
+    captured = output.getvalue()
+    assert "Warning: managed post-commit hook is missing" in captured
+    assert "Batch run_id=run_batch_001 status=success successes=1 failures=0" in captured
+
+
+def test_run_single_does_not_warn_when_post_commit_hook_installed(
+    fake_agent: None,
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    _patch_dataset_tokens(monkeypatch, "0001")
+    _init_git_repo(tmp_path)
+    git_hooks.install_post_commit_hook(tmp_path)
+
+    output = io.StringIO()
+    with redirect_stdout(output):
+        assert (
+            dataset_main(
+                [
+                    "--repo-root",
+                    str(tmp_path),
+                    "run-single",
+                    "Create a compact home router with a vented body and two hinged antennas.",
+                    "--category-slug",
+                    "internet_router",
+                    "--provider",
+                    "openai",
+                    "--model-id",
+                    "gpt-5.4",
+                    "--thinking-level",
+                    "high",
+                    "--sdk-package",
+                    "sdk",
+                    "--record-id",
+                    "rec_router_single",
+                ]
+            )
+            == 0
+        )
+
+    assert "Warning: managed post-commit hook" not in output.getvalue()
 
 
 def test_sync_authors_cli_reports_summary(

@@ -7,6 +7,7 @@ import subprocess
 import sys
 from dataclasses import dataclass, field
 from pathlib import Path
+from typing import Literal
 
 from storage.record_authors import (
     sync_record_authors,
@@ -28,6 +29,8 @@ if command -v uv >/dev/null 2>&1; then
 fi
 exec python3 scripts/git_hooks.py post-commit-record-authors
 """.format(marker=MANAGED_POST_COMMIT_MARKER)
+
+HookInstallStatus = Literal["installed", "missing", "unmanaged"]
 
 
 def _git_output(repo_root: Path, *args: str) -> str:
@@ -134,6 +137,16 @@ class PostCommitRecordMetadataResult:
         )
 
 
+@dataclass(slots=True, frozen=True)
+class PostCommitHookStatus:
+    status: HookInstallStatus
+    hook_path: Path
+
+    @property
+    def installed(self) -> bool:
+        return self.status == "installed"
+
+
 def run_post_commit_record_metadata_sync(repo_root: Path) -> PostCommitRecordMetadataResult:
     if os.environ.get(POST_COMMIT_GUARD_ENV):
         return PostCommitRecordMetadataResult()
@@ -178,15 +191,28 @@ def run_post_commit_record_author_sync(repo_root: Path) -> PostCommitRecordMetad
     return run_post_commit_record_metadata_sync(repo_root)
 
 
-def install_post_commit_hook(repo_root: Path) -> Path:
+def get_post_commit_hook_status(repo_root: Path) -> PostCommitHookStatus:
     repo_root = repo_root.resolve()
     hook_path = _git_path(repo_root, "hooks/post-commit")
+    if not hook_path.exists():
+        return PostCommitHookStatus(status="missing", hook_path=hook_path)
+
+    existing = hook_path.read_text(encoding="utf-8")
+    if existing == MANAGED_POST_COMMIT_SCRIPT:
+        return PostCommitHookStatus(status="installed", hook_path=hook_path)
+    return PostCommitHookStatus(status="unmanaged", hook_path=hook_path)
+
+
+def install_post_commit_hook(repo_root: Path) -> Path:
+    repo_root = repo_root.resolve()
+    status = get_post_commit_hook_status(repo_root)
+    hook_path = status.hook_path
     if hook_path.exists():
-        existing = hook_path.read_text(encoding="utf-8")
-        if existing == MANAGED_POST_COMMIT_SCRIPT:
+        if status.status == "installed":
             current_mode = stat.S_IMODE(hook_path.stat().st_mode)
             hook_path.chmod(current_mode | stat.S_IXUSR | stat.S_IXGRP | stat.S_IXOTH)
             return hook_path
+        existing = hook_path.read_text(encoding="utf-8")
         if MANAGED_POST_COMMIT_MARKER not in existing:
             raise RuntimeError(
                 f"Refusing to overwrite unmanaged post-commit hook at {hook_path}. "
@@ -204,6 +230,10 @@ def _build_parser() -> argparse.ArgumentParser:
     subparsers = parser.add_subparsers(dest="command", required=True)
     subparsers.add_parser("install-post-commit", help="Install the managed post-commit hook.")
     subparsers.add_parser(
+        "check-post-commit",
+        help="Report whether the managed post-commit hook is installed, missing, or unmanaged.",
+    )
+    subparsers.add_parser(
         "post-commit-record-authors",
         help="Hook entrypoint that syncs record author metadata and amends the latest commit.",
     )
@@ -217,6 +247,11 @@ def main(argv: list[str] | None = None) -> int:
     if args.command == "install-post-commit":
         hook_path = install_post_commit_hook(REPO_ROOT)
         print(f"Installed post-commit hook at {hook_path}")
+        return 0
+
+    if args.command == "check-post-commit":
+        status = get_post_commit_hook_status(REPO_ROOT)
+        print(f"status={status.status} hook_path={status.hook_path}")
         return 0
 
     if args.command == "post-commit-record-authors":

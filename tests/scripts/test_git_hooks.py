@@ -345,3 +345,37 @@ def test_install_post_commit_hook_refuses_to_overwrite_unmanaged_hook(tmp_path: 
 
     with pytest.raises(RuntimeError, match="Refusing to overwrite unmanaged post-commit hook"):
         git_hooks.install_post_commit_hook(tmp_path)
+
+
+def test_get_post_commit_hook_status_returns_missing_when_hook_absent(tmp_path: Path) -> None:
+    _init_git_repo(tmp_path)
+
+    status = git_hooks.get_post_commit_hook_status(tmp_path)
+
+    assert status.status == "missing"
+    assert status.hook_path == tmp_path / ".git" / "hooks" / "post-commit"
+    assert status.installed is False
+
+
+def test_get_post_commit_hook_status_returns_installed_for_managed_hook(tmp_path: Path) -> None:
+    _init_git_repo(tmp_path)
+    hook_path = git_hooks.install_post_commit_hook(tmp_path)
+
+    status = git_hooks.get_post_commit_hook_status(tmp_path)
+
+    assert status.status == "installed"
+    assert status.hook_path == hook_path
+    assert status.installed is True
+
+
+def test_get_post_commit_hook_status_returns_unmanaged_for_custom_hook(tmp_path: Path) -> None:
+    _init_git_repo(tmp_path)
+    hook_path = tmp_path / ".git" / "hooks" / "post-commit"
+    hook_path.parent.mkdir(parents=True, exist_ok=True)
+    hook_path.write_text("#!/bin/sh\nexit 0\n", encoding="utf-8")
+
+    status = git_hooks.get_post_commit_hook_status(tmp_path)
+
+    assert status.status == "unmanaged"
+    assert status.hook_path == hook_path
+    assert status.installed is False
