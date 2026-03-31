@@ -819,10 +819,10 @@ export function ExplorerFilters(): JSX.Element | null {
     }
 
     const catToSuper = new Map<string, string>();
-    const titleOrder = new Map<string, number>();
+    const superOrder = new Map<string, number>();
     for (let i = 0; i < supercategories.length; i++) {
       const sc = supercategories[i];
-      titleOrder.set(sc.title, i);
+      superOrder.set(sc.slug, i);
       for (const cat of sc.category_slugs) {
         catToSuper.set(cat, sc.title);
       }
@@ -838,8 +838,10 @@ export function ExplorerFilters(): JSX.Element | null {
         const leftGroup = left.group ?? "\uffff";
         const rightGroup = right.group ?? "\uffff";
         if (leftGroup !== rightGroup) {
-          const leftIdx = titleOrder.get(leftGroup) ?? Infinity;
-          const rightIdx = titleOrder.get(rightGroup) ?? Infinity;
+          const leftSuper = supercategories.find((sc) => sc.title === leftGroup);
+          const rightSuper = supercategories.find((sc) => sc.title === rightGroup);
+          const leftIdx = leftSuper ? (superOrder.get(leftSuper.slug) ?? Infinity) : Infinity;
+          const rightIdx = rightSuper ? (superOrder.get(rightSuper.slug) ?? Infinity) : Infinity;
           return leftIdx - rightIdx;
         }
         return left.label.localeCompare(right.label);
