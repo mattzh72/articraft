@@ -10,6 +10,7 @@ export type RecordSummary = {
   secondary_rated_by: string | null;
   created_at: string | null;
   updated_at: string | null;
+  viewer_asset_updated_at: string | null;
   sdk_package: string | null;
   provider: string | null;
   model_id: string | null;

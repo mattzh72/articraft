@@ -542,6 +542,7 @@ def test_viewer_api_end_to_end(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) 
     assert workbench_by_id["rec_001"]["record"]["rated_by"] == "RuiningLi"
     assert workbench_by_id["rec_001"]["record"]["secondary_rated_by"] is None
     assert workbench_by_id["rec_001"]["record"]["thinking_level"] == "high"
+    assert workbench_by_id["rec_001"]["record"]["viewer_asset_updated_at"] is not None
     assert workbench_by_id["rec_bike_001"]["record"]["effective_rating"] == 2.0
 
     dataset = client.get("/api/collections/dataset").json()
@@ -631,6 +632,10 @@ def test_viewer_api_end_to_end(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) 
     assert updated_workbench_by_id["rec_001"]["record"]["rating"] == 4
     assert updated_workbench_by_id["rec_001"]["record"]["effective_rating"] == 4.0
     assert updated_workbench_by_id["rec_001"]["record"]["rated_by"] is None
+    assert (
+        updated_workbench_by_id["rec_001"]["record"]["viewer_asset_updated_at"]
+        == workbench_by_id["rec_001"]["record"]["viewer_asset_updated_at"]
+    )
     persisted_record = repo.read_json(repo.layout.record_metadata_path("rec_001"))
     assert persisted_record["rating"] == 4
     assert persisted_record["rated_by"] is None

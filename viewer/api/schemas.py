@@ -45,6 +45,7 @@ class RecordSummaryResponse(BaseModel):
     secondary_rated_by: str | None = None
     created_at: str | None = None
     updated_at: str | None = None
+    viewer_asset_updated_at: str | None = None
     sdk_package: str | None = None
     provider: str | None = None
     model_id: str | None = None

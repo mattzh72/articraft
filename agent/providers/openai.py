@@ -109,10 +109,18 @@ class OpenAILLM:
 
             self._client: Any
             self._client_is_async: bool
+            client_kwargs: dict[str, Any] = {
+                "api_key": api_key,
+                # Disable SDK-managed retries so request timing and retry policy are
+                # controlled by this wrapper rather than hidden nested backoff.
+                "max_retries": 0,
+            }
+            if self.request_timeout_seconds and self.request_timeout_seconds > 0:
+                client_kwargs["timeout"] = float(self.request_timeout_seconds)
             try:
                 from openai import AsyncOpenAI  # type: ignore
 
-                self._client = AsyncOpenAI(api_key=api_key)
+                self._client = AsyncOpenAI(**client_kwargs)
                 self._client_is_async = True
             except Exception:
                 try:
@@ -123,7 +131,7 @@ class OpenAILLM:
                         "Install it (e.g. `uv add openai`), then try again."
                     ) from exc
 
-                self._client = OpenAI(api_key=api_key)
+                self._client = OpenAI(**client_kwargs)
                 self._client_is_async = False
 
         base_url = os.environ.get("OPENAI_BASE_URL")

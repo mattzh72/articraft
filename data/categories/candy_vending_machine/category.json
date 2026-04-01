@@ -1,0 +1,7 @@
+{
+  "schema_version": 1,
+  "slug": "candy_vending_machine",
+  "title": "Candy Vending Machine",
+  "description": "",
+  "target_sdk_version": "base"
+}

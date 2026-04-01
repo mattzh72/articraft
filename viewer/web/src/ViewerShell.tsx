@@ -453,7 +453,7 @@ export default function ViewerShell(): JSX.Element {
   const assetRevisionKey = selection
     ? selection.kind === "staging"
       ? selectedStagingEntry?.checkpoint_updated_at ?? selectedStagingEntry?.updated_at ?? null
-      : selectedRecord?.updated_at ?? null
+      : selectedRecord?.viewer_asset_updated_at ?? null
     : null;
   const selectionKey = selection
     ? selection.kind === "record"

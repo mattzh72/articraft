@@ -2,6 +2,8 @@ from __future__ import annotations
 
 import asyncio
 import logging
+import sys
+from types import SimpleNamespace
 
 import pytest
 
@@ -135,3 +137,57 @@ def test_request_with_websocket_logs_full_context_fallback(
         ({"input": [{"type": "message"}]}, True),
     ]
     assert "full-context fallback triggered" in caplog.text
+
+
+def test_openai_client_disables_sdk_retries_and_uses_request_timeout(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    captured: dict[str, object] = {}
+
+    class _FakeAsyncOpenAI:
+        def __init__(self, **kwargs: object) -> None:
+            captured.update(kwargs)
+
+    monkeypatch.setenv("OPENAI_API_KEY", "sk-primary")
+    monkeypatch.setenv("OPENAI_REQUEST_TIMEOUT_SECONDS", "37")
+    monkeypatch.setitem(sys.modules, "openai", SimpleNamespace(AsyncOpenAI=_FakeAsyncOpenAI))
+
+    provider = OpenAILLM(dry_run=False)
+
+    assert provider._client_is_async is True
+    assert captured == {
+        "api_key": "sk-primary",
+        "max_retries": 0,
+        "timeout": 37.0,
+    }
+
+
+def test_openai_sync_client_disables_sdk_retries_and_uses_request_timeout(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    captured: dict[str, object] = {}
+
+    class _FakeOpenAI:
+        def __init__(self, **kwargs: object) -> None:
+            captured.update(kwargs)
+
+    class _MissingAsyncOpenAI:
+        def __init__(self, **kwargs: object) -> None:
+            raise RuntimeError("async unavailable")
+
+    monkeypatch.setenv("OPENAI_API_KEY", "sk-primary")
+    monkeypatch.setenv("OPENAI_REQUEST_TIMEOUT_SECONDS", "42")
+    monkeypatch.setitem(
+        sys.modules,
+        "openai",
+        SimpleNamespace(AsyncOpenAI=_MissingAsyncOpenAI, OpenAI=_FakeOpenAI),
+    )
+
+    provider = OpenAILLM(dry_run=False)
+
+    assert provider._client_is_async is False
+    assert captured == {
+        "api_key": "sk-primary",
+        "max_retries": 0,
+        "timeout": 42.0,
+    }

@@ -205,6 +205,31 @@ def _file_mtime_to_utc(path: Path) -> str | None:
         return None
 
 
+def _latest_tree_mtime_to_utc(paths: list[Path], fallback: str | None = None) -> str | None:
+    latest_mtime: float | None = None
+
+    for root in paths:
+        candidates: list[Path]
+        if root.is_file():
+            candidates = [root]
+        elif root.is_dir():
+            candidates = [root, *root.rglob("*")]
+        else:
+            continue
+
+        for candidate in candidates:
+            try:
+                stat = candidate.stat()
+            except OSError:
+                continue
+            if latest_mtime is None or stat.st_mtime > latest_mtime:
+                latest_mtime = stat.st_mtime
+
+    if latest_mtime is None:
+        return fallback
+    return _mtime_to_utc(latest_mtime)
+
+
 def _replace_tree_from_source(source: Path, destination: Path) -> None:
     if not source.exists() or not source.is_dir():
         return
@@ -311,6 +336,17 @@ class ViewerStore:
         record_id: str,
     ) -> str:
         return infer_materialization_status(self.repo, record_id)
+
+    def _viewer_asset_updated_at_for_record(self, record_id: str) -> str | None:
+        layout = self.repo.layout
+        return _latest_tree_mtime_to_utc(
+            [
+                layout.record_materialization_urdf_path(record_id),
+                layout.record_materialization_asset_meshes_dir(record_id),
+                layout.record_materialization_asset_glb_dir(record_id),
+                layout.record_materialization_asset_viewer_dir(record_id),
+            ]
+        )
 
     def _clear_derived_asset_outputs(
         self,
@@ -708,6 +744,7 @@ class ViewerStore:
             secondary_rated_by=_coerce_string(record.get("secondary_rated_by")),
             created_at=record.get("created_at"),
             updated_at=record.get("updated_at"),
+            viewer_asset_updated_at=self._viewer_asset_updated_at_for_record(record_id),
             sdk_package=record.get("sdk_package"),
             provider=record.get("provider"),
             model_id=record.get("model_id"),
