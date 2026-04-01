@@ -324,3 +324,50 @@ def test_find_unsupported_parts_keeps_single_mesh_behavior(tmp_path: Path) -> No
 
     assert len(findings) == 1
     assert findings[0].part == "child"
+
+
+def test_compute_part_world_transforms_applies_floating_origin_pose() -> None:
+    model = ArticulatedObject(name="floating_pose_world_tf")
+
+    base = model.part("base")
+    base.visual(Box((0.2, 0.2, 0.2)), origin=Origin(xyz=(0.0, 0.0, 0.1)))
+
+    payload = model.part("payload")
+    payload.visual(Box((0.1, 0.1, 0.1)), origin=Origin(xyz=(0.0, 0.0, 0.05)))
+
+    free_joint = model.articulation(
+        "base_to_payload",
+        ArticulationType.FLOATING,
+        parent=base,
+        child=payload,
+        origin=Origin(xyz=(1.0, 0.0, 0.0)),
+    )
+
+    world = geometry_qc.compute_part_world_transforms(
+        model,
+        {free_joint.name: Origin(xyz=(0.25, -0.5, 0.75))},
+    )
+
+    payload_tf = world["payload"]
+    assert payload_tf[0][3] == pytest.approx(1.25)
+    assert payload_tf[1][3] == pytest.approx(-0.5)
+    assert payload_tf[2][3] == pytest.approx(0.75)
+
+
+def test_generate_pose_samples_keeps_floating_origin_values() -> None:
+    model = ArticulatedObject(name="floating_pose_samples")
+    base = model.part("base")
+    payload = model.part("payload")
+    joint = model.articulation(
+        "base_to_payload",
+        ArticulationType.FLOATING,
+        parent=base,
+        child=payload,
+        meta={"qc_samples": [Origin(xyz=(0.1, 0.2, 0.3)), Origin(rpy=(0.0, 0.0, 0.4))]},
+    )
+
+    poses = geometry_qc.generate_pose_samples(model, max_samples=8, seed=0)
+
+    assert poses[0][joint.name] == Origin()
+    assert any(pose[joint.name] == Origin(xyz=(0.1, 0.2, 0.3)) for pose in poses)
+    assert any(pose[joint.name] == Origin(rpy=(0.0, 0.0, 0.4)) for pose in poses)

@@ -295,3 +295,10 @@ model.articulation(
 
 - `20_core_types.md` for `Part`, `Articulation`, `MotionLimits`, and materials
 - `80_testing.md` for geometry and articulation QC
+
+## Clarifications for agent usage
+
+- `origin` defines the joint frame in the parent part frame. The child part then moves relative to that joint frame.
+- `axis` is expressed in the articulation frame after applying `origin.rpy`, not in world space. Author it as a unit vector.
+- `FLOATING` articulations are advanced and do not use `axis` or scalar motion limits. In testing/probe tooling, move them with `Origin(xyz=..., rpy=...)`, not a scalar.
+- If increasing a scalar joint value moves the child in the wrong direction, negate `axis`; do not swap semantic open/close meaning by flipping limits.

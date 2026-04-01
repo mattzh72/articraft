@@ -401,3 +401,62 @@ def test_probe_model_non_aabb_measurements_use_exact_geometry(tmp_path: Path) ->
         assert abs(float(observed) - float(expected)) < 1e-6
     for observed, expected in zip(position, expected_center, strict=False):
         assert abs(float(observed) - float(expected)) < 1e-6
+
+
+def _write_floating_probe_fixture(script_path: Path) -> None:
+    lines = [
+        "from __future__ import annotations",
+        "",
+        "from pathlib import Path",
+        "",
+        "from sdk import ArticulatedObject, ArticulationType, Box, Origin, TestContext",
+        "",
+        "HERE = Path(__file__).resolve().parent",
+        "model = ArticulatedObject(name='floating_probe_fixture')",
+        "base = model.part('base')",
+        "base.visual(Box((0.4, 0.4, 0.2)), origin=Origin(xyz=(0.0, 0.0, 0.1)), name='base_body')",
+        "payload = model.part('payload')",
+        "payload.visual(Box((0.2, 0.2, 0.2)), origin=Origin(xyz=(0.0, 0.0, 0.1)), name='payload_body')",
+        "model.articulation(",
+        "    'base_to_payload',",
+        "    ArticulationType.FLOATING,",
+        "    parent=base,",
+        "    child=payload,",
+        "    origin=Origin(xyz=(0.3, 0.0, 0.0)),",
+        "    meta={'qc_samples': [Origin(xyz=(0.1, 0.0, 0.0))]},",
+        ")",
+        "object_model = model",
+        "",
+        "def run_tests():",
+        "    ctx = TestContext(object_model, asset_root=HERE)",
+        "    return ctx.report()",
+    ]
+    script_path.write_text("\n".join(lines) + "\n", encoding="utf-8")
+
+
+def test_probe_model_supports_floating_origin_pose_values(tmp_path: Path) -> None:
+    script_path = tmp_path / "model.py"
+    _write_floating_probe_fixture(script_path)
+
+    output = asyncio.run(
+        _run_probe(
+            script_path,
+            "\n".join(
+                [
+                    "joint_obj = joint('base_to_payload')",
+                    "before = position(part('payload'))",
+                    "with pose(base_to_payload=Origin(xyz=(0.1, 0.2, 0.3))):",
+                    "    after = position(part('payload'))",
+                    "emit({'summary': summary(joint_obj), 'before': before, 'after': after})",
+                ]
+            ),
+        )
+    )
+
+    assert output["ok"] is True
+    result = output["result"]
+    assert result["summary"]["type"] == "floating"
+    assert result["summary"]["motion"] == "rigid_6dof"
+    assert result["summary"]["pose_value_kind"] == "origin"
+    assert result["before"] == [0.3, 0.0, 0.0]
+    assert result["after"] == [0.4, 0.2, 0.3]

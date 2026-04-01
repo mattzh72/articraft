@@ -241,3 +241,9 @@ and elbow locations are part of the silhouette.
 ## See Also
 
 - `40_mesh_geometry.md` for general procedural mesh authoring
+
+## Clarifications for agent usage
+
+- Spline/path angle conventions use radians and the right-hand rule.
+- `spline="bezier"` expects chained cubic Bezier control points rather than a generic interpolating spline-through-points contract. For an open chain, `(n - 1) % 3 == 0`; for a closed chain, the authored point list must already close back on itself.
+- `up_hint` defines the transported frame used to orient swept profiles. Changing it changes the profile roll even when the path points stay fixed.

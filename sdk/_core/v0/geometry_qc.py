@@ -765,7 +765,7 @@ def _compiled_part_collision_entries(
 
 def compute_part_world_transforms(
     model: object,
-    joint_positions: Dict[str, float],
+    joint_positions: Dict[str, object],
 ) -> Dict[str, Mat4]:
     links = getattr(model, "parts", None)
     if not isinstance(links, list):
@@ -825,21 +825,27 @@ def compute_part_world_transforms(
             motion_tf = _identity4()
             joint_type = getattr(joint, "articulation_type", None)
             axis = getattr(joint, "axis", (0.0, 0.0, 1.0))
-            q = float(joint_positions.get(getattr(joint, "name", ""), 0.0))
+            pose_value = _coerce_joint_pose_value(
+                joint,
+                joint_positions.get(getattr(joint, "name", ""), _joint_zero_pose_value(joint)),
+            )
 
             if joint_type in (ArticulationType.REVOLUTE, ArticulationType.CONTINUOUS):
-                rot = _axis_angle_matrix(axis, q)
+                q = float(pose_value)
+                rot = _axis_angle_matrix(_normalize(axis), q)
                 motion_tf = _mat3_to_mat4(rot)
             elif joint_type == ArticulationType.PRISMATIC:
+                q = float(pose_value)
                 ax = _normalize(axis)
                 motion_tf = _mat3_to_mat4(
                     ((1.0, 0.0, 0.0), (0.0, 1.0, 0.0), (0.0, 0.0, 1.0)),
                     translation=(ax[0] * q, ax[1] * q, ax[2] * q),
                 )
+            elif joint_type == ArticulationType.FLOATING:
+                motion_tf = _origin_to_mat4(pose_value)
             elif joint_type == ArticulationType.FIXED:
                 motion_tf = _identity4()
             else:
-                # Unsupported multi-DOF articulations are not well-defined without more state.
                 motion_tf = _identity4()
 
             child_tf = _mat4_mul(_mat4_mul(parent_tf, joint_tf), motion_tf)
@@ -857,32 +863,92 @@ def compute_part_world_transforms(
     return world
 
 
+def _coerce_origin_pose_value(value: object, *, joint_name: str) -> Origin:
+    if isinstance(value, Origin):
+        return value
+    xyz = getattr(value, "xyz", None)
+    rpy = getattr(value, "rpy", None)
+    if xyz is not None and rpy is not None:
+        try:
+            return Origin(xyz=xyz, rpy=rpy)
+        except Exception as exc:  # pragma: no cover - defensive conversion guard
+            raise ValidationError(
+                f"Articulation {joint_name!r} expects an Origin pose value"
+            ) from exc
+    raise ValidationError(f"Articulation {joint_name!r} expects an Origin pose value")
+
+
+def _joint_zero_pose_value(joint: object) -> object:
+    if getattr(joint, "articulation_type", None) == ArticulationType.FLOATING:
+        return Origin()
+    return 0.0
+
+
+def _coerce_joint_pose_value(joint: object, value: object) -> object:
+    joint_name = str(getattr(joint, "name", ""))
+    joint_type = getattr(joint, "articulation_type", None)
+    if joint_type == ArticulationType.FLOATING:
+        return _coerce_origin_pose_value(value, joint_name=joint_name)
+    if isinstance(value, Origin) or (hasattr(value, "xyz") and hasattr(value, "rpy")):
+        raise ValidationError(
+            f"Articulation {joint_name!r} expects a scalar pose value, not Origin(...)"
+        )
+    try:
+        return float(value)
+    except (TypeError, ValueError) as exc:
+        raise ValidationError(f"Articulation {joint_name!r} expects a scalar pose value") from exc
+
+
+def _pose_value_key(value: object) -> object:
+    if isinstance(value, Origin):
+        return ("origin", value.xyz, value.rpy)
+    return float(value)
+
+
+def _pose_value_is_zero(value: object) -> bool:
+    if isinstance(value, Origin):
+        return all(abs(float(v)) <= 1e-12 for v in (*value.xyz, *value.rpy))
+    return abs(float(value)) <= 1e-12
+
+
 def compute_link_world_transforms(
     model: object,
-    joint_positions: Dict[str, float],
+    joint_positions: Dict[str, object],
 ) -> Dict[str, Mat4]:
     return compute_part_world_transforms(model, joint_positions)
 
 
-def _joint_sample_values(joint: object) -> List[float]:
+def _joint_sample_values(joint: object) -> List[object]:
     joint_type = getattr(joint, "articulation_type", None)
     motion_limits = getattr(joint, "motion_limits", None)
     if joint_type == ArticulationType.FIXED:
         return [0.0]
 
     meta = getattr(joint, "meta", None)
-    if isinstance(meta, dict):
-        raw = meta.get("qc_samples", meta.get("qc_sample_values"))
+    raw = meta.get("qc_samples", meta.get("qc_sample_values")) if isinstance(meta, dict) else None
+
+    if joint_type == ArticulationType.FLOATING:
+        values: list[Origin] = [Origin()]
         if isinstance(raw, (list, tuple)) and raw:
-            values: list[float] = [0.0]
             for v in raw[:32]:
-                if isinstance(v, (int, float)):
-                    values.append(float(v))
-            out: list[float] = []
-            for v in values:
-                if not any(abs(v - u) <= 1e-9 for u in out):
-                    out.append(v)
-            return out
+                try:
+                    pose_value = _coerce_joint_pose_value(joint, v)
+                except ValidationError:
+                    continue
+                if isinstance(pose_value, Origin) and pose_value not in values:
+                    values.append(pose_value)
+        return list(values)
+
+    if isinstance(raw, (list, tuple)) and raw:
+        values: list[float] = [0.0]
+        for v in raw[:32]:
+            if isinstance(v, (int, float)):
+                values.append(float(v))
+        out: list[float] = []
+        for v in values:
+            if not any(abs(v - u) <= 1e-9 for u in out):
+                out.append(v)
+        return list(out)
 
     if joint_type == ArticulationType.CONTINUOUS:
         return [0.0, -math.pi / 2.0, math.pi / 2.0, math.pi]
@@ -896,12 +962,11 @@ def _joint_sample_values(joint: object) -> List[float]:
         values.append(float(upper))
     if isinstance(lower, (int, float)) and isinstance(upper, (int, float)):
         values.append(0.5 * (float(lower) + float(upper)))
-    # Deduplicate while keeping order.
     out: list[float] = []
     for v in values:
         if not any(abs(v - u) <= 1e-9 for u in out):
             out.append(v)
-    return out
+    return list(out)
 
 
 def generate_pose_samples(
@@ -909,7 +974,7 @@ def generate_pose_samples(
     *,
     max_samples: int = 256,
     seed: int = 0,
-) -> List[Dict[str, float]]:
+) -> List[Dict[str, object]]:
     max_samples = int(max_samples)
     if max_samples <= 0:
         raise ValidationError("max_samples must be positive")
@@ -921,7 +986,7 @@ def generate_pose_samples(
         raise ValidationError("model must have an .articulations list")
 
     joint_names: list[str] = []
-    per_joint: list[list[float]] = []
+    per_joint: list[list[object]] = []
     for j in joints:
         name = getattr(j, "name", None)
         if not isinstance(name, str):
@@ -936,38 +1001,38 @@ def generate_pose_samples(
     for vals in per_joint:
         total *= max(1, len(vals))
 
-    poses: list[dict[str, float]] = []
-    seen: set[tuple[float, ...]] = set()
+    poses: list[dict[str, object]] = []
+    seen: set[tuple[object, ...]] = set()
 
-    def add_pose(values: Sequence[float]) -> None:
+    def add_pose(values: Sequence[object]) -> None:
         if len(poses) >= max_samples:
             return
-        key = tuple(float(values[i]) for i in range(len(joint_names)))
+        key = tuple(_pose_value_key(values[i]) for i in range(len(joint_names)))
         if key in seen:
             return
         seen.add(key)
-        poses.append({joint_names[i]: key[i] for i in range(len(joint_names))})
+        poses.append({joint_names[i]: values[i] for i in range(len(joint_names))})
 
     if total <= max_samples:
         for combo in itertools.product(*per_joint):
             add_pose(combo)
         return poses
 
-    zero = [0.0] * len(joint_names)
+    zero = [vals[0] for vals in per_joint]
     add_pose(zero)
     for i, vals in enumerate(per_joint):
         if len(poses) >= max_samples:
             break
         for v in vals:
-            if abs(v) <= 1e-9:
+            if _pose_value_is_zero(v):
                 continue
             one = list(zero)
-            one[i] = float(v)
+            one[i] = v
             add_pose(one)
 
     rng = random.Random(int(seed))
     while len(poses) < max_samples and len(seen) < total:
-        sample = [float(rng.choice(vals)) for vals in per_joint]
+        sample = [rng.choice(vals) for vals in per_joint]
         add_pose(sample)
     return poses
 

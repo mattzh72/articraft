@@ -352,3 +352,12 @@ lip = LatheGeometry.from_shell_profiles(
 - `45_wires.md` for rails, loops, tubes, and frames
 - `46_section_lofts.md` for the recommended loft API
 - `50_placement.md` for wrapping and mounting mesh-backed geometry
+
+## Clarifications for agent usage
+
+- Angle arguments are radians and use the right-hand rule.
+- `LoftGeometry` validates profiles through their XY projection. End caps only behave as expected when the first and last profiles are planar at constant `z`.
+- `ExtrudeGeometry(..., center=True)` produces a solid centered on the profile plane, spanning `z in [-height/2, +height/2]`. Use the `from_z0(...)` form when the intended span is `z in [0, height]`.
+- `rounded_rect_profile(...)` and `superellipse_profile(...)` return centered counter-clockwise XY loops.
+- `cut_opening_on_face(...)` does not subtract material from a closed solid by itself. It adds the interior throat wall geometry and works best when the target face is already open or when you perform the outer cut separately.
+- The side-loft helpers use explicit section tuples in the final part frame. For `superellipse_side_loft(...)`, `split_superellipse_side_loft(...)`, and `resample_side_sections(...)`, each section is `(y, z_min, z_max, width)` with the loft axis along `+Y` and each profile section lying in `XZ`.

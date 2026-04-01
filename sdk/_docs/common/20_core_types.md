@@ -406,3 +406,12 @@ scaled = scale_geometry_to_size(
 - `30_articulated_object.md` for model authoring helpers
 - `50_placement.md` for mounting and surface wrapping helpers
 - `80_testing.md` for test-time use of parts and named visuals
+
+## Clarifications for agent usage
+
+- `Origin` is always a local rigid transform: `xyz` is translation in meters and `rpy` is roll, pitch, yaw in radians using the right-hand rule.
+- A part visual or collision is placed in its part-local frame with `origin=Origin(...)`; an articulation `origin` defines the child joint frame relative to the parent part frame.
+- `Mesh(...)` requires either `filename` or `name`. Use `filename` for a concrete mesh asset path and `name` for managed/materialized mesh assets that will be resolved later.
+- `Part.collisions` is not part of the authored source-model path for agent use. Author visuals; derived collision geometry is handled by validation/materialization.
+- `ArticulationType.FLOATING` is supported but advanced. Its authored/test pose value is `Origin(...)`, where `xyz` is relative translation in the joint frame and `rpy` is relative rotation in that same frame.
+- For `REVOLUTE`, `CONTINUOUS`, and `PRISMATIC`, author `axis` as a unit vector in the articulation frame. Positive revolute motion follows the right-hand rule around `+axis`; positive prismatic motion translates along `+axis`.

@@ -315,3 +315,9 @@ wrapped = wrap_profile_onto_surface(
 
 - `20_core_types.md` for geometry descriptors and `Origin`
 - `40_mesh_geometry.md` for `MeshGeometry`
+
+## Clarifications for agent usage
+
+- `up_hint` does more than break ties: it defines the zero-spin tangent basis by projecting the hint into the surface tangent plane. Changing `up_hint` changes what `spin=0` means.
+- Angle inputs are radians and follow the right-hand rule.
+- Intrinsic wrapping support is intentionally narrow: use it for spheres and cylinder sidewalls, not arbitrary cylindrical end caps or general meshes.

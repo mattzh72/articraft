@@ -2,6 +2,8 @@ from __future__ import annotations
 
 from pathlib import Path
 
+import pytest
+
 from sdk import (
     ArticulatedObject,
     ArticulationType,
@@ -1162,3 +1164,68 @@ def test_expect_within_uses_exact_visual_geometry() -> None:
     assert report.passed
     assert report.failures == ()
     assert report.checks == ("expect_within(inner,outer,axes=xyz)",)
+
+
+def _build_floating_pose_model() -> ArticulatedObject:
+    model = ArticulatedObject(name="floating_pose_checks")
+
+    base = model.part("base")
+    base.visual(Box((0.2, 0.2, 0.2)), origin=Origin(xyz=(0.0, 0.0, 0.1)), name="base_box")
+
+    payload = model.part("payload")
+    payload.visual(
+        Box((0.1, 0.1, 0.1)),
+        origin=Origin(xyz=(0.0, 0.0, 0.05)),
+        name="payload_box",
+    )
+
+    model.articulation(
+        "base_to_payload",
+        ArticulationType.FLOATING,
+        parent=base,
+        child=payload,
+        origin=Origin(xyz=(0.4, 0.0, 0.0)),
+    )
+
+    return model
+
+
+def test_pose_accepts_origin_for_floating_joint() -> None:
+    model = _build_floating_pose_model()
+    ctx = SDKTestContext(model)
+    joint = model.get_articulation("base_to_payload")
+
+    with ctx.pose({joint: Origin(xyz=(0.1, 0.2, 0.3))}):
+        pos = ctx.part_world_position("payload")
+        assert pos is not None
+        assert pos == pytest.approx((0.5, 0.2, 0.3))
+
+
+def test_pose_rejects_scalar_for_floating_joint() -> None:
+    model = _build_floating_pose_model()
+    ctx = SDKTestContext(model)
+    joint = model.get_articulation("base_to_payload")
+
+    with pytest.raises(Exception, match="expects an Origin pose value"):
+        with ctx.pose({joint: 0.1}):
+            pass
+
+
+def test_pose_rejects_origin_for_scalar_joint() -> None:
+    model = _build_joint_origin_model(joint_z=0.1)
+    ctx = SDKTestContext(model)
+    joint = model.get_articulation("base_to_child")
+
+    with pytest.raises(Exception, match="expects a scalar pose value"):
+        with ctx.pose({joint: Origin(xyz=(0.1, 0.0, 0.0))}):
+            pass
+
+
+def test_pose_kwargs_accept_origin_for_floating_joint() -> None:
+    model = _build_floating_pose_model()
+    ctx = SDKTestContext(model)
+
+    with ctx.pose(base_to_payload=Origin(xyz=(0.0, -0.2, 0.15))):
+        pos = ctx.part_world_position("payload")
+        assert pos is not None
+        assert pos == pytest.approx((0.4, -0.2, 0.15))

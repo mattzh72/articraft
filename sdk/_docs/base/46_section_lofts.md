@@ -172,3 +172,9 @@ clean = repair_loft(spec, repair="mesh")
 ## See Also
 
 - `40_mesh_geometry.md` for lower-level mesh loft helpers
+
+## Clarifications for agent usage
+
+- `guide_curves` is intentionally narrow: the supported keys are `spine`, `aux_spine`, and `binormal`.
+- If `path` is omitted and `guide_curves.spine` is present, the spine becomes the sweep path.
+- When the implementation takes the path-driven sweep branch, several advanced tuning fields (`continuity`, `parametrization`, `degree`, `compat`, `smoothing`, `weights`) are not active knobs. Treat them as advanced/conditional controls rather than guaranteed universal behavior.

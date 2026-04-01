@@ -178,6 +178,16 @@ def _part_element(part: Part) -> ET.Element:
     return elem
 
 
+def _normalized_axis(axis: tuple[float, float, float]) -> tuple[float, float, float]:
+    x = float(axis[0])
+    y = float(axis[1])
+    z = float(axis[2])
+    mag = (x * x + y * y + z * z) ** 0.5
+    if mag <= 1e-12:
+        return (x, y, z)
+    return (x / mag, y / mag, z / mag)
+
+
 def _articulation_element(articulation: Articulation) -> ET.Element:
     joint_type = (
         articulation.articulation_type
@@ -197,7 +207,7 @@ def _articulation_element(articulation: Articulation) -> ET.Element:
         ArticulationType.PRISMATIC,
         ArticulationType.CONTINUOUS,
     }:
-        ET.SubElement(elem, "axis", {"xyz": _format_vec(articulation.axis)})
+        ET.SubElement(elem, "axis", {"xyz": _format_vec(_normalized_axis(articulation.axis))})
 
     if articulation.motion_limits and joint_type in {
         ArticulationType.REVOLUTE,

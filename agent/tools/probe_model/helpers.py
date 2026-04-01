@@ -61,10 +61,13 @@ def _normalize_axes(value: str | Sequence[str]) -> list[str]:
     return deduped
 
 
-def _coerce_float_map(values: dict[str, float] | None) -> dict[str, float]:
+def _coerce_pose_map(values: dict[str, object] | None) -> dict[str, object]:
     if not values:
         return {}
-    return {str(key): float(value) for key, value in values.items()}
+    out: dict[str, object] = {}
+    for key, value in values.items():
+        out[str(key)] = float(value) if isinstance(value, (int, float)) else value
+    return out
 
 
 class ProbeSession:
@@ -182,10 +185,11 @@ class ProbeSession:
         return type(obj).__name__
 
     def pose(
-        self, mapping: dict[str, float] | None = None, **kwargs: float
+        self, mapping: dict[str, object] | None = None, **kwargs: object
     ) -> AbstractContextManager:
-        merged = _coerce_float_map(mapping)
-        merged.update({str(key): float(value) for key, value in kwargs.items()})
+        merged = _coerce_pose_map(mapping)
+        for key, value in kwargs.items():
+            merged[str(key)] = float(value) if isinstance(value, (int, float)) else value
         return self.ctx.pose(merged)
 
     def aabb(self, obj: object) -> dict[str, list[float]] | None:
@@ -240,10 +244,12 @@ class ProbeSession:
             limits = getattr(obj, "motion_limits", None)
             lower = getattr(limits, "lower", None)
             upper = getattr(limits, "upper", None)
-            return {
+            joint_type = getattr(obj, "articulation_type", getattr(obj, "joint_type", "unknown"))
+            joint_type_value = getattr(joint_type, "value", joint_type)
+            summary = {
                 "kind": "articulation",
                 "name": self.name(obj),
-                "type": str(getattr(obj, "type", getattr(obj, "joint_type", "unknown"))),
+                "type": str(joint_type_value),
                 "axis": list(getattr(obj, "axis", ()) or ()),
                 "limits": {
                     "lower": None if lower is None else float(lower),
@@ -256,6 +262,11 @@ class ProbeSession:
                     else float(getattr(limits, "velocity")),
                 },
             }
+            if str(joint_type_value) == "floating":
+                summary["axis"] = []
+                summary["motion"] = "rigid_6dof"
+                summary["pose_value_kind"] = "origin"
+            return summary
         target = self._resolve_target(obj)
         parent_name = None if target["visual"] is None else self.name(target["part"])
         return {
@@ -533,7 +544,7 @@ class ProbeSession:
             "abs_delta": [abs(value) for value in delta],
         }
 
-    def sample_poses(self, max_samples: int = 32, seed: int = 0) -> list[dict[str, float]]:
+    def sample_poses(self, max_samples: int = 32, seed: int = 0) -> list[dict[str, object]]:
         return generate_pose_samples(
             self.object_model,
             max_samples=int(max_samples),

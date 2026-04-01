@@ -23,6 +23,21 @@ class _EmitContractError(RuntimeError):
     pass
 
 
+def _jsonable(value: Any) -> Any:
+    if value is None or isinstance(value, (str, int, float, bool)):
+        return value
+    if isinstance(value, dict):
+        return {str(key): _jsonable(val) for key, val in value.items()}
+    if isinstance(value, (list, tuple)):
+        return [_jsonable(item) for item in value]
+    if hasattr(value, "xyz") and hasattr(value, "rpy"):
+        return {
+            "xyz": [float(v) for v in getattr(value, "xyz")],
+            "rpy": [float(v) for v in getattr(value, "rpy")],
+        }
+    return value
+
+
 def _payload(
     *,
     ok: bool,
@@ -123,6 +138,7 @@ def main() -> int:
                 exec(compiled, namespace, namespace)
             if emit_count == 0:
                 raise _EmitContractError("emit(value) was not called")
+            emitted_value = _jsonable(emitted_value)
             json.dumps(emitted_value)
             payload = _payload(
                 ok=True,

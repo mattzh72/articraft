@@ -159,3 +159,10 @@ def build_object_model() -> ArticulatedObject:
 
 - `../common/80_testing.md` for the shared testing API
 - `../common/00_quickstart.md` for the overall script contract
+
+## Clarifications for agent usage
+
+- `mesh_from_cadquery(...)` and `export_cadquery_mesh(...)` accept CadQuery `Shape`, `Workplane`, and `Assembly` inputs. Workplanes are exported from their resolved solid values; assemblies export each component at its current CadQuery location.
+- Constrained CadQuery assemblies must be solved before export. The SDK does not call `solve()` for you.
+- Export preserves the CadQuery local frame of the authored shape/component. The SDK does not recenter meshes, infer hinge pivots, or move geometry to an articulation axis automatically.
+- If an articulation pivot should be at a hinge, either model the CadQuery shape in that local frame or attach the mesh with `visual(origin=Origin(...))` so the mesh frame and joint frame line up explicitly.

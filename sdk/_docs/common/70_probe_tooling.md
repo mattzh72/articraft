@@ -30,14 +30,14 @@ Execution rules:
 
 ## Lookup and Pose Helpers
 
-### `pose(mapping: dict[str, float] | None = None, **kwargs: float) -> ContextManager`
+### `pose(mapping: dict[str, float | Origin] | None = None, **kwargs: float | Origin) -> ContextManager`
 
 Temporarily apply articulation positions.
 
-- Inputs: articulation names and numeric positions.
+- Inputs: articulation names mapped to scalar joint positions or `Origin(...)` for `FLOATING`.
 - Revolute and continuous positions are radians; prismatic positions are
-  meters.
-- Positive values follow the joint convention encoded by `axis`.
+  meters. Floating positions use `Origin.xyz` in meters and `Origin.rpy` in radians.
+- Positive scalar values follow the joint convention encoded by `axis`. Floating articulations do not use `axis`.
 - Return: context manager for `with pose(...):`.
 
 ### `part(name: str) -> object`
@@ -152,7 +152,7 @@ Return signed and absolute world-space center delta.
 
 ## Review Helpers
 
-### `sample_poses(max_samples: int = 32, seed: int = 0) -> list[dict[str, float]]`
+### `sample_poses(max_samples: int = 32, seed: int = 0) -> list[dict[str, float | Origin]]`
 
 Return articulation pose samples.
 
@@ -243,3 +243,9 @@ emit(
 ## See Also
 
 - `80_testing.md` for the persistent test API
+
+## Floating pose notes
+
+- `pose(...)` accepts mixed values: scalar `float` for scalar joints, `Origin(...)` for `FLOATING`.
+- `sample_poses(...)` returns the same mixed pose-map shape. Floating joints sample only `Origin()` by default unless the articulation metadata provides explicit `qc_samples` made of `Origin(...)` values.
+- Probe `summary(joint)` reports floating joints as rigid 6-DOF motion with `Origin` pose values rather than an axis-driven scalar motion model.

@@ -11,6 +11,7 @@ from .errors import ValidationError
 from .exact_collisions import compile_object_model_with_exact_collisions
 from .geometry_qc import (
     GeometryOverlap,
+    _coerce_joint_pose_value,
     _collision_object_from_geometry,
     _identity4,
     _mat4_mul,
@@ -31,6 +32,7 @@ from .types import ArticulationType, Box, Cylinder, Mesh, Origin, Sphere
 
 Vec3 = Tuple[float, float, float]
 AABB = Tuple[Vec3, Vec3]
+PoseValue = Union[float, Origin]
 
 _JOINT_ORIGIN_TOL_DEFAULT = 0.015
 _JOINT_ORIGIN_TOL_MAX = 0.15
@@ -61,7 +63,7 @@ class _CoplanarFinding:
     relation: str
     risk: str
     pose_index: int
-    pose: Dict[str, float]
+    pose: Dict[str, object]
     axis_name: str
     overlap_axis_0: str
     overlap_axis_1: str
@@ -937,16 +939,32 @@ class TestContext:
     @contextmanager
     def pose(
         self,
-        joint_positions: Optional[Dict[object, float]] = None,
-        **kwargs: float,
+        joint_positions: Optional[Dict[object, object]] = None,
+        **kwargs: object,
     ) -> Iterator[None]:
         prev = dict(self._pose)
-        merged: Dict[str, float] = {}
+        merged: Dict[str, PoseValue] = {}
+        raw_joints = getattr(self.model, "articulations", None)
+        if not isinstance(raw_joints, list):
+            raw_joints = getattr(self.model, "joints", None)
+        joint_lookup = {
+            str(getattr(joint, "name")): joint
+            for joint in list(raw_joints or [])
+            if isinstance(getattr(joint, "name", None), str)
+        }
         if joint_positions:
-            merged.update(
-                {_named_ref(k, kind="joint"): float(v) for k, v in joint_positions.items()}
-            )
-        merged.update({str(k): float(v) for k, v in kwargs.items()})
+            for key, value in joint_positions.items():
+                joint_name = _named_ref(key, kind="joint")
+                joint = joint_lookup.get(joint_name)
+                if joint is None:
+                    raise ValidationError(f"Unknown joint: {joint_name!r}")
+                merged[joint_name] = _coerce_joint_pose_value(joint, value)
+        for key, value in kwargs.items():
+            joint_name = str(key)
+            joint = joint_lookup.get(joint_name)
+            if joint is None:
+                raise ValidationError(f"Unknown joint: {joint_name!r}")
+            merged[joint_name] = _coerce_joint_pose_value(joint, value)
         self._pose = merged
         self._world_tfs_cache = None
         self._part_world_aabb_cache.clear()
