@@ -265,6 +265,7 @@ export function InspectPanel({
   const [promptStatus, setPromptStatus] = useState<"idle" | "loading" | "loaded" | "unavailable">("idle");
   const [hoveredRating, setHoveredRating] = useState<number | null>(null);
   const [hoveredSecondaryRating, setHoveredSecondaryRating] = useState<number | null>(null);
+  const [keyboardRatingTarget, setKeyboardRatingTarget] = useState<"primary" | "secondary">("primary");
   const [savingRating, setSavingRating] = useState(false);
   const [savingSecondaryRating, setSavingSecondaryRating] = useState(false);
   const [ratingError, setRatingError] = useState<string | null>(null);
@@ -521,27 +522,40 @@ export function InspectPanel({
     ]);
 
     const handleKeyDown = (event: KeyboardEvent) => {
-      const nextRating = keyToRating.get(event.code);
       if (
-        !nextRating ||
         event.repeat ||
         event.altKey ||
         event.ctrlKey ||
         event.metaKey ||
-        event.shiftKey ||
         isEditableTarget(event.target)
       ) {
         return;
       }
+
+      // Tab (without modifiers) toggles keyboard rating target
+      if (event.code === "Tab" && !event.shiftKey) {
+        event.preventDefault();
+        setKeyboardRatingTarget((prev) => (prev === "primary" ? "secondary" : "primary"));
+        return;
+      }
+
+      const nextRating = keyToRating.get(event.code);
+      if (!nextRating || event.shiftKey) {
+        return;
+      }
       event.preventDefault();
-      void handleRatingSelect(nextRating);
+      if (keyboardRatingTarget === "secondary") {
+        void handleSecondaryRatingSelect(nextRating);
+      } else {
+        void handleRatingSelect(nextRating);
+      }
     };
 
     window.addEventListener("keydown", handleKeyDown);
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
     };
-  }, [handleRatingSelect, hasSelectedRecord]);
+  }, [handleRatingSelect, handleSecondaryRatingSelect, hasSelectedRecord, keyboardRatingTarget]);
 
   if (!selection) {
     return (
@@ -747,6 +761,25 @@ export function InspectPanel({
           onSelect={(starValue) => void handleSecondaryRatingSelect(starValue)}
           onClear={() => void handleSecondaryRatingSelect(null)}
         />
+
+        {/* 1–5 shortcut target */}
+        <div className="flex items-center gap-2">
+          <span className="text-[9.5px] text-[var(--text-quaternary)]"><span className="font-mono">1</span>–<span className="font-mono">5</span> shortcuts map to</span>
+          <div className="flex items-center gap-1.5">
+            <span className={`text-[9.5px] transition-colors ${keyboardRatingTarget === "primary" ? "font-medium text-[var(--text-secondary)]" : "text-[var(--text-quaternary)]"}`}>1st</span>
+            <button
+              type="button"
+              role="switch"
+              aria-checked={keyboardRatingTarget === "secondary"}
+              aria-label="Toggle 1–5 shortcut between primary and secondary rating"
+              onClick={() => setKeyboardRatingTarget((prev) => (prev === "primary" ? "secondary" : "primary"))}
+              className="relative h-3 w-[22px] shrink-0 rounded-full bg-[var(--surface-3)] transition-colors"
+            >
+              <span className={`absolute top-0.5 size-2 rounded-full bg-[var(--text-secondary)] transition-all duration-150 ${keyboardRatingTarget === "secondary" ? "left-[12px]" : "left-0.5"}`} />
+            </button>
+            <span className={`text-[9.5px] transition-colors ${keyboardRatingTarget === "secondary" ? "font-medium text-[var(--text-secondary)]" : "text-[var(--text-quaternary)]"}`}>2nd</span>
+          </div>
+        </div>
 
         {/* Record context */}
         <section>
