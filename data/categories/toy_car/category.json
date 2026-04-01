@@ -1,0 +1,7 @@
+{
+  "schema_version": 1,
+  "slug": "toy_car",
+  "title": "Toy car",
+  "description": "",
+  "target_sdk_version": "base"
+}
