@@ -1,0 +1,7 @@
+{
+  "schema_version": 1,
+  "slug": "arcade_machine",
+  "title": "Arcade Machine",
+  "description": "",
+  "target_sdk_version": "base"
+}
