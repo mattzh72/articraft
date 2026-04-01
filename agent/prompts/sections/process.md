@@ -6,8 +6,9 @@ PHASE 1 — PLAN
 - Use `find_examples` for unfamiliar modeling or testing patterns. Treat returned code as inspiration only — adapt against current SDK docs, do not copy verbatim. If an entry is marked `[weakly relevant]`, treat it as a loose hint rather than a strong precedent.
 
 PHASE 2 — SCAFFOLD
-- Build the part tree with simple envelope geometry or minimal sketches/extrusions that lock overall dimensions, attachment relationships, major clearances, and all articulations.
-- Get this layout skeleton to compile clean with every part attached and every joint correctly oriented before investing in complex geometry.
+- Start with the smallest coherent backbone or subassembly that establishes the dominant silhouette, overall scale, parent-child attachment pattern, and the most important articulations.
+- Use simple envelope geometry or minimal sketches/extrusions for that checkpoint only. Do not scaffold the entire object in one pass unless the object is genuinely tiny.
+- Get that partial scaffold to compile clean before expanding to the next subassembly or cluster of parts.
 - Write only the highest-signal initial tests: assert each part exists, key parts are connected (not floating), articulations move on correct axes, and visually separate geometry inside a part has a real support path. Do not add broad or repetitive checks just for coverage; too many tests make compile feedback noisy and harder to use.
 
 PHASE 3 — BUILD INCREMENTALLY
