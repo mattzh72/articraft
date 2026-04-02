@@ -8,6 +8,7 @@ import { computeFit, preserveViewAcrossModelSwitch, updateCameraClipping } from 
 import { positionGroundHelpers } from './lighting';
 import { loadGeometryObject } from './geometry-loader';
 import { depthBiasForOrdinal, resolveVisualMaterialSpec } from './materials';
+import { attachUsdLinkVisuals } from './usdz-link-visuals';
 
 /** Sentinel name attached to the robot group so we can find and remove it later. */
 const ROBOT_GROUP_NAME = '__articraft_robot__';
@@ -49,8 +50,10 @@ export interface UrdfLoaderState {
 export function useUrdfLoader(
   baseFileUrl: string | null,
   assetRevisionKey: string | null,
+  texturedUsdPath: string | null,
   jointPoseSignal: Map<string, number>,
   showCollisionMeshes: boolean,
+  useTexturedUsd: boolean,
   scene: THREE.Scene | null,
   camera: THREE.PerspectiveCamera | null,
   controls: OrbitControls | null,
@@ -112,8 +115,32 @@ export function useUrdfLoader(
         const spec = rewriteAbsoluteMeshFilenames(rawSpec);
 
         // 3. Build scene graph.
-        const { root, jointNodes: joints, jointFrames: frames, linkNodes } = buildRobotSceneGraph(spec, { showCollisions: true });
-        await attachVisualMeshGeometry(spec, linkNodes, baseFileUrl, assetRevisionKey);
+        const preferUsdVisuals = useTexturedUsd && texturedUsdPath != null;
+        const { root, jointNodes: joints, jointFrames: frames, linkNodes } = buildRobotSceneGraph(spec, {
+          showVisuals: true,
+          showCollisions: true,
+        });
+        let usdMatchedLinks = new Set<string>();
+        if (preferUsdVisuals) {
+          try {
+            usdMatchedLinks = await attachUsdLinkVisuals(spec, linkNodes, {
+              usdzUrl:
+                texturedUsdPath != null
+                  ? `${baseFileUrl}/${texturedUsdPath}`
+                  : `${baseFileUrl}/oven_textured.usdz`,
+              assetRevisionKey,
+            });
+          } catch {
+            usdMatchedLinks = new Set<string>();
+          }
+        }
+        await attachVisualMeshGeometry(
+          spec,
+          linkNodes,
+          baseFileUrl,
+          assetRevisionKey,
+          usdMatchedLinks,
+        );
         if (cancelled) return;
 
         // 4. Swap robot group in scene.
@@ -181,7 +208,7 @@ export function useUrdfLoader(
     return () => {
       cancelled = true;
     };
-  }, [baseFileUrl, assetRevisionKey, scene, camera, controls, gridGroup, axisGroup, invalidate]);
+  }, [baseFileUrl, assetRevisionKey, texturedUsdPath, scene, camera, controls, gridGroup, axisGroup, invalidate, useTexturedUsd]);
 
   useEffect(() => {
     const assetKey = baseFileUrl ? `${baseFileUrl}|${assetRevisionKey ?? ''}` : null;
@@ -262,11 +289,15 @@ async function attachVisualMeshGeometry(
   linkNodes: Map<string, THREE.Group>,
   baseUrl: string,
   assetRevisionKey: string | null,
+  skipLinks: ReadonlySet<string> = new Set<string>(),
 ): Promise<void> {
   const pending: Array<Promise<void>> = [];
   let visualIndex = 0;
 
   for (const link of spec.links) {
+    if (skipLinks.has(link.name)) {
+      continue;
+    }
     const linkGroup = linkNodes.get(link.name);
     if (!linkGroup) {
       continue;

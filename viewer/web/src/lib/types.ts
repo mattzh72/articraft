@@ -23,6 +23,7 @@ export type RecordSummary = {
   run_message: string | null;
   collections: string[];
   materialization_status: string | null;
+  textured_usdz_path: string | null;
   has_compile_report: boolean;
   has_provenance: boolean;
   has_cost: boolean;

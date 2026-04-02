@@ -15,6 +15,7 @@ export type RenderOptions = {
   doubleSided: boolean;
   autoAnimate: boolean;
   showJointOverlay: boolean;
+  useTexturedUsd: boolean;
 };
 
 export const defaultRenderOptions: RenderOptions = {
@@ -26,6 +27,7 @@ export const defaultRenderOptions: RenderOptions = {
   doubleSided: true,
   autoAnimate: false,
   showJointOverlay: false,
+  useTexturedUsd: true,
 };
 
 type RenderOptionsPanelProps = {
@@ -75,6 +77,12 @@ const optionRows: OptionRow[] = [
     key: "showSurfaceSamples",
     label: "Surface samples",
     description: "Sample point clouds across visible mesh surfaces",
+    section: "display",
+  },
+  {
+    key: "useTexturedUsd",
+    label: "Textured USDZ",
+    description: "Use textured USDZ visuals when a matching file is available",
     section: "display",
   },
   {
