@@ -115,7 +115,7 @@ export function DashboardPage(): JSX.Element {
 
   return (
     <main className="custom-scrollbar h-full overflow-y-auto bg-[var(--surface-2)]">
-      <div className="mx-auto max-w-[960px] px-6 py-6">
+      <div className="mx-auto max-w-[1120px] px-6 py-6">
         <div className="flex flex-col gap-6">
           {datasetEntries ? (
             <DashboardFilterBar

@@ -39,6 +39,10 @@ export type DashboardCategoryStats = {
   sdk_package: string | null;
   average_rating: number | null;
   average_cost_usd: number | null;
+  average_input_tokens: number | null;
+  average_output_tokens: number | null;
+  input_token_sample_count: number;
+  output_token_sample_count: number;
 };
 
 export type DashboardCostTrendPoint = {
@@ -230,6 +234,10 @@ export function buildDashboardCategoryStats(
       ratingCount: number;
       costTotal: number;
       costCount: number;
+      inputTokenTotal: number;
+      inputTokenCount: number;
+      outputTokenTotal: number;
+      outputTokenCount: number;
     }
   >();
 
@@ -244,6 +252,10 @@ export function buildDashboardCategoryStats(
         ratingCount: 0,
         costTotal: 0,
         costCount: 0,
+        inputTokenTotal: 0,
+        inputTokenCount: 0,
+        outputTokenTotal: 0,
+        outputTokenCount: 0,
       };
       aggregates.set(categorySlug, aggregate);
     }
@@ -257,6 +269,14 @@ export function buildDashboardCategoryStats(
     if (record.total_cost_usd != null) {
       aggregate.costTotal += record.total_cost_usd;
       aggregate.costCount += 1;
+    }
+    if (record.input_tokens != null) {
+      aggregate.inputTokenTotal += record.input_tokens;
+      aggregate.inputTokenCount += 1;
+    }
+    if (record.output_tokens != null) {
+      aggregate.outputTokenTotal += record.output_tokens;
+      aggregate.outputTokenCount += 1;
     }
   }
 
@@ -273,6 +293,16 @@ export function buildDashboardCategoryStats(
         aggregate.costCount > 0
           ? Math.round((aggregate.costTotal / aggregate.costCount) * 10000) / 10000
           : null,
+      average_input_tokens:
+        aggregate.inputTokenCount > 0
+          ? Math.round(aggregate.inputTokenTotal / aggregate.inputTokenCount)
+          : null,
+      average_output_tokens:
+        aggregate.outputTokenCount > 0
+          ? Math.round(aggregate.outputTokenTotal / aggregate.outputTokenCount)
+          : null,
+      input_token_sample_count: aggregate.inputTokenCount,
+      output_token_sample_count: aggregate.outputTokenCount,
     };
   }
 

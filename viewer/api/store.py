@@ -108,6 +108,29 @@ def _thinking_level_from_provenance(provenance: Any) -> str | None:
     return _coerce_string(generation.get("thinking_level"))
 
 
+def _cost_totals(cost: Any) -> tuple[float | None, int | None, int | None]:
+    if not isinstance(cost, dict):
+        return None, None, None
+
+    total = cost.get("total")
+    if not isinstance(total, dict):
+        return None, None, None
+
+    total_cost_usd: float | None = None
+    costs_usd = total.get("costs_usd")
+    if isinstance(costs_usd, dict):
+        total_cost_usd = _coerce_float(costs_usd.get("total"))
+
+    input_tokens: int | None = None
+    output_tokens: int | None = None
+    tokens = total.get("tokens")
+    if isinstance(tokens, dict):
+        input_tokens = _coerce_int(tokens.get("prompt_tokens"))
+        output_tokens = _coerce_int(tokens.get("candidates_tokens"))
+
+    return total_cost_usd, input_tokens, output_tokens
+
+
 def _within_time_filter(created_at: str | None, filter_value: str | None) -> bool:
     if filter_value in {None, "", "any"}:
         return True
@@ -717,13 +740,7 @@ class ViewerStore:
                 run_status = _coerce_string(run_summary.get("final_status"))
             thinking_level = _thinking_level_from_provenance(provenance)
 
-        total_cost_usd: float | None = None
-        if isinstance(cost, dict):
-            total = cost.get("total")
-            if isinstance(total, dict):
-                costs_usd = total.get("costs_usd")
-                if isinstance(costs_usd, dict):
-                    total_cost_usd = _coerce_float(costs_usd.get("total"))
+        total_cost_usd, input_tokens, output_tokens = _cost_totals(cost)
 
         run_id = _coerce_string(source.get("run_id")) if isinstance(source, dict) else None
         if run_id is not None:
@@ -752,6 +769,8 @@ class ViewerStore:
             model_id=record.get("model_id"),
             thinking_level=thinking_level,
             turn_count=turn_count,
+            input_tokens=input_tokens,
+            output_tokens=output_tokens,
             total_cost_usd=total_cost_usd,
             category_slug=record.get("category_slug"),
             run_id=run_id,
@@ -802,13 +821,7 @@ class ViewerStore:
                 turn_count = _coerce_int(run_summary.get("turn_count"))
             thinking_level = _thinking_level_from_provenance(provenance)
 
-        total_cost_usd: float | None = None
-        if isinstance(cost, dict):
-            total = cost.get("total")
-            if isinstance(total, dict):
-                costs_usd = total.get("costs_usd")
-                if isinstance(costs_usd, dict):
-                    total_cost_usd = _coerce_float(costs_usd.get("total"))
+        total_cost_usd, input_tokens, output_tokens = _cost_totals(cost)
 
         run_id = _coerce_string(source.get("run_id")) if isinstance(source, dict) else None
         primary_rating = _coerce_rating(record.get("rating"))
@@ -831,6 +844,8 @@ class ViewerStore:
             model_id=record.get("model_id"),
             thinking_level=thinking_level,
             turn_count=turn_count,
+            input_tokens=input_tokens,
+            output_tokens=output_tokens,
             total_cost_usd=total_cost_usd,
             category_slug=record.get("category_slug"),
             run_id=run_id,
@@ -1529,6 +1544,10 @@ class ViewerStore:
         category_rating_counts: dict[str, int] = {}
         category_cost_totals: dict[str, float] = {}
         category_cost_counts: dict[str, int] = {}
+        category_input_token_totals: dict[str, int] = {}
+        category_input_token_counts: dict[str, int] = {}
+        category_output_token_totals: dict[str, int] = {}
+        category_output_token_counts: dict[str, int] = {}
         category_record_sdk_packages: dict[str, set[str]] = {}
         model_counts: dict[str, int] = {}
         provider_counts: dict[str, int] = {}
@@ -1554,6 +1573,20 @@ class ViewerStore:
                         category_cost_totals.get(category, 0.0) + s.total_cost_usd
                     )
                     category_cost_counts[category] = category_cost_counts.get(category, 0) + 1
+                if s.input_tokens is not None:
+                    category_input_token_totals[category] = (
+                        category_input_token_totals.get(category, 0) + s.input_tokens
+                    )
+                    category_input_token_counts[category] = (
+                        category_input_token_counts.get(category, 0) + 1
+                    )
+                if s.output_tokens is not None:
+                    category_output_token_totals[category] = (
+                        category_output_token_totals.get(category, 0) + s.output_tokens
+                    )
+                    category_output_token_counts[category] = (
+                        category_output_token_counts.get(category, 0) + 1
+                    )
             if s.model_id:
                 model_counts[s.model_id] = model_counts.get(s.model_id, 0) + 1
             if s.provider:
@@ -1594,6 +1627,24 @@ class ViewerStore:
                 average_cost_usd=(
                     round(category_cost_totals[category] / category_cost_counts[category], 4)
                     if category_cost_counts.get(category)
+                    else None
+                ),
+                average_input_tokens=(
+                    round(
+                        category_input_token_totals[category]
+                        / category_input_token_counts[category],
+                        2,
+                    )
+                    if category_input_token_counts.get(category)
+                    else None
+                ),
+                average_output_tokens=(
+                    round(
+                        category_output_token_totals[category]
+                        / category_output_token_counts[category],
+                        2,
+                    )
+                    if category_output_token_counts.get(category)
                     else None
                 ),
             )

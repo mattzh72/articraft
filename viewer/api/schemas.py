@@ -51,6 +51,8 @@ class RecordSummaryResponse(BaseModel):
     model_id: str | None = None
     thinking_level: str | None = None
     turn_count: int | None = None
+    input_tokens: int | None = None
+    output_tokens: int | None = None
     total_cost_usd: float | None = None
     category_slug: str | None = None
     run_id: str | None = None
@@ -235,6 +237,8 @@ class CategoryStatsResponse(BaseModel):
     sdk_package: str | None = None
     average_rating: float | None = None
     average_cost_usd: float | None = None
+    average_input_tokens: float | None = None
+    average_output_tokens: float | None = None
 
 
 class RepoStatsResponse(BaseModel):

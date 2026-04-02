@@ -31,6 +31,19 @@ export function formatCost(usd: number | null): string {
   return `$${usd.toFixed(2)}`;
 }
 
+export function formatTokenCount(tokens: number | null): string {
+  if (tokens == null || !Number.isFinite(tokens)) return "—";
+  const value = Math.round(tokens);
+  const absValue = Math.abs(value);
+
+  if (absValue < 1_000) return `${value}`;
+  if (absValue < 10_000) return `${Math.round(value / 100) / 10}k`;
+  if (absValue < 1_000_000) return `${Math.round(value / 1_000)}k`;
+  if (absValue < 10_000_000) return `${Math.round(value / 100_000) / 10}m`;
+  if (absValue < 1_000_000_000) return `${Math.round(value / 1_000_000)}m`;
+  return `${Math.round(value / 100_000_000) / 10}b`;
+}
+
 export function isRunActive(run: RunSummary): boolean {
   if (run.status === "running" || run.status === "in_progress") return true;
   if (run.prompt_count != null && run.result_count < run.prompt_count) return true;

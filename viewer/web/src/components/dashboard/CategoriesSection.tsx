@@ -1,7 +1,7 @@
 import { useCallback, useState, useMemo, type JSX } from "react";
 import { ArrowDown, ArrowUp, ArrowUpDown, ChevronDown, ChevronRight, Download, Search } from "lucide-react";
 
-import { formatCost } from "@/lib/dashboard-stats";
+import { formatCost, formatTokenCount } from "@/lib/dashboard-stats";
 import { formatCategoryLabel } from "@/lib/utils";
 import type { SupercategoryOption } from "@/lib/types";
 import { Badge } from "@/components/ui/badge";
@@ -19,6 +19,10 @@ type CategoryStats = {
   sdk_package: string | null;
   average_rating: number | null;
   average_cost_usd: number | null;
+  average_input_tokens: number | null;
+  average_output_tokens: number | null;
+  input_token_sample_count: number;
+  output_token_sample_count: number;
 };
 
 type CategoriesSectionProps = {
@@ -26,7 +30,14 @@ type CategoriesSectionProps = {
   supercategories?: SupercategoryOption[];
 };
 
-type SortKey = "category" | "sdk_package" | "count" | "average_rating" | "average_cost_usd";
+type SortKey =
+  | "category"
+  | "sdk_package"
+  | "count"
+  | "average_rating"
+  | "average_cost_usd"
+  | "average_input_tokens"
+  | "average_output_tokens";
 type SortDirection = "asc" | "desc";
 
 function formatAverageRating(value: number | null): string {
@@ -82,6 +93,8 @@ type SupercategoryGroup = {
   totalCount: number;
   avgRating: number | null;
   avgCost: number | null;
+  avgInputTokens: number | null;
+  avgOutputTokens: number | null;
 };
 
 function buildGroups(
@@ -128,6 +141,10 @@ function buildGroupStats(slug: string, title: string, rows: CategoryRow[]): Supe
   let ratingCount = 0;
   let costSum = 0;
   let costCount = 0;
+  let inputTokenSum = 0;
+  let inputTokenCount = 0;
+  let outputTokenSum = 0;
+  let outputTokenCount = 0;
   for (const [, stats] of rows) {
     totalCount += stats.count;
     if (stats.average_rating != null) {
@@ -138,6 +155,14 @@ function buildGroupStats(slug: string, title: string, rows: CategoryRow[]): Supe
       costSum += stats.average_cost_usd * stats.count;
       costCount += stats.count;
     }
+    if (stats.average_input_tokens != null && stats.input_token_sample_count > 0) {
+      inputTokenSum += stats.average_input_tokens * stats.input_token_sample_count;
+      inputTokenCount += stats.input_token_sample_count;
+    }
+    if (stats.average_output_tokens != null && stats.output_token_sample_count > 0) {
+      outputTokenSum += stats.average_output_tokens * stats.output_token_sample_count;
+      outputTokenCount += stats.output_token_sample_count;
+    }
   }
   return {
     slug,
@@ -146,6 +171,8 @@ function buildGroupStats(slug: string, title: string, rows: CategoryRow[]): Supe
     totalCount,
     avgRating: ratingCount > 0 ? Math.round((ratingSum / ratingCount) * 10) / 10 : null,
     avgCost: costCount > 0 ? Math.round((costSum / costCount) * 10000) / 10000 : null,
+    avgInputTokens: inputTokenCount > 0 ? Math.round(inputTokenSum / inputTokenCount) : null,
+    avgOutputTokens: outputTokenCount > 0 ? Math.round(outputTokenSum / outputTokenCount) : null,
   };
 }
 
@@ -187,6 +214,12 @@ function CategoryTableRows({
           <TableCell className="whitespace-nowrap px-4 py-[5px] text-right font-mono tabular-nums text-[var(--text-tertiary)]">
             {formatCost(stats.average_cost_usd)}
           </TableCell>
+          <TableCell className="whitespace-nowrap px-4 py-[5px] text-right font-mono tabular-nums text-[var(--text-tertiary)]">
+            {formatTokenCount(stats.average_input_tokens)}
+          </TableCell>
+          <TableCell className="whitespace-nowrap px-4 py-[5px] text-right font-mono tabular-nums text-[var(--text-tertiary)]">
+            {formatTokenCount(stats.average_output_tokens)}
+          </TableCell>
         </TableRow>
       ))}
     </>
@@ -214,13 +247,17 @@ export function CategoriesSection({
 
   const exportCsv = useCallback(
     (rows: CategoryRow[]) => {
-      const header = "Category,SDK,Count,Avg Stars,Avg Cost USD";
+      const header = "Category,SDK,Count,Avg Stars,Avg Cost USD,Avg Input Tokens,Avg Output Tokens";
       const lines = rows.map(([slug, s]) => {
         const cat = formatCategoryLabel(slug).replaceAll('"', '""');
         const sdk = formatSdkPackage(s.sdk_package);
         const rating = s.average_rating != null ? s.average_rating.toFixed(1) : "";
         const cost = s.average_cost_usd != null ? s.average_cost_usd.toFixed(4) : "";
-        return `"${cat}",${sdk},${s.count},${rating},${cost}`;
+        const inputTokens =
+          s.average_input_tokens != null ? String(Math.round(s.average_input_tokens)) : "";
+        const outputTokens =
+          s.average_output_tokens != null ? String(Math.round(s.average_output_tokens)) : "";
+        return `"${cat}",${sdk},${s.count},${rating},${cost},${inputTokens},${outputTokens}`;
       });
       const blob = new Blob([header + "\n" + lines.join("\n") + "\n"], { type: "text/csv" });
       const url = URL.createObjectURL(blob);
@@ -319,7 +356,7 @@ export function CategoriesSection({
           </div>
         ) : null}
 
-        <div className="custom-scrollbar max-h-[320px] overflow-y-auto">
+        <div className="custom-scrollbar max-h-[320px] overflow-auto">
           {filtered.length === 0 ? (
             <div className="px-4 py-3">
               <span className="text-[11px] text-[var(--text-quaternary)]">
@@ -381,6 +418,26 @@ export function CategoriesSection({
                     >
                       <span>Avg Cost</span>
                       <SortIndicator column="average_cost_usd" />
+                    </button>
+                  </TableHead>
+                  <TableHead className="h-8 whitespace-nowrap px-4 py-[5px] text-right text-[10px] uppercase tracking-[0.06em] text-[var(--text-quaternary)]">
+                    <button
+                      type="button"
+                      onClick={() => toggleSort("average_input_tokens")}
+                      className="ml-auto flex items-center gap-1"
+                    >
+                      <span>Avg Input</span>
+                      <SortIndicator column="average_input_tokens" />
+                    </button>
+                  </TableHead>
+                  <TableHead className="h-8 whitespace-nowrap px-4 py-[5px] text-right text-[10px] uppercase tracking-[0.06em] text-[var(--text-quaternary)]">
+                    <button
+                      type="button"
+                      onClick={() => toggleSort("average_output_tokens")}
+                      className="ml-auto flex items-center gap-1"
+                    >
+                      <span>Avg Output</span>
+                      <SortIndicator column="average_output_tokens" />
                     </button>
                   </TableHead>
                 </TableRow>
@@ -456,6 +513,12 @@ function SupercategoryGroupRows({
         </TableCell>
         <TableCell className="whitespace-nowrap px-4 py-[5px] text-right font-mono tabular-nums text-[var(--text-tertiary)]">
           {formatCost(group.avgCost)}
+        </TableCell>
+        <TableCell className="whitespace-nowrap px-4 py-[5px] text-right font-mono tabular-nums text-[var(--text-tertiary)]">
+          {formatTokenCount(group.avgInputTokens)}
+        </TableCell>
+        <TableCell className="whitespace-nowrap px-4 py-[5px] text-right font-mono tabular-nums text-[var(--text-tertiary)]">
+          {formatTokenCount(group.avgOutputTokens)}
         </TableCell>
       </TableRow>
       {!collapsed ? (

@@ -16,6 +16,8 @@ export type RecordSummary = {
   model_id: string | null;
   thinking_level: string | null;
   turn_count: number | null;
+  input_tokens: number | null;
+  output_tokens: number | null;
   total_cost_usd: number | null;
   category_slug: string | null;
   run_id: string | null;
@@ -201,6 +203,8 @@ export type RepoStats = {
       sdk_package: string | null;
       average_rating: number | null;
       average_cost_usd: number | null;
+      average_input_tokens: number | null;
+      average_output_tokens: number | null;
     }
   >;
   model_counts: Record<string, number>;

@@ -9,7 +9,7 @@ import {
   type PieSectorShapeProps,
 } from "recharts";
 
-import { formatCost } from "@/lib/dashboard-stats";
+import { formatCost, formatTokenCount } from "@/lib/dashboard-stats";
 import type { SupercategoryOption } from "@/lib/types";
 import { cn } from "@/lib/utils";
 import {
@@ -30,6 +30,10 @@ type CategoryStats = {
   sdk_package: string | null;
   average_rating: number | null;
   average_cost_usd: number | null;
+  average_input_tokens: number | null;
+  average_output_tokens: number | null;
+  input_token_sample_count: number;
+  output_token_sample_count: number;
 };
 
 type SupercategoriesSectionProps = {
@@ -68,6 +72,8 @@ type SupercategoryRow = {
   recordCount: number;
   avgRating: number | null;
   avgCost: number | null;
+  avgInputTokens: number | null;
+  avgOutputTokens: number | null;
 };
 
 type DisplayRow = SupercategoryRow & {
@@ -101,6 +107,10 @@ function computeRows(
     let ratingWeights = 0;
     let costSum = 0;
     let costWeights = 0;
+    let inputTokenSum = 0;
+    let inputTokenWeights = 0;
+    let outputTokenSum = 0;
+    let outputTokenWeights = 0;
     let categoryCount = 0;
 
     for (const slug of sc.category_slugs) {
@@ -116,6 +126,14 @@ function computeRows(
         costSum += stats.average_cost_usd * stats.count;
         costWeights += stats.count;
       }
+      if (stats.average_input_tokens != null && stats.input_token_sample_count > 0) {
+        inputTokenSum += stats.average_input_tokens * stats.input_token_sample_count;
+        inputTokenWeights += stats.input_token_sample_count;
+      }
+      if (stats.average_output_tokens != null && stats.output_token_sample_count > 0) {
+        outputTokenSum += stats.average_output_tokens * stats.output_token_sample_count;
+        outputTokenWeights += stats.output_token_sample_count;
+      }
     }
 
     return {
@@ -126,6 +144,9 @@ function computeRows(
       recordCount,
       avgRating: ratingWeights > 0 ? Math.round((ratingSum / ratingWeights) * 10) / 10 : null,
       avgCost: costWeights > 0 ? Math.round((costSum / costWeights) * 10000) / 10000 : null,
+      avgInputTokens: inputTokenWeights > 0 ? Math.round(inputTokenSum / inputTokenWeights) : null,
+      avgOutputTokens:
+        outputTokenWeights > 0 ? Math.round(outputTokenSum / outputTokenWeights) : null,
     };
   });
 }
@@ -211,6 +232,9 @@ function CustomTooltip({
         <div>
           Avg stars: {formatRating(row.avgRating)} · Avg cost: {formatCost(row.avgCost)}
         </div>
+        <div>
+          Avg input: {formatTokenCount(row.avgInputTokens)} · Avg output: {formatTokenCount(row.avgOutputTokens)}
+        </div>
       </div>
     </div>
   );
@@ -275,156 +299,169 @@ export function SupercategoriesSection({
             No supercategories match the current filters
           </div>
         ) : (
-        <div
-          className="flex flex-col gap-4 md:flex-row"
-          onMouseLeave={() => setActiveSlug(null)}
-        >
-          <div className="flex shrink-0 flex-col items-center justify-center md:w-[248px]">
-            <ChartContainer config={chartConfig} className="aspect-square h-[236px] w-[236px]">
-              <PieChart>
-                <Tooltip cursor={false} content={<CustomTooltip />} />
+          <div
+            className="flex flex-col gap-4 md:flex-row"
+            onMouseLeave={() => setActiveSlug(null)}
+          >
+            <div className="flex shrink-0 flex-col items-center justify-center md:w-[248px]">
+              <ChartContainer config={chartConfig} className="aspect-square h-[236px] w-[236px]">
+                <PieChart>
+                  <Tooltip cursor={false} content={<CustomTooltip />} />
 
-                <Pie
-                  data={[{ value: totalRecords }]}
-                  dataKey="value"
-                  innerRadius={70}
-                  outerRadius={102}
-                  strokeWidth={0}
-                  isAnimationActive={false}
-                >
-                  <Cell fill="var(--surface-2)" />
-                </Pie>
+                  <Pie
+                    data={[{ value: totalRecords }]}
+                    dataKey="value"
+                    innerRadius={70}
+                    outerRadius={102}
+                    strokeWidth={0}
+                    isAnimationActive={false}
+                  >
+                    <Cell fill="var(--surface-2)" />
+                  </Pie>
 
-                <Pie
-                  data={displayRows}
-                  dataKey="recordCount"
-                  nameKey="title"
-                  innerRadius={70}
-                  outerRadius={102}
-                  paddingAngle={2}
-                  cornerRadius={5}
-                  shape={(props) => renderSliceShape(props, activeSlug)}
-                  onMouseEnter={(_, index) => {
-                    const hoveredRow = displayRows[index];
-                    setActiveSlug(hoveredRow?.slug ?? null);
-                  }}
-                >
-                  {displayRows.map((row) => (
-                    <Cell key={row.slug} fill={row.color} />
-                  ))}
-                  <Label
-                    content={({ viewBox }) => {
-                      if (!viewBox || !("cx" in viewBox) || !("cy" in viewBox)) {
-                        return null;
-                      }
-
-                      const centerValue = activeRow
-                        ? formatRecordCount(activeRow.recordCount)
-                        : formatRecordCount(totalRecords);
-                      const centerLabel = activeRow
-                        ? formatShare(activeRow.share)
-                        : "records";
-
-                      return (
-                        <text x={viewBox.cx} y={viewBox.cy} textAnchor="middle" dominantBaseline="middle">
-                          <tspan
-                            x={viewBox.cx}
-                            y={(viewBox.cy ?? 0) - 2}
-                            className="fill-[var(--text-primary)] text-[24px] font-semibold"
-                            style={{ fontFamily: "var(--font-mono, ui-monospace, monospace)" }}
-                          >
-                            {centerValue}
-                          </tspan>
-                          <tspan
-                            x={viewBox.cx}
-                            y={(viewBox.cy ?? 0) + 18}
-                            className="fill-[var(--text-quaternary)] text-[11px]"
-                          >
-                            {centerLabel}
-                          </tspan>
-                        </text>
-                      );
+                  <Pie
+                    data={displayRows}
+                    dataKey="recordCount"
+                    nameKey="title"
+                    innerRadius={70}
+                    outerRadius={102}
+                    paddingAngle={2}
+                    cornerRadius={5}
+                    shape={(props) => renderSliceShape(props, activeSlug)}
+                    onMouseEnter={(_, index) => {
+                      const hoveredRow = displayRows[index];
+                      setActiveSlug(hoveredRow?.slug ?? null);
                     }}
-                  />
-                </Pie>
-              </PieChart>
-            </ChartContainer>
+                  >
+                    {displayRows.map((row) => (
+                      <Cell key={row.slug} fill={row.color} />
+                    ))}
+                    <Label
+                      content={({ viewBox }) => {
+                        if (!viewBox || !("cx" in viewBox) || !("cy" in viewBox)) {
+                          return null;
+                        }
 
-            <p className="mt-1 text-center text-[10px] text-[var(--text-quaternary)]">
-              {activeRow
-                ? `${activeRow.title} · ${activeRow.categoryCount} categories`
-                : "Distribution by supercategory"}
-            </p>
+                        const centerValue = activeRow
+                          ? formatRecordCount(activeRow.recordCount)
+                          : formatRecordCount(totalRecords);
+                        const centerLabel = activeRow
+                          ? formatShare(activeRow.share)
+                          : "records";
+
+                        return (
+                          <text
+                            x={viewBox.cx}
+                            y={viewBox.cy}
+                            textAnchor="middle"
+                            dominantBaseline="middle"
+                          >
+                            <tspan
+                              x={viewBox.cx}
+                              y={(viewBox.cy ?? 0) - 2}
+                              className="fill-[var(--text-primary)] text-[24px] font-semibold"
+                              style={{ fontFamily: "var(--font-mono, ui-monospace, monospace)" }}
+                            >
+                              {centerValue}
+                            </tspan>
+                            <tspan
+                              x={viewBox.cx}
+                              y={(viewBox.cy ?? 0) + 18}
+                              className="fill-[var(--text-quaternary)] text-[11px]"
+                            >
+                              {centerLabel}
+                            </tspan>
+                          </text>
+                        );
+                      }}
+                    />
+                  </Pie>
+                </PieChart>
+              </ChartContainer>
+
+              <p className="mt-1 text-center text-[10px] text-[var(--text-quaternary)]">
+                {activeRow
+                  ? `${activeRow.title} · ${activeRow.categoryCount} categories`
+                  : "Distribution by supercategory"}
+              </p>
+            </div>
+
+            <div className="custom-scrollbar min-w-0 flex-1 overflow-auto">
+              <Table className="text-[11px]">
+                <TableHeader>
+                  <TableRow className="border-b border-[var(--border-default)] hover:bg-transparent">
+                    <TableHead className={`${HEAD_CLASSES} w-full`}>Group</TableHead>
+                    <TableHead className={`${HEAD_CLASSES} text-right`}>Cat</TableHead>
+                    <TableHead className={`${HEAD_CLASSES} text-right`}>Rec</TableHead>
+                    <TableHead className={`${HEAD_CLASSES} text-right`}>Stars</TableHead>
+                    <TableHead className={`${HEAD_CLASSES} text-right`}>Cost</TableHead>
+                    <TableHead className={`${HEAD_CLASSES} text-right`}>Input</TableHead>
+                    <TableHead className={`${HEAD_CLASSES} text-right`}>Output</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {displayRows.map((row) => {
+                    const isActive = row.slug === activeSlug;
+
+                    return (
+                      <TableRow
+                        key={row.slug}
+                        className={cn(
+                          "border-b border-[var(--border-subtle)]",
+                          isActive ? "" : "hover:bg-[var(--surface-1)]",
+                        )}
+                        onMouseEnter={() => setActiveSlug(row.slug)}
+                        style={isActive
+                          ? {
+                              backgroundColor: hexToRgba(row.color, 0.06),
+                              boxShadow: `inset 2px 0 0 ${row.color}`,
+                            }
+                          : undefined}
+                      >
+                        <TableCell className="w-full px-3 py-[6px] text-[var(--text-secondary)]">
+                          <button
+                            type="button"
+                            onFocus={() => setActiveSlug(row.slug)}
+                            onBlur={() => {
+                              setActiveSlug((current) => (current === row.slug ? null : current));
+                            }}
+                            className="flex w-full items-center gap-2 text-left focus:outline-none"
+                          >
+                            <span
+                              className="inline-block size-2 shrink-0 rounded-full"
+                              style={{ backgroundColor: row.color }}
+                            />
+                            <span className="truncate">{row.title}</span>
+                            <span className="ml-auto shrink-0 font-mono text-[10px] text-[var(--text-quaternary)]">
+                              {formatShare(row.share)}
+                            </span>
+                          </button>
+                        </TableCell>
+                        <TableCell className="whitespace-nowrap px-3 py-[6px] text-right font-mono tabular-nums text-[var(--text-tertiary)]">
+                          {row.categoryCount}
+                        </TableCell>
+                        <TableCell className="whitespace-nowrap px-3 py-[6px] text-right font-mono tabular-nums text-[var(--text-tertiary)]">
+                          {row.recordCount}
+                        </TableCell>
+                        <TableCell className="whitespace-nowrap px-3 py-[6px] text-right font-mono tabular-nums text-[var(--text-tertiary)]">
+                          {formatRating(row.avgRating)}
+                        </TableCell>
+                        <TableCell className="whitespace-nowrap px-3 py-[6px] text-right font-mono tabular-nums text-[var(--text-tertiary)]">
+                          {formatCost(row.avgCost)}
+                        </TableCell>
+                        <TableCell className="whitespace-nowrap px-3 py-[6px] text-right font-mono tabular-nums text-[var(--text-tertiary)]">
+                          {formatTokenCount(row.avgInputTokens)}
+                        </TableCell>
+                        <TableCell className="whitespace-nowrap px-3 py-[6px] text-right font-mono tabular-nums text-[var(--text-tertiary)]">
+                          {formatTokenCount(row.avgOutputTokens)}
+                        </TableCell>
+                      </TableRow>
+                    );
+                  })}
+                </TableBody>
+              </Table>
+            </div>
           </div>
-
-          <div className="min-w-0 flex-1">
-            <Table className="text-[11px]">
-              <TableHeader>
-                <TableRow className="border-b border-[var(--border-default)] hover:bg-transparent">
-                  <TableHead className={`${HEAD_CLASSES} w-full`}>Group</TableHead>
-                  <TableHead className={`${HEAD_CLASSES} text-right`}>Cat</TableHead>
-                  <TableHead className={`${HEAD_CLASSES} text-right`}>Rec</TableHead>
-                  <TableHead className={`${HEAD_CLASSES} text-right`}>Stars</TableHead>
-                  <TableHead className={`${HEAD_CLASSES} text-right`}>Cost</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {displayRows.map((row) => {
-                  const isActive = row.slug === activeSlug;
-
-                  return (
-                    <TableRow
-                      key={row.slug}
-                      className={cn(
-                        "border-b border-[var(--border-subtle)]",
-                        isActive ? "" : "hover:bg-[var(--surface-1)]",
-                      )}
-                      onMouseEnter={() => setActiveSlug(row.slug)}
-                      style={isActive
-                        ? {
-                            backgroundColor: hexToRgba(row.color, 0.06),
-                            boxShadow: `inset 2px 0 0 ${row.color}`,
-                          }
-                        : undefined}
-                    >
-                      <TableCell className="w-full px-3 py-[6px] text-[var(--text-secondary)]">
-                        <button
-                          type="button"
-                          onFocus={() => setActiveSlug(row.slug)}
-                          onBlur={() => {
-                            setActiveSlug((current) => (current === row.slug ? null : current));
-                          }}
-                          className="flex w-full items-center gap-2 text-left focus:outline-none"
-                        >
-                          <span
-                            className="inline-block size-2 shrink-0 rounded-full"
-                            style={{ backgroundColor: row.color }}
-                          />
-                          <span className="truncate">{row.title}</span>
-                          <span className="ml-auto shrink-0 font-mono text-[10px] text-[var(--text-quaternary)]">
-                            {formatShare(row.share)}
-                          </span>
-                        </button>
-                      </TableCell>
-                      <TableCell className="whitespace-nowrap px-3 py-[6px] text-right font-mono tabular-nums text-[var(--text-tertiary)]">
-                        {row.categoryCount}
-                      </TableCell>
-                      <TableCell className="whitespace-nowrap px-3 py-[6px] text-right font-mono tabular-nums text-[var(--text-tertiary)]">
-                        {row.recordCount}
-                      </TableCell>
-                      <TableCell className="whitespace-nowrap px-3 py-[6px] text-right font-mono tabular-nums text-[var(--text-tertiary)]">
-                        {formatRating(row.avgRating)}
-                      </TableCell>
-                      <TableCell className="whitespace-nowrap px-3 py-[6px] text-right font-mono tabular-nums text-[var(--text-tertiary)]">
-                        {formatCost(row.avgCost)}
-                      </TableCell>
-                    </TableRow>
-                  );
-                })}
-              </TableBody>
-            </Table>
-          </div>
-        </div>
         )}
       </div>
     </section>

@@ -294,7 +294,11 @@ def test_viewer_api_end_to_end(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) 
         repo.layout.record_dir("rec_001") / "cost.json",
         {
             "total": {
-                "tokens": {"total_tokens": 1000},
+                "tokens": {
+                    "prompt_tokens": 800,
+                    "candidates_tokens": 200,
+                    "total_tokens": 1000,
+                },
                 "costs_usd": {"total": 0.05},
             }
         },
@@ -398,7 +402,11 @@ def test_viewer_api_end_to_end(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) 
         repo.layout.record_dir("rec_bike_001") / "cost.json",
         {
             "total": {
-                "tokens": {"total_tokens": 1200},
+                "tokens": {
+                    "prompt_tokens": 900,
+                    "candidates_tokens": 300,
+                    "total_tokens": 1200,
+                },
                 "costs_usd": {"total": 0.15},
             }
         },
@@ -543,6 +551,8 @@ def test_viewer_api_end_to_end(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) 
     assert workbench_by_id["rec_001"]["record"]["secondary_rated_by"] is None
     assert workbench_by_id["rec_001"]["record"]["thinking_level"] == "high"
     assert workbench_by_id["rec_001"]["record"]["viewer_asset_updated_at"] is not None
+    assert workbench_by_id["rec_001"]["record"]["input_tokens"] == 800
+    assert workbench_by_id["rec_001"]["record"]["output_tokens"] == 200
     assert workbench_by_id["rec_bike_001"]["record"]["effective_rating"] == 2.0
 
     dataset = client.get("/api/collections/dataset").json()
@@ -563,6 +573,8 @@ def test_viewer_api_end_to_end(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) 
     assert record_summary["record_id"] == "rec_001"
     assert record_summary["viewer_asset_updated_at"] is not None
     assert record_summary["has_compile_report"] is True
+    assert record_summary["input_tokens"] == 800
+    assert record_summary["output_tokens"] == 200
 
     categories = client.get("/api/categories").json()
     assert categories == [
@@ -727,18 +739,24 @@ def test_viewer_api_end_to_end(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) 
         "sdk_package": "sdk",
         "average_rating": 3.5,
         "average_cost_usd": 0.05,
+        "average_input_tokens": 800.0,
+        "average_output_tokens": 200.0,
     }
     assert stats_payload["category_stats"]["dj_equipment"] == {
         "count": 1,
         "sdk_package": "sdk",
         "average_rating": None,
         "average_cost_usd": None,
+        "average_input_tokens": None,
+        "average_output_tokens": None,
     }
     assert stats_payload["category_stats"]["exercise_bikes"] == {
         "count": 1,
         "sdk_package": "sdk",
         "average_rating": 2.0,
         "average_cost_usd": 0.15,
+        "average_input_tokens": 900.0,
+        "average_output_tokens": 300.0,
     }
     assert stats_payload["rating_distribution"] == {
         "2": 1,
@@ -773,6 +791,8 @@ def test_viewer_api_end_to_end(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) 
         "sdk_package": "sdk",
         "average_rating": 4.0,
         "average_cost_usd": 0.05,
+        "average_input_tokens": 800.0,
+        "average_output_tokens": 200.0,
     }
     assert refreshed_stats_payload["rating_distribution"] == {
         "2": 1,
