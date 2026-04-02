@@ -63,6 +63,26 @@ class RecordSummaryResponse(BaseModel):
     has_cost: bool = False
 
 
+class RecordBrowseFacetsResponse(BaseModel):
+    models: list[str] = Field(default_factory=list)
+    sdk_packages: list[str] = Field(default_factory=list)
+    authors: list[str] = Field(default_factory=list)
+    categories: list[str] = Field(default_factory=list)
+    cost_min: float | None = None
+    cost_max: float | None = None
+
+
+class RecordBrowseResponse(BaseModel):
+    source: str
+    total: int
+    source_total: int
+    offset: int
+    limit: int
+    record_ids: list[str] = Field(default_factory=list)
+    records: list[RecordSummaryResponse] = Field(default_factory=list)
+    facets: RecordBrowseFacetsResponse
+
+
 class WorkbenchEntryResponse(BaseModel):
     record_id: str
     added_at: str

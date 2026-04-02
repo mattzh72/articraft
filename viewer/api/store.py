@@ -25,6 +25,8 @@ from viewer.api.schemas import (
     CategoryOptionResponse,
     CategoryStatsResponse,
     DatasetEntryResponse,
+    RecordBrowseFacetsResponse,
+    RecordBrowseResponse,
     RecordDetailResponse,
     RecordSummaryResponse,
     RepoStatsResponse,
@@ -765,6 +767,85 @@ class ViewerStore:
             summary_cache[record_id] = summary
         return summary
 
+    def _record_browser_summary(
+        self,
+        record_id: str,
+        summary_cache: dict[str, RecordSummaryResponse | None] | None = None,
+    ) -> RecordSummaryResponse | None:
+        if summary_cache is not None and record_id in summary_cache:
+            return summary_cache[record_id]
+
+        record_path = self.repo.layout.record_metadata_path(record_id)
+        record = self.repo.read_json(record_path)
+        if record is None:
+            if summary_cache is not None:
+                summary_cache[record_id] = None
+            return None
+
+        display = record.get("display") or {}
+        source = record.get("source") or {}
+        artifacts = record.get("artifacts") or {}
+        record_dir = self.repo.layout.record_dir(record_id)
+
+        compile_path = self.repo.layout.record_materialization_compile_report_path(record_id)
+        provenance_path = record_dir / "provenance.json"
+        cost_name = artifacts.get("cost_json")
+        cost_path = record_dir / str(cost_name) if cost_name else None
+        provenance = self.repo.read_json(provenance_path) if provenance_path.exists() else None
+        cost = self.repo.read_json(cost_path) if cost_path and cost_path.exists() else None
+
+        turn_count: int | None = None
+        thinking_level: str | None = None
+        if isinstance(provenance, dict):
+            run_summary = provenance.get("run_summary")
+            if isinstance(run_summary, dict):
+                turn_count = _coerce_int(run_summary.get("turn_count"))
+            thinking_level = _thinking_level_from_provenance(provenance)
+
+        total_cost_usd: float | None = None
+        if isinstance(cost, dict):
+            total = cost.get("total")
+            if isinstance(total, dict):
+                costs_usd = total.get("costs_usd")
+                if isinstance(costs_usd, dict):
+                    total_cost_usd = _coerce_float(costs_usd.get("total"))
+
+        run_id = _coerce_string(source.get("run_id")) if isinstance(source, dict) else None
+        primary_rating = _coerce_rating(record.get("rating"))
+        secondary_rating = _coerce_rating(record.get("secondary_rating"))
+        summary = RecordSummaryResponse(
+            record_id=record_id,
+            title=str(display.get("title") or record_id),
+            prompt_preview=str(display.get("prompt_preview") or ""),
+            rating=primary_rating,
+            secondary_rating=secondary_rating,
+            effective_rating=_effective_rating(primary_rating, secondary_rating),
+            author=_coerce_string(record.get("author")),
+            rated_by=_coerce_string(record.get("rated_by")),
+            secondary_rated_by=_coerce_string(record.get("secondary_rated_by")),
+            created_at=record.get("created_at"),
+            updated_at=record.get("updated_at"),
+            viewer_asset_updated_at=None,
+            sdk_package=record.get("sdk_package"),
+            provider=record.get("provider"),
+            model_id=record.get("model_id"),
+            thinking_level=thinking_level,
+            turn_count=turn_count,
+            total_cost_usd=total_cost_usd,
+            category_slug=record.get("category_slug"),
+            run_id=run_id,
+            run_status=None,
+            run_message=None,
+            collections=[str(item) for item in record.get("collections", [])],
+            materialization_status=None,
+            has_compile_report=compile_path.exists(),
+            has_provenance=provenance_path.exists(),
+            has_cost=cost_path.exists() if cost_path else False,
+        )
+        if summary_cache is not None:
+            summary_cache[record_id] = summary
+        return summary
+
     def _record_detail(
         self,
         record_id: str,
@@ -838,6 +919,181 @@ class ViewerStore:
                 )
             )
         return entries
+
+    def _source_record_ids(self, source_filter: str) -> list[str]:
+        seen: set[str] = set()
+        record_ids: list[str] = []
+
+        if source_filter == "workbench":
+            workbench = self.collections.load_workbench() or {"entries": []}
+            for item in workbench.get("entries", []):
+                record_id = str(item.get("record_id", "")).strip()
+                if not record_id or record_id in seen:
+                    continue
+                seen.add(record_id)
+                record_ids.append(record_id)
+            return record_ids
+
+        if source_filter == "dataset":
+            for item in self.datasets.list_entries():
+                record_id = str(item.get("record_id", "")).strip()
+                if not record_id or record_id in seen:
+                    continue
+                seen.add(record_id)
+                record_ids.append(record_id)
+            return record_ids
+
+        raise ValueError(f"Unsupported source filter: {source_filter}")
+
+    def load_record_summary(self, record_id: str) -> RecordSummaryResponse | None:
+        return self._record_summary(record_id)
+
+    def browse_records(
+        self,
+        *,
+        source_filter: str,
+        query: str | None = None,
+        run_id: str | None = None,
+        time_filter: str | None = None,
+        model_filter: str | None = None,
+        sdk_filter: str | None = None,
+        author_filters: list[str] | None = None,
+        category_filters: list[str] | None = None,
+        cost_min: float | None = None,
+        cost_max: float | None = None,
+        rating_filter: list[str] | None = None,
+        secondary_rating_filter: list[str] | None = None,
+        offset: int = 0,
+        limit: int = 100,
+    ) -> RecordBrowseResponse:
+        if cost_min is not None and cost_max is not None and cost_min > cost_max:
+            cost_min, cost_max = cost_max, cost_min
+
+        source_record_ids = self._source_record_ids(source_filter)
+        source_total = len(source_record_ids)
+        summary_cache: dict[str, RecordSummaryResponse | None] = {}
+
+        all_source_summaries = [
+            summary
+            for record_id in source_record_ids
+            if (summary := self._record_browser_summary(record_id, summary_cache=summary_cache))
+            is not None
+        ]
+
+        available_models = sorted(
+            {
+                str(summary.model_id)
+                for summary in all_source_summaries
+                if isinstance(summary.model_id, str) and summary.model_id
+            }
+        )
+        available_sdk_packages = sorted(
+            {
+                str(summary.sdk_package)
+                for summary in all_source_summaries
+                if isinstance(summary.sdk_package, str) and summary.sdk_package
+            }
+        )
+        available_authors = sorted(
+            {
+                str(summary.author)
+                for summary in all_source_summaries
+                if isinstance(summary.author, str) and summary.author
+            }
+        )
+        available_categories = (
+            sorted(
+                {
+                    str(item.get("category_slug", "")).strip()
+                    for item in self.datasets.list_entries()
+                    if str(item.get("category_slug", "")).strip()
+                }
+            )
+            if source_filter == "dataset"
+            else []
+        )
+
+        cost_records = [
+            summary for summary in all_source_summaries if not run_id or summary.run_id == run_id
+        ]
+        cost_values = [
+            summary.total_cost_usd
+            for summary in cost_records
+            if isinstance(summary.total_cost_usd, float)
+        ]
+
+        facets = RecordBrowseFacetsResponse(
+            models=available_models,
+            sdk_packages=available_sdk_packages,
+            authors=available_authors,
+            categories=available_categories,
+            cost_min=min(cost_values) if cost_values else None,
+            cost_max=max(cost_values) if cost_values else None,
+        )
+
+        candidate_ids: list[str]
+        query_text = (query or "").strip()
+        if query_text:
+            candidate_ids = self.search.search_record_ids(
+                query_text,
+                source_filter=source_filter,
+                run_id=run_id,
+                limit=max(source_total, 1000),
+            )
+        else:
+            candidate_ids = source_record_ids
+
+        matching_summaries: list[RecordSummaryResponse] = []
+        for record_id in candidate_ids:
+            summary = summary_cache.get(record_id)
+            if summary is None:
+                summary = self._record_browser_summary(record_id, summary_cache=summary_cache)
+            if summary is None:
+                continue
+            if run_id and summary.run_id != run_id:
+                continue
+            if not _within_time_filter(summary.created_at, time_filter):
+                continue
+            if model_filter and summary.model_id != model_filter:
+                continue
+            if sdk_filter and summary.sdk_package != sdk_filter:
+                continue
+            if not _within_author_filters(summary.author, author_filters):
+                continue
+            if not _within_category_filters(summary.category_slug, category_filters):
+                continue
+            if not _within_cost_filter(summary.total_cost_usd, cost_min, cost_max):
+                continue
+            if not _within_rating_filter(summary.effective_rating, rating_filter):
+                continue
+            if not _within_rating_filter(summary.secondary_rating, secondary_rating_filter):
+                continue
+            matching_summaries.append(summary)
+
+        if not query_text:
+            matching_summaries.sort(
+                key=lambda summary: _parse_sort_key(summary.updated_at or summary.created_at),
+                reverse=True,
+            )
+
+        normalized_offset = max(0, offset)
+        normalized_limit = max(0, min(limit, 500))
+        paged_summaries = (
+            matching_summaries[normalized_offset : normalized_offset + normalized_limit]
+            if normalized_limit > 0
+            else []
+        )
+
+        return RecordBrowseResponse(
+            source=source_filter,
+            total=len(matching_summaries),
+            source_total=source_total,
+            offset=normalized_offset,
+            limit=normalized_limit,
+            record_ids=[summary.record_id for summary in matching_summaries],
+            records=paged_summaries,
+            facets=facets,
+        )
 
     def list_supercategories(self) -> list[SupercategoryOptionResponse]:
         manifest = self.supercategory_store.load_manifest()
@@ -1145,7 +1401,7 @@ class ViewerStore:
             repo_root=self.repo_root.as_posix(),
             generated_at=_utc_now(),
             workbench_entries=self.list_workbench_entries(summary_cache=summary_cache),
-            dataset_entries=self.list_dataset_entries(summary_cache=summary_cache),
+            dataset_entries=[],
             staging_entries=self.list_staging_entries(summary_cache=summary_cache),
             runs=self.list_runs(),
             supercategories=self.list_supercategories(),
@@ -1159,6 +1415,7 @@ class ViewerStore:
         run_id: str | None = None,
         time_filter: str | None = None,
         model_filter: str | None = None,
+        sdk_filter: str | None = None,
         author_filters: list[str] | None = None,
         category_filters: list[str] | None = None,
         cost_min: float | None = None,
@@ -1186,6 +1443,8 @@ class ViewerStore:
             if not _within_time_filter(summary.created_at, time_filter):
                 continue
             if model_filter and summary.model_id != model_filter:
+                continue
+            if sdk_filter and summary.sdk_package != sdk_filter:
                 continue
             if not _within_author_filters(summary.author, author_filters):
                 continue

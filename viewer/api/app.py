@@ -35,6 +35,7 @@ from viewer.api.schemas import (
     OpenRecordFolderResponse,
     OpenStagingFolderResponse,
     PromoteRecordRequest,
+    RecordBrowseResponse,
     RecordRatingRequest,
     RecordRatingResponse,
     RecordSecondaryRatingRequest,
@@ -435,6 +436,54 @@ def create_app(*, repo_root: Path | None = None) -> FastAPI:
             raise HTTPException(status_code=404, detail=f"Run not found: {run_id}")
         return detail
 
+    @app.get("/api/records/{record_id}/summary", response_model=RecordSummaryResponse)
+    async def record_summary(record_id: str) -> RecordSummaryResponse:
+        if not record_id.startswith("rec_"):
+            raise HTTPException(status_code=400, detail="Invalid record ID format")
+
+        summary = await asyncio.to_thread(app.state.viewer_store.load_record_summary, record_id)
+        if summary is None:
+            raise HTTPException(status_code=404, detail=f"Record not found: {record_id}")
+        return summary
+
+    @app.get("/api/records/browse", response_model=RecordBrowseResponse)
+    async def browse_records(
+        source: str,
+        q: str | None = None,
+        run_id: str | None = None,
+        time: str | None = None,
+        model: str | None = None,
+        sdk: str | None = None,
+        author: list[str] | None = Query(default=None),
+        category: list[str] | None = Query(default=None),
+        cost_min: float | None = None,
+        cost_max: float | None = None,
+        rating: list[str] | None = Query(default=None),
+        secondary_rating: list[str] | None = Query(default=None),
+        offset: int = Query(default=0, ge=0),
+        limit: int = Query(default=100, ge=0, le=500),
+    ) -> RecordBrowseResponse:
+        try:
+            return await asyncio.to_thread(
+                app.state.viewer_store.browse_records,
+                source_filter=source,
+                query=q,
+                run_id=run_id,
+                time_filter=time,
+                model_filter=model,
+                sdk_filter=sdk,
+                author_filters=author,
+                category_filters=category,
+                cost_min=cost_min,
+                cost_max=cost_max,
+                rating_filter=rating,
+                secondary_rating_filter=secondary_rating,
+                offset=offset,
+                limit=limit,
+            )
+        except ValueError as exc:
+            raise HTTPException(status_code=400, detail=str(exc)) from exc
+
     @app.get("/api/records/search", response_model=list[RecordSummaryResponse])
     async def search_records(
         q: str,
@@ -442,6 +491,7 @@ def create_app(*, repo_root: Path | None = None) -> FastAPI:
         run_id: str | None = None,
         time: str | None = None,
         model: str | None = None,
+        sdk: str | None = None,
         author: list[str] | None = Query(default=None),
         category: list[str] | None = Query(default=None),
         cost_min: float | None = None,
@@ -456,6 +506,7 @@ def create_app(*, repo_root: Path | None = None) -> FastAPI:
             run_id=run_id,
             time_filter=time,
             model_filter=model,
+            sdk_filter=sdk,
             author_filters=author,
             category_filters=category,
             cost_min=cost_min,

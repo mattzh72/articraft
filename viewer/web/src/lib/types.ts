@@ -28,6 +28,26 @@ export type RecordSummary = {
   has_cost: boolean;
 };
 
+export type RecordBrowseFacets = {
+  models: string[];
+  sdk_packages: string[];
+  authors: string[];
+  categories: string[];
+  cost_min: number | null;
+  cost_max: number | null;
+};
+
+export type RecordBrowseResponse = {
+  source: SourceFilter;
+  total: number;
+  source_total: number;
+  offset: number;
+  limit: number;
+  record_ids: string[];
+  records: RecordSummary[];
+  facets: RecordBrowseFacets;
+};
+
 export type WorkbenchEntry = {
   record_id: string;
   added_at: string;
@@ -219,8 +239,10 @@ export type InspectorTab = "inspect" | "render" | "code" | "metadata";
 
 export type ViewerState = {
   bootstrap: ViewerBootstrap | null;
+  recordCache: Record<string, RecordSummary>;
   selection: ViewerSelection | null;
   selectedRecordId: string | null;
+  selectedRecordSummary: RecordSummary | null;
   selectedInspectorTab: InspectorTab;
   inspectorOpen: boolean;
   loading: boolean;
@@ -242,6 +264,8 @@ export type ViewerState = {
 
 export type ViewerAction =
   | { type: "SET_BOOTSTRAP"; payload: ViewerBootstrap }
+  | { type: "UPSERT_RECORDS"; payload: RecordSummary[] }
+  | { type: "SET_SELECTED_RECORD_SUMMARY"; payload: RecordSummary | null }
   | {
       type: "SYNC_FROM_URL";
       payload: {

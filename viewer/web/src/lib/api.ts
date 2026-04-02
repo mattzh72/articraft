@@ -6,12 +6,14 @@ import type {
   DeleteRecordResult,
   OpenRecordFolderResult,
   OpenStagingFolderResult,
+  RecordBrowseResponse,
   RecordRatingResponse,
   RecordSecondaryRatingResponse,
   RecordSummary,
   RepoStats,
   RatingFilter,
   RunDetail,
+  SourceFilter,
   StagingEntry,
   TimeFilter,
   ViewerBootstrap,
@@ -24,6 +26,16 @@ export interface RecordTextFileResult {
   truncated: boolean;
   byte_count: number;
   preview_byte_limit: number | null;
+}
+
+export class HttpError extends Error {
+  readonly status: number;
+
+  constructor(status: number, message: string) {
+    super(message);
+    this.name = "HttpError";
+    this.status = status;
+  }
 }
 
 async function readErrorMessage(response: Response): Promise<string> {
@@ -51,7 +63,7 @@ async function readErrorMessage(response: Response): Promise<string> {
 async function fetchJson<T>(path: string): Promise<T> {
   const response = await fetch(path);
   if (!response.ok) {
-    throw new Error(await readErrorMessage(response));
+    throw new HttpError(response.status, await readErrorMessage(response));
   }
   return (await response.json()) as T;
 }
@@ -68,12 +80,80 @@ export async function fetchCategories(): Promise<CategoryOption[]> {
   return fetchJson<CategoryOption[]>("/api/categories");
 }
 
+export async function fetchDatasetEntries(): Promise<DatasetEntry[]> {
+  return fetchJson<DatasetEntry[]>("/api/collections/dataset");
+}
+
+export async function fetchRecordSummary(recordId: string): Promise<RecordSummary> {
+  return fetchJson<RecordSummary>(`/api/records/${encodeURIComponent(recordId)}/summary`);
+}
+
+export async function browseRecords(params: {
+  source: SourceFilter;
+  query: string;
+  runId: string | null;
+  timeFilter: TimeFilter;
+  modelFilter: string | null;
+  sdkFilter: string | null;
+  authorFilters: string[];
+  categoryFilters: string[];
+  costFilter: CostFilter;
+  ratingFilter: RatingFilter;
+  secondaryRatingFilter: RatingFilter;
+  offset?: number;
+  limit?: number;
+}): Promise<RecordBrowseResponse> {
+  const searchParams = new URLSearchParams();
+  searchParams.set("source", params.source);
+  if (params.query.trim()) {
+    searchParams.set("q", params.query.trim());
+  }
+  if (params.runId) {
+    searchParams.set("run_id", params.runId);
+  }
+  if (params.timeFilter.oldest) {
+    searchParams.set("time", params.timeFilter.oldest);
+  }
+  if (params.modelFilter) {
+    searchParams.set("model", params.modelFilter);
+  }
+  if (params.sdkFilter) {
+    searchParams.set("sdk", params.sdkFilter);
+  }
+  for (const authorFilter of params.authorFilters) {
+    searchParams.append("author", authorFilter);
+  }
+  for (const categoryFilter of params.categoryFilters) {
+    searchParams.append("category", categoryFilter);
+  }
+  if (params.costFilter.min != null) {
+    searchParams.set("cost_min", String(params.costFilter.min));
+  }
+  if (params.costFilter.max != null) {
+    searchParams.set("cost_max", String(params.costFilter.max));
+  }
+  for (const ratingFilter of params.ratingFilter) {
+    searchParams.append("rating", ratingFilter);
+  }
+  for (const secondaryRatingFilter of params.secondaryRatingFilter) {
+    searchParams.append("secondary_rating", secondaryRatingFilter);
+  }
+  if (params.offset != null) {
+    searchParams.set("offset", String(params.offset));
+  }
+  if (params.limit != null) {
+    searchParams.set("limit", String(params.limit));
+  }
+  return fetchJson<RecordBrowseResponse>(`/api/records/browse?${searchParams.toString()}`);
+}
+
 export async function searchRecords(params: {
   query: string;
   source: "workbench" | "dataset";
   runId: string | null;
   timeFilter: TimeFilter;
   modelFilter: string | null;
+  sdkFilter: string | null;
   authorFilters: string[];
   categoryFilters: string[];
   costFilter: CostFilter;
@@ -92,6 +172,9 @@ export async function searchRecords(params: {
   }
   if (params.modelFilter) {
     searchParams.set("model", params.modelFilter);
+  }
+  if (params.sdkFilter) {
+    searchParams.set("sdk", params.sdkFilter);
   }
   for (const authorFilter of params.authorFilters) {
     searchParams.append("author", authorFilter);
@@ -122,7 +205,7 @@ export async function deleteRecord(recordId: string): Promise<DeleteRecordResult
     method: "DELETE",
   });
   if (!response.ok) {
-    throw new Error(await readErrorMessage(response));
+    throw new HttpError(response.status, await readErrorMessage(response));
   }
   return (await response.json()) as DeleteRecordResult;
 }
@@ -147,7 +230,7 @@ export async function promoteRecordToDataset(
     }),
   });
   if (!response.ok) {
-    throw new Error(await readErrorMessage(response));
+    throw new HttpError(response.status, await readErrorMessage(response));
   }
   return (await response.json()) as DatasetEntry;
 }

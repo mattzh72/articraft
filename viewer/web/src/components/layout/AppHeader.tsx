@@ -35,25 +35,9 @@ export function AppHeader(): JSX.Element {
     ? findStagingEntryInBootstrap(state.bootstrap, state.selection.runId, state.selection.recordId)
     : null;
 
-  const selectedRecord = (() => {
-    if (!state.bootstrap || !state.selectedRecordId) return null;
-
-    for (const entry of state.bootstrap.workbench_entries) {
-      if (entry.record_id === state.selectedRecordId && entry.record) {
-        return entry.record;
-      }
-    }
-    for (const entry of state.bootstrap.dataset_entries) {
-      if (entry.record_id === state.selectedRecordId && entry.record) {
-        return entry.record;
-      }
-    }
-    return null;
-  })();
-
   const titleSource = isStagingSelection
     ? stagingEntry?.title ?? null
-    : selectedRecord?.title ?? null;
+    : state.selectedRecordSummary?.title ?? null;
   const selectedRecordTitleFull = titleSource;
   const selectedRecordTitle = titleSource ? truncateWithEllipsis(titleSource, 72) : null;
 

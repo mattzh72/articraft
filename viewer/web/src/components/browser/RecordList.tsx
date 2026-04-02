@@ -1,10 +1,20 @@
-import { useCallback, useDeferredValue, useEffect, useMemo, useRef, useState, type JSX } from "react";
+import {
+  useCallback,
+  useDeferredValue,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  type JSX,
+} from "react";
+import { AutoSizer } from "react-virtualized-auto-sizer";
+import { List, type ListImperativeAPI, type RowComponentProps } from "react-window";
 
-import { searchRecords } from "@/lib/api";
+import { RecordListItem } from "@/components/browser/RecordListItem";
+import type { DatasetFilterMetadata } from "@/components/browser/ExplorerFilters";
+import { browseRecords, searchRecords } from "@/lib/api";
 import type { CostFilter, RatingFilter, RecordSummary, TimeFilter } from "@/lib/types";
 import { useViewer, useViewerDispatch } from "@/lib/viewer-context";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { RecordListItem } from "@/components/browser/RecordListItem";
 
 const TIME_DURATIONS: Record<string, number> = {
   "1h": 1 * 60 * 60 * 1000,
@@ -20,6 +30,11 @@ const TIME_DURATIONS: Record<string, number> = {
   "180d": 180 * 24 * 60 * 60 * 1000,
   "1y": 365 * 24 * 60 * 60 * 1000,
 };
+
+const DATASET_PAGE_SIZE = 120;
+const DEFAULT_LIST_HEIGHT_PX = 480;
+const VIRTUAL_OVERSCAN = 8;
+const RECORD_ROW_HEIGHT_PX = 68;
 
 function withinTimeFilter(createdAt: string | null, filter: TimeFilter): boolean {
   if (!filter.oldest && !filter.newest) return true;
@@ -63,14 +78,72 @@ function recordSortTimestamp(record: RecordSummary): number {
   return timestamp ? new Date(timestamp).getTime() : 0;
 }
 
+type VirtualRowData = {
+  visibleIds: string[];
+  recordForId: (recordId: string) => RecordSummary | null;
+  repoRoot: string | null;
+  selectedRecordId: string | null;
+  multiSelectActive: boolean;
+  multiSelection: Set<string>;
+  onSelect: (recordId: string) => void;
+  onMultiSelectToggle: (recordId: string, shiftKey: boolean) => void;
+};
+
+function VirtualRecordRow({
+  ariaAttributes,
+  index,
+  style,
+  visibleIds,
+  recordForId,
+  repoRoot,
+  selectedRecordId,
+  multiSelectActive,
+  multiSelection,
+  onSelect,
+  onMultiSelectToggle,
+}: RowComponentProps<VirtualRowData>): JSX.Element | null {
+  const recordId = visibleIds[index] ?? null;
+  if (!recordId) {
+    return null;
+  }
+
+  return (
+    <div
+      {...ariaAttributes}
+      style={{
+        ...style,
+        boxSizing: "border-box",
+        paddingInline: "2px",
+      }}
+    >
+      <RecordListItem
+        recordId={recordId}
+        record={recordForId(recordId)}
+        repoRoot={repoRoot}
+        isSelected={selectedRecordId === recordId}
+        multiSelectActive={multiSelectActive}
+        isMultiSelected={multiSelection.has(recordId)}
+        onSelect={onSelect}
+        onMultiSelectToggle={onMultiSelectToggle}
+      />
+    </div>
+  );
+}
+
 interface RecordListProps {
   onVisibleIdsChange?: (ids: string[]) => void;
   onCountsChange?: (counts: { visible: number; total: number }) => void;
+  onDatasetMetadataChange?: (metadata: DatasetFilterMetadata | null) => void;
 }
 
-export function RecordList({ onVisibleIdsChange, onCountsChange }: RecordListProps): JSX.Element {
+export function RecordList({
+  onVisibleIdsChange,
+  onCountsChange,
+  onDatasetMetadataChange,
+}: RecordListProps): JSX.Element {
   const {
     bootstrap,
+    recordCache,
     searchQuery,
     sourceFilter,
     timeFilter,
@@ -86,45 +159,41 @@ export function RecordList({ onVisibleIdsChange, onCountsChange }: RecordListPro
     multiSelection,
   } = useViewer();
   const dispatch = useViewerDispatch();
-  const scrollAreaRef = useRef<HTMLDivElement | null>(null);
+  const listRef = useRef<ListImperativeAPI | null>(null);
   const previousSelectedRecordIdRef = useRef<string | null>(selectedRecordId);
   const followSelectionRef = useRef(true);
+  const activeDatasetRequestIdRef = useRef(0);
+  const loadedDatasetPagesRef = useRef<Set<number>>(new Set());
+  const loadingDatasetPagesRef = useRef<Set<number>>(new Set());
   const deferredSearchQuery = useDeferredValue(searchQuery.trim());
   const [searchedRecords, setSearchedRecords] = useState<RecordSummary[] | null>(null);
   const [searchPending, setSearchPending] = useState(false);
+  const [datasetRecordIds, setDatasetRecordIds] = useState<string[]>([]);
+  const [datasetRecordsById, setDatasetRecordsById] = useState<Record<string, RecordSummary>>({});
+  const [datasetSourceTotal, setDatasetSourceTotal] = useState(0);
+  const [datasetLoading, setDatasetLoading] = useState(false);
 
-  const sourceRecords = useMemo(() => {
-    if (!bootstrap) return [];
+  const workbenchSourceRecords = useMemo(() => {
+    if (!bootstrap || sourceFilter !== "workbench") {
+      return [];
+    }
 
     const seen = new Map<string, RecordSummary>();
-    const addRecord = (recordId: string, record: RecordSummary | null) => {
-      if (!record || seen.has(recordId)) {
-        return;
-      }
-      seen.set(recordId, record);
-    };
-
-    if (sourceFilter === "workbench") {
-      for (const entry of bootstrap.workbench_entries) {
-        addRecord(entry.record_id, entry.record);
+    for (const entry of bootstrap.workbench_entries) {
+      if (entry.record && !seen.has(entry.record_id)) {
+        seen.set(entry.record_id, entry.record);
       }
     }
-
-    if (sourceFilter === "dataset") {
-      for (const entry of bootstrap.dataset_entries) {
-        addRecord(entry.record_id, entry.record);
-      }
-    }
-
     return Array.from(seen.values());
   }, [bootstrap, sourceFilter]);
-  const sourceRecordById = useMemo(
-    () => new Map(sourceRecords.map((record) => [record.record_id, record])),
-    [sourceRecords],
+
+  const workbenchRecordById = useMemo(
+    () => new Map(workbenchSourceRecords.map((record) => [record.record_id, record])),
+    [workbenchSourceRecords],
   );
 
   useEffect(() => {
-    if (!deferredSearchQuery) {
+    if (sourceFilter !== "workbench" || !deferredSearchQuery) {
       setSearchedRecords(null);
       setSearchPending(false);
       return;
@@ -140,8 +209,9 @@ export function RecordList({ onVisibleIdsChange, onCountsChange }: RecordListPro
       runId: selectedRunId,
       timeFilter,
       modelFilter,
-      authorFilters: sourceFilter === "dataset" ? authorFilters : [],
-      categoryFilters: sourceFilter === "dataset" ? categoryFilters : [],
+      sdkFilter,
+      authorFilters: [],
+      categoryFilters: [],
       costFilter,
       ratingFilter,
       secondaryRatingFilter,
@@ -151,6 +221,7 @@ export function RecordList({ onVisibleIdsChange, onCountsChange }: RecordListPro
         if (!cancelled) {
           setSearchedRecords(results);
           setSearchPending(false);
+          dispatch({ type: "UPSERT_RECORDS", payload: results });
         }
       })
       .catch(() => {
@@ -163,27 +234,28 @@ export function RecordList({ onVisibleIdsChange, onCountsChange }: RecordListPro
     return () => {
       cancelled = true;
     };
-  }, [authorFilters, categoryFilters, costFilter, deferredSearchQuery, modelFilter, ratingFilter, secondaryRatingFilter, selectedRunId, sourceFilter, timeFilter]);
+  }, [
+    costFilter,
+    deferredSearchQuery,
+    dispatch,
+    modelFilter,
+    ratingFilter,
+    secondaryRatingFilter,
+    sdkFilter,
+    selectedRunId,
+    sourceFilter,
+    timeFilter,
+  ]);
 
-  const records = useMemo(() => {
-    if (!bootstrap) return [];
+  const workbenchRecords = useMemo(() => {
+    if (!bootstrap || sourceFilter !== "workbench") return [];
 
     let list = deferredSearchQuery
-      ? (searchedRecords ?? []).map((record) => sourceRecordById.get(record.record_id) ?? record)
-      : sourceRecords;
+      ? (searchedRecords ?? []).map((record) => workbenchRecordById.get(record.record_id) ?? record)
+      : workbenchSourceRecords;
 
     if (!deferredSearchQuery && selectedRunId) {
-      list = list.filter((r) => r.run_id === selectedRunId);
-    }
-
-    if (sourceFilter === "dataset" && categoryFilters.length > 0) {
-      const selectedCategories = new Set(categoryFilters);
-      list = list.filter((record) => record.category_slug && selectedCategories.has(record.category_slug));
-    }
-
-    if (sourceFilter === "dataset" && authorFilters.length > 0) {
-      const selectedAuthors = new Set(authorFilters);
-      list = list.filter((record) => record.author && selectedAuthors.has(record.author));
+      list = list.filter((record) => record.run_id === selectedRunId);
     }
 
     if (!deferredSearchQuery) {
@@ -197,47 +269,240 @@ export function RecordList({ onVisibleIdsChange, onCountsChange }: RecordListPro
       if (sdkFilter) {
         list = list.filter((record) => record.sdk_package === sdkFilter);
       }
-    }
-
-    if (!deferredSearchQuery) {
-      list.sort((a, b) => {
-        const dateA = recordSortTimestamp(a);
-        const dateB = recordSortTimestamp(b);
-        return dateB - dateA;
-      });
+      list.sort((left, right) => recordSortTimestamp(right) - recordSortTimestamp(left));
     }
 
     return list;
   }, [
     bootstrap,
-    authorFilters,
-    categoryFilters,
     costFilter,
     deferredSearchQuery,
     modelFilter,
-    sdkFilter,
     ratingFilter,
     secondaryRatingFilter,
     searchedRecords,
+    sdkFilter,
     selectedRunId,
-    sourceRecordById,
-    sourceRecords,
     sourceFilter,
     timeFilter,
+    workbenchRecordById,
+    workbenchSourceRecords,
   ]);
 
-  useEffect(() => {
-    onVisibleIdsChange?.(records.map((r) => r.record_id));
-  }, [records, onVisibleIdsChange]);
+  const datasetBrowseParams = useMemo(
+    () => ({
+      source: "dataset" as const,
+      query: deferredSearchQuery,
+      runId: selectedRunId,
+      timeFilter,
+      modelFilter,
+      sdkFilter,
+      authorFilters,
+      categoryFilters,
+      costFilter,
+      ratingFilter,
+      secondaryRatingFilter,
+    }),
+    [
+      authorFilters,
+      categoryFilters,
+      costFilter,
+      deferredSearchQuery,
+      modelFilter,
+      ratingFilter,
+      secondaryRatingFilter,
+      selectedRunId,
+      sdkFilter,
+      timeFilter,
+    ],
+  );
+
+  const datasetGeneratedAt = bootstrap?.generated_at ?? "";
+
+  const mergeDatasetRecords = useCallback(
+    (records: RecordSummary[]) => {
+      if (records.length === 0) {
+        return;
+      }
+      dispatch({ type: "UPSERT_RECORDS", payload: records });
+      setDatasetRecordsById((current) => {
+        const next = { ...current };
+        for (const record of records) {
+          next[record.record_id] = record;
+        }
+        return next;
+      });
+    },
+    [dispatch],
+  );
+
+  const applyDatasetMetadata = useCallback(
+    (response: Awaited<ReturnType<typeof browseRecords>>) => {
+      onDatasetMetadataChange?.({
+        availableModels: response.facets.models,
+        availableSdks: response.facets.sdk_packages,
+        availableAuthors: response.facets.authors,
+        availableCategories: response.facets.categories,
+        availableCostBounds:
+          response.facets.cost_min != null && response.facets.cost_max != null
+            ? { min: response.facets.cost_min, max: response.facets.cost_max }
+            : null,
+      });
+      setDatasetSourceTotal(response.source_total);
+    },
+    [onDatasetMetadataChange],
+  );
+
+  const loadDatasetPage = useCallback(
+    (pageIndex: number) => {
+      if (sourceFilter !== "dataset") {
+        return;
+      }
+      if (loadedDatasetPagesRef.current.has(pageIndex) || loadingDatasetPagesRef.current.has(pageIndex)) {
+        return;
+      }
+
+      const requestId = activeDatasetRequestIdRef.current;
+      loadingDatasetPagesRef.current.add(pageIndex);
+
+      browseRecords({
+        ...datasetBrowseParams,
+        offset: pageIndex * DATASET_PAGE_SIZE,
+        limit: DATASET_PAGE_SIZE,
+      })
+        .then((response) => {
+          if (activeDatasetRequestIdRef.current !== requestId) {
+            return;
+          }
+          loadingDatasetPagesRef.current.delete(pageIndex);
+          loadedDatasetPagesRef.current.add(pageIndex);
+          applyDatasetMetadata(response);
+          mergeDatasetRecords(response.records);
+          setDatasetRecordIds((current) => (current.length > 0 ? current : response.record_ids));
+        })
+        .catch(() => {
+          if (activeDatasetRequestIdRef.current !== requestId) {
+            return;
+          }
+          loadingDatasetPagesRef.current.delete(pageIndex);
+        });
+    },
+    [applyDatasetMetadata, datasetBrowseParams, mergeDatasetRecords, sourceFilter],
+  );
 
   useEffect(() => {
-    if (!bootstrap) {
-      onCountsChange?.({ visible: 0, total: 0 });
+    if (sourceFilter !== "dataset") {
+      onDatasetMetadataChange?.(null);
+      setDatasetLoading(false);
+      setDatasetRecordIds([]);
+      setDatasetRecordsById({});
+      setDatasetSourceTotal(0);
+      loadedDatasetPagesRef.current.clear();
+      loadingDatasetPagesRef.current.clear();
       return;
     }
 
-    onCountsChange?.({ visible: records.length, total: sourceRecords.length });
-  }, [bootstrap, onCountsChange, records.length, sourceRecords.length]);
+    let cancelled = false;
+    const requestId = activeDatasetRequestIdRef.current + 1;
+    activeDatasetRequestIdRef.current = requestId;
+    loadedDatasetPagesRef.current.clear();
+    loadingDatasetPagesRef.current.clear();
+    setDatasetLoading(true);
+    setDatasetRecordIds([]);
+    setDatasetRecordsById({});
+    setDatasetSourceTotal(0);
+
+    browseRecords({
+      ...datasetBrowseParams,
+      offset: 0,
+      limit: DATASET_PAGE_SIZE,
+    })
+      .then((response) => {
+        if (cancelled || activeDatasetRequestIdRef.current !== requestId) {
+          return;
+        }
+        loadedDatasetPagesRef.current.add(0);
+        applyDatasetMetadata(response);
+        setDatasetRecordIds(response.record_ids);
+        mergeDatasetRecords(response.records);
+        setDatasetLoading(false);
+      })
+      .catch(() => {
+        if (cancelled || activeDatasetRequestIdRef.current !== requestId) {
+          return;
+        }
+        onDatasetMetadataChange?.(null);
+        setDatasetRecordIds([]);
+        setDatasetRecordsById({});
+        setDatasetSourceTotal(0);
+        setDatasetLoading(false);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [
+    applyDatasetMetadata,
+    datasetBrowseParams,
+    datasetGeneratedAt,
+    mergeDatasetRecords,
+    onDatasetMetadataChange,
+    sourceFilter,
+  ]);
+
+  const visibleIds = useMemo(
+    () => (sourceFilter === "dataset" ? datasetRecordIds : workbenchRecords.map((record) => record.record_id)),
+    [datasetRecordIds, sourceFilter, workbenchRecords],
+  );
+
+  const counts = useMemo(
+    () => ({
+      visible: visibleIds.length,
+      total: sourceFilter === "dataset" ? datasetSourceTotal : workbenchSourceRecords.length,
+    }),
+    [datasetSourceTotal, sourceFilter, visibleIds.length, workbenchSourceRecords.length],
+  );
+
+  const recordForId = useCallback(
+    (recordId: string): RecordSummary | null => {
+      if (sourceFilter === "dataset") {
+        return datasetRecordsById[recordId] ?? recordCache[recordId] ?? null;
+      }
+      return workbenchRecordById.get(recordId) ?? recordCache[recordId] ?? null;
+    },
+    [datasetRecordsById, recordCache, sourceFilter, workbenchRecordById],
+  );
+
+  useEffect(() => {
+    onVisibleIdsChange?.(visibleIds);
+  }, [onVisibleIdsChange, visibleIds]);
+
+  useEffect(() => {
+    onCountsChange?.(counts);
+  }, [counts, onCountsChange]);
+
+  useEffect(() => {
+    const element = listRef.current?.element;
+    if (!element) {
+      return;
+    }
+
+    const disableAutoFollow = () => {
+      followSelectionRef.current = false;
+    };
+
+    element.addEventListener("wheel", disableAutoFollow, { passive: true });
+    element.addEventListener("touchmove", disableAutoFollow, { passive: true });
+    element.addEventListener("pointerdown", disableAutoFollow);
+
+    return () => {
+      element.removeEventListener("wheel", disableAutoFollow);
+      element.removeEventListener("touchmove", disableAutoFollow);
+      element.removeEventListener("pointerdown", disableAutoFollow);
+    };
+  }, [visibleIds.length]);
+
+  const rowCount = visibleIds.length;
 
   useEffect(() => {
     if (selectedRecordId !== previousSelectedRecordIdRef.current) {
@@ -249,60 +514,23 @@ export function RecordList({ onVisibleIdsChange, onCountsChange }: RecordListPro
       return;
     }
 
-    const selectedItem = selectedRecordId
-      ? scrollAreaRef.current?.querySelector<HTMLElement>(
-          `[data-record-list-item="${CSS.escape(selectedRecordId)}"]`,
-        ) ?? null
-      : null;
-    selectedItem?.scrollIntoView({ block: "nearest" });
-  }, [records, selectedRecordId]);
-
-  useEffect(() => {
-    const root = scrollAreaRef.current;
-    if (!root) {
+    const selectedIndex = visibleIds.indexOf(selectedRecordId);
+    if (selectedIndex === -1) {
       return;
     }
 
-    const viewport = root.querySelector<HTMLElement>('[data-slot="scroll-area-viewport"]');
-    if (!viewport) {
-      return;
+    if (sourceFilter === "dataset") {
+      loadDatasetPage(Math.floor(selectedIndex / DATASET_PAGE_SIZE));
     }
 
-    const disableAutoFollow = () => {
-      followSelectionRef.current = false;
-    };
-
-    const handleWheel = () => {
-      disableAutoFollow();
-    };
-
-    const handleTouchMove = () => {
-      disableAutoFollow();
-    };
-
-    const handlePointerDown = (event: PointerEvent) => {
-      if (!(event.target instanceof HTMLElement)) {
-        return;
-      }
-      if (event.target.closest('[data-slot="scroll-area-scrollbar"]')) {
-        disableAutoFollow();
-      }
-    };
-
-    viewport.addEventListener("wheel", handleWheel, { passive: true });
-    viewport.addEventListener("touchmove", handleTouchMove, { passive: true });
-    root.addEventListener("pointerdown", handlePointerDown);
-
-    return () => {
-      viewport.removeEventListener("wheel", handleWheel);
-      viewport.removeEventListener("touchmove", handleTouchMove);
-      root.removeEventListener("pointerdown", handlePointerDown);
-    };
-  }, []);
+    listRef.current?.scrollToRow({
+      align: "smart",
+      behavior: "instant",
+      index: selectedIndex,
+    });
+  }, [loadDatasetPage, selectedRecordId, sourceFilter, visibleIds]);
 
   const multiSelectActive = multiSelection.size > 0;
-
-  const visibleIds = useMemo(() => records.map((r) => r.record_id), [records]);
 
   const onMultiSelectToggle = useCallback(
     (recordId: string, shiftKey: boolean) => {
@@ -313,6 +541,51 @@ export function RecordList({ onVisibleIdsChange, onCountsChange }: RecordListPro
       }
     },
     [dispatch, multiSelectActive, visibleIds],
+  );
+
+  const onSelect = useCallback(
+    (recordId: string) => {
+      dispatch({ type: "SELECT_RECORD", payload: recordId });
+    },
+    [dispatch],
+  );
+
+  const rowProps = useMemo<VirtualRowData>(
+    () => ({
+      visibleIds,
+      recordForId,
+      repoRoot: bootstrap?.repo_root ?? null,
+      selectedRecordId,
+      multiSelectActive,
+      multiSelection,
+      onSelect,
+      onMultiSelectToggle,
+    }),
+    [
+      bootstrap?.repo_root,
+      multiSelectActive,
+      multiSelection,
+      onMultiSelectToggle,
+      onSelect,
+      recordForId,
+      selectedRecordId,
+      visibleIds,
+    ],
+  );
+
+  const handleRowsRendered = useCallback(
+    (_visibleRows: { startIndex: number; stopIndex: number }, allRows: { startIndex: number; stopIndex: number }) => {
+      if (sourceFilter !== "dataset" || rowCount === 0 || allRows.stopIndex < allRows.startIndex) {
+        return;
+      }
+
+      const startPage = Math.floor(allRows.startIndex / DATASET_PAGE_SIZE);
+      const endPage = Math.floor(allRows.stopIndex / DATASET_PAGE_SIZE);
+      for (let pageIndex = startPage; pageIndex <= endPage; pageIndex += 1) {
+        loadDatasetPage(pageIndex);
+      }
+    },
+    [loadDatasetPage, rowCount, sourceFilter],
   );
 
   useEffect(() => {
@@ -333,16 +606,14 @@ export function RecordList({ onVisibleIdsChange, onCountsChange }: RecordListPro
     };
 
     const handleKeyDown = (event: KeyboardEvent) => {
-      // Cmd/Ctrl+A: select all visible records
       if ((event.metaKey || event.ctrlKey) && event.key === "a" && !event.shiftKey && !event.altKey) {
-        if (!isTypingTarget(event.target) && records.length > 0) {
+        if (!isTypingTarget(event.target) && visibleIds.length > 0) {
           event.preventDefault();
-          dispatch({ type: "SET_MULTI_SELECT_ALL", payload: records.map((r) => r.record_id) });
+          dispatch({ type: "SET_MULTI_SELECT_ALL", payload: visibleIds });
           return;
         }
       }
 
-      // Escape: clear multi-select
       if (event.key === "Escape" && multiSelectActive) {
         event.preventDefault();
         dispatch({ type: "CLEAR_MULTI_SELECT" });
@@ -358,33 +629,34 @@ export function RecordList({ onVisibleIdsChange, onCountsChange }: RecordListPro
       if (isTypingTarget(event.target)) {
         return;
       }
-      if (records.length === 0) {
+      if (visibleIds.length === 0) {
         return;
       }
 
       event.preventDefault();
 
-      const currentIndex = selectedRecordId
-        ? records.findIndex((record) => record.record_id === selectedRecordId)
-        : -1;
-
+      const currentIndex = selectedRecordId ? visibleIds.indexOf(selectedRecordId) : -1;
       const nextIndex =
         event.key === "ArrowDown"
           ? currentIndex >= 0
-            ? (currentIndex + 1) % records.length
+            ? (currentIndex + 1) % visibleIds.length
             : 0
           : currentIndex >= 0
-            ? (currentIndex - 1 + records.length) % records.length
-            : records.length - 1;
+            ? (currentIndex - 1 + visibleIds.length) % visibleIds.length
+            : visibleIds.length - 1;
 
-      dispatch({ type: "SELECT_RECORD", payload: records[nextIndex]?.record_id ?? null });
+      const nextRecordId = visibleIds[nextIndex] ?? null;
+      if (sourceFilter === "dataset" && nextRecordId != null) {
+        loadDatasetPage(Math.floor(nextIndex / DATASET_PAGE_SIZE));
+      }
+      dispatch({ type: "SELECT_RECORD", payload: nextRecordId });
     };
 
     document.addEventListener("keydown", handleKeyDown);
     return () => {
       document.removeEventListener("keydown", handleKeyDown);
     };
-  }, [dispatch, multiSelectActive, records, selectedRecordId]);
+  }, [dispatch, loadDatasetPage, multiSelectActive, selectedRecordId, sourceFilter, visibleIds]);
 
   if (!bootstrap) {
     return (
@@ -394,7 +666,7 @@ export function RecordList({ onVisibleIdsChange, onCountsChange }: RecordListPro
     );
   }
 
-  if (deferredSearchQuery && searchPending && searchedRecords === null) {
+  if (sourceFilter === "workbench" && deferredSearchQuery && searchPending && searchedRecords === null) {
     return (
       <div className="flex flex-1 items-center justify-center p-4">
         <p className="text-[11px] text-[var(--text-quaternary)]">Searching…</p>
@@ -402,7 +674,17 @@ export function RecordList({ onVisibleIdsChange, onCountsChange }: RecordListPro
     );
   }
 
-  if (records.length === 0) {
+  if (sourceFilter === "dataset" && datasetLoading && visibleIds.length === 0) {
+    return (
+      <div className="flex flex-1 items-center justify-center p-4">
+        <p className="text-[11px] text-[var(--text-quaternary)]">
+          {deferredSearchQuery ? "Searching…" : "Loading records…"}
+        </p>
+      </div>
+    );
+  }
+
+  if (visibleIds.length === 0) {
     return (
       <div className="flex flex-1 items-center justify-center p-4">
         <p className="text-[11px] text-[var(--text-quaternary)]">
@@ -413,18 +695,30 @@ export function RecordList({ onVisibleIdsChange, onCountsChange }: RecordListPro
   }
 
   return (
-    <ScrollArea ref={scrollAreaRef} className="min-h-0 flex-1">
-      <div className="py-0.5">
-        {records.map((record) => (
-          <RecordListItem
-            key={record.record_id}
-            record={record}
-            multiSelectActive={multiSelectActive}
-            isMultiSelected={multiSelection.has(record.record_id)}
-            onMultiSelectToggle={onMultiSelectToggle}
-          />
-        ))}
-      </div>
-    </ScrollArea>
+    <div className="min-h-0 flex-1">
+      <AutoSizer
+        renderProp={({ height, width }) => {
+          if (!height || !width) {
+            return null;
+          }
+
+          return (
+            <List
+              className="outline-none"
+              defaultHeight={DEFAULT_LIST_HEIGHT_PX}
+              listRef={listRef}
+              onRowsRendered={handleRowsRendered}
+              overscanCount={VIRTUAL_OVERSCAN}
+              rowComponent={VirtualRecordRow}
+              rowCount={rowCount}
+              rowHeight={RECORD_ROW_HEIGHT_PX}
+              rowProps={rowProps}
+              style={{ height, width }}
+            />
+          );
+        }}
+        style={{ height: "100%", width: "100%" }}
+      />
+    </div>
   );
 }

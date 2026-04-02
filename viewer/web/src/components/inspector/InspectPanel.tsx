@@ -10,7 +10,7 @@ import {
   saveRecordSecondaryRating,
 } from "@/lib/api";
 import { buildRecordPath, copyTextToClipboard } from "@/lib/record-path";
-import { findRecordInBootstrap, findStagingEntryInBootstrap } from "@/lib/record-summary";
+import { findStagingEntryInBootstrap } from "@/lib/record-summary";
 import { useViewer, useViewerDispatch } from "@/lib/viewer-context";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -259,7 +259,7 @@ export function InspectPanel({
   onJointChange,
   onResetAll,
 }: InspectPanelProps): JSX.Element {
-  const { bootstrap, selectedRecordId, selection } = useViewer();
+  const { bootstrap, selectedRecordId, selectedRecordSummary, selection } = useViewer();
   const dispatch = useViewerDispatch();
   const [promptText, setPromptText] = useState<string | null>(null);
   const [promptStatus, setPromptStatus] = useState<"idle" | "loading" | "loaded" | "unavailable">("idle");
@@ -277,7 +277,7 @@ export function InspectPanel({
   const stagingEntry = isStaging
     ? findStagingEntryInBootstrap(bootstrap, selection.runId, selection.recordId)
     : null;
-  const record = selectedRecordId ? findRecordInBootstrap(bootstrap, selectedRecordId) : null;
+  const record = selection?.kind === "record" ? selectedRecordSummary : null;
   const joints = useMemo(() => urdfSpec?.joints ?? [], [urdfSpec?.joints]);
   const movableJointCount = joints.filter(isMovableJoint).length;
   const recordPath = bootstrap && selectedRecordId ? buildRecordPath(bootstrap.repo_root, selectedRecordId) : null;
@@ -705,7 +705,7 @@ export function InspectPanel({
   if (!record) {
     return (
       <div className="flex h-32 items-center justify-center">
-        <p className="text-[11px] text-[var(--text-quaternary)]">Record not found</p>
+        <p className="text-[11px] text-[var(--text-quaternary)]">Loading record…</p>
       </div>
     );
   }

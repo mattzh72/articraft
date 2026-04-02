@@ -15,7 +15,7 @@ interface BulkActionBarProps {
 }
 
 export function BulkActionBar({ visibleRecordIds }: BulkActionBarProps): JSX.Element {
-  const { bootstrap, multiSelection } = useViewer();
+  const { bootstrap, multiSelection, recordCache } = useViewer();
   const dispatch = useViewerDispatch();
   const titleId = useId();
   const descriptionId = useId();
@@ -132,12 +132,10 @@ export function BulkActionBar({ visibleRecordIds }: BulkActionBarProps): JSX.Ele
   };
 
   // Build preview titles for confirmation dialog
-  const selectedRecords = bootstrap
-    ? [...(bootstrap.workbench_entries.map((e) => e.record)), ...(bootstrap.dataset_entries.map((e) => e.record))]
-        .filter((r): r is NonNullable<typeof r> => r !== null && multiSelection.has(r.record_id))
-    : [];
-  const uniqueRecords = [...new Map(selectedRecords.map((r) => [r.record_id, r])).values()];
-  const previewTitles = uniqueRecords.slice(0, 3).map((r) => r.title);
+  const selectedRecords = selectedIds
+    .map((recordId) => recordCache[recordId] ?? null)
+    .filter((record): record is NonNullable<typeof record> => record !== null);
+  const previewTitles = selectedRecords.slice(0, 3).map((record) => record.title);
 
   return (
     <>
@@ -256,8 +254,8 @@ export function BulkActionBar({ visibleRecordIds }: BulkActionBarProps): JSX.Ele
                       {title}
                     </p>
                   ))}
-                  {uniqueRecords.length > 3 ? (
-                    <p>+{uniqueRecords.length - 3} more</p>
+                  {selectedRecords.length > 3 ? (
+                    <p>+{selectedRecords.length - 3} more</p>
                   ) : null}
                 </div>
               ) : null}

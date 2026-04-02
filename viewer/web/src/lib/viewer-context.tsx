@@ -9,7 +9,7 @@ import {
   type ReactNode,
 } from "react";
 
-import { fetchBootstrap, fetchStagingEntries } from "@/lib/api";
+import { fetchBootstrap, fetchRecordSummary, fetchStagingEntries, HttpError } from "@/lib/api";
 import { useRoute } from "@/lib/useRoute";
 import type {
   BrowserTab,
@@ -379,62 +379,33 @@ function syncViewerStateToUrl(state: ViewerUrlState): void {
 const initialState: ViewerState = {
   ...readViewerUrlState(),
   bootstrap: null,
+  recordCache: {},
+  selectedRecordSummary: null,
   inspectorOpen: true,
   loading: true,
   error: null,
   multiSelection: new Set(),
 };
 
-function recordSortTimestamp(record: RecordSummary): number {
-  const timestamp = record.updated_at ?? record.created_at;
-  return timestamp ? new Date(timestamp).getTime() : 0;
-}
-
-function getBootstrapRecords(bootstrap: ViewerBootstrap): RecordSummary[] {
-  const records = new Map<string, RecordSummary>();
+function seedRecordCacheFromBootstrap(
+  bootstrap: ViewerBootstrap,
+  existing: Record<string, RecordSummary>,
+): Record<string, RecordSummary> {
+  const next: Record<string, RecordSummary> = { ...existing };
 
   for (const entry of bootstrap.workbench_entries) {
-    if (entry.record && !records.has(entry.record_id)) {
-      records.set(entry.record_id, entry.record);
+    if (entry.record) {
+      next[entry.record_id] = entry.record;
     }
   }
 
   for (const entry of bootstrap.dataset_entries) {
-    if (entry.record && !records.has(entry.record_id)) {
-      records.set(entry.record_id, entry.record);
+    if (entry.record) {
+      next[entry.record_id] = entry.record;
     }
   }
 
-  return Array.from(records.values()).sort((a, b) => {
-    const dateA = recordSortTimestamp(a);
-    const dateB = recordSortTimestamp(b);
-    return dateB - dateA;
-  });
-}
-
-function getNextSelection(
-  bootstrap: ViewerBootstrap,
-  currentSelection: ViewerSelection | null,
-): ViewerSelection | null {
-  // If current selection is a staging entry that still exists, keep it
-  if (currentSelection?.kind === "staging") {
-    const stillExists = bootstrap.staging_entries.some(
-      (entry) => entry.run_id === currentSelection.runId && entry.record_id === currentSelection.recordId,
-    );
-    if (stillExists) return currentSelection;
-  }
-
-  // If current selection is a record that still exists, keep it
-  const records = getBootstrapRecords(bootstrap);
-  if (currentSelection?.kind === "record") {
-    if (records.some((record) => record.record_id === currentSelection.recordId)) {
-      return currentSelection;
-    }
-  }
-
-  // Fall back to first record
-  const firstRecord = records[0];
-  return firstRecord ? { kind: "record", recordId: firstRecord.record_id } : null;
+  return next;
 }
 
 function updateRecordSummaryFields(
@@ -457,6 +428,30 @@ function updateRecordSummaryFields(
   return {
     ...nextSummary,
     effective_rating: computeEffectiveRating(nextSummary.rating, nextSummary.secondary_rating),
+  };
+}
+
+function updateRecordCacheFields(
+  recordCache: Record<string, RecordSummary>,
+  recordId: string,
+  updates: Partial<
+    Pick<
+      RecordSummary,
+      "rating" | "secondary_rating" | "effective_rating" | "rated_by" | "secondary_rated_by" | "updated_at"
+    >
+  >,
+): Record<string, RecordSummary> {
+  const current = recordCache[recordId];
+  if (!current) {
+    return recordCache;
+  }
+  const nextRecord = updateRecordSummaryFields(current, recordId, updates);
+  if (!nextRecord) {
+    return recordCache;
+  }
+  return {
+    ...recordCache,
+    [recordId]: nextRecord,
   };
 }
 
@@ -487,10 +482,7 @@ function updateBootstrapRecordFields(
   };
 }
 
-function removeRecordFromBootstrap(
-  bootstrap: ViewerBootstrap | null,
-  recordId: string,
-): ViewerBootstrap | null {
+function removeRecordFromBootstrap(bootstrap: ViewerBootstrap | null, recordId: string): ViewerBootstrap | null {
   if (!bootstrap) {
     return bootstrap;
   }
@@ -502,11 +494,29 @@ function removeRecordFromBootstrap(
   };
 }
 
+function removeRecordFromCache(
+  recordCache: Record<string, RecordSummary>,
+  recordId: string,
+): Record<string, RecordSummary> {
+  if (!(recordId in recordCache)) {
+    return recordCache;
+  }
+  const next = { ...recordCache };
+  delete next[recordId];
+  return next;
+}
+
 function applySelection(state: ViewerState, selection: ViewerSelection | null): ViewerState {
   return {
     ...state,
     selection,
     selectedRecordId: selectionToSelectedRecordId(selection),
+    selectedRecordSummary:
+      selection?.kind === "record"
+        ? state.selectedRecordSummary?.record_id === selection.recordId
+          ? state.selectedRecordSummary
+          : state.recordCache[selection.recordId] ?? null
+        : null,
     inspectorOpen: selection !== null ? true : state.inspectorOpen,
   };
 }
@@ -514,34 +524,77 @@ function applySelection(state: ViewerState, selection: ViewerSelection | null): 
 function viewerReducer(state: ViewerState, action: ViewerAction): ViewerState {
   switch (action.type) {
     case "SET_BOOTSTRAP": {
-      const nextSelection = getNextSelection(action.payload, state.selection);
-      const validIds = new Set(getBootstrapRecords(action.payload).map((r) => r.record_id));
-      const prunedMultiSelection = new Set([...state.multiSelection].filter((id) => validIds.has(id)));
+      const nextRecordCache = seedRecordCacheFromBootstrap(action.payload, state.recordCache);
       return {
         ...state,
         bootstrap: action.payload,
-        selection: nextSelection,
-        selectedRecordId: selectionToSelectedRecordId(nextSelection),
+        recordCache: nextRecordCache,
+        selectedRecordSummary:
+          state.selectedRecordId != null
+            ? nextRecordCache[state.selectedRecordId] ?? state.selectedRecordSummary
+            : null,
         loading: false,
         error: null,
-        multiSelection: prunedMultiSelection,
       };
     }
+    case "UPSERT_RECORDS": {
+      if (action.payload.length === 0) {
+        return state;
+      }
+      const nextRecordCache = { ...state.recordCache };
+      for (const record of action.payload) {
+        nextRecordCache[record.record_id] = record;
+      }
+      return {
+        ...state,
+        recordCache: nextRecordCache,
+        selectedRecordSummary:
+          state.selectedRecordSummary?.record_id === state.selectedRecordId
+            ? state.selectedRecordSummary
+            : state.selectedRecordId != null
+            ? nextRecordCache[state.selectedRecordId] ?? state.selectedRecordSummary
+            : null,
+      };
+    }
+    case "SET_SELECTED_RECORD_SUMMARY":
+      return {
+        ...state,
+        selectedRecordSummary: action.payload,
+        recordCache:
+          action.payload == null
+            ? state.recordCache
+            : {
+                ...state.recordCache,
+                [action.payload.record_id]: action.payload,
+              },
+      };
     case "SYNC_FROM_URL":
       return {
         ...state,
         ...action.payload,
+        selectedRecordSummary:
+          action.payload.selectedRecordId != null
+            ? state.recordCache[action.payload.selectedRecordId] ?? null
+            : null,
       };
     case "DELETE_RECORD_LOCAL": {
       const nextBootstrap = removeRecordFromBootstrap(state.bootstrap, action.payload);
-      const nextSelection = nextBootstrap ? getNextSelection(nextBootstrap, state.selection) : state.selection;
       const nextMultiSelection = new Set(state.multiSelection);
       nextMultiSelection.delete(action.payload);
+      const nextSelection =
+        state.selection?.kind === "record" && state.selection.recordId === action.payload
+          ? null
+          : state.selection;
       return {
         ...state,
         bootstrap: nextBootstrap,
+        recordCache: removeRecordFromCache(state.recordCache, action.payload),
         selection: nextSelection,
         selectedRecordId: selectionToSelectedRecordId(nextSelection),
+        selectedRecordSummary:
+          state.selectedRecordSummary?.record_id === action.payload
+            ? null
+            : state.selectedRecordSummary,
         error: null,
         multiSelection: nextMultiSelection,
       };
@@ -573,7 +626,7 @@ function viewerReducer(state: ViewerState, action: ViewerAction): ViewerState {
           (entry) => entry.run_id === runId && entry.record_id === recordId,
         );
         if (!stillExists) {
-          nextSelection = getNextSelection(nextBootstrap, null);
+          nextSelection = null;
         }
       }
       return {
@@ -586,6 +639,24 @@ function viewerReducer(state: ViewerState, action: ViewerAction): ViewerState {
     case "UPDATE_RECORD_RATING":
       return {
         ...state,
+        recordCache: updateRecordCacheFields(
+          state.recordCache,
+          action.payload.recordId,
+          {
+            rating: action.payload.rating,
+            rated_by: null,
+            updated_at: action.payload.updatedAt,
+          },
+        ),
+        selectedRecordSummary: updateRecordSummaryFields(
+          state.selectedRecordSummary,
+          action.payload.recordId,
+          {
+            rating: action.payload.rating,
+            rated_by: null,
+            updated_at: action.payload.updatedAt,
+          },
+        ),
         bootstrap: updateBootstrapRecordFields(
           state.bootstrap,
           action.payload.recordId,
@@ -599,6 +670,24 @@ function viewerReducer(state: ViewerState, action: ViewerAction): ViewerState {
     case "UPDATE_RECORD_SECONDARY_RATING":
       return {
         ...state,
+        recordCache: updateRecordCacheFields(
+          state.recordCache,
+          action.payload.recordId,
+          {
+            secondary_rating: action.payload.secondaryRating,
+            secondary_rated_by: null,
+            updated_at: action.payload.updatedAt,
+          },
+        ),
+        selectedRecordSummary: updateRecordSummaryFields(
+          state.selectedRecordSummary,
+          action.payload.recordId,
+          {
+            secondary_rating: action.payload.secondaryRating,
+            secondary_rated_by: null,
+            updated_at: action.payload.updatedAt,
+          },
+        ),
         bootstrap: updateBootstrapRecordFields(
           state.bootstrap,
           action.payload.recordId,
@@ -740,6 +829,10 @@ function useStagingPolling(state: ViewerState, dispatch: Dispatch<ViewerAction>)
 export function ViewerProvider({ children }: { children: ReactNode }): JSX.Element {
   const [state, dispatch] = useReducer(viewerReducer, initialState);
   const route = useRoute();
+  const selectedCachedRecord =
+    state.selection?.kind === "record" && state.selectedRecordId
+      ? state.recordCache[state.selectedRecordId] ?? null
+      : null;
 
   useEffect(() => {
     let cancelled = false;
@@ -764,6 +857,50 @@ export function ViewerProvider({ children }: { children: ReactNode }): JSX.Eleme
       cancelled = true;
     };
   }, []);
+
+  useEffect(() => {
+    if (state.selection?.kind !== "record" || !state.selectedRecordId) {
+      dispatch({ type: "SET_SELECTED_RECORD_SUMMARY", payload: null });
+      return;
+    }
+
+    if (selectedCachedRecord) {
+      dispatch({ type: "SET_SELECTED_RECORD_SUMMARY", payload: selectedCachedRecord });
+    }
+  }, [dispatch, selectedCachedRecord, state.selectedRecordId, state.selection]);
+
+  useEffect(() => {
+    if (state.selection?.kind !== "record" || !state.selectedRecordId) {
+      return;
+    }
+
+    const recordId = state.selectedRecordId;
+    let cancelled = false;
+    fetchRecordSummary(recordId)
+      .then((summary) => {
+        if (!cancelled) {
+          dispatch({ type: "SET_SELECTED_RECORD_SUMMARY", payload: summary });
+        }
+      })
+      .catch((error) => {
+        if (cancelled) {
+          return;
+        }
+
+        if (error instanceof HttpError && error.status === 404) {
+          dispatch({ type: "DELETE_RECORD_LOCAL", payload: recordId });
+          return;
+        }
+
+        if (!selectedCachedRecord) {
+          dispatch({ type: "SET_SELECTED_RECORD_SUMMARY", payload: null });
+        }
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [dispatch, selectedCachedRecord, state.selectedRecordId, state.selection]);
 
   useStagingPolling(state, dispatch);
 

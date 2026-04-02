@@ -510,7 +510,7 @@ def test_viewer_api_end_to_end(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) 
     bootstrap = client.get("/api/bootstrap").json()
     assert bootstrap["repo_root"] == repo_root.resolve().as_posix()
     assert len(bootstrap["workbench_entries"]) == 3
-    assert len(bootstrap["dataset_entries"]) == 2
+    assert bootstrap["dataset_entries"] == []
     assert len(bootstrap["staging_entries"]) == 1
     assert len(bootstrap["runs"]) == 2
     assert bootstrap["staging_entries"][0]["run_id"] == "run_live_001"
@@ -547,6 +547,22 @@ def test_viewer_api_end_to_end(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) 
 
     dataset = client.get("/api/collections/dataset").json()
     assert [item["dataset_id"] for item in dataset] == ["dj_dataset_001", "hinge_dataset_001"]
+
+    dataset_browse = client.get("/api/records/browse?source=dataset&limit=1").json()
+    assert dataset_browse["source"] == "dataset"
+    assert dataset_browse["total"] == 2
+    assert dataset_browse["source_total"] == 2
+    assert dataset_browse["record_ids"] == ["rec_dj_001", "rec_001"]
+    assert [item["record_id"] for item in dataset_browse["records"]] == ["rec_dj_001"]
+    assert dataset_browse["facets"]["categories"] == ["dj_equipment", "hinges"]
+    assert dataset_browse["facets"]["models"] == ["gpt-5.4"]
+    assert dataset_browse["facets"]["sdk_packages"] == ["sdk"]
+    assert dataset_browse["facets"]["authors"] == ["RuiningLi", "mattzh72"]
+
+    record_summary = client.get("/api/records/rec_001/summary").json()
+    assert record_summary["record_id"] == "rec_001"
+    assert record_summary["viewer_asset_updated_at"] is not None
+    assert record_summary["has_compile_report"] is True
 
     categories = client.get("/api/categories").json()
     assert categories == [
@@ -687,7 +703,9 @@ def test_viewer_api_end_to_end(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) 
 
     bootstrap_after_promote = client.get("/api/bootstrap").json()
     assert len(bootstrap_after_promote["workbench_entries"]) == 2
-    assert [item["dataset_id"] for item in bootstrap_after_promote["dataset_entries"]] == [
+    assert bootstrap_after_promote["dataset_entries"] == []
+    dataset_after_promote = client.get("/api/collections/dataset").json()
+    assert [item["dataset_id"] for item in dataset_after_promote] == [
         "dj_dataset_001",
         "ds_exercise_bikes_0001",
         "hinge_dataset_001",
@@ -825,7 +843,9 @@ def test_viewer_api_end_to_end(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) 
 
     bootstrap_after_delete = client.get("/api/bootstrap").json()
     assert len(bootstrap_after_delete["workbench_entries"]) == 1
-    assert [item["record_id"] for item in bootstrap_after_delete["dataset_entries"]] == [
+    assert bootstrap_after_delete["dataset_entries"] == []
+    dataset_after_delete = client.get("/api/collections/dataset").json()
+    assert [item["record_id"] for item in dataset_after_delete] == [
         "rec_dj_001",
         "rec_bike_001",
     ]

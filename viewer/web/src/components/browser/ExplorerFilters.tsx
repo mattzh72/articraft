@@ -104,6 +104,14 @@ type CostBounds = {
   max: number;
 };
 
+export type DatasetFilterMetadata = {
+  availableModels: string[];
+  availableSdks: string[];
+  availableAuthors: string[];
+  availableCategories: string[];
+  availableCostBounds: CostBounds | null;
+};
+
 const costFormatter = new Intl.NumberFormat("en-US", {
   style: "currency",
   currency: "USD",
@@ -753,42 +761,54 @@ function CostRangeFilter({
   );
 }
 
-export function ExplorerFilters(): JSX.Element | null {
+export function ExplorerFilters({
+  datasetMetadata,
+}: {
+  datasetMetadata?: DatasetFilterMetadata | null;
+} = {}): JSX.Element | null {
   const { bootstrap, sourceFilter, timeFilter, modelFilter, sdkFilter, authorFilters, categoryFilters, costFilter, ratingFilter, secondaryRatingFilter, selectedRunId } =
     useViewer();
   const dispatch = useViewerDispatch();
 
   const sourceRecords = useMemo(() => {
-    if (!bootstrap) return [];
+    if (!bootstrap || sourceFilter === "dataset") return [];
 
-    return uniqueRecords(
-      sourceFilter === "dataset"
-        ? bootstrap.dataset_entries.map((entry) => entry.record)
-        : bootstrap.workbench_entries.map((entry) => entry.record),
-    );
+    return uniqueRecords(bootstrap.workbench_entries.map((entry) => entry.record));
   }, [bootstrap, sourceFilter]);
 
   const availableModels = useMemo(() => {
+    if (sourceFilter === "dataset") {
+      return datasetMetadata?.availableModels ?? [];
+    }
     return Array.from(
       new Set(sourceRecords.map((record) => record.model_id).filter((value): value is string => Boolean(value))),
     ).sort((left, right) => left.localeCompare(right));
-  }, [sourceRecords]);
+  }, [datasetMetadata?.availableModels, sourceFilter, sourceRecords]);
 
   const availableSdks = useMemo(() => {
+    if (sourceFilter === "dataset") {
+      return datasetMetadata?.availableSdks ?? [];
+    }
     return Array.from(
       new Set(sourceRecords.map((record) => record.sdk_package).filter((value): value is string => Boolean(value))),
     ).sort((left, right) => left.localeCompare(right));
-  }, [sourceRecords]);
+  }, [datasetMetadata?.availableSdks, sourceFilter, sourceRecords]);
 
   const availableAuthors = useMemo(() => {
+    if (sourceFilter === "dataset") {
+      return datasetMetadata?.availableAuthors ?? [];
+    }
     return Array.from(
       new Set(sourceRecords.map((record) => record.author).filter((value): value is string => Boolean(value))),
     ).sort((left, right) => left.localeCompare(right));
-  }, [sourceRecords]);
+  }, [datasetMetadata?.availableAuthors, sourceFilter, sourceRecords]);
 
   const availableCostBounds = useMemo(
-    () => getCostBounds(sourceRecords, selectedRunId),
-    [selectedRunId, sourceRecords],
+    () =>
+      sourceFilter === "dataset"
+        ? (datasetMetadata?.availableCostBounds ?? null)
+        : getCostBounds(sourceRecords, selectedRunId),
+    [datasetMetadata?.availableCostBounds, selectedRunId, sourceFilter, sourceRecords],
   );
 
   const costFilterActive = costFilter.min != null || costFilter.max != null;
@@ -801,15 +821,9 @@ export function ExplorerFilters(): JSX.Element | null {
   const categoryFilterActive = sourceFilter === "dataset" && categoryFilters.length > 0;
 
   const availableCategories = useMemo(() => {
-    if (!bootstrap) return [];
+    if (!bootstrap || sourceFilter !== "dataset") return [];
 
-    const slugs = Array.from(
-      new Set(
-        bootstrap.dataset_entries
-          .map((entry) => entry.category_slug.trim())
-          .filter((value) => value.length > 0),
-      ),
-    );
+    const slugs = datasetMetadata?.availableCategories ?? [];
 
     const supercategories: SupercategoryOption[] = bootstrap.supercategories ?? [];
     if (supercategories.length === 0) {
@@ -846,7 +860,7 @@ export function ExplorerFilters(): JSX.Element | null {
         }
         return left.label.localeCompare(right.label);
       });
-  }, [bootstrap]);
+  }, [bootstrap, datasetMetadata?.availableCategories, sourceFilter]);
 
   useEffect(() => {
     if (!availableCostBounds) {

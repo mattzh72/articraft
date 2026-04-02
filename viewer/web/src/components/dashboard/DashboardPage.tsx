@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback, type JSX } from "react";
 
-import { fetchRepoStats } from "@/lib/api";
-import type { RepoStats } from "@/lib/types";
+import { fetchDatasetEntries, fetchRepoStats } from "@/lib/api";
+import type { DatasetEntry, RepoStats } from "@/lib/types";
 import { useViewer } from "@/lib/viewer-context";
 import { OverviewSection } from "@/components/dashboard/OverviewSection";
 import { SupercategoriesSection } from "@/components/dashboard/SupercategoriesSection";
@@ -11,6 +11,7 @@ export function DashboardPage(): JSX.Element {
   const { bootstrap } = useViewer();
   const [stats, setStats] = useState<RepoStats | null>(null);
   const [statsError, setStatsError] = useState<string | null>(null);
+  const [datasetEntries, setDatasetEntries] = useState<DatasetEntry[] | null>(null);
 
   const loadStats = useCallback(() => {
     fetchRepoStats()
@@ -26,6 +27,16 @@ export function DashboardPage(): JSX.Element {
   useEffect(() => {
     loadStats();
   }, [loadStats]);
+
+  useEffect(() => {
+    fetchDatasetEntries()
+      .then((entries) => {
+        setDatasetEntries(entries);
+      })
+      .catch(() => {
+        setDatasetEntries([]);
+      });
+  }, [bootstrap?.generated_at]);
 
   if (!bootstrap && !stats) {
     return (
@@ -48,10 +59,20 @@ export function DashboardPage(): JSX.Element {
           ) : null}
 
           {stats && bootstrap?.supercategories && bootstrap.supercategories.length > 0 ? (
-            <SupercategoriesSection categoryStats={stats.category_stats} supercategories={bootstrap.supercategories} datasetEntries={bootstrap.dataset_entries} />
+            <SupercategoriesSection
+              categoryStats={stats.category_stats}
+              supercategories={bootstrap.supercategories}
+              datasetEntries={datasetEntries ?? undefined}
+            />
           ) : null}
 
-          {stats ? <CategoriesSection categoryStats={stats.category_stats} supercategories={bootstrap?.supercategories} datasetEntries={bootstrap?.dataset_entries} /> : null}
+          {stats ? (
+            <CategoriesSection
+              categoryStats={stats.category_stats}
+              supercategories={bootstrap?.supercategories}
+              datasetEntries={datasetEntries ?? undefined}
+            />
+          ) : null}
         </div>
       </div>
     </main>

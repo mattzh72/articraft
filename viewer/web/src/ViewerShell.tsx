@@ -20,7 +20,6 @@ import { Button } from "@/components/ui/button";
 import { useRenderOptions } from "@/components/viewer3d/useRenderOptions";
 import { useJointController } from "@/components/viewer3d/useJointController";
 import type { UrdfJoint, UrdfSpec } from "@/components/viewer3d/urdf-parser";
-import { findRecordInBootstrap } from "@/lib/record-summary";
 import { MissingArtifactsOverlay } from "@/components/layout/MissingArtifactsOverlay";
 
 const JOINT_POSE_QUERY_PARAM = "pose";
@@ -282,7 +281,7 @@ function previewJointValue(joint: UrdfJoint, phase: number): number {
 }
 
 export default function ViewerShell(): JSX.Element {
-  const { bootstrap, selectedRecordId, selection } = useViewer();
+  const { bootstrap, selectedRecordId, selectedRecordSummary, selection } = useViewer();
   const { options: renderOptions, setOption: setRenderOption } = useRenderOptions();
 
   const [urdfSpec, setUrdfSpec] = useState<UrdfSpec | null>(null);
@@ -445,11 +444,8 @@ export default function ViewerShell(): JSX.Element {
     );
   }, [bootstrap, selection]);
   const selectedRecord = useMemo(() => {
-    if (selection?.kind !== "record") {
-      return null;
-    }
-    return findRecordInBootstrap(bootstrap, selection.recordId);
-  }, [bootstrap, selection]);
+    return selection?.kind === "record" ? selectedRecordSummary : null;
+  }, [selectedRecordSummary, selection]);
   const assetRevisionKey = selection
     ? selection.kind === "staging"
       ? selectedStagingEntry?.checkpoint_updated_at ?? selectedStagingEntry?.updated_at ?? null

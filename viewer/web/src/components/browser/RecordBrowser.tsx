@@ -2,7 +2,10 @@ import { useCallback, useState, type JSX } from "react";
 
 import { useViewer, useViewerDispatch } from "@/lib/viewer-context";
 import { BulkActionBar } from "@/components/browser/BulkActionBar";
-import { ExplorerFilters } from "@/components/browser/ExplorerFilters";
+import {
+  ExplorerFilters,
+  type DatasetFilterMetadata,
+} from "@/components/browser/ExplorerFilters";
 import { RecordSearch } from "@/components/browser/RecordSearch";
 import { RecordList } from "@/components/browser/RecordList";
 import { StagingList } from "@/components/browser/StagingList";
@@ -17,6 +20,7 @@ export function RecordBrowser(): JSX.Element {
   const dispatch = useViewerDispatch();
   const [visibleRecordIds, setVisibleRecordIds] = useState<string[]>([]);
   const [browserCounts, setBrowserCounts] = useState<BrowserCounts>({ visible: 0, total: 0 });
+  const [datasetMetadata, setDatasetMetadata] = useState<DatasetFilterMetadata | null>(null);
   const handleVisibleIdsChange = useCallback((ids: string[]) => setVisibleRecordIds(ids), []);
   const handleCountsChange = useCallback((counts: BrowserCounts) => setBrowserCounts(counts), []);
 
@@ -84,7 +88,7 @@ export function RecordBrowser(): JSX.Element {
         <>
           <div className="space-y-2 px-3 py-3">
             <RecordSearch placeholder="Search records…" />
-            <ExplorerFilters />
+            <ExplorerFilters datasetMetadata={datasetMetadata} />
             <p className="text-[10px] text-[var(--text-tertiary)]">
               {browserCounts.visible} / {browserCounts.total}
             </p>
@@ -96,7 +100,11 @@ export function RecordBrowser(): JSX.Element {
             </div>
           ) : (
             <>
-              <RecordList onVisibleIdsChange={handleVisibleIdsChange} onCountsChange={handleCountsChange} />
+              <RecordList
+                onVisibleIdsChange={handleVisibleIdsChange}
+                onCountsChange={handleCountsChange}
+                onDatasetMetadataChange={setDatasetMetadata}
+              />
               {multiSelection.size > 0 ? (
                 <BulkActionBar visibleRecordIds={visibleRecordIds} />
               ) : null}

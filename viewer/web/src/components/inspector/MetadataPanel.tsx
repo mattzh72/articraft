@@ -2,7 +2,7 @@ import { useEffect, useState, type JSX } from "react";
 
 import { useViewer } from "@/lib/viewer-context";
 import { fetchRecordFile, fetchRecordTraceFile, fetchStagingFile, fetchStagingTraceFile } from "@/lib/api";
-import { findRecordInBootstrap, findStagingEntryInBootstrap } from "@/lib/record-summary";
+import { findStagingEntryInBootstrap } from "@/lib/record-summary";
 import { TracePanel } from "@/components/inspector/TracePanel";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -33,7 +33,7 @@ function SectionLabel({ children }: { children: React.ReactNode }): JSX.Element 
 }
 
 export function MetadataPanel(): JSX.Element {
-  const { bootstrap, selectedRecordId, selection } = useViewer();
+  const { bootstrap, selectedRecordId, selectedRecordSummary, selection } = useViewer();
   const [compileReport, setCompileReport] = useState<Record<string, unknown> | null>(null);
   const [cost, setCost] = useState<Record<string, unknown> | null>(null);
   const [traceText, setTraceText] = useState<string | null>(null);
@@ -43,7 +43,7 @@ export function MetadataPanel(): JSX.Element {
   const stagingEntry = isStaging
     ? findStagingEntryInBootstrap(bootstrap, selection.runId, selection.recordId)
     : null;
-  const record = selectedRecordId ? findRecordInBootstrap(bootstrap, selectedRecordId) : null;
+  const record = selection?.kind === "record" ? selectedRecordSummary : null;
   const compileStatus =
     typeof compileReport?.status === "string" ? compileReport.status : record?.has_compile_report ? "available" : null;
   const stagingSelectionKey =
@@ -268,7 +268,7 @@ export function MetadataPanel(): JSX.Element {
   if (!record) {
     return (
       <div className="flex h-32 items-center justify-center">
-        <p className="text-[11px] text-[var(--text-quaternary)]">Record not found</p>
+        <p className="text-[11px] text-[var(--text-quaternary)]">Loading record…</p>
       </div>
     );
   }

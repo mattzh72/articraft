@@ -1,4 +1,5 @@
 import {
+  memo,
   useEffect,
   useId,
   useMemo,
@@ -18,16 +19,30 @@ import { deleteRecord, fetchBootstrap, fetchCategories, openRecordFolder, promot
 import { buildRecordPath, copyTextToClipboard } from "@/lib/record-path";
 import type { CategoryOption, RecordSummary } from "@/lib/types";
 import { cn } from "@/lib/utils";
-import { useViewer, useViewerDispatch } from "@/lib/viewer-context";
+import { useViewerDispatch } from "@/lib/viewer-context";
 
 interface RecordListItemProps {
-  record: RecordSummary;
+  recordId: string;
+  record: RecordSummary | null;
+  repoRoot: string | null;
+  isSelected: boolean;
   multiSelectActive: boolean;
   isMultiSelected: boolean;
+  onSelect: (recordId: string) => void;
   onMultiSelectToggle: (recordId: string, shiftKey: boolean) => void;
 }
 
 const TRAILING_PUNCTUATION = /[\s,.;:!?)]*$/;
+const COST_FORMATTER = new Intl.NumberFormat(undefined, {
+  style: "currency",
+  currency: "USD",
+  minimumFractionDigits: 2,
+  maximumFractionDigits: 2,
+});
+const DATE_FORMATTER_CURRENT_YEAR = new Intl.DateTimeFormat(undefined, {
+  month: "short",
+  day: "numeric",
+});
 
 function truncateWithEllipsis(value: string, maxLength = 88): string {
   const normalized = value.replace(/\s+/g, " ").trim();
@@ -46,12 +61,7 @@ function formatCost(value: number | null): string | null {
   if (value === null || Number.isNaN(value)) return null;
   if (value < 0.01) return `$${value.toFixed(3)}`;
   if (value < 0.1) return `$${value.toFixed(3)}`;
-  return new Intl.NumberFormat(undefined, {
-    style: "currency",
-    currency: "USD",
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  }).format(value);
+  return COST_FORMATTER.format(value);
 }
 
 function formatDate(value: string | null): string | null {
@@ -61,15 +71,25 @@ function formatDate(value: string | null): string | null {
 
   const now = new Date();
   const sameYear = date.getFullYear() === now.getFullYear();
-  return new Intl.DateTimeFormat(undefined, {
-    month: "short",
-    day: "numeric",
-    ...(sameYear ? {} : { year: "numeric" }),
-  }).format(date);
+  return sameYear
+    ? DATE_FORMATTER_CURRENT_YEAR.format(date)
+    : new Intl.DateTimeFormat(undefined, {
+        month: "short",
+        day: "numeric",
+        year: "numeric",
+      }).format(date);
 }
 
-export function RecordListItem({ record, multiSelectActive, isMultiSelected, onMultiSelectToggle }: RecordListItemProps): JSX.Element {
-  const { bootstrap, selection } = useViewer();
+function RecordListItemInner({
+  recordId,
+  record,
+  repoRoot,
+  isSelected,
+  multiSelectActive,
+  isMultiSelected,
+  onSelect,
+  onMultiSelectToggle,
+}: RecordListItemProps): JSX.Element {
   const dispatch = useViewerDispatch();
   const [menuOpen, setMenuOpen] = useState(false);
   const [confirmOpen, setConfirmOpen] = useState(false);
@@ -94,18 +114,17 @@ export function RecordListItem({ record, multiSelectActive, isMultiSelected, onM
   const descriptionId = useId();
   const promoteTitleId = useId();
   const promoteDescriptionId = useId();
-  const isSelected = selection?.kind === "record" && selection.recordId === record.record_id;
-  const alreadyInDataset = record.collections.includes("dataset");
-  const summaryText = truncateWithEllipsis(record.prompt_preview || record.title);
+  const alreadyInDataset = record?.collections.includes("dataset") ?? false;
+  const summaryText = truncateWithEllipsis(record?.prompt_preview || record?.title || recordId);
   const metadata = [
-    record.model_id,
-    record.turn_count !== null
+    record?.model_id ?? null,
+    record?.turn_count != null
       ? `${record.turn_count} turn${record.turn_count === 1 ? "" : "s"}`
       : null,
-    formatCost(record.total_cost_usd),
-    formatDate(record.updated_at ?? record.created_at),
+    formatCost(record?.total_cost_usd ?? null),
+    formatDate(record?.updated_at ?? record?.created_at ?? null),
   ].filter((item): item is string => Boolean(item));
-  const effectiveRating = record.effective_rating;
+  const effectiveRating = record?.effective_rating ?? null;
   const effectiveRatingLabel =
     effectiveRating == null
       ? null
@@ -188,7 +207,7 @@ export function RecordListItem({ record, multiSelectActive, isMultiSelected, onM
         }
         setPromoteCategoryOptions(categories);
         setPromoteCategoryLoading(false);
-        if (record.category_slug && categories.some((option) => option.slug === record.category_slug)) {
+        if (record?.category_slug && categories.some((option) => option.slug === record.category_slug)) {
           setPromoteCategorySlug(record.category_slug);
         } else {
           setPromoteCategorySlug("");
@@ -206,7 +225,7 @@ export function RecordListItem({ record, multiSelectActive, isMultiSelected, onM
     return () => {
       cancelled = true;
     };
-  }, [promoteOpen, record.category_slug]);
+  }, [promoteOpen, record?.category_slug]);
 
   useEffect(() => {
     if (!promoteOpen) {
@@ -286,18 +305,18 @@ export function RecordListItem({ record, multiSelectActive, isMultiSelected, onM
 
   const handleSelect = () => {
     dispatch({ type: "CLEAR_MULTI_SELECT" });
-    dispatch({ type: "SELECT_ITEM", payload: { kind: "record", recordId: record.record_id } });
+    onSelect(recordId);
   };
 
   const handleRowClick = (event: ReactMouseEvent) => {
     if (event.shiftKey && multiSelectActive) {
       event.preventDefault();
-      onMultiSelectToggle(record.record_id, true);
+      onMultiSelectToggle(recordId, true);
       return;
     }
     if (event.metaKey || event.ctrlKey) {
       event.preventDefault();
-      onMultiSelectToggle(record.record_id, false);
+      onMultiSelectToggle(recordId, false);
       return;
     }
     handleSelect();
@@ -305,7 +324,7 @@ export function RecordListItem({ record, multiSelectActive, isMultiSelected, onM
 
   const handleCheckboxClick = (event: ReactMouseEvent) => {
     event.stopPropagation();
-    onMultiSelectToggle(record.record_id, event.shiftKey);
+    onMultiSelectToggle(recordId, event.shiftKey);
   };
 
   const handleMenuToggle = (event: ReactMouseEvent<HTMLButtonElement>) => {
@@ -314,13 +333,13 @@ export function RecordListItem({ record, multiSelectActive, isMultiSelected, onM
   };
 
   const handleCopyRecordPath = async () => {
-    if (!bootstrap) {
+    if (!repoRoot) {
       setCopyState("error");
       return;
     }
 
     try {
-      await copyTextToClipboard(buildRecordPath(bootstrap.repo_root, record.record_id));
+      await copyTextToClipboard(buildRecordPath(repoRoot, recordId));
       setCopyState("copied");
     } catch {
       setCopyState("error");
@@ -329,7 +348,7 @@ export function RecordListItem({ record, multiSelectActive, isMultiSelected, onM
 
   const handleOpenRecordFolder = async () => {
     try {
-      await openRecordFolder(record.record_id);
+      await openRecordFolder(recordId);
       setOpenState("opened");
     } catch {
       setOpenState("error");
@@ -343,6 +362,9 @@ export function RecordListItem({ record, multiSelectActive, isMultiSelected, onM
   };
 
   const handlePromoteIntent = () => {
+    if (!record) {
+      return;
+    }
     setMenuOpen(false);
     setPromoteError(null);
     setPromoteCategoryOpen(false);
@@ -378,8 +400,8 @@ export function RecordListItem({ record, multiSelectActive, isMultiSelected, onM
     setDeleteError(null);
 
     try {
-      await deleteRecord(record.record_id);
-      dispatch({ type: "DELETE_RECORD_LOCAL", payload: record.record_id });
+      await deleteRecord(recordId);
+      dispatch({ type: "DELETE_RECORD_LOCAL", payload: recordId });
       setConfirmOpen(false);
 
       try {
@@ -404,6 +426,11 @@ export function RecordListItem({ record, multiSelectActive, isMultiSelected, onM
       return;
     }
 
+    if (!record) {
+      setPromoteError("Record details are still loading.");
+      return;
+    }
+
     if (!selectedCategoryOption) {
       setPromoteError("Select a category.");
       return;
@@ -413,7 +440,7 @@ export function RecordListItem({ record, multiSelectActive, isMultiSelected, onM
     setPromoteError(null);
 
     try {
-      await promoteRecordToDataset(record.record_id, {
+      await promoteRecordToDataset(recordId, {
         categorySlug: selectedCategoryOption.slug,
         categoryTitle: selectedCategoryOption.title,
         datasetId: promoteDatasetId,
@@ -437,12 +464,63 @@ export function RecordListItem({ record, multiSelectActive, isMultiSelected, onM
     }
   };
 
-  return (
-    <>
-      <div className="px-1.5" data-record-list-item={record.record_id}>
+  if (!record) {
+    return (
+      <div className="px-1.5" data-record-list-item={recordId}>
         <div
           className={cn(
-            "group flex items-start gap-0.5 rounded-lg px-2.5 py-2 transition-colors duration-100",
+            "group flex h-[68px] items-start gap-0.5 rounded-lg px-2.5 py-2 transition-colors duration-100",
+            isMultiSelected || isSelected ? "bg-[var(--accent-soft)]" : "hover:bg-[var(--surface-1)]",
+          )}
+          onClick={handleRowClick}
+        >
+          <button
+            type="button"
+            aria-label={isMultiSelected ? "Deselect record" : "Select record"}
+            onClick={handleCheckboxClick}
+            className={cn(
+              "mr-1.5 mt-0.5 flex shrink-0 items-center justify-center rounded-sm p-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-soft)]",
+              multiSelectActive ? "opacity-100" : "opacity-0 group-hover:opacity-100",
+            )}
+          >
+            <span
+              className={cn(
+                "flex size-3.5 shrink-0 items-center justify-center rounded-sm border",
+                isMultiSelected
+                  ? "border-[var(--accent)] bg-[var(--accent-soft)] text-[var(--accent)]"
+                  : "border-[var(--border-default)] bg-[var(--surface-1)] text-transparent",
+              )}
+            >
+              <Check className="size-3" />
+            </span>
+          </button>
+
+          <button
+            type="button"
+            onClick={(event) => {
+              event.stopPropagation();
+              handleRowClick(event);
+            }}
+            data-record-select-trigger="true"
+            className="min-w-0 flex-1 rounded-sm py-0 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-soft)]"
+            title={recordId}
+          >
+            <p className="line-clamp-2 break-words text-[11px] leading-[1.45] text-[var(--text-secondary)]">
+              {recordId}
+            </p>
+            <p className="mt-1 text-[9.5px] text-[var(--text-quaternary)]">Loading summary…</p>
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <>
+      <div className="px-1.5" data-record-list-item={recordId}>
+        <div
+          className={cn(
+            "group flex h-[68px] items-start gap-0.5 rounded-lg px-2.5 py-2 transition-colors duration-100",
             isMultiSelected
               ? "bg-[var(--accent-soft)]"
               : isSelected
@@ -483,7 +561,7 @@ export function RecordListItem({ record, multiSelectActive, isMultiSelected, onM
             title={summaryText}
           >
             <p
-              className={`break-words text-[11px] leading-[1.45] ${
+              className={`line-clamp-2 break-words text-[11px] leading-[1.45] ${
                 isSelected ? "font-medium text-[var(--text-primary)]" : "text-[var(--text-secondary)]"
               }`}
             >
@@ -499,7 +577,7 @@ export function RecordListItem({ record, multiSelectActive, isMultiSelected, onM
                   </span>
                 ) : null}
                 {metadata.map((item, index) => (
-                  <span key={`${record.record_id}-${item}`} className="flex items-center gap-x-1">
+                  <span key={`${recordId}-${item}`} className="flex items-center gap-x-1">
                     {(index > 0 || effectiveRatingLabel) ? <span className="text-[var(--border-strong)]">·</span> : null}
                     <span>{item}</span>
                   </span>
@@ -797,3 +875,16 @@ export function RecordListItem({ record, multiSelectActive, isMultiSelected, onM
     </>
   );
 }
+
+export const RecordListItem = memo(
+  RecordListItemInner,
+  (previous, next) =>
+    previous.recordId === next.recordId
+    && previous.record === next.record
+    && previous.repoRoot === next.repoRoot
+    && previous.isSelected === next.isSelected
+    && previous.multiSelectActive === next.multiSelectActive
+    && previous.isMultiSelected === next.isMultiSelected
+    && previous.onSelect === next.onSelect
+    && previous.onMultiSelectToggle === next.onMultiSelectToggle,
+);
