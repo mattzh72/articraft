@@ -35,6 +35,7 @@ logger = logging.getLogger(__name__)
 _COMPILE_PLATEAU_THRESHOLD = 3
 _GPT_5_4_DANGER_ZONE_TOKENS = 272_000
 _GPT_5_2_AND_5_3_CODEX_DANGER_ZONE_TOKENS = 280_000
+DEFAULT_OPENAI_COMPACTION_MODEL = "gpt-5.4-mini"
 
 
 @dataclass(slots=True)
@@ -120,6 +121,7 @@ class OpenAILLM:
         self,
         model_id: str = "gpt-5.4",
         *,
+        compaction_model_id: Optional[str] = None,
         thinking_level: str = "high",
         reasoning_summary: Optional[str] = "auto",
         transport: str = "http",
@@ -129,6 +131,7 @@ class OpenAILLM:
         dry_run: bool = False,
     ):
         self.model_id = model_id
+        self.compaction_model_id = (compaction_model_id or DEFAULT_OPENAI_COMPACTION_MODEL).strip()
         self.reasoning_effort = _effort_from_thinking_level(thinking_level)
         self.reasoning_summary = _normalize_reasoning_summary(reasoning_summary)
         self.transport = _normalize_transport(transport)
@@ -551,7 +554,7 @@ class OpenAILLM:
             if self._client is None:
                 raise RuntimeError("OpenAI compaction requires a real API client")
             request_kwargs: dict[str, Any] = {
-                "model": self.model_id,
+                "model": self.compaction_model_id,
                 "input": input_items,
                 "instructions": system_prompt,
             }
