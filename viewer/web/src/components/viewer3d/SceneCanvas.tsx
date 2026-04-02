@@ -300,6 +300,7 @@ function forEachOwnLinkVisualMesh(
 export interface SceneCanvasProps {
   baseFileUrl: string | null;
   assetRevisionKey: string | null;
+  texturedUsdPath: string | null;
   selectionKey: string | null;
   jointPoseSignal: Map<string, number>;
   renderOptions: RenderOptions;
@@ -322,6 +323,7 @@ function isMissingArtifactsError(error: string | null): boolean {
 export function SceneCanvas({
   baseFileUrl,
   assetRevisionKey,
+  texturedUsdPath,
   selectionKey,
   jointPoseSignal,
   renderOptions,
@@ -348,8 +350,10 @@ export function SceneCanvas({
   const { urdfSpec, jointNodes, jointFrames, loading, error } = useUrdfLoader(
     baseFileUrl,
     assetRevisionKey,
+    texturedUsdPath,
     jointPoseSignal,
     renderOptions.showCollisions,
+    renderOptions.useTexturedUsd,
     scene,
     camera,
     controls,
@@ -357,6 +361,7 @@ export function SceneCanvas({
     axisGroup,
     invalidate,
   );
+  const texturedUsdEnabled = renderOptions.useTexturedUsd;
 
   const partLegendItems = useMemo<PartLegendItem[]>(
     () => (
@@ -366,17 +371,19 @@ export function SceneCanvas({
               name: link.name,
               color: `#${segmentColorForIndex(index).getHexString()}`,
               visualCount: link.visuals.length,
-              subparts: describeLinkVisuals(link).map((subpart) => ({
-                key: subpart.key,
-                name: subpart.label,
-                color: `#${segmentColorForIndex(index).getHexString()}`,
-              })),
+              subparts: texturedUsdEnabled
+                ? []
+                : describeLinkVisuals(link).map((subpart) => ({
+                    key: subpart.key,
+                    name: subpart.label,
+                    color: `#${segmentColorForIndex(index).getHexString()}`,
+                  })),
             }))
             .filter((item) => item.visualCount > 0)
             .map(({ name, color, subparts }) => ({ name, color, subparts }))
         : []
     ),
-    [urdfSpec],
+    [texturedUsdEnabled, urdfSpec],
   );
   const shouldShowPartLegend =
     Boolean(selectionKey) &&
