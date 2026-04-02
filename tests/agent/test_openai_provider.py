@@ -234,11 +234,9 @@ def test_prepare_next_request_compacts_for_hard_pressure_and_clears_previous_res
     async def fake_compact_inputs(
         *,
         system_prompt: str,
-        tools: list[dict[str, object]],
         input_items: list[dict[str, object]],
     ) -> dict:
         assert system_prompt == "system"
-        assert tools == []
         assert input_items == provider._input_items[2:5]
         return {
             "id": "resp_cmp",
@@ -326,7 +324,6 @@ def test_prepare_next_request_compacts_once_for_compile_plateau_signature() -> N
     async def fake_compact_inputs(
         *,
         system_prompt: str,
-        tools: list[dict[str, object]],
         input_items: list[dict[str, object]],
     ) -> dict:
         nonlocal compact_calls
@@ -408,7 +405,6 @@ def test_prepare_next_request_allows_same_plateau_signature_after_reset() -> Non
     async def fake_compact_inputs(
         *,
         system_prompt: str,
-        tools: list[dict[str, object]],
         input_items: list[dict[str, object]],
     ) -> dict:
         nonlocal compact_calls
@@ -492,7 +488,6 @@ def test_prepare_next_request_survives_token_count_failures() -> None:
     async def fake_compact_inputs(
         *,
         system_prompt: str,
-        tools: list[dict[str, object]],
         input_items: list[dict[str, object]],
     ) -> dict:
         return {

@@ -338,7 +338,6 @@ class OpenAILLM:
 
         compacted_response = await self._compact_inputs(
             system_prompt=system_prompt,
-            tools=converted_tools,
             input_items=compactable_items,
         )
         compacted_items = self._serialize_response_output(compacted_response)
@@ -546,10 +545,9 @@ class OpenAILLM:
         self,
         *,
         system_prompt: str,
-        tools: list[dict[str, Any]],
         input_items: list[dict[str, Any]],
     ) -> Any:
-        async def _compact_once(*, extra_body: dict[str, Any] | None = None) -> Any:
+        async def _compact_once() -> Any:
             if self._client is None:
                 raise RuntimeError("OpenAI compaction requires a real API client")
             request_kwargs: dict[str, Any] = {
@@ -559,26 +557,12 @@ class OpenAILLM:
             }
             if self.prompt_cache_key:
                 request_kwargs["prompt_cache_key"] = self.prompt_cache_key
-            if extra_body:
-                request_kwargs["extra_body"] = extra_body
             if self._client_is_async:
                 return await self._client.responses.compact(**request_kwargs)
             return await asyncio.to_thread(self._client.responses.compact, **request_kwargs)
 
-        extra_body = {"tools": tools, "store": self.store}
-
         async def _request_once() -> Any:
-            try:
-                return await _compact_once(extra_body=extra_body)
-            except Exception as exc:
-                if not _is_compaction_extra_body_unsupported_error(exc):
-                    raise
-                logger.warning(
-                    "OpenAI compaction rejected tools/store extra_body for model=%s; retrying without them: %s",
-                    self.model_id,
-                    _format_retry_exception(exc),
-                )
-                return await _compact_once()
+            return await _compact_once()
 
         return await _async_retry(
             _request_once,
@@ -1012,7 +996,14 @@ class OpenAILLM:
 
             dump = getattr(item, "model_dump", None)
             if callable(dump):
-                serialized.append(dump(exclude_none=True))
+                serialized.append(
+                    dump(
+                        mode="json",
+                        exclude_none=True,
+                        warnings="none",
+                        serialize_as_any=True,
+                    )
+                )
                 continue
 
             # Best-effort fallback for tests / duck-typed objects.
@@ -1467,22 +1458,6 @@ def _format_retry_exception(exc: BaseException) -> str:
     if message:
         return f"{summary}: {message}"
     return f"{summary}: {repr(exc)}"
-
-
-def _is_compaction_extra_body_unsupported_error(exc: BaseException) -> bool:
-    message = str(exc).lower()
-    if not message:
-        return False
-    if not any(
-        marker in message
-        for marker in (
-            "unsupported parameter",
-            "unknown parameter",
-            "extra inputs are not permitted",
-        )
-    ):
-        return False
-    return "tools" in message or "store" in message
 
 
 async def _async_retry(
