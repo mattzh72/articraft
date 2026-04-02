@@ -53,7 +53,9 @@ REPAIR RULES
 - Treat `<failures>` as blocking, `<warnings>` as design evidence, `<notes>` as context.
 - If an automated compile warning reports disconnected geometry inside a part, assume it may be valid until you disprove it with inspection or exact checks. Prefer adding the missing support geometry or splitting the assembly into real parts over waving the warning away.
 - Classify before patching: local bug, wrong representation, wrong composition, or wrong proportions.
-- If the same failure persists across 2 repair turns, stop patching. Simplify only the failing region back to envelope geometry, keep its learned dimensions/joints/attachments, then rebuild that region from scratch.
+- `missing exact geometry` usually means you deleted or renamed a named exact-check anchor. Restore the name or update/remove the dependent `ctx.expect_*` check before more geometry edits.
+- `min_distance=... contact_tol=...` from `expect_contact(...)` means a gap, not an overlap. Verify the tested pair before tuning geometry or tolerance.
+- If the same overlap/composition failure persists across 2 repair turns, stop patching. Simplify only the failing region back to envelope geometry, keep its learned dimensions/joints/attachments, then rebuild that region from scratch.
 - When you change geometry or motion, update tests in the same edit only if an existing high-signal invariant changed or a new prompt-critical invariant needs coverage.
 </process>
 
@@ -98,9 +100,11 @@ TESTING
 - Prefer `TestContext(object_model)`; do not pass asset roots in new code.
 - Use the object-first pattern: resolve Part, Articulation, and named Visual objects once, then pass them to `ctx.expect_*` and `ctx.allow_*` helpers. See SDK docs for exact signatures.
 - Use `run_tests()` for prompt-specific exact checks, targeted pose checks, and explicit allowances only.
+- Once `run_tests()` references a visual by exact `elem_*` name, treat that name as a contract. Preserve it or update every dependent check in the same edit.
 - `fail_if_parts_overlap_*` and `ctx.allow_overlap(...)` mean real 3D interpenetration; `expect_overlap(...)` is a separate projected footprint check. If parts are nested but should remain clear, use `expect_within(...)`, `expect_gap(...)`, `expect_contact(...)`, and/or `expect_overlap(...)` instead of `allow_overlap(...)`.
 - Every part must be tested for: presence, connection to neighbors, correct placement, and no unsupported disconnected sub-geometry when the visuals make that ambiguous.
 - If a part has multiple visual regions, prefer exact contact/support checks for the critical mounts instead of broad heuristics.
+- Delay brittle element-scoped or numeric constraints until the representation is stable. Prefer prompt-critical part-level exact checks first.
 - Do not add blanket lower/upper pose sweeps by default. Keep pose-specific checks narrow and only add them when a prompt-critical articulation remains ambiguous after exact checks.
 - If an automated compile warning suggests floating-looking or disconnected geometry, investigate with `probe_model` before changing geometry or relaxing assumptions.
 - When support or floating status is ambiguous, probe first, then encode the real invariant in tests.

@@ -66,6 +66,8 @@ def _assert_shared_contract(text: str, *, budget: int) -> None:
     assert "expect_within" in text
     assert "exactly one root part" in text
     assert "Use `run_tests()` for prompt-specific exact checks" in text
+    assert "treat that name as a contract" in text
+    assert "means a gap, not an overlap" in text
     assert "real 3D interpenetration" in text
     assert "projected footprint check" in text
 
@@ -93,7 +95,7 @@ def test_prompt_outputs_are_current() -> None:
     }
 
     openai_text = compiled_by_name["designer_system_prompt_openai.txt"]
-    _assert_shared_contract(openai_text, budget=110)
+    _assert_shared_contract(openai_text, budget=112)
     assert (
         "Use ONLY `read_file`, `apply_patch`, `compile_model`, `probe_model`, and `find_examples`"
         in openai_text
@@ -123,7 +125,7 @@ def test_prompt_outputs_are_current() -> None:
     assert "`compile_model` automatically checks model validity" in openai_hybrid_text
 
     gemini_text = compiled_by_name["designer_system_prompt_gemini.txt"]
-    _assert_shared_contract(gemini_text, budget=110)
+    _assert_shared_contract(gemini_text, budget=113)
     assert (
         "Use ONLY `read_code`, `edit_code`, `compile_model`, `probe_model`, and `find_examples`"
         in gemini_text

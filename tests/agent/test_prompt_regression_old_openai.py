@@ -55,4 +55,4 @@ def test_compiled_openai_prompt_keeps_compact_contract_and_visual_test_gate() ->
         # No disallowed fragments
         assert "expect_aabb_" not in text
         assert "expect_joint_motion_axis(" not in text
-        assert len(text.splitlines()) <= 110
+        assert len(text.splitlines()) <= 112

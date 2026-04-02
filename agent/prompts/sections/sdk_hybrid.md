@@ -28,9 +28,11 @@ TESTING
 - Prefer `TestContext(object_model)`; do not pass asset roots in new code.
 - Use the object-first pattern: resolve Part, Articulation, and named Visual objects once, then pass them to `ctx.expect_*` and `ctx.allow_*` helpers. See SDK docs for exact signatures.
 - Use `run_tests()` for prompt-specific exact checks, targeted pose checks, and explicit allowances only.
+- Once `run_tests()` references a visual by exact `elem_*` name, treat that name as a contract. Preserve it or update every dependent check in the same edit.
 - `fail_if_parts_overlap_*` and `ctx.allow_overlap(...)` mean real 3D interpenetration; `expect_overlap(...)` is a separate projected footprint check. If parts are nested but should remain clear, use `expect_within(...)`, `expect_gap(...)`, `expect_contact(...)`, and/or `expect_overlap(...)` instead of `allow_overlap(...)`.
 - Every part must be tested for: presence, connection to neighbors, correct placement, and no unsupported disconnected sub-geometry when the visuals make that ambiguous.
 - If a part has multiple visual regions, prefer exact contact/support checks for the critical mounts instead of broad heuristics.
+- Delay brittle element-scoped or numeric constraints until the representation is stable. Prefer prompt-critical part-level exact checks first.
 - Do not add blanket lower/upper pose sweeps by default. Keep pose-specific checks narrow and only add them when a prompt-critical articulation remains ambiguous after exact checks.
 - If an automated compile warning suggests floating-looking or disconnected geometry, investigate with `probe_model` before changing geometry or relaxing assumptions.
 - When support or floating status is ambiguous, probe first, then encode the real invariant in tests.

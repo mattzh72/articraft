@@ -399,6 +399,169 @@ def test_compile_signal_bundle_classifies_isolated_part_failures_cleanly() -> No
     assert "floating group ['lid', 'top_vent']" in signal.details
 
 
+def test_compile_signal_bundle_classifies_missing_exact_geometry_failure() -> None:
+    bundle = build_compile_signal_bundle(
+        status="failure",
+        test_report=SDKTestReport(
+            passed=False,
+            checks_run=1,
+            checks=("latch barrel bears on the right latch boss",),
+            failures=(
+                SimpleNamespace(
+                    name="latch barrel bears on the right latch boss",
+                    details="missing exact geometry for elem_b='latch_boss_right' on 'post'",
+                ),
+            ),
+            warnings=(),
+            allowances=(),
+        ),
+    )
+
+    signal = next(signal for signal in bundle.signals if signal.kind == "missing_exact_geometry")
+    assert signal.severity == "failure"
+    assert signal.summary == "Authored exact check references named geometry that is not present."
+    assert signal.source == "tests"
+
+
+def test_compile_signal_bundle_classifies_exact_contact_gap_failure() -> None:
+    bundle = build_compile_signal_bundle(
+        status="failure",
+        test_report=SDKTestReport(
+            passed=False,
+            checks_run=1,
+            checks=("front wheel hub is carried by the fork",),
+            failures=(
+                SimpleNamespace(
+                    name="front wheel hub is carried by the fork",
+                    details=(
+                        "min_distance=0.015 contact_tol=1e-06 elem_a='front_wheel_core' "
+                        "elem_b='fork_left' pose={}"
+                    ),
+                ),
+            ),
+            warnings=(),
+            allowances=(),
+        ),
+    )
+
+    signal = next(signal for signal in bundle.signals if signal.kind == "exact_contact_gap")
+    assert signal.severity == "failure"
+    assert signal.summary == "Authored exact-contact check found 15 mm where contact was expected."
+    assert signal.source == "tests"
+
+
+def test_compile_signal_bundle_classifies_compiler_owned_overlap_failure() -> None:
+    bundle = build_compile_signal_bundle(
+        status="failure",
+        test_report=SDKTestReport(
+            passed=False,
+            checks_run=1,
+            checks=("fail_if_parts_overlap_in_current_pose()",),
+            failures=(
+                SimpleNamespace(
+                    name="fail_if_parts_overlap_in_current_pose()",
+                    details=(
+                        "Part overlaps detected (overlap_tol=0.005, overlap_volume_tol=0):\n"
+                        "pair=('deck','front_wheel') depth=(0.04,0.0453,0.1) min_depth=0.04 "
+                        "vol=0.0001812 elem_a=#2 'head_block':Box elem_b=#0 "
+                        "'front_wheel_tire':Mesh pose={}"
+                    ),
+                ),
+            ),
+            warnings=(),
+            allowances=(),
+        ),
+    )
+
+    signal = next(signal for signal in bundle.signals if signal.kind == "real_overlap")
+    assert signal.severity == "failure"
+    assert signal.source == "compiler"
+    assert (
+        signal.summary
+        == "Compiler-owned global QC found real 3D overlap in the current pose (`fail_if_parts_overlap_in_current_pose()`)."
+    )
+    assert "compiler-owned global qc found real part overlap" in bundle.summary.lower()
+
+
+def test_harness_injects_exact_geometry_contract_guidance(tmp_path: Path) -> None:
+    model_path = tmp_path / "model.py"
+    model_path.write_text(
+        "\n".join(
+            [
+                "from sdk import TestContext",
+                "",
+                "def build_object_model():",
+                "    return None",
+                "",
+                "object_model = build_object_model()",
+                "",
+                "def run_tests():",
+                "    ctx = TestContext(object_model)",
+                "    ctx.expect_contact('latch', 'post', elem_b='latch_boss_right')",
+                "    return ctx.report()",
+                "",
+                "def unused():",
+                "    pass",
+            ]
+        ),
+        encoding="utf-8",
+    )
+
+    agent = ArticraftAgent.__new__(ArticraftAgent)
+    agent.file_path = str(model_path)
+    agent.trace_writer = None
+
+    conversation: list[dict] = []
+    injected = agent._maybe_inject_exact_geometry_contract_guidance(
+        conversation,
+        scan=agent._scan_current_code_contracts(),
+    )
+
+    assert injected is True
+    assert "<exact_geometry_contract>" in conversation[0]["content"]
+    assert "'latch_boss_right'" in conversation[0]["content"]
+
+
+def test_harness_injects_baseline_qc_guidance(tmp_path: Path) -> None:
+    model_path = tmp_path / "model.py"
+    model_path.write_text(
+        "\n".join(
+            [
+                "from sdk import TestContext",
+                "",
+                "def build_object_model():",
+                "    return None",
+                "",
+                "object_model = build_object_model()",
+                "",
+                "def run_tests():",
+                "    ctx = TestContext(object_model)",
+                "    ctx.check_model_valid()",
+                "    ctx.check_mesh_assets_ready()",
+                "    ctx.fail_if_parts_overlap_in_current_pose()",
+                "    return ctx.report()",
+            ]
+        ),
+        encoding="utf-8",
+    )
+
+    agent = ArticraftAgent.__new__(ArticraftAgent)
+    agent.file_path = str(model_path)
+    agent.trace_writer = None
+
+    conversation: list[dict] = []
+    injected = agent._maybe_inject_baseline_qc_guidance(
+        conversation,
+        scan=agent._scan_current_code_contracts(),
+    )
+
+    assert injected is True
+    assert "<baseline_qc_guidance>" in conversation[0]["content"]
+    assert "`check_model_valid()`" in conversation[0]["content"]
+    assert "`check_mesh_assets_ready()`" in conversation[0]["content"]
+    assert "`fail_if_parts_overlap_in_current_pose()`" in conversation[0]["content"]
+
+
 def test_harness_injects_structured_compile_signals() -> None:
     agent = ArticraftAgent.__new__(ArticraftAgent)
     agent._seen_compile_signal_sigs = set()

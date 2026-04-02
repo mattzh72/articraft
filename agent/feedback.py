@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import hashlib
 import linecache
+import math
 import re
 import traceback
 from dataclasses import dataclass
@@ -57,6 +58,14 @@ class ParsedTestWarning:
     check_name: str
     detail_text: str
     max_risk: str | None
+
+
+@dataclass(frozen=True, slots=True)
+class ParsedTestFailure:
+    name: str
+    details: str
+    lower_name: str
+    lower_details: str
 
 
 @dataclass(frozen=True, slots=True)
@@ -232,6 +241,74 @@ COMPILE_RUNTIME_SPEC = SignalSpec(
     group="build",
     blocking=True,
 )
+MISSING_EXACT_GEOMETRY_SPEC = SignalSpec(
+    severity="failure",
+    kind="missing_exact_geometry",
+    code="TEST_MISSING_EXACT_GEOMETRY",
+    source="tests",
+    group="qc",
+    blocking=True,
+)
+EXACT_CONTACT_GAP_SPEC = SignalSpec(
+    severity="failure",
+    kind="exact_contact_gap",
+    code="TEST_EXACT_CONTACT_GAP",
+    source="tests",
+    group="qc",
+    blocking=True,
+)
+REAL_OVERLAP_TEST_SPEC = SignalSpec(
+    severity="failure",
+    kind="real_overlap",
+    code="TEST_REAL_OVERLAP",
+    source="tests",
+    group="qc",
+    blocking=True,
+)
+REAL_OVERLAP_COMPILER_SPEC = SignalSpec(
+    severity="failure",
+    kind="real_overlap",
+    code="QC_REAL_OVERLAP",
+    source="compiler",
+    group="qc",
+    blocking=True,
+)
+SINGLE_ROOT_POLICY_SPEC = SignalSpec(
+    severity="failure",
+    kind="single_root_policy",
+    code="QC_SINGLE_ROOT_POLICY",
+    source="compiler",
+    group="build",
+    blocking=True,
+)
+MODEL_VALIDITY_SPEC = SignalSpec(
+    severity="failure",
+    kind="model_validity",
+    code="QC_MODEL_VALIDITY",
+    source="compiler",
+    group="build",
+    blocking=True,
+)
+MESH_ASSETS_SPEC = SignalSpec(
+    severity="failure",
+    kind="mesh_assets",
+    code="QC_MESH_ASSETS",
+    source="compiler",
+    group="build",
+    blocking=True,
+)
+ISOLATED_PART_COMPILER_SPEC = SignalSpec(
+    severity="failure",
+    kind="isolated_part",
+    code="QC_ISOLATED_PART",
+    source="compiler",
+    group="qc",
+    blocking=True,
+)
+
+_MIN_DISTANCE_RE = re.compile(
+    r"min_distance=(?P<distance>[-+0-9.eE]+)\s+contact_tol=(?P<tol>[-+0-9.eE]+)"
+)
 
 
 def contains_code_in_text(text: str) -> bool:
@@ -324,6 +401,17 @@ def _parse_test_warning(text: str) -> ParsedTestWarning:
     )
 
 
+def _parse_test_failure(failure: TestFailureLike) -> ParsedTestFailure:
+    name = str(failure.name)
+    details = str(failure.details).strip()
+    return ParsedTestFailure(
+        name=name,
+        details=details,
+        lower_name=name.lower(),
+        lower_details=details.lower(),
+    )
+
+
 def _make_signal(
     *,
     severity: SignalSeverity,
@@ -392,6 +480,16 @@ def _isolated_part_summary(headline: str) -> str:
     return summary
 
 
+def _format_distance_summary(value: float) -> str:
+    magnitude = abs(float(value))
+    if magnitude >= 0.1:
+        return f"{value:.3g} m"
+    mm_value = value * 1000.0
+    if abs(mm_value - round(mm_value)) < 1e-9:
+        return f"{int(round(mm_value))} mm"
+    return f"{mm_value:.3g} mm"
+
+
 def _warning_signal_from_text(warning: str) -> CompileSignal:
     text = str(warning).strip()
     if not text:
@@ -447,25 +545,123 @@ def _iter_test_failures(test_report: TestReportLike | None) -> Iterable[CompileS
 
     signals: list[CompileSignal] = []
     for failure in test_report.failures:
-        name = str(failure.name)
-        details = str(failure.details).strip()
-        lowered = details.lower()
-        if name.startswith("fail_if_isolated_parts(") or "isolated parts detected" in lowered:
+        parsed = _parse_test_failure(failure)
+        if parsed.name.startswith("fail_if_isolated_parts(") or (
+            "isolated parts detected" in parsed.lower_details
+        ):
+            spec = (
+                ISOLATED_PART_COMPILER_SPEC
+                if parsed.name == "fail_if_isolated_parts()"
+                else ISOLATED_PART_FAILURE_SPEC
+            )
             signals.append(
                 _signal_from_spec(
-                    ISOLATED_PART_FAILURE_SPEC,
-                    summary=_isolated_part_summary(details.splitlines()[0] if details else name),
-                    details=details,
-                    check_name=name,
+                    spec,
+                    summary=_isolated_part_summary(
+                        parsed.details.splitlines()[0] if parsed.details else parsed.name
+                    ),
+                    details=parsed.details,
+                    check_name=parsed.name,
+                )
+            )
+            continue
+        if parsed.name == "check_single_root_part":
+            signals.append(
+                _signal_from_spec(
+                    SINGLE_ROOT_POLICY_SPEC,
+                    summary=(
+                        "Compiler-owned global QC requires exactly one root part "
+                        "(`check_single_root_part`)."
+                    ),
+                    details=parsed.details,
+                    check_name=parsed.name,
+                )
+            )
+            continue
+        if parsed.name == "check_model_valid":
+            signals.append(
+                _signal_from_spec(
+                    MODEL_VALIDITY_SPEC,
+                    summary=(
+                        "Compiler-owned structural validation rejected the current model "
+                        "(`check_model_valid`)."
+                    ),
+                    details=parsed.details,
+                    check_name=parsed.name,
+                )
+            )
+            continue
+        if parsed.name == "check_mesh_assets_ready":
+            signals.append(
+                _signal_from_spec(
+                    MESH_ASSETS_SPEC,
+                    summary=(
+                        "Compiler-owned mesh asset readiness checks found missing or unresolved "
+                        "assets (`check_mesh_assets_ready`)."
+                    ),
+                    details=parsed.details,
+                    check_name=parsed.name,
+                )
+            )
+            continue
+        if "missing exact geometry" in parsed.lower_details:
+            signals.append(
+                _signal_from_spec(
+                    MISSING_EXACT_GEOMETRY_SPEC,
+                    summary="Authored exact check references named geometry that is not present.",
+                    details=parsed.details,
+                    check_name=parsed.name,
+                )
+            )
+            continue
+        gap_match = _MIN_DISTANCE_RE.search(parsed.details)
+        if gap_match is not None:
+            try:
+                min_distance = float(gap_match.group("distance"))
+            except ValueError:
+                min_distance = math.nan
+            gap_summary = "nonzero separation"
+            if math.isfinite(min_distance):
+                gap_summary = _format_distance_summary(min_distance)
+            signals.append(
+                _signal_from_spec(
+                    EXACT_CONTACT_GAP_SPEC,
+                    summary=(
+                        "Authored exact-contact check found "
+                        f"{gap_summary} where contact was expected."
+                    ),
+                    details=parsed.details,
+                    check_name=parsed.name,
+                )
+            )
+            continue
+        if "part overlaps detected" in parsed.lower_details:
+            spec = (
+                REAL_OVERLAP_COMPILER_SPEC
+                if parsed.name == "fail_if_parts_overlap_in_current_pose()"
+                else REAL_OVERLAP_TEST_SPEC
+            )
+            summary = (
+                "Compiler-owned global QC found real 3D overlap in the current pose "
+                "(`fail_if_parts_overlap_in_current_pose()`)."
+                if spec is REAL_OVERLAP_COMPILER_SPEC
+                else "Authored QC check found real 3D overlap in the tested pose."
+            )
+            signals.append(
+                _signal_from_spec(
+                    spec,
+                    summary=summary,
+                    details=parsed.details,
+                    check_name=parsed.name,
                 )
             )
             continue
         signals.append(
             _signal_from_spec(
                 TEST_FAILURE_SPEC,
-                summary=name,
-                details=details,
-                check_name=name,
+                summary=parsed.name,
+                details=parsed.details,
+                check_name=parsed.name,
             )
         )
     return signals
@@ -691,20 +887,72 @@ def _signal_key(signal: CompileSignal) -> str:
     return signal.dedupe_key or signal.summary
 
 
+def _failure_sort_key(signal: CompileSignal) -> tuple[int, str, str]:
+    priority = 90
+    if signal.kind == "compile_runtime":
+        priority = 0
+    elif signal.kind in {"single_root_policy", "model_validity", "mesh_assets"}:
+        priority = 1
+    elif signal.source == "compiler" and signal.kind in {"isolated_part", "real_overlap"}:
+        priority = 2
+    elif signal.kind == "missing_exact_geometry":
+        priority = 3
+    elif signal.kind == "exact_contact_gap":
+        priority = 4
+    elif signal.kind == "real_overlap":
+        priority = 5
+    elif signal.kind == "isolated_part":
+        priority = 6
+    elif signal.kind == "test_failure":
+        priority = 7
+    return (priority, signal.kind, signal.summary)
+
+
+def _ordered_failure_signals(signals: Iterable[CompileSignal]) -> list[CompileSignal]:
+    return sorted(
+        (signal for signal in signals if signal.severity == "failure"),
+        key=_failure_sort_key,
+    )
+
+
+def _primary_failure_summary(signals: tuple[CompileSignal, ...]) -> str:
+    failures = _ordered_failure_signals(signals)
+    if not failures:
+        return "Primary issue: compile execution failed."
+
+    primary = failures[0]
+    if primary.kind == "compile_runtime":
+        return "Primary issue: compile execution failed."
+    if primary.kind == "single_root_policy":
+        return "Primary issue: compiler-owned structural policy checks failed."
+    if primary.kind == "model_validity":
+        return "Primary issue: compiler-owned model validation failed."
+    if primary.kind == "mesh_assets":
+        return "Primary issue: compiler-owned mesh asset readiness checks failed."
+    if primary.source == "compiler" and primary.kind == "isolated_part":
+        return "Primary issue: compiler-owned global QC found floating disconnected parts."
+    if primary.source == "compiler" and primary.kind == "real_overlap":
+        return "Primary issue: compiler-owned global QC found real part overlap."
+    if primary.kind == "missing_exact_geometry":
+        return "Primary issue: authored exact checks reference missing named geometry."
+    if primary.kind == "exact_contact_gap":
+        return "Primary issue: authored exact-contact checks found separation where contact was expected."
+    if primary.kind == "real_overlap":
+        return "Primary issue: required QC tests found real part overlap."
+    if primary.kind == "isolated_part":
+        return "Primary issue: required QC tests found floating disconnected parts."
+    return "Primary issue: required QC tests failed."
+
+
 def _build_bundle_summary(status: CompileStatus, signals: tuple[CompileSignal, ...]) -> str:
     failure_count = sum(1 for signal in signals if signal.severity == "failure")
     warning_count = sum(1 for signal in signals if signal.severity == "warning")
     note_count = sum(1 for signal in signals if signal.severity == "note")
 
     if failure_count:
-        if any(signal.kind == "test_failure" for signal in signals):
-            return (
-                f"status={status} failures={failure_count} warnings={warning_count} notes={note_count}\n"
-                "Primary issue: required QC tests failed."
-            )
         return (
             f"status={status} failures={failure_count} warnings={warning_count} notes={note_count}\n"
-            "Primary issue: compile execution failed."
+            f"{_primary_failure_summary(signals)}"
         )
     if warning_count:
         return (
@@ -787,7 +1035,7 @@ def render_compile_signals(
     repeated: bool = False,
     failure_streak: int = 1,
 ) -> str:
-    failures = [signal for signal in bundle.signals if signal.severity == "failure"]
+    failures = _ordered_failure_signals(bundle.signals)
     warnings = [signal for signal in bundle.signals if signal.severity == "warning"]
     notes = [signal for signal in bundle.signals if signal.severity == "note"]
 
@@ -816,21 +1064,12 @@ def render_compile_signals(
     if notes and (failures or warnings):
         parts.extend(["", "<notes>", _render_signal_lines(notes), "</notes>"])
 
-    response_rules = [
-        "- Failures are blocking and should be investigated. Some come from compiler-owned automated QC rather than authored tests. If an isolated or floating part/group is intentional because the assembly requires a gap, you may explicitly bypass it; for real 3D overlap findings, be judicious because some penetrations are reasonable and may call for an allow-list or a better exact check rather than a geometry rewrite.",
-        "- Warnings are possible issues and should not be ignored, but they are noisier than failures.",
-        "- Automated disconnected-geometry-island warnings can reflect a very real modeling issue. Investigate them before dismissing them as warning noise.",
-        "- Before relaxing a warning-tier signal, use probe_model or exact checks to confirm whether it reflects a real issue.",
-        "- If a signal reveals a wrong representation or composition, replace that representation instead of tuning around it.",
-    ]
-    if repeated and failures:
-        response_rules.append(
-            "- This failure class repeated. Stop patching symptoms and rewrite the affected region from the root cause."
-        )
-    if failure_streak >= 3 and failures:
-        response_rules.append(
-            "- You are in a repair loop. Stop making small placement, tolerance, or box/cylinder tweaks and rewrite the failing subassembly with a more realistic representation."
-        )
+    response_rules = _response_rules_for_failures(
+        failures,
+        repeated=repeated,
+        failure_streak=failure_streak,
+        include_warning_note=bool(warnings),
+    )
     parts.extend(
         [
             "",
@@ -841,3 +1080,101 @@ def render_compile_signals(
         ]
     )
     return "\n".join(parts)
+
+
+def _response_rules_for_failures(
+    failures: list[CompileSignal],
+    *,
+    repeated: bool,
+    failure_streak: int,
+    include_warning_note: bool,
+) -> list[str]:
+    if not failures:
+        rules: list[str] = []
+        if include_warning_note:
+            rules.append(
+                "- Warnings are not blocking, but they are design evidence and should not be ignored."
+            )
+        return rules
+
+    primary = failures[0]
+    rules: list[str]
+    if primary.kind == "compile_runtime":
+        rules = [
+            "- Fix the compile/runtime error first. Geometry repair is blocked until the script executes cleanly.",
+            "- Read the exception details and location lines before changing unrelated geometry or tests.",
+        ]
+    elif primary.kind == "single_root_policy":
+        rules = [
+            "- Fix the part tree first. This is a structural assembly error, not a local geometry issue.",
+            "- Add or correct the missing articulation or fixed mount so the model has exactly one rooted assembly.",
+            "- Do not spend turns tuning geometry until the root structure is valid.",
+        ]
+    elif primary.kind == "model_validity":
+        rules = [
+            "- Fix the model-definition error first. This is a structural validation failure, not a local placement issue.",
+            "- Read the validation details carefully before changing unrelated geometry or exact checks.",
+        ]
+    elif primary.kind == "mesh_assets":
+        rules = [
+            "- Fix mesh asset readiness first. Missing or unresolved assets block exact geometry checks and downstream QC.",
+            "- Resolve the referenced mesh names or asset roots before tuning geometry or tests.",
+        ]
+    elif primary.source == "compiler" and primary.kind == "isolated_part":
+        rules = [
+            "- Fix the compiler-owned floating/disconnected part failure first. Do not keep patching authored exact checks until the global QC failure is gone.",
+            "- If the disconnected part is intentional, justify it with an explicit isolated-part allowance. Otherwise add the missing support path or mount.",
+        ]
+    elif primary.source == "compiler" and primary.kind == "real_overlap":
+        rules = [
+            "- Fix the compiler-owned blocking overlap first. Do not keep patching authored exact checks until the global QC failure is gone.",
+            "- This is a real 3D interpenetration finding, not a tolerance issue.",
+            "- If the penetration is intentional, prove that with an explicit allowance. Otherwise change geometry, mount layout, or pose.",
+        ]
+    elif primary.kind == "missing_exact_geometry":
+        rules = [
+            "- This is usually a deleted or renamed visual-name contract, not a placement failure.",
+            "- Restore the named visual or update/remove the dependent exact check in the same edit.",
+            "- Do not rewrite the subassembly just because this repeated.",
+        ]
+    elif primary.kind == "exact_contact_gap":
+        rules = [
+            "- This is a gap, not an overlap.",
+            "- First verify that the tested pair is the right pair. The support path may be through a different exact element than the one named here.",
+            "- If the pair is correct, change geometry or mount placement. Do not relax `contact_tol` unless near-zero contact is actually the intended invariant.",
+        ]
+    elif primary.kind == "real_overlap":
+        rules = [
+            "- Fix the real 3D overlap in the tested pose before adding more exact checks.",
+            "- If the penetration is intentional, use an explicit allowance. Otherwise change geometry, mount layout, or the tested pose.",
+        ]
+    elif primary.kind == "isolated_part":
+        rules = [
+            "- Fix the floating/disconnected part failure before tuning secondary geometry.",
+            "- If the disconnection is intentional, justify it explicitly. Otherwise add the missing support path or mount.",
+        ]
+    else:
+        rules = [
+            "- Failures are blocking and should be investigated before adding more geometry or tests.",
+            "- Classify whether this is a local bug, a wrong representation, or a stale exact-check contract before patching.",
+        ]
+
+    if include_warning_note:
+        rules.append(
+            "- Warnings are not blocking, but they are design evidence and should not be ignored."
+        )
+
+    if repeated and primary.kind in {"real_overlap", "isolated_part"}:
+        rules.append(
+            "- This failure class repeated. Stop patching symptoms and rewrite the affected region from the root cause."
+        )
+    if failure_streak >= 3:
+        if primary.kind in {"missing_exact_geometry", "exact_contact_gap"}:
+            rules.append(
+                "- You are in a repair loop, but this failure family does not call for a geometry rewrite. Audit authored exact-name and exact-pair contracts first."
+            )
+        elif primary.kind in {"real_overlap", "isolated_part"}:
+            rules.append(
+                "- You are in a repair loop. Stop making small placement, tolerance, or box/cylinder tweaks and rewrite the failing subassembly with a more realistic representation."
+            )
+    return rules

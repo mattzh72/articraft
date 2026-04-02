@@ -108,6 +108,8 @@ def test_openai_prompt_resolution_and_payload_preview() -> None:
     assert "find_floating_parts(...)" in instructions
     assert "exactly one root part" in instructions
     assert "Use `run_tests()` for prompt-specific exact checks" in instructions
+    assert "treat that name as a contract" in instructions
+    assert "means a gap, not an overlap" in instructions
 
     # Cache key
     assert payload["prompt_cache_key"].startswith("ac1:")
