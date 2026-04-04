@@ -31,7 +31,7 @@ from agent.compiler import (
 from agent.compiler import (
     compile_urdf_report_maybe_timeout as _compile_urdf_report_maybe_timeout,
 )
-from agent.cost import max_cost_usd_from_env, parse_max_cost_usd
+from agent.cost import is_flash_model, max_cost_usd_from_env, parse_max_cost_usd
 from agent.defaults import DEFAULT_MAX_TURNS
 from agent.harness import ArticraftAgent, build_openai_prompt_cache_settings
 from agent.models import CompileReport as AgentCompileReport
@@ -105,6 +105,19 @@ _DRAFT_MOTION_LIMIT_EXAMPLE_BLOCK = """    # if hinge_limits is not None and hin
     #     with ctx.pose({lid_hinge: hinge_limits.upper}):
     #         ctx.expect_contact(lid, body, elem_a=hinge_leaf, elem_b=body_leaf)
 """
+
+
+def _resolve_post_success_design_audit(
+    *,
+    provider: str,
+    model_id: str | None,
+    enabled: bool,
+) -> bool:
+    if provider == "gemini" and isinstance(model_id, str) and is_flash_model(model_id):
+        # Gemini Flash over-audits after a clean compile and uses the extra turn
+        # to keep probing or recompiling instead of concluding.
+        return False
+    return bool(enabled)
 
 
 def _draft_model_template(*, sdk_package: str, scaffold_mode: str) -> str:
@@ -768,6 +781,11 @@ def create_workbench_draft_record(
         openai_transport=openai_transport,
         openai_reasoning_summary=openai_reasoning_summary,
     )
+    post_success_design_audit = _resolve_post_success_design_audit(
+        provider=provider,
+        model_id=selected_model_id,
+        enabled=post_success_design_audit,
+    )
     normalized_scaffold_mode = normalize_scaffold_mode(scaffold_mode)
     loaded_system_prompt_path = resolve_system_prompt_path(
         system_prompt_path,
@@ -1352,6 +1370,11 @@ async def _execute_single_run(
         openai_transport=openai_transport,
         openai_reasoning_summary=openai_reasoning_summary,
     )
+    resolved_post_success_design_audit = _resolve_post_success_design_audit(
+        provider=provider,
+        model_id=selected_model_id,
+        enabled=post_success_design_audit,
+    )
 
     async def _persist_failure(
         *,
@@ -1402,7 +1425,7 @@ async def _execute_single_run(
                         sdk_docs_mode=sdk_docs_mode,
                         openai_transport=openai_transport,
                         openai_reasoning_summary=openai_reasoning_summary,
-                        post_success_design_audit=post_success_design_audit,
+                        post_success_design_audit=resolved_post_success_design_audit,
                         max_cost_usd=max_cost_usd,
                     ),
                 ),
@@ -1451,7 +1474,7 @@ async def _execute_single_run(
                     sdk_docs_mode=sdk_docs_mode,
                     openai_transport=openai_transport,
                     openai_reasoning_summary=openai_reasoning_summary,
-                    post_success_design_audit=post_success_design_audit,
+                    post_success_design_audit=resolved_post_success_design_audit,
                     max_cost_usd=max_cost_usd,
                 ),
             ),
@@ -1486,7 +1509,7 @@ async def _execute_single_run(
             scaffold_mode=scaffold_mode,
             sdk_docs_mode=sdk_docs_mode,
             openai_reasoning_summary=openai_reasoning_summary,
-            post_success_design_audit=post_success_design_audit,
+            post_success_design_audit=resolved_post_success_design_audit,
             max_cost_usd=max_cost_usd,
             runtime_limits=runtime_limits,
         ) as agent:
@@ -1600,7 +1623,7 @@ async def _execute_single_run(
             scaffold_mode=scaffold_mode,
             sdk_docs_mode=sdk_docs_mode,
             openai_reasoning_summary=openai_reasoning_summary,
-            post_success_design_audit=post_success_design_audit,
+            post_success_design_audit=resolved_post_success_design_audit,
             max_cost_usd=max_cost_usd,
             final_code=final_code,
             urdf_xml=urdf_xml,
@@ -1692,7 +1715,7 @@ async def _execute_single_run(
                     sdk_docs_mode=sdk_docs_mode,
                     openai_transport=openai_transport,
                     openai_reasoning_summary=openai_reasoning_summary,
-                    post_success_design_audit=post_success_design_audit,
+                    post_success_design_audit=resolved_post_success_design_audit,
                     max_cost_usd=max_cost_usd,
                 ),
             ),

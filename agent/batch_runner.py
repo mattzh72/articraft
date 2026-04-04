@@ -25,6 +25,7 @@ from agent.runner import (
     _build_single_run_context,
     _execute_single_run,
     _relative_to_repo,
+    _resolve_post_success_design_audit,
     _timestamp_token,
 )
 from agent.runtime_limits import BatchRuntimeLimits
@@ -720,6 +721,11 @@ def _parse_batch_row(
     )
     if post_success_design_audit is None:
         post_success_design_audit = default_post_success_design_audit
+    post_success_design_audit = _resolve_post_success_design_audit(
+        provider=provider,
+        model_id=model_id,
+        enabled=post_success_design_audit,
+    )
 
     category_title = _resolve_category_title(
         categories,

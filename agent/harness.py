@@ -18,7 +18,7 @@ from agent.compiler import (
     compile_urdf_report_maybe_timeout,
     persist_compile_success_artifacts,
 )
-from agent.cost import CostTracker, pricing_for_provider_model
+from agent.cost import CostTracker, is_flash_model, pricing_for_provider_model
 from agent.defaults import DEFAULT_MAX_TURNS
 from agent.feedback import (
     compile_signal_bundle_from_exception,
@@ -206,6 +206,20 @@ def _prompt_cache_retention_from_env(*, model_id: str) -> Optional[str]:
     return value
 
 
+def _resolve_post_success_design_audit(
+    *,
+    provider: str,
+    model_id: str,
+    enabled: bool,
+) -> bool:
+    if provider == "gemini" and is_flash_model(model_id):
+        # Gemini Flash tends to turn the extra post-success audit turn into a
+        # redundant verify/probe/compile loop after a clean compile, so keep
+        # the clean-compile exit path direct for Flash runs.
+        return False
+    return bool(enabled)
+
+
 def _log_compile_signals(bundle: CompileSignalBundle) -> None:
     failures = sum(1 for signal in bundle.signals if signal.severity == "failure")
     warnings = sum(1 for signal in bundle.signals if signal.severity == "warning")
@@ -308,7 +322,6 @@ class ArticraftAgent:
         self._last_compile_failure_sig: Optional[str] = None
         self._consecutive_compile_failure_count = 0
         self._post_success_design_audit_sent = False
-        self._post_success_design_audit_enabled = post_success_design_audit
         self.checkpoint_urdf_path = (
             Path(checkpoint_urdf_path).resolve() if checkpoint_urdf_path else None
         )
@@ -346,6 +359,11 @@ class ArticraftAgent:
             raise ValueError(f"Unsupported provider: {provider}")
 
         actual_model_id = self.llm.model_id
+        self._post_success_design_audit_enabled = _resolve_post_success_design_audit(
+            provider=provider_norm,
+            model_id=actual_model_id,
+            enabled=post_success_design_audit,
+        )
         self.cost_tracker: Optional[CostTracker] = None
         self.max_cost_usd = max_cost_usd
         pricing = pricing_for_provider_model(provider_norm, actual_model_id)
@@ -443,6 +461,14 @@ class ArticraftAgent:
             trace_writer.write_message(msg)
 
     def _append_code_paste_nudge(self, conversation: list[dict]) -> None:
+        marker = {
+            "role": "assistant",
+            "content": "[Previous response pasted code and was discarded.]",
+        }
+        conversation.append(marker)
+        trace_writer = getattr(self, "trace_writer", None)
+        if trace_writer:
+            trace_writer.write_message(marker)
         self._append_guidance_message(conversation, self._code_paste_nudge_text())
 
     def _append_guidance_message(self, conversation: list[dict], content: str) -> None:
@@ -586,6 +612,13 @@ class ArticraftAgent:
         self._consecutive_compile_failure_count = 0
         return render_compile_signals(bundle)
 
+    def _render_reused_compile_tool_output(self, bundle: CompileSignalBundle) -> str:
+        return (
+            "Fresh compile already exists for the current code revision; `compile_model` was not re-run.\n"
+            "Treat that compile result as authoritative unless you are about to edit code for one specific unresolved defect.\n\n"
+            f"{self._render_compile_tool_output(bundle)}"
+        )
+
     def _maybe_inject_compile_signals(
         self,
         conversation: list[dict],
@@ -720,7 +753,7 @@ class ArticraftAgent:
         cached_report = self._last_successful_compile_report
         if self._latest_code_is_fresh() and cached_report is not None:
             return ToolResult(
-                output=self._render_compile_tool_output(cached_report.signal_bundle),
+                output=self._render_reused_compile_tool_output(cached_report.signal_bundle),
                 compilation={"status": "success", "error": None},
                 tool_call_id=tool_call_id,
             )
@@ -861,17 +894,20 @@ class ArticraftAgent:
         if self.provider == "openai":
             return (
                 "<tool_use_rules>\n"
-                "- Do not paste code in your response.\n"
+                "- The previous assistant response pasted code and was discarded. Ignore it.\n"
+                "- Source of truth is the file on disk, not the discarded text.\n"
                 "- Use tools to apply your changes.\n"
                 "- Use read_file to fetch exact current lines, then apply_patch for edits.\n"
-                "- Do not provide file_path.\n"
+                "- If the latest compile already covers the current revision and you cannot name one specific defect, conclude.\n"
                 "</tool_use_rules>"
             )
         return (
             "<tool_use_rules>\n"
-            "- Do not paste code in your response.\n"
+            "- The previous assistant response pasted code and was discarded. Ignore it.\n"
+            "- Source of truth is the file on disk, not the discarded text.\n"
             "- Use tools to apply your changes.\n"
             "- Use read_code to fetch exact current text, then edit_code for edits.\n"
+            "- If the latest compile already covers the current revision and you cannot name one specific defect, conclude.\n"
             '- If the editable section is empty, initialize it with edit_code using old_string="".\n'
             "</tool_use_rules>"
         )
@@ -1040,6 +1076,26 @@ class ArticraftAgent:
             return result, tool_message
 
         if func_name == "compile_model":
+            unexpected = sorted(func_args.keys())
+            if unexpected:
+                result = ToolResult(
+                    error=(
+                        f"Invalid parameters for {func_name}. Unexpected parameters: {unexpected}"
+                    ),
+                    tool_call_id=tool_id,
+                )
+                tool_message = {
+                    "role": "tool",
+                    "tool_call_id": tool_id,
+                    "name": func_name,
+                    "tool_type": call_type if call_type == "custom" else "function",
+                    "content": json.dumps(
+                        {k: v for k, v in result.to_dict().items() if k != "tool_call_id"}
+                    ),
+                }
+                if thought_signature:
+                    tool_message["thought_signature"] = thought_signature
+                return result, tool_message
             result = await self._execute_compile_model(tool_call_id=tool_id)
             tool_message = {
                 "role": "tool",
@@ -1053,9 +1109,6 @@ class ArticraftAgent:
             if thought_signature:
                 tool_message["thought_signature"] = thought_signature
             return result, tool_message
-
-        func_args.pop("file_path", None)
-        func_args["file_path"] = self.file_path
 
         if func_name == "edit_code":
             try:
@@ -1122,6 +1175,9 @@ class ArticraftAgent:
                     tool_call_id=tool_id,
                 )
             else:
+                bind_file_path = getattr(invocation, "bind_file_path", None)
+                if callable(bind_file_path):
+                    bind_file_path(self.file_path)
                 result = await invocation.execute()
                 result.tool_call_id = tool_id
                 if result.is_success() and func_name == "find_examples":
@@ -1403,8 +1459,12 @@ class ArticraftAgent:
             has_assistant_payload = any(
                 key in assistant_message for key in ("content", "tool_calls", "thought_summary")
             )
-            if has_assistant_payload:
+            pasted_code = contains_code_in_text(text)
+            if has_assistant_payload and not pasted_code:
                 conversation.append(assistant_message)
+                if self.trace_writer:
+                    self.trace_writer.write_message(assistant_message)
+            elif has_assistant_payload and pasted_code:
                 if self.trace_writer:
                     self.trace_writer.write_message(assistant_message)
             else:
@@ -1462,7 +1522,7 @@ class ArticraftAgent:
 
             completed_turns += 1
 
-            if contains_code_in_text(text):
+            if pasted_code:
                 self._append_code_paste_nudge(conversation)
                 self.display.end_turn(success=True)
                 continue

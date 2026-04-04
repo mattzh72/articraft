@@ -129,9 +129,35 @@ def test_execute_compile_model_reuses_cached_success_for_current_revision() -> N
     assert compile_calls == 1
     assert agent._compile_attempt_count == 1
     assert agent._last_successful_compile_revision == 2
-    assert first.output == second.output
     assert first.compilation == {"status": "success", "error": None}
     assert second.compilation == {"status": "success", "error": None}
+    assert "Compile passed cleanly." in str(first.output)
+    assert "Fresh compile already exists for the current code revision" in str(second.output)
+    assert "Treat that compile result as authoritative" in str(second.output)
+
+
+def test_flash_model_disables_post_success_design_audit_by_default(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+) -> None:
+    class _FlashLLM:
+        model_id = "gemini-3-flash-preview"
+
+        def __init__(self, *args: object, **kwargs: object) -> None:
+            return None
+
+        async def close(self) -> None:
+            return None
+
+    monkeypatch.setattr(harness, "GeminiLLM", _FlashLLM)
+
+    agent = ArticraftAgent(
+        file_path=str(tmp_path / "model.py"),
+        provider="gemini",
+        display_enabled=False,
+    )
+
+    assert agent._post_success_design_audit_enabled is False
 
 
 def test_execute_compile_model_failure_leaves_latest_revision_stale() -> None:
@@ -169,6 +195,80 @@ def test_execute_compile_model_failure_leaves_latest_revision_stale() -> None:
     }
     assert "<compile_signals>" in str(result.output)
     assert "bad loft" in str(result.output)
+
+
+def test_run_discards_pasted_code_and_replaces_it_with_recovery_messages(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+) -> None:
+    class _SequenceLLM:
+        model_id = "gemini-2.5-pro"
+
+        def __init__(self, *args: object, **kwargs: object) -> None:
+            self._responses = [
+                {"content": "```python\nprint('bad')\n```", "tool_calls": []},
+                {"content": "Done.", "tool_calls": []},
+                {
+                    "content": "",
+                    "tool_calls": [
+                        {
+                            "id": "call_compile",
+                            "type": "function",
+                            "function": {"name": "compile_model", "arguments": "{}"},
+                        }
+                    ],
+                },
+                {"content": "Done.", "tool_calls": []},
+            ]
+
+        async def generate_with_tools(
+            self, *, system_prompt: str, messages: list[dict], tools: list[dict]
+        ) -> dict:
+            assert tools
+            return self._responses.pop(0)
+
+        async def close(self) -> None:
+            return None
+
+    report = CompileReport(
+        urdf_xml="<robot />",
+        warnings=[],
+        signal_bundle=build_compile_signal_bundle(status="success"),
+    )
+
+    monkeypatch.setattr(harness, "GeminiLLM", _SequenceLLM)
+    agent = ArticraftAgent(
+        file_path=str(tmp_path / "model.py"),
+        provider="gemini",
+        max_turns=6,
+        display_enabled=False,
+        post_success_design_audit=False,
+    )
+    agent.tool_registry = ToolRegistry([CompileModelTool()])
+
+    async def fake_compile() -> CompileReport:
+        return report
+
+    async def fake_persist(_: str) -> None:
+        return None
+
+    agent._compile_urdf_report_async = fake_compile
+    agent._persist_compile_success_checkpoint_async = fake_persist
+
+    result = asyncio.run(agent.run("make a hinge"))
+
+    assert result.success is True
+    assert "print('bad')" not in json.dumps(result.conversation)
+    assert any(
+        message.get("role") == "assistant"
+        and message.get("content") == "[Previous response pasted code and was discarded.]"
+        for message in result.conversation
+    )
+    assert any(
+        message.get("role") == "user"
+        and "Source of truth is the file on disk" in str(message.get("content", ""))
+        for message in result.conversation
+    )
 
 
 def test_mark_code_mutated_invalidates_fresh_compile_without_rearming_audit() -> None:

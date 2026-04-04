@@ -348,6 +348,7 @@ class GeminiLLM:
         self._cached_content_name: str | None = None
         self._cached_content_expire_time: datetime | None = None
         self._cached_prefix_digest: str | None = None
+        self._token_counting_disabled_reason: str | None = None
 
     def _sync_messages_state(self, messages: list[dict]) -> None:
         if not messages:
@@ -449,6 +450,14 @@ class GeminiLLM:
             return None
         return self._cached_content_name
 
+    def _maybe_disable_token_counting(self, exc: BaseException) -> str | None:
+        if self._token_counting_disabled_reason is not None:
+            return self._token_counting_disabled_reason
+        if not _is_unsupported_count_tokens_exception(exc):
+            return None
+        self._token_counting_disabled_reason = "Gemini token counting disabled for this run because count_tokens rejected the request shape."
+        return self._token_counting_disabled_reason
+
     def _build_generate_config(
         self,
         *,
@@ -498,6 +507,20 @@ class GeminiLLM:
             return []
 
         prefix_digest = _prefix_digest(system_prompt, tools, immutable_prefix_messages)
+        if self._token_counting_disabled_reason is not None:
+            trace_events.append(
+                ProviderTraceEvent(
+                    event_type="cache_skip",
+                    payload={
+                        "kind": "cache_skip",
+                        "reason": "token_counting_disabled",
+                        "model_id": self.model_id,
+                        "prefix_digest": prefix_digest,
+                        "error": self._token_counting_disabled_reason,
+                    },
+                )
+            )
+            return []
         prefix_token_count: int | None = None
         try:
             prefix_token_count = await self._count_prefix_tokens(
@@ -506,12 +529,17 @@ class GeminiLLM:
                 messages=immutable_prefix_messages,
             )
         except Exception as exc:
+            disabled_reason = self._maybe_disable_token_counting(exc)
             payload = {
                 "kind": "cache_skip",
-                "reason": "prefix_token_count_failed",
+                "reason": (
+                    "token_counting_disabled"
+                    if disabled_reason is not None
+                    else "prefix_token_count_failed"
+                ),
                 "model_id": self.model_id,
                 "prefix_digest": prefix_digest,
-                "error": str(exc),
+                "error": disabled_reason or str(exc),
             }
             trace_events.append(ProviderTraceEvent(event_type="cache_skip", payload=payload))
             return []
@@ -738,67 +766,50 @@ class GeminiLLM:
         cached_content_name: str | None,
         context: str,
     ) -> int:
+        if self._token_counting_disabled_reason is not None:
+            raise RuntimeError(self._token_counting_disabled_reason)
         if not self._clients:
             raise RuntimeError("Gemini token counting requires a real API client")
-        from google.genai import _common, types  # type: ignore
-        from google.genai import models as genai_models
+        from google.genai import types  # type: ignore
 
         client = self._next_client()
-        config = self._build_generate_config(
-            system_prompt=system_prompt,
-            tools=tools,
-            cached_content_name=cached_content_name,
+        tool_declarations = self._convert_tools(tools)
+        config = types.CountTokensConfig(
+            system_instruction=None if cached_content_name else system_prompt,
+            tools=(
+                [types.Tool(function_declarations=tool_declarations)]
+                if tool_declarations and not cached_content_name
+                else None
+            ),
         )
-        parameter_model = types._GenerateContentParameters(
-            model=self.model_id,
-            contents=self._convert_messages(messages),
-            config=config,
-        )
-        if client._api_client.vertexai:
-            request_dict = genai_models._GenerateContentParameters_to_vertex(
-                client._api_client,
-                parameter_model,
-                None,
-                parameter_model,
-            )
-        else:
-            request_dict = genai_models._GenerateContentParameters_to_mldev(
-                client._api_client,
-                parameter_model,
-                None,
-                parameter_model,
-            )
-        request_url_dict = request_dict.get("_url")
-        path = (
-            "{model}:countTokens".format_map(request_url_dict)
-            if request_url_dict
-            else "{model}:countTokens"
-        )
-        request_dict.pop("config", None)
-        request_dict = _common.convert_to_dict(request_dict)
-        request_dict = _common.encode_unserializable_types(request_dict)
+        contents = self._convert_messages(messages)
 
         async def _call() -> int:
-            http_response = await client._api_client.async_request("post", path, request_dict)
-            body = getattr(http_response, "body", None)
-            if isinstance(body, str):
-                body = json.loads(body)
-            if not isinstance(body, dict):
-                raise RuntimeError("Gemini countTokens response did not include a JSON body")
-            total_tokens = body.get("totalTokens") or body.get("total_tokens")
+            response = await client.aio.models.count_tokens(
+                model=self.model_id,
+                contents=contents,
+                config=config,
+            )
+            total_tokens = getattr(response, "total_tokens", None)
             if not isinstance(total_tokens, int):
                 raise RuntimeError("Gemini countTokens response did not include totalTokens")
             return total_tokens
 
-        return await _async_retry(
-            _call,
-            max_attempts=1 + max(0, self.max_retries),
-            should_retry=_should_retry_gemini_exception,
-            base_delay=self.retry_base_seconds,
-            max_delay=self.retry_max_seconds,
-            logger=_logger,
-            context=context,
-        )
+        try:
+            return await _async_retry(
+                _call,
+                max_attempts=1 + max(0, self.max_retries),
+                should_retry=_should_retry_gemini_exception,
+                base_delay=self.retry_base_seconds,
+                max_delay=self.retry_max_seconds,
+                logger=_logger,
+                context=context,
+            )
+        except Exception as exc:
+            disabled_reason = self._maybe_disable_token_counting(exc)
+            if disabled_reason is not None:
+                raise RuntimeError(disabled_reason) from exc
+            raise
 
     async def _compact_messages(
         self,
@@ -988,12 +999,17 @@ class GeminiLLM:
                 if item_type == "text":
                     text = item.get("text")
                     if isinstance(text, str) and text:
-                        parts.append(
-                            Part(
-                                text=text,
-                                thought_signature=_decode_signature(signature),
-                            )
-                        )
+                        part_kwargs: dict[str, Any] = {
+                            "text": text,
+                            "thought_signature": _decode_signature(signature),
+                        }
+                        if "thought" in item:
+                            part_kwargs["thought"] = bool(item.get("thought", False))
+                        try:
+                            parts.append(Part(**part_kwargs))
+                        except TypeError:
+                            part_kwargs.pop("thought", None)
+                            parts.append(Part(**part_kwargs))
                 elif item_type == "function_call":
                     name = item.get("name", "")
                     args = item.get("arguments", {})
@@ -1534,6 +1550,23 @@ def _extract_http_status(exc: BaseException) -> Optional[int]:
         return status
 
     return None
+
+
+def _is_unsupported_count_tokens_exception(exc: BaseException) -> bool:
+    status = _extract_http_status(exc)
+    if status is not None and status != 400:
+        return False
+    message = str(exc).lower().replace('\\"', '"')
+    if "invalid json payload received" not in message or "unknown name" not in message:
+        return False
+    return any(
+        needle in message
+        for needle in (
+            'unknown name "systeminstruction"',
+            'unknown name "tools"',
+            'unknown name "generationconfig"',
+        )
+    )
 
 
 def _should_retry_gemini_exception(exc: BaseException) -> bool:

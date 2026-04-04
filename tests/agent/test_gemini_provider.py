@@ -1,7 +1,9 @@
 from __future__ import annotations
 
 import asyncio
+import base64
 from datetime import datetime, timezone
+from types import SimpleNamespace
 
 from agent.providers.gemini import (
     GeminiLLM,
@@ -283,6 +285,134 @@ def test_close_emits_cache_delete_event() -> None:
             "accounting_status": "not_billed_v1",
         }
     ]
+
+
+def test_convert_message_preserves_thought_flag_when_replaying_google_parts() -> None:
+    provider = GeminiLLM(dry_run=True)
+    signature = base64.b64encode(b"sig").decode("ascii")
+
+    content = provider._convert_message(
+        {
+            "role": "assistant",
+            "extra_content": {
+                "google": {
+                    "parts": [
+                        {
+                            "type": "text",
+                            "text": "internal summary",
+                            "thought": True,
+                            "thought_signature": signature,
+                        },
+                        {
+                            "type": "function_call",
+                            "name": "compile_model",
+                            "arguments": {},
+                            "thought_signature": signature,
+                        },
+                    ]
+                }
+            },
+        }
+    )
+
+    thought_part, tool_part = content.parts
+    assert content.role == "model"
+    assert thought_part.text == "internal summary"
+    assert thought_part.thought is True
+    assert thought_part.thought_signature == b"sig"
+    assert tool_part.function_call.name == "compile_model"
+    assert tool_part.thought_signature == b"sig"
+
+
+def test_count_generate_request_tokens_uses_sdk_count_tokens() -> None:
+    provider = GeminiLLM(dry_run=True)
+    captured: dict[str, object] = {}
+
+    class _FakeModels:
+        async def count_tokens(
+            self, *, model: str, contents: list[object], config: object
+        ) -> object:
+            captured["model"] = model
+            captured["contents"] = contents
+            captured["config"] = config
+            return SimpleNamespace(total_tokens=321)
+
+    provider._clients = [SimpleNamespace(aio=SimpleNamespace(models=_FakeModels()))]
+
+    total_tokens = asyncio.run(
+        provider._count_generate_request_tokens(
+            system_prompt="system",
+            tools=[
+                {
+                    "type": "function",
+                    "function": {
+                        "name": "compile_model",
+                        "description": "Compile the model.",
+                        "parameters": {"type": "object", "properties": {}},
+                    },
+                }
+            ],
+            messages=[{"role": "user", "content": "task"}],
+            cached_content_name=None,
+            context="test",
+        )
+    )
+
+    config = captured["config"]
+    assert total_tokens == 321
+    assert captured["model"] == provider.model_id
+    assert len(captured["contents"]) == 1
+    assert getattr(config, "system_instruction") == "system"
+    assert len(getattr(config, "tools") or []) == 1
+
+
+def test_prepare_next_request_disables_prefix_token_count_after_unsupported_error() -> None:
+    provider = GeminiLLM(dry_run=True)
+    count_attempts = 0
+
+    class _UnsupportedCountTokensError(RuntimeError):
+        status_code = 400
+
+    async def fake_count_prefix_tokens(
+        *, system_prompt: str, tools: list[dict], messages: list[dict]
+    ) -> int:
+        nonlocal count_attempts
+        count_attempts += 1
+        raise _UnsupportedCountTokensError(
+            '400 INVALID_ARGUMENT. {"error": {"message": "Invalid JSON payload received. '
+            'Unknown name \\"systemInstruction\\": Cannot find field.\\n'
+            'Invalid JSON payload received. Unknown name \\"tools\\": Cannot find field.\\n'
+            'Invalid JSON payload received. Unknown name \\"generationConfig\\": Cannot find field."}}'
+        )
+
+    provider._count_prefix_tokens = fake_count_prefix_tokens  # type: ignore[method-assign]
+
+    first = asyncio.run(
+        provider.prepare_next_request(
+            system_prompt="system",
+            messages=[
+                {"role": "user", "content": "sdk docs"},
+                {"role": "user", "content": "task"},
+            ],
+            tools=[],
+            completed_turns=0,
+        )
+    )
+    second = asyncio.run(
+        provider.prepare_next_request(
+            system_prompt="system",
+            messages=[
+                {"role": "user", "content": "sdk docs"},
+                {"role": "user", "content": "task"},
+            ],
+            tools=[],
+            completed_turns=1,
+        )
+    )
+
+    assert count_attempts == 1
+    assert first.trace_events[0].payload["reason"] == "token_counting_disabled"
+    assert second.trace_events[0].payload["reason"] == "token_counting_disabled"
 
 
 def test_unsupported_gemini_api_value_error_is_not_retried() -> None:
