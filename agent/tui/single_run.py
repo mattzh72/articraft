@@ -127,36 +127,30 @@ class SingleRunDisplay:
         self,
         result: Any,
         compilation: Optional[dict[str, Any]],
-    ) -> tuple[bool, str | None, list[str]]:
+    ) -> tuple[bool, str | None, bool]:
         compile_ok = compilation is not None and compilation.get("status") == "success"
         if not isinstance(result, str):
-            return compile_ok, None if compile_ok else str(result), []
+            if result is None and not compile_ok and compilation and compilation.get("error"):
+                return compile_ok, str(compilation["error"]), False
+            return compile_ok, None if result is None else str(result), False
 
-        summary = self._extract_tagged_block(result, "summary")
-        failures = self._extract_tagged_block(result, "failures")
-        warnings = self._extract_tagged_block(result, "warnings")
-
-        warning_lines = [
-            line[2:].strip()
-            for line in (warnings or "").splitlines()
-            if line.strip().startswith("- ")
+        has_warnings = bool(self._extract_tagged_block(result, "warnings"))
+        blocks = [
+            self._extract_tagged_block(result, tag)
+            for tag in ("summary", "failures", "warnings", "notes", "response_rules")
         ]
-        failure_lines = [
-            line[2:].strip()
-            for line in (failures or "").splitlines()
-            if line.strip().startswith("- ")
+        visible_blocks = [
+            block.strip() for block in blocks if isinstance(block, str) and block.strip()
         ]
+        if visible_blocks:
+            return compile_ok, "\n\n".join(visible_blocks), has_warnings
 
-        if compile_ok:
-            return True, None, warning_lines
-
-        error_lines: list[str] = []
-        if summary:
-            error_lines.append(summary)
-        elif compilation and compilation.get("error"):
-            error_lines.append(str(compilation["error"]))
-        error_lines.extend(failure_lines[:3])
-        return False, "\n".join(error_lines).strip() or None, warning_lines
+        cleaned = result.strip()
+        if cleaned:
+            return compile_ok, cleaned, has_warnings
+        if not compile_ok and compilation and compilation.get("error"):
+            return compile_ok, str(compilation["error"]), False
+        return compile_ok, None, False
 
     def _supports_live_timer(self) -> bool:
         stream = getattr(self.console, "file", None)
@@ -398,15 +392,15 @@ class SingleRunDisplay:
             return
 
         if tool_name == "compile_model":
-            compile_success, compile_error, compile_warnings = self._parse_compile_output(
+            compile_success, compile_details, compile_has_warnings = self._parse_compile_output(
                 result,
                 compilation,
             )
             self.add_compile_result(
                 success=compile_success,
                 duration=duration,
-                error=compile_error,
-                warnings=compile_warnings,
+                details=compile_details,
+                has_warnings=compile_has_warnings,
             )
             return
 
@@ -469,8 +463,8 @@ class SingleRunDisplay:
         self,
         success: bool,
         duration: float,
-        error: Optional[str] = None,
-        warnings: Optional[list[str]] = None,
+        details: Optional[str] = None,
+        has_warnings: bool = False,
     ):
         if not self.enabled:
             return
@@ -484,12 +478,9 @@ class SingleRunDisplay:
         line.append(f" {format_duration(duration)}", style="dim")
         self.console.print(line)
 
-        if error:
-            self._print_indented_block(error, style="red")
-
-        if warnings:
-            for w in warnings[:3]:
-                warn = Text()
-                warn.append("            ", style="dim")
-                warn.append(truncate_text(w, 80), style="yellow")
-                self.console.print(warn)
+        if details:
+            if success and has_warnings:
+                detail_style = "yellow"
+            else:
+                detail_style = "green" if success else "red"
+            self._print_indented_block(details, style=detail_style)

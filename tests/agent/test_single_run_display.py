@@ -153,6 +153,7 @@ def test_add_tool_call_renders_compile_model_warning_details() -> None:
             "</summary>\n\n"
             "<warnings>\n"
             "- [geometry_overlap] Geometry overlap check reported overlaps.\n"
+            "warn_if_overlaps(): pair=('base','door') depth=(0.001,0.002,0.003)\n"
             "</warnings>\n"
             "</compile_signals>"
         ),
@@ -161,7 +162,10 @@ def test_add_tool_call_renders_compile_model_warning_details() -> None:
 
     output = buffer.getvalue()
     assert "compile ✓" in output
+    assert "status=success failures=0 warnings=1 notes=0" in output
+    assert "Compile passed with warnings." in output
     assert "[geometry_overlap] Geometry overlap check reported overlaps." in output
+    assert "warn_if_overlaps(): pair=('base','door') depth=(0.001,0.002,0.003)" in output
 
 
 def test_add_tool_call_renders_compile_model_failure_details() -> None:
@@ -180,7 +184,12 @@ def test_add_tool_call_renders_compile_model_failure_details() -> None:
             "</summary>\n\n"
             "<failures>\n"
             "- [compile_runtime] ValueError: bad loft\n"
+            "Traceback line 1\n"
+            "Traceback line 2\n"
             "</failures>\n"
+            "\n<response_rules>\n"
+            "- Failures are blocking and should be investigated.\n"
+            "</response_rules>\n"
             "</compile_signals>"
         ),
         compilation={"status": "error", "error": "Primary issue: compile execution failed."},
@@ -188,8 +197,44 @@ def test_add_tool_call_renders_compile_model_failure_details() -> None:
 
     output = buffer.getvalue()
     assert "compile ✗" in output
+    assert "status=failure failures=1 warnings=0 notes=0" in output
     assert "Primary issue: compile execution failed." in output
     assert "[compile_runtime] ValueError: bad loft" in output
+    assert "Traceback line 1" in output
+    assert "Traceback line 2" in output
+    assert "Failures are blocking and should be investigated." in output
+
+
+def test_add_tool_call_renders_all_compile_warnings_without_truncating_count() -> None:
+    display, buffer = _make_display()
+
+    display.add_tool_call(
+        tool_name="compile_model",
+        args={},
+        success=True,
+        duration=0.25,
+        result=(
+            "<compile_signals>\n"
+            "<summary>\n"
+            "status=success failures=0 warnings=4 notes=0\n"
+            "Compile passed with warnings.\n"
+            "</summary>\n\n"
+            "<warnings>\n"
+            "- [warning_1] first warning\n"
+            "- [warning_2] second warning\n"
+            "- [warning_3] third warning\n"
+            "- [warning_4] fourth warning\n"
+            "</warnings>\n"
+            "</compile_signals>"
+        ),
+        compilation={"status": "success", "error": None},
+    )
+
+    output = buffer.getvalue()
+    assert "[warning_1] first warning" in output
+    assert "[warning_2] second warning" in output
+    assert "[warning_3] third warning" in output
+    assert "[warning_4] fourth warning" in output
 
 
 def test_add_compaction_event_shows_saved_tokens_and_billed_cost_in_summary() -> None:
