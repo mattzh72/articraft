@@ -84,7 +84,6 @@ def test_openai_prompt_resolution_and_payload_preview() -> None:
     )
     assert "FREEFORM tool" in instructions
     assert "write_code" not in instructions
-    assert "Do not provide `file_path`" in instructions
     assert "Use `compile_model` explicitly to run full compile + QC" in instructions
 
     # Three hard requirements
@@ -101,7 +100,7 @@ def test_openai_prompt_resolution_and_payload_preview() -> None:
 
     # Probe and testing guidance
     assert "inspection-only" in instructions
-    assert "lexical search over curated base SDK examples" in instructions
+    assert "lexical search over curated examples for the active SDK" in instructions
     assert "<compile_signals>" in instructions
     assert "SDK docs" in instructions
     assert "object-first" in instructions
@@ -109,7 +108,9 @@ def test_openai_prompt_resolution_and_payload_preview() -> None:
     assert "exactly one root part" in instructions
     assert "Use `run_tests()` for prompt-specific exact checks" in instructions
     assert "treat that name as a contract" in instructions
-    assert "means a gap, not an overlap" in instructions
+    assert "Do not provide `file_path`" not in instructions
+    assert "missing exact geometry" not in instructions
+    assert "means a gap, not an overlap" not in instructions
 
     # Cache key
     assert payload["prompt_cache_key"].startswith("ac1:")
@@ -165,11 +166,14 @@ def test_openai_hybrid_payload_preview_includes_find_examples_tool() -> None:
     assert "compile_model" in tool_names
     assert "probe_model" in tool_names
     assert "find_examples" in tool_names
+    assert all(
+        tool.get("type") != "function" or tool.get("strict") is True for tool in payload["tools"]
+    )
     assert (
         "Use ONLY `read_file`, `apply_patch`, `compile_model`, `probe_model`, and `find_examples`"
         in payload["instructions"]
     )
-    assert "lexical search over curated hybrid/CadQuery examples" in payload["instructions"]
+    assert "lexical search over curated examples for the active SDK" in payload["instructions"]
 
 
 def test_openai_prompt_cache_key_is_stable_across_user_prompt_changes() -> None:
@@ -325,7 +329,7 @@ def test_gemini_prompt_resolution_and_payload_preview() -> None:
 
     # Probe and testing
     assert "inspection-only" in gemini_instructions
-    assert "lexical search over curated base SDK examples" in gemini_instructions
+    assert "lexical search over curated examples for the active SDK" in gemini_instructions
     assert "object-first" in gemini_instructions
     assert "find_floating_parts(...)" in gemini_instructions
     assert "exactly one root part" in gemini_instructions
@@ -354,6 +358,6 @@ def test_gemini_hybrid_payload_preview_includes_find_examples_tool() -> None:
         in payload["config"]["system_instruction"]
     )
     assert (
-        "lexical search over curated hybrid/CadQuery examples"
+        "lexical search over curated examples for the active SDK"
         in payload["config"]["system_instruction"]
     )

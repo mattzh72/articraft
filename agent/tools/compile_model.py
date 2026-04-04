@@ -4,15 +4,17 @@ CompileModel tool - Advertise explicit compile/QC to the model.
 
 from __future__ import annotations
 
-from pydantic import BaseModel
+from agent.tools.base import (
+    BaseDeclarativeTool,
+    BaseToolInvocation,
+    ToolParamsModel,
+    ToolResult,
+    make_tool_schema,
+)
 
-from agent.tools.base import BaseDeclarativeTool, BaseToolInvocation, ToolResult, make_tool_schema
 
-
-class CompileModelParams(BaseModel):
+class CompileModelParams(ToolParamsModel):
     """Parameters for compile_model tool."""
-
-    file_path: str | None = None
 
 
 class CompileModelInvocation(BaseToolInvocation[CompileModelParams, str]):
@@ -23,7 +25,7 @@ class CompileModelInvocation(BaseToolInvocation[CompileModelParams, str]):
     """
 
     def get_description(self) -> str:
-        return f"Compile current model file {self.params.file_path}"
+        return "Compile current model file"
 
     async def execute(self) -> ToolResult:
         return ToolResult(error="compile_model must be handled by the harness")
@@ -44,8 +46,7 @@ class CompileModelTool(BaseDeclarativeTool):
                 "Do not manually author that baseline stack in `run_tests()`; reserve `run_tests()` "
                 "for exact checks, targeted poses, and explicit allowances.\n\n"
                 "The tool returns the same structured `<compile_signals>` block used by the harness "
-                "for clean success, warnings, or failures.\n\n"
-                "This tool takes no parameters; the harness supplies the current file automatically."
+                "for clean success, warnings, or failures."
             ),
             parameters={},
             required=[],

@@ -5,6 +5,7 @@ Base classes for tools
 from abc import ABC, abstractmethod
 from typing import Any, Generic, Optional, TypeVar
 
+from pydantic import BaseModel, ConfigDict
 
 TParams = TypeVar("TParams")
 TResult = TypeVar("TResult")
@@ -80,6 +81,12 @@ class ToolResult:
         return result
 
 
+class ToolParamsModel(BaseModel):
+    """Strict parameter model for public tool-call arguments."""
+
+    model_config = ConfigDict(extra="forbid")
+
+
 class BaseToolInvocation(ABC, Generic[TParams, TResult]):
     """Base class for tool invocations"""
 
@@ -95,6 +102,17 @@ class BaseToolInvocation(ABC, Generic[TParams, TResult]):
     async def execute(self) -> ToolResult:
         """Execute the tool and return result"""
         pass
+
+
+class BoundFileToolInvocation(BaseToolInvocation[TParams, TResult], ABC):
+    """Invocation that operates on the harness-bound target file."""
+
+    def __init__(self, params: TParams):
+        super().__init__(params)
+        self.file_path: str | None = None
+
+    def bind_file_path(self, file_path: str) -> None:
+        self.file_path = file_path
 
 
 class BaseDeclarativeTool(ABC):

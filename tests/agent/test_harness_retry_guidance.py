@@ -161,3 +161,34 @@ def test_missing_exact_geometry_loop_avoids_geometry_rewrite_advice() -> None:
     assert "This is compile failure 3 in a row." in content
     assert "does not call for a geometry rewrite" in content
     assert "Audit authored exact-name" in content
+
+
+def test_exact_contact_gap_guidance_is_targeted_in_compile_feedback() -> None:
+    agent = ArticraftAgent.__new__(ArticraftAgent)
+    agent._last_compile_failure_sig = None
+    agent._consecutive_compile_failure_count = 0
+    agent.trace_writer = None
+
+    bundle = build_compile_signal_bundle(
+        status="failure",
+        test_report=SDKTestReport(
+            passed=False,
+            checks_run=1,
+            checks=("hinge barrel bears on the frame boss",),
+            failures=(
+                SimpleNamespace(
+                    name="hinge barrel bears on the frame boss",
+                    details=(
+                        "min_distance=0.015 contact_tol=1e-06 "
+                        "elem_a='hinge_barrel' elem_b='frame_boss'"
+                    ),
+                ),
+            ),
+            warnings=(),
+            allowances=(),
+        ),
+    )
+    content = agent._append_compile_failure_signals([], bundle=bundle)
+
+    assert "This is a gap, not an overlap." in content
+    assert "verify that the tested pair is the right pair" in content

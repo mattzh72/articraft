@@ -1,5 +1,10 @@
 from __future__ import annotations
 
+import asyncio
+
+import pytest
+from pydantic import ValidationError
+
 from agent.tools import build_tool_registry
 
 
@@ -86,3 +91,24 @@ def test_provider_tool_registry_schemas() -> None:
     assert "short lexical query" in (
         find_examples_schema["function"]["parameters"]["properties"]["query"]["description"].lower()
     )
+
+
+def test_tool_registry_rejects_hidden_file_path_parameter() -> None:
+    openai_registry = build_tool_registry("openai", sdk_package="sdk")
+    gemini_registry = build_tool_registry("gemini", sdk_package="sdk")
+
+    with pytest.raises(ValidationError):
+        asyncio.run(
+            openai_registry.build_invocation(
+                "read_file",
+                {"offset": 1, "limit": 20, "file_path": "/tmp/model.py"},
+            )
+        )
+
+    with pytest.raises(ValidationError):
+        asyncio.run(
+            gemini_registry.build_invocation(
+                "read_code",
+                {"file_path": "/tmp/model.py"},
+            )
+        )

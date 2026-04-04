@@ -41,7 +41,7 @@ def test_compiled_openai_prompt_keeps_compact_contract_and_visual_test_gate() ->
         )
         assert "FREEFORM tool" in text
         assert "inspection-only" in text
-        assert "lexical search over curated base SDK examples" in text
+        assert "lexical search over curated examples for the active SDK" in text
         assert "Use `compile_model` explicitly to run full compile + QC" in text
 
         # Probe and testing

@@ -7,11 +7,11 @@ from __future__ import annotations
 import ast
 
 import aiofiles
-from pydantic import BaseModel
 
 from agent.tools.base import (
     BaseDeclarativeTool,
-    BaseToolInvocation,
+    BoundFileToolInvocation,
+    ToolParamsModel,
     ToolResult,
     make_tool_schema,
 )
@@ -22,28 +22,27 @@ from agent.tools.code_region import (
 )
 
 
-class WriteCodeParams(BaseModel):
+class WriteCodeParams(ToolParamsModel):
     """Parameters for write_code tool"""
 
-    file_path: str | None = None
     code: str
 
 
-class WriteCodeInvocation(BaseToolInvocation[WriteCodeParams, str]):
+class WriteCodeInvocation(BoundFileToolInvocation[WriteCodeParams, str]):
     """Invocation for replacing editable code"""
 
     def get_description(self) -> str:
         preview = self.params.code[:50].replace("\n", "\\n")
         if len(self.params.code) > 50:
             preview += "..."
-        return f"Rewrite editable code in {self.params.file_path}: '{preview}'"
+        return f"Rewrite editable code in current target file: '{preview}'"
 
     async def execute(self) -> ToolResult:
         try:
-            if not self.params.file_path:
+            if not self.file_path:
                 return ToolResult(error="file_path is required")
 
-            async with aiofiles.open(self.params.file_path, mode="r") as f:
+            async with aiofiles.open(self.file_path, mode="r") as f:
                 full_code = await f.read()
 
             region = find_code_region(full_code)
@@ -58,14 +57,14 @@ class WriteCodeInvocation(BaseToolInvocation[WriteCodeParams, str]):
                     )
 
             new_full_code = replace_editable_code(full_code, self.params.code)
-            validation = self._validate_python_syntax(new_full_code, self.params.file_path or "<string>")
+            validation = self._validate_python_syntax(new_full_code, self.file_path or "<string>")
 
-            async with aiofiles.open(self.params.file_path, mode="w") as f:
+            async with aiofiles.open(self.file_path, mode="w") as f:
                 await f.write(new_full_code)
 
             return ToolResult(output="Code rewritten successfully", compilation=validation)
         except FileNotFoundError:
-            return ToolResult(error=f"File {self.params.file_path} not found")
+            return ToolResult(error=f"File {self.file_path} not found")
         except Exception as exc:
             return ToolResult(error=f"Error writing code: {str(exc)}")
 
@@ -94,9 +93,7 @@ class WriteCodeInvocation(BaseToolInvocation[WriteCodeParams, str]):
         except SyntaxError as exc:
             editable_line = map_syntax_error_line_to_editable(full_code, exc.lineno)
             if editable_line is not None and editable_line != exc.lineno:
-                error_msg = (
-                    f"Syntax error: {exc.msg} (editable line {editable_line}, full line {exc.lineno})"
-                )
+                error_msg = f"Syntax error: {exc.msg} (editable line {editable_line}, full line {exc.lineno})"
             else:
                 error_msg = f"Syntax error: {exc.msg} (line {exc.lineno})"
             return {

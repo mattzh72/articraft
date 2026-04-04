@@ -4,11 +4,17 @@ ApplyPatch tool - Apply a Codex-style patch to the current target file.
 
 from __future__ import annotations
 
-import aiofiles
 from dataclasses import dataclass
-from pydantic import BaseModel
 
-from agent.tools.base import BaseDeclarativeTool, BaseToolInvocation, ToolResult, make_tool_schema
+import aiofiles
+
+from agent.tools.base import (
+    BaseDeclarativeTool,
+    BoundFileToolInvocation,
+    ToolParamsModel,
+    ToolResult,
+    make_tool_schema,
+)
 from agent.tools.code_region import map_syntax_error_line_to_editable
 
 APPLY_PATCH_LARK_GRAMMAR = """start: begin_patch hunk+ end_patch
@@ -39,42 +45,43 @@ class PatchHunk:
     lines: list[str]
 
 
-class ApplyPatchParams(BaseModel):
+class ApplyPatchParams(ToolParamsModel):
     """Parameters for apply_patch tool."""
 
-    file_path: str | None = None
     input: str
 
 
-class ApplyPatchInvocation(BaseToolInvocation[ApplyPatchParams, str]):
+class ApplyPatchInvocation(BoundFileToolInvocation[ApplyPatchParams, str]):
     """Invocation for applying Codex-style patches."""
 
     def get_description(self) -> str:
         preview = self.params.input[:80].replace("\n", "\\n")
         if len(self.params.input) > 80:
             preview += "..."
-        return f"Apply patch to {self.params.file_path}: '{preview}'"
+        return f"Apply patch to current target file: '{preview}'"
 
     async def execute(self) -> ToolResult:
         try:
-            if not self.params.file_path:
+            if not self.file_path:
                 return ToolResult(error="file_path is required")
             if not self.params.input.strip():
                 return ToolResult(error="input cannot be empty")
 
-            async with aiofiles.open(self.params.file_path, mode="r") as f:
+            async with aiofiles.open(self.file_path, mode="r") as f:
                 full_code = await f.read()
 
             hunks = _parse_patch(self.params.input)
             new_code = _apply_hunks(full_code, hunks)
-            validation = self._validate_python_syntax(new_code, self.params.file_path)
+            validation = self._validate_python_syntax(new_code, self.file_path)
 
-            async with aiofiles.open(self.params.file_path, mode="w") as f:
+            async with aiofiles.open(self.file_path, mode="w") as f:
                 await f.write(new_code)
 
-            return ToolResult(output=f"Patch applied successfully ({len(hunks)} hunks)", compilation=validation)
+            return ToolResult(
+                output=f"Patch applied successfully ({len(hunks)} hunks)", compilation=validation
+            )
         except FileNotFoundError:
-            return ToolResult(error=f"File {self.params.file_path} not found")
+            return ToolResult(error=f"File {self.file_path} not found")
         except ValueError as exc:
             return ToolResult(error=f"Invalid patch: {str(exc)}")
         except Exception as exc:
@@ -87,9 +94,7 @@ class ApplyPatchInvocation(BaseToolInvocation[ApplyPatchParams, str]):
         except SyntaxError as exc:
             editable_line = map_syntax_error_line_to_editable(full_code, exc.lineno)
             if editable_line is not None and editable_line != exc.lineno:
-                error_msg = (
-                    f"Syntax error: {exc.msg} (editable line {editable_line}, full line {exc.lineno})"
-                )
+                error_msg = f"Syntax error: {exc.msg} (editable line {editable_line}, full line {exc.lineno})"
             else:
                 error_msg = f"Syntax error: {exc.msg} (line {exc.lineno})"
             return {
@@ -110,8 +115,7 @@ class ApplyPatchTool(BaseDeclarativeTool):
             name="apply_patch",
             description=(
                 "Apply a patch in Codex apply_patch format.\n\n"
-                "Single-file mode: this run is bound to one target file by the harness.\n"
-                "Do not pass file_path; provide only the patch text in `input`.\n\n"
+                "Provide only the patch text in `input`.\n\n"
                 "Patch envelope:\n"
                 "*** Begin Patch\n"
                 "*** Update File: CURRENT_FILE\n"
@@ -265,7 +269,7 @@ def _apply_hunks(full_code: str, hunks: list[PatchHunk]) -> str:
                 f"hunk {index} could not be matched in the target file with exact text"
             )
 
-        lines = lines[:position] + new_block + lines[position + len(old_block):]
+        lines = lines[:position] + new_block + lines[position + len(old_block) :]
         search_start = position + len(new_block)
 
     rewritten = "\n".join(lines)

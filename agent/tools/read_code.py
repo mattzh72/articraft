@@ -3,38 +3,36 @@ ReadCode tool - Read a code file.
 """
 
 import aiofiles
-from pydantic import BaseModel
 
-from agent.tools.code_region import extract_editable_code
 from agent.tools.base import (
     BaseDeclarativeTool,
-    BaseToolInvocation,
+    BoundFileToolInvocation,
+    ToolParamsModel,
     ToolResult,
     make_tool_schema,
 )
+from agent.tools.code_region import extract_editable_code
 
 
-class ReadCodeParams(BaseModel):
+class ReadCodeParams(ToolParamsModel):
     """Parameters for read_code tool"""
 
-    file_path: str | None = None
 
-
-class ReadCodeInvocation(BaseToolInvocation[ReadCodeParams, str]):
+class ReadCodeInvocation(BoundFileToolInvocation[ReadCodeParams, str]):
     """Invocation for reading code file"""
 
     def get_description(self) -> str:
-        return f"Read code from {self.params.file_path}"
+        return "Read code from the current target file"
 
     async def execute(self) -> ToolResult:
         try:
-            if not self.params.file_path:
+            if not self.file_path:
                 return ToolResult(error="file_path is required")
-            async with aiofiles.open(self.params.file_path, mode="r") as f:
+            async with aiofiles.open(self.file_path, mode="r") as f:
                 full_code = await f.read()
             return ToolResult(output=extract_editable_code(full_code))
         except FileNotFoundError:
-            return ToolResult(error=f"File {self.params.file_path} not found")
+            return ToolResult(error=f"File {self.file_path} not found")
         except Exception as exc:
             return ToolResult(error=f"Error reading file: {str(exc)}")
 
@@ -50,7 +48,6 @@ class ReadCodeTool(BaseDeclarativeTool):
                 "Returns the editable user code as a plain string.\n\n"
                 "Use this tool when you need the latest exact text for incremental edits with edit_code.\n\n"
                 "Notes:\n"
-                "- This tool takes no parameters; the harness supplies the target file path.\n"
                 "- In scaffolded files, this returns only the editable user section.\n\n"
                 "Returns: The editable user code as a string."
             ),

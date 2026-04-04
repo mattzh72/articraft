@@ -5,22 +5,25 @@ import json
 import sys
 from pathlib import Path
 
-from pydantic import BaseModel
-
 from agent.prompts import normalize_sdk_package
 from agent.runtime_limits import BatchRuntimeLimits, local_work_slot
-from agent.tools.base import BaseDeclarativeTool, BaseToolInvocation, ToolResult, make_tool_schema
+from agent.tools.base import (
+    BaseDeclarativeTool,
+    BoundFileToolInvocation,
+    ToolParamsModel,
+    ToolResult,
+    make_tool_schema,
+)
 from agent.tools.probe_model.description import PROBE_MODEL_DESCRIPTION
 
 
-class ProbeModelParams(BaseModel):
-    file_path: str | None = None
+class ProbeModelParams(ToolParamsModel):
     code: str
     timeout_ms: int = 10_000
     include_stdout: bool = False
 
 
-class ProbeModelInvocation(BaseToolInvocation[ProbeModelParams, dict[str, object]]):
+class ProbeModelInvocation(BoundFileToolInvocation[ProbeModelParams, dict[str, object]]):
     def __init__(
         self,
         params: ProbeModelParams,
@@ -36,14 +39,14 @@ class ProbeModelInvocation(BaseToolInvocation[ProbeModelParams, dict[str, object
         preview = self.params.code[:50].replace("\n", "\\n")
         if len(self.params.code) > 50:
             preview += "..."
-        return f"Probe geometry in {self.params.file_path}: '{preview}'"
+        return f"Probe geometry in current target file: '{preview}'"
 
     async def execute(self) -> ToolResult:
-        if not self.params.file_path:
+        if not self.file_path:
             return ToolResult(error="file_path is required")
         if self.params.timeout_ms < 100:
             return ToolResult(error="timeout_ms must be >= 100")
-        file_path = Path(self.params.file_path).resolve()
+        file_path = Path(self.file_path).resolve()
         if not file_path.exists():
             return ToolResult(error=f"File {file_path} not found")
 

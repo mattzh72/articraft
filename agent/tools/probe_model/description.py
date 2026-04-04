@@ -8,9 +8,8 @@ def build_probe_model_description() -> str:
         """
         Execute a short Python snippet against the current bound `model.py` for inspection-only geometry diagnosis.
 
-        This tool is intended for inspection-only use and is bound to one target file by the harness.
-        Do not pass file paths. Use it when placements, clearances, containment, overlap risk,
-        or pose behavior are uncertain.
+        This tool is intended for inspection-only use on the current model file.
+        Use it when placements, clearances, containment, overlap risk, or pose behavior are uncertain.
 
         Execution contract:
         - Write ordinary Python code.

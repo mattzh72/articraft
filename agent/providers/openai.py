@@ -922,9 +922,7 @@ class OpenAILLM:
                         "description": func.get("description", ""),
                         "parameters": func.get("parameters")
                         or {"type": "object", "properties": {}},
-                        # Codex-style tools use non-strict schemas so optional fields
-                        # do not need to be listed in `required`.
-                        "strict": False,
+                        "strict": True,
                     }
                 )
         return converted

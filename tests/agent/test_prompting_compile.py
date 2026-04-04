@@ -67,7 +67,6 @@ def _assert_shared_contract(text: str, *, budget: int) -> None:
     assert "exactly one root part" in text
     assert "Use `run_tests()` for prompt-specific exact checks" in text
     assert "treat that name as a contract" in text
-    assert "means a gap, not an overlap" in text
     assert "real 3D interpenetration" in text
     assert "projected footprint check" in text
 
@@ -80,6 +79,9 @@ def _assert_shared_contract(text: str, *, budget: int) -> None:
 
     # SDK docs deference
     assert "SDK docs" in text
+    assert "Do not provide `file_path`" not in text
+    assert "missing exact geometry" not in text
+    assert "means a gap, not an overlap" not in text
 
     for fragment in DISALLOWED_FRAGMENTS:
         assert fragment not in text
@@ -102,7 +104,7 @@ def test_prompt_outputs_are_current() -> None:
     )
     assert "write_code" not in openai_text
     assert "FREEFORM tool" in openai_text
-    assert "lexical search over curated base SDK examples" in openai_text
+    assert "lexical search over curated examples for the active SDK" in openai_text
     assert "[weakly relevant]" in openai_text
     assert "Author visual geometry only; do not author collision geometry in `sdk`." in openai_text
     assert "Use `compile_model` explicitly to run full compile + QC" in openai_text
@@ -115,7 +117,7 @@ def test_prompt_outputs_are_current() -> None:
         in openai_hybrid_text
     )
     assert "FREEFORM tool" in openai_hybrid_text
-    assert "lexical search over curated hybrid/CadQuery examples" in openai_hybrid_text
+    assert "lexical search over curated examples for the active SDK" in openai_hybrid_text
     assert "[weakly relevant]" in openai_hybrid_text
     assert "Import from `sdk_hybrid`, not `sdk`" in openai_hybrid_text
     assert (
@@ -132,7 +134,7 @@ def test_prompt_outputs_are_current() -> None:
     )
     assert 'old_string=""' in gemini_text
     assert "write_code" not in gemini_text
-    assert "lexical search over curated base SDK examples" in gemini_text
+    assert "lexical search over curated examples for the active SDK" in gemini_text
     assert "[weakly relevant]" in gemini_text
     assert "Author visual geometry only; do not author collision geometry in `sdk`." in gemini_text
 
@@ -142,7 +144,7 @@ def test_prompt_outputs_are_current() -> None:
         "Use ONLY `read_code`, `edit_code`, `compile_model`, `probe_model`, and `find_examples`"
         in gemini_hybrid_text
     )
-    assert "lexical search over curated hybrid/CadQuery examples" in gemini_hybrid_text
+    assert "lexical search over curated examples for the active SDK" in gemini_hybrid_text
     assert "[weakly relevant]" in gemini_hybrid_text
     assert "Import from `sdk_hybrid`, not `sdk`" in gemini_hybrid_text
     assert (

@@ -3,11 +3,11 @@ EditCode tool - Make precise edits to code files using old_string/new_string
 """
 
 import aiofiles
-from pydantic import BaseModel
 
 from agent.tools.base import (
     BaseDeclarativeTool,
-    BaseToolInvocation,
+    BoundFileToolInvocation,
+    ToolParamsModel,
     ToolResult,
     make_tool_schema,
 )
@@ -18,31 +18,30 @@ from agent.tools.code_region import (
 )
 
 
-class EditCodeParams(BaseModel):
+class EditCodeParams(ToolParamsModel):
     """Parameters for edit_code tool"""
 
-    file_path: str | None = None
     old_string: str
     new_string: str
     replace_all: bool = False
 
 
-class EditCodeInvocation(BaseToolInvocation[EditCodeParams, str]):
+class EditCodeInvocation(BoundFileToolInvocation[EditCodeParams, str]):
     """Invocation for editing code file"""
 
     def get_description(self) -> str:
         preview = self.params.old_string[:50]
         if len(self.params.old_string) > 50:
             preview += "..."
-        return f"Edit code in {self.params.file_path}: replacing '{preview}'"
+        return f"Edit current target file: replacing '{preview}'"
 
     async def execute(self) -> ToolResult:
         try:
-            if not self.params.file_path:
+            if not self.file_path:
                 return ToolResult(error="file_path is required")
 
             # Load current code
-            async with aiofiles.open(self.params.file_path, mode="r") as f:
+            async with aiofiles.open(self.file_path, mode="r") as f:
                 full_code = await f.read()
 
             editable_code = extract_editable_code(full_code)
@@ -57,10 +56,8 @@ class EditCodeInvocation(BaseToolInvocation[EditCodeParams, str]):
                     )
                 new_editable_code = self.params.new_string
                 new_code = replace_editable_code(full_code, new_editable_code)
-                validation = self._validate_python_syntax(
-                    new_code, self.params.file_path or "<string>"
-                )
-                async with aiofiles.open(self.params.file_path, mode="w") as f:
+                validation = self._validate_python_syntax(new_code, self.file_path or "<string>")
+                async with aiofiles.open(self.file_path, mode="w") as f:
                     await f.write(new_code)
                 return ToolResult(output="Code edited successfully", compilation=validation)
 
@@ -92,10 +89,10 @@ class EditCodeInvocation(BaseToolInvocation[EditCodeParams, str]):
             new_code = replace_editable_code(full_code, new_editable_code)
 
             # Validate Python syntax
-            validation = self._validate_python_syntax(new_code, self.params.file_path or "<string>")
+            validation = self._validate_python_syntax(new_code, self.file_path or "<string>")
 
             # Save updated code
-            async with aiofiles.open(self.params.file_path, mode="w") as f:
+            async with aiofiles.open(self.file_path, mode="w") as f:
                 await f.write(new_code)
 
             # Build success message
@@ -107,7 +104,7 @@ class EditCodeInvocation(BaseToolInvocation[EditCodeParams, str]):
             return ToolResult(output=success_msg, compilation=validation)
 
         except FileNotFoundError:
-            return ToolResult(error=f"File {self.params.file_path} not found")
+            return ToolResult(error=f"File {self.file_path} not found")
         except Exception as e:
             return ToolResult(error=f"Error editing code: {str(e)}")
 

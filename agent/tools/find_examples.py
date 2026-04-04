@@ -2,14 +2,17 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from pydantic import BaseModel
-
 from agent.examples import search_example_documents
-from agent.tools.base import BaseDeclarativeTool, BaseToolInvocation, ToolResult, make_tool_schema
+from agent.tools.base import (
+    BaseDeclarativeTool,
+    BaseToolInvocation,
+    ToolParamsModel,
+    ToolResult,
+    make_tool_schema,
+)
 
 
-class FindExamplesParams(BaseModel):
-    file_path: str | None = None
+class FindExamplesParams(ToolParamsModel):
     query: str
     limit: int = 3
 

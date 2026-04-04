@@ -5,38 +5,39 @@ ReadFile tool - Read the current target file with line numbers.
 from __future__ import annotations
 
 import aiofiles
-from pydantic import BaseModel
 
-from agent.tools.base import BaseDeclarativeTool, BaseToolInvocation, ToolResult, make_tool_schema
+from agent.tools.base import (
+    BaseDeclarativeTool,
+    BoundFileToolInvocation,
+    ToolParamsModel,
+    ToolResult,
+    make_tool_schema,
+)
 
 
-class ReadFileParams(BaseModel):
+class ReadFileParams(ToolParamsModel):
     """Parameters for read_file tool."""
 
-    file_path: str | None = None
     offset: int = 1
     limit: int = 200
 
 
-class ReadFileInvocation(BaseToolInvocation[ReadFileParams, str]):
+class ReadFileInvocation(BoundFileToolInvocation[ReadFileParams, str]):
     """Invocation for reading the target file."""
 
     def get_description(self) -> str:
-        return (
-            f"Read file {self.params.file_path} "
-            f"(offset={self.params.offset}, limit={self.params.limit})"
-        )
+        return f"Read bound file (offset={self.params.offset}, limit={self.params.limit})"
 
     async def execute(self) -> ToolResult:
         try:
-            if not self.params.file_path:
+            if not self.file_path:
                 return ToolResult(error="file_path is required")
             if self.params.offset < 1:
                 return ToolResult(error="offset must be >= 1")
             if self.params.limit < 1:
                 return ToolResult(error="limit must be >= 1")
 
-            async with aiofiles.open(self.params.file_path, mode="r") as f:
+            async with aiofiles.open(self.file_path, mode="r") as f:
                 full_code = await f.read()
 
             lines = full_code.splitlines()
@@ -53,7 +54,7 @@ class ReadFileInvocation(BaseToolInvocation[ReadFileParams, str]):
             formatted = [f"L{idx}: {lines[idx - 1]}" for idx in range(start + 1, end + 1)]
             return ToolResult(output="\n".join(formatted))
         except FileNotFoundError:
-            return ToolResult(error=f"File {self.params.file_path} not found")
+            return ToolResult(error=f"File {self.file_path} not found")
         except Exception as exc:
             return ToolResult(error=f"Error reading file: {str(exc)}")
 
@@ -67,7 +68,6 @@ class ReadFileTool(BaseDeclarativeTool):
             description=(
                 "Read the current target file with 1-indexed line numbers.\n\n"
                 "Returned lines are formatted as `L{line_number}: ...`.\n\n"
-                "This run is bound to a single file by the harness, so do not pass file paths.\n"
                 "Use offset/limit to read a slice before creating an apply_patch update."
             ),
             parameters={
