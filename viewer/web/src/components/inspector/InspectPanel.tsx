@@ -9,6 +9,7 @@ import {
   saveRecordRating,
   saveRecordSecondaryRating,
 } from "@/lib/api";
+import { formatCost } from "@/lib/dashboard-stats";
 import { buildRecordPath, copyTextToClipboard } from "@/lib/record-path";
 import { findStagingEntryInBootstrap } from "@/lib/record-summary";
 import { useViewer, useViewerDispatch } from "@/lib/viewer-context";
@@ -56,6 +57,22 @@ function SectionLabel({ children }: { children: React.ReactNode }): JSX.Element 
       <div className="h-px flex-1 bg-[var(--border-subtle)]" />
     </div>
   );
+}
+
+function extractTotalCostUsd(rawCost: string): number | null {
+  try {
+    const parsed = JSON.parse(rawCost) as {
+      total?: {
+        costs_usd?: {
+          total?: unknown;
+        };
+      };
+    };
+    const total = parsed.total?.costs_usd?.total;
+    return typeof total === "number" && Number.isFinite(total) ? total : null;
+  } catch {
+    return null;
+  }
 }
 
 type EditableRatingSectionProps = {
@@ -272,6 +289,8 @@ export function InspectPanel({
   const [secondaryRatingError, setSecondaryRatingError] = useState<string | null>(null);
   const [copyState, setCopyState] = useState<"idle" | "copied" | "error">("idle");
   const [openState, setOpenState] = useState<"idle" | "opened" | "error">("idle");
+  const [stagingCostUsd, setStagingCostUsd] = useState<number | null>(null);
+  const [stagingCostStatus, setStagingCostStatus] = useState<"idle" | "loading" | "loaded" | "unavailable">("idle");
 
   const isStaging = selection?.kind === "staging";
   const stagingEntry = isStaging
@@ -288,6 +307,8 @@ export function InspectPanel({
   const stagingRecordId = stagingEntry?.record_id ?? null;
   const stagingRunId = stagingEntry?.run_id ?? null;
   const stagingHasPrompt = stagingEntry?.has_prompt ?? false;
+  const stagingHasCost = stagingEntry?.has_cost ?? false;
+  const stagingUpdatedAt = stagingEntry?.updated_at ?? null;
 
   const { rootLinks, jointsByParent } = useMemo(() => {
     const nextMap = new Map<string, UrdfJoint[]>();
@@ -371,6 +392,42 @@ export function InspectPanel({
     stagingRunId,
     stagingSelectionKey,
   ]);
+
+  useEffect(() => {
+    if (!isStaging || !stagingRunId || !stagingRecordId) {
+      setStagingCostUsd(null);
+      setStagingCostStatus("idle");
+      return;
+    }
+
+    if (!stagingHasCost) {
+      setStagingCostUsd(null);
+      setStagingCostStatus("unavailable");
+      return;
+    }
+
+    let cancelled = false;
+    setStagingCostStatus("loading");
+
+    fetchStagingFile(stagingRunId, stagingRecordId, "cost.json")
+      .then((text) => {
+        if (cancelled) {
+          return;
+        }
+        setStagingCostUsd(extractTotalCostUsd(text));
+        setStagingCostStatus("loaded");
+      })
+      .catch(() => {
+        if (!cancelled) {
+          setStagingCostUsd(null);
+          setStagingCostStatus("unavailable");
+        }
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [isStaging, stagingHasCost, stagingRecordId, stagingRunId, stagingSelectionKey, stagingUpdatedAt]);
 
   useEffect(() => {
     setHoveredRating(null);
@@ -625,6 +682,16 @@ export function InspectPanel({
                 <div className="prop-row">
                   <span className="prop-label">Turns</span>
                   <span className="prop-value font-mono">{stagingEntry.turn_count != null ? String(stagingEntry.turn_count) : "--"}</span>
+                </div>
+                <div className="prop-row">
+                  <span className="prop-label">Cost</span>
+                  <span className="prop-value font-mono">
+                    {stagingCostStatus === "loading"
+                      ? "Loading..."
+                      : stagingCostStatus === "loaded"
+                        ? formatCost(stagingCostUsd)
+                        : "--"}
+                  </span>
                 </div>
               </div>
               <button

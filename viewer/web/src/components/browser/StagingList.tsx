@@ -249,7 +249,7 @@ function StagingListItem({ entry }: { entry: StagingEntry }): JSX.Element {
                 ) : null}
 
                 <p className="mt-1 text-[9.5px] text-[var(--text-quaternary)]">
-                  {isPreview ? "Temporary UI-only preview row" : `run ${entry.run_id}`}
+                  {isPreview ? "Temporary UI-only preview row" : entry.run_id}
                 </p>
               </div>
             </div>
