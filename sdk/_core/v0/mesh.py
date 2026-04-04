@@ -10,6 +10,8 @@ from typing import Iterable, List, Literal, Optional, Sequence, Tuple, Union
 import manifold3d as _m3d
 import numpy as np
 
+from sdk._dependencies import require_cadquery
+
 from .assets import get_active_asset_session
 from .types import Box, Cylinder, Mesh, Sphere
 
@@ -64,6 +66,21 @@ def _copy_primitive_provenance(src: "MeshGeometry", dst: "MeshGeometry") -> None
     transform = _primitive_source_transform(src)
     if transform is not None:
         setattr(dst, "_primitive_transform", transform)
+
+
+def _set_manifold_provenance(geometry: "MeshGeometry", manifold) -> None:
+    setattr(geometry, "_manifold_source", manifold)
+
+
+def _clear_manifold_provenance(geometry: "MeshGeometry") -> None:
+    if hasattr(geometry, "_manifold_source"):
+        delattr(geometry, "_manifold_source")
+
+
+def _copy_manifold_provenance(src: "MeshGeometry", dst: "MeshGeometry") -> None:
+    manifold = getattr(src, "_manifold_source", None)
+    if manifold is not None:
+        setattr(dst, "_manifold_source", manifold)
 
 
 def _prepend_primitive_transform(geometry: "MeshGeometry", transform: Mat4) -> None:
@@ -1398,16 +1415,19 @@ class MeshGeometry:
             faces=[tuple(face) for face in self.faces],
         )
         _copy_primitive_provenance(self, copied)
+        _copy_manifold_provenance(self, copied)
         return copied
 
     def clone(self) -> "MeshGeometry":
         return self.copy()
 
     def add_vertex(self, x: float, y: float, z: float) -> int:
+        _clear_manifold_provenance(self)
         self.vertices.append((float(x), float(y), float(z)))
         return len(self.vertices) - 1
 
     def add_face(self, a: int, b: int, c: int) -> None:
+        _clear_manifold_provenance(self)
         self.faces.append((int(a), int(b), int(c)))
 
     def merge(self, other: "MeshGeometry") -> "MeshGeometry":
@@ -1415,6 +1435,7 @@ class MeshGeometry:
         self.vertices.extend(other.vertices)
         self.faces.extend((a + offset, b + offset, c + offset) for (a, b, c) in other.faces)
         _clear_primitive_provenance(self)
+        _clear_manifold_provenance(self)
         return self
 
     def translate(self, dx: float, dy: float, dz: float) -> "MeshGeometry":
@@ -1426,6 +1447,7 @@ class MeshGeometry:
             (0.0, 0.0, 0.0, 1.0),
         )
         _prepend_primitive_transform(self, transform)
+        _clear_manifold_provenance(self)
         return self
 
     def scale(
@@ -1445,6 +1467,7 @@ class MeshGeometry:
                 (0.0, 0.0, 0.0, 1.0),
             ),
         )
+        _clear_manifold_provenance(self)
         return self
 
     def rotate(
@@ -1489,6 +1512,7 @@ class MeshGeometry:
             for (x, y, z) in self.vertices
         ]
         _prepend_primitive_transform(self, transform)
+        _clear_manifold_provenance(self)
         return self
 
     def rotate_x(self, angle: float) -> "MeshGeometry":
@@ -2161,6 +2185,59 @@ def _translated_profile(profile: List[Vec2], dx: float, dy: float) -> List[Vec2]
     return [(x + dx, y + dy) for (x, y) in profile]
 
 
+def _mesh_geometry_from_cadquery_model(
+    model: object,
+    *,
+    tolerance: float = 0.001,
+    angular_tolerance: float = 0.1,
+) -> "MeshGeometry":
+    import trimesh
+
+    shape = model.val() if hasattr(model, "val") else model
+    if hasattr(shape, "fix"):
+        try:
+            shape = shape.fix()
+        except Exception:
+            pass
+
+    try:
+        vertices_raw, triangles_raw = shape.tessellate(
+            float(tolerance),
+            float(angular_tolerance),
+        )
+    except TypeError:
+        vertices_raw, triangles_raw = shape.tessellate(float(tolerance))
+
+    vertices = [
+        (float(vertex.x), float(vertex.y), float(vertex.z))
+        if hasattr(vertex, "x")
+        else (float(vertex[0]), float(vertex[1]), float(vertex[2]))
+        for vertex in vertices_raw
+    ]
+    faces = [(int(face[0]), int(face[1]), int(face[2])) for face in triangles_raw]
+    if not vertices or not faces:
+        raise ValueError("CadQuery tessellation produced an empty mesh")
+
+    # CadQuery tessellation can duplicate shared vertices per face. Normalize the
+    # triangle soup so downstream manifold checks and OBJ export see one closed mesh.
+    mesh = trimesh.Trimesh(vertices=np.asarray(vertices), faces=np.asarray(faces), process=True)
+    if len(mesh.vertices) == 0 or len(mesh.faces) == 0:
+        raise ValueError("CadQuery tessellation normalization produced an empty mesh")
+
+    geometry = MeshGeometry(
+        vertices=[tuple(float(coord) for coord in vertex) for vertex in mesh.vertices],
+        faces=[tuple(int(index) for index in face) for face in mesh.faces],
+    )
+    try:
+        _set_manifold_provenance(
+            geometry,
+            _manifold_from_geometry(geometry, name="cadquery_tessellation"),
+        )
+    except ValueError:
+        pass
+    return geometry
+
+
 class LouverPanelGeometry(MeshGeometry):
     """
     Build a rectangular panel with slot cutouts and fused louver fins.
@@ -2188,7 +2265,6 @@ class LouverPanelGeometry(MeshGeometry):
         frame = float(frame)
         pitch = float(slat_pitch)
         slat_w = float(slat_width)
-        angle = float(slat_angle_deg) * pi / 180.0
         corner_radius = max(0.0, float(corner_radius))
 
         if panel_w <= 0 or panel_h <= 0 or t <= 0:
@@ -2205,61 +2281,143 @@ class LouverPanelGeometry(MeshGeometry):
         inner_h = panel_h - 2.0 * frame
         if inner_w <= 0 or inner_h <= 0:
             raise ValueError("frame leaves no interior area")
-
-        outer_profile = rounded_rect_profile(
-            panel_w,
-            panel_h,
-            radius=min(corner_radius, panel_w * 0.5, panel_h * 0.5),
-            corner_segments=6,
-        )
-
         slot_h = min(gap * 0.9, inner_h * 0.8)
         slot_w = inner_w * 0.95
-        slot_radius = min(slot_h * 0.45, slot_w * 0.1, corner_radius * 0.75)
-        base_slot = rounded_rect_profile(
-            slot_w, slot_h, radius=max(0.0, slot_radius), corner_segments=4
-        )
+        if slot_h <= 0.0 or slot_w <= 0.0:
+            raise ValueError("frame/slat settings leave no slot area")
 
-        hole_profiles: List[List[Vec2]] = []
+        slat_rows: List[float] = []
         y = -inner_h * 0.5 + pitch * 0.5
         limit = inner_h * 0.5 - pitch * 0.5
         while y <= limit + 1e-9:
-            hole_profiles.append(_translated_profile(base_slot, 0.0, y))
+            slat_rows.append(y)
             y += pitch
-
-        if not hole_profiles:
+        if not slat_rows:
             raise ValueError("No louver rows fit panel; increase panel height or reduce slat_pitch")
-
-        panel = ExtrudeWithHolesGeometry(
-            outer_profile,
-            hole_profiles,
-            t,
-            cap=True,
-            center=center,
-            closed=True,
-        )
 
         fin_t = float(fin_thickness) if fin_thickness is not None else t * 0.35
         fin_t = max(1e-4, fin_t)
-        # Extend each fin slightly into the slot side walls so the manifold
-        # boolean union produces a single connected vent body instead of
-        # floating slat islands.
-        fin_len = min(inner_w, slot_w + inner_w * 0.04)
-        fin_depth = min(inner_h, slot_h)
-        z_center = 0.0 if center else (t * 0.5)
-        z_offset = z_center - t * 0.05
-        fin_y_offset = slot_h * 0.20
+        cq = require_cadquery(feature="LouverPanelGeometry")
+        shape = cq.Workplane("XY").box(panel_w, panel_h, t)
+        if corner_radius > 0.0:
+            shape = shape.edges("|Z").fillet(min(corner_radius, panel_w * 0.5, panel_h * 0.5))
 
-        solids: List[MeshGeometry] = [panel]
+        slot_depth = t + max(0.002, t * 0.5)
+        slat_span = min(inner_w + frame * 0.35, panel_w - 2.0e-4)
+        slat_z = -t * 0.05
 
-        for hole in hole_profiles:
-            _, y_center = _polygon_centroid(hole)
-            fin = BoxGeometry((fin_len, fin_depth, fin_t))
-            fin.rotate_x(angle)
-            fin.translate(0.0, y_center + fin_y_offset, z_offset)
-            solids.append(fin)
+        for row_y in slat_rows:
+            slot = cq.Workplane("XY").box(slot_w, slot_h, slot_depth).translate((0.0, row_y, 0.0))
+            shape = shape.cut(slot)
 
-        self.merge(_boolean_union_many(solids))
+            slat = cq.Workplane("XY").box(slat_span, slat_w, fin_t)
+            slat = slat.rotate((0.0, 0.0, 0.0), (1.0, 0.0, 0.0), -float(slat_angle_deg))
+            slat = slat.translate((0.0, row_y + slot_h * 0.20, slat_z))
+            shape = shape.union(slat)
+
+        geom = _mesh_geometry_from_cadquery_model(shape)
+        if not center:
+            geom.translate(0.0, 0.0, t * 0.5)
+        self.vertices = [tuple(vertex) for vertex in geom.vertices]
+        self.faces = [tuple(face) for face in geom.faces]
+        _copy_manifold_provenance(geom, self)
+
+
+class VentGrilleGeometry(MeshGeometry):
+    """
+    Build a rectangular vent grille with real openings and a shallow rear sleeve.
+
+    The front flange is centered on local z=0 and the sleeve extends toward -Z.
+    """
+
+    def __init__(
+        self,
+        panel_size: Sequence[float],
+        *,
+        frame: float = 0.012,
+        face_thickness: float = 0.004,
+        duct_depth: float = 0.026,
+        duct_wall: float = 0.003,
+        slat_pitch: float = 0.018,
+        slat_width: float = 0.009,
+        slat_angle_deg: float = 35.0,
+        slat_thickness: Optional[float] = None,
+        corner_radius: float = 0.0,
+    ):
+        super().__init__()
+        panel_w = float(panel_size[0])
+        panel_h = float(panel_size[1])
+        frame = float(frame)
+        face_t = float(face_thickness)
+        duct_depth = float(duct_depth)
+        duct_wall = float(duct_wall)
+        slat_pitch = float(slat_pitch)
+        slat_w = float(slat_width)
+        slat_t = float(slat_thickness) if slat_thickness is not None else max(0.001, face_t * 0.35)
+        corner_radius = max(0.0, float(corner_radius))
+
+        if panel_w <= 0 or panel_h <= 0:
+            raise ValueError("panel_size must be positive")
+        if face_t <= 0 or duct_depth <= 0 or duct_wall <= 0:
+            raise ValueError("face_thickness, duct_depth, and duct_wall must be positive")
+        if frame <= 0 or frame >= min(panel_w, panel_h) * 0.5:
+            raise ValueError("frame must be > 0 and less than half of min(panel_size)")
+        if slat_pitch <= 0 or slat_w <= 0 or slat_t <= 0:
+            raise ValueError("slat_pitch, slat_width, and slat_thickness must be positive")
+        if slat_pitch <= slat_w:
+            raise ValueError("slat_pitch must be greater than slat_width")
+
+        opening_w = panel_w - 2.0 * frame
+        opening_h = panel_h - 2.0 * frame
+        if opening_w <= 2.0 * duct_wall or opening_h <= 2.0 * duct_wall:
+            raise ValueError("frame/duct_wall leave no open sleeve area")
+        y = -opening_h * 0.5 + slat_pitch * 0.5
+        limit = opening_h * 0.5 - slat_pitch * 0.5
+        slat_rows: List[float] = []
+        while y <= limit + 1e-9:
+            slat_rows.append(y)
+            y += slat_pitch
+        if not slat_rows:
+            raise ValueError("No slat rows fit panel; increase panel height or reduce slat_pitch")
+        cq = require_cadquery(feature="VentGrilleGeometry")
+        shape = cq.Workplane("XY").box(panel_w, panel_h, face_t)
+        if corner_radius > 0.0:
+            shape = shape.edges("|Z").fillet(
+                min(corner_radius, panel_w * 0.5 - frame, panel_h * 0.5 - frame)
+            )
+
+        shape = shape.cut(
+            cq.Workplane("XY").box(
+                opening_w,
+                opening_h,
+                face_t + max(0.002, face_t * 0.5),
+            )
+        )
+
+        duct_outer = cq.Workplane("XY").box(opening_w, opening_h, duct_depth)
+        duct_inner = cq.Workplane("XY").box(
+            opening_w - 2.0 * duct_wall,
+            opening_h - 2.0 * duct_wall,
+            duct_depth + face_t + 0.004,
+        )
+        duct_shell = duct_outer.cut(duct_inner).translate(
+            (0.0, 0.0, -face_t * 0.5 - duct_depth * 0.5 + min(face_t * 0.25, 0.001))
+        )
+        shape = shape.union(duct_shell)
+
+        slat_embed = min(frame * 0.5, 0.002)
+        slat_chord = opening_w + 2.0 * slat_embed
+        slat_z = -face_t * 0.25
+        for row_y in slat_rows:
+            slat = cq.Workplane("XY").box(slat_chord, slat_w, slat_t)
+            slat = slat.rotate((0.0, 0.0, 0.0), (1.0, 0.0, 0.0), -float(slat_angle_deg))
+            slat = slat.translate((0.0, row_y, slat_z))
+            shape = shape.union(slat)
+
+        geom = _mesh_geometry_from_cadquery_model(shape)
+        self.vertices = [tuple(vertex) for vertex in geom.vertices]
+        self.faces = [tuple(face) for face in geom.faces]
+        _copy_manifold_provenance(geom, self)
 
 
 class SweepGeometry(MeshGeometry):
@@ -3199,6 +3357,9 @@ def cut_opening_on_face(
 def _manifold_from_geometry(geometry: MeshGeometry, *, name: str = "geometry"):
     if not isinstance(geometry, MeshGeometry):
         raise TypeError(f"{name} must be MeshGeometry")
+    manifold_source = getattr(geometry, "_manifold_source", None)
+    if manifold_source is not None:
+        return manifold_source
 
     verts = np.asarray(geometry.vertices, dtype=np.float32)
     faces = np.asarray(geometry.faces, dtype=np.uint32)
@@ -3217,6 +3378,49 @@ def _manifold_from_geometry(geometry: MeshGeometry, *, name: str = "geometry"):
     return manifold
 
 
+def _quantize_scalar(value: float, *, step: float) -> int:
+    return int(round(float(value) / float(step)))
+
+
+def _canonical_plane(
+    normal: Vec3, offset: float, *, step: float
+) -> Tuple[Tuple[int, int, int, int], Vec3, float]:
+    n = _v_normalize(normal)
+    if n[2] < -_EPS or (
+        abs(n[2]) <= _EPS and (n[1] < -_EPS or (abs(n[1]) <= _EPS and n[0] < -_EPS))
+    ):
+        n = (-n[0], -n[1], -n[2])
+        offset = -offset
+    key = (
+        _quantize_scalar(n[0], step=step),
+        _quantize_scalar(n[1], step=step),
+        _quantize_scalar(n[2], step=step),
+        _quantize_scalar(offset, step=step),
+    )
+    return key, n, float(offset)
+
+
+def _plane_basis(normal: Vec3) -> Tuple[Vec3, Vec3]:
+    reference = (1.0, 0.0, 0.0) if abs(normal[0]) < 0.8 else (0.0, 1.0, 0.0)
+    u_axis = _v_normalize(_v_cross(reference, normal))
+    v_axis = _v_cross(normal, u_axis)
+    return u_axis, v_axis
+
+
+def _project_point_to_plane(point: Vec3, origin: Vec3, u_axis: Vec3, v_axis: Vec3) -> Vec2:
+    delta = _v_sub(point, origin)
+    return (_v_dot(delta, u_axis), _v_dot(delta, v_axis))
+
+
+def _lift_point_from_plane(point: Vec2, origin: Vec3, u_axis: Vec3, v_axis: Vec3) -> Vec3:
+    return _v_add(origin, _v_add(_v_scale(u_axis, point[0]), _v_scale(v_axis, point[1])))
+
+
+def _point_inside_manifold(manifold, point: Vec3, *, probe_size: float) -> bool:
+    probe = _m3d.Manifold.cube((probe_size, probe_size, probe_size), center=True).translate(point)
+    return not (manifold ^ probe).is_empty()
+
+
 def _geometry_from_manifold(manifold) -> MeshGeometry:
     if manifold is None or manifold.is_empty():
         return MeshGeometry()
@@ -3227,9 +3431,130 @@ def _geometry_from_manifold(manifold) -> MeshGeometry:
     if vp.size == 0 or tri.size == 0:
         return MeshGeometry()
 
-    verts: List[Vec3] = [(float(v[0]), float(v[1]), float(v[2])) for v in vp]
-    faces: List[Face] = [(int(f[0]), int(f[1]), int(f[2])) for f in tri]
-    return MeshGeometry(vertices=verts, faces=faces)
+    plane_step = max(_OBJ_QUANT_STEP, float(manifold.get_tolerance()) * 4.0)
+    grouped_triangles: dict[Tuple[int, int, int, int], List[Tuple[Vec3, Vec3, Vec3]]] = {}
+    grouped_normals: dict[Tuple[int, int, int, int], Vec3] = {}
+    grouped_offsets: dict[Tuple[int, int, int, int], float] = {}
+
+    for face in tri:
+        points = tuple((float(vp[idx][0]), float(vp[idx][1]), float(vp[idx][2])) for idx in face)
+        normal = _v_cross(_v_sub(points[1], points[0]), _v_sub(points[2], points[0]))
+        if _v_norm(normal) <= _EPS:
+            continue
+        plane_offset = _v_dot(_v_normalize(normal), points[0])
+        key, plane_normal, canonical_offset = _canonical_plane(
+            normal, plane_offset, step=plane_step
+        )
+        grouped_triangles.setdefault(key, []).append(points)
+        grouped_normals.setdefault(key, plane_normal)
+        grouped_offsets.setdefault(key, canonical_offset)
+
+    if not grouped_triangles:
+        return MeshGeometry()
+
+    bounds = manifold.bounding_box()
+    bbox_diag = sqrt(
+        (float(bounds[3]) - float(bounds[0])) ** 2
+        + (float(bounds[4]) - float(bounds[1])) ** 2
+        + (float(bounds[5]) - float(bounds[2])) ** 2
+    )
+    sample_offset = max(
+        float(manifold.get_tolerance()) * 12.0, bbox_diag * 2.0e-4, _OBJ_QUANT_STEP * 32.0
+    )
+    probe_size = max(sample_offset * 0.1, _OBJ_QUANT_STEP * 8.0)
+
+    output_vertices: List[Vec3] = []
+    output_faces: List[Face] = []
+    vertex_index: dict[Tuple[int, int, int], int] = {}
+
+    def add_output_vertex(point: Vec3) -> int:
+        key = (
+            _quantize_scalar(point[0], step=_OBJ_QUANT_STEP),
+            _quantize_scalar(point[1], step=_OBJ_QUANT_STEP),
+            _quantize_scalar(point[2], step=_OBJ_QUANT_STEP),
+        )
+        idx = vertex_index.get(key)
+        if idx is not None:
+            return idx
+        idx = len(output_vertices)
+        vertex_index[key] = idx
+        output_vertices.append(point)
+        return idx
+
+    for key, triangles in grouped_triangles.items():
+        plane_normal = grouped_normals[key]
+        plane_origin = _v_scale(plane_normal, grouped_offsets[key])
+        u_axis, v_axis = _plane_basis(plane_normal)
+
+        projected_triangles: List[List[Vec2]] = []
+        for triangle in triangles:
+            projected = [
+                _project_point_to_plane(point, plane_origin, u_axis, v_axis) for point in triangle
+            ]
+            if _polygon_area(projected) < 0.0:
+                projected = [projected[0], projected[2], projected[1]]
+            projected_triangles.append(projected)
+
+        cross_section = _m3d.CrossSection(projected_triangles, _m3d.FillRule.Positive)
+        cross_section = cross_section.simplify(plane_step * 0.25)
+
+        for piece in cross_section.decompose():
+            contours = [
+                [(float(point[0]), float(point[1])) for point in contour]
+                for contour in piece.to_polygons()
+                if len(contour) >= 3
+            ]
+            if not contours:
+                continue
+
+            outer = max(
+                (contour for contour in contours if _polygon_area(contour) > 0.0),
+                key=lambda contour: abs(_polygon_area(contour)),
+                default=None,
+            )
+            if outer is None:
+                continue
+
+            holes = [
+                contour
+                for contour in contours
+                if contour is not outer and _polygon_area(contour) < 0.0
+            ]
+            flat_ring, piece_triangles = _triangulate_polygon_with_holes(outer, holes)
+            if not piece_triangles:
+                continue
+
+            sample_face = piece_triangles[0]
+            sample_points = [
+                _lift_point_from_plane(flat_ring[idx], plane_origin, u_axis, v_axis)
+                for idx in sample_face
+            ]
+            sample_centroid = (
+                (sample_points[0][0] + sample_points[1][0] + sample_points[2][0]) / 3.0,
+                (sample_points[0][1] + sample_points[1][1] + sample_points[2][1]) / 3.0,
+                (sample_points[0][2] + sample_points[1][2] + sample_points[2][2]) / 3.0,
+            )
+            plus_sample = _v_add(sample_centroid, _v_scale(plane_normal, sample_offset))
+            minus_sample = _v_add(sample_centroid, _v_scale(plane_normal, -sample_offset))
+            inside_plus = _point_inside_manifold(manifold, plus_sample, probe_size=probe_size)
+            inside_minus = _point_inside_manifold(manifold, minus_sample, probe_size=probe_size)
+            if inside_plus == inside_minus:
+                continue
+
+            reverse = inside_plus and not inside_minus
+            output_indices = [
+                add_output_vertex(_lift_point_from_plane(point, plane_origin, u_axis, v_axis))
+                for point in flat_ring
+            ]
+            for a, b, c in piece_triangles:
+                if reverse:
+                    output_faces.append((output_indices[a], output_indices[c], output_indices[b]))
+                else:
+                    output_faces.append((output_indices[a], output_indices[b], output_indices[c]))
+
+    geometry = MeshGeometry(vertices=output_vertices, faces=output_faces)
+    _set_manifold_provenance(geometry, manifold)
+    return geometry
 
 
 def _is_expected_boolean_fallback_error(exc: BaseException) -> bool:

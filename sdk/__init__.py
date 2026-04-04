@@ -19,7 +19,6 @@ from .v0 import (
     LoftGeometry,
     LoftSection,
     LoftTessellation,
-    LouverPanelGeometry,
     Material,
     Mesh,
     MeshGeometry,
@@ -42,6 +41,7 @@ from .v0 import (
     TestReport,
     TorusGeometry,
     ValidationError,
+    VentGrilleGeometry,
     Visual,
     WirePath,
     WirePolylineGeometry,
@@ -115,7 +115,7 @@ __all__ = [
     "WirePolylineGeometry",
     "LatheGeometry",
     "TorusGeometry",
-    "LouverPanelGeometry",
+    "VentGrilleGeometry",
     "cut_opening_on_face",
     "boolean_union",
     "boolean_difference",
@@ -168,6 +168,11 @@ def __getattr__(name: str):
         value = getattr(_v0, name)
         globals()[name] = value
         return value
+    if name == "LouverPanelGeometry":
+        raise AttributeError(
+            f"module {__name__!r} no longer exposes {name!r}; "
+            "use 'VentGrilleGeometry' for public vent/grille mesh helpers"
+        )
     raise AttributeError(f"module {__name__!r} has no attribute {name!r}")
 
 

@@ -457,8 +457,8 @@ def test_extrude_with_holes_geometry_builds_manifold_panel() -> None:
     assert len(geom.faces) > 0
 
 
-def test_louver_panel_geometry_builds_closed_panel_with_expected_bounds() -> None:
-    geom = sdk.LouverPanelGeometry(
+def test_legacy_internal_louver_panel_geometry_builds_closed_panel_with_expected_bounds() -> None:
+    geom = mesh_module.LouverPanelGeometry(
         (0.12, 0.08),
         0.01,
         frame=0.01,
@@ -483,14 +483,147 @@ def test_louver_panel_geometry_builds_closed_panel_with_expected_bounds() -> Non
     assert maxs[2] == pytest.approx(0.005, abs=1e-6)
 
 
-def test_louver_panel_geometry_requires_at_least_one_slat_row() -> None:
+def test_legacy_internal_louver_panel_geometry_exports_clean_single_body_mesh(
+    tmp_path: Path,
+) -> None:
+    import trimesh
+
+    session = AssetSession(tmp_path)
+    with activate_asset_session(session):
+        mesh = sdk.mesh_from_geometry(
+            mesh_module.LouverPanelGeometry(
+                (0.12, 0.08),
+                0.01,
+                frame=0.01,
+                slat_pitch=0.02,
+                slat_width=0.008,
+                slat_angle_deg=30.0,
+                corner_radius=0.006,
+            ),
+            "louver_panel",
+        )
+
+    exported = trimesh.load_mesh(mesh.materialized_path, force="mesh")
+    assert exported.is_watertight
+    assert exported.body_count == 1
+    assert len(exported.split(only_watertight=False)) == 1
+
+    mins, maxs = exported.bounds
+    assert mins[0] == pytest.approx(-0.06, abs=1e-3)
+    assert maxs[0] == pytest.approx(0.06, abs=1e-3)
+    assert mins[1] == pytest.approx(-0.04, abs=1e-3)
+    assert maxs[1] == pytest.approx(0.04, abs=1e-3)
+    assert mins[2] == pytest.approx(-0.005, abs=1e-3)
+    assert maxs[2] == pytest.approx(0.005, abs=1e-3)
+
+
+def test_sdk_does_not_expose_louver_panel_geometry() -> None:
+    assert "LouverPanelGeometry" not in sdk.__all__
+    with pytest.raises(AttributeError, match="no longer exposes"):
+        getattr(sdk, "LouverPanelGeometry")
+
+
+def test_legacy_internal_louver_panel_geometry_requires_at_least_one_slat_row() -> None:
     with pytest.raises(ValueError, match="No louver rows fit panel"):
-        sdk.LouverPanelGeometry(
+        mesh_module.LouverPanelGeometry(
             (0.12, 0.03),
             0.01,
             frame=0.01,
             slat_pitch=0.02,
             slat_width=0.008,
+        )
+
+
+def test_boolean_union_exports_clean_single_body_mesh(tmp_path: Path) -> None:
+    import trimesh
+
+    left = sdk.BoxGeometry((1.0, 1.0, 1.0)).translate(-0.2, 0.0, 0.0)
+    right = sdk.BoxGeometry((1.0, 1.0, 1.0)).translate(0.2, 0.0, 0.0)
+
+    session = AssetSession(tmp_path)
+    with activate_asset_session(session):
+        mesh = sdk.mesh_from_geometry(sdk.boolean_union(left, right), "boolean_union_box")
+
+    exported = trimesh.load_mesh(mesh.materialized_path, force="mesh")
+    assert exported.is_watertight
+    assert exported.body_count == 1
+    assert len(exported.split(only_watertight=False)) == 1
+
+    mins, maxs = exported.bounds
+    assert mins[0] == pytest.approx(-0.7, abs=1e-3)
+    assert maxs[0] == pytest.approx(0.7, abs=1e-3)
+    assert mins[1] == pytest.approx(-0.5, abs=1e-3)
+    assert maxs[1] == pytest.approx(0.5, abs=1e-3)
+    assert mins[2] == pytest.approx(-0.5, abs=1e-3)
+    assert maxs[2] == pytest.approx(0.5, abs=1e-3)
+
+
+def test_boolean_difference_exports_clean_single_body_mesh(tmp_path: Path) -> None:
+    import trimesh
+
+    outer = sdk.BoxGeometry((0.18, 0.10, 0.026))
+    inner = sdk.BoxGeometry((0.174, 0.094, 0.03))
+    shell = sdk.boolean_difference(outer, inner)
+
+    session = AssetSession(tmp_path)
+    with activate_asset_session(session):
+        mesh = sdk.mesh_from_geometry(shell, "boolean_difference_shell")
+
+    exported = trimesh.load_mesh(mesh.materialized_path, force="mesh")
+    assert exported.is_watertight
+    assert exported.body_count == 1
+    assert len(exported.split(only_watertight=False)) == 1
+
+    mins, maxs = exported.bounds
+    assert mins[0] == pytest.approx(-0.09, abs=1e-3)
+    assert maxs[0] == pytest.approx(0.09, abs=1e-3)
+    assert mins[1] == pytest.approx(-0.05, abs=1e-3)
+    assert maxs[1] == pytest.approx(0.05, abs=1e-3)
+    assert mins[2] == pytest.approx(-0.013, abs=1e-3)
+    assert maxs[2] == pytest.approx(0.013, abs=1e-3)
+
+
+def test_vent_grille_geometry_builds_with_expected_bounds(tmp_path: Path) -> None:
+    import trimesh
+
+    session = AssetSession(tmp_path)
+    with activate_asset_session(session):
+        mesh = sdk.mesh_from_geometry(
+            sdk.VentGrilleGeometry(
+                (0.18, 0.10),
+                frame=0.012,
+                face_thickness=0.004,
+                duct_depth=0.026,
+                duct_wall=0.003,
+                slat_pitch=0.018,
+                slat_width=0.009,
+                slat_angle_deg=35.0,
+                corner_radius=0.006,
+            ),
+            "vent_grille",
+        )
+
+    exported = trimesh.load_mesh(mesh.materialized_path, force="mesh")
+    assert exported.is_watertight
+    assert exported.body_count == 1
+    assert len(exported.split(only_watertight=False)) == 1
+
+    mins, maxs = exported.bounds
+    assert mins[0] == pytest.approx(-0.09, abs=1e-3)
+    assert maxs[0] == pytest.approx(0.09, abs=1e-3)
+    assert mins[1] == pytest.approx(-0.05, abs=1e-3)
+    assert maxs[1] == pytest.approx(0.05, abs=1e-3)
+    assert mins[2] < -0.025
+    assert maxs[2] > 0.0
+
+
+def test_vent_grille_geometry_requires_at_least_one_slat_row() -> None:
+    with pytest.raises(ValueError, match="No slat rows fit panel"):
+        sdk.VentGrilleGeometry(
+            (0.18, 0.03),
+            frame=0.008,
+            slat_pitch=0.018,
+            slat_width=0.009,
         )
 
 

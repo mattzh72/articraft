@@ -13,12 +13,12 @@ from .mesh import (
     ExtrudeWithHolesGeometry,
     LatheGeometry,
     LoftGeometry,
-    LouverPanelGeometry,
     MeshGeometry,
     PipeGeometry,
     SphereGeometry,
     SweepGeometry,
     TorusGeometry,
+    VentGrilleGeometry,
     WirePath,
     WirePolylineGeometry,
     boolean_difference,
@@ -104,7 +104,7 @@ __all__ = [
     "WirePolylineGeometry",
     "TorusGeometry",
     "LatheGeometry",
-    "LouverPanelGeometry",
+    "VentGrilleGeometry",
     "cut_opening_on_face",
     "boolean_union",
     "boolean_difference",
@@ -171,6 +171,11 @@ def __getattr__(name: str):
 
         globals()[name] = AssetContext
         return AssetContext
+    if name == "LouverPanelGeometry":
+        raise AttributeError(
+            f"module {__name__!r} no longer exposes {name!r}; "
+            "use 'VentGrilleGeometry' for public vent/grille mesh helpers"
+        )
     raise AttributeError(f"module {__name__!r} has no attribute {name!r}")
 
 
