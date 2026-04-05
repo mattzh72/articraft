@@ -304,6 +304,8 @@ class DashboardResponse(BaseModel):
     generated_at: str
     supercategories: list[SupercategoryOptionResponse] = Field(default_factory=list)
     available_sdks: list[str] = Field(default_factory=list)
+    available_authors: list[str] = Field(default_factory=list)
+    available_categories: list[str] = Field(default_factory=list)
     cost_bounds: DashboardCostBoundsResponse | None = None
     overview: DashboardOverviewResponse
     category_stats: dict[str, DashboardCategoryStatsResponse] = Field(default_factory=dict)

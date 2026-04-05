@@ -247,7 +247,8 @@ export function CategoriesSection({
 
   const exportCsv = useCallback(
     (rows: CategoryRow[]) => {
-      const header = "Category,SDK,Count,Avg Stars,Avg Cost USD,Avg Input Tokens,Avg Output Tokens";
+      const header =
+        "Category,SDK,Count,Average Rating,Avg Cost USD,Avg Input Tokens,Avg Output Tokens";
       const lines = rows.map(([slug, s]) => {
         const cat = formatCategoryLabel(slug).replaceAll('"', '""');
         const sdk = formatSdkPackage(s.sdk_package);
@@ -406,7 +407,7 @@ export function CategoriesSection({
                       onClick={() => toggleSort("average_rating")}
                       className="ml-auto flex items-center gap-1"
                     >
-                      <span>Avg Stars</span>
+                      <span>Average Rating</span>
                       <SortIndicator column="average_rating" />
                     </button>
                   </TableHead>

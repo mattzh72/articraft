@@ -261,6 +261,8 @@ export type DashboardData = {
   generated_at: string;
   supercategories: SupercategoryOption[];
   available_sdks: string[];
+  available_authors: string[];
+  available_categories: string[];
   cost_bounds: DashboardCostBounds | null;
   overview: DashboardOverview;
   category_stats: Record<string, DashboardCategoryStats>;

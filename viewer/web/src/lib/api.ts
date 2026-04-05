@@ -83,6 +83,8 @@ export async function fetchDashboard(
     starsFilter: [number, number];
     costFilter: CostFilter;
     sdkFilter: string | null;
+    authorFilters: string[];
+    categoryFilters: string[];
     rollingWindowDays: number;
   },
   init?: RequestInit,
@@ -108,6 +110,12 @@ export async function fetchDashboard(
   }
   if (params.sdkFilter) {
     searchParams.set("sdk", params.sdkFilter);
+  }
+  for (const authorFilter of params.authorFilters) {
+    searchParams.append("author", authorFilter);
+  }
+  for (const categoryFilter of params.categoryFilters) {
+    searchParams.append("category", categoryFilter);
   }
   searchParams.set("rolling_window_days", String(params.rollingWindowDays));
 

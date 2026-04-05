@@ -230,7 +230,7 @@ function CustomTooltip({
           {formatRecordCount(row.recordCount)} records across {row.categoryCount} categories
         </div>
         <div>
-          Avg stars: {formatRating(row.avgRating)} · Avg cost: {formatCost(row.avgCost)}
+          Average rating: {formatRating(row.avgRating)} · Avg cost: {formatCost(row.avgCost)}
         </div>
         <div>
           Avg input: {formatTokenCount(row.avgInputTokens)} · Avg output: {formatTokenCount(row.avgOutputTokens)}

@@ -1,8 +1,8 @@
-import { useEffect, useRef, useState, type JSX } from "react";
+import { useEffect, useMemo, useRef, useState, type JSX } from "react";
 import { createPortal } from "react-dom";
-import { ChevronDown } from "lucide-react";
+import { Check, ChevronDown, Search } from "lucide-react";
 
-import { cn } from "@/lib/utils";
+import { cn, formatCategoryLabel } from "@/lib/utils";
 import type { TimeFilter, TimeFilterPoint } from "@/lib/types";
 import { Slider } from "@/components/ui/slider";
 
@@ -106,6 +106,35 @@ const COST_EPSILON = 0.0005;
 const costFmt = new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", minimumFractionDigits: 2, maximumFractionDigits: 3 });
 
 export type CostBounds = { min: number; max: number };
+
+type DashboardMultiSelectFilterProps = {
+  title: string;
+  emptyLabel: string;
+  summaryNoun: string;
+  options: string[];
+  value: string[];
+  onChange: (value: string[]) => void;
+  formatOptionLabel?: (value: string) => string;
+  searchPlaceholder: string;
+  noResultsLabel: string;
+};
+
+function buildMultiSelectLabel({
+  value,
+  options,
+  emptyLabel,
+  summaryNoun,
+  formatOptionLabel,
+}: Omit<DashboardMultiSelectFilterProps, "title" | "onChange" | "searchPlaceholder" | "noResultsLabel">): string {
+  if (value.length === 0) {
+    return emptyLabel;
+  }
+  if (value.length === 1) {
+    const selected = options.find((option) => option === value[0]) ?? value[0];
+    return formatOptionLabel ? formatOptionLabel(selected) : selected;
+  }
+  return `${value.length} ${summaryNoun}`;
+}
 
 /* ---------------------------------------------------------------------------
  * SliderPopover
@@ -238,8 +267,10 @@ export function DashboardStarsFilter({
   const hasActive = value[0] !== STAR_SLIDER_MIN || value[1] !== STAR_SLIDER_MAX;
 
   const label = hasActive
-    ? value[0] === value[1] ? `${value[0]}★` : `${value[0]}★ – ${value[1]}★`
-    : "Any stars";
+    ? value[0] === value[1]
+      ? `${value[0]} rating`
+      : `${value[0]} – ${value[1]} rating`
+    : "Any average rating";
 
   return (
     <div ref={containerRef} className="relative">
@@ -247,7 +278,7 @@ export function DashboardStarsFilter({
         <span className="truncate">{label}</span>
         <ChevronDown className={cn("size-3 transition-transform duration-150", open && "rotate-180")} />
       </button>
-      <SliderPopover open={open} triggerRef={triggerRef} containerRef={containerRef} onClose={() => setOpen(false)} title="Star range" hasActive={hasActive} onClear={() => onChange([STAR_SLIDER_MIN, STAR_SLIDER_MAX])}>
+      <SliderPopover open={open} triggerRef={triggerRef} containerRef={containerRef} onClose={() => setOpen(false)} title="Average rating" hasActive={hasActive} onClear={() => onChange([STAR_SLIDER_MIN, STAR_SLIDER_MAX])}>
         <div className="text-[10px] text-[var(--text-secondary)]">{label}</div>
         <Slider min={STAR_SLIDER_MIN} max={STAR_SLIDER_MAX} step={0.5} value={value} onValueChange={(v) => { if (v.length === 2) onChange([v[0], v[1]]); }} />
         <div className="flex items-center justify-between font-mono text-[10px] text-[var(--text-quaternary)]">
@@ -256,6 +287,173 @@ export function DashboardStarsFilter({
         </div>
       </SliderPopover>
     </div>
+  );
+}
+
+function DashboardMultiSelectFilter({
+  title,
+  emptyLabel,
+  summaryNoun,
+  options,
+  value,
+  onChange,
+  formatOptionLabel,
+  searchPlaceholder,
+  noResultsLabel,
+}: DashboardMultiSelectFilterProps): JSX.Element {
+  const [open, setOpen] = useState(false);
+  const [search, setSearch] = useState("");
+  const containerRef = useRef<HTMLDivElement | null>(null);
+  const triggerRef = useRef<HTMLButtonElement | null>(null);
+  const hasActive = value.length > 0;
+  const selectedSet = useMemo(() => new Set(value), [value]);
+  const label = buildMultiSelectLabel({
+    value,
+    options,
+    emptyLabel,
+    summaryNoun,
+    formatOptionLabel,
+  });
+
+  const filteredOptions = useMemo(() => {
+    const query = search.trim().toLowerCase();
+    if (!query) {
+      return options;
+    }
+    return options.filter((option) => {
+      const optionLabel = formatOptionLabel ? formatOptionLabel(option) : option;
+      return (
+        option.toLowerCase().includes(query) ||
+        optionLabel.toLowerCase().includes(query)
+      );
+    });
+  }, [formatOptionLabel, options, search]);
+
+  function toggleOption(option: string): void {
+    if (selectedSet.has(option)) {
+      onChange(value.filter((item) => item !== option));
+      return;
+    }
+    onChange([...value, option]);
+  }
+
+  return (
+    <div ref={containerRef} className="relative">
+      <button
+        ref={triggerRef}
+        type="button"
+        onClick={() => setOpen((current) => !current)}
+        className={cn("flex items-center gap-1.5", pillClass(hasActive))}
+      >
+        <span className="truncate">{label}</span>
+        <ChevronDown className={cn("size-3 transition-transform duration-150", open && "rotate-180")} />
+      </button>
+      <SliderPopover
+        open={open}
+        triggerRef={triggerRef}
+        containerRef={containerRef}
+        onClose={() => setOpen(false)}
+        title={title}
+        hasActive={hasActive}
+        onClear={() => onChange([])}
+        minWidth={300}
+      >
+        <label className="flex items-center gap-2 rounded-md border border-[var(--border-default)] bg-[var(--surface-1)] px-2 py-1">
+          <Search className="size-3 shrink-0 text-[var(--text-quaternary)]" />
+          <input
+            type="text"
+            value={search}
+            onChange={(event) => setSearch(event.target.value)}
+            placeholder={searchPlaceholder}
+            className="w-full bg-transparent text-[10px] text-[var(--text-primary)] placeholder:text-[var(--text-quaternary)] focus:outline-none"
+          />
+        </label>
+        <div className="max-h-56 overflow-y-auto pr-1">
+          {filteredOptions.length === 0 ? (
+            <div className="py-1 text-[10px] text-[var(--text-quaternary)]">{noResultsLabel}</div>
+          ) : (
+            <div className="space-y-1">
+              {filteredOptions.map((option) => {
+                const checked = selectedSet.has(option);
+                const optionLabel = formatOptionLabel ? formatOptionLabel(option) : option;
+                return (
+                  <button
+                    key={option}
+                    type="button"
+                    onClick={() => toggleOption(option)}
+                    className={cn(
+                      "flex w-full items-center justify-between gap-3 rounded-md px-2 py-1.5 text-left text-[10px] transition-colors",
+                      checked
+                        ? "bg-[var(--accent-soft)] text-[var(--accent)]"
+                        : "text-[var(--text-secondary)] hover:bg-[var(--surface-1)]",
+                    )}
+                  >
+                    <span className="truncate">{optionLabel}</span>
+                    <span
+                      className={cn(
+                        "flex size-3.5 shrink-0 items-center justify-center rounded-sm border",
+                        checked
+                          ? "border-[var(--accent)] bg-[var(--accent)] text-white"
+                          : "border-[var(--border-default)] text-transparent",
+                      )}
+                    >
+                      <Check className="size-2.5" />
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+          )}
+        </div>
+      </SliderPopover>
+    </div>
+  );
+}
+
+export function DashboardCategoryFilter({
+  options,
+  value,
+  onChange,
+}: {
+  options: string[];
+  value: string[];
+  onChange: (value: string[]) => void;
+}): JSX.Element {
+  return (
+    <DashboardMultiSelectFilter
+      title="Categories"
+      emptyLabel="All categories"
+      summaryNoun="categories"
+      options={options}
+      value={value}
+      onChange={onChange}
+      formatOptionLabel={formatCategoryLabel}
+      searchPlaceholder="Filter categories..."
+      noResultsLabel="No matching categories"
+    />
+  );
+}
+
+export function DashboardAuthorFilter({
+  options,
+  value,
+  onChange,
+}: {
+  options: string[];
+  value: string[];
+  onChange: (value: string[]) => void;
+}): JSX.Element {
+  return (
+    <DashboardMultiSelectFilter
+      title="Authors"
+      emptyLabel="All authors"
+      summaryNoun="authors"
+      options={options}
+      value={value}
+      onChange={onChange}
+      searchPlaceholder="Filter authors..."
+      noResultsLabel="No matching authors"
+    />
   );
 }
 

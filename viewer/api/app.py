@@ -417,6 +417,8 @@ def create_app(*, repo_root: Path | None = None) -> FastAPI:
         cost_min: float | None = Query(default=None, ge=0),
         cost_max: float | None = Query(default=None, ge=0),
         sdk: str | None = None,
+        author: list[str] | None = Query(default=None),
+        category: list[str] | None = Query(default=None),
         rolling_window_days: int = Query(default=14, ge=1, le=365),
     ) -> DashboardResponse:
         return await asyncio.to_thread(
@@ -428,6 +430,8 @@ def create_app(*, repo_root: Path | None = None) -> FastAPI:
             cost_min=cost_min,
             cost_max=cost_max,
             sdk_filter=sdk,
+            author_filters=author,
+            category_filters=category,
             rolling_window_days=rolling_window_days,
         )
 

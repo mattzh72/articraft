@@ -402,6 +402,7 @@ class DashboardRecord:
     sdk_package: str | None
     total_cost_usd: float | None
     effective_rating: float | None
+    author: str | None
     run_id: str | None
     category_slug: str | None
     model_id: str | None
@@ -1059,6 +1060,7 @@ class ViewerStore:
             sdk_package=_coerce_string(record.get("sdk_package")),
             total_cost_usd=total_cost_usd,
             effective_rating=_effective_rating(primary_rating, secondary_rating),
+            author=_coerce_string(record.get("author")),
             run_id=_coerce_string(source.get("run_id")) if isinstance(source, dict) else None,
             category_slug=category_slug_override or _coerce_string(record.get("category_slug")),
             model_id=_coerce_string(record.get("model_id")),
@@ -1295,6 +1297,8 @@ class ViewerStore:
         cost_min: float | None = None,
         cost_max: float | None = None,
         sdk_filter: str | None = None,
+        author_filters: list[str] | None = None,
+        category_filters: list[str] | None = None,
         rolling_window_days: int = 14,
     ) -> DashboardResponse:
         if rolling_window_days <= 0:
@@ -1329,6 +1333,20 @@ class ViewerStore:
                 if isinstance(record.sdk_package, str) and record.sdk_package
             }
         )
+        available_authors = sorted(
+            {
+                str(record.author)
+                for record in source_records
+                if isinstance(record.author, str) and record.author
+            }
+        )
+        available_categories = sorted(
+            {
+                str(record.category_slug)
+                for record in source_records
+                if isinstance(record.category_slug, str) and record.category_slug
+            }
+        )
         cost_values = [
             record.total_cost_usd
             for record in source_records
@@ -1346,6 +1364,8 @@ class ViewerStore:
             for record in source_records
             if (
                 (not sdk_filter or record.sdk_package == sdk_filter)
+                and _within_author_filters(record.author, author_filters)
+                and _within_category_filters(record.category_slug, category_filters)
                 and _within_dashboard_time_filter(
                     record.created_at,
                     oldest=time_oldest,
@@ -1382,6 +1402,8 @@ class ViewerStore:
                     sdk_filter,
                 )
             )
+            or bool(author_filters)
+            or bool(category_filters)
             or (normalized_stars_min is not None and normalized_stars_min > 0)
             or (normalized_stars_max is not None and normalized_stars_max < 5)
         )
@@ -1410,6 +1432,8 @@ class ViewerStore:
             generated_at=_utc_now(),
             supercategories=self.list_supercategories(),
             available_sdks=available_sdks,
+            available_authors=available_authors,
+            available_categories=available_categories,
             cost_bounds=cost_bounds,
             overview=overview,
             category_stats=self._dashboard_category_stats(filtered_records),

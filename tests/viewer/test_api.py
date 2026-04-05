@@ -768,6 +768,12 @@ def test_viewer_api_end_to_end(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) 
     assert dashboard.status_code == 200
     dashboard_payload = dashboard.json()
     assert dashboard_payload["available_sdks"] == ["sdk"]
+    assert dashboard_payload["available_authors"] == ["RuiningLi", "mattzh72"]
+    assert dashboard_payload["available_categories"] == [
+        "dj_equipment",
+        "exercise_bikes",
+        "hinges",
+    ]
     assert dashboard_payload["cost_bounds"] == {
         "min": 0.05,
         "max": 0.15,
@@ -811,6 +817,27 @@ def test_viewer_api_end_to_end(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) 
     assert filtered_dashboard_payload["overview"]["category_count"] == 1
     assert filtered_dashboard_payload["overview"]["is_filtered"] is True
     assert filtered_dashboard_payload["category_stats"] == {
+        "hinges": {
+            "count": 1,
+            "sdk_package": "sdk",
+            "average_rating": 3.5,
+            "average_cost_usd": 0.05,
+            "average_input_tokens": 800.0,
+            "average_output_tokens": 200.0,
+            "input_token_sample_count": 1,
+            "output_token_sample_count": 1,
+        }
+    }
+
+    author_and_category_filtered_dashboard = client.get(
+        "/api/dashboard?author=mattzh72&category=hinges&rolling_window_days=7"
+    )
+    assert author_and_category_filtered_dashboard.status_code == 200
+    author_and_category_filtered_payload = author_and_category_filtered_dashboard.json()
+    assert author_and_category_filtered_payload["overview"]["total_records"] == 1
+    assert author_and_category_filtered_payload["overview"]["category_count"] == 1
+    assert author_and_category_filtered_payload["overview"]["is_filtered"] is True
+    assert author_and_category_filtered_payload["category_stats"] == {
         "hinges": {
             "count": 1,
             "sdk_package": "sdk",

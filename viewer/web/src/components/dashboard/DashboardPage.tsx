@@ -49,6 +49,8 @@ export function DashboardPage(): JSX.Element {
     max: null,
   });
   const [sdkFilter, setSdkFilter] = useState<string | null>(null);
+  const [authorFilters, setAuthorFilters] = useState<string[]>([]);
+  const [categoryFilters, setCategoryFilters] = useState<string[]>([]);
   const [rollingWindowDays, setRollingWindowDays] = useState(14);
 
   const requestParams = useMemo(
@@ -57,9 +59,11 @@ export function DashboardPage(): JSX.Element {
       starsFilter,
       costFilter,
       sdkFilter,
+      authorFilters,
+      categoryFilters,
       rollingWindowDays,
     }),
-    [costFilter, rollingWindowDays, sdkFilter, starsFilter, timeFilter],
+    [authorFilters, categoryFilters, costFilter, rollingWindowDays, sdkFilter, starsFilter, timeFilter],
   );
   const deferredRequest = useDeferredValue(requestParams);
   const dashboardQuery = useQuery(
@@ -68,6 +72,8 @@ export function DashboardPage(): JSX.Element {
       starsFilter: deferredRequest.starsFilter,
       costFilter: deferredRequest.costFilter,
       sdkFilter: deferredRequest.sdkFilter,
+      authorFilters: deferredRequest.authorFilters,
+      categoryFilters: deferredRequest.categoryFilters,
       rollingWindowDays: deferredRequest.rollingWindowDays,
     }),
   );
@@ -117,7 +123,13 @@ export function DashboardPage(): JSX.Element {
             onCostFilterChange={setCostFilter}
             sdkFilter={sdkFilter}
             onSdkFilterChange={setSdkFilter}
+            authorFilters={authorFilters}
+            onAuthorFiltersChange={setAuthorFilters}
+            categoryFilters={categoryFilters}
+            onCategoryFiltersChange={setCategoryFilters}
             availableSdks={dashboard.available_sdks}
+            availableAuthors={dashboard.available_authors}
+            availableCategories={dashboard.available_categories}
             costBounds={dashboard.cost_bounds}
             recordCount={dashboard.overview.total_records}
             categoryCount={dashboard.overview.category_count}
