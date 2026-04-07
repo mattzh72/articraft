@@ -251,10 +251,32 @@ export function SupercategoriesSection({
     [supercategories, categoryStats],
   );
 
-  const totalRecords = useMemo(
+  const mappedRecordCount = useMemo(
     () => rows.reduce((sum, row) => sum + row.recordCount, 0),
     [rows],
   );
+
+  const mappedCategoryCount = useMemo(
+    () => rows.reduce((sum, row) => sum + row.categoryCount, 0),
+    [rows],
+  );
+
+  const totalRecordCount = useMemo(
+    () =>
+      Object.values(categoryStats).reduce(
+        (sum, stats) => sum + (typeof stats.count === "number" ? stats.count : 0),
+        0,
+      ),
+    [categoryStats],
+  );
+
+  const totalCategoryCount = useMemo(
+    () => Object.keys(categoryStats).length,
+    [categoryStats],
+  );
+
+  const unmappedRecordCount = Math.max(0, totalRecordCount - mappedRecordCount);
+  const unmappedCategoryCount = Math.max(0, totalCategoryCount - mappedCategoryCount);
 
   const displayRows = useMemo<DisplayRow[]>(
     () =>
@@ -262,9 +284,9 @@ export function SupercategoriesSection({
         .filter((row) => row.recordCount > 0)
         .map((row) => ({
           ...row,
-          share: totalRecords > 0 ? row.recordCount / totalRecords : 0,
+          share: mappedRecordCount > 0 ? row.recordCount / mappedRecordCount : 0,
         })),
-    [rows, totalRecords],
+    [rows, mappedRecordCount],
   );
 
   const chartConfig = useMemo(() => {
@@ -289,14 +311,23 @@ export function SupercategoriesSection({
           Supercategories
         </h2>
         <span className="text-[10px] text-[var(--text-quaternary)]">
-          Hover a group to highlight it
+          {mappedRecordCount < totalRecordCount
+            ? `${formatRecordCount(mappedRecordCount)} mapped of ${formatRecordCount(totalRecordCount)} records`
+            : "Hover a group to highlight it"}
         </span>
       </div>
 
       <div className="rounded-md border border-[var(--border-default)] bg-[var(--surface-0)] p-4">
+        {unmappedRecordCount > 0 ? (
+          <p className="mb-3 text-[10px] leading-4 text-[var(--text-quaternary)]">
+            Showing {formatRecordCount(mappedRecordCount)} mapped records across {mappedCategoryCount} categories.
+            {` ${formatRecordCount(unmappedRecordCount)} records in ${unmappedCategoryCount} categories are not assigned to a supercategory yet.`}
+          </p>
+        ) : null}
+
         {displayRows.length === 0 ? (
           <div className="py-8 text-center text-[11px] text-[var(--text-quaternary)]">
-            No supercategories match the current filters
+            No mapped supercategories match the current filters
           </div>
         ) : (
           <div
@@ -309,7 +340,7 @@ export function SupercategoriesSection({
                   <Tooltip cursor={false} content={<CustomTooltip />} />
 
                   <Pie
-                    data={[{ value: totalRecords }]}
+                    data={[{ value: mappedRecordCount }]}
                     dataKey="value"
                     innerRadius={70}
                     outerRadius={102}
@@ -344,10 +375,10 @@ export function SupercategoriesSection({
 
                         const centerValue = activeRow
                           ? formatRecordCount(activeRow.recordCount)
-                          : formatRecordCount(totalRecords);
+                          : formatRecordCount(mappedRecordCount);
                         const centerLabel = activeRow
                           ? formatShare(activeRow.share)
-                          : "records";
+                          : "mapped records";
 
                         return (
                           <text
@@ -382,7 +413,7 @@ export function SupercategoriesSection({
               <p className="mt-1 text-center text-[10px] text-[var(--text-quaternary)]">
                 {activeRow
                   ? `${activeRow.title} · ${activeRow.categoryCount} categories`
-                  : "Distribution by supercategory"}
+                  : "Distribution across mapped supercategories"}
               </p>
             </div>
 
