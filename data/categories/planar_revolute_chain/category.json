@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "slug": "folding_arm_chain",
-  "title": "Folding arm chain",
+  "slug": "planar_revolute_chain",
+  "title": "Planar revolute chain",
   "description": "",
   "prompt_batch_ids": [
     "20260312_seed_prompts_v1"
