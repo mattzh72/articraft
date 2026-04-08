@@ -10,7 +10,7 @@
   "secondary_rated_by": null,
   "kind": "generated_model",
   "prompt_kind": "single_prompt",
-  "category_slug": "folding_arm_chain",
+  "category_slug": "planar_revolute_chain",
   "source": {
     "run_id": "run_20260331_172028_809973_20260331-sdk-hybrid-fill-to-20-gpt54-high",
     "prompt_batch_id": null,

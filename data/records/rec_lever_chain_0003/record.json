@@ -6,7 +6,7 @@
   "rating": 4,
   "kind": "generated_model",
   "prompt_kind": "single_prompt",
-  "category_slug": "lever_chain",
+  "category_slug": "planar_revolute_chain",
   "source": {
     "run_id": "run_20260325_170410_328290_20260325-sdk-hybrid-mechanical-1x-gpt54-high",
     "prompt_batch_id": null,

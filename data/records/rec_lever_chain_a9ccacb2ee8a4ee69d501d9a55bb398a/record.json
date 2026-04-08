@@ -6,7 +6,7 @@
   "rating": 5,
   "kind": "generated_model",
   "prompt_kind": "single_prompt",
-  "category_slug": "lever_chain",
+  "category_slug": "planar_revolute_chain",
   "source": {
     "run_id": "run_20260329_040041_508364_20260328-sdk-hybrid-backfill-to-7-gpt54-high",
     "prompt_batch_id": null,

@@ -6,7 +6,7 @@
   "rating": 5,
   "kind": "generated_model",
   "prompt_kind": "single_prompt",
-  "category_slug": "lever_chain",
+  "category_slug": "planar_revolute_chain",
   "source": {
     "run_id": "run_20260328_033229_430311_20260327-sdk-hybrid-categories-realism-gpt54-hig",
     "prompt_batch_id": null,

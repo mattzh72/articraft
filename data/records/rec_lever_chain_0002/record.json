@@ -6,7 +6,7 @@
   "rating": 5,
   "kind": "generated_model",
   "prompt_kind": "single_prompt",
-  "category_slug": "lever_chain",
+  "category_slug": "planar_revolute_chain",
   "source": {
     "run_id": "run_import_lever_chain_20260312-181201-20260312-seed-prompts-v1",
     "prompt_batch_id": "20260312_seed_prompts_v1",

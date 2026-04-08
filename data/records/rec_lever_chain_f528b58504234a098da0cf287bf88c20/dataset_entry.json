@@ -2,6 +2,6 @@
   "schema_version": 1,
   "dataset_id": "ds_lever_chain_f528b58504234a098da0cf287bf88c20",
   "record_id": "rec_lever_chain_f528b58504234a098da0cf287bf88c20",
-  "category_slug": "lever_chain",
+  "category_slug": "planar_revolute_chain",
   "promoted_at": "2026-03-28T03:45:21Z"
 }

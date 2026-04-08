@@ -6,7 +6,7 @@
   "rating": 2,
   "kind": "generated_model",
   "prompt_kind": "single_prompt",
-  "category_slug": "folding_arm_chain",
+  "category_slug": "planar_revolute_chain",
   "source": {
     "run_id": "run_20260325_231541_877152_20260325-sdk-hybrid-fill-to-4-gpt54-medium",
     "prompt_batch_id": null,
