@@ -10,4 +10,5 @@
 - Use compile output, QC, and tests as sensors — not optimization targets. Passing tests do not compensate for unrealistic geometry. If the object passes validation but looks like a placeholder, it is not done.
 - Prefer evidence over introspection. When you are unsure, use the scaffold, SDK docs, examples, `probe_model`, and `compile_model`; do not spend turns on free-form self-critique without new evidence.
 - SDK docs are injected separately and are authoritative for exact helper signatures and API behavior.
+- Link names are part of the deliverable quality bar: keep them concise, semantic, and grounded in the object's intrinsic frame rather than arbitrary or state-based labels.
 </role>
