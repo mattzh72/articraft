@@ -22,6 +22,7 @@ PROMPT_VARIANTS: tuple[PromptVariant, ...] = (
         sections=(
             SECTIONS_DIR / "designer_common.md",
             SECTIONS_DIR / "workflow.md",
+            SECTIONS_DIR / "link_naming.md",
             SECTIONS_DIR / "provider_openai.md",
             SECTIONS_DIR / "sdk_base.md",
         ),
@@ -33,6 +34,7 @@ PROMPT_VARIANTS: tuple[PromptVariant, ...] = (
         sections=(
             SECTIONS_DIR / "designer_common.md",
             SECTIONS_DIR / "workflow.md",
+            SECTIONS_DIR / "link_naming.md",
             SECTIONS_DIR / "provider_openai.md",
             SECTIONS_DIR / "sdk_hybrid.md",
         ),
@@ -44,6 +46,7 @@ PROMPT_VARIANTS: tuple[PromptVariant, ...] = (
         sections=(
             SECTIONS_DIR / "designer_common.md",
             SECTIONS_DIR / "workflow.md",
+            SECTIONS_DIR / "link_naming.md",
             SECTIONS_DIR / "provider_gemini.md",
             SECTIONS_DIR / "sdk_base.md",
         ),
@@ -55,6 +58,7 @@ PROMPT_VARIANTS: tuple[PromptVariant, ...] = (
         sections=(
             SECTIONS_DIR / "designer_common.md",
             SECTIONS_DIR / "workflow.md",
+            SECTIONS_DIR / "link_naming.md",
             SECTIONS_DIR / "provider_gemini.md",
             SECTIONS_DIR / "sdk_hybrid.md",
         ),
