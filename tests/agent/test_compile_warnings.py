@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import linecache
 from pathlib import Path
 from types import SimpleNamespace
 
@@ -352,8 +353,29 @@ def test_runtime_error_failure_uses_remote_traceback_location_lines() -> None:
 
     signal = next(signal for signal in bundle.signals if signal.kind == "compile_runtime")
     assert signal.summary == "Standard_Failure: BRep_API: command not done"
-    assert "Location: /tmp/lib.py:34" in signal.details
+    assert "Location: tmp/lib.py:34" in signal.details
+    assert "/tmp/lib.py:34" not in signal.details
     assert "Code: return fillet_builder.Shape()" in signal.details
+
+
+def test_non_runtime_error_failure_sanitizes_local_location_lines() -> None:
+    source = "def build():\n    raise ValueError('bad loft')\n\nbuild()\n"
+    filename = "/Users/matthewzhou/articraft/agent/generated_model.py"
+    linecache.cache[filename] = (len(source), None, source.splitlines(True), filename)
+
+    try:
+        exec(compile(source, filename, "exec"), {})
+    except ValueError as exc:
+        bundle = build_compile_signal_bundle(status="failure", exc=exc)
+    else:
+        raise AssertionError("Expected ValueError")
+    finally:
+        linecache.cache.pop(filename, None)
+
+    signal = next(signal for signal in bundle.signals if signal.kind == "compile_runtime")
+    assert "Location: agent/generated_model.py:2" in signal.details
+    assert "/Users/matthewzhou/articraft/agent/generated_model.py:2" not in signal.details
+    assert "Code:     raise ValueError('bad loft')" in signal.details
 
 
 def test_compile_signal_bundle_accepts_protocol_shaped_test_report() -> None:

@@ -6,6 +6,7 @@ import math
 import re
 import traceback
 from dataclasses import dataclass
+from pathlib import Path
 from typing import Iterable, Literal, Protocol, TypeAlias, runtime_checkable
 
 from agent.models import CompileSignal, CompileSignalBundle
@@ -311,6 +312,8 @@ _MIN_DISTANCE_RE = re.compile(
     r"min_distance=(?P<distance>[-+0-9.eE]+)\s+contact_tol=(?P<tol>[-+0-9.eE]+)"
 )
 _TRACEBACK_FRAME_RE = re.compile(r'^\s*File "([^"]+)", line (\d+), in .+$')
+_WINDOWS_ABSOLUTE_PATH_RE = re.compile(r"^[A-Za-z]:[\\/]")
+_REPO_ROOT = Path(__file__).resolve().parents[1]
 
 
 def contains_code_in_text(text: str) -> bool:
@@ -324,6 +327,37 @@ def _compile_hint_lines(detail_lines: list[str]) -> list[str]:
     if any(LOFT_PROFILE_AREA_ERROR in line for line in detail_lines):
         return [LOFT_PROFILE_AREA_HINT]
     return []
+
+
+def _sanitize_display_path(path_text: str) -> str:
+    raw = path_text.strip()
+    if not raw:
+        return raw
+
+    normalized = raw.replace("\\", "/")
+    if normalized.startswith("<") and normalized.endswith(">"):
+        return raw
+    if not (
+        normalized.startswith("/")
+        or normalized.startswith("\\")
+        or _WINDOWS_ABSOLUTE_PATH_RE.match(raw)
+    ):
+        return normalized
+
+    repo_root = _REPO_ROOT.as_posix().rstrip("/")
+    if normalized == repo_root:
+        return "."
+    if repo_root and normalized.startswith(f"{repo_root}/"):
+        return normalized[len(repo_root) + 1 :]
+
+    parts = [part for part in normalized.split("/") if part]
+    for marker in ("site-packages", "dist-packages"):
+        if marker in parts:
+            return "/".join(parts[parts.index(marker) :])
+
+    if len(parts) <= 2:
+        return "/".join(parts)
+    return f".../{'/'.join(parts[-3:])}"
 
 
 def _display_exception_type(exc: BaseException) -> str:
@@ -439,7 +473,7 @@ def _location_lines_from_traceback_text(traceback_text: str) -> list[str]:
     if last_frame_idx < 0 or not last_filename or not last_lineno:
         return []
 
-    rendered = [f"Location: {last_filename}:{last_lineno}"]
+    rendered = [f"Location: {_sanitize_display_path(last_filename)}:{last_lineno}"]
     if last_frame_idx + 1 < len(lines):
         code_line = lines[last_frame_idx + 1].strip()
         if code_line and _TRACEBACK_FRAME_RE.match(lines[last_frame_idx + 1]) is None:
@@ -458,7 +492,7 @@ def _exception_location_lines(exc: BaseException) -> list[str]:
         return []
 
     last = extracted[-1]
-    location = f"{last.filename}:{last.lineno}"
+    location = f"{_sanitize_display_path(last.filename)}:{last.lineno}"
     lines = [f"Location: {location}"]
     raw_line = linecache.getline(last.filename, last.lineno).rstrip("\n")
     if raw_line.strip():
