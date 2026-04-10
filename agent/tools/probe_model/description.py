@@ -21,7 +21,7 @@ def build_probe_model_description() -> str:
         - The snippet runs in an isolated subprocess with a timeout.
 
         Guidance:
-        - The injected SDK docs include the exact probe helper catalog and signatures.
+        - Read `docs/sdk/references/probe-tooling.md` for the exact probe helper catalog and signatures.
         - IMPORTANT: Do not import probe helpers from `sdk` or other modules inside the snippet. Helpers such as `part(...)`, `joint(...)`, `visual(...)`, `pose(...)`, `emit(...)`, `pair_report(...)`, and related review helpers are already injected into the snippet namespace.
         - The helper surface includes lookup, measurement, relationship, and review helpers such as `part(...)`, `visual(...)`, `pose(...)`, `summary(...)`, `pair_report(...)`, `find_clearance_risks(...)`, and `geometry_connectivity_report(...)`.
         - Except for the explicit `aabb(...)` helper, probe measurements should prefer exact geometry over transformed AABB approximations.

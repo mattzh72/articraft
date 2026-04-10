@@ -8,8 +8,6 @@ from agent import runner
 from agent.prompts import (
     DESIGNER_PROMPT_NAME,
     GEMINI_DESIGNER_PROMPT_NAME,
-    HYBRID_GEMINI_DESIGNER_PROMPT_NAME,
-    HYBRID_OPENAI_DESIGNER_PROMPT_NAME,
     OPENAI_DESIGNER_PROMPT_NAME,
     load_system_prompt_text,
     resolve_system_prompt_path,
@@ -54,14 +52,6 @@ def test_openai_prompt_resolution_and_payload_preview() -> None:
     assert loaded_path == resolved
     assert loaded_text == resolved.read_text(encoding="utf-8")
 
-    hybrid_resolved = resolve_system_prompt_path(
-        DESIGNER_PROMPT_NAME,
-        provider="openai",
-        sdk_package="sdk_hybrid",
-        repo_root=repo_root,
-    )
-    assert hybrid_resolved.name == HYBRID_OPENAI_DESIGNER_PROMPT_NAME
-
     payload = build_provider_payload_preview(
         "a pair of scissors",
         provider="openai",
@@ -94,9 +84,11 @@ def test_openai_prompt_resolution_and_payload_preview() -> None:
     assert "REALISTIC GEOMETRY" in instructions
 
     # Compact workflow + moved SDK guidance
-    assert "Read `model.py` and the preloaded SDK quickstart before editing." in instructions
+    assert "Start with a short evidence-gathering pass before the first edit:" in instructions
+    assert "preloaded SDK quickstart/router" in instructions
+    assert "load only the specific `docs/` references needed for that next change" in instructions
     assert (
-        "Use `read_file(path=...)` to load additional `docs/` references only when needed."
+        "Gather context for the next coherent edit, not for the whole object up front."
         in instructions
     )
     assert "Start with the smallest coherent backbone or subassembly" in instructions
@@ -107,7 +99,12 @@ def test_openai_prompt_resolution_and_payload_preview() -> None:
     assert "inspection-only" in instructions
     assert "lexical search over curated examples for the active SDK" in instructions
     assert "<compile_signals>" in instructions
-    assert "See injected SDK docs" in instructions
+    assert "Read mounted SDK docs as needed" in instructions
+    assert "Prefer Articraft-native primitives and placement helpers" in instructions
+    assert (
+        "Use CadQuery-backed geometry only for the specific parts that need lower-level control"
+        in instructions
+    )
     assert "Do not provide `file_path`" not in instructions
     assert "missing exact geometry" not in instructions
     assert "means a gap, not an overlap" not in instructions
@@ -118,6 +115,8 @@ def test_openai_prompt_resolution_and_payload_preview() -> None:
         'Read the exact current code with `read_file(path="model.py")` before editing.'
         in task_message
     )
+    assert "Start with a short context pass: decide the next coherent edit" in task_message
+    assert "do not front-load unrelated references" in task_message
     assert task_message.endswith("</runtime_task_guidance>")
 
     # Cache key
@@ -130,18 +129,9 @@ def test_openai_prompt_resolution_and_payload_preview() -> None:
     assert "## docs/sdk/references/probe-tooling.md" in docs_message
     assert "## docs/sdk/references/testing.md" in docs_message
     assert "Virtual Workspace" in docs_message
-    assert "Preserve the existing import root already present in `model.py`." in docs_message
+    assert "Import from `sdk` in `model.py`." in docs_message
     assert "Use `place_on_surface(...)` by default" in docs_message
     assert "Once `run_tests()` references a visual by exact `elem_*` name" in docs_message
-
-
-def test_openai_hybrid_payload_preview_includes_hybrid_docs() -> None:
-    hybrid_docs_message = _build_openai_preview(
-        sdk_package="sdk_hybrid",
-        sdk_docs_mode="full",
-    )["input"][0]["content"][0]["text"]
-    assert "## docs/sdk/references/quickstart.md" in hybrid_docs_message
-    assert "legacy hybrid runs use `sdk_hybrid`" in hybrid_docs_message
 
 
 def test_openai_core_payload_preview_keeps_router_bundle() -> None:
@@ -153,17 +143,9 @@ def test_openai_core_payload_preview_keeps_router_bundle() -> None:
     assert "## docs/sdk/references/testing.md" in docs_message
 
 
-def test_openai_hybrid_core_payload_preview_keeps_router_bundle() -> None:
-    docs_message = _build_openai_preview(sdk_package="sdk_hybrid", sdk_docs_mode="core")["input"][
-        0
-    ]["content"][0]["text"]
-    assert "## docs/sdk/references/quickstart.md" in docs_message
-    assert "legacy hybrid runs use `sdk_hybrid`" in docs_message
-
-
-def test_openai_hybrid_payload_preview_includes_find_examples_tool() -> None:
+def test_openai_payload_preview_includes_find_examples_tool() -> None:
     payload = _build_openai_preview(
-        sdk_package="sdk_hybrid",
+        sdk_package="sdk",
         sdk_docs_mode="full",
     )
 
@@ -213,12 +195,10 @@ def test_openai_prompt_cache_key_is_stable_across_user_prompt_changes() -> None:
 
 
 def test_openai_prompt_cache_key_changes_for_sdk_package_and_docs_mode() -> None:
-    base_payload = _build_openai_preview(sdk_package="sdk", sdk_docs_mode="full")
-    hybrid_payload = _build_openai_preview(sdk_package="sdk_hybrid", sdk_docs_mode="full")
+    full_payload = _build_openai_preview(sdk_package="sdk", sdk_docs_mode="full")
     core_payload = _build_openai_preview(sdk_package="sdk", sdk_docs_mode="core")
 
-    assert base_payload["prompt_cache_key"] != hybrid_payload["prompt_cache_key"]
-    assert base_payload["prompt_cache_key"] != core_payload["prompt_cache_key"]
+    assert full_payload["prompt_cache_key"] != core_payload["prompt_cache_key"]
 
 
 def test_openai_prompt_cache_key_changes_for_system_prompt_contents(tmp_path: Path) -> None:
@@ -314,14 +294,6 @@ def test_gemini_prompt_resolution_and_payload_preview() -> None:
     )
     assert gemini_resolved.name == GEMINI_DESIGNER_PROMPT_NAME
 
-    gemini_hybrid_resolved = resolve_system_prompt_path(
-        DESIGNER_PROMPT_NAME,
-        provider="gemini",
-        sdk_package="sdk_hybrid",
-        repo_root=repo_root,
-    )
-    assert gemini_hybrid_resolved.name == HYBRID_GEMINI_DESIGNER_PROMPT_NAME
-
     gemini_payload = build_provider_payload_preview(
         "a pair of scissors",
         provider="gemini",
@@ -355,9 +327,16 @@ def test_gemini_prompt_resolution_and_payload_preview() -> None:
     assert "REALISTIC GEOMETRY" in gemini_instructions
 
     # Compact workflow
-    assert "Read `model.py` and the preloaded SDK quickstart before editing." in gemini_instructions
     assert (
-        "Use `read_file(path=...)` to load additional `docs/` references only when needed."
+        "Start with a short evidence-gathering pass before the first edit:" in gemini_instructions
+    )
+    assert "preloaded SDK quickstart/router" in gemini_instructions
+    assert (
+        "load only the specific `docs/` references needed for that next change"
+        in gemini_instructions
+    )
+    assert (
+        "Gather context for the next coherent edit, not for the whole object up front."
         in gemini_instructions
     )
     assert "Start with the smallest coherent backbone or subassembly" in gemini_instructions
@@ -370,7 +349,12 @@ def test_gemini_prompt_resolution_and_payload_preview() -> None:
     # Provider/system guidance
     assert "inspection-only" in gemini_instructions
     assert "lexical search over curated examples for the active SDK" in gemini_instructions
-    assert "See injected SDK docs" in gemini_instructions
+    assert "Read mounted SDK docs as needed" in gemini_instructions
+    assert "Prefer Articraft-native primitives and placement helpers" in gemini_instructions
+    assert (
+        "Use CadQuery-backed geometry only for the specific parts that need lower-level control"
+        in gemini_instructions
+    )
 
     # Runtime first-turn task guidance
     assert gemini_task_message.startswith("a pair of scissors")
@@ -378,6 +362,7 @@ def test_gemini_prompt_resolution_and_payload_preview() -> None:
         'Read the exact current code with `read_file(path="model.py")` before editing.'
         in gemini_task_message
     )
+    assert "Start with a short context pass: decide the next coherent edit" in gemini_task_message
     assert 'read_file(path="docs/...")' in gemini_task_message
     assert gemini_task_message.endswith("</runtime_task_guidance>")
 
@@ -387,14 +372,14 @@ def test_gemini_prompt_resolution_and_payload_preview() -> None:
     assert "Once `run_tests()` references a visual by exact `elem_*` name" in gemini_docs_message
 
 
-def test_gemini_hybrid_payload_preview_includes_find_examples_tool() -> None:
+def test_gemini_payload_preview_includes_find_examples_tool() -> None:
     payload = build_provider_payload_preview(
         "a pair of scissors",
         provider="gemini",
         model_id="gemini-2.5-pro",
         thinking_level="high",
         system_prompt_path=DESIGNER_PROMPT_NAME,
-        sdk_package="sdk_hybrid",
+        sdk_package="sdk",
     )
 
     declarations = payload["config"]["tools"][0]["function_declarations"]
