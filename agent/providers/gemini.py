@@ -22,6 +22,7 @@ from typing import Any, Optional, Union
 
 from agent.prompts import load_prompt_section_text
 from agent.providers.base import CompactionEvent, PrepareRequestResult, ProviderTraceEvent
+from agent.providers.compaction_policy import decide_compaction
 
 try:
     from dotenv import load_dotenv  # type: ignore
@@ -33,7 +34,6 @@ except Exception:  # pragma: no cover
 
 _logger = logging.getLogger(__name__)
 
-_COMPILE_PLATEAU_THRESHOLD = 3
 _GEMINI_DANGER_ZONE_TOKENS = 700_000
 _GEMINI_PREFIX_CACHE_TTL_SECONDS = 3600
 _GEMINI_PREFIX_CACHE_REFRESH_WINDOW_SECONDS = 300
@@ -158,34 +158,46 @@ class GeminiLLM:
                 )
             )
 
-        trigger: str | None = None
-        if (
-            hard_threshold is not None
-            and prompt_tokens is not None
-            and prompt_tokens >= hard_threshold
-        ):
-            trigger = "hard_pressure"
-        elif (
-            consecutive_compile_failure_count >= _COMPILE_PLATEAU_THRESHOLD
-            and isinstance(last_compile_failure_sig, str)
-            and last_compile_failure_sig
-            and last_compile_failure_sig != self._last_soft_compaction_failure_sig
-        ):
-            trigger = "compile_plateau"
-
-        if trigger is None:
-            return result
-
-        if (
-            trigger != "hard_pressure"
-            and self._last_compaction_turn_number is not None
-            and self._last_compaction_turn_number == (turn_number - 1)
-        ):
-            return result
-
         immutable_prefix_messages, compactable_messages, raw_tail_messages = (
             self._partition_compaction_messages()
         )
+        # Keep the trigger policy shared across providers so pressure bands,
+        # cache-aware thresholds, and cooldown behavior stay aligned.
+        decision = decide_compaction(
+            prompt_tokens=prompt_tokens,
+            cached_tokens=self._last_cached_tokens(),
+            hard_threshold=hard_threshold,
+            consecutive_compile_failure_count=consecutive_compile_failure_count,
+            last_compile_failure_sig=last_compile_failure_sig,
+            last_soft_compaction_failure_sig=self._last_soft_compaction_failure_sig,
+            compactable_item_count=len(compactable_messages),
+            turn_number=turn_number,
+            last_soft_compaction_turn_number=self._last_soft_compaction_turn_number,
+            last_soft_compaction_prompt_tokens=self._last_soft_compaction_prompt_tokens,
+        )
+        trigger = decision.trigger
+        if trigger is None:
+            if consecutive_compile_failure_count > 0 and last_compile_failure_sig:
+                result.trace_events.append(
+                    ProviderTraceEvent(
+                        event_type="compaction_skipped",
+                        payload={
+                            "reason": decision.reason,
+                            "model_id": self.model_id,
+                            "prompt_tokens": prompt_tokens,
+                            "cached_tokens": self._last_cached_tokens(),
+                            "turn_before_request": completed_turns,
+                            "failure_streak": consecutive_compile_failure_count,
+                            "pressure_ratio": decision.pressure_ratio,
+                            "cache_ratio": decision.cache_ratio,
+                            "soft_failure_threshold": decision.soft_failure_threshold,
+                            "min_compactable_items": decision.min_compactable_items,
+                            "hard_trigger_tokens": decision.hard_trigger_tokens,
+                        },
+                    )
+                )
+            return result
+
         if not compactable_messages:
             result.trace_events.append(
                 ProviderTraceEvent(
@@ -221,6 +233,8 @@ class GeminiLLM:
         self._last_compaction_turn_number = turn_number
         if trigger == "compile_plateau":
             self._last_soft_compaction_failure_sig = last_compile_failure_sig
+            self._last_soft_compaction_turn_number = turn_number
+            self._last_soft_compaction_prompt_tokens = prompt_tokens
 
         if estimate_error is None:
             try:
@@ -251,11 +265,16 @@ class GeminiLLM:
             previous_response_id_cleared=False,
             guardrails={
                 "min_turns_satisfied": True,
-                "back_to_back_allowed": True,
+                "hard_trigger_tokens": decision.hard_trigger_tokens,
+                "pressure_ratio": decision.pressure_ratio,
+                "cache_ratio": decision.cache_ratio,
+                "soft_failure_threshold": decision.soft_failure_threshold,
                 "raw_tail_preserved": True,
             },
             estimate_error=estimate_error,
         )
+        if trigger == "compile_plateau" and isinstance(after_tokens, int):
+            self._last_soft_compaction_prompt_tokens = after_tokens
         result.compaction_event = event
         result.trace_events.append(
             ProviderTraceEvent(event_type="compaction", payload=event.to_dict())
@@ -343,6 +362,8 @@ class GeminiLLM:
         self._last_usage: Optional[dict[str, int]] = None
         self._last_compaction_turn_number: int | None = None
         self._last_soft_compaction_failure_sig: str | None = None
+        self._last_soft_compaction_turn_number: int | None = None
+        self._last_soft_compaction_prompt_tokens: int | None = None
         self._unsupported_threshold_event_emitted = False
         self._summary_message: dict[str, Any] | None = None
         self._cached_content_name: str | None = None
@@ -431,6 +452,12 @@ class GeminiLLM:
             return None
         prompt_tokens = self._last_usage.get("prompt_tokens")
         return prompt_tokens if isinstance(prompt_tokens, int) else None
+
+    def _last_cached_tokens(self) -> int | None:
+        if not isinstance(self._last_usage, dict):
+            return None
+        cached_tokens = self._last_usage.get("cached_tokens")
+        return cached_tokens if isinstance(cached_tokens, int) else None
 
     def _extract_cache_usage(self, cache: Any) -> dict[str, int] | None:
         if isinstance(cache, dict) and isinstance(cache.get("usage_metadata"), dict):

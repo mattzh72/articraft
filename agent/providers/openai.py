@@ -22,6 +22,7 @@ from typing import Any, Optional
 from urllib.parse import urlparse, urlunparse
 
 from agent.providers.base import CompactionEvent, PrepareRequestResult, ProviderTraceEvent
+from agent.providers.compaction_policy import decide_compaction
 
 try:
     from dotenv import load_dotenv  # type: ignore
@@ -34,7 +35,6 @@ except Exception:  # pragma: no cover
 logger = logging.getLogger(__name__)
 
 
-_COMPILE_PLATEAU_THRESHOLD = 3
 _GPT_5_4_DANGER_ZONE_TOKENS = 272_000
 _GPT_5_2_AND_5_3_CODEX_DANGER_ZONE_TOKENS = 280_000
 DEFAULT_OPENAI_COMPACTION_MODEL = "gpt-5.4-mini"
@@ -237,6 +237,8 @@ class OpenAILLM:
         self._last_usage: Optional[dict[str, int]] = None
         self._last_compaction_turn_number: Optional[int] = None
         self._last_soft_compaction_failure_sig: Optional[str] = None
+        self._last_soft_compaction_turn_number: Optional[int] = None
+        self._last_soft_compaction_prompt_tokens: Optional[int] = None
         self._unsupported_threshold_event_emitted = False
         self._websocket: Any = None
         self._websocket_opened_at: Optional[float] = None
@@ -263,6 +265,8 @@ class OpenAILLM:
         self._last_usage = None
         self._last_compaction_turn_number = None
         self._last_soft_compaction_failure_sig = None
+        self._last_soft_compaction_turn_number = None
+        self._last_soft_compaction_prompt_tokens = None
         self._unsupported_threshold_event_emitted = False
         self._append_new_inputs(messages)
 
@@ -314,34 +318,46 @@ class OpenAILLM:
                 )
             )
 
-        trigger: str | None = None
-        if (
-            hard_threshold is not None
-            and prompt_tokens is not None
-            and prompt_tokens >= hard_threshold
-        ):
-            trigger = "hard_pressure"
-        elif (
-            consecutive_compile_failure_count >= _COMPILE_PLATEAU_THRESHOLD
-            and isinstance(last_compile_failure_sig, str)
-            and last_compile_failure_sig
-            and last_compile_failure_sig != self._last_soft_compaction_failure_sig
-        ):
-            trigger = "compile_plateau"
-
-        if trigger is None:
-            return result
-
-        if (
-            trigger != "hard_pressure"
-            and self._last_compaction_turn_number is not None
-            and self._last_compaction_turn_number == (turn_number - 1)
-        ):
-            return result
-
         immutable_prefix_items, compactable_items, raw_tail_items = (
             self._partition_compaction_items()
         )
+        # Keep the trigger policy shared across providers so pressure bands,
+        # cache-aware thresholds, and cooldown behavior stay aligned.
+        decision = decide_compaction(
+            prompt_tokens=prompt_tokens,
+            cached_tokens=self._last_cached_tokens(),
+            hard_threshold=hard_threshold,
+            consecutive_compile_failure_count=consecutive_compile_failure_count,
+            last_compile_failure_sig=last_compile_failure_sig,
+            last_soft_compaction_failure_sig=self._last_soft_compaction_failure_sig,
+            compactable_item_count=len(compactable_items),
+            turn_number=turn_number,
+            last_soft_compaction_turn_number=self._last_soft_compaction_turn_number,
+            last_soft_compaction_prompt_tokens=self._last_soft_compaction_prompt_tokens,
+        )
+        trigger = decision.trigger
+        if trigger is None:
+            if consecutive_compile_failure_count > 0 and last_compile_failure_sig:
+                result.trace_events.append(
+                    ProviderTraceEvent(
+                        event_type="compaction_skipped",
+                        payload={
+                            "reason": decision.reason,
+                            "model_id": self.model_id,
+                            "prompt_tokens": prompt_tokens,
+                            "cached_tokens": self._last_cached_tokens(),
+                            "turn_before_request": completed_turns,
+                            "failure_streak": consecutive_compile_failure_count,
+                            "pressure_ratio": decision.pressure_ratio,
+                            "cache_ratio": decision.cache_ratio,
+                            "soft_failure_threshold": decision.soft_failure_threshold,
+                            "min_compactable_items": decision.min_compactable_items,
+                            "hard_trigger_tokens": decision.hard_trigger_tokens,
+                        },
+                    )
+                )
+            return result
+
         if not compactable_items:
             result.trace_events.append(
                 ProviderTraceEvent(
@@ -382,6 +398,8 @@ class OpenAILLM:
         self._last_compaction_turn_number = turn_number
         if trigger == "compile_plateau":
             self._last_soft_compaction_failure_sig = last_compile_failure_sig
+            self._last_soft_compaction_turn_number = turn_number
+            self._last_soft_compaction_prompt_tokens = prompt_tokens
 
         if estimate_error is None:
             try:
@@ -415,11 +433,16 @@ class OpenAILLM:
             previous_response_id_cleared=True,
             guardrails={
                 "min_turns_satisfied": True,
-                "back_to_back_allowed": True,
+                "hard_trigger_tokens": decision.hard_trigger_tokens,
+                "pressure_ratio": decision.pressure_ratio,
+                "cache_ratio": decision.cache_ratio,
+                "soft_failure_threshold": decision.soft_failure_threshold,
                 "raw_tail_preserved": True,
             },
             estimate_error=estimate_error,
         )
+        if trigger == "compile_plateau" and isinstance(after_tokens, int):
+            self._last_soft_compaction_prompt_tokens = after_tokens
         result.compaction_event = event
         result.trace_events.append(
             ProviderTraceEvent(
@@ -637,6 +660,12 @@ class OpenAILLM:
             return None
         prompt_tokens = self._last_usage.get("prompt_tokens")
         return prompt_tokens if isinstance(prompt_tokens, int) else None
+
+    def _last_cached_tokens(self) -> int | None:
+        if not isinstance(self._last_usage, dict):
+            return None
+        cached_tokens = self._last_usage.get("cached_tokens")
+        return cached_tokens if isinstance(cached_tokens, int) else None
 
     async def _request_with_http(self, request_payload: dict[str, Any]) -> Any:
         if self._client is None:
