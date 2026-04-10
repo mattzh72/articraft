@@ -331,7 +331,7 @@ def test_gemini_prompt_resolution_and_payload_preview() -> None:
 
     # Tool contract
     assert (
-        "Available tools: `read_file`, `edit_code`, `compile_model`, `probe_model`, and `find_examples`."
+        "Available tools: `read_code`, `read_file`, `edit_code`, `compile_model`, `probe_model`, and `find_examples`."
         in gemini_instructions
     )
     assert 'old_string=""' in gemini_instructions
@@ -383,7 +383,7 @@ def test_gemini_prompt_resolution_and_payload_preview() -> None:
     # Runtime first-turn task guidance
     assert gemini_task_message.startswith("<runtime_task_guidance>")
     assert (
-        'Read the exact current code with `read_file(path="model.py")` before editing.'
+        "Read the exact current editable code with `read_code()` before editing."
         in gemini_task_message
     )
     assert (
@@ -416,7 +416,7 @@ def test_gemini_payload_preview_includes_find_examples_tool() -> None:
     assert "probe_model" in tool_names
     assert "find_examples" in tool_names
     assert (
-        "Available tools: `read_file`, `edit_code`, `compile_model`, `probe_model`, and `find_examples`."
+        "Available tools: `read_code`, `read_file`, `edit_code`, `compile_model`, `probe_model`, and `find_examples`."
         in payload["config"]["system_instruction"]
     )
     assert (

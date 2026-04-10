@@ -18,6 +18,7 @@ from agent.tools.compile_model import CompileModelTool
 from agent.tools.edit_code import EditCodeTool
 from agent.tools.find_examples import FindExamplesTool
 from agent.tools.probe_model import ProbeModelTool
+from agent.tools.read_code import ReadCodeTool
 from agent.tools.read_file import ReadFileTool
 from agent.tools.registry import ToolRegistry
 from agent.tools.write_code import WriteCodeTool
@@ -71,13 +72,14 @@ _FIRST_TURN_RUNTIME_GUIDANCE_BY_PROVIDER: dict[str, str] = {
     "gemini": (
         "<runtime_task_guidance>\n"
         "- Start with a small coherent backbone or subassembly, then expand incrementally.\n"
-        '- Read the exact current code with `read_file(path="model.py")` before editing.\n'
+        "- Read the exact current editable code with `read_code()` before editing.\n"
         "- Start with a short context pass: decide the next coherent edit, then read only the docs/examples needed for it.\n"
         '- The SDK quickstart/router is preloaded. If a `docs/sdk/references/...` file is relevant, read the full file with `read_file(path="docs/...")`.\n'
+        '- Use `read_file(path="model.py")` only when you need the full scaffolded artifact, not when copying `old_string` for `edit_code`.\n'
         "- Do not front-load unrelated docs, and do not re-read a reference file that is already in context.\n"
         "- Use `find_examples` for unfamiliar geometry, mechanisms, placement patterns, or testing structure, and adapt examples against current SDK docs.\n"
         "- Prefer small exact `edit_code` replacements over broad rewrites.\n"
-        "- If `edit_code` fails, reread the exact current text before retrying.\n"
+        "- If `edit_code` fails, reread the exact current editable text with `read_code()` before retrying.\n"
         "- After each coherent chunk, run `compile_model` before moving on.\n"
         "- Use tools deliberately. Prefer the smallest action that gives decisive evidence.\n"
         "- If the cause is obvious from `model.py` and `compile_model` output, fix it directly.\n"
@@ -105,6 +107,7 @@ def build_tool_registry(
         ]
     else:
         tools = [
+            ReadCodeTool(),
             ReadFileTool(),
             EditCodeTool(),
             CompileModelTool(),

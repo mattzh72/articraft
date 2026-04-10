@@ -20,6 +20,7 @@ def test_provider_tool_registry_schemas() -> None:
         "find_examples",
     }
     assert set(gemini_registry.get_all_tool_names()) == {
+        "read_code",
         "read_file",
         "edit_code",
         "compile_model",

@@ -56,6 +56,7 @@ def test_first_turn_runtime_guidance_is_provider_specific() -> None:
     assert "read_file" in openai_guidance
     assert "apply_patch" in openai_guidance
     assert "docs/..." in openai_guidance
+    assert "read_code" in gemini_guidance
     assert "read_file" in gemini_guidance
     assert "edit_code" in gemini_guidance
 
