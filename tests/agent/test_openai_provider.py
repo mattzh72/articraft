@@ -23,6 +23,48 @@ class _FakeOpenAIError(RuntimeError):
         super().__init__(message)
 
 
+def _seed_openai_compaction_provider(
+    *,
+    prompt_tokens: int,
+    cached_tokens: int = 0,
+) -> OpenAILLM:
+    provider = OpenAILLM(dry_run=True)
+    provider._input_items = [
+        {"role": "user", "content": [{"type": "input_text", "text": "docs"}]},
+        {"role": "user", "content": [{"type": "input_text", "text": "task"}]},
+        {
+            "type": "message",
+            "role": "assistant",
+            "content": [{"type": "output_text", "text": "old"}],
+        },
+        {
+            "type": "function_call",
+            "call_id": "call_old",
+            "name": "compile_model",
+            "arguments": "{}",
+        },
+        {"type": "function_call_output", "call_id": "call_old", "output": "old output"},
+        {
+            "type": "message",
+            "role": "assistant",
+            "content": [{"type": "output_text", "text": "latest"}],
+        },
+        {
+            "type": "function_call",
+            "call_id": "call_latest",
+            "name": "compile_model",
+            "arguments": "{}",
+        },
+        {"type": "function_call_output", "call_id": "call_latest", "output": "latest output"},
+    ]
+    provider._last_response_start_index = 5
+    provider._last_usage = {
+        "prompt_tokens": prompt_tokens,
+        "cached_tokens": cached_tokens,
+    }
+    return provider
+
+
 def test_openai_api_keys_from_env_prefers_primary_key_and_dedupes() -> None:
     keys = openai_api_keys_from_env(
         {
@@ -335,37 +377,7 @@ def test_prepare_next_request_compacts_for_hard_pressure_and_clears_previous_res
 
 
 def test_prepare_next_request_compacts_once_for_compile_plateau_signature() -> None:
-    provider = OpenAILLM(dry_run=True)
-    provider._input_items = [
-        {"role": "user", "content": [{"type": "input_text", "text": "docs"}]},
-        {"role": "user", "content": [{"type": "input_text", "text": "task"}]},
-        {
-            "type": "message",
-            "role": "assistant",
-            "content": [{"type": "output_text", "text": "old"}],
-        },
-        {
-            "type": "function_call",
-            "call_id": "call_old",
-            "name": "compile_model",
-            "arguments": "{}",
-        },
-        {"type": "function_call_output", "call_id": "call_old", "output": "old output"},
-        {
-            "type": "message",
-            "role": "assistant",
-            "content": [{"type": "output_text", "text": "latest"}],
-        },
-        {
-            "type": "function_call",
-            "call_id": "call_latest",
-            "name": "compile_model",
-            "arguments": "{}",
-        },
-        {"type": "function_call_output", "call_id": "call_latest", "output": "latest output"},
-    ]
-    provider._last_response_start_index = 5
-    provider._last_usage = {"prompt_tokens": 10_000}
+    provider = _seed_openai_compaction_provider(prompt_tokens=210_000)
 
     compact_calls = 0
 
@@ -394,7 +406,7 @@ def test_prepare_next_request_compacts_once_for_compile_plateau_signature() -> N
             messages=[],
             tools=[],
             completed_turns=2,
-            consecutive_compile_failure_count=3,
+            consecutive_compile_failure_count=4,
             last_compile_failure_sig="sig_a",
         )
     )
@@ -415,43 +427,85 @@ def test_prepare_next_request_compacts_once_for_compile_plateau_signature() -> N
     assert compact_calls == 1
 
 
-def test_prepare_next_request_allows_same_plateau_signature_after_reset() -> None:
-    provider = OpenAILLM(dry_run=True)
-    provider._input_items = [
-        {"role": "user", "content": [{"type": "input_text", "text": "docs"}]},
-        {"role": "user", "content": [{"type": "input_text", "text": "task"}]},
-        {
-            "type": "message",
-            "role": "assistant",
-            "content": [{"type": "output_text", "text": "old"}],
-        },
-        {
-            "type": "function_call",
-            "call_id": "call_old",
-            "name": "compile_model",
-            "arguments": "{}",
-        },
-        {"type": "function_call_output", "call_id": "call_old", "output": "old output"},
-        {
-            "type": "message",
-            "role": "assistant",
-            "content": [{"type": "output_text", "text": "latest"}],
-        },
-        {
-            "type": "function_call",
-            "call_id": "call_latest",
-            "name": "compile_model",
-            "arguments": "{}",
-        },
-        {"type": "function_call_output", "call_id": "call_latest", "output": "latest output"},
-    ]
-    provider._last_response_start_index = 5
-    provider._last_usage = {"prompt_tokens": 10_000}
+def test_prepare_next_request_skips_compile_plateau_under_low_pressure() -> None:
+    provider = _seed_openai_compaction_provider(prompt_tokens=10_000)
+
+    result = asyncio.run(
+        provider.prepare_next_request(
+            system_prompt="system",
+            messages=[],
+            tools=[],
+            completed_turns=2,
+            consecutive_compile_failure_count=6,
+            last_compile_failure_sig="sig_a",
+        )
+    )
+
+    assert result.compaction_event is None
+    assert [event.event_type for event in result.trace_events] == ["compaction_skipped"]
+    assert result.trace_events[0].payload["reason"] == "soft_pressure_too_low"
+
+
+def test_prepare_next_request_requires_extra_failure_when_cache_hits_are_high() -> None:
+    provider = _seed_openai_compaction_provider(prompt_tokens=210_000, cached_tokens=150_000)
 
     compact_calls = 0
 
     async def fake_count_request_tokens(request_payload: dict) -> int:
         return len(request_payload["input"]) * 100
+
+    async def fake_compact_inputs(
+        *,
+        system_prompt: str,
+        input_items: list[dict[str, object]],
+    ) -> dict:
+        nonlocal compact_calls
+        compact_calls += 1
+        return {
+            "id": "resp_cmp",
+            "output": [{"type": "compaction", "id": f"cmp_{compact_calls}"}],
+            "usage": {"input_tokens": 1_000, "output_tokens": 250, "total_tokens": 1_250},
+        }
+
+    provider._count_request_tokens = fake_count_request_tokens  # type: ignore[method-assign]
+    provider._compact_inputs = fake_compact_inputs  # type: ignore[method-assign]
+
+    skipped = asyncio.run(
+        provider.prepare_next_request(
+            system_prompt="system",
+            messages=[],
+            tools=[],
+            completed_turns=2,
+            consecutive_compile_failure_count=4,
+            last_compile_failure_sig="sig_a",
+        )
+    )
+    compacted = asyncio.run(
+        provider.prepare_next_request(
+            system_prompt="system",
+            messages=[],
+            tools=[],
+            completed_turns=3,
+            consecutive_compile_failure_count=5,
+            last_compile_failure_sig="sig_b",
+        )
+    )
+
+    assert skipped.compaction_event is None
+    assert skipped.trace_events[-1].payload["reason"] == "compile_plateau_below_threshold"
+    assert compacted.compaction_event is not None
+    assert compacted.compaction_event.trigger == "compile_plateau"
+    assert compact_calls == 1
+
+
+def test_prepare_next_request_soft_compaction_respects_cooldown() -> None:
+    provider = _seed_openai_compaction_provider(prompt_tokens=210_000)
+
+    compact_calls = 0
+    token_counts = iter([210_000, 180_000])
+
+    async def fake_count_request_tokens(request_payload: dict) -> int:
+        return next(token_counts)
 
     async def fake_compact_inputs(
         *,
@@ -475,36 +529,28 @@ def test_prepare_next_request_allows_same_plateau_signature_after_reset() -> Non
             messages=[],
             tools=[],
             completed_turns=2,
-            consecutive_compile_failure_count=3,
+            consecutive_compile_failure_count=4,
             last_compile_failure_sig="sig_a",
         )
     )
-    reset = asyncio.run(
+    provider._input_items = _seed_openai_compaction_provider(prompt_tokens=200_000)._input_items
+    provider._last_response_start_index = 5
+    provider._last_usage = {"prompt_tokens": 200_000}
+    skipped = asyncio.run(
         provider.prepare_next_request(
             system_prompt="system",
             messages=[],
             tools=[],
-            completed_turns=4,
-            consecutive_compile_failure_count=0,
-            last_compile_failure_sig=None,
-        )
-    )
-    second = asyncio.run(
-        provider.prepare_next_request(
-            system_prompt="system",
-            messages=[],
-            tools=[],
-            completed_turns=5,
-            consecutive_compile_failure_count=3,
-            last_compile_failure_sig="sig_a",
+            completed_turns=3,
+            consecutive_compile_failure_count=4,
+            last_compile_failure_sig="sig_b",
         )
     )
 
     assert first.compaction_event is not None
-    assert reset.compaction_event is None
-    assert second.compaction_event is not None
-    assert second.compaction_event.trigger == "compile_plateau"
-    assert compact_calls == 2
+    assert skipped.compaction_event is None
+    assert skipped.trace_events[-1].payload["reason"] == "soft_compaction_cooldown"
+    assert compact_calls == 1
 
 
 def test_prepare_next_request_survives_token_count_failures() -> None:

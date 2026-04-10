@@ -39,6 +39,8 @@ from agent.open_file_limits import (
     open_file_worker_cap as _shared_open_file_worker_cap,
 )
 from storage.materialize import (
+    build_compile_fingerprint_from_inputs,
+    build_compile_fingerprint_inputs,
     infer_materialization_status,
     materialization_paths,
     urdf_references_external_meshes,
@@ -123,6 +125,16 @@ def _compile_level(payload: object) -> str | None:
         if isinstance(value, str) and value in {"visual", "full"}:
             return value
     return None
+
+
+def _compile_fingerprint(payload: object) -> str | None:
+    if not isinstance(payload, dict) or payload.get("status") != "success":
+        return None
+    metrics = payload.get("metrics")
+    if not isinstance(metrics, dict):
+        return None
+    value = metrics.get("materialization_fingerprint")
+    return str(value) if isinstance(value, str) and value else None
 
 
 def _estimate_visual_mesh_footprint(repo: StorageRepo, record_id: str) -> tuple[int, int]:
@@ -229,6 +241,7 @@ def _collect_candidates(
         compile_report = repo.read_json(compile_report_path)
         compile_status = _compile_status(compile_report)
         compile_level = _compile_level(compile_report)
+        compile_fingerprint = _compile_fingerprint(compile_report)
 
         if not script_path.exists():
             if isinstance(record, dict) or compile_status is not None or urdf_path.exists():
@@ -294,6 +307,21 @@ def _collect_candidates(
                     repo,
                     record_id=record_id,
                     reason=f"compile status is {label}",
+                    force=True,
+                    sdk_package=sdk_package,
+                )
+            )
+            continue
+
+        current_fingerprint = build_compile_fingerprint_from_inputs(
+            build_compile_fingerprint_inputs(model_path=script_path)
+        )
+        if compile_fingerprint != current_fingerprint:
+            candidates.append(
+                _make_candidate(
+                    repo,
+                    record_id=record_id,
+                    reason="compile inputs changed",
                     force=True,
                     sdk_package=sdk_package,
                 )
@@ -543,6 +571,12 @@ def _resolve_worker_count(
         # This keeps fan-out intentionally independent of compile target to avoid
         # unexpectedly conservative defaults.
         resolved = max(1, min(candidate_count, _VISUAL_AUTO_WORKER_HARD_CAP))
+        memory_cap = _auto_worker_memory_cap(
+            reserve_mem_gb=reserve_mem_gb,
+            mem_per_worker_gb=mem_per_worker_gb,
+        )
+        if memory_cap is not None:
+            resolved = min(resolved, max(1, memory_cap))
         if open_file_cap is not None:
             resolved = min(resolved, open_file_cap.worker_cap)
         return resolved

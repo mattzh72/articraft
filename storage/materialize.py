@@ -3,6 +3,7 @@ from __future__ import annotations
 import hashlib
 from dataclasses import dataclass
 from pathlib import Path
+from typing import Any, Mapping
 
 from storage.models import AssetStatus, CompileReport, MaterializationStatus
 from storage.repo import StorageRepo
@@ -24,6 +25,41 @@ def build_materialization_fingerprint(
         ]
     )
     return hashlib.sha256(payload.encode("utf-8")).hexdigest()
+
+
+def sha256_file(path: Path) -> str:
+    digest = hashlib.sha256()
+    with Path(path).open("rb") as handle:
+        for chunk in iter(lambda: handle.read(1024 * 1024), b""):
+            if not chunk:
+                break
+            digest.update(chunk)
+    return digest.hexdigest()
+
+
+def build_compile_fingerprint_inputs(
+    *,
+    model_path: Path,
+    sdk_fingerprint: str | None = None,
+) -> dict[str, str | None]:
+    return {
+        "model_py_sha256": sha256_file(model_path),
+        "sdk_fingerprint": sdk_fingerprint,
+    }
+
+
+def build_compile_fingerprint_from_inputs(
+    inputs: Mapping[str, Any],
+    *,
+    materializer_version: str = "v1",
+) -> str:
+    model_py_sha256 = inputs.get("model_py_sha256")
+    sdk_fingerprint = inputs.get("sdk_fingerprint")
+    return build_materialization_fingerprint(
+        model_py_sha256=str(model_py_sha256) if isinstance(model_py_sha256, str) else None,
+        sdk_fingerprint=str(sdk_fingerprint) if isinstance(sdk_fingerprint, str) else None,
+        materializer_version=materializer_version,
+    )
 
 
 @dataclass(slots=True)

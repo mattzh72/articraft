@@ -21,6 +21,10 @@ from scripts.compile_all_records import (
     _sort_candidates_for_compile,
     _spawn_initial_workers,
 )
+from storage.materialize import (
+    build_compile_fingerprint_from_inputs,
+    build_compile_fingerprint_inputs,
+)
 from storage.repo import StorageRepo
 
 
@@ -300,6 +304,7 @@ def test_resolve_worker_count_auto_for_visual_uses_throughput_first_fanout(monke
         "scripts.compile_all_records._logical_cpu_count",
         lambda: 12,
     )
+    monkeypatch.setattr("scripts.compile_all_records._auto_worker_memory_cap", lambda **_: None)
     monkeypatch.setattr("scripts.compile_all_records._open_file_worker_cap", lambda: None)
 
     resolved = _resolve_worker_count(
@@ -332,6 +337,7 @@ def test_resolve_worker_count_max_means_maximum_fanout(monkeypatch) -> None:
 
 
 def test_resolve_worker_count_auto_for_full_uses_throughput_first_fanout(monkeypatch) -> None:
+    monkeypatch.setattr("scripts.compile_all_records._auto_worker_memory_cap", lambda **_: None)
     monkeypatch.setattr("scripts.compile_all_records._open_file_worker_cap", lambda: None)
 
     resolved = _resolve_worker_count(
@@ -348,6 +354,7 @@ def test_resolve_worker_count_auto_for_full_uses_throughput_first_fanout(monkeyp
 def test_resolve_worker_count_auto_for_full_uses_open_file_cap(monkeypatch) -> None:
     from scripts.compile_all_records import OpenFileWorkerCap
 
+    monkeypatch.setattr("scripts.compile_all_records._auto_worker_memory_cap", lambda **_: None)
     monkeypatch.setattr(
         "scripts.compile_all_records._open_file_worker_cap",
         lambda: OpenFileWorkerCap(
@@ -370,6 +377,21 @@ def test_resolve_worker_count_auto_for_full_uses_open_file_cap(monkeypatch) -> N
     assert resolved == 23
 
 
+def test_resolve_worker_count_auto_respects_memory_cap(monkeypatch) -> None:
+    monkeypatch.setattr("scripts.compile_all_records._auto_worker_memory_cap", lambda **_: 7)
+    monkeypatch.setattr("scripts.compile_all_records._open_file_worker_cap", lambda: None)
+
+    resolved = _resolve_worker_count(
+        "auto",
+        candidate_count=264,
+        reserve_mem_gb=1.0,
+        mem_per_worker_gb=2.0,
+        target="full",
+    )
+
+    assert resolved == 7
+
+
 def test_resolve_worker_count_visual_auto_is_clamped_by_open_file_limit(monkeypatch) -> None:
     from scripts.compile_all_records import OpenFileWorkerCap
 
@@ -377,6 +399,7 @@ def test_resolve_worker_count_visual_auto_is_clamped_by_open_file_limit(monkeypa
         "scripts.compile_all_records._logical_cpu_count",
         lambda: 12,
     )
+    monkeypatch.setattr("scripts.compile_all_records._auto_worker_memory_cap", lambda **_: None)
     monkeypatch.setattr(
         "scripts.compile_all_records._open_file_worker_cap",
         lambda: OpenFileWorkerCap(
@@ -478,6 +501,7 @@ def test_collect_candidates_skips_primitive_only_success_records_without_assets(
     materialization_dir = repo.layout.record_materialization_dir(record_id)
     materialization_dir.mkdir(parents=True, exist_ok=True)
     (record_dir / "model.py").write_text("object_model = None\n", encoding="utf-8")
+    fingerprint_inputs = build_compile_fingerprint_inputs(model_path=record_dir / "model.py")
     (materialization_dir / "model.urdf").write_text(
         "<robot name='primitive'><link name='base'><visual><geometry><box size='1 1 1'/></geometry></visual></link></robot>",
         encoding="utf-8",
@@ -487,7 +511,18 @@ def test_collect_candidates_skips_primitive_only_success_records_without_assets(
         encoding="utf-8",
     )
     (materialization_dir / "compile_report.json").write_text(
-        json.dumps({"status": "success", "metrics": {"compile_level": "full"}}),
+        json.dumps(
+            {
+                "status": "success",
+                "metrics": {
+                    "compile_level": "full",
+                    "fingerprint_inputs": fingerprint_inputs,
+                    "materialization_fingerprint": build_compile_fingerprint_from_inputs(
+                        fingerprint_inputs
+                    ),
+                },
+            }
+        ),
         encoding="utf-8",
     )
 
@@ -592,6 +627,7 @@ def test_collect_candidates_visual_target_skips_legacy_full_compile_reports(tmp_
     materialization_dir = repo.layout.record_materialization_dir(record_id)
     materialization_dir.mkdir(parents=True, exist_ok=True)
     (record_dir / "model.py").write_text("object_model = None\n", encoding="utf-8")
+    fingerprint_inputs = build_compile_fingerprint_inputs(model_path=record_dir / "model.py")
     (materialization_dir / "model.urdf").write_text(
         "<robot name='primitive'><link name='base'><visual><geometry><box size='1 1 1'/></geometry></visual></link></robot>",
         encoding="utf-8",
@@ -601,7 +637,17 @@ def test_collect_candidates_visual_target_skips_legacy_full_compile_reports(tmp_
         encoding="utf-8",
     )
     (materialization_dir / "compile_report.json").write_text(
-        json.dumps({"status": "success"}),
+        json.dumps(
+            {
+                "status": "success",
+                "metrics": {
+                    "fingerprint_inputs": fingerprint_inputs,
+                    "materialization_fingerprint": build_compile_fingerprint_from_inputs(
+                        fingerprint_inputs
+                    ),
+                },
+            }
+        ),
         encoding="utf-8",
     )
 
@@ -625,6 +671,7 @@ def test_collect_candidates_full_target_queues_visual_only_reports_for_upgrade(t
     materialization_dir = repo.layout.record_materialization_dir(record_id)
     materialization_dir.mkdir(parents=True, exist_ok=True)
     (record_dir / "model.py").write_text("object_model = None\n", encoding="utf-8")
+    fingerprint_inputs = build_compile_fingerprint_inputs(model_path=record_dir / "model.py")
     (materialization_dir / "model.urdf").write_text(
         "<robot name='primitive'><link name='base'><visual><geometry><box size='1 1 1'/></geometry></visual></link></robot>",
         encoding="utf-8",
@@ -634,7 +681,18 @@ def test_collect_candidates_full_target_queues_visual_only_reports_for_upgrade(t
         encoding="utf-8",
     )
     (materialization_dir / "compile_report.json").write_text(
-        json.dumps({"status": "success", "metrics": {"compile_level": "visual"}}),
+        json.dumps(
+            {
+                "status": "success",
+                "metrics": {
+                    "compile_level": "visual",
+                    "fingerprint_inputs": fingerprint_inputs,
+                    "materialization_fingerprint": build_compile_fingerprint_from_inputs(
+                        fingerprint_inputs
+                    ),
+                },
+            }
+        ),
         encoding="utf-8",
     )
 
@@ -648,3 +706,48 @@ def test_collect_candidates_full_target_queues_visual_only_reports_for_upgrade(t
     assert len(candidates) == 1
     assert candidates[0].record_id == record_id
     assert candidates[0].reason == "compile level is visual"
+
+
+def test_collect_candidates_queues_records_when_compile_inputs_change(tmp_path) -> None:
+    repo = StorageRepo(tmp_path)
+    repo.ensure_layout()
+
+    record_id = "rec_changed_inputs"
+    record_dir = repo.layout.record_dir(record_id)
+    record_dir.mkdir(parents=True, exist_ok=True)
+    materialization_dir = repo.layout.record_materialization_dir(record_id)
+    materialization_dir.mkdir(parents=True, exist_ok=True)
+    model_path = record_dir / "model.py"
+    model_path.write_text("object_model = None\n", encoding="utf-8")
+    old_fingerprint_inputs = build_compile_fingerprint_inputs(model_path=model_path)
+    model_path.write_text("UPDATED = True\nobject_model = None\n", encoding="utf-8")
+    (materialization_dir / "model.urdf").write_text(
+        "<robot name='primitive'><link name='base'><visual><geometry><box size='1 1 1'/></geometry></visual></link></robot>",
+        encoding="utf-8",
+    )
+    (record_dir / "record.json").write_text(
+        json.dumps({"artifacts": {"model_py": "model.py"}}),
+        encoding="utf-8",
+    )
+    (materialization_dir / "compile_report.json").write_text(
+        json.dumps(
+            {
+                "status": "success",
+                "metrics": {
+                    "compile_level": "full",
+                    "fingerprint_inputs": old_fingerprint_inputs,
+                    "materialization_fingerprint": build_compile_fingerprint_from_inputs(
+                        old_fingerprint_inputs
+                    ),
+                },
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    candidates, skipped_missing_script = _collect_candidates(tmp_path, force=False, target="full")
+
+    assert skipped_missing_script == 0
+    assert len(candidates) == 1
+    assert candidates[0].record_id == record_id
+    assert candidates[0].reason == "compile inputs changed"

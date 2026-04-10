@@ -12,6 +12,10 @@ from storage import dataset_workflow
 from storage.categories import CategoryStore
 from storage.collections import CollectionStore
 from storage.datasets import DatasetStore
+from storage.materialize import (
+    build_compile_fingerprint_from_inputs,
+    build_compile_fingerprint_inputs,
+)
 from storage.models import (
     CategoryRecord,
     DisplayMetadata,
@@ -2091,6 +2095,98 @@ def test_viewer_store_full_materialize_can_enable_validation(
     assert compile_report["metrics"]["validation_level"] == "full"
 
 
+def test_viewer_store_recompiles_when_model_inputs_change(
+    tmp_path: Path,
+    monkeypatch,
+) -> None:
+    repo = StorageRepo(tmp_path)
+    repo.ensure_layout()
+    record_store = RecordStore(repo)
+
+    record = Record(
+        schema_version=1,
+        record_id="rec_stale_compile_001",
+        created_at="2026-03-20T10:00:00Z",
+        updated_at="2026-03-20T10:00:00Z",
+        rating=None,
+        kind="generated_model",
+        prompt_kind="single_prompt",
+        category_slug="hinges",
+        source=SourceRef(run_id="run_stale_compile_001"),
+        sdk_package="sdk",
+        provider="openai",
+        model_id="gpt-5.4",
+        display=DisplayMetadata(
+            title="Stale compile model",
+            prompt_preview="record with changed model inputs",
+        ),
+        artifacts=RecordArtifacts(
+            prompt_txt="prompt.txt",
+            prompt_series_json=None,
+            model_py="model.py",
+            provenance_json="provenance.json",
+            cost_json=None,
+        ),
+        collections=["workbench"],
+    )
+    record_store.write_record(record)
+    record_dir = repo.layout.record_dir("rec_stale_compile_001")
+    model_path = record_dir / "model.py"
+    (record_dir / "prompt.txt").write_text("stale compile", encoding="utf-8")
+    model_path.write_text("object_model = None\n", encoding="utf-8")
+    stale_inputs = build_compile_fingerprint_inputs(model_path=model_path)
+    model_path.write_text("UPDATED = True\nobject_model = None\n", encoding="utf-8")
+    repo.write_json(record_dir / "provenance.json", {"schema_version": 1})
+    materialization_dir = repo.layout.record_materialization_dir("rec_stale_compile_001")
+    materialization_dir.mkdir(parents=True, exist_ok=True)
+    (materialization_dir / "model.urdf").write_text("<robot name='stale'/>", encoding="utf-8")
+    repo.write_json(
+        materialization_dir / "compile_report.json",
+        {
+            "schema_version": 1,
+            "record_id": "rec_stale_compile_001",
+            "status": "success",
+            "urdf_path": "model.urdf",
+            "warnings": [],
+            "checks_run": ["compile_urdf_fast"],
+            "metrics": {
+                "compile_level": "full",
+                "validation_level": "none",
+                "fingerprint_inputs": stale_inputs,
+                "materialization_fingerprint": build_compile_fingerprint_from_inputs(stale_inputs),
+            },
+        },
+    )
+
+    compile_calls: list[tuple[Path, bool, str]] = []
+
+    def fake_compile(
+        script_path: Path,
+        *,
+        sdk_package: str = "sdk",
+        ignore_geom_qc: bool = False,
+        run_checks: bool = True,
+        target: str = "full",
+    ) -> SimpleNamespace:
+        compile_calls.append((script_path, run_checks, target))
+        return SimpleNamespace(
+            urdf_xml="<robot name='fresh'><link name='base'/></robot>",
+            warnings=[],
+        )
+
+    monkeypatch.setattr("agent.compiler.compile_urdf_report", fake_compile)
+    monkeypatch.setattr("agent.compiler.compile_urdf_report_maybe_timeout", fake_compile)
+
+    viewer_store = ViewerStore(tmp_path)
+    result = viewer_store.materialize_record_assets("rec_stale_compile_001", target="full")
+
+    assert result.compiled is True
+    assert compile_calls == [(model_path, False, "full")]
+    compile_report = repo.read_json(materialization_dir / "compile_report.json")
+    assert compile_report["metrics"]["fingerprint_inputs"]["model_py_sha256"] is not None
+    assert compile_report["metrics"]["materialization_fingerprint"]
+
+
 def test_viewer_store_full_materialize_persists_allowed_isolated_part_note(
     tmp_path: Path,
 ) -> None:
@@ -2149,7 +2245,7 @@ def test_viewer_store_full_materialize_persists_allowed_isolated_part_note(
                 "    ArticulationType.FIXED,",
                 "    parent=base,",
                 "    child=support,",
-                "    origin=Origin(xyz=(0.0, 0.0, 0.0)),",
+                "    origin=Origin(xyz=(0.0, 0.0, 0.1)),",
                 ")",
                 "object_model.articulation(",
                 "    'base_to_antenna',",

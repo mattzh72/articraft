@@ -218,6 +218,46 @@ def test_compile_urdf_report_can_skip_required_checks(tmp_path: Path) -> None:
     assert report.signal_bundle.status == "success"
 
 
+def test_compile_urdf_report_reuses_validation_work_for_full_checks(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    script_path = tmp_path / "model.py"
+    script_path.write_text(
+        "\n".join(
+            [
+                "from __future__ import annotations",
+                "",
+                "from sdk import ArticulatedObject, Box, Origin, TestContext",
+                "",
+                "object_model = ArticulatedObject(name='validate_once')",
+                "base = object_model.part('base')",
+                "base.visual(Box((0.1, 0.1, 0.1)), origin=Origin(xyz=(0.0, 0.0, 0.05)))",
+                "",
+                "def run_tests():",
+                "    ctx = TestContext(object_model)",
+                "    return ctx.report()",
+            ]
+        ),
+        encoding="utf-8",
+    )
+
+    from sdk._core.v0.articulated_object import ArticulatedObject
+
+    validate_calls = {"count": 0}
+    original_validate = ArticulatedObject.validate
+
+    def wrapped_validate(self, strict: bool = True):
+        validate_calls["count"] += 1
+        return original_validate(self, strict=strict)
+
+    monkeypatch.setattr(ArticulatedObject, "validate", wrapped_validate)
+
+    compile_urdf_report(script_path, run_checks=True, target="full")
+
+    assert validate_calls["count"] == 1
+
+
 def test_compile_urdf_report_can_ignore_geometry_qc_after_materialization(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,

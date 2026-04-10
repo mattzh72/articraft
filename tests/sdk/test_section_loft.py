@@ -48,6 +48,8 @@ def test_repair_loft_normalizes_dirty_meshgeometry() -> None:
     assert len(repaired.faces) > 0
     assert all(len(face) == 3 for face in repaired.faces)
     assert all(max(face) < len(repaired.vertices) for face in repaired.faces)
+    assert len(repaired.vertices) < len(dirty.vertices)
+    assert repaired.faces != dirty.faces
 
     untouched = sdk.repair_loft(dirty, repair="off")
     assert untouched.vertices == dirty.vertices

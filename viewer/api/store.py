@@ -13,7 +13,12 @@ from typing import Any
 from storage.collections import CollectionStore
 from storage.dataset_workflow import promote_record_workflow, reconcile_category_metadata
 from storage.datasets import DatasetStore
-from storage.materialize import MaterializationStore, infer_materialization_status
+from storage.materialize import (
+    MaterializationStore,
+    build_compile_fingerprint_from_inputs,
+    build_compile_fingerprint_inputs,
+    infer_materialization_status,
+)
 from storage.models import CompileReport as StorageCompileReport
 from storage.models import CompileWarning
 from storage.queries import StorageQueries
@@ -387,6 +392,20 @@ def _compile_report_satisfies_target(
     raise ValueError(f"Unsupported materialization target: {target!r}")
 
 
+def _compile_report_matches_fingerprint(
+    report: dict[str, Any] | None,
+    *,
+    current_fingerprint: str,
+) -> bool:
+    if not isinstance(report, dict):
+        return False
+    metrics = report.get("metrics")
+    if not isinstance(metrics, dict):
+        return False
+    fingerprint = metrics.get("materialization_fingerprint")
+    return isinstance(fingerprint, str) and fingerprint == current_fingerprint
+
+
 @dataclass(slots=True, frozen=True)
 class MaterializeRecordAssetsResult:
     record_id: str
@@ -520,6 +539,7 @@ class ViewerStore:
         warnings: list[str],
         compile_level: str,
         validation_level: str,
+        fingerprint_inputs: dict[str, str | None],
         checks_run: list[str] | None = None,
     ) -> None:
         existing_report = self.repo.read_json(compile_path)
@@ -531,6 +551,10 @@ class ViewerStore:
         )
         metrics["compile_level"] = compile_level
         metrics["validation_level"] = validation_level
+        metrics["fingerprint_inputs"] = dict(fingerprint_inputs)
+        metrics["materialization_fingerprint"] = build_compile_fingerprint_from_inputs(
+            fingerprint_inputs
+        )
         report = StorageCompileReport(
             schema_version=1,
             record_id=record_id,
@@ -563,6 +587,11 @@ class ViewerStore:
             record,
         )
         record_dir = self.repo.layout.record_dir(record_id)
+        current_fingerprint = None
+        if model_path.exists():
+            current_fingerprint = build_compile_fingerprint_from_inputs(
+                build_compile_fingerprint_inputs(model_path=model_path)
+            )
         compile_report = self.repo.read_json(compile_path)
         existing_compile_status = (
             str(compile_report.get("status"))
@@ -574,6 +603,11 @@ class ViewerStore:
             urdf_path.exists()
             and not force
             and _compile_report_satisfies_target(compile_report, target=target)
+            and current_fingerprint is not None
+            and _compile_report_matches_fingerprint(
+                compile_report,
+                current_fingerprint=current_fingerprint,
+            )
             and materialization_status == "available"
         ):
             return MaterializeRecordAssetsResult(
@@ -598,6 +632,10 @@ class ViewerStore:
                 refreshed_record,
             )
             record_dir = self.repo.layout.record_dir(record_id)
+            if not model_path.exists():
+                raise FileNotFoundError(f"Record model not found: {model_path}")
+            fingerprint_inputs = build_compile_fingerprint_inputs(model_path=model_path)
+            current_fingerprint = build_compile_fingerprint_from_inputs(fingerprint_inputs)
             compile_report = self.repo.read_json(compile_path)
             existing_compile_status = (
                 str(compile_report.get("status"))
@@ -610,6 +648,10 @@ class ViewerStore:
                 urdf_path.exists()
                 and not force
                 and _compile_report_satisfies_target(compile_report, target=target)
+                and _compile_report_matches_fingerprint(
+                    compile_report,
+                    current_fingerprint=current_fingerprint,
+                )
                 and materialization_status == "available"
             ):
                 return MaterializeRecordAssetsResult(
@@ -665,6 +707,7 @@ class ViewerStore:
                     warnings=warning_lines,
                     compile_level=target,
                     validation_level=validation_level,
+                    fingerprint_inputs=fingerprint_inputs,
                     checks_run=checks_run,
                 )
                 raise RuntimeError(f"Failed to compile assets for {record_id}: {exc}") from exc
@@ -679,6 +722,7 @@ class ViewerStore:
                 warnings=warning_lines,
                 compile_level=target,
                 validation_level=validation_level,
+                fingerprint_inputs=fingerprint_inputs,
                 checks_run=checks_run,
             )
             materialization_status = self._materialization_status_for_record(record_id)

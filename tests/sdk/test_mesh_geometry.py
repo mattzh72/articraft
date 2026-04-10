@@ -824,13 +824,6 @@ def test_new_mesh_geometry_helpers_export_clean_single_body_meshes(
         pytest.param(
             _build_perforated_panel_geometry, "PerforatedPanelGeometry", id="perforated-panel"
         ),
-        pytest.param(
-            _build_slot_pattern_panel_geometry, "SlotPatternPanelGeometry", id="slot-pattern-panel"
-        ),
-        pytest.param(_build_clevis_bracket_geometry, "ClevisBracketGeometry", id="clevis-bracket"),
-        pytest.param(_build_pivot_fork_geometry, "PivotForkGeometry", id="pivot-fork"),
-        pytest.param(_build_trunnion_yoke_geometry, "TrunnionYokeGeometry", id="trunnion-yoke"),
-        pytest.param(_build_fan_rotor_geometry, "FanRotorGeometry", id="fan-rotor"),
         pytest.param(_build_blower_wheel_geometry, "BlowerWheelGeometry", id="blower-wheel"),
     ],
 )

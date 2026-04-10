@@ -31,12 +31,15 @@ def compile_object_to_urdf_xml(
     pretty: bool = True,
     asset_root: str | os.PathLike[str] | Path | None = None,
     include_physical_collisions: bool = True,
+    validate: bool = True,
 ) -> str:
-    object_model.validate(strict=True)
+    if validate:
+        object_model.validate(strict=True)
     compiled_model = (
         compile_object_model_with_exact_collisions(
             object_model,
             asset_root=asset_root,
+            validate=False,
         )
         if include_physical_collisions
         else object_model

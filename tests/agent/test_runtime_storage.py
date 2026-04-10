@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import asyncio
 import json
+import logging
 from pathlib import Path
 
 import pytest
@@ -125,6 +126,55 @@ class OverBudgetAgent(FakeAgent):
         )
 
 
+class AllInTotalsAgent(FakeAgent):
+    async def run(self, user_content: object):  # type: ignore[override]
+        self.file_path.parent.mkdir(parents=True, exist_ok=True)
+        self.file_path.write_text(
+            "from __future__ import annotations\n\nobject_model = None\n",
+            encoding="utf-8",
+        )
+        (self.file_path.parent / "cost.json").write_text(
+            json.dumps(
+                {
+                    "total": {
+                        "tokens": {
+                            "prompt_tokens": 100,
+                            "candidates_tokens": 20,
+                            "total_tokens": 120,
+                            "cached_tokens": 0,
+                        },
+                        "costs_usd": {"total": 0.75},
+                    },
+                    "all_in_total": {
+                        "tokens": {
+                            "prompt_tokens": 140,
+                            "candidates_tokens": 25,
+                            "total_tokens": 165,
+                            "cached_tokens": 10,
+                            "uncached_prompt_tokens": 130,
+                        },
+                        "costs_usd": {"total": 0.91},
+                    },
+                },
+                indent=2,
+            ),
+            encoding="utf-8",
+        )
+        return AgentResult(
+            success=True,
+            reason=TerminateReason.CODE_VALID,
+            message="done",
+            conversation=[{"role": "user", "content": user_content}],
+            final_code=self.file_path.read_text(encoding="utf-8"),
+            urdf_xml="<robot name='test'/>",
+            compile_warnings=[],
+            turn_count=1,
+            tool_call_count=0,
+            compile_attempt_count=0,
+            usage={"prompt_tokens": 100, "candidates_tokens": 20, "total_tokens": 120},
+        )
+
+
 def test_workbench_run_and_rerun_persist_runtime_artifacts(
     fake_agent: None,
     tmp_path: Path,
@@ -171,6 +221,8 @@ def test_workbench_run_and_rerun_persist_runtime_artifacts(
         (materialization_dir / "compile_report.json").read_text(encoding="utf-8")
     )
     assert compile_report["metrics"]["compile_level"] == "full"
+    assert compile_report["metrics"]["fingerprint_inputs"]["model_py_sha256"]
+    assert compile_report["metrics"]["materialization_fingerprint"]
     assert not (materialization_dir / "assets" / "meshes").exists()
 
     workbench_path = repo_root / "data" / "local" / "workbench.json"
@@ -379,6 +431,40 @@ def test_over_budget_run_persists_failed_run_metadata_without_record(
         ]["total"]
         == 0.75
     )
+
+
+def test_successful_run_logs_all_in_cost_totals(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+    caplog: pytest.LogCaptureFixture,
+) -> None:
+    monkeypatch.setattr(runner, "ArticraftAgent", AllInTotalsAgent)
+
+    with caplog.at_level(logging.INFO):
+        exit_code = asyncio.run(
+            runner.run_from_input(
+                "make a model with compaction",
+                prompt_text="make a model with compaction",
+                display_prompt="make a model with compaction",
+                repo_root=tmp_path,
+                image_path=None,
+                provider="openai",
+                thinking_level="high",
+                max_turns=30,
+                system_prompt_path=DESIGNER_PROMPT_NAME,
+                sdk_package="sdk",
+                sdk_docs_mode="full",
+                label=None,
+                tags=[],
+            )
+        )
+
+    assert exit_code == 0
+    assert (
+        "Total tokens: {'prompt_tokens': 140, 'cached_tokens': 10, 'uncached_prompt_tokens': 130, 'candidates_tokens': 25, 'total_tokens': 165}"
+        in caplog.text
+    )
+    assert "Total cost: $0.910000" in caplog.text
 
 
 def test_successful_run_rewrites_visual_meshes_to_glb(
@@ -619,6 +705,8 @@ def test_workbench_run_succeeds_when_persisted_input_image_disappears(
         (materialization_dir / "compile_report.json").read_text(encoding="utf-8")
     )
     assert compile_report["metrics"]["compile_level"] == "full"
+    assert compile_report["metrics"]["fingerprint_inputs"]["model_py_sha256"]
+    assert compile_report["metrics"]["materialization_fingerprint"]
     assert list((record_dir / "inputs").iterdir()) == []
 
     run_dir = next((repo_root / "data" / "cache" / "runs").iterdir())

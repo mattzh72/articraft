@@ -438,6 +438,7 @@ class TestContext:
     )
     _mesh_vertex_cache: Dict[Path, Tuple[Vec3, ...]] = field(default_factory=dict, repr=False)
     _warned_deprecations: Set[str] = field(default_factory=set, repr=False)
+    _model_validated_strict: bool = field(default=False, repr=False)
 
     def report(self) -> TestReport:
         failures = tuple(self._failures)
@@ -597,6 +598,7 @@ class TestContext:
             self._exact_compiled_model_cache = compile_object_model_with_exact_collisions(
                 self.model,
                 asset_root=self._asset_root(),
+                validate=not self._model_validated_strict,
             )
         return self._exact_compiled_model_cache
 
@@ -1071,6 +1073,7 @@ class TestContext:
             validate = getattr(self.model, "validate", None)
             if callable(validate):
                 validate(strict=True)
+                self._model_validated_strict = True
                 return self._record("check_model_valid", True)
             return self._record("check_model_valid", False, "model has no .validate()")
         except Exception as exc:
@@ -1140,6 +1143,7 @@ class TestContext:
             self.model,
             asset_root=self._asset_root(),
             tol=tol_f,
+            validate_model=not self._model_validated_strict,
         )
 
         failures: List[str] = []
@@ -1242,6 +1246,7 @@ class TestContext:
             self.model,
             asset_root=self._asset_root(),
             contact_tol=float(tol),
+            validate_model=not self._model_validated_strict,
         )
 
         failures: List[str] = []
@@ -1307,6 +1312,7 @@ class TestContext:
             max_pose_samples=sample_count,
             contact_tol=resolved_contact_tol,
             seed=int(self.seed),
+            validate_model=not self._model_validated_strict,
         )
         if not findings:
             return self._record(resolved_name, True)
@@ -1397,6 +1403,7 @@ class TestContext:
             poses=[dict(self._pose)],
             overlap_tol=resolved_overlap_tol,
             overlap_volume_tol=resolved_overlap_volume_tol,
+            validate_model=not self._model_validated_strict,
         )
 
         representative_by_pair: Dict[Tuple[str, str], GeometryOverlap] = {}
@@ -1633,6 +1640,7 @@ class TestContext:
             overlap_volume_tol=resolved_overlap_volume_tol,
             allowed_pairs=allowed_pairs or None,
             seed=int(self.seed),
+            validate_model=not self._model_validated_strict,
         )
 
         relevant_overlaps = overlaps

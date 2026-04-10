@@ -1149,10 +1149,12 @@ def _find_collision_overlaps_fcl(
     overlap_volume_tol: float,
     allowed_pairs: Optional[Iterable[Tuple[str, str]]],
     seed: int,
+    validate_model: bool = True,
 ) -> List[GeometryOverlap]:
     compiled_model = compile_object_model_with_exact_collisions(
         model,  # type: ignore[arg-type]
         asset_root=asset_root,
+        validate=validate_model,
     )
     poses = generate_pose_samples(compiled_model, max_samples=max_pose_samples, seed=int(seed))
     return _find_collision_overlaps_fcl_for_poses(
@@ -1344,10 +1346,12 @@ def _find_unsupported_parts_physical(
     max_pose_samples: int,
     contact_tol: float,
     seed: int,
+    validate_model: bool = True,
 ) -> List[UnsupportedPartFinding]:
     compiled_model = compile_object_model_with_exact_collisions(
         model,  # type: ignore[arg-type]
         asset_root=asset_root,
+        validate=validate_model,
     )
     resolved_asset_root = resolve_asset_root(asset_root, compiled_model, model)
     links, joints = _resolve_model_links_and_joints(compiled_model)
@@ -1453,10 +1457,12 @@ def find_joint_origin_distance_findings(
     *,
     asset_root: Optional[Path] = None,
     tol: float = 0.015,
+    validate_model: bool = True,
 ) -> List[JointOriginDistanceFinding]:
     compiled_model = compile_object_model_with_exact_collisions(
         model,  # type: ignore[arg-type]
         asset_root=asset_root,
+        validate=validate_model,
     )
     resolved_asset_root = resolve_asset_root(asset_root, compiled_model, model)
     links, joints = _resolve_model_links_and_joints(compiled_model)
@@ -1534,10 +1540,12 @@ def find_part_geometry_connectivity_findings(
     *,
     asset_root: Optional[Path] = None,
     contact_tol: float = 1e-6,
+    validate_model: bool = True,
 ) -> List[PartGeometryConnectivityFinding]:
     compiled_model = compile_object_model_with_exact_collisions(
         model,  # type: ignore[arg-type]
         asset_root=asset_root,
+        validate=validate_model,
     )
     resolved_asset_root = resolve_asset_root(asset_root, compiled_model, model)
     links, _joints = _resolve_model_links_and_joints(compiled_model)
@@ -1612,6 +1620,7 @@ def find_unsupported_parts(
     max_pose_samples: int = 1,
     contact_tol: float = 1e-6,
     seed: int = 0,
+    validate_model: bool = True,
 ) -> List[UnsupportedPartFinding]:
     """
     Find support-disconnected floating components across sampled poses.
@@ -1627,6 +1636,7 @@ def find_unsupported_parts(
         max_pose_samples=max_pose_samples,
         contact_tol=float(contact_tol),
         seed=int(seed),
+        validate_model=validate_model,
     )
 
 
@@ -1639,6 +1649,7 @@ def find_geometry_overlaps(
     overlap_volume_tol: float = 0.0,
     allowed_pairs: Optional[Iterable[Tuple[str, str]]] = None,
     seed: int = 0,
+    validate_model: bool = True,
 ) -> List[GeometryOverlap]:
     return _find_collision_overlaps_fcl(
         model,
@@ -1648,6 +1659,7 @@ def find_geometry_overlaps(
         overlap_volume_tol=overlap_volume_tol,
         allowed_pairs=allowed_pairs,
         seed=seed,
+        validate_model=validate_model,
     )
 
 
@@ -1659,12 +1671,14 @@ def find_geometry_overlaps_in_poses(
     overlap_tol: float = 1e-3,
     overlap_volume_tol: float = 0.0,
     allowed_pairs: Optional[Iterable[Tuple[str, str]]] = None,
+    validate_model: bool = True,
 ) -> List[GeometryOverlap]:
     if not poses:
         return []
     compiled_model = compile_object_model_with_exact_collisions(
         model,  # type: ignore[arg-type]
         asset_root=asset_root,
+        validate=validate_model,
     )
     return _find_collision_overlaps_fcl_for_poses(
         compiled_model,
@@ -1686,6 +1700,7 @@ def validate_no_geometry_overlaps(
     overlap_volume_tol: float = 0.0,
     allowed_pairs: Optional[Iterable[Tuple[str, str]]] = None,
     seed: int = 0,
+    validate_model: bool = True,
 ) -> None:
     overlaps = find_geometry_overlaps(
         model,
@@ -1695,6 +1710,7 @@ def validate_no_geometry_overlaps(
         overlap_volume_tol=overlap_volume_tol,
         allowed_pairs=allowed_pairs,
         seed=int(seed),
+        validate_model=validate_model,
     )
     if not overlaps:
         return

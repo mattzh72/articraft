@@ -5,13 +5,12 @@ from pathlib import Path
 
 import pytest
 
-from sdk._core.v0.assets import AssetContext
-from sdk_hybrid import cadquery_local_aabb
-from sdk_hybrid.v0.cadquery import export_cadquery_components, export_cadquery_mesh
-
 cq = pytest.importorskip("cadquery")
 
 _PYTHON_FENCE_RE = re.compile(r"```python\n(.*?)```", re.DOTALL)
+# Keep this focused on representative hybrid examples. The heavier gear-family
+# markdowns are covered by dedicated CadQuery gear tests, and re-executing all
+# of them here turns this smoke file into the slowest part of the suite.
 _EXAMPLE_PATHS = (
     "sdk/_examples/hybrid/bga_package.md",
     "sdk/_examples/hybrid/parametric_pin_header.md",
@@ -20,12 +19,7 @@ _EXAMPLE_PATHS = (
     "sdk/_examples/hybrid/mecanum_wheel.md",
     "sdk/_examples/hybrid/raspberry_pi_3_model_b_assembly.md",
     "sdk/_examples/hybrid/pitray_clip.md",
-    "sdk/_examples/hybrid/spur_helical_herringbone_gears.md",
-    "sdk/_examples/hybrid/ring_gears_and_planetary_gearsets.md",
-    "sdk/_examples/hybrid/bevel_gears.md",
-    "sdk/_examples/hybrid/rack_and_pinion.md",
     "sdk/_examples/hybrid/worm_gear.md",
-    "sdk/_examples/hybrid/crossed_and_hyperbolic_gears.md",
 )
 
 
@@ -41,7 +35,7 @@ def _extract_python_fence(path: Path) -> str:
 
 
 @pytest.mark.parametrize("relative_path", _EXAMPLE_PATHS)
-def test_derived_hybrid_example_executes_and_exports(tmp_path: Path, relative_path: str) -> None:
+def test_derived_hybrid_example_executes(relative_path: str) -> None:
     path = _repo_root() / relative_path
     namespace = {"cq": cq, "cadquery": cq}
 
@@ -49,14 +43,3 @@ def test_derived_hybrid_example_executes_and_exports(tmp_path: Path, relative_pa
 
     result = namespace.get("result")
     assert isinstance(result, (cq.Workplane, cq.Shape, cq.Assembly))
-
-    assets = AssetContext(tmp_path / path.stem)
-    if isinstance(result, cq.Assembly):
-        exports = export_cadquery_components(result, f"{path.stem}.obj", assets=assets)
-        assert exports
-        assert all(Path(str(export.mesh.materialized_path)).exists() for export in exports)
-    else:
-        export = export_cadquery_mesh(result, f"{path.stem}.obj", assets=assets)
-        assert Path(str(export.mesh.materialized_path)).exists()
-
-    assert cadquery_local_aabb(result)

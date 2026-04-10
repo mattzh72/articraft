@@ -11,6 +11,7 @@ import re
 import runpy
 import statistics
 import sys
+import threading
 import traceback
 from pathlib import Path
 from typing import Any
@@ -59,6 +60,7 @@ _AUTOMATED_BASELINE_DEFAULT_CHECK_NAMES = frozenset(
         "fail_if_parts_overlap_in_current_pose()",
     }
 )
+_MODEL_EXECUTION_LOCK = threading.Lock()
 
 
 def _import_sdk_module(sdk_package: str, module_suffix: str = "") -> Any:
@@ -112,6 +114,7 @@ def _extract_urdf_xml(
     *,
     sdk_package: str = "sdk",
     target: str = "full",
+    validate_export: bool = True,
 ) -> str | None:
     target_key = _normalize_compile_target(target)
     object_model = globals_dict.get("object_model")
@@ -134,6 +137,7 @@ def _extract_urdf_xml(
                     object_model,
                     asset_root=asset_root,
                     include_physical_collisions=target_key != "visual",
+                    validate=validate_export,
                 )
             else:
                 urdf_xml = compile_object_to_urdf_xml(object_model)
@@ -296,6 +300,7 @@ def _compile_urdf_report_impl(
         globals_dict,
         sdk_package=sdk_package,
         target=target_key,
+        validate_export=not (run_checks and target_key == "full"),
     )
     if not isinstance(urdf_xml, str):
         raise ValueError("object_model must compile into an exportable XML payload")
@@ -366,15 +371,16 @@ def load_model_globals(
     normalize_sdk_package(sdk_package)
     repo_root = Path(__file__).resolve().parents[1]
     script_path = script_path.resolve()
-    prev_cwd = Path.cwd()
-    os.chdir(script_path.parent)
-    sys.path.insert(0, str(repo_root))
-    try:
-        globals_dict = runpy.run_path(script_path.name)
-    finally:
-        os.chdir(prev_cwd)
-        if sys.path and sys.path[0] == str(repo_root):
-            sys.path.pop(0)
+    with _MODEL_EXECUTION_LOCK:
+        prev_cwd = Path.cwd()
+        os.chdir(script_path.parent)
+        sys.path.insert(0, str(repo_root))
+        try:
+            globals_dict = runpy.run_path(script_path.name)
+        finally:
+            os.chdir(prev_cwd)
+            if sys.path and sys.path[0] == str(repo_root):
+                sys.path.pop(0)
     return globals_dict
 
 
@@ -1179,6 +1185,17 @@ def _run_compiler_owned_baseline_tests(
     _apply_authored_allowances_to_baseline_context(ctx, authored_report)
     ctx.check_model_valid()
     _check_model_has_single_root_part(ctx)
+    preliminary_report = ctx.report()
+    if not bool(getattr(preliminary_report, "passed", False)):
+        return _build_test_report(
+            type(preliminary_report),
+            checks=tuple(str(name) for name in getattr(preliminary_report, "checks", ())),
+            failures=tuple(getattr(preliminary_report, "failures", ())),
+            warnings=tuple(str(item) for item in getattr(preliminary_report, "warnings", ())),
+            allowances=(),
+            allowed_isolated_parts=(),
+            allowed_overlaps=(),
+        )
     ctx.check_mesh_assets_ready()
     ctx.fail_if_isolated_parts()
     ctx.warn_if_part_contains_disconnected_geometry_islands()

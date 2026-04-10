@@ -12,6 +12,27 @@ from agent.providers.gemini import (
 )
 
 
+def _seed_gemini_messages() -> list[dict[str, str]]:
+    return [
+        {"role": "user", "content": "sdk docs"},
+        {"role": "user", "content": "task"},
+        {"role": "assistant", "content": "older assistant"},
+        {
+            "role": "tool",
+            "name": "compile_model",
+            "tool_call_id": "call_older",
+            "content": "older tool result",
+        },
+        {"role": "assistant", "content": "latest assistant"},
+        {
+            "role": "tool",
+            "name": "compile_model",
+            "tool_call_id": "call_latest",
+            "content": "latest tool result",
+        },
+    ]
+
+
 def test_prepare_next_request_creates_prefix_cache_event() -> None:
     provider = GeminiLLM(dry_run=True)
 
@@ -143,6 +164,7 @@ def test_prepare_next_request_compacts_for_hard_pressure_and_preserves_raw_tail(
 
 def test_prepare_next_request_soft_compaction_resets_after_compile_streak_reset() -> None:
     provider = GeminiLLM(dry_run=True)
+    provider._last_usage = {"prompt_tokens": 500_000}
 
     async def fake_ensure_prefix_cache(
         *, system_prompt: str, tools: list[dict], trace_events: list
@@ -152,7 +174,7 @@ def test_prepare_next_request_soft_compaction_resets_after_compile_streak_reset(
     async def fake_count_request_tokens(
         *, system_prompt: str, tools: list[dict], messages: list[dict]
     ) -> int:
-        return 100_000
+        return 500_000
 
     async def fake_compact_messages(
         *, system_prompt: str, messages: list[dict]
@@ -166,24 +188,7 @@ def test_prepare_next_request_soft_compaction_resets_after_compile_streak_reset(
     provider._count_request_tokens = fake_count_request_tokens  # type: ignore[method-assign]
     provider._compact_messages = fake_compact_messages  # type: ignore[method-assign]
 
-    messages = [
-        {"role": "user", "content": "sdk docs"},
-        {"role": "user", "content": "task"},
-        {"role": "assistant", "content": "older assistant"},
-        {
-            "role": "tool",
-            "name": "compile_model",
-            "tool_call_id": "call_older",
-            "content": "older tool result",
-        },
-        {"role": "assistant", "content": "latest assistant"},
-        {
-            "role": "tool",
-            "name": "compile_model",
-            "tool_call_id": "call_latest",
-            "content": "latest tool result",
-        },
-    ]
+    messages = _seed_gemini_messages()
 
     first = asyncio.run(
         provider.prepare_next_request(
@@ -191,7 +196,7 @@ def test_prepare_next_request_soft_compaction_resets_after_compile_streak_reset(
             messages=messages,
             tools=[],
             completed_turns=2,
-            consecutive_compile_failure_count=3,
+            consecutive_compile_failure_count=4,
             last_compile_failure_sig="compile_sig",
         )
     )
@@ -201,7 +206,7 @@ def test_prepare_next_request_soft_compaction_resets_after_compile_streak_reset(
             messages=messages,
             tools=[],
             completed_turns=4,
-            consecutive_compile_failure_count=3,
+            consecutive_compile_failure_count=4,
             last_compile_failure_sig="compile_sig",
         )
     )
@@ -221,7 +226,7 @@ def test_prepare_next_request_soft_compaction_resets_after_compile_streak_reset(
             messages=messages,
             tools=[],
             completed_turns=6,
-            consecutive_compile_failure_count=3,
+            consecutive_compile_failure_count=4,
             last_compile_failure_sig="compile_sig",
         )
     )
@@ -230,6 +235,149 @@ def test_prepare_next_request_soft_compaction_resets_after_compile_streak_reset(
     assert second.compaction_event is None
     assert reset.compaction_event is None
     assert third.compaction_event is not None
+
+
+def test_prepare_next_request_skips_soft_compaction_under_low_pressure() -> None:
+    provider = GeminiLLM(dry_run=True)
+    provider._last_usage = {"prompt_tokens": 100_000}
+
+    async def fake_ensure_prefix_cache(
+        *, system_prompt: str, tools: list[dict], trace_events: list
+    ) -> list[dict]:
+        return []
+
+    provider._ensure_prefix_cache = fake_ensure_prefix_cache  # type: ignore[method-assign]
+
+    result = asyncio.run(
+        provider.prepare_next_request(
+            system_prompt="system",
+            messages=_seed_gemini_messages(),
+            tools=[],
+            completed_turns=2,
+            consecutive_compile_failure_count=6,
+            last_compile_failure_sig="compile_sig",
+        )
+    )
+
+    assert result.compaction_event is None
+    assert result.trace_events[-1].payload["reason"] == "soft_pressure_too_low"
+
+
+def test_prepare_next_request_requires_extra_failure_when_cache_hits_are_high() -> None:
+    provider = GeminiLLM(dry_run=True)
+    provider._last_usage = {"prompt_tokens": 500_000, "cached_tokens": 350_000}
+
+    compact_calls = 0
+
+    async def fake_ensure_prefix_cache(
+        *, system_prompt: str, tools: list[dict], trace_events: list
+    ) -> list[dict]:
+        return []
+
+    async def fake_count_request_tokens(
+        *, system_prompt: str, tools: list[dict], messages: list[dict]
+    ) -> int:
+        return 500_000
+
+    async def fake_compact_messages(
+        *, system_prompt: str, messages: list[dict]
+    ) -> tuple[dict, dict[str, int]]:
+        nonlocal compact_calls
+        compact_calls += 1
+        return (
+            {"role": "user", "content": "[System-generated compaction summary]\nsummary"},
+            {"prompt_tokens": 1_000, "candidates_tokens": 50, "total_tokens": 1_050},
+        )
+
+    provider._ensure_prefix_cache = fake_ensure_prefix_cache  # type: ignore[method-assign]
+    provider._count_request_tokens = fake_count_request_tokens  # type: ignore[method-assign]
+    provider._compact_messages = fake_compact_messages  # type: ignore[method-assign]
+
+    skipped = asyncio.run(
+        provider.prepare_next_request(
+            system_prompt="system",
+            messages=_seed_gemini_messages(),
+            tools=[],
+            completed_turns=2,
+            consecutive_compile_failure_count=4,
+            last_compile_failure_sig="compile_sig_a",
+        )
+    )
+    compacted = asyncio.run(
+        provider.prepare_next_request(
+            system_prompt="system",
+            messages=_seed_gemini_messages(),
+            tools=[],
+            completed_turns=3,
+            consecutive_compile_failure_count=5,
+            last_compile_failure_sig="compile_sig_b",
+        )
+    )
+
+    assert skipped.compaction_event is None
+    assert skipped.trace_events[-1].payload["reason"] == "compile_plateau_below_threshold"
+    assert compacted.compaction_event is not None
+    assert compacted.compaction_event.trigger == "compile_plateau"
+    assert compact_calls == 1
+
+
+def test_prepare_next_request_soft_compaction_respects_cooldown() -> None:
+    provider = GeminiLLM(dry_run=True)
+    provider._last_usage = {"prompt_tokens": 500_000}
+
+    async def fake_ensure_prefix_cache(
+        *, system_prompt: str, tools: list[dict], trace_events: list
+    ) -> list[dict]:
+        return []
+
+    token_counts = iter([500_000, 420_000])
+    compact_calls = 0
+
+    async def fake_count_request_tokens(
+        *, system_prompt: str, tools: list[dict], messages: list[dict]
+    ) -> int:
+        return next(token_counts)
+
+    async def fake_compact_messages(
+        *, system_prompt: str, messages: list[dict]
+    ) -> tuple[dict, dict[str, int]]:
+        nonlocal compact_calls
+        compact_calls += 1
+        return (
+            {"role": "user", "content": "[System-generated compaction summary]\nsummary"},
+            {"prompt_tokens": 1_000, "candidates_tokens": 50, "total_tokens": 1_050},
+        )
+
+    provider._ensure_prefix_cache = fake_ensure_prefix_cache  # type: ignore[method-assign]
+    provider._count_request_tokens = fake_count_request_tokens  # type: ignore[method-assign]
+    provider._compact_messages = fake_compact_messages  # type: ignore[method-assign]
+
+    first = asyncio.run(
+        provider.prepare_next_request(
+            system_prompt="system",
+            messages=_seed_gemini_messages(),
+            tools=[],
+            completed_turns=2,
+            consecutive_compile_failure_count=4,
+            last_compile_failure_sig="compile_sig_a",
+        )
+    )
+    provider._last_usage = {"prompt_tokens": 500_000}
+    skipped = asyncio.run(
+        provider.prepare_next_request(
+            system_prompt="system",
+            messages=_seed_gemini_messages(),
+            tools=[],
+            completed_turns=3,
+            consecutive_compile_failure_count=4,
+            last_compile_failure_sig="compile_sig_b",
+        )
+    )
+
+    assert first.compaction_event is not None
+    assert skipped.compaction_event is None
+    assert skipped.trace_events[-1].payload["reason"] == "soft_compaction_cooldown"
+    assert compact_calls == 1
 
 
 def test_prepare_next_request_emits_skip_for_unsupported_threshold_model() -> None:

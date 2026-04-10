@@ -260,12 +260,20 @@ def _looks_like_legacy_export_name(value: str | os.PathLike[str]) -> bool:
 
 
 def _managed_export_session(assets: AssetContextLike | None) -> AssetSession:
+    if isinstance(assets, AssetSession):
+        return assets
+    asset_ctx = resolve_asset_context(assets)
     current = get_active_asset_session(create_if_missing=False)
+    if asset_ctx is not None:
+        if (
+            current is not None
+            and current.asset_root == asset_ctx.asset_root
+            and current.mesh_subdir == asset_ctx.mesh_subdir
+        ):
+            return current
+        return AssetSession(asset_ctx.asset_root, mesh_subdir=asset_ctx.mesh_subdir)
     if current is not None:
         return current
-    asset_ctx = resolve_asset_context(assets)
-    if asset_ctx is not None:
-        return AssetSession(asset_ctx.asset_root, mesh_subdir=asset_ctx.mesh_subdir)
     session = get_active_asset_session(create_if_missing=True)
     if session is None:
         raise RuntimeError("Failed to create a managed asset session")

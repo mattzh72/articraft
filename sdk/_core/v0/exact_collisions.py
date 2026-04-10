@@ -24,8 +24,10 @@ def compile_object_model_with_exact_collisions(
     object_model: "ArticulatedObject",
     *,
     asset_root: Optional[AssetContext | str | Path] = None,
+    validate: bool = True,
 ) -> "ArticulatedObject":
-    object_model.validate(strict=True)
+    if validate:
+        object_model.validate(strict=True)
     assets = _resolve_compile_assets(object_model, asset_root=asset_root)
     cache_key = _compiled_model_cache_key(object_model, assets=assets)
     cached_models = getattr(object_model, _COMPILED_MODEL_CACHE_ATTR, None)
