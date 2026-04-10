@@ -1,9 +1,8 @@
 from __future__ import annotations
 
-# User code should import every SDK/stdlib symbol it uses instead of relying on
-# hidden scaffold imports.
-# >>> USER_CODE_START
-from sdk import ArticulatedObject, TestContext, TestReport
+import cadquery as cq  # noqa: F401
+
+from sdk import ArticulatedObject, TestContext, TestReport, mesh_from_cadquery  # noqa: F401
 
 
 def build_object_model() -> ArticulatedObject:
@@ -25,7 +24,5 @@ def run_tests() -> TestReport:
 
     return ctx.report()
 
-
-# >>> USER_CODE_END
 
 object_model = build_object_model()

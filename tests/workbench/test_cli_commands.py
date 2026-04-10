@@ -399,6 +399,8 @@ def test_workbench_init_record_command(
     assert (record_dir / "prompt.txt").read_text(encoding="utf-8") == "build a folding reading lamp"
     model_text = (record_dir / "model.py").read_text(encoding="utf-8")
     assert "Draft scaffold created by `articraft-workbench init-record`." in model_text
+    assert "import cadquery as cq" in model_text
+    assert "mesh_from_cadquery" in model_text
     assert "def build_object_model() -> ArticulatedObject:" in model_text
     assert "def run_tests() -> TestReport:" in model_text
     assert "ctx.check_model_valid()" not in model_text
