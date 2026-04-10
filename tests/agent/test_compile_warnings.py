@@ -330,6 +330,32 @@ def test_runtime_error_failure_omits_location_lines() -> None:
     assert "Code:" not in signal.details
 
 
+def test_runtime_error_failure_uses_remote_traceback_location_lines() -> None:
+    exc = RuntimeError("Standard_Failure:")
+    setattr(exc, "remote_error_type", "Standard_Failure")
+    setattr(
+        exc,
+        "remote_traceback",
+        "\n".join(
+            [
+                "Traceback (most recent call last):",
+                '  File "/tmp/model.py", line 12, in <module>',
+                "    build()",
+                '  File "/tmp/lib.py", line 34, in build',
+                "    return fillet_builder.Shape()",
+                "Standard_Failure: BRep_API: command not done",
+            ]
+        ),
+    )
+
+    bundle = build_compile_signal_bundle(status="failure", exc=exc)
+
+    signal = next(signal for signal in bundle.signals if signal.kind == "compile_runtime")
+    assert signal.summary == "Standard_Failure: BRep_API: command not done"
+    assert "Location: /tmp/lib.py:34" in signal.details
+    assert "Code: return fillet_builder.Shape()" in signal.details
+
+
 def test_compile_signal_bundle_accepts_protocol_shaped_test_report() -> None:
     report = SimpleNamespace(
         failures=(),

@@ -115,10 +115,12 @@ def _extract_urdf_xml(
     sdk_package: str = "sdk",
     target: str = "full",
     validate_export: bool = True,
+    suppress_exceptions: bool = False,
 ) -> str | None:
     target_key = _normalize_compile_target(target)
     object_model = globals_dict.get("object_model")
     urdf_xml: str | None = None
+    export_exc: Exception | None = None
     try:
         if object_model is not None:
             compile_object_to_urdf_xml = getattr(
@@ -142,13 +144,16 @@ def _extract_urdf_xml(
             else:
                 urdf_xml = compile_object_to_urdf_xml(object_model)
             globals_dict["urdf_xml"] = urdf_xml
-    except Exception:
+    except Exception as exc:
+        export_exc = exc
         urdf_xml = None
 
     if not isinstance(urdf_xml, str):
         maybe_urdf_xml = globals_dict.get("urdf_xml")
         if isinstance(maybe_urdf_xml, str):
             urdf_xml = maybe_urdf_xml
+    if not isinstance(urdf_xml, str) and export_exc is not None and not suppress_exceptions:
+        raise export_exc
     return urdf_xml
 
 
@@ -260,6 +265,7 @@ def _compile_urdf_report_impl(
                 globals_dict,
                 sdk_package=sdk_package,
                 target=target_key,
+                suppress_exceptions=True,
             )
             signal_bundle = build_compile_signal_bundle(
                 status="failure",
@@ -590,6 +596,7 @@ def _compile_worker(
         payload = {
             "ok": False,
             "error": f"{type(exc).__name__}: {exc}",
+            "error_type": type(exc).__name__,
             "traceback": traceback.format_exc(),
         }
         compiled_urdf_xml = getattr(exc, "compiled_urdf_xml", None)
@@ -708,10 +715,15 @@ def compile_urdf_report_maybe_timeout(
         )
 
     error_text = str(msg.get("error", "Unknown compile worker error")).strip()
+    error_type = str(msg.get("error_type", "")).strip()
     tb_text = str(msg.get("traceback", "")).strip()
     if tb_text:
         logger.debug("Compile worker traceback:\n%s", tb_text)
     exc = RuntimeError(error_text or "Unknown compile worker error")
+    if error_type:
+        setattr(exc, "remote_error_type", error_type)
+    if tb_text:
+        setattr(exc, "remote_traceback", tb_text)
     compiled_urdf_xml = msg.get("compiled_urdf_xml")
     if isinstance(compiled_urdf_xml, str) and compiled_urdf_xml.strip():
         setattr(exc, "compiled_urdf_xml", compiled_urdf_xml)

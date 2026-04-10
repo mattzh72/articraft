@@ -15,6 +15,7 @@ CODE_PATTERN = re.compile(
     r"|^(?:from\s+\w+\s+import\s|import\s+\w+|def\s+\w+\s*\(|class\s+\w+)",
     re.MULTILINE,
 )
+_EXCEPTION_PREFIX_RE = re.compile(r"^(?:[A-Za-z_][A-Za-z0-9_]*(?:Error|Exception|Failure)):\s*")
 LOFT_PROFILE_AREA_ERROR = "Loft profile area must be non-zero"
 LOFT_PROFILE_AREA_HINT = (
     "Hint: LoftGeometry checks profile area in the XY projection. "
@@ -309,6 +310,7 @@ ISOLATED_PART_COMPILER_SPEC = SignalSpec(
 _MIN_DISTANCE_RE = re.compile(
     r"min_distance=(?P<distance>[-+0-9.eE]+)\s+contact_tol=(?P<tol>[-+0-9.eE]+)"
 )
+_TRACEBACK_FRAME_RE = re.compile(r'^\s*File "([^"]+)", line (\d+), in .+$')
 
 
 def contains_code_in_text(text: str) -> bool:
@@ -322,6 +324,54 @@ def _compile_hint_lines(detail_lines: list[str]) -> list[str]:
     if any(LOFT_PROFILE_AREA_ERROR in line for line in detail_lines):
         return [LOFT_PROFILE_AREA_HINT]
     return []
+
+
+def _display_exception_type(exc: BaseException) -> str:
+    remote_error_type = getattr(exc, "remote_error_type", None)
+    if isinstance(remote_error_type, str) and remote_error_type.strip():
+        return remote_error_type.strip()
+    return type(exc).__name__
+
+
+def _remote_traceback_text(exc: BaseException) -> str:
+    remote_traceback = getattr(exc, "remote_traceback", None)
+    if not isinstance(remote_traceback, str):
+        return ""
+    return remote_traceback.strip()
+
+
+def _remote_traceback_exception_line(exc: BaseException) -> str | None:
+    remote_traceback = _remote_traceback_text(exc)
+    if not remote_traceback:
+        return None
+    for line in reversed(remote_traceback.splitlines()):
+        cleaned = line.strip()
+        if cleaned:
+            return cleaned
+    return None
+
+
+def _is_low_information_exception_text(text: str) -> bool:
+    stripped = text.strip()
+    if not stripped:
+        return True
+    normalized = stripped
+    while True:
+        match = _EXCEPTION_PREFIX_RE.match(normalized)
+        if match is None:
+            break
+        normalized = normalized[match.end() :].lstrip()
+    if not normalized:
+        return True
+    return normalized.endswith(":") and " " not in normalized[:-1]
+
+
+def _strip_redundant_exception_prefix(text: str, exc_type: str) -> str:
+    stripped = text.strip()
+    prefix = f"{exc_type}:"
+    while stripped.startswith(prefix):
+        stripped = stripped[len(prefix) :].lstrip()
+    return stripped or text.strip()
 
 
 def _exception_detail_lines(exc: BaseException, *, max_detail_lines: int = 40) -> list[str]:
@@ -342,6 +392,12 @@ def _exception_detail_lines(exc: BaseException, *, max_detail_lines: int = 40) -
             continue
         seen.add(cleaned)
         detail_lines.append(cleaned)
+
+    remote_exception_line = _remote_traceback_exception_line(exc)
+    if remote_exception_line and remote_exception_line not in seen:
+        if not detail_lines or _is_low_information_exception_text(detail_lines[0]):
+            detail_lines.insert(0, remote_exception_line)
+            seen.add(remote_exception_line)
 
     warnings = getattr(exc, "warnings", None)
     if isinstance(warnings, list):
@@ -364,7 +420,38 @@ def _exception_detail_lines(exc: BaseException, *, max_detail_lines: int = 40) -
     return detail_lines
 
 
+def _location_lines_from_traceback_text(traceback_text: str) -> list[str]:
+    if not traceback_text:
+        return []
+
+    lines = traceback_text.splitlines()
+    last_frame_idx = -1
+    last_filename = ""
+    last_lineno = ""
+    for idx, line in enumerate(lines):
+        match = _TRACEBACK_FRAME_RE.match(line)
+        if match is None:
+            continue
+        last_frame_idx = idx
+        last_filename = match.group(1).strip()
+        last_lineno = match.group(2).strip()
+
+    if last_frame_idx < 0 or not last_filename or not last_lineno:
+        return []
+
+    rendered = [f"Location: {last_filename}:{last_lineno}"]
+    if last_frame_idx + 1 < len(lines):
+        code_line = lines[last_frame_idx + 1].strip()
+        if code_line and _TRACEBACK_FRAME_RE.match(lines[last_frame_idx + 1]) is None:
+            rendered.append(f"Code: {code_line}")
+    return rendered
+
+
 def _exception_location_lines(exc: BaseException) -> list[str]:
+    remote_lines = _location_lines_from_traceback_text(_remote_traceback_text(exc))
+    if remote_lines:
+        return remote_lines
+
     extracted = traceback.extract_tb(exc.__traceback__) if exc.__traceback__ else []
     skip_wrapper_location = isinstance(exc, RuntimeError)
     if not extracted or skip_wrapper_location:
@@ -871,11 +958,12 @@ def _iter_allowance_notes(test_report: TestReportLike | None) -> Iterable[Compil
 def _runtime_failure_signal(exc: BaseException) -> CompileSignal:
     detail_lines = _exception_detail_lines(exc)
     detail_lines.extend(_exception_location_lines(exc))
-    summary = f"{type(exc).__name__}: compile execution failed."
+    exc_type = _display_exception_type(exc)
+    summary = f"{exc_type}: compile execution failed."
     if detail_lines:
         first = detail_lines[0]
         if first:
-            summary = f"{type(exc).__name__}: {first}"
+            summary = f"{exc_type}: {_strip_redundant_exception_prefix(first, exc_type)}"
     return _signal_from_spec(
         COMPILE_RUNTIME_SPEC,
         summary=summary,

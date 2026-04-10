@@ -701,6 +701,46 @@ def test_compile_urdf_report_can_skip_visual_glb_rewrite(tmp_path: Path) -> None
     assert report.signal_bundle.status == "success"
 
 
+def test_compile_urdf_report_preserves_export_exception_details(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    script_path = tmp_path / "model.py"
+    script_path.write_text(
+        "\n".join(
+            [
+                "from __future__ import annotations",
+                "",
+                "from sdk import ArticulatedObject, Box, Origin",
+                "",
+                "object_model = ArticulatedObject(name='export_failure')",
+                "base = object_model.part('base')",
+                "base.visual(Box((0.1, 0.1, 0.1)), origin=Origin(xyz=(0.0, 0.0, 0.05)))",
+            ]
+        ),
+        encoding="utf-8",
+    )
+
+    import agent.compiler as compiler
+
+    original_import_sdk_module = compiler._import_sdk_module
+
+    class _FakeExportModule:
+        @staticmethod
+        def compile_object_to_urdf_xml(*_args, **_kwargs) -> str:
+            raise RuntimeError("Standard_Failure: BRep_API: command not done")
+
+    def fake_import_sdk_module(sdk_package: str, module_suffix: str = ""):
+        if module_suffix == ".v0._urdf_export":
+            return _FakeExportModule()
+        return original_import_sdk_module(sdk_package, module_suffix)
+
+    monkeypatch.setattr(compiler, "_import_sdk_module", fake_import_sdk_module)
+
+    with pytest.raises(RuntimeError, match="Standard_Failure: BRep_API: command not done"):
+        compile_urdf_report(script_path, run_checks=False)
+
+
 def test_compile_urdf_report_rejects_removed_collision_target(tmp_path: Path) -> None:
     script_path = tmp_path / "model.py"
     script_path.write_text(
