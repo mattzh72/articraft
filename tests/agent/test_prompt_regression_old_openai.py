@@ -23,6 +23,7 @@ def test_compiled_openai_prompt_keeps_compact_contract_and_visual_test_gate() ->
         assert "NO FLOATING PARTS" in text
         assert "NO UNINTENTIONAL OVERLAPS" in text
         assert "REALISTIC GEOMETRY" in text
+        assert "ARTICULATE THE PRIMARY MECHANISMS" in text
 
         # Compact shared workflow stub
         assert "Start with a short context pass:" in text
@@ -54,11 +55,8 @@ def test_compiled_openai_prompt_keeps_compact_contract_and_visual_test_gate() ->
             "Read mounted SDK docs as needed for placement, probe patterns, exact signatures, and testing guidance."
             in text
         )
-        assert (
-            "Prefer Articraft-native primitives and placement helpers when they represent the form credibly."
-            in text
-        )
-        assert "Use CadQuery only for the parts that need lower-level shape control" in text
+        assert "Match the visible construction logic of the object." in text
+        assert "Preserve correct joint origins, axes, limits, and articulation behavior." in text
         assert "Author visual geometry only; do not author collision geometry in `sdk`." in text
 
         # No disallowed fragments

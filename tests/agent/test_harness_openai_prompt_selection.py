@@ -106,11 +106,10 @@ def test_openai_prompt_resolution_and_payload_preview() -> None:
         "Read mounted SDK docs as needed for placement, probe patterns, exact signatures, and testing guidance."
         in instructions
     )
+    assert "Match the visible construction logic of the object." in instructions
     assert (
-        "Prefer Articraft-native primitives and placement helpers when they represent the form credibly."
-        in instructions
+        "Preserve correct joint origins, axes, limits, and articulation behavior." in instructions
     )
-    assert "Use CadQuery only for the parts that need lower-level shape control" in instructions
     assert "Do not provide `file_path`" not in instructions
     assert "missing exact geometry" not in instructions
     assert "means a gap, not an overlap" not in instructions
@@ -372,12 +371,10 @@ def test_gemini_prompt_resolution_and_payload_preview() -> None:
         "Read mounted SDK docs as needed for placement, probe patterns, exact signatures, and testing guidance."
         in gemini_instructions
     )
+    assert "Match the visible construction logic of the object." in gemini_instructions
     assert (
-        "Prefer Articraft-native primitives and placement helpers when they represent the form credibly."
+        "Preserve correct joint origins, axes, limits, and articulation behavior."
         in gemini_instructions
-    )
-    assert (
-        "Use CadQuery only for the parts that need lower-level shape control" in gemini_instructions
     )
 
     # Runtime first-turn task guidance
