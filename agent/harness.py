@@ -1002,11 +1002,9 @@ class ArticraftAgent:
             if not isinstance(result, list):
                 continue
             for item in result:
-                if not isinstance(item, dict):
-                    continue
-                path = item.get("path")
-                if isinstance(path, str) and path:
-                    self._seen_find_example_paths.add(path)
+                cache_key = self._find_examples_cache_key(item)
+                if cache_key is not None:
+                    self._seen_find_example_paths.add(cache_key)
 
     def _compress_find_examples_output(self, output: Any) -> Any:
         if not isinstance(output, list):
@@ -1014,22 +1012,30 @@ class ArticraftAgent:
 
         compressed: list[Any] = []
         for item in output:
-            if not isinstance(item, dict):
-                compressed.append(item)
-                continue
-            path = item.get("path")
-            if not isinstance(path, str) or not path:
+            cache_key = self._find_examples_cache_key(item)
+            if cache_key is None:
                 compressed.append(item)
                 continue
 
             entry = dict(item)
-            if path in self._seen_find_example_paths:
+            if cache_key in self._seen_find_example_paths:
                 entry["content"] = _FIND_EXAMPLES_SKIPPED_CONTENT
                 entry["content_skipped"] = True
             else:
-                self._seen_find_example_paths.add(path)
+                self._seen_find_example_paths.add(cache_key)
             compressed.append(entry)
         return compressed
+
+    def _find_examples_cache_key(self, item: Any) -> str | None:
+        if not isinstance(item, dict):
+            return None
+        example_id = item.get("example_id")
+        if isinstance(example_id, str) and example_id:
+            return example_id
+        path = item.get("path")
+        if isinstance(path, str) and path:
+            return path
+        return None
 
     async def _execute_tool(self, tool_call: dict) -> tuple[ToolResult, dict]:
         tool_id = tool_call["id"]

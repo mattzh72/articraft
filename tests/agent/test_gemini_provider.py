@@ -563,6 +563,47 @@ def test_prepare_next_request_disables_prefix_token_count_after_unsupported_erro
     assert second.trace_events[0].payload["reason"] == "token_counting_disabled"
 
 
+def test_prepare_next_request_disables_prefix_token_count_after_sdk_value_error() -> None:
+    provider = GeminiLLM(dry_run=True)
+    count_attempts = 0
+
+    async def fake_count_prefix_tokens(
+        *, system_prompt: str, tools: list[dict], messages: list[dict]
+    ) -> int:
+        nonlocal count_attempts
+        count_attempts += 1
+        raise ValueError("system_instruction parameter is not supported in Gemini API.")
+
+    provider._count_prefix_tokens = fake_count_prefix_tokens  # type: ignore[method-assign]
+
+    first = asyncio.run(
+        provider.prepare_next_request(
+            system_prompt="system",
+            messages=[
+                {"role": "user", "content": "sdk docs"},
+                {"role": "user", "content": "task"},
+            ],
+            tools=[],
+            completed_turns=0,
+        )
+    )
+    second = asyncio.run(
+        provider.prepare_next_request(
+            system_prompt="system",
+            messages=[
+                {"role": "user", "content": "sdk docs"},
+                {"role": "user", "content": "task"},
+            ],
+            tools=[],
+            completed_turns=1,
+        )
+    )
+
+    assert count_attempts == 1
+    assert first.trace_events[0].payload["reason"] == "token_counting_disabled"
+    assert second.trace_events[0].payload["reason"] == "token_counting_disabled"
+
+
 def test_unsupported_gemini_api_value_error_is_not_retried() -> None:
     exc = ValueError("system_instruction parameter is not supported in Gemini API.")
     assert _should_retry_gemini_exception(exc) is False

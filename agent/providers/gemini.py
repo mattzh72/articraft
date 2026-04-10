@@ -1583,6 +1583,8 @@ def _is_unsupported_count_tokens_exception(exc: BaseException) -> bool:
     if status is not None and status != 400:
         return False
     message = str(exc).lower().replace('\\"', '"')
+    if "system_instruction parameter is not supported in gemini api." in message:
+        return True
     if "invalid json payload received" not in message or "unknown name" not in message:
         return False
     return any(

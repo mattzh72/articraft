@@ -94,6 +94,7 @@ def test_find_examples_tool_returns_expected_shape() -> None:
 
     assert len(output) == 1
     assert output[0]["title"] == "Making Lofts"
+    assert output[0]["example_id"] == "sdk/_examples/cadquery/making_lofts.md"
     assert output[0]["path"] == "sdk/_examples/cadquery/making_lofts.md"
     assert "content" in output[0]
     assert output[0]["match_quality"] == "strong"
@@ -177,11 +178,32 @@ def test_find_examples_tool_supports_base_sdk_examples() -> None:
     assert output
     assert output[0]["title"] == "Jet Engine with Smooth Nacelle and Dense Front Fan"
     assert (
+        output[0]["example_id"]
+        == "sdk/_examples/base/jet_engine_with_smooth_nacelle_dense_front_fan.md"
+    )
+    assert (
         output[0]["path"] == "sdk/_examples/base/jet_engine_with_smooth_nacelle_dense_front_fan.md"
     )
     assert output[0]["match_quality"] == "strong"
     assert output[0]["matched_tokens"]
     assert output[0]["matched_fields"]
+
+
+def test_find_examples_tool_can_omit_repo_paths_for_gemini() -> None:
+    async def _run() -> list[dict[str, object]]:
+        tool = FindExamplesTool(sdk_package="sdk", include_paths=False)
+        invocation = await tool.build({"query": "loft", "limit": 1})
+        result = await invocation.execute()
+        assert result.error is None
+        assert isinstance(result.output, list)
+        return result.output
+
+    output = asyncio.run(_run())
+
+    assert len(output) == 1
+    assert output[0]["title"] == "Making Lofts"
+    assert output[0]["example_id"] == "sdk/_examples/cadquery/making_lofts.md"
+    assert "path" not in output[0]
 
 
 def test_search_example_documents_sdk_can_retrieve_cadquery_examples() -> None:
@@ -208,6 +230,7 @@ def test_find_examples_repeated_results_replace_full_content_with_blurb() -> Non
     first = agent._compress_find_examples_output(
         [
             {
+                "example_id": "sdk/_examples/cadquery/making_lofts.md",
                 "title": "Making Lofts",
                 "description": "Loft example",
                 "tags": ["cadquery"],
@@ -219,6 +242,7 @@ def test_find_examples_repeated_results_replace_full_content_with_blurb() -> Non
     second = agent._compress_find_examples_output(
         [
             {
+                "example_id": "sdk/_examples/cadquery/making_lofts.md",
                 "title": "Making Lofts",
                 "description": "Loft example",
                 "tags": ["cadquery"],
@@ -246,6 +270,7 @@ def test_find_examples_cache_can_seed_from_prior_conversation() -> None:
                     {
                         "result": [
                             {
+                                "example_id": "sdk/_examples/cadquery/making_lofts.md",
                                 "title": "Making Lofts",
                                 "description": "Loft example",
                                 "tags": ["cadquery"],
@@ -262,6 +287,7 @@ def test_find_examples_cache_can_seed_from_prior_conversation() -> None:
     compressed = agent._compress_find_examples_output(
         [
             {
+                "example_id": "sdk/_examples/cadquery/making_lofts.md",
                 "title": "Making Lofts",
                 "description": "Loft example",
                 "tags": ["cadquery"],

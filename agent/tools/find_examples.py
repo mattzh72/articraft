@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from pathlib import Path
+from typing import Any
 
 from agent.examples import search_example_documents
 from agent.tools.base import (
@@ -19,9 +20,16 @@ class FindExamplesParams(ToolParamsModel):
 
 
 class FindExamplesInvocation(BaseToolInvocation[FindExamplesParams, list[dict[str, object]]]):
-    def __init__(self, params: FindExamplesParams, *, sdk_package: str) -> None:
+    def __init__(
+        self,
+        params: FindExamplesParams,
+        *,
+        sdk_package: str,
+        include_paths: bool,
+    ) -> None:
         super().__init__(params)
         self.sdk_package = sdk_package
+        self.include_paths = include_paths
 
     def get_description(self) -> str:
         return (
@@ -43,24 +51,32 @@ class FindExamplesInvocation(BaseToolInvocation[FindExamplesParams, list[dict[st
         )
         return ToolResult(
             output=[
-                {
-                    "title": doc.title,
-                    "description": doc.description,
-                    "tags": list(doc.tags),
-                    "path": doc.path.relative_to(Path(__file__).resolve().parents[2]).as_posix(),
-                    "content": doc.content,
-                    "match_quality": doc.match_quality,
-                    "matched_tokens": list(doc.matched_tokens),
-                    "matched_fields": list(doc.matched_fields),
-                }
+                self._serialize_match(doc)
                 for doc in matches
             ]
         )
 
+    def _serialize_match(self, doc: Any) -> dict[str, object]:
+        relative_path = doc.path.relative_to(Path(__file__).resolve().parents[2]).as_posix()
+        result: dict[str, object] = {
+            "example_id": relative_path,
+            "title": doc.title,
+            "description": doc.description,
+            "tags": list(doc.tags),
+            "content": doc.content,
+            "match_quality": doc.match_quality,
+            "matched_tokens": list(doc.matched_tokens),
+            "matched_fields": list(doc.matched_fields),
+        }
+        if self.include_paths:
+            result["path"] = relative_path
+        return result
+
 
 class FindExamplesTool(BaseDeclarativeTool):
-    def __init__(self, *, sdk_package: str) -> None:
+    def __init__(self, *, sdk_package: str, include_paths: bool = True) -> None:
         self.sdk_package = sdk_package
+        self.include_paths = include_paths
         schema = make_tool_schema(
             name="find_examples",
             description=(
@@ -98,4 +114,8 @@ class FindExamplesTool(BaseDeclarativeTool):
 
     async def build(self, params: dict) -> FindExamplesInvocation:
         validated = validate_tool_params(FindExamplesParams, params)
-        return FindExamplesInvocation(validated, sdk_package=self.sdk_package)
+        return FindExamplesInvocation(
+            validated,
+            sdk_package=self.sdk_package,
+            include_paths=self.include_paths,
+        )

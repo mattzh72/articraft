@@ -110,7 +110,7 @@ def build_tool_registry(
             CompileModelTool(),
             ProbeModelTool(sdk_package=package, runtime_limits=runtime_limits),
         ]
-    tools.append(FindExamplesTool(sdk_package=package))
+    tools.append(FindExamplesTool(sdk_package=package, include_paths=provider_norm == "openai"))
     return ToolRegistry(tools)
 
 
