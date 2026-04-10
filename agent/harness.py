@@ -179,6 +179,19 @@ def _canonical_json(value: Any) -> str:
     return json.dumps(value, sort_keys=True, separators=(",", ":"), ensure_ascii=False)
 
 
+def _stable_tool_schema_payload(tools: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    def _tool_identity(tool: dict[str, Any]) -> tuple[str, str]:
+        tool_type = str(tool.get("type") or "")
+        if tool_type == "function":
+            function = tool.get("function")
+            if isinstance(function, dict):
+                return tool_type, str(function.get("name") or "")
+        return tool_type, str(tool.get("name") or "")
+
+    normalized = [tool for tool in tools if isinstance(tool, dict)]
+    return sorted(normalized, key=_tool_identity)
+
+
 def _prompt_cache_key_strategy_from_env() -> str:
     raw = os.environ.get("OPENAI_PROMPT_CACHE_KEY_STRATEGY")
     if raw is None:
@@ -198,7 +211,14 @@ def _prompt_cache_key_strategy_from_env() -> str:
 def _prompt_cache_retention_from_env(*, model_id: str) -> Optional[str]:
     raw = os.environ.get("OPENAI_PROMPT_CACHE_RETENTION")
     if raw is None:
-        if model_id.strip().lower().startswith("gpt-5.4"):
+        normalized = model_id.strip().lower()
+        if (
+            normalized == "gpt-5"
+            or normalized.startswith("gpt-5.1")
+            or normalized.startswith("gpt-5-codex")
+            or normalized.startswith("gpt-5.1-codex")
+            or normalized.startswith("gpt-4.1")
+        ):
             return "24h"
         return None
     value = raw.strip()
@@ -255,16 +275,15 @@ def build_openai_prompt_cache_settings(
         return None, retention
 
     normalized_sdk_package = _normalize_sdk_package(sdk_package)
-    normalized_docs_mode = _normalize_sdk_docs_mode(sdk_docs_mode)
+    _normalize_sdk_docs_mode(sdk_docs_mode)
     prefix = (os.environ.get("OPENAI_PROMPT_CACHE_KEY_PREFIX") or "").strip()
     key_payload = {
         "provider": "openai",
         "model_id": model_id.strip(),
         "sdk_package": normalized_sdk_package,
-        "sdk_docs_mode": normalized_docs_mode,
         "system_prompt_sha256": _sha256_text(system_prompt),
         "sdk_docs_sha256": _sha256_text(sdk_docs_context),
-        "tool_schema_sha256": _sha256_text(_canonical_json(tools)),
+        "tool_schema_sha256": _sha256_text(_canonical_json(_stable_tool_schema_payload(tools))),
     }
     digest = _short_cache_digest(_canonical_json(key_payload))
     visible_prefix = "".join(

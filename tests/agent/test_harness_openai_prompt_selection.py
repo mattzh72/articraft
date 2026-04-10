@@ -116,7 +116,7 @@ def test_openai_prompt_resolution_and_payload_preview() -> None:
     assert "means a gap, not an overlap" not in instructions
 
     # Runtime first-turn task guidance
-    assert task_message.startswith("a pair of scissors")
+    assert task_message.startswith("<runtime_task_guidance>")
     assert (
         'Read the exact current code with `read_file(path="model.py")` before editing.'
         in task_message
@@ -127,12 +127,12 @@ def test_openai_prompt_resolution_and_payload_preview() -> None:
     )
     assert 'read the full file with `read_file(path="docs/...")`' in task_message
     assert "do not re-read a reference file that is already in context" in task_message
-    assert task_message.endswith("</runtime_task_guidance>")
+    assert task_message.endswith("a pair of scissors")
 
     # Cache key
     assert payload["prompt_cache_key"].startswith("ac1:")
     assert len(payload["prompt_cache_key"]) <= 64
-    assert payload["prompt_cache_retention"] == "24h"
+    assert "prompt_cache_retention" not in payload
 
     # SDK docs router bundle is injected
     assert "## docs/sdk/references/quickstart.md" in docs_message
@@ -188,13 +188,13 @@ def test_openai_multimodal_payload_preview_keeps_image_and_appends_guidance(
 
     task_parts = payload["input"][1]["content"]
 
-    assert task_parts[0] == {"type": "input_text", "text": "a table lamp"}
-    assert task_parts[1]["type"] == "input_image"
-    assert task_parts[1]["detail"] == "high"
-    assert task_parts[1]["image_url"].startswith("data:image/png;base64,")
-    assert task_parts[2]["type"] == "input_text"
-    assert task_parts[2]["text"].startswith("<runtime_task_guidance>")
-    assert "apply_patch" in task_parts[2]["text"]
+    assert task_parts[0]["type"] == "input_text"
+    assert task_parts[0]["text"].startswith("<runtime_task_guidance>")
+    assert "apply_patch" in task_parts[0]["text"]
+    assert task_parts[1] == {"type": "input_text", "text": "a table lamp"}
+    assert task_parts[2]["type"] == "input_image"
+    assert task_parts[2]["detail"] == "high"
+    assert task_parts[2]["image_url"].startswith("data:image/png;base64,")
 
 
 def test_openai_prompt_cache_key_is_stable_across_user_prompt_changes() -> None:
@@ -204,11 +204,13 @@ def test_openai_prompt_cache_key_is_stable_across_user_prompt_changes() -> None:
     assert first_payload["prompt_cache_key"] == second_payload["prompt_cache_key"]
 
 
-def test_openai_prompt_cache_key_changes_for_sdk_package_and_docs_mode() -> None:
+def test_openai_prompt_cache_key_is_stable_when_sdk_inputs_normalize_to_same_prefix() -> None:
     full_payload = _build_openai_preview(sdk_package="sdk", sdk_docs_mode="full")
     core_payload = _build_openai_preview(sdk_package="sdk", sdk_docs_mode="core")
+    hybrid_payload = _build_openai_preview(sdk_package="sdk_hybrid", sdk_docs_mode="full")
 
-    assert full_payload["prompt_cache_key"] != core_payload["prompt_cache_key"]
+    assert full_payload["prompt_cache_key"] == core_payload["prompt_cache_key"]
+    assert full_payload["prompt_cache_key"] == hybrid_payload["prompt_cache_key"]
 
 
 def test_openai_prompt_cache_key_changes_for_system_prompt_contents(tmp_path: Path) -> None:
@@ -268,7 +270,7 @@ def test_openai_prompt_cache_key_can_be_disabled_by_env(
     payload = _build_openai_preview()
 
     assert "prompt_cache_key" not in payload
-    assert payload["prompt_cache_retention"] == "24h"
+    assert "prompt_cache_retention" not in payload
 
 
 def test_openai_prompt_cache_retention_can_be_disabled_by_env(
@@ -281,6 +283,12 @@ def test_openai_prompt_cache_retention_can_be_disabled_by_env(
     assert "prompt_cache_retention" not in payload
     assert payload["prompt_cache_key"].startswith("ac1:")
     assert len(payload["prompt_cache_key"]) <= 64
+
+
+def test_openai_prompt_cache_retention_defaults_for_supported_models() -> None:
+    payload = _build_openai_preview(model_id="gpt-5")
+
+    assert payload["prompt_cache_retention"] == "24h"
 
 
 def test_openai_prompt_cache_key_stays_within_length_limit_with_prefix(
@@ -373,7 +381,7 @@ def test_gemini_prompt_resolution_and_payload_preview() -> None:
     )
 
     # Runtime first-turn task guidance
-    assert gemini_task_message.startswith("a pair of scissors")
+    assert gemini_task_message.startswith("<runtime_task_guidance>")
     assert (
         'Read the exact current code with `read_file(path="model.py")` before editing.'
         in gemini_task_message
@@ -384,7 +392,7 @@ def test_gemini_prompt_resolution_and_payload_preview() -> None:
     )
     assert 'read_file(path="docs/...")' in gemini_task_message
     assert "do not re-read a reference file that is already in context" in gemini_task_message
-    assert gemini_task_message.endswith("</runtime_task_guidance>")
+    assert gemini_task_message.endswith("a pair of scissors")
 
     assert "## docs/sdk/references/quickstart.md" in gemini_docs_message
     assert "## docs/sdk/references/probe-tooling.md" in gemini_docs_message
@@ -436,10 +444,10 @@ def test_gemini_multimodal_payload_preview_keeps_image_and_appends_guidance(
 
     task_parts = payload["contents"][1]["parts"]
 
-    assert task_parts[0] == {"text": "a table lamp"}
+    assert task_parts[0]["text"].startswith("<runtime_task_guidance>")
     assert any(
         isinstance(part, dict) and ("inline_data" in part or "inlineData" in part)
         for part in task_parts
     )
-    assert task_parts[-1]["text"].startswith("<runtime_task_guidance>")
-    assert "edit_code" in task_parts[-1]["text"]
+    assert any(part == {"text": "a table lamp"} for part in task_parts if isinstance(part, dict))
+    assert "edit_code" in task_parts[0]["text"]

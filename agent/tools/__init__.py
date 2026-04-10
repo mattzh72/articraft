@@ -139,12 +139,12 @@ def prepend_runtime_guidance(
     if isinstance(user_content, str):
         if not user_content.strip():
             return guidance
-        return f"{user_content}\n\n{guidance}"
+        return f"{guidance}\n\n{user_content}"
 
     if not isinstance(user_content, list):
         return user_content
 
-    return [*user_content, {"type": "input_text", "text": guidance}]
+    return [{"type": "input_text", "text": guidance}, *user_content]
 
 
 def build_first_turn_messages(

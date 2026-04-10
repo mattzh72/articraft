@@ -67,8 +67,8 @@ def test_prepend_runtime_guidance_supports_text_only_content() -> None:
     )
 
     assert isinstance(content, str)
-    assert content.startswith("make a hinge")
-    assert content.endswith("</runtime_task_guidance>")
+    assert content.startswith("<runtime_task_guidance>")
+    assert content.endswith("make a hinge")
 
 
 def test_build_initial_user_content_can_append_runtime_guidance_for_multimodal(
@@ -84,12 +84,12 @@ def test_build_initial_user_content_can_append_runtime_guidance_for_multimodal(
     )
 
     assert content == [
-        {"type": "input_text", "text": "make a lamp"},
-        {"type": "input_image", "image_path": str(image_path), "detail": "high"},
         {
             "type": "input_text",
             "text": "<runtime_task_guidance>\n- Stay incremental.\n</runtime_task_guidance>",
         },
+        {"type": "input_text", "text": "make a lamp"},
+        {"type": "input_image", "image_path": str(image_path), "detail": "high"},
     ]
 
 
