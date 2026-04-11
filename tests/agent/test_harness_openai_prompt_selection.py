@@ -8,8 +8,6 @@ from agent import runner
 from agent.prompts import (
     DESIGNER_PROMPT_NAME,
     GEMINI_DESIGNER_PROMPT_NAME,
-    HYBRID_GEMINI_DESIGNER_PROMPT_NAME,
-    HYBRID_OPENAI_DESIGNER_PROMPT_NAME,
     OPENAI_DESIGNER_PROMPT_NAME,
     load_system_prompt_text,
     resolve_system_prompt_path,
@@ -54,14 +52,6 @@ def test_openai_prompt_resolution_and_payload_preview() -> None:
     assert loaded_path == resolved
     assert loaded_text == resolved.read_text(encoding="utf-8")
 
-    hybrid_resolved = resolve_system_prompt_path(
-        DESIGNER_PROMPT_NAME,
-        provider="openai",
-        sdk_package="sdk_hybrid",
-        repo_root=repo_root,
-    )
-    assert hybrid_resolved.name == HYBRID_OPENAI_DESIGNER_PROMPT_NAME
-
     payload = build_provider_payload_preview(
         "a pair of scissors",
         provider="openai",
@@ -80,13 +70,13 @@ def test_openai_prompt_resolution_and_payload_preview() -> None:
 
     # Tool contract
     assert (
-        "Use ONLY `read_file`, `apply_patch`, `compile_model`, `probe_model`, and `find_examples`"
+        "Available tools: `read_file`, `apply_patch`, `compile_model`, `probe_model`, and `find_examples`."
         in instructions
     )
     assert "FREEFORM tool" in instructions
     assert "write_code" not in instructions
     assert "Prefer several small `apply_patch` edits over one giant patch" in instructions
-    assert "Treat `compile_model` as the full validation pass." in instructions
+    assert "Prefer the smallest action that gives decisive evidence." in instructions
 
     # Three hard requirements
     assert "NO FLOATING PARTS" in instructions
@@ -94,8 +84,15 @@ def test_openai_prompt_resolution_and_payload_preview() -> None:
     assert "REALISTIC GEOMETRY" in instructions
 
     # Compact workflow + moved SDK guidance
-    assert "Read the bound scaffold and the injected SDK docs before editing." in instructions
+    assert "Start with a short context pass:" in instructions
+    assert "preloaded SDK quickstart/router" in instructions
+    assert "Read only the specific `docs/` references needed for the next change" in instructions
+    assert "read the full file once, not a small slice" in instructions
+    assert "Do not re-read it if it is already in context." in instructions
     assert "Start with the smallest coherent backbone or subassembly" in instructions
+    assert (
+        "When a spatial issue is ambiguous, use `probe_model` to gather evidence." in instructions
+    )
     assert "Always run `compile_model` on the latest revision before concluding." in instructions
     assert "PHASE 1" not in instructions
 
@@ -103,66 +100,56 @@ def test_openai_prompt_resolution_and_payload_preview() -> None:
     assert "inspection-only" in instructions
     assert "lexical search over curated examples for the active SDK" in instructions
     assert "<compile_signals>" in instructions
-    assert "See injected SDK docs" in instructions
+    assert "Match the visible construction logic of the object." in instructions
+    assert (
+        "Preserve correct joint origins, axes, limits, and articulation behavior." in instructions
+    )
     assert "Do not provide `file_path`" not in instructions
     assert "missing exact geometry" not in instructions
     assert "means a gap, not an overlap" not in instructions
 
     # Runtime first-turn task guidance
     assert task_message.startswith("<runtime_task_guidance>")
-    assert "Read the exact current code with `read_file` before editing." in task_message
+    assert (
+        'Read the exact current code with `read_file(path="model.py")` before editing.'
+        in task_message
+    )
+    assert (
+        "Start with a short context pass: decide the next coherent edit, then read only the docs/examples needed for it."
+        in task_message
+    )
+    assert "After a first ambiguous spatial repair does not resolve the issue" in task_message
+    assert 'read the full file with `read_file(path="docs/...")`' in task_message
+    assert "do not re-read a reference file that is already in context" in task_message
     assert task_message.endswith("a pair of scissors")
 
     # Cache key
     assert payload["prompt_cache_key"].startswith("ac1:")
     assert len(payload["prompt_cache_key"]) <= 64
-    assert payload["prompt_cache_retention"] == "24h"
+    assert "prompt_cache_retention" not in payload
 
-    # SDK docs injected
-    assert "## sdk/_docs/common/00_quickstart.md" in docs_message
-    assert "## sdk/_docs/common/70_probe_tooling.md" in docs_message
-    assert "## sdk/_docs/common/80_testing.md" in docs_message
+    # SDK docs router bundle is injected
+    assert "## docs/sdk/references/quickstart.md" in docs_message
+    assert "## docs/sdk/references/probe-tooling.md" in docs_message
+    assert "## docs/sdk/references/testing.md" in docs_message
+    assert "Virtual Workspace" in docs_message
+    assert "Import from `sdk` in `model.py`." in docs_message
     assert "Use `place_on_surface(...)` by default" in docs_message
-    assert "Prefer object-first snippets" in docs_message
     assert "Once `run_tests()` references a visual by exact `elem_*` name" in docs_message
 
 
-def test_openai_hybrid_payload_preview_includes_hybrid_docs() -> None:
-    hybrid_docs_message = _build_openai_preview(
-        sdk_package="sdk_hybrid",
-        sdk_docs_mode="full",
-    )["input"][0]["content"][0]["text"]
-    assert "## sdk/_docs/common/00_quickstart.md" in hybrid_docs_message
-    assert "## sdk/_docs/cadquery/35_cadquery.md" in hybrid_docs_message
-    assert "## sdk/_docs/common/70_probe_tooling.md" in hybrid_docs_message
-    assert "## sdk/_docs/common/80_testing.md" in hybrid_docs_message
-    assert "## sdk/_docs/cadquery/39a_cadquery_examples.md" not in hybrid_docs_message
-
-
-def test_openai_core_payload_preview_includes_probe_doc() -> None:
+def test_openai_core_payload_preview_keeps_router_bundle() -> None:
     docs_message = _build_openai_preview(sdk_package="sdk", sdk_docs_mode="core")["input"][0][
         "content"
     ][0]["text"]
-    assert "## sdk/_docs/common/00_quickstart.md" in docs_message
-    assert "## sdk/_docs/common/70_probe_tooling.md" in docs_message
-    assert "## sdk/_docs/common/80_testing.md" in docs_message
-    assert "## sdk/_docs/base/40_mesh_geometry.md" not in docs_message
+    assert "## docs/sdk/references/quickstart.md" in docs_message
+    assert "## docs/sdk/references/probe-tooling.md" in docs_message
+    assert "## docs/sdk/references/testing.md" in docs_message
 
 
-def test_openai_hybrid_core_payload_preview_includes_probe_doc() -> None:
-    docs_message = _build_openai_preview(sdk_package="sdk_hybrid", sdk_docs_mode="core")["input"][
-        0
-    ]["content"][0]["text"]
-    assert "## sdk/_docs/common/00_quickstart.md" in docs_message
-    assert "## sdk/_docs/cadquery/35_cadquery.md" in docs_message
-    assert "## sdk/_docs/common/70_probe_tooling.md" in docs_message
-    assert "## sdk/_docs/common/80_testing.md" in docs_message
-    assert "## sdk/_docs/cadquery/36_cadquery_primer.md" not in docs_message
-
-
-def test_openai_hybrid_payload_preview_includes_find_examples_tool() -> None:
+def test_openai_payload_preview_includes_find_examples_tool() -> None:
     payload = _build_openai_preview(
-        sdk_package="sdk_hybrid",
+        sdk_package="sdk",
         sdk_docs_mode="full",
     )
 
@@ -174,13 +161,13 @@ def test_openai_hybrid_payload_preview_includes_find_examples_tool() -> None:
         tool.get("type") != "function" or tool.get("strict") is True for tool in payload["tools"]
     )
     assert (
-        "Use ONLY `read_file`, `apply_patch`, `compile_model`, `probe_model`, and `find_examples`"
+        "Available tools: `read_file`, `apply_patch`, `compile_model`, `probe_model`, and `find_examples`."
         in payload["instructions"]
     )
     assert "lexical search over curated examples for the active SDK" in payload["instructions"]
 
 
-def test_openai_multimodal_payload_preview_keeps_image_and_prepends_guidance(
+def test_openai_multimodal_payload_preview_keeps_image_and_appends_guidance(
     tmp_path: Path,
 ) -> None:
     image_path = tmp_path / "reference.png"
@@ -211,13 +198,13 @@ def test_openai_prompt_cache_key_is_stable_across_user_prompt_changes() -> None:
     assert first_payload["prompt_cache_key"] == second_payload["prompt_cache_key"]
 
 
-def test_openai_prompt_cache_key_changes_for_sdk_package_and_docs_mode() -> None:
-    base_payload = _build_openai_preview(sdk_package="sdk", sdk_docs_mode="full")
-    hybrid_payload = _build_openai_preview(sdk_package="sdk_hybrid", sdk_docs_mode="full")
+def test_openai_prompt_cache_key_is_stable_when_sdk_inputs_normalize_to_same_prefix() -> None:
+    full_payload = _build_openai_preview(sdk_package="sdk", sdk_docs_mode="full")
     core_payload = _build_openai_preview(sdk_package="sdk", sdk_docs_mode="core")
+    hybrid_payload = _build_openai_preview(sdk_package="sdk_hybrid", sdk_docs_mode="full")
 
-    assert base_payload["prompt_cache_key"] != hybrid_payload["prompt_cache_key"]
-    assert base_payload["prompt_cache_key"] != core_payload["prompt_cache_key"]
+    assert full_payload["prompt_cache_key"] == core_payload["prompt_cache_key"]
+    assert full_payload["prompt_cache_key"] == hybrid_payload["prompt_cache_key"]
 
 
 def test_openai_prompt_cache_key_changes_for_system_prompt_contents(tmp_path: Path) -> None:
@@ -277,7 +264,7 @@ def test_openai_prompt_cache_key_can_be_disabled_by_env(
     payload = _build_openai_preview()
 
     assert "prompt_cache_key" not in payload
-    assert payload["prompt_cache_retention"] == "24h"
+    assert "prompt_cache_retention" not in payload
 
 
 def test_openai_prompt_cache_retention_can_be_disabled_by_env(
@@ -290,6 +277,12 @@ def test_openai_prompt_cache_retention_can_be_disabled_by_env(
     assert "prompt_cache_retention" not in payload
     assert payload["prompt_cache_key"].startswith("ac1:")
     assert len(payload["prompt_cache_key"]) <= 64
+
+
+def test_openai_prompt_cache_retention_defaults_for_supported_models() -> None:
+    payload = _build_openai_preview(model_id="gpt-5")
+
+    assert payload["prompt_cache_retention"] == "24h"
 
 
 def test_openai_prompt_cache_key_stays_within_length_limit_with_prefix(
@@ -313,14 +306,6 @@ def test_gemini_prompt_resolution_and_payload_preview() -> None:
     )
     assert gemini_resolved.name == GEMINI_DESIGNER_PROMPT_NAME
 
-    gemini_hybrid_resolved = resolve_system_prompt_path(
-        DESIGNER_PROMPT_NAME,
-        provider="gemini",
-        sdk_package="sdk_hybrid",
-        repo_root=repo_root,
-    )
-    assert gemini_hybrid_resolved.name == HYBRID_GEMINI_DESIGNER_PROMPT_NAME
-
     gemini_payload = build_provider_payload_preview(
         "a pair of scissors",
         provider="gemini",
@@ -340,13 +325,13 @@ def test_gemini_prompt_resolution_and_payload_preview() -> None:
 
     # Tool contract
     assert (
-        "Use ONLY `read_code`, `edit_code`, `compile_model`, `probe_model`, and `find_examples`"
+        "Available tools: `read_code`, `read_file`, `edit_code`, `compile_model`, `probe_model`, and `find_examples`."
         in gemini_instructions
     )
     assert 'old_string=""' in gemini_instructions
     assert "write_code" not in gemini_instructions
     assert "Prefer small exact `edit_code` replacements over broad rewrites" in gemini_instructions
-    assert "Treat `compile_model` as the full validation pass." in gemini_instructions
+    assert "Prefer the smallest action that gives decisive evidence." in gemini_instructions
 
     # Three hard requirements
     assert "NO FLOATING PARTS" in gemini_instructions
@@ -354,10 +339,19 @@ def test_gemini_prompt_resolution_and_payload_preview() -> None:
     assert "REALISTIC GEOMETRY" in gemini_instructions
 
     # Compact workflow
+    assert "Start with a short context pass:" in gemini_instructions
+    assert "preloaded SDK quickstart/router" in gemini_instructions
     assert (
-        "Read the bound scaffold and the injected SDK docs before editing." in gemini_instructions
+        "Read only the specific `docs/` references needed for the next change"
+        in gemini_instructions
     )
+    assert "read the full file once, not a small slice" in gemini_instructions
+    assert "Do not re-read it if it is already in context." in gemini_instructions
     assert "Start with the smallest coherent backbone or subassembly" in gemini_instructions
+    assert (
+        "When a spatial issue is ambiguous, use `probe_model` to gather evidence."
+        in gemini_instructions
+    )
     assert (
         "Always run `compile_model` on the latest revision before concluding."
         in gemini_instructions
@@ -367,26 +361,43 @@ def test_gemini_prompt_resolution_and_payload_preview() -> None:
     # Provider/system guidance
     assert "inspection-only" in gemini_instructions
     assert "lexical search over curated examples for the active SDK" in gemini_instructions
-    assert "See injected SDK docs" in gemini_instructions
+    assert "Match the visible construction logic of the object." in gemini_instructions
+    assert (
+        "Preserve correct joint origins, axes, limits, and articulation behavior."
+        in gemini_instructions
+    )
 
     # Runtime first-turn task guidance
     assert gemini_task_message.startswith("<runtime_task_guidance>")
-    assert "Read the exact current code with `read_code` before editing." in gemini_task_message
+    assert (
+        "Read the exact current editable code with `read_code()` before editing."
+        in gemini_task_message
+    )
+    assert (
+        "Start with a short context pass: decide the next coherent edit, then read only the docs/examples needed for it."
+        in gemini_task_message
+    )
+    assert (
+        "After a first ambiguous spatial repair does not resolve the issue" in gemini_task_message
+    )
+    assert 'read_file(path="docs/...")' in gemini_task_message
+    assert "do not re-read a reference file that is already in context" in gemini_task_message
     assert gemini_task_message.endswith("a pair of scissors")
 
-    assert "## sdk/_docs/common/70_probe_tooling.md" in gemini_docs_message
-    assert "Prefer object-first snippets" in gemini_docs_message
+    assert "## docs/sdk/references/quickstart.md" in gemini_docs_message
+    assert "## docs/sdk/references/probe-tooling.md" in gemini_docs_message
+    assert "Mounted Reference Layout" in gemini_docs_message
     assert "Once `run_tests()` references a visual by exact `elem_*` name" in gemini_docs_message
 
 
-def test_gemini_hybrid_payload_preview_includes_find_examples_tool() -> None:
+def test_gemini_payload_preview_includes_find_examples_tool() -> None:
     payload = build_provider_payload_preview(
         "a pair of scissors",
         provider="gemini",
         model_id="gemini-2.5-pro",
         thinking_level="high",
         system_prompt_path=DESIGNER_PROMPT_NAME,
-        sdk_package="sdk_hybrid",
+        sdk_package="sdk",
     )
 
     declarations = payload["config"]["tools"][0]["function_declarations"]
@@ -395,7 +406,7 @@ def test_gemini_hybrid_payload_preview_includes_find_examples_tool() -> None:
     assert "probe_model" in tool_names
     assert "find_examples" in tool_names
     assert (
-        "Use ONLY `read_code`, `edit_code`, `compile_model`, `probe_model`, and `find_examples`"
+        "Available tools: `read_code`, `read_file`, `edit_code`, `compile_model`, `probe_model`, and `find_examples`."
         in payload["config"]["system_instruction"]
     )
     assert (
@@ -404,7 +415,7 @@ def test_gemini_hybrid_payload_preview_includes_find_examples_tool() -> None:
     )
 
 
-def test_gemini_multimodal_payload_preview_keeps_image_and_prepends_guidance(
+def test_gemini_multimodal_payload_preview_keeps_image_and_appends_guidance(
     tmp_path: Path,
 ) -> None:
     image_path = tmp_path / "reference.png"
@@ -424,9 +435,9 @@ def test_gemini_multimodal_payload_preview_keeps_image_and_prepends_guidance(
     task_parts = payload["contents"][1]["parts"]
 
     assert task_parts[0]["text"].startswith("<runtime_task_guidance>")
-    assert "edit_code" in task_parts[0]["text"]
-    assert task_parts[1] == {"text": "a table lamp"}
     assert any(
         isinstance(part, dict) and ("inline_data" in part or "inlineData" in part)
         for part in task_parts
     )
+    assert any(part == {"text": "a table lamp"} for part in task_parts if isinstance(part, dict))
+    assert "edit_code" in task_parts[0]["text"]

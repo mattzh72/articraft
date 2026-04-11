@@ -31,6 +31,7 @@ ArticulatedObject(
     articulations: list[Articulation] = [],
     materials: list[Material] = [],
     meta: dict[str, object] = {},
+    assets=None,
 )
 ```
 
@@ -41,6 +42,7 @@ Important fields:
 - `articulations`: authored articulations.
 - `materials`: registered materials.
 - `meta`: optional model-level metadata.
+- `assets`: optional asset owner or root for mesh-backed authoring.
 - Mesh assets are runtime-managed. Author mesh-backed visuals through helpers
   such as `mesh_from_geometry(...)`, `mesh_from_input(...)`, and
   `mesh_from_cadquery(...)`.

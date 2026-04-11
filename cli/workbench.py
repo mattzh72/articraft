@@ -6,7 +6,6 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 from agent.cost import max_cost_usd_from_env, parse_max_cost_usd
-from agent.defaults import DEFAULT_MAX_TURNS
 from agent.prompts import normalize_sdk_package
 from agent.runner import create_workbench_draft_record, rerun_record_in_place
 from agent.tools import resolve_image_path
@@ -89,8 +88,8 @@ def _build_parser() -> argparse.ArgumentParser:
     init_record.add_argument(
         "--max-turns",
         type=int,
-        default=DEFAULT_MAX_TURNS,
-        help="Max-turns metadata to attach to the draft provenance.",
+        default=None,
+        help="Max-turns metadata to attach to the draft provenance. Defaults vary by model.",
     )
     init_record.add_argument(
         "--max-cost-usd",
@@ -106,7 +105,7 @@ def _build_parser() -> argparse.ArgumentParser:
     init_record.add_argument(
         "--sdk-package",
         default="sdk",
-        help="SDK package metadata to attach to the draft record.",
+        help=argparse.SUPPRESS,
     )
     init_record.add_argument(
         "--scaffold-mode",
@@ -165,7 +164,7 @@ def _build_parser() -> argparse.ArgumentParser:
     rerun.add_argument(
         "--sdk-package",
         default=None,
-        help="Optional SDK package override for this rerun.",
+        help=argparse.SUPPRESS,
     )
     rerun.add_argument(
         "--scaffold-mode",

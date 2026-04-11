@@ -1260,6 +1260,25 @@ def test_expect_gap_can_target_named_elements() -> None:
     assert "negative_elem='body'" in report.failures[0].details
 
 
+def test_expect_gap_accepts_elem_aliases() -> None:
+    ctx = SDKTestContext(_build_element_gap_model())
+
+    assert not ctx.expect_gap(
+        "arm",
+        "base",
+        axis="z",
+        max_gap=0.0,
+        max_penetration=0.0,
+        elem_a="hub",
+        elem_b="body",
+    )
+
+    report = ctx.report()
+    assert not report.passed
+    assert "positive_elem='hub'" in report.failures[0].details
+    assert "negative_elem='body'" in report.failures[0].details
+
+
 def test_expect_overlap_uses_exact_visual_geometry() -> None:
     ctx = SDKTestContext(_build_overlapping_parts_model())
 
@@ -1279,6 +1298,16 @@ def test_expect_within_uses_exact_visual_geometry() -> None:
     report = ctx.report()
     assert report.passed
     assert report.failures == ()
+    assert report.checks == ("expect_within(inner,outer,axes=xyz)",)
+
+
+def test_expect_within_accepts_elem_aliases() -> None:
+    ctx = SDKTestContext(_build_nested_parts_model())
+
+    assert ctx.expect_within("inner", "outer", axes="xyz", elem_a="insert", elem_b="shell")
+
+    report = ctx.report()
+    assert report.passed
     assert report.checks == ("expect_within(inner,outer,axes=xyz)",)
 
 

@@ -146,6 +146,14 @@ class FailIfRunAgent(SuccessBatchAgent):
         raise AssertionError("resume should not rerun a durably completed row")
 
 
+class ExplodingBatchAgent(SuccessBatchAgent):
+    async def run(self, user_content: object) -> AgentResult:
+        if "explode" in str(user_content).lower():
+            await asyncio.sleep(0.05)
+            raise RuntimeError("synthetic crash")
+        return await super().run(user_content)
+
+
 class RecordingBatchDisplay:
     events: list[str] = []
 
@@ -367,6 +375,49 @@ def test_build_batch_config_resolves_auto_concurrency_to_logical_cpu_count(
     )
 
     assert config.concurrency == 6
+
+
+def test_build_batch_config_defaults_missing_sdk_package_to_sdk(tmp_path: Path) -> None:
+    repo = StorageRepo(tmp_path)
+    repo.ensure_layout()
+    CategoryStore(repo).save(
+        CategoryRecord(schema_version=1, slug="hinge", title="Hinge", description="")
+    )
+
+    spec_path = tmp_path / "source_specs" / "default_sdk_batch.csv"
+    _write_csv(
+        spec_path,
+        [
+            {
+                "row_id": "row_1",
+                "category_slug": "hinge",
+                "category_title": "Hinge",
+                "prompt": "make hinge 1",
+                "provider": "openai",
+                "model_id": "gpt-5.4",
+                "thinking_level": "high",
+                "max_turns": "10",
+            }
+        ],
+    )
+
+    config = batch_runner.build_batch_config(
+        repo_root=tmp_path,
+        spec_arg=str(spec_path),
+        concurrency=1,
+        system_prompt_path="designer_system_prompt.txt",
+        sdk_docs_mode="full",
+        qc_blurb_path=None,
+        resume=False,
+        resume_policy="failed_or_pending",
+        keep_awake=False,
+        pause_file=None,
+        pause_poll_seconds=1.0,
+        keyboard_pause_enabled=False,
+    )
+
+    assert len(config.rows) == 1
+    assert config.rows[0].sdk_package == "sdk"
 
 
 def test_build_batch_config_supports_design_audit_default_and_row_overrides(
@@ -1082,7 +1133,7 @@ def test_run_batch_persists_records_and_batch_metadata(
                 "model_id": "gemini-3-flash-preview",
                 "thinking_level": "low",
                 "max_turns": "8",
-                "sdk_package": "sdk_hybrid",
+                "sdk_package": "sdk",
             },
         ],
     )
@@ -1114,7 +1165,7 @@ def test_run_batch_persists_records_and_batch_metadata(
     assert run_payload["run_mode"] == "dataset_batch"
     assert run_payload["provider"] == "mixed"
     assert run_payload["model_id"] == "mixed"
-    assert run_payload["sdk_package"] == "mixed"
+    assert run_payload["sdk_package"] == "sdk"
     assert run_payload["batch_spec_id"] == "mixed_batch"
     assert sorted(run_payload["category_slugs"]) == ["fan", "hinge"]
     assert run_payload["status"] == "success"
@@ -1135,7 +1186,7 @@ def test_run_batch_persists_records_and_batch_metadata(
     assert hinge_record["source"]["row_id"] == "hinge_row"
     assert hinge_record["source"]["prompt_index"] == 1
     assert fan_record["source"]["row_id"] == "fan_row"
-    assert fan_record["sdk_package"] == "sdk_hybrid"
+    assert fan_record["sdk_package"] == "sdk"
     hinge_provenance = repo.read_json(repo.layout.record_dir("rec_hinge_0001") / "provenance.json")
     fan_provenance = repo.read_json(repo.layout.record_dir("rec_fan_0001") / "provenance.json")
     assert hinge_provenance["prompting"]["scaffold_mode"] == "lite"
@@ -1234,7 +1285,7 @@ def test_run_batch_resume_reuses_allocations_and_only_reruns_failed_rows(
                 "model_id": "gemini-3-flash-preview",
                 "thinking_level": "low",
                 "max_turns": "8",
-                "sdk_package": "sdk_hybrid",
+                "sdk_package": "sdk",
             },
         ],
     )
@@ -1600,6 +1651,82 @@ def test_run_batch_resume_reruns_interrupted_running_rows(
     ]
     assert len(repaired_rows) == 1
     assert repaired_rows[0]["status"] == "success"
+
+
+def test_run_batch_unexpected_worker_exception_finalizes_cleanly(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setattr(runner, "ArticraftAgent", ExplodingBatchAgent)
+    _patch_dataset_tokens(monkeypatch, "0001", "0002")
+
+    spec_path = tmp_path / "source_specs" / "unexpected_worker_error.csv"
+    _write_csv(
+        spec_path,
+        [
+            {
+                "row_id": "ok_row",
+                "category_slug": "hinge",
+                "category_title": "Hinge",
+                "prompt": "make a hinge",
+                "provider": "openai",
+                "model_id": "gpt-5.4",
+                "thinking_level": "high",
+                "max_turns": "12",
+                "sdk_package": "sdk",
+            },
+            {
+                "row_id": "boom_row",
+                "category_slug": "hinge",
+                "category_title": "Hinge",
+                "prompt": "explode this row",
+                "provider": "openai",
+                "model_id": "gpt-5.4",
+                "thinking_level": "high",
+                "max_turns": "12",
+                "sdk_package": "sdk",
+            },
+        ],
+    )
+
+    exit_code = dataset_main(
+        [
+            "--repo-root",
+            str(tmp_path),
+            "run-batch",
+            str(spec_path),
+            "--concurrency",
+            "2",
+        ]
+    )
+    assert exit_code == 1
+
+    repo = StorageRepo(tmp_path)
+    run_id = next(path.name for path in repo.layout.runs_root.iterdir() if path.is_dir())
+    run_payload = repo.read_json(repo.layout.run_metadata_path(run_id))
+    assert run_payload["status"] == "failed"
+
+    result_rows = [
+        json.loads(line)
+        for line in repo.layout.run_results_path(run_id).read_text(encoding="utf-8").splitlines()
+    ]
+    assert len(result_rows) == 2
+    result_by_row_id = {row["row_id"]: row for row in result_rows}
+    assert result_by_row_id["ok_row"]["status"] == "success"
+    assert result_by_row_id["boom_row"]["status"] == "failed"
+    assert "synthetic crash" in result_by_row_id["boom_row"]["message"]
+
+    boom_state = repo.read_json(repo.layout.run_row_state_path(run_id, "boom_row"))
+    assert boom_state["latest_status"] == "failed"
+    assert "synthetic crash" in boom_state["latest_error_message"]
+
+    manifest = repo.read_json(repo.layout.dataset_manifest_path())
+    assert manifest == {
+        "generated": [
+            {"name": "ds_hinge_0001", "record_id": "rec_hinge_0001"},
+        ]
+    }
+    assert repo.layout.search_index_path().exists()
 
 
 def test_run_batch_display_stops_after_finalization(

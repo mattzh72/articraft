@@ -6,6 +6,7 @@ from pathlib import Path
 import pytest
 
 from agent import batch_runner
+from storage.datasets import DatasetStore
 from storage.repo import StorageRepo
 
 
@@ -306,3 +307,29 @@ def test_read_total_cost_prefers_all_in_total(tmp_path: Path) -> None:
     )
 
     assert batch_runner._read_total_cost(run_dir) == pytest.approx(0.91)
+
+
+def test_build_allocations_reuses_dataset_id_index(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    repo = StorageRepo(tmp_path)
+    repo.ensure_layout()
+    rows = [
+        replace(_make_row(), row_id=f"row_{index:04d}", prompt_index=index, prompt=f"hinge {index}")
+        for index in range(1, 4)
+    ]
+
+    build_calls = 0
+    original_builder = DatasetStore._build_dataset_id_index_from_records
+
+    def wrapped_builder(self: DatasetStore) -> dict[str, str]:
+        nonlocal build_calls
+        build_calls += 1
+        return original_builder(self)
+
+    monkeypatch.setattr(DatasetStore, "_build_dataset_id_index_from_records", wrapped_builder)
+
+    allocations = batch_runner._build_allocations(rows, repo=repo)
+
+    assert len(allocations) == 3
+    assert build_calls == 1

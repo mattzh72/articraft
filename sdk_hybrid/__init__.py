@@ -1,4 +1,4 @@
-from .v0 import (
+from sdk import (
     AllowedOverlap,
     ArticulatedObject,
     Articulation,
@@ -40,29 +40,7 @@ from .v0 import (
     wrap_mesh_onto_surface,
     wrap_profile_onto_surface,
 )
-
-_GEAR_EXPORTS = {
-    "GearBase",
-    "SpurGear",
-    "HerringboneGear",
-    "RingGear",
-    "HerringboneRingGear",
-    "PlanetaryGearset",
-    "HerringbonePlanetaryGearset",
-    "BevelGear",
-    "BevelGearPair",
-    "RackGear",
-    "HerringboneRackGear",
-    "Worm",
-    "CrossedHelicalGear",
-    "CrossedGearPair",
-    "HyperbolicGear",
-    "HyperbolicGearPair",
-    "gear",
-    "addGear",
-}
-
-_HIDDEN_COMPAT_EXPORTS = {"AssetContext", "save_cadquery_obj"}
+from sdk import __getattr__ as _sdk_getattr
 
 Link = Part
 Joint = Articulation
@@ -138,13 +116,7 @@ __all__ = [
 
 
 def __getattr__(name: str):
-    if name in _GEAR_EXPORTS or name in _HIDDEN_COMPAT_EXPORTS:
-        from . import v0 as _v0
-
-        value = getattr(_v0, name)
-        globals()[name] = value
-        return value
-    raise AttributeError(f"module {__name__!r} has no attribute {name!r}")
+    return _sdk_getattr(name)
 
 
 def __dir__() -> list[str]:

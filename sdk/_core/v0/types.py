@@ -44,10 +44,29 @@ class Box:
     size: Vec3
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, init=False)
 class Cylinder:
     radius: float
     length: float
+
+    def __init__(
+        self,
+        radius: float,
+        length: float | None = None,
+        *,
+        height: float | None = None,
+    ) -> None:
+        if length is not None and height is not None:
+            raise TypeError("Cylinder() accepts only one of 'length' or alias 'height'")
+        resolved_length = height if length is None else length
+        if resolved_length is None:
+            raise TypeError("Cylinder() missing required argument: 'length'")
+        object.__setattr__(self, "radius", float(radius))
+        object.__setattr__(self, "length", float(resolved_length))
+
+    @property
+    def height(self) -> float:
+        return self.length
 
 
 @dataclass(frozen=True)
@@ -123,6 +142,24 @@ class Material:
 
 
 MaterialRef = Union[Material, str]
+
+
+def _coerce_visual_material_ref(
+    *,
+    material: Optional[MaterialRef],
+    color: object,
+) -> Optional[MaterialRef]:
+    if material is not None and color is not None:
+        raise TypeError("Part.visual() accepts only one of 'material' or alias 'color'")
+    if color is None:
+        return material
+    if isinstance(color, (Material, str)):
+        return color
+    if isinstance(color, Sequence) and not isinstance(color, (str, bytes)):
+        return Material(name="inline_color", rgba=tuple(float(v) for v in color))
+    raise TypeError(
+        "Part.visual() alias 'color' must be a material name, Material, or 3/4-value color tuple"
+    )
 
 
 @dataclass
@@ -244,12 +281,13 @@ class Part:
         *,
         origin: Optional[Origin] = None,
         material: Optional[MaterialRef] = None,
+        color: object = None,
         name: Optional[str] = None,
     ) -> Visual:
         visual = Visual(
             geometry=geometry,
             origin=origin or Origin(),
-            material=material,
+            material=_coerce_visual_material_ref(material=material, color=color),
             name=name,
         )
         self.visuals.append(visual)

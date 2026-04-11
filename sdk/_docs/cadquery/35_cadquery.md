@@ -1,8 +1,8 @@
-# CadQuery Hybrid Helpers
+# CadQuery Helpers
 
 ## Purpose
 
-`sdk_hybrid` keeps the articulated-object, testing, and export stack from the
+`sdk` keeps the articulated-object, testing, and export stack from the
 base SDK, but uses CadQuery to author visible mesh geometry.
 
 Use this when:
@@ -16,7 +16,7 @@ Use this when:
 ```python
 import cadquery as cq
 
-from sdk_hybrid import (
+from sdk import (
     ArticulatedObject,
     ArticulationType,
     Box,
@@ -24,22 +24,33 @@ from sdk_hybrid import (
     Origin,
     TestContext,
     TestReport,
+    cadquery_local_aabb,
+    export_cadquery_components,
     export_cadquery_mesh,
+    mesh_components_from_cadquery,
     mesh_from_cadquery,
     mesh_from_input,
+    save_cadquery_obj,
     tessellate_cadquery,
 )
 ```
 
 ## Recommended Surface
 
+- `cadquery_local_aabb(...)`
 - `tessellate_cadquery(...)`
 - `export_cadquery_mesh(...)`
+- `export_cadquery_components(...)`
 - `mesh_from_cadquery(...)`
+- `mesh_components_from_cadquery(...)`
+
+Compatibility helper:
+
+- `save_cadquery_obj(...)`
 
 ## Units
 
-CadQuery is unitless. In `sdk_hybrid`, authored geometry must land in meters.
+CadQuery is unitless. In `sdk`, authored geometry must land in meters.
 
 - If the CadQuery model is already authored in meters, keep `unit_scale=1.0`.
 - If it is authored in millimeters, either convert the literals to meters or
@@ -65,12 +76,31 @@ tessellate_cadquery(
 - Use this when you need tessellated geometry directly rather than an exported
   OBJ.
 
+### `cadquery_local_aabb(...)`
+
+```python
+cadquery_local_aabb(
+    model: object,
+    *,
+    tolerance: float = 0.001,
+    angular_tolerance: float = 0.1,
+    unit_scale: float = 1.0,
+) -> tuple[tuple[float, float, float], tuple[float, float, float]]
+```
+
+- Returns the local axis-aligned bounding box of the tessellated CadQuery
+  result.
+- This is useful when you need a size/placement probe before attaching the mesh
+  into an `ArticulatedObject`.
+
 ### `export_cadquery_mesh(...)`
 
 ```python
 export_cadquery_mesh(
     model: object,
     name: str,
+    *,
+    assets=None,
     tolerance: float = 0.001,
     angular_tolerance: float = 0.1,
     unit_scale: float = 1.0,
@@ -88,6 +118,35 @@ CadQueryMeshExport(
 
 - Materializes the OBJ internally and returns the managed `sdk.Mesh` plus local
   bounds.
+- `name`: logical mesh name such as `"door_panel"` or a legacy path-like name
+  such as `"door_panel.obj"`.
+- `assets`: optional explicit asset owner or root. Read
+  `../common/40_assets.md` when you need stable on-disk paths outside the
+  managed harness.
+- `tolerance`: linear tessellation tolerance.
+- `angular_tolerance`: angular tessellation tolerance in radians.
+- `unit_scale`: scales both tessellated geometry and CadQuery assembly
+  locations.
+
+### `export_cadquery_components(...)`
+
+```python
+export_cadquery_components(
+    model: object,
+    name: str,
+    *,
+    assets=None,
+    tolerance: float = 0.001,
+    angular_tolerance: float = 0.1,
+    unit_scale: float = 1.0,
+) -> list[CadQueryMeshExport]
+```
+
+- Splits a CadQuery multi-shape workplane or assembly into one exported mesh per
+  component.
+- Uses numbered managed names such as `"pair__component_001.obj"` under the
+  chosen logical name.
+- Returns one `CadQueryMeshExport` per resolved component in CadQuery order.
 
 ### `mesh_from_cadquery(...)`
 
@@ -95,6 +154,8 @@ CadQueryMeshExport(
 mesh_from_cadquery(
     model: object,
     name: str,
+    *,
+    assets=None,
     tolerance: float = 0.001,
     angular_tolerance: float = 0.1,
     unit_scale: float = 1.0,
@@ -102,6 +163,44 @@ mesh_from_cadquery(
 ```
 
 - This is the normal helper for attaching a CadQuery-authored visual to a part.
+- Parameters match `export_cadquery_mesh(...)`, but only the managed `Mesh` is
+  returned.
+
+### `mesh_components_from_cadquery(...)`
+
+```python
+mesh_components_from_cadquery(
+    model: object,
+    name: str,
+    *,
+    assets=None,
+    tolerance: float = 0.001,
+    angular_tolerance: float = 0.1,
+    unit_scale: float = 1.0,
+) -> list[Mesh]
+```
+
+- Component-only convenience wrapper over `export_cadquery_components(...)`.
+- Use this when one CadQuery source should become multiple separate mesh visuals
+  or subfeatures.
+
+### `save_cadquery_obj(...)`
+
+```python
+save_cadquery_obj(
+    model: object,
+    name: str,
+    *,
+    assets=None,
+    tolerance: float = 0.001,
+    angular_tolerance: float = 0.1,
+    unit_scale: float = 1.0,
+) -> Path
+```
+
+- Public compatibility helper that returns the materialized OBJ path directly.
+- Prefer `export_cadquery_mesh(...)` or `mesh_from_cadquery(...)` for new code
+  when you want the managed `Mesh` object.
 
 ## Recommended Pattern
 
@@ -158,15 +257,22 @@ def build_object_model() -> ArticulatedObject:
     return model
 ```
 
+## Clarifications for agent usage
+
+- `mesh_from_cadquery(...)` and `export_cadquery_mesh(...)` accept CadQuery `Shape`, `Workplane`, and `Assembly` inputs. Workplanes are exported from their resolved solid values; assemblies export each component at its current CadQuery location.
+- `cadquery_local_aabb(...)`, `export_cadquery_components(...)`, and `mesh_components_from_cadquery(...)` accept the same CadQuery input types.
+- Constrained CadQuery assemblies must be solved before export. The SDK does not call `solve()` for you.
+- Choose one unit story per authored CadQuery model: either author the shape and assembly locations directly in meters, or keep them in source units and pass the matching `unit_scale` when exporting to `sdk`.
+- Export preserves the CadQuery local frame of the authored shape/component. The SDK does not recenter meshes, infer hinge pivots, or move geometry to an articulation axis automatically.
+- If an articulation pivot should be at a hinge, either model the CadQuery shape in that local frame or attach the mesh with `visual(origin=Origin(...))` so the mesh frame and joint frame line up explicitly.
+- When you need one mesh per CadQuery component instead of a single combined
+  mesh, use `export_cadquery_components(...)` or
+  `mesh_components_from_cadquery(...)`.
+
 ## See Also
 
 - `../common/80_testing.md` for the shared testing API
 - `../common/00_quickstart.md` for the overall script contract
-
-## Clarifications for agent usage
-
-- `mesh_from_cadquery(...)` and `export_cadquery_mesh(...)` accept CadQuery `Shape`, `Workplane`, and `Assembly` inputs. Workplanes are exported from their resolved solid values; assemblies export each component at its current CadQuery location.
-- Constrained CadQuery assemblies must be solved before export. The SDK does not call `solve()` for you.
-- Choose one unit story per authored CadQuery model: either author the shape and assembly locations directly in meters, or keep them in source units and pass the matching `unit_scale` when exporting to `sdk_hybrid`.
-- Export preserves the CadQuery local frame of the authored shape/component. The SDK does not recenter meshes, infer hinge pivots, or move geometry to an articulation axis automatically.
-- If an articulation pivot should be at a hinge, either model the CadQuery shape in that local frame or attach the mesh with `visual(origin=Origin(...))` so the mesh frame and joint frame line up explicitly.
+- `39d_cadquery_gears.md` for the vendored gear builders and Workplane gear
+  plugin helpers
+- `../common/40_assets.md` for explicit asset-root control

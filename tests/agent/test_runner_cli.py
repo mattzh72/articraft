@@ -18,7 +18,6 @@ def test_runner_help_text(capsys: pytest.CaptureFixture[str]) -> None:
     assert "--provider {gemini,openai}" in help_text
     assert "--design-audit" in help_text
     assert "--openai-transport {http,websocket}" in help_text
-    assert "--sdk-package SDK_PACKAGE" in help_text
     assert "--scaffold-mode {lite,strict}" in help_text
     assert "--collection {workbench,dataset}" in help_text
     assert "--dataset-id DATASET_ID" in help_text
@@ -45,7 +44,7 @@ def test_runner_requires_dataset_id_for_dataset_collection(
     assert "--dataset-id is required when --collection dataset." in capsys.readouterr().err
 
 
-def test_runner_dump_provider_payload_supports_hybrid_sdk(
+def test_runner_dump_provider_payload_supports_sdk(
     capsys: pytest.CaptureFixture[str],
 ) -> None:
     exit_code = runner.main(
@@ -53,16 +52,14 @@ def test_runner_dump_provider_payload_supports_hybrid_sdk(
             "--prompt",
             "test prompt",
             "--dump-provider-payload",
-            "--sdk-package",
-            "sdk_hybrid",
         ]
     )
 
     assert exit_code == 0
     payload = json.loads(capsys.readouterr().out)
     docs_message = payload["input"][0]["content"][0]["text"]
-    assert "The selected SDK package for this run is `sdk_hybrid`." in docs_message
-    assert "## sdk/_docs/cadquery/35_cadquery.md" in docs_message
+    assert "## docs/sdk/references/quickstart.md" in docs_message
+    assert "Import from `sdk` in `model.py`." in docs_message
 
 
 def test_runner_accepts_openai_api_keys_env(

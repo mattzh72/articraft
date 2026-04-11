@@ -27,19 +27,7 @@ PROMPT_VARIANTS: tuple[PromptVariant, ...] = (
             SECTIONS_DIR / "sdk_base.md",
         ),
         output=GENERATED_DIR / "designer_system_prompt_openai.txt",
-        description="OpenAI designer prompt for the base SDK.",
-    ),
-    PromptVariant(
-        name="designer_openai_hybrid",
-        sections=(
-            SECTIONS_DIR / "designer_common.md",
-            SECTIONS_DIR / "workflow.md",
-            SECTIONS_DIR / "link_naming.md",
-            SECTIONS_DIR / "provider_openai.md",
-            SECTIONS_DIR / "sdk_hybrid.md",
-        ),
-        output=GENERATED_DIR / "designer_system_prompt_openai_hybrid.txt",
-        description="OpenAI designer prompt for the hybrid SDK.",
+        description="OpenAI designer prompt for the unified SDK.",
     ),
     PromptVariant(
         name="designer_gemini",
@@ -51,19 +39,7 @@ PROMPT_VARIANTS: tuple[PromptVariant, ...] = (
             SECTIONS_DIR / "sdk_base.md",
         ),
         output=GENERATED_DIR / "designer_system_prompt_gemini.txt",
-        description="Gemini designer prompt for the base SDK.",
-    ),
-    PromptVariant(
-        name="designer_gemini_hybrid",
-        sections=(
-            SECTIONS_DIR / "designer_common.md",
-            SECTIONS_DIR / "workflow.md",
-            SECTIONS_DIR / "link_naming.md",
-            SECTIONS_DIR / "provider_gemini.md",
-            SECTIONS_DIR / "sdk_hybrid.md",
-        ),
-        output=GENERATED_DIR / "designer_system_prompt_gemini_hybrid.txt",
-        description="Gemini designer prompt for the hybrid SDK.",
+        description="Gemini designer prompt for the unified SDK.",
     ),
 )
 

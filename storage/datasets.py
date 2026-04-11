@@ -1,6 +1,7 @@
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
+from pathlib import Path
 
 from storage.models import DatasetEntry
 from storage.repo import StorageRepo
@@ -9,16 +10,59 @@ from storage.repo import StorageRepo
 @dataclass(slots=True)
 class DatasetStore:
     repo: StorageRepo
+    _dataset_id_index_cache: dict[str, str] | None = field(default=None, init=False, repr=False)
+    _dataset_id_index_token: tuple[int | None, int | None] | None = field(
+        default=None,
+        init=False,
+        repr=False,
+    )
+
+    def _path_mtime_ns(self, path: Path) -> int | None:
+        try:
+            return path.stat().st_mtime_ns
+        except OSError:
+            return None
+
+    def _dataset_id_index_fs_token(self) -> tuple[int | None, int | None]:
+        return (
+            self._path_mtime_ns(self.repo.layout.records_root),
+            self._path_mtime_ns(self.repo.layout.dataset_manifest_path()),
+        )
+
+    def _build_dataset_id_index_from_records(self) -> dict[str, str]:
+        dataset_id_to_record_id: dict[str, str] = {}
+        records_root = self.repo.layout.records_root
+        if not records_root.exists():
+            return dataset_id_to_record_id
+
+        for record_dir in sorted(path for path in records_root.iterdir() if path.is_dir()):
+            entry = self.load_entry(record_dir.name)
+            if not isinstance(entry, dict):
+                continue
+            dataset_id = str(entry.get("dataset_id") or "")
+            record_id = str(entry.get("record_id") or record_dir.name)
+            if dataset_id and record_id:
+                dataset_id_to_record_id[dataset_id] = record_id
+        return dataset_id_to_record_id
+
+    def _dataset_id_index(self) -> dict[str, str]:
+        token = self._dataset_id_index_fs_token()
+        if self._dataset_id_index_cache is not None and self._dataset_id_index_token == token:
+            return self._dataset_id_index_cache
+
+        self._dataset_id_index_cache = self._build_dataset_id_index_from_records()
+        self._dataset_id_index_token = token
+        return self._dataset_id_index_cache
+
+    def dataset_ids(self) -> set[str]:
+        return set(self._dataset_id_index())
 
     def load_entry(self, record_id: str) -> dict | None:
         return self.repo.read_json(self.repo.layout.record_dataset_entry_path(record_id))
 
     def find_record_id_by_dataset_id(self, dataset_id: str) -> str | None:
-        for entry in self.list_entries():
-            if str(entry.get("dataset_id") or "") == dataset_id:
-                record_id = str(entry.get("record_id") or "")
-                return record_id or None
-        return None
+        record_id = self._dataset_id_index().get(dataset_id)
+        return record_id or None
 
     def list_entries(self) -> list[dict]:
         entries: list[dict] = []
@@ -72,6 +116,9 @@ class DatasetStore:
         )
         path = self.repo.layout.record_dataset_entry_path(record_id)
         self.repo.write_json(path, entry.to_dict())
+        if self._dataset_id_index_cache is not None:
+            self._dataset_id_index_cache[dataset_id] = record_id
+            self._dataset_id_index_token = self._dataset_id_index_fs_token()
         return entry.to_dict()
 
     def validate(self) -> list[str]:

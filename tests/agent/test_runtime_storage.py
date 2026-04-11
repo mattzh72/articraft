@@ -545,48 +545,6 @@ def test_successful_run_copies_only_referenced_mesh_assets(
     assert not (materialization_dir / "assets" / "glb").exists()
 
 
-def test_successful_hybrid_run_keeps_visual_meshes_as_obj(
-    monkeypatch: pytest.MonkeyPatch,
-    tmp_path: Path,
-) -> None:
-    monkeypatch.setattr(runner, "ArticraftAgent", MeshVisualAgent)
-
-    exit_code = asyncio.run(
-        runner.run_from_input(
-            "make a hybrid mesh part",
-            prompt_text="make a hybrid mesh part",
-            display_prompt="make a hybrid mesh part",
-            repo_root=tmp_path,
-            image_path=None,
-            provider="openai",
-            thinking_level="high",
-            max_turns=30,
-            system_prompt_path=DESIGNER_PROMPT_NAME,
-            sdk_package="sdk_hybrid",
-            sdk_docs_mode="full",
-            label=None,
-            tags=[],
-        )
-    )
-
-    assert exit_code == 0
-
-    records_root = tmp_path / "data" / "records"
-    record_dirs = [path for path in records_root.iterdir() if path.is_dir()]
-    assert len(record_dirs) == 1
-    record_dir = record_dirs[0]
-    materialization_dir = tmp_path / "data" / "cache" / "record_materialization" / record_dir.name
-
-    assert "assets/meshes/part.obj" in (materialization_dir / "model.urdf").read_text(
-        encoding="utf-8"
-    )
-    assert "assets/meshes/part.glb" not in (materialization_dir / "model.urdf").read_text(
-        encoding="utf-8"
-    )
-    assert (materialization_dir / "assets" / "meshes" / "part.obj").exists()
-    assert not (materialization_dir / "assets" / "meshes" / "part.glb").exists()
-
-
 def test_dataset_run_and_rerun_preserve_dataset_metadata(
     fake_agent: None,
     tmp_path: Path,

@@ -38,7 +38,7 @@ class _CadQueryMeshCacheMetadata:
 
 
 def _require_cadquery() -> Any:
-    return require_cadquery(feature="CadQuery support in `sdk_hybrid`")
+    return require_cadquery(feature="CadQuery support in `sdk`")
 
 
 def _vector_xyz(value: Any) -> Vec3:

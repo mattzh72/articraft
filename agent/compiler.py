@@ -21,7 +21,6 @@ from agent.models import CompileReport, CompileSignalBundle
 from agent.mp_utils import get_mp_context
 from agent.prompts import normalize_sdk_package
 from sdk._core.v0.assets import activate_asset_session, asset_session_for_script
-from sdk._dependencies import ensure_sdk_hybrid_dependencies
 
 logger = logging.getLogger(__name__)
 
@@ -48,9 +47,6 @@ _GEOMETRY_QC_MARKERS = (
     "expect_joint_motion_axis",
     "urdf tests failed:",
 )
-_HYBRID_BASE_SDK_IMPORT_RE = re.compile(
-    r"^\s*(?:from\s+sdk\s+import\b|import\s+sdk\b)", re.MULTILINE
-)
 _AUTOMATED_BASELINE_WARNING_CHECK_NAME = (
     "warn_if_part_contains_disconnected_geometry_islands(tol=1e-06)"
 )
@@ -65,25 +61,6 @@ _AUTOMATED_BASELINE_DEFAULT_CHECK_NAMES = frozenset(
     }
 )
 _MODEL_EXECUTION_LOCK = threading.Lock()
-
-
-def _validate_hybrid_script_imports(script_path: Path) -> None:
-    try:
-        source = script_path.read_text(encoding="utf-8")
-    except OSError:
-        return
-
-    match = _HYBRID_BASE_SDK_IMPORT_RE.search(source)
-    if match is None:
-        return
-
-    line_no = source.count("\n", 0, match.start()) + 1
-    line = source.splitlines()[line_no - 1].strip()
-    raise RuntimeError(
-        "Hybrid SDK runs must import from `sdk_hybrid`, not `sdk`. "
-        "`section_loft(...)`, `repair_loft(...)`, and `partition_shell(...)` are unavailable "
-        f"in `sdk_hybrid`.\nLocation: {script_path.name}:{line_no}\nCode: {line}"
-    )
 
 
 def _import_sdk_module(sdk_package: str, module_suffix: str = "") -> Any:
@@ -138,10 +115,12 @@ def _extract_urdf_xml(
     sdk_package: str = "sdk",
     target: str = "full",
     validate_export: bool = True,
+    suppress_exceptions: bool = False,
 ) -> str | None:
     target_key = _normalize_compile_target(target)
     object_model = globals_dict.get("object_model")
     urdf_xml: str | None = None
+    export_exc: Exception | None = None
     try:
         if object_model is not None:
             compile_object_to_urdf_xml = getattr(
@@ -165,13 +144,16 @@ def _extract_urdf_xml(
             else:
                 urdf_xml = compile_object_to_urdf_xml(object_model)
             globals_dict["urdf_xml"] = urdf_xml
-    except Exception:
+    except Exception as exc:
+        export_exc = exc
         urdf_xml = None
 
     if not isinstance(urdf_xml, str):
         maybe_urdf_xml = globals_dict.get("urdf_xml")
         if isinstance(maybe_urdf_xml, str):
             urdf_xml = maybe_urdf_xml
+    if not isinstance(urdf_xml, str) and export_exc is not None and not suppress_exceptions:
+        raise export_exc
     return urdf_xml
 
 
@@ -283,6 +265,7 @@ def _compile_urdf_report_impl(
                 globals_dict,
                 sdk_package=sdk_package,
                 target=target_key,
+                suppress_exceptions=True,
             )
             signal_bundle = build_compile_signal_bundle(
                 status="failure",
@@ -382,7 +365,7 @@ def _should_rewrite_visual_meshes_to_glb(
 ) -> bool:
     if rewrite_visual_glb is not None:
         return rewrite_visual_glb
-    return sdk_package != "sdk_hybrid"
+    return True
 
 
 def load_model_globals(
@@ -391,10 +374,7 @@ def load_model_globals(
     sdk_package: str = "sdk",
 ) -> dict[str, Any]:
     """Execute a model script and return its globals."""
-    normalized_sdk_package = normalize_sdk_package(sdk_package)
-    if normalized_sdk_package == "sdk_hybrid":
-        ensure_sdk_hybrid_dependencies()
-        _validate_hybrid_script_imports(script_path.resolve())
+    normalize_sdk_package(sdk_package)
     repo_root = Path(__file__).resolve().parents[1]
     script_path = script_path.resolve()
     with _MODEL_EXECUTION_LOCK:
@@ -616,6 +596,7 @@ def _compile_worker(
         payload = {
             "ok": False,
             "error": f"{type(exc).__name__}: {exc}",
+            "error_type": type(exc).__name__,
             "traceback": traceback.format_exc(),
         }
         compiled_urdf_xml = getattr(exc, "compiled_urdf_xml", None)
@@ -734,10 +715,15 @@ def compile_urdf_report_maybe_timeout(
         )
 
     error_text = str(msg.get("error", "Unknown compile worker error")).strip()
+    error_type = str(msg.get("error_type", "")).strip()
     tb_text = str(msg.get("traceback", "")).strip()
     if tb_text:
         logger.debug("Compile worker traceback:\n%s", tb_text)
     exc = RuntimeError(error_text or "Unknown compile worker error")
+    if error_type:
+        setattr(exc, "remote_error_type", error_type)
+    if tb_text:
+        setattr(exc, "remote_traceback", tb_text)
     compiled_urdf_xml = msg.get("compiled_urdf_xml")
     if isinstance(compiled_urdf_xml, str) and compiled_urdf_xml.strip():
         setattr(exc, "compiled_urdf_xml", compiled_urdf_xml)

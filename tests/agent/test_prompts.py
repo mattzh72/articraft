@@ -5,8 +5,6 @@ from pathlib import Path
 from agent.prompts import (
     DESIGNER_PROMPT_NAME,
     GEMINI_DESIGNER_PROMPT_NAME,
-    HYBRID_GEMINI_DESIGNER_PROMPT_NAME,
-    HYBRID_OPENAI_DESIGNER_PROMPT_NAME,
     OPENAI_DESIGNER_PROMPT_NAME,
     load_prompt_section_text,
     load_system_prompt_text,
@@ -38,28 +36,12 @@ def test_system_prompt_resolution_variants() -> None:
     assert loaded_path == resolved
     assert loaded_text == resolved.read_text(encoding="utf-8")
 
-    hybrid_resolved = resolve_system_prompt_path(
-        str(Path("agent/prompts/generated") / DESIGNER_PROMPT_NAME),
-        provider="openai",
-        sdk_package="sdk_hybrid",
-        repo_root=repo_root,
-    )
-    assert hybrid_resolved.name == HYBRID_OPENAI_DESIGNER_PROMPT_NAME
-
     gemini_resolved = resolve_system_prompt_path(
         str(Path("agent/prompts/generated") / DESIGNER_PROMPT_NAME),
         provider="gemini",
         repo_root=repo_root,
     )
     assert gemini_resolved.name == GEMINI_DESIGNER_PROMPT_NAME
-
-    gemini_hybrid_resolved = resolve_system_prompt_path(
-        str(Path("agent/prompts/generated") / DESIGNER_PROMPT_NAME),
-        provider="gemini",
-        sdk_package="sdk_hybrid",
-        repo_root=repo_root,
-    )
-    assert gemini_hybrid_resolved.name == HYBRID_GEMINI_DESIGNER_PROMPT_NAME
 
 
 def test_provider_system_prompt_suffixes() -> None:
@@ -73,8 +55,11 @@ def test_first_turn_runtime_guidance_is_provider_specific() -> None:
 
     assert "read_file" in openai_guidance
     assert "apply_patch" in openai_guidance
+    assert "docs/..." in openai_guidance
     assert "read_code" in gemini_guidance
+    assert "read_file" in gemini_guidance
     assert "edit_code" in gemini_guidance
+    assert "multiple independent read-only lookups" not in gemini_guidance
 
 
 def test_prepend_runtime_guidance_supports_text_only_content() -> None:
@@ -88,7 +73,7 @@ def test_prepend_runtime_guidance_supports_text_only_content() -> None:
     assert content.endswith("make a hinge")
 
 
-def test_build_initial_user_content_can_prepend_runtime_guidance_for_multimodal(
+def test_build_initial_user_content_can_append_runtime_guidance_for_multimodal(
     tmp_path: Path,
 ) -> None:
     image_path = tmp_path / "reference.png"

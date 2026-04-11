@@ -27,4 +27,4 @@ def require_cadquery(*, feature: str) -> Any:
 
 
 def ensure_sdk_hybrid_dependencies() -> None:
-    require_cadquery(feature="`sdk_hybrid`")
+    require_cadquery(feature="`sdk`")

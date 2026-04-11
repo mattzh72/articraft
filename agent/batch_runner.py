@@ -84,7 +84,6 @@ _REQUIRED_HEADERS = {
     "model_id",
     "thinking_level",
     "max_turns",
-    "sdk_package",
 }
 
 
@@ -683,7 +682,7 @@ def _parse_batch_row(
     thinking_level = raw_row.get("thinking_level", "").lower()
     max_turns_text = raw_row.get("max_turns", "")
     max_cost_usd = _parse_optional_max_cost_usd(raw_row.get("max_cost_usd"), row_index=row_index)
-    sdk_package = raw_row.get("sdk_package", "")
+    sdk_package = raw_row.get("sdk_package", "sdk")
     scaffold_mode = _parse_optional_scaffold_mode(raw_row.get("scaffold_mode"), row_index=row_index)
     scaffold_mode_explicit = scaffold_mode is not None
     category_title = raw_row.get("category_title") or None
@@ -1339,6 +1338,9 @@ async def _run_batch_row(
     *,
     config: BatchRunConfig,
     repo: StorageRepo,
+    record_store: RecordStore,
+    collections: CollectionStore,
+    datasets: DatasetStore,
     run_store: RunStore,
     row: BatchRowSpec,
     allocation: BatchRowAllocation,
@@ -1385,9 +1387,9 @@ async def _run_batch_row(
         display_prompt=row.prompt,
         resolved_repo_root=config.repo_root,
         storage_repo=repo,
-        record_store=RecordStore(repo),
-        collections=CollectionStore(repo),
-        datasets=DatasetStore(repo),
+        record_store=record_store,
+        collections=collections,
+        datasets=datasets,
         run_store=run_store,
         image_path=None,
         provider=row.provider,
@@ -1513,6 +1515,9 @@ async def _finalize_batch_dataset_artifacts(
 class BatchRunSession:
     config: BatchRunConfig
     repo: StorageRepo
+    record_store: RecordStore
+    collections: CollectionStore
+    datasets: DatasetStore
     run_store: RunStore
     search: SearchIndex
     display: BatchRunDisplay
@@ -1686,16 +1691,37 @@ class BatchRunSession:
             await self.pause_controller.wait_until_resumed()
             allocation = self.config.allocations[row.row_id]
             self.display.start_run(allocation.record_id, scaffold_mode=row.scaffold_mode)
-            outcome = await _run_batch_row(
-                config=self.config,
-                repo=self.repo,
-                run_store=self.run_store,
-                row=row,
-                allocation=allocation,
-                commit_lock=self.commit_lock,
-                display=self.display,
-                runtime_limits=self.runtime_limits,
-            )
+            try:
+                outcome = await _run_batch_row(
+                    config=self.config,
+                    repo=self.repo,
+                    record_store=self.record_store,
+                    collections=self.collections,
+                    datasets=self.datasets,
+                    run_store=self.run_store,
+                    row=row,
+                    allocation=allocation,
+                    commit_lock=self.commit_lock,
+                    display=self.display,
+                    runtime_limits=self.runtime_limits,
+                )
+            except Exception as exc:
+                logger.exception("Batch row %s failed unexpectedly", row.row_id)
+                staging_dir = (
+                    self.repo.layout.run_staging_dir(self.config.run_id) / allocation.record_id
+                )
+                outcome = BatchRowOutcome(
+                    row_id=row.row_id,
+                    success=False,
+                    message=f"Unexpected batch worker error: {exc}",
+                    turn_count=None,
+                    tool_call_count=None,
+                    compile_attempt_count=None,
+                    total_cost=_read_total_cost(staging_dir),
+                    record_dir=None,
+                    staging_dir=staging_dir,
+                    model_id=row.model_id,
+                )
             await self.commit_outcome(row, outcome)
             self.work_queue.task_done()
 
@@ -1716,6 +1742,10 @@ class BatchRunSession:
         )
         try:
             async with self.commit_lock:
+                self.display.print_finalizing("compacting run results")
+                await asyncio.to_thread(
+                    self.run_store.compact_results, self.config.run_id, key="row_id"
+                )
                 self.display.print_finalizing("rebuilding dataset manifests and categories")
                 await _finalize_batch_dataset_artifacts(
                     repo=self.repo,
@@ -1732,34 +1762,43 @@ class BatchRunSession:
             raise
 
         self.display.stop()
+        success_count = sum(
+            1 for status in self.final_status_by_row.values() if status == "success"
+        )
         return {
             "run_id": self.config.run_id,
             "status": overall_status,
             "prompt_count": len(self.config.rows),
-            "success_count": sum(
-                1 for status in self.final_status_by_row.values() if status == "success"
-            ),
-            "failed_count": sum(
-                1 for status in self.final_status_by_row.values() if status != "success"
-            ),
+            "success_count": success_count,
+            "failed_count": len(self.config.rows) - success_count,
         }
 
     async def run(self) -> dict[str, Any]:
         self.start()
-        await self.prepare_run()
+        run_error: Exception | None = None
         try:
+            await self.prepare_run()
             await self.enqueue_rows()
             await self.run_workers()
+        except Exception as exc:
+            run_error = exc
+            logger.exception("Batch run %s failed unexpectedly", self.config.run_id)
         finally:
             self.pause_controller.stop()
             if self.watcher_task is not None:
                 await self.watcher_task
-        return await self.finalize()
+        summary = await self.finalize()
+        if run_error is not None:
+            summary["status"] = "failed"
+        return summary
 
 
 async def run_dataset_batch(config: BatchRunConfig) -> dict[str, Any]:
     repo = StorageRepo(config.repo_root)
     await asyncio.to_thread(repo.ensure_layout)
+    record_store = RecordStore(repo)
+    collections = CollectionStore(repo)
+    datasets = DatasetStore(repo)
     run_store = RunStore(repo)
     scaffold_summary, show_row_scaffold_mode = _scaffold_mode_display_summary(
         config.rows,
@@ -1789,6 +1828,9 @@ async def run_dataset_batch(config: BatchRunConfig) -> dict[str, Any]:
     session = BatchRunSession(
         config=config,
         repo=repo,
+        record_store=record_store,
+        collections=collections,
+        datasets=datasets,
         run_store=run_store,
         search=SearchIndex(repo),
         display=display,

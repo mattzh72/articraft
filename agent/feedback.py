@@ -6,6 +6,7 @@ import math
 import re
 import traceback
 from dataclasses import dataclass
+from pathlib import Path
 from typing import Iterable, Literal, Protocol, TypeAlias, runtime_checkable
 
 from agent.models import CompileSignal, CompileSignalBundle
@@ -15,11 +16,17 @@ CODE_PATTERN = re.compile(
     r"|^(?:from\s+\w+\s+import\s|import\s+\w+|def\s+\w+\s*\(|class\s+\w+)",
     re.MULTILINE,
 )
+_EXCEPTION_PREFIX_RE = re.compile(r"^(?:[A-Za-z_][A-Za-z0-9_]*(?:Error|Exception|Failure)):\s*")
 LOFT_PROFILE_AREA_ERROR = "Loft profile area must be non-zero"
 LOFT_PROFILE_AREA_HINT = (
     "Hint: LoftGeometry checks profile area in the XY projection. "
     "Use closed loops like `(x_i, y_i, z_const)`. "
     "If you need an XZ/YZ section, author it in XY first and rotate the mesh afterward."
+)
+SDK_SUBMODULE_IMPORT_HINT = (
+    "Hint: Public authoring helpers import from top-level `sdk`. "
+    "Use `from sdk import place_on_face`, `TestContext`, or `MotionLimits`, "
+    "not guessed submodules like `sdk.placement`, `sdk.testing`, or `sdk.core_types`."
 )
 MAX_RISK_PATTERN = re.compile(r"max_risk=(low|medium|high)", re.IGNORECASE)
 
@@ -309,6 +316,9 @@ ISOLATED_PART_COMPILER_SPEC = SignalSpec(
 _MIN_DISTANCE_RE = re.compile(
     r"min_distance=(?P<distance>[-+0-9.eE]+)\s+contact_tol=(?P<tol>[-+0-9.eE]+)"
 )
+_TRACEBACK_FRAME_RE = re.compile(r'^\s*File "([^"]+)", line (\d+), in .+$')
+_WINDOWS_ABSOLUTE_PATH_RE = re.compile(r"^[A-Za-z]:[\\/]")
+_REPO_ROOT = Path(__file__).resolve().parents[1]
 
 
 def contains_code_in_text(text: str) -> bool:
@@ -321,7 +331,91 @@ def contains_code_in_text(text: str) -> bool:
 def _compile_hint_lines(detail_lines: list[str]) -> list[str]:
     if any(LOFT_PROFILE_AREA_ERROR in line for line in detail_lines):
         return [LOFT_PROFILE_AREA_HINT]
+    lower_lines = [line.lower() for line in detail_lines]
+    if any(
+        "no module named 'sdk." in line or 'no module named "sdk.' in line for line in lower_lines
+    ):
+        return [SDK_SUBMODULE_IMPORT_HINT]
     return []
+
+
+def _sanitize_display_path(path_text: str) -> str:
+    raw = path_text.strip()
+    if not raw:
+        return raw
+
+    normalized = raw.replace("\\", "/")
+    if normalized.startswith("<") and normalized.endswith(">"):
+        return raw
+    if not (
+        normalized.startswith("/")
+        or normalized.startswith("\\")
+        or _WINDOWS_ABSOLUTE_PATH_RE.match(raw)
+    ):
+        return normalized
+
+    repo_root = _REPO_ROOT.as_posix().rstrip("/")
+    if normalized == repo_root:
+        return "."
+    if repo_root and normalized.startswith(f"{repo_root}/"):
+        return normalized[len(repo_root) + 1 :]
+
+    parts = [part for part in normalized.split("/") if part]
+    for marker in ("site-packages", "dist-packages"):
+        if marker in parts:
+            return "/".join(parts[parts.index(marker) :])
+
+    if len(parts) <= 2:
+        return "/".join(parts)
+    return f".../{'/'.join(parts[-3:])}"
+
+
+def _display_exception_type(exc: BaseException) -> str:
+    remote_error_type = getattr(exc, "remote_error_type", None)
+    if isinstance(remote_error_type, str) and remote_error_type.strip():
+        return remote_error_type.strip()
+    return type(exc).__name__
+
+
+def _remote_traceback_text(exc: BaseException) -> str:
+    remote_traceback = getattr(exc, "remote_traceback", None)
+    if not isinstance(remote_traceback, str):
+        return ""
+    return remote_traceback.strip()
+
+
+def _remote_traceback_exception_line(exc: BaseException) -> str | None:
+    remote_traceback = _remote_traceback_text(exc)
+    if not remote_traceback:
+        return None
+    for line in reversed(remote_traceback.splitlines()):
+        cleaned = line.strip()
+        if cleaned:
+            return cleaned
+    return None
+
+
+def _is_low_information_exception_text(text: str) -> bool:
+    stripped = text.strip()
+    if not stripped:
+        return True
+    normalized = stripped
+    while True:
+        match = _EXCEPTION_PREFIX_RE.match(normalized)
+        if match is None:
+            break
+        normalized = normalized[match.end() :].lstrip()
+    if not normalized:
+        return True
+    return normalized.endswith(":") and " " not in normalized[:-1]
+
+
+def _strip_redundant_exception_prefix(text: str, exc_type: str) -> str:
+    stripped = text.strip()
+    prefix = f"{exc_type}:"
+    while stripped.startswith(prefix):
+        stripped = stripped[len(prefix) :].lstrip()
+    return stripped or text.strip()
 
 
 def _exception_detail_lines(exc: BaseException, *, max_detail_lines: int = 40) -> list[str]:
@@ -342,6 +436,12 @@ def _exception_detail_lines(exc: BaseException, *, max_detail_lines: int = 40) -
             continue
         seen.add(cleaned)
         detail_lines.append(cleaned)
+
+    remote_exception_line = _remote_traceback_exception_line(exc)
+    if remote_exception_line and remote_exception_line not in seen:
+        if not detail_lines or _is_low_information_exception_text(detail_lines[0]):
+            detail_lines.insert(0, remote_exception_line)
+            seen.add(remote_exception_line)
 
     warnings = getattr(exc, "warnings", None)
     if isinstance(warnings, list):
@@ -364,14 +464,45 @@ def _exception_detail_lines(exc: BaseException, *, max_detail_lines: int = 40) -
     return detail_lines
 
 
+def _location_lines_from_traceback_text(traceback_text: str) -> list[str]:
+    if not traceback_text:
+        return []
+
+    lines = traceback_text.splitlines()
+    last_frame_idx = -1
+    last_filename = ""
+    last_lineno = ""
+    for idx, line in enumerate(lines):
+        match = _TRACEBACK_FRAME_RE.match(line)
+        if match is None:
+            continue
+        last_frame_idx = idx
+        last_filename = match.group(1).strip()
+        last_lineno = match.group(2).strip()
+
+    if last_frame_idx < 0 or not last_filename or not last_lineno:
+        return []
+
+    rendered = [f"Location: {_sanitize_display_path(last_filename)}:{last_lineno}"]
+    if last_frame_idx + 1 < len(lines):
+        code_line = lines[last_frame_idx + 1].strip()
+        if code_line and _TRACEBACK_FRAME_RE.match(lines[last_frame_idx + 1]) is None:
+            rendered.append(f"Code: {code_line}")
+    return rendered
+
+
 def _exception_location_lines(exc: BaseException) -> list[str]:
+    remote_lines = _location_lines_from_traceback_text(_remote_traceback_text(exc))
+    if remote_lines:
+        return remote_lines
+
     extracted = traceback.extract_tb(exc.__traceback__) if exc.__traceback__ else []
     skip_wrapper_location = isinstance(exc, RuntimeError)
     if not extracted or skip_wrapper_location:
         return []
 
     last = extracted[-1]
-    location = f"{last.filename}:{last.lineno}"
+    location = f"{_sanitize_display_path(last.filename)}:{last.lineno}"
     lines = [f"Location: {location}"]
     raw_line = linecache.getline(last.filename, last.lineno).rstrip("\n")
     if raw_line.strip():
@@ -642,7 +773,7 @@ def _iter_test_failures(test_report: TestReportLike | None) -> Iterable[CompileS
                 else REAL_OVERLAP_TEST_SPEC
             )
             summary = (
-                "Compiler-owned global QC found real 3D overlap in the current pose "
+                "Compiler-owned global QC reported real 3D overlap in the current pose "
                 "(`fail_if_parts_overlap_in_current_pose()`)."
                 if spec is REAL_OVERLAP_COMPILER_SPEC
                 else "Authored QC check found real 3D overlap in the tested pose."
@@ -871,11 +1002,12 @@ def _iter_allowance_notes(test_report: TestReportLike | None) -> Iterable[Compil
 def _runtime_failure_signal(exc: BaseException) -> CompileSignal:
     detail_lines = _exception_detail_lines(exc)
     detail_lines.extend(_exception_location_lines(exc))
-    summary = f"{type(exc).__name__}: compile execution failed."
+    exc_type = _display_exception_type(exc)
+    summary = f"{exc_type}: compile execution failed."
     if detail_lines:
         first = detail_lines[0]
         if first:
-            summary = f"{type(exc).__name__}: {first}"
+            summary = f"{exc_type}: {_strip_redundant_exception_prefix(first, exc_type)}"
     return _signal_from_spec(
         COMPILE_RUNTIME_SPEC,
         summary=summary,
@@ -922,7 +1054,10 @@ def _primary_failure_summary(signals: tuple[CompileSignal, ...]) -> str:
 
     primary = failures[0]
     if primary.kind == "compile_runtime":
-        return "Primary issue: compile execution failed."
+        primary_summary = primary.summary.strip()
+        if not primary_summary:
+            return "Primary issue: compile execution failed."
+        return f"Primary issue: {primary_summary}"
     if primary.kind == "single_root_policy":
         return "Primary issue: compiler-owned structural policy checks failed."
     if primary.kind == "model_validity":
@@ -932,13 +1067,13 @@ def _primary_failure_summary(signals: tuple[CompileSignal, ...]) -> str:
     if primary.source == "compiler" and primary.kind == "isolated_part":
         return "Primary issue: compiler-owned global QC found floating disconnected parts."
     if primary.source == "compiler" and primary.kind == "real_overlap":
-        return "Primary issue: compiler-owned global QC found real part overlap."
+        return "Primary issue: compiler-owned global QC reported part overlap that needs classification."
     if primary.kind == "missing_exact_geometry":
         return "Primary issue: authored exact checks reference missing named geometry."
     if primary.kind == "exact_contact_gap":
         return "Primary issue: authored exact-contact checks found separation where contact was expected."
     if primary.kind == "real_overlap":
-        return "Primary issue: required QC tests found real part overlap."
+        return "Primary issue: required QC tests reported part overlap."
     if primary.kind == "isolated_part":
         return "Primary issue: required QC tests found floating disconnected parts."
     return "Primary issue: required QC tests failed."
@@ -1098,6 +1233,13 @@ def _response_rules_for_failures(
         return rules
 
     primary = failures[0]
+    intentional_qc_allowance_rule = (
+        "- If any disconnected or overlapping finding appears intentional, "
+        "consider declaring or correcting explicit allowances for every "
+        "intentional case. Scope each allowance to the exact part or element "
+        "pair and include a concrete reason. Otherwise, use the finding to "
+        "guide the underlying support path, mount, geometry, or pose fix."
+    )
     rules: list[str]
     if primary.kind == "compile_runtime":
         rules = [
@@ -1122,14 +1264,16 @@ def _response_rules_for_failures(
         ]
     elif primary.source == "compiler" and primary.kind == "isolated_part":
         rules = [
-            "- Fix the compiler-owned floating/disconnected part failure first. Do not keep patching authored exact checks until the global QC failure is gone.",
-            "- If the disconnected part is intentional, justify it with an explicit isolated-part allowance. Otherwise add the missing support path or mount.",
+            "- Treat the compiler-owned floating/disconnected part finding as primary evidence before tuning authored exact checks.",
+            "- If the support path is not obvious, consider using `probe_model` with `find_floating_parts(...)`, `nearest_neighbors(...)`, or `mount_report(...)` before another geometry edit.",
+            intentional_qc_allowance_rule,
         ]
     elif primary.source == "compiler" and primary.kind == "real_overlap":
         rules = [
-            "- Fix the compiler-owned blocking overlap first. Do not keep patching authored exact checks until the global QC failure is gone.",
-            "- This is a real 3D interpenetration finding, not a tolerance issue.",
-            "- If the penetration is intentional, prove that with an explicit allowance. Otherwise change geometry, mount layout, or pose.",
+            "- Compiler-owned overlap QC reported a real 3D overlap in the current pose. First decide whether it looks like intentional embedding or an unintended collision.",
+            "- If the cause is not obvious from the reported pair and pose, consider using `probe_model` with `pair_report(...)`, `overlap_report(...)`, or `mount_report(...)` before another geometry edit.",
+            "- If the overlap could be intentional, inspect any existing `allow_overlap(...)` coverage and compare its part and element scope to the reported pair before changing geometry.",
+            intentional_qc_allowance_rule,
         ]
     elif primary.kind == "missing_exact_geometry":
         rules = [
@@ -1141,17 +1285,20 @@ def _response_rules_for_failures(
         rules = [
             "- This is a gap, not an overlap.",
             "- First verify that the tested pair is the right pair. The support path may be through a different exact element than the one named here.",
+            "- If the pair or support relationship is unclear, consider using `probe_model` with `gap_report(...)`, `within_report(...)`, or `mount_report(...)` before patching.",
             "- If the pair is correct, change geometry or mount placement. Do not relax `contact_tol` unless near-zero contact is actually the intended invariant.",
         ]
     elif primary.kind == "real_overlap":
         rules = [
-            "- Fix the real 3D overlap in the tested pose before adding more exact checks.",
-            "- If the penetration is intentional, use an explicit allowance. Otherwise change geometry, mount layout, or the tested pose.",
+            "- Fix or explicitly justify the real 3D overlap in the tested pose before adding more exact checks.",
+            "- If the relationship is ambiguous, consider using `probe_model` with `pair_report(...)`, `overlap_report(...)`, or `mount_report(...)` before changing geometry.",
+            intentional_qc_allowance_rule,
         ]
     elif primary.kind == "isolated_part":
         rules = [
             "- Fix the floating/disconnected part failure before tuning secondary geometry.",
-            "- If the disconnection is intentional, justify it explicitly. Otherwise add the missing support path or mount.",
+            "- If the support path is unclear, consider using `probe_model` with `find_floating_parts(...)`, `nearest_neighbors(...)`, or `mount_report(...)` before changing geometry.",
+            intentional_qc_allowance_rule,
         ]
     else:
         rules = [
@@ -1166,7 +1313,7 @@ def _response_rules_for_failures(
 
     if repeated and primary.kind in {"real_overlap", "isolated_part"}:
         rules.append(
-            "- This failure class repeated. Stop patching symptoms and rewrite the affected region from the root cause."
+            "- This failure class repeated. A short `probe_model` check is likely to be more informative than another small tweak; consider inspecting the underlying representation or support path before patching again, or add a precise allowance when the finding is intentional."
         )
     if failure_streak >= 3:
         if primary.kind in {"missing_exact_geometry", "exact_contact_gap"}:
@@ -1175,6 +1322,6 @@ def _response_rules_for_failures(
             )
         elif primary.kind in {"real_overlap", "isolated_part"}:
             rules.append(
-                "- You are in a repair loop. Stop making small placement, tolerance, or box/cylinder tweaks and rewrite the failing subassembly with a more realistic representation."
+                "- You are in a repair loop. A short `probe_model` snippet is likely to be more informative than another small placement, tolerance, or primitive tweak. Consider `pair_report(...)`, `mount_report(...)`, `find_floating_parts(...)`, or `nearest_neighbors(...)` before patching again."
             )
     return rules

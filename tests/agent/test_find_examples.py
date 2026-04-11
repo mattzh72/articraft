@@ -12,7 +12,7 @@ from agent.tools.find_examples import FindExamplesTool
 
 def test_parse_example_document_reads_frontmatter() -> None:
     repo_root = Path(__file__).resolve().parents[2]
-    path = repo_root / "sdk" / "_examples" / "hybrid" / "simple_rectangular_plate.md"
+    path = repo_root / "sdk" / "_examples" / "cadquery" / "simple_rectangular_plate.md"
 
     doc = parse_example_document(path)
 
@@ -23,7 +23,7 @@ def test_parse_example_document_reads_frontmatter() -> None:
 
 
 def test_search_example_documents_prefers_structured_matches() -> None:
-    matches = search_example_documents("fillet", sdk_package="sdk_hybrid", limit=3)
+    matches = search_example_documents("fillet", sdk_package="sdk", limit=3)
 
     assert matches
     assert matches[0].title == "Rounding Corners with Fillet"
@@ -31,7 +31,7 @@ def test_search_example_documents_prefers_structured_matches() -> None:
 
 
 def test_search_example_documents_returns_full_content() -> None:
-    matches = search_example_documents("counterbore", sdk_package="sdk_hybrid", limit=1)
+    matches = search_example_documents("counterbore", sdk_package="sdk", limit=1)
 
     assert len(matches) == 1
     assert "cboreHole" in matches[0].content
@@ -39,29 +39,25 @@ def test_search_example_documents_returns_full_content() -> None:
 
 
 def test_search_example_documents_default_limit_is_used() -> None:
-    matches = search_example_documents("workplane", sdk_package="sdk_hybrid")
+    matches = search_example_documents("workplane", sdk_package="sdk")
 
     assert len(matches) == 3
 
 
 def test_search_example_documents_honors_explicit_large_limit() -> None:
-    matches = search_example_documents("workplane", sdk_package="sdk_hybrid", limit=100)
+    matches = search_example_documents("workplane", sdk_package="sdk", limit=100)
 
     assert len(matches) > 3
 
 
 def test_search_example_documents_returns_empty_list_for_no_match() -> None:
-    assert search_example_documents("nonexistent-mechanism-token", sdk_package="sdk_hybrid") == []
-
-
-def test_search_example_documents_excludes_incidental_single_body_hits() -> None:
-    assert search_example_documents("articulated cap", sdk_package="sdk_hybrid", limit=10) == []
+    assert search_example_documents("nonexistent-mechanism-token", sdk_package="sdk") == []
 
 
 def test_search_example_documents_ignores_generic_cadquery_tag_matches() -> None:
     matches = search_example_documents(
         "bottle cadquery classic occ bottle",
-        sdk_package="sdk_hybrid",
+        sdk_package="sdk",
         limit=10,
     )
 
@@ -69,7 +65,7 @@ def test_search_example_documents_ignores_generic_cadquery_tag_matches() -> None
 
 
 def test_search_example_documents_keeps_specific_body_api_queries() -> None:
-    matches = search_example_documents("cboreHole", sdk_package="sdk_hybrid", limit=10)
+    matches = search_example_documents("cboreHole", sdk_package="sdk", limit=10)
 
     assert matches
     assert matches[0].title == "Making Counter-bored and Counter-sunk Holes"
@@ -77,8 +73,8 @@ def test_search_example_documents_keeps_specific_body_api_queries() -> None:
     assert all(doc.match_quality == "strong" for doc in matches)
 
 
-def test_hybrid_example_corpus_titles_are_unique() -> None:
-    docs = load_example_documents("sdk_hybrid")
+def test_sdk_example_corpus_titles_are_unique() -> None:
+    docs = load_example_documents("sdk")
 
     assert docs
     titles = [doc.title for doc in docs]
@@ -87,7 +83,7 @@ def test_hybrid_example_corpus_titles_are_unique() -> None:
 
 def test_find_examples_tool_returns_expected_shape() -> None:
     async def _run() -> list[dict[str, object]]:
-        tool = FindExamplesTool(sdk_package="sdk_hybrid")
+        tool = FindExamplesTool(sdk_package="sdk")
         invocation = await tool.build({"query": "loft", "limit": 1})
         result = await invocation.execute()
         assert result.error is None
@@ -98,7 +94,8 @@ def test_find_examples_tool_returns_expected_shape() -> None:
 
     assert len(output) == 1
     assert output[0]["title"] == "Making Lofts"
-    assert output[0]["path"] == "sdk/_examples/hybrid/making_lofts.md"
+    assert output[0]["example_id"] == "sdk/_examples/cadquery/making_lofts.md"
+    assert output[0]["path"] == "sdk/_examples/cadquery/making_lofts.md"
     assert "content" in output[0]
     assert output[0]["match_quality"] == "strong"
     assert output[0]["matched_tokens"]
@@ -181,6 +178,10 @@ def test_find_examples_tool_supports_base_sdk_examples() -> None:
     assert output
     assert output[0]["title"] == "Jet Engine with Smooth Nacelle and Dense Front Fan"
     assert (
+        output[0]["example_id"]
+        == "sdk/_examples/base/jet_engine_with_smooth_nacelle_dense_front_fan.md"
+    )
+    assert (
         output[0]["path"] == "sdk/_examples/base/jet_engine_with_smooth_nacelle_dense_front_fan.md"
     )
     assert output[0]["match_quality"] == "strong"
@@ -188,24 +189,29 @@ def test_find_examples_tool_supports_base_sdk_examples() -> None:
     assert output[0]["matched_fields"]
 
 
-def test_search_example_documents_can_return_weakly_relevant_hybrid_matches() -> None:
-    matches = search_example_documents("support bracket", sdk_package="sdk_hybrid", limit=5)
+def test_find_examples_tool_can_omit_repo_paths_for_gemini() -> None:
+    async def _run() -> list[dict[str, object]]:
+        tool = FindExamplesTool(sdk_package="sdk", include_paths=False)
+        invocation = await tool.build({"query": "loft", "limit": 1})
+        result = await invocation.execute()
+        assert result.error is None
+        assert isinstance(result.output, list)
+        return result.output
+
+    output = asyncio.run(_run())
+
+    assert len(output) == 1
+    assert output[0]["title"] == "Making Lofts"
+    assert output[0]["example_id"] == "sdk/_examples/cadquery/making_lofts.md"
+    assert "path" not in output[0]
+
+
+def test_search_example_documents_sdk_can_retrieve_cadquery_examples() -> None:
+    matches = search_example_documents("making lofts", sdk_package="sdk", limit=3)
 
     assert matches
-    assert [doc.title for doc in matches] == ["PiTray Clip"]
-    assert all(doc.match_quality == "weakly_relevant" for doc in matches)
-    assert len(matches) <= 2
-
-
-def test_search_example_documents_sparse_hybrid_query_never_returns_strong_matches() -> None:
-    matches = search_example_documents(
-        "cadquery bracket shaft bearing housing",
-        sdk_package="sdk_hybrid",
-        limit=5,
-    )
-
-    assert len(matches) <= 2
-    assert all(doc.match_quality == "weakly_relevant" for doc in matches)
+    assert matches[0].title == "Making Lofts"
+    assert matches[0].path.as_posix().endswith("sdk/_examples/cadquery/making_lofts.md")
 
 
 def test_search_example_documents_can_return_weakly_relevant_base_matches() -> None:
@@ -217,14 +223,6 @@ def test_search_example_documents_can_return_weakly_relevant_base_matches() -> N
     assert len(matches) <= 2
 
 
-def test_search_example_documents_excludes_weak_matches_when_strong_matches_exist() -> None:
-    matches = search_example_documents("loft wheel", sdk_package="sdk_hybrid", limit=5)
-
-    assert matches
-    assert [doc.title for doc in matches] == ["Mecanum Wheel"]
-    assert all(doc.match_quality == "strong" for doc in matches)
-
-
 def test_find_examples_repeated_results_replace_full_content_with_blurb() -> None:
     agent = ArticraftAgent.__new__(ArticraftAgent)
     agent._seen_find_example_paths = set()
@@ -232,10 +230,11 @@ def test_find_examples_repeated_results_replace_full_content_with_blurb() -> Non
     first = agent._compress_find_examples_output(
         [
             {
+                "example_id": "sdk/_examples/cadquery/making_lofts.md",
                 "title": "Making Lofts",
                 "description": "Loft example",
                 "tags": ["cadquery"],
-                "path": "sdk/_examples/hybrid/making_lofts.md",
+                "path": "sdk/_examples/cadquery/making_lofts.md",
                 "content": "# full example",
             }
         ]
@@ -243,10 +242,11 @@ def test_find_examples_repeated_results_replace_full_content_with_blurb() -> Non
     second = agent._compress_find_examples_output(
         [
             {
+                "example_id": "sdk/_examples/cadquery/making_lofts.md",
                 "title": "Making Lofts",
                 "description": "Loft example",
                 "tags": ["cadquery"],
-                "path": "sdk/_examples/hybrid/making_lofts.md",
+                "path": "sdk/_examples/cadquery/making_lofts.md",
                 "content": "# full example",
             }
         ]
@@ -270,10 +270,11 @@ def test_find_examples_cache_can_seed_from_prior_conversation() -> None:
                     {
                         "result": [
                             {
+                                "example_id": "sdk/_examples/cadquery/making_lofts.md",
                                 "title": "Making Lofts",
                                 "description": "Loft example",
                                 "tags": ["cadquery"],
-                                "path": "sdk/_examples/hybrid/making_lofts.md",
+                                "path": "sdk/_examples/cadquery/making_lofts.md",
                                 "content": "# full example",
                             }
                         ]
@@ -286,10 +287,11 @@ def test_find_examples_cache_can_seed_from_prior_conversation() -> None:
     compressed = agent._compress_find_examples_output(
         [
             {
+                "example_id": "sdk/_examples/cadquery/making_lofts.md",
                 "title": "Making Lofts",
                 "description": "Loft example",
                 "tags": ["cadquery"],
-                "path": "sdk/_examples/hybrid/making_lofts.md",
+                "path": "sdk/_examples/cadquery/making_lofts.md",
                 "content": "# full example",
             }
         ]

@@ -361,7 +361,7 @@ Checks exact minimum distance between two parts or two named elements.
 - `contact_tol`: maximum allowed separation to still count as contact.
 - `elem_a`, `elem_b`: optional named element scope.
 
-### `expect_gap(positive_link, negative_link, *, axis, min_gap=None, max_gap=None, max_penetration=None, positive_elem=None, negative_elem=None, name=None) -> bool`
+### `expect_gap(positive_link, negative_link, *, axis, min_gap=None, max_gap=None, max_penetration=None, positive_elem=None, negative_elem=None, elem_a=None, elem_b=None, name=None) -> bool`
 
 Checks signed exact-geometry gap along a positive world axis.
 
@@ -372,6 +372,8 @@ Checks signed exact-geometry gap along a positive world axis.
 - `max_penetration`: convenience way to express the allowed overlap depth;
   equivalent to a lower bound of `-max_penetration`.
 - `positive_elem`, `negative_elem`: optional named element scope.
+- `elem_a`, `elem_b`: accepted as compatibility aliases for
+  `positive_elem`/`negative_elem`.
 
 This is the main exact clearance and seating helper.
 
@@ -383,13 +385,15 @@ footprint/projection check, not a collision/contact check.
 - `min_overlap`: required overlap on every requested axis.
 - `elem_a`, `elem_b`: optional named element scope.
 
-### `expect_within(inner_link, outer_link, *, axes="xy", margin=0.0, inner_elem=None, outer_elem=None, name=None) -> bool`
+### `expect_within(inner_link, outer_link, *, axes="xy", margin=0.0, inner_elem=None, outer_elem=None, elem_a=None, elem_b=None, name=None) -> bool`
 
 Checks that one part or named element stays within another on the requested
 axes.
 
 - `margin`: allowed slack outside the outer bounds.
 - `inner_elem`, `outer_elem`: optional named element scope.
+- `elem_a`, `elem_b`: accepted as compatibility aliases for
+  `inner_elem`/`outer_elem`.
 
 For nested sliders, use `expect_within(...)` on the non-motion axes and pair it
 with `expect_overlap(...)` or `expect_gap(...)` on the slide axis. Do not use

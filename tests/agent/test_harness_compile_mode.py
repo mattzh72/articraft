@@ -3,6 +3,7 @@ from __future__ import annotations
 import asyncio
 import json
 from pathlib import Path
+from types import SimpleNamespace
 
 import pytest
 
@@ -61,7 +62,7 @@ def test_compile_async_uses_timeout_wrapper(
 ) -> None:
     agent = ArticraftAgent.__new__(ArticraftAgent)
     agent.file_path = str(tmp_path / "model.py")
-    agent.sdk_package = "sdk_hybrid"
+    agent.sdk_package = "sdk"
     agent.runtime_limits = None
 
     report = CompileReport(
@@ -89,7 +90,7 @@ def test_compile_async_uses_timeout_wrapper(
     assert result is report
     assert captured == {
         "script_path": tmp_path / "model.py",
-        "sdk_package": "sdk_hybrid",
+        "sdk_package": "sdk",
         "rewrite_visual_glb": False,
     }
 
@@ -191,10 +192,116 @@ def test_execute_compile_model_failure_leaves_latest_revision_stale() -> None:
     assert agent._latest_code_is_fresh() is False
     assert result.compilation == {
         "status": "error",
-        "error": "status=failure failures=1 warnings=0 notes=0\nPrimary issue: compile execution failed.",
+        "error": "status=failure failures=1 warnings=0 notes=0\nPrimary issue: RuntimeError: ValueError: bad loft",
     }
     assert "<compile_signals>" in str(result.output)
     assert "bad loft" in str(result.output)
+
+
+def test_execute_tool_calls_batch_runs_parallel_safe_gemini_calls_concurrently() -> None:
+    agent = ArticraftAgent.__new__(ArticraftAgent)
+    agent.provider = "gemini"
+
+    active_calls = 0
+    peak_calls = 0
+
+    async def fake_execute_tool(tool_call: dict) -> tuple[object, dict]:
+        nonlocal active_calls, peak_calls
+        active_calls += 1
+        peak_calls = max(peak_calls, active_calls)
+        await asyncio.sleep(0.01)
+        active_calls -= 1
+        return (
+            SimpleNamespace(
+                is_success=lambda: True,
+                output=tool_call["id"],
+                compilation=None,
+                error=None,
+            ),
+            {
+                "role": "tool",
+                "tool_call_id": tool_call["id"],
+                "name": agent._tool_call_name(tool_call),
+            },
+        )
+
+    agent._execute_tool = fake_execute_tool  # type: ignore[method-assign]
+
+    results = asyncio.run(
+        agent._execute_tool_calls_batch(
+            [
+                {
+                    "id": "call_read_code",
+                    "type": "function",
+                    "function": {"name": "read_code", "arguments": "{}"},
+                },
+                {
+                    "id": "call_find_examples",
+                    "type": "function",
+                    "function": {"name": "find_examples", "arguments": '{"query":"hinge"}'},
+                },
+            ]
+        )
+    )
+
+    assert [tool_call["id"] for tool_call, *_ in results] == [
+        "call_read_code",
+        "call_find_examples",
+    ]
+    assert peak_calls == 2
+
+
+def test_execute_tool_calls_batch_keeps_mutating_gemini_calls_serialized() -> None:
+    agent = ArticraftAgent.__new__(ArticraftAgent)
+    agent.provider = "gemini"
+
+    active_calls = 0
+    peak_calls = 0
+
+    async def fake_execute_tool(tool_call: dict) -> tuple[object, dict]:
+        nonlocal active_calls, peak_calls
+        active_calls += 1
+        peak_calls = max(peak_calls, active_calls)
+        await asyncio.sleep(0.01)
+        active_calls -= 1
+        return (
+            SimpleNamespace(
+                is_success=lambda: True,
+                output=tool_call["id"],
+                compilation=None,
+                error=None,
+            ),
+            {
+                "role": "tool",
+                "tool_call_id": tool_call["id"],
+                "name": agent._tool_call_name(tool_call),
+            },
+        )
+
+    agent._execute_tool = fake_execute_tool  # type: ignore[method-assign]
+
+    results = asyncio.run(
+        agent._execute_tool_calls_batch(
+            [
+                {
+                    "id": "call_read_code",
+                    "type": "function",
+                    "function": {"name": "read_code", "arguments": "{}"},
+                },
+                {
+                    "id": "call_edit_code",
+                    "type": "function",
+                    "function": {
+                        "name": "edit_code",
+                        "arguments": '{"old_string":"a","new_string":"b"}',
+                    },
+                },
+            ]
+        )
+    )
+
+    assert [tool_call["id"] for tool_call, *_ in results] == ["call_read_code", "call_edit_code"]
+    assert peak_calls == 1
 
 
 def test_run_discards_pasted_code_and_replaces_it_with_recovery_messages(
@@ -396,6 +503,90 @@ def test_run_requires_compile_model_before_concluding_and_delays_design_audit(
         if message.get("role") == "user" and "<design_audit>" in str(message.get("content", ""))
     )
     assert audit_index > compile_index + 1
+
+
+def test_run_accepts_gemini_edit_code_without_replace_all(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+) -> None:
+    class _SequenceLLM:
+        model_id = "gemini-2.5-pro"
+
+        def __init__(self, *args: object, **kwargs: object) -> None:
+            self._responses = [
+                {
+                    "content": "",
+                    "tool_calls": [
+                        {
+                            "id": "call_edit",
+                            "type": "function",
+                            "function": {
+                                "name": "edit_code",
+                                "arguments": json.dumps(
+                                    {
+                                        "old_string": '"draft_model"',
+                                        "new_string": '"draft_model_v2"',
+                                    }
+                                ),
+                            },
+                        }
+                    ],
+                },
+                {"content": "Done.", "tool_calls": []},
+                {
+                    "content": "",
+                    "tool_calls": [
+                        {
+                            "id": "call_compile",
+                            "type": "function",
+                            "function": {"name": "compile_model", "arguments": "{}"},
+                        }
+                    ],
+                },
+                {"content": "Done.", "tool_calls": []},
+            ]
+
+        async def generate_with_tools(
+            self, *, system_prompt: str, messages: list[dict], tools: list[dict]
+        ) -> dict:
+            assert tools
+            return self._responses.pop(0)
+
+        async def close(self) -> None:
+            return None
+
+    report = CompileReport(
+        urdf_xml="<robot />",
+        warnings=[],
+        signal_bundle=build_compile_signal_bundle(status="success"),
+    )
+
+    monkeypatch.setattr(harness, "GeminiLLM", _SequenceLLM)
+    agent = ArticraftAgent(
+        file_path=str(tmp_path / "model.py"),
+        provider="gemini",
+        max_turns=5,
+        post_success_design_audit=False,
+        display_enabled=False,
+    )
+
+    async def fake_compile() -> CompileReport:
+        return report
+
+    async def fake_persist(_: str) -> None:
+        return None
+
+    agent._compile_urdf_report_async = fake_compile
+    agent._persist_compile_success_checkpoint_async = fake_persist
+
+    result = asyncio.run(agent.run("make a hinge"))
+
+    assert result.success is True
+    assert result.reason == TerminateReason.CODE_VALID
+    assert result.compile_attempt_count == 1
+    assert result.tool_call_count == 2
+    assert result.final_code is not None
+    assert '"draft_model_v2"' in result.final_code
 
 
 @pytest.mark.parametrize(

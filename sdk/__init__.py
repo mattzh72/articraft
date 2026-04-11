@@ -86,6 +86,37 @@ from .v0 import (
     wrap_profile_onto_surface,
 )
 
+_CADQUERY_EXPORTS = {
+    "CadQueryMeshExport",
+    "cadquery_local_aabb",
+    "export_cadquery_components",
+    "export_cadquery_mesh",
+    "mesh_components_from_cadquery",
+    "mesh_from_cadquery",
+    "tessellate_cadquery",
+}
+
+_GEAR_EXPORTS = {
+    "GearBase",
+    "SpurGear",
+    "HerringboneGear",
+    "RingGear",
+    "HerringboneRingGear",
+    "PlanetaryGearset",
+    "HerringbonePlanetaryGearset",
+    "BevelGear",
+    "BevelGearPair",
+    "RackGear",
+    "HerringboneRackGear",
+    "Worm",
+    "CrossedHelicalGear",
+    "CrossedGearPair",
+    "HyperbolicGear",
+    "HyperbolicGearPair",
+    "gear",
+    "addGear",
+}
+
 __all__ = [
     "SDKError",
     "ValidationError",
@@ -172,11 +203,48 @@ __all__ = [
     "surface_frame",
     "wrap_profile_onto_surface",
     "wrap_mesh_onto_surface",
+    "CadQueryMeshExport",
+    "cadquery_local_aabb",
+    "export_cadquery_components",
+    "export_cadquery_mesh",
+    "mesh_components_from_cadquery",
+    "mesh_from_cadquery",
+    "tessellate_cadquery",
+    "GearBase",
+    "SpurGear",
+    "HerringboneGear",
+    "RingGear",
+    "HerringboneRingGear",
+    "PlanetaryGearset",
+    "HerringbonePlanetaryGearset",
+    "BevelGear",
+    "BevelGearPair",
+    "RackGear",
+    "HerringboneRackGear",
+    "Worm",
+    "CrossedHelicalGear",
+    "CrossedGearPair",
+    "HyperbolicGear",
+    "HyperbolicGearPair",
+    "gear",
+    "addGear",
 ]
 
 
 def __getattr__(name: str):
+    if name in _CADQUERY_EXPORTS or name in _GEAR_EXPORTS:
+        from . import v0 as _v0
+
+        value = getattr(_v0, name)
+        globals()[name] = value
+        return value
     if name == "AssetContext":
+        from . import v0 as _v0
+
+        value = getattr(_v0, name)
+        globals()[name] = value
+        return value
+    if name == "save_cadquery_obj":
         from . import v0 as _v0
 
         value = getattr(_v0, name)

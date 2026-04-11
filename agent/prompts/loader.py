@@ -3,14 +3,13 @@ from __future__ import annotations
 from dataclasses import dataclass
 from pathlib import Path
 
+from agent.workspace_docs import load_sdk_docs_reference as _load_sdk_docs_reference
 from sdk._profiles import get_sdk_profile
 
 LEGACY_DESIGNER_PROMPT_NAME = "system_prompt.txt"
 DESIGNER_PROMPT_NAME = "designer_system_prompt.txt"
 OPENAI_DESIGNER_PROMPT_NAME = "designer_system_prompt_openai.txt"
-HYBRID_OPENAI_DESIGNER_PROMPT_NAME = "designer_system_prompt_openai_hybrid.txt"
 GEMINI_DESIGNER_PROMPT_NAME = "designer_system_prompt_gemini.txt"
-HYBRID_GEMINI_DESIGNER_PROMPT_NAME = "designer_system_prompt_gemini_hybrid.txt"
 
 SUPPORTED_SDK_DOCS_MODES = {"full", "core", "none"}
 LEGACY_SDK_DOCS_MODE_ALIASES = {
@@ -24,9 +23,8 @@ PROMPTING_ROOT = PROMPTS_ROOT
 
 
 def normalize_sdk_package(sdk_package: str) -> str:
-    candidate = (sdk_package or "sdk").strip()
-    get_sdk_profile(candidate)
-    return candidate
+    candidate = str(sdk_package or "sdk").strip().lower()
+    return get_sdk_profile(candidate).package_name
 
 
 def normalize_sdk_docs_mode(docs_mode: str) -> str:
@@ -46,66 +44,8 @@ def resolve_sdk_package_flags(
     default_sdk_package: str = "sdk",
 ) -> str:
     if hybrid_sdk:
-        return "sdk_hybrid"
+        return "sdk"
     return normalize_sdk_package(default_sdk_package)
-
-
-def _select_sdk_doc_paths(
-    repo_root: Path,
-    *,
-    sdk_package: str,
-    docs_mode: str,
-) -> list[Path]:
-    profile = get_sdk_profile(normalize_sdk_package(sdk_package))
-    mode = normalize_sdk_docs_mode(docs_mode)
-    if mode == "none":
-        return []
-
-    selected: list[Path] = []
-    for rel_path in profile.docs_for_mode(mode):
-        path = repo_root / rel_path
-        if path.exists():
-            selected.append(path)
-    return selected
-
-
-def load_sdk_docs_reference(
-    repo_root: Path,
-    *,
-    sdk_package: str = "sdk",
-    docs_mode: str = "full",
-) -> str:
-    package = normalize_sdk_package(sdk_package)
-    mode = normalize_sdk_docs_mode(docs_mode)
-    doc_paths = _select_sdk_doc_paths(
-        repo_root,
-        sdk_package=package,
-        docs_mode=mode,
-    )
-    if not doc_paths:
-        return ""
-
-    parts: list[str] = []
-    parts.append("\n\n# SDK Documentation (read-only)\n")
-    parts.append(
-        f"The selected SDK package for this run is `{package}`. "
-        f"When you write imports, import from `{package}`.\n"
-    )
-    parts.append(
-        "The content below is the SDK user documentation available in this repository. "
-        "Use it for recommended usage patterns and best practices.\n"
-    )
-    if mode == "core":
-        parts.append(
-            "Only the core SDK docs subset is injected for speed. "
-            "It focuses on quickstart, testing, and package-specific essentials.\n"
-        )
-    for path in doc_paths:
-        rel = path.relative_to(repo_root).as_posix()
-        content = path.read_text(encoding="utf-8")
-        parts.append(f"\n## {rel}\n````markdown\n{content}\n````\n")
-
-    return "".join(parts)
 
 
 def resolve_system_prompt_path(
@@ -134,9 +74,7 @@ def resolve_system_prompt_path(
         LEGACY_DESIGNER_PROMPT_NAME,
         DESIGNER_PROMPT_NAME,
         OPENAI_DESIGNER_PROMPT_NAME,
-        HYBRID_OPENAI_DESIGNER_PROMPT_NAME,
         GEMINI_DESIGNER_PROMPT_NAME,
-        HYBRID_GEMINI_DESIGNER_PROMPT_NAME,
     }
     profile_prompt_name = profile.prompt_name_for_provider(provider_norm)
     if path.name in default_names and profile_prompt_name is not None:
@@ -175,6 +113,19 @@ def load_prompt_section_text(section_name: str) -> tuple[Path, str]:
     if not section_path.exists():
         raise FileNotFoundError(f"Prompt section file not found: {section_name}")
     return section_path, section_path.read_text(encoding="utf-8")
+
+
+def load_sdk_docs_reference(
+    repo_root: Path,
+    *,
+    sdk_package: str = "sdk",
+    docs_mode: str = "full",
+) -> str:
+    return _load_sdk_docs_reference(
+        repo_root,
+        sdk_package=sdk_package,
+        docs_mode=docs_mode,
+    )
 
 
 def provider_system_prompt_suffix(provider: str, *, sdk_package: str = "sdk") -> str:

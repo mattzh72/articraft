@@ -5,7 +5,6 @@ host := "127.0.0.1"
 port := "8765"
 model := ""
 thinking := ""
-sdk := ""
 scaffold_mode := ""
 image := ""
 dataset_id := ""
@@ -65,7 +64,6 @@ wb prompt:
     set -euo pipefail
     model={{ quote(model) }}
     thinking={{ quote(thinking) }}
-    sdk={{ quote(sdk) }}
     scaffold_mode_value={{ quote(scaffold_mode) }}
     image={{ quote(image) }}
     design_audit={{ quote(design_audit) }}
@@ -76,18 +74,6 @@ wb prompt:
     if [ -z "$thinking" ]; then
       thinking="high"
     fi
-    case "$sdk" in
-      ""|sdk|base)
-        sdk_package="sdk"
-        ;;
-      hybrid|sdk_hybrid)
-        sdk_package="sdk_hybrid"
-        ;;
-      *)
-        echo "Unsupported sdk '$sdk'. Supported values: sdk or hybrid. Aliases: base, sdk_hybrid." >&2
-        exit 1
-        ;;
-    esac
     case "$model" in
       gpt-*|o1*|o3*|o4*)
         provider="openai"
@@ -107,7 +93,6 @@ wb prompt:
       --provider "$provider"
       --model "$model"
       --thinking "$thinking"
-      --sdk-package "$sdk_package"
     )
     if [ -n "$scaffold_mode_value" ]; then
       cmd+=(--scaffold-mode "$scaffold_mode_value")
@@ -130,7 +115,6 @@ wb-init prompt:
     set -euo pipefail
     model={{ quote(model) }}
     thinking={{ quote(thinking) }}
-    sdk={{ quote(sdk) }}
     scaffold_mode_value={{ quote(scaffold_mode) }}
     image={{ quote(image) }}
     design_audit={{ quote(design_audit) }}
@@ -141,18 +125,6 @@ wb-init prompt:
     if [ -z "$thinking" ]; then
       thinking="high"
     fi
-    case "$sdk" in
-      ""|sdk|base)
-        sdk_package="sdk"
-        ;;
-      hybrid|sdk_hybrid)
-        sdk_package="sdk_hybrid"
-        ;;
-      *)
-        echo "Unsupported sdk '$sdk'. Supported values: sdk or hybrid. Aliases: base, sdk_hybrid." >&2
-        exit 1
-        ;;
-    esac
     case "$model" in
       gpt-*|o1*|o3*|o4*)
         provider="openai"
@@ -173,7 +145,6 @@ wb-init prompt:
       --provider "$provider"
       --model-id "$model"
       --thinking-level "$thinking"
-      --sdk-package "$sdk_package"
     )
     if [ -n "$scaffold_mode_value" ]; then
       cmd+=(--scaffold-mode "$scaffold_mode_value")
@@ -196,7 +167,6 @@ wb-category prompt:
     set -euo pipefail
     model={{ quote(model) }}
     thinking={{ quote(thinking) }}
-    sdk={{ quote(sdk) }}
     scaffold_mode_value={{ quote(scaffold_mode) }}
     image={{ quote(image) }}
     design_audit={{ quote(design_audit) }}
@@ -213,18 +183,6 @@ wb-category prompt:
     if [ -z "$thinking" ]; then
       thinking="high"
     fi
-    case "$sdk" in
-      ""|sdk|base)
-        sdk_package="sdk"
-        ;;
-      hybrid|sdk_hybrid)
-        sdk_package="sdk_hybrid"
-        ;;
-      *)
-        echo "Unsupported sdk '$sdk'. Supported values: sdk or hybrid. Aliases: base, sdk_hybrid." >&2
-        exit 1
-        ;;
-    esac
     case "$model" in
       gpt-*|o1*|o3*|o4*)
         provider="openai"
@@ -246,7 +204,6 @@ wb-category prompt:
       --provider "$provider"
       --model-id "$model"
       --thinking-level "$thinking"
-      --sdk-package "$sdk_package"
     )
     if [ -n "$scaffold_mode_value" ]; then
       cmd+=(--scaffold-mode "$scaffold_mode_value")
@@ -486,7 +443,7 @@ batch-spec-new:
       exit 1
     fi
     mkdir -p "$(dirname "$spec_path")"
-    printf '%s\n' 'row_id,category_slug,category_title,prompt,provider,model_id,thinking_level,max_turns,max_cost_usd,sdk_package,scaffold_mode,label,design_audit' >"$spec_path"
+    printf '%s\n' 'row_id,category_slug,category_title,prompt,provider,model_id,thinking_level,max_turns,max_cost_usd,scaffold_mode,label,design_audit' >"$spec_path"
     echo "Created $spec_path"
 
 search-index:
@@ -499,23 +456,7 @@ rerun record:
     model_override={{ quote(model) }}
     thinking_override={{ quote(thinking) }}
     max_cost_usd_value={{ quote(max_cost_usd) }}
-    sdk={{ quote(sdk) }}
     scaffold_mode_value={{ quote(scaffold_mode) }}
-    case "$sdk" in
-      "")
-        sdk_package=""
-        ;;
-      sdk|base)
-        sdk_package="sdk"
-        ;;
-      hybrid|sdk_hybrid)
-        sdk_package="sdk_hybrid"
-        ;;
-      *)
-        echo "Unsupported sdk '$sdk'. Supported values: sdk or hybrid. Aliases: base, sdk_hybrid." >&2
-        exit 1
-        ;;
-    esac
     cmd=(
       uv run articraft-workbench
       --repo-root .
@@ -530,9 +471,6 @@ rerun record:
     fi
     if [ -n "$max_cost_usd_value" ]; then
       cmd+=(--max-cost-usd "$max_cost_usd_value")
-    fi
-    if [ -n "$sdk_package" ]; then
-      cmd+=(--sdk-package "$sdk_package")
     fi
     if [ -n "$scaffold_mode_value" ]; then
       cmd+=(--scaffold-mode "$scaffold_mode_value")
@@ -678,28 +616,12 @@ compile-unsafe record_dir:
     #!/usr/bin/env bash
     set -euo pipefail
     record_dir={{ quote(record_dir) }}
-    sdk={{ quote(sdk) }}
-    case "$sdk" in
-      "")
-        sdk_override=""
-        ;;
-      sdk|base)
-        sdk_override="sdk"
-        ;;
-      hybrid|sdk_hybrid)
-        sdk_override="sdk_hybrid"
-        ;;
-      *)
-        echo "Unsupported sdk '$sdk'. Supported values: sdk or hybrid. Aliases: base, sdk_hybrid." >&2
-        exit 1
-        ;;
-    esac
     script_path="$record_dir/model.py"
     if [ ! -f "$script_path" ]; then
       echo "Record model not found: $script_path" >&2
       exit 1
     fi
-    RECORD_DIR="$record_dir" RECORD_SCRIPT="$script_path" RECORD_SDK="$sdk_override" uv run python - <<'PY'
+    RECORD_DIR="$record_dir" RECORD_SCRIPT="$script_path" uv run python - <<'PY'
     import os
     from agent.compiler import compile_urdf_report
     from agent.prompts import normalize_sdk_package
@@ -712,7 +634,7 @@ compile-unsafe record_dir:
     repo = StorageRepo(repo_root)
     record_id = record_dir.name
     record = repo.read_json(repo.layout.record_metadata_path(record_id), default={}) or {}
-    raw_sdk_package = os.environ["RECORD_SDK"] or str(record.get("sdk_package") or "sdk")
+    raw_sdk_package = str(record.get("sdk_package") or "sdk")
     sdk_package = normalize_sdk_package(raw_sdk_package)
     urdf_path = repo.layout.record_materialization_urdf_path(record_id)
     urdf_path.parent.mkdir(parents=True, exist_ok=True)

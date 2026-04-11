@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import sdk
+from sdk._extensions.cadquery.v0 import mesh_components_from_cadquery, mesh_from_cadquery
 
 
 def test_sdk_exports() -> None:
@@ -25,6 +26,18 @@ def test_sdk_exports() -> None:
     assert hasattr(sdk, "wrap_profile_onto_surface")
     assert hasattr(sdk, "wrap_mesh_onto_surface")
     assert hasattr(sdk, "scale_geometry_to_size")
+    assert hasattr(sdk, "CadQueryMeshExport")
+    assert hasattr(sdk, "export_cadquery_components")
+    assert hasattr(sdk, "mesh_components_from_cadquery")
+    assert hasattr(sdk, "mesh_from_cadquery")
+    assert hasattr(sdk, "SpurGear")
+    assert hasattr(sdk, "RingGear")
+    assert hasattr(sdk, "BevelGearPair")
+    assert hasattr(sdk, "Worm")
+    assert hasattr(sdk, "gear")
+    assert hasattr(sdk, "addGear")
+    assert callable(mesh_from_cadquery)
+    assert callable(mesh_components_from_cadquery)
     assert not hasattr(sdk, "BufferGeometry")
     assert not hasattr(sdk, "place_on_top")
     assert not hasattr(sdk, "place_in_front_of")

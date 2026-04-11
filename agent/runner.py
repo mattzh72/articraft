@@ -32,7 +32,7 @@ from agent.compiler import (
     compile_urdf_report_maybe_timeout as _compile_urdf_report_maybe_timeout,
 )
 from agent.cost import is_flash_model, max_cost_usd_from_env, parse_max_cost_usd
-from agent.defaults import DEFAULT_MAX_TURNS
+from agent.defaults import resolve_max_turns
 from agent.harness import ArticraftAgent, build_openai_prompt_cache_settings
 from agent.models import CompileReport as AgentCompileReport
 from agent.prompts import (
@@ -172,7 +172,8 @@ def _draft_model_template(*, sdk_package: str, scaffold_mode: str) -> str:
 # The target prompt for this record is stored in prompt.txt.
 # Extend this scaffold with a valid Articraft model implementation.
 
-from {sdk_package} import ArticulatedObject, TestContext, TestReport
+import cadquery as cq
+from {sdk_package} import ArticulatedObject, TestContext, TestReport, mesh_from_cadquery
 
 
 def build_object_model() -> ArticulatedObject:
@@ -191,6 +192,9 @@ def run_tests() -> TestReport:
     # - current-pose real 3D overlap detection
     # Use `run_tests()` only for prompt-specific exact checks, targeted poses,
     # and explicit allowances such as `ctx.allow_overlap(...)`.
+    # If overlap QC reports an intersection, classify it first: intentional
+    # embeddings or nested fits should get a scoped allowance; unintended
+    # collisions should be fixed in geometry, support, mount, or pose.
 
     # Encode the actual visual/mechanical claims with prompt-specific exact checks.
     # Cover each applicable category before returning:
@@ -782,7 +786,7 @@ def create_workbench_draft_record(
     model_id: str | None = None,
     openai_transport: str = "http",
     thinking_level: str = "high",
-    max_turns: int = DEFAULT_MAX_TURNS,
+    max_turns: int | None = None,
     system_prompt_path: str = "designer_system_prompt.txt",
     sdk_package: str = "sdk",
     scaffold_mode: str = DEFAULT_SCAFFOLD_MODE,
@@ -822,6 +826,7 @@ def create_workbench_draft_record(
         openai_transport=openai_transport,
         openai_reasoning_summary=openai_reasoning_summary,
     )
+    resolved_max_turns = resolve_max_turns(model_id=selected_model_id, max_turns=max_turns)
     post_success_design_audit = _resolve_post_success_design_audit(
         provider=provider,
         model_id=selected_model_id,
@@ -860,7 +865,7 @@ def create_workbench_draft_record(
             thinking_level=thinking_level,
             openai_transport=openai_transport if provider == "openai" else None,
             openai_reasoning_summary=openai_reasoning_summary if provider == "openai" else None,
-            max_turns=max_turns,
+            max_turns=resolved_max_turns,
             max_cost_usd=max_cost_usd,
         ),
         prompting=PromptingSettings(
@@ -1297,7 +1302,7 @@ async def run_from_input(
     model_id: Optional[str] = None,
     openai_transport: str = "http",
     thinking_level: str,
-    max_turns: int,
+    max_turns: int | None,
     system_prompt_path: str,
     display_enabled: Optional[bool] = None,
     on_turn_start: Optional[Callable[[int], None]] = None,
@@ -1370,7 +1375,7 @@ async def _execute_single_run(
     model_id: Optional[str] = None,
     openai_transport: str = "http",
     thinking_level: str,
-    max_turns: int,
+    max_turns: int | None,
     system_prompt_path: str,
     display_enabled: Optional[bool] = None,
     on_turn_start: Optional[Callable[[int], None]] = None,
@@ -1421,6 +1426,7 @@ async def _execute_single_run(
         openai_transport=openai_transport,
         openai_reasoning_summary=openai_reasoning_summary,
     )
+    resolved_max_turns = resolve_max_turns(model_id=selected_model_id, max_turns=max_turns)
     resolved_post_success_design_audit = _resolve_post_success_design_audit(
         provider=provider,
         model_id=selected_model_id,
@@ -1469,7 +1475,7 @@ async def _execute_single_run(
                         provider=provider,
                         model_id=actual_model_id,
                         thinking_level=thinking_level,
-                        max_turns=max_turns,
+                        max_turns=resolved_max_turns,
                         system_prompt_path=system_prompt_path,
                         sdk_package=sdk_package,
                         scaffold_mode=scaffold_mode,
@@ -1518,7 +1524,7 @@ async def _execute_single_run(
                     provider=provider,
                     model_id=selected_model_id,
                     thinking_level=thinking_level,
-                    max_turns=max_turns,
+                    max_turns=resolved_max_turns,
                     system_prompt_path=system_prompt_path,
                     sdk_package=sdk_package,
                     scaffold_mode=scaffold_mode,
@@ -1548,7 +1554,7 @@ async def _execute_single_run(
             model_id=model_id,
             openai_transport=openai_transport,
             thinking_level=thinking_level,
-            max_turns=max_turns,
+            max_turns=resolved_max_turns,
             system_prompt_path=system_prompt_path,
             trace_dir=str(resolved_context.trace_dir),
             display_enabled=display_enabled,
@@ -1669,7 +1675,7 @@ async def _execute_single_run(
             model_id=actual_model_id,
             openai_transport=openai_transport,
             thinking_level=thinking_level,
-            max_turns=max_turns,
+            max_turns=resolved_max_turns,
             system_prompt_path=loaded_system_prompt_path,
             sdk_package=sdk_package,
             scaffold_mode=scaffold_mode,
@@ -1969,7 +1975,7 @@ async def rerun_record_in_place(
         ),
         _first_string(generation.get("thinking_level"), "high"),
     )
-    max_turns = int(generation.get("max_turns") or DEFAULT_MAX_TURNS)
+    stored_max_turns = generation.get("max_turns")
     openai_reasoning_summary = (
         _optional_string(generation.get("openai_reasoning_summary")) or "auto"
     )
@@ -2009,6 +2015,17 @@ async def rerun_record_in_place(
     model_id = _optional_string(model_id) or stored_model_id
     thinking_level = _optional_string(thinking_level) or stored_thinking_level
     provider = _infer_provider_from_model_id(model_id) or provider
+    selected_model_id = _default_model_id(
+        provider=provider,
+        model_id=model_id,
+        thinking_level=thinking_level,
+        openai_transport=openai_transport,
+        openai_reasoning_summary=openai_reasoning_summary,
+    )
+    max_turns = resolve_max_turns(
+        model_id=selected_model_id,
+        max_turns=stored_max_turns if isinstance(stored_max_turns, int) else None,
+    )
     if max_cost_usd is not None:
         resolved_max_cost_usd = max_cost_usd
     elif stored_max_cost_usd is not None:
@@ -2198,7 +2215,7 @@ def main(argv: list[str] | None = None) -> int:
         choices=["low", "med", "high"],
         help="Thinking budget level.",
     )
-    parser.add_argument("--max-turns", type=int, default=DEFAULT_MAX_TURNS)
+    parser.add_argument("--max-turns", type=int, default=None)
     parser.add_argument(
         "--max-cost-usd",
         type=float,
@@ -2237,7 +2254,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument(
         "--sdk-package",
         default="sdk",
-        help="SDK package to use for prompt selection, scaffolding, and compilation.",
+        help=argparse.SUPPRESS,
     )
     parser.add_argument(
         "--scaffold-mode",

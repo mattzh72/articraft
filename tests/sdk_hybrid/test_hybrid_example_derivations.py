@@ -8,18 +8,18 @@ import pytest
 cq = pytest.importorskip("cadquery")
 
 _PYTHON_FENCE_RE = re.compile(r"```python\n(.*?)```", re.DOTALL)
-# Keep this focused on representative hybrid examples. The heavier gear-family
+# Keep this focused on representative CadQuery examples. The heavier gear-family
 # markdowns are covered by dedicated CadQuery gear tests, and re-executing all
 # of them here turns this smoke file into the slowest part of the suite.
 _EXAMPLE_PATHS = (
-    "sdk/_examples/hybrid/bga_package.md",
-    "sdk/_examples/hybrid/parametric_pin_header.md",
-    "sdk/_examples/hybrid/rj45_surface_mount_jack.md",
-    "sdk/_examples/hybrid/din_rail_clip.md",
-    "sdk/_examples/hybrid/mecanum_wheel.md",
-    "sdk/_examples/hybrid/raspberry_pi_3_model_b_assembly.md",
-    "sdk/_examples/hybrid/pitray_clip.md",
-    "sdk/_examples/hybrid/worm_gear.md",
+    "sdk/_examples/cadquery/bga_package.md",
+    "sdk/_examples/cadquery/parametric_pin_header.md",
+    "sdk/_examples/cadquery/rj45_surface_mount_jack.md",
+    "sdk/_examples/cadquery/din_rail_clip.md",
+    "sdk/_examples/cadquery/mecanum_wheel.md",
+    "sdk/_examples/cadquery/raspberry_pi_3_model_b_assembly.md",
+    "sdk/_examples/cadquery/pitray_clip.md",
+    "sdk/_examples/cadquery/worm_gear.md",
 )
 
 

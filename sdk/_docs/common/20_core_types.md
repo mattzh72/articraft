@@ -84,6 +84,8 @@ Cylinder(radius: float, length: float)
 
 - `radius`: cylinder radius in meters.
 - `length`: full cylinder length along local `+Z`.
+- `height`: accepted as a compatibility alias for `length`, but prefer `length`
+  in new code.
 
 ### `Sphere`
 
@@ -143,6 +145,8 @@ Visual(
 - `geometry`: visible geometry descriptor.
 - `origin`: local transform of this visual on its part.
 - `material`: either a `Material` object or a registered material name.
+- `color`: when adding visuals through `Part.visual(...)`, accepted as a
+  compatibility alias for `material`; prefer `material` in new code.
 - `name`: optional visual name. Use this when tests or probe snippets need to
   target a local feature.
 

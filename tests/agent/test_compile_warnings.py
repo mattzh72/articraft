@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import linecache
 from pathlib import Path
 from types import SimpleNamespace
 
@@ -330,6 +331,53 @@ def test_runtime_error_failure_omits_location_lines() -> None:
     assert "Code:" not in signal.details
 
 
+def test_runtime_error_failure_uses_remote_traceback_location_lines() -> None:
+    exc = RuntimeError("Standard_Failure:")
+    setattr(exc, "remote_error_type", "Standard_Failure")
+    setattr(
+        exc,
+        "remote_traceback",
+        "\n".join(
+            [
+                "Traceback (most recent call last):",
+                '  File "/tmp/model.py", line 12, in <module>',
+                "    build()",
+                '  File "/tmp/lib.py", line 34, in build',
+                "    return fillet_builder.Shape()",
+                "Standard_Failure: BRep_API: command not done",
+            ]
+        ),
+    )
+
+    bundle = build_compile_signal_bundle(status="failure", exc=exc)
+
+    signal = next(signal for signal in bundle.signals if signal.kind == "compile_runtime")
+    assert signal.summary == "Standard_Failure: BRep_API: command not done"
+    assert "Location: tmp/lib.py:34" in signal.details
+    assert "/tmp/lib.py:34" not in signal.details
+    assert "Code: return fillet_builder.Shape()" in signal.details
+
+
+def test_non_runtime_error_failure_sanitizes_local_location_lines() -> None:
+    source = "def build():\n    raise ValueError('bad loft')\n\nbuild()\n"
+    filename = "/Users/matthewzhou/articraft/agent/generated_model.py"
+    linecache.cache[filename] = (len(source), None, source.splitlines(True), filename)
+
+    try:
+        exec(compile(source, filename, "exec"), {})
+    except ValueError as exc:
+        bundle = build_compile_signal_bundle(status="failure", exc=exc)
+    else:
+        raise AssertionError("Expected ValueError")
+    finally:
+        linecache.cache.pop(filename, None)
+
+    signal = next(signal for signal in bundle.signals if signal.kind == "compile_runtime")
+    assert "Location: agent/generated_model.py:2" in signal.details
+    assert "/Users/matthewzhou/articraft/agent/generated_model.py:2" not in signal.details
+    assert "Code:     raise ValueError('bad loft')" in signal.details
+
+
 def test_compile_signal_bundle_accepts_protocol_shaped_test_report() -> None:
     report = SimpleNamespace(
         failures=(),
@@ -478,9 +526,11 @@ def test_compile_signal_bundle_classifies_compiler_owned_overlap_failure() -> No
     assert signal.source == "compiler"
     assert (
         signal.summary
-        == "Compiler-owned global QC found real 3D overlap in the current pose (`fail_if_parts_overlap_in_current_pose()`)."
+        == "Compiler-owned global QC reported real 3D overlap in the current pose (`fail_if_parts_overlap_in_current_pose()`)."
     )
-    assert "compiler-owned global qc found real part overlap" in bundle.summary.lower()
+    assert "compiler-owned global qc reported part overlap that needs classification" in (
+        bundle.summary.lower()
+    )
 
 
 def test_harness_injects_exact_geometry_contract_guidance(tmp_path: Path) -> None:

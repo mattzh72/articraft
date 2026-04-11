@@ -231,7 +231,8 @@ def test_convert_tools_normalizes_function_schemas_for_responses_strict_mode() -
 
     read_file = next(tool for tool in converted if tool.get("name") == "read_file")
     assert read_file["strict"] is True
-    assert read_file["parameters"]["required"] == ["offset", "limit"]
+    assert read_file["parameters"]["required"] == ["path", "offset", "limit"]
+    assert read_file["parameters"]["properties"]["path"]["type"] == "string"
     assert read_file["parameters"]["properties"]["offset"]["type"] == ["integer", "null"]
     assert read_file["parameters"]["properties"]["limit"]["type"] == ["integer", "null"]
     assert read_file["parameters"]["additionalProperties"] is False

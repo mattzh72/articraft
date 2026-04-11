@@ -90,6 +90,37 @@ from .types import (
     Visual,
 )
 
+_CADQUERY_EXPORTS = {
+    "CadQueryMeshExport",
+    "cadquery_local_aabb",
+    "export_cadquery_components",
+    "export_cadquery_mesh",
+    "mesh_components_from_cadquery",
+    "mesh_from_cadquery",
+    "tessellate_cadquery",
+}
+
+_GEAR_EXPORTS = {
+    "GearBase",
+    "SpurGear",
+    "HerringboneGear",
+    "RingGear",
+    "HerringboneRingGear",
+    "PlanetaryGearset",
+    "HerringbonePlanetaryGearset",
+    "BevelGear",
+    "BevelGearPair",
+    "RackGear",
+    "HerringboneRackGear",
+    "Worm",
+    "CrossedHelicalGear",
+    "CrossedGearPair",
+    "HyperbolicGear",
+    "HyperbolicGearPair",
+    "gear",
+    "addGear",
+}
+
 __all__ = [
     "SDKError",
     "ValidationError",
@@ -176,15 +207,57 @@ __all__ = [
     "Part",
     "Sphere",
     "Visual",
+    "CadQueryMeshExport",
+    "cadquery_local_aabb",
+    "export_cadquery_components",
+    "export_cadquery_mesh",
+    "mesh_components_from_cadquery",
+    "mesh_from_cadquery",
+    "tessellate_cadquery",
+    "GearBase",
+    "SpurGear",
+    "HerringboneGear",
+    "RingGear",
+    "HerringboneRingGear",
+    "PlanetaryGearset",
+    "HerringbonePlanetaryGearset",
+    "BevelGear",
+    "BevelGearPair",
+    "RackGear",
+    "HerringboneRackGear",
+    "Worm",
+    "CrossedHelicalGear",
+    "CrossedGearPair",
+    "HyperbolicGear",
+    "HyperbolicGearPair",
+    "gear",
+    "addGear",
 ]
 
 
 def __getattr__(name: str):
+    if name in _CADQUERY_EXPORTS:
+        from sdk._extensions.cadquery import v0 as _cadquery_v0
+
+        value = getattr(_cadquery_v0, name)
+        globals()[name] = value
+        return value
+    if name in _GEAR_EXPORTS:
+        from . import gears as _gears
+
+        value = getattr(_gears, name)
+        globals()[name] = value
+        return value
     if name == "AssetContext":
         from .assets import AssetContext
 
         globals()[name] = AssetContext
         return AssetContext
+    if name == "save_cadquery_obj":
+        from sdk._extensions.cadquery.v0 import save_cadquery_obj
+
+        globals()[name] = save_cadquery_obj
+        return save_cadquery_obj
     if name == "LouverPanelGeometry":
         raise AttributeError(
             f"module {__name__!r} no longer exposes {name!r}; "

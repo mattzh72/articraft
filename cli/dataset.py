@@ -9,7 +9,6 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 from agent.cost import max_cost_usd_from_env, parse_max_cost_usd
-from agent.defaults import DEFAULT_MAX_TURNS
 from agent.prompts import normalize_sdk_package
 from agent.runner import run_from_input
 from agent.tools import build_initial_user_content, resolve_image_path
@@ -277,7 +276,7 @@ def _run_single_category_workflow(
     model_id: str | None,
     image: str | None,
     thinking_level: str,
-    max_turns: int,
+    max_turns: int | None,
     max_cost_usd: float | None,
     system_prompt_path: str,
     sdk_package: str,
@@ -684,8 +683,8 @@ def _build_parser() -> argparse.ArgumentParser:
     run_single.add_argument(
         "--max-turns",
         type=int,
-        default=DEFAULT_MAX_TURNS,
-        help="Max-turns cap for the generation run.",
+        default=None,
+        help="Max-turns cap for the generation run. Defaults vary by model.",
     )
     run_single.add_argument(
         "--max-cost-usd",
@@ -701,7 +700,7 @@ def _build_parser() -> argparse.ArgumentParser:
     run_single.add_argument(
         "--sdk-package",
         default="sdk",
-        help="SDK package to use for prompt selection, scaffolding, and compilation.",
+        help=argparse.SUPPRESS,
     )
     run_single.add_argument(
         "--scaffold-mode",
@@ -762,7 +761,7 @@ def _build_parser() -> argparse.ArgumentParser:
     )
     upsert_category.add_argument(
         "--target-sdk-version",
-        choices=("base", "hybrid_cad"),
+        choices=("base",),
         help="Optional target SDK version override.",
     )
     subparsers.add_parser(

@@ -2115,6 +2115,8 @@ class TestContext:
         max_penetration: Optional[float] = None,
         positive_elem: Optional[object] = None,
         negative_elem: Optional[object] = None,
+        elem_a: Optional[object] = None,
+        elem_b: Optional[object] = None,
         name: Optional[str] = None,
     ) -> bool:
         positive_name = _named_ref(positive_link, kind="positive_link")
@@ -2123,6 +2125,14 @@ class TestContext:
         check_name = name or f"expect_gap({positive_name},{negative_name},axis={axis_key or axis})"
         if axis_err is not None or axis_key is None or axis_sign < 0.0:
             return self._record(check_name, False, axis_err or "axis must be one of: x, y, z")
+        if positive_elem is not None and elem_a is not None:
+            raise TypeError("expect_gap() accepts only one of 'positive_elem' or alias 'elem_a'")
+        if negative_elem is not None and elem_b is not None:
+            raise TypeError("expect_gap() accepts only one of 'negative_elem' or alias 'elem_b'")
+        if elem_a is not None:
+            positive_elem = elem_a
+        if elem_b is not None:
+            negative_elem = elem_b
 
         positive_elements, _resolved_positive, positive_elem_name, positive_error = (
             self._resolve_exact_elements(
@@ -2251,6 +2261,8 @@ class TestContext:
         margin: float = 0.0,
         inner_elem: Optional[object] = None,
         outer_elem: Optional[object] = None,
+        elem_a: Optional[object] = None,
+        elem_b: Optional[object] = None,
         name: Optional[str] = None,
     ) -> bool:
         inner_name = _named_ref(inner_link, kind="inner_link")
@@ -2261,6 +2273,14 @@ class TestContext:
         )
         if axes_err is not None:
             return self._record(check_name, False, axes_err)
+        if inner_elem is not None and elem_a is not None:
+            raise TypeError("expect_within() accepts only one of 'inner_elem' or alias 'elem_a'")
+        if outer_elem is not None and elem_b is not None:
+            raise TypeError("expect_within() accepts only one of 'outer_elem' or alias 'elem_b'")
+        if elem_a is not None:
+            inner_elem = elem_a
+        if elem_b is not None:
+            outer_elem = elem_b
 
         inner_elements, _resolved_inner, inner_elem_name, inner_error = (
             self._resolve_exact_elements(

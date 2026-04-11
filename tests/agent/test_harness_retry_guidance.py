@@ -50,13 +50,13 @@ def test_compile_failure_signal_message_has_structured_sections() -> None:
     assert "<summary>" in content
     assert "<failures>" in content
     assert "<response_rules>" in content
-    assert "compile execution failed" in content
+    assert "Primary issue: RuntimeError: ValueError: bad loft" in content
     assert "Fix the compile/runtime error first." in content
     assert "Geometry repair is blocked" in content
     assert conversation
 
 
-def test_repeated_compile_failure_signal_message_escalates_to_rewrite() -> None:
+def test_repeated_compile_failure_signal_message_suggests_probe_before_more_tweaks() -> None:
     agent = ArticraftAgent.__new__(ArticraftAgent)
     agent._last_compile_failure_sig = None
     agent._consecutive_compile_failure_count = 0
@@ -69,7 +69,9 @@ def test_repeated_compile_failure_signal_message_escalates_to_rewrite() -> None:
 
     assert "This failure matches the previous compile attempt." in content
     assert "This failure class repeated." in content
-    assert "rewrite the affected region from the root cause" in content
+    assert "`probe_model`" in content
+    assert "pair_report(...)" in content
+    assert "add a precise allowance when the finding is intentional" in content
 
 
 def test_compile_failure_streak_escalates_even_when_signature_changes() -> None:
@@ -131,7 +133,8 @@ def test_compile_failure_streak_escalates_even_when_signature_changes() -> None:
         )
 
     assert "This is compile failure 3 in a row." in content
-    assert "You are in a repair loop." in content
+    assert "likely to be more informative than another small placement" in content
+    assert "find_floating_parts(...)" in content
 
 
 def test_missing_exact_geometry_loop_avoids_geometry_rewrite_advice() -> None:
@@ -192,3 +195,37 @@ def test_exact_contact_gap_guidance_is_targeted_in_compile_feedback() -> None:
 
     assert "This is a gap, not an overlap." in content
     assert "verify that the tested pair is the right pair" in content
+    assert "gap_report(...)" in content
+    assert "within_report(...)" in content
+
+
+def test_compiler_owned_isolated_part_guidance_suggests_probe_helpers() -> None:
+    agent = ArticraftAgent.__new__(ArticraftAgent)
+    agent._last_compile_failure_sig = None
+    agent._consecutive_compile_failure_count = 0
+    agent.trace_writer = None
+
+    bundle = build_compile_signal_bundle(
+        status="failure",
+        test_report=SDKTestReport(
+            passed=False,
+            checks_run=1,
+            checks=("fail_if_isolated_parts()",),
+            failures=(
+                SimpleNamespace(
+                    name="fail_if_isolated_parts()",
+                    details=(
+                        "Isolated parts detected (samples=1, contact_tol=1e-06):\n"
+                        "- part='antenna' nearest_part='body' approx_gap=0.01m pose_index=0 pose={} backend=fcl"
+                    ),
+                ),
+            ),
+            warnings=(),
+            allowances=(),
+        ),
+    )
+    content = agent._append_compile_failure_signals([], bundle=bundle)
+
+    assert "consider using `probe_model`" in content
+    assert "find_floating_parts(...)" in content
+    assert "nearest_neighbors(...)" in content

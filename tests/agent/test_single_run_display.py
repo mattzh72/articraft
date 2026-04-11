@@ -77,9 +77,9 @@ def test_add_tool_call_shows_all_find_examples_titles() -> None:
         success=True,
         duration=0.02,
         result=[
-            {"title": "Raspberry Pi 3 Model B Assembly", "path": "sdk/_examples/hybrid/foo.md"},
-            {"title": "Parametric Pin Header", "path": "sdk/_examples/hybrid/bar.md"},
-            {"title": "RJ45 Surface-mount Jack", "path": "sdk/_examples/hybrid/baz.md"},
+            {"title": "Raspberry Pi 3 Model B Assembly", "path": "sdk/_examples/cadquery/foo.md"},
+            {"title": "Parametric Pin Header", "path": "sdk/_examples/cadquery/bar.md"},
+            {"title": "RJ45 Surface-mount Jack", "path": "sdk/_examples/cadquery/baz.md"},
         ],
     )
 
@@ -103,7 +103,7 @@ def test_add_tool_call_marks_weakly_relevant_find_example_titles() -> None:
         result=[
             {
                 "title": "PiTray Clip",
-                "path": "sdk/_examples/hybrid/pitray_clip.md",
+                "path": "sdk/_examples/cadquery/pitray_clip.md",
                 "match_quality": "weakly_relevant",
             }
         ],
@@ -111,6 +111,25 @@ def test_add_tool_call_marks_weakly_relevant_find_example_titles() -> None:
 
     output = buffer.getvalue()
     assert "- PiTray Clip [weakly relevant]" in output
+
+
+def test_add_tool_call_shows_read_file_path_before_slice_args() -> None:
+    display, buffer = _make_display()
+
+    display.add_tool_call(
+        tool_name="read_file",
+        args={"path": "docs/sdk/references/geometry/mesh-geometry.md", "offset": 1, "limit": 200},
+        success=True,
+        duration=0.02,
+        result='{"result":"L10: runtime"}',
+    )
+
+    output = buffer.getvalue()
+    assert "tool    read_file ✓" in output
+    assert "path: docs/sdk/references/geometry/mesh-geometry.md" in output
+    assert "offset: 1" in output
+    assert "limit: 200" in output
+    assert "... (1 more)" not in output
 
 
 def test_add_tool_call_renders_compile_model_as_compile_event() -> None:
@@ -180,7 +199,7 @@ def test_add_tool_call_renders_compile_model_failure_details() -> None:
             "<compile_signals>\n"
             "<summary>\n"
             "status=failure failures=1 warnings=0 notes=0\n"
-            "Primary issue: compile execution failed.\n"
+            "Primary issue: ValueError: bad loft\n"
             "</summary>\n\n"
             "<failures>\n"
             "- [compile_runtime] ValueError: bad loft\n"
@@ -192,13 +211,13 @@ def test_add_tool_call_renders_compile_model_failure_details() -> None:
             "</response_rules>\n"
             "</compile_signals>"
         ),
-        compilation={"status": "error", "error": "Primary issue: compile execution failed."},
+        compilation={"status": "error", "error": "Primary issue: ValueError: bad loft"},
     )
 
     output = buffer.getvalue()
     assert "compile ✗" in output
     assert "status=failure failures=1 warnings=0 notes=0" in output
-    assert "Primary issue: compile execution failed." in output
+    assert "Primary issue: ValueError: bad loft" in output
     assert "[compile_runtime] ValueError: bad loft" in output
     assert "Traceback line 1" in output
     assert "Traceback line 2" in output

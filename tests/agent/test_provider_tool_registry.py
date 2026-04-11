@@ -11,8 +11,6 @@ from agent.tools import build_tool_registry
 def test_provider_tool_registry_schemas() -> None:
     openai_registry = build_tool_registry("openai", sdk_package="sdk")
     gemini_registry = build_tool_registry("gemini", sdk_package="sdk")
-    hybrid_openai_registry = build_tool_registry("openai", sdk_package="sdk_hybrid")
-    hybrid_gemini_registry = build_tool_registry("gemini", sdk_package="sdk_hybrid")
 
     assert set(openai_registry.get_all_tool_names()) == {
         "read_file",
@@ -23,26 +21,12 @@ def test_provider_tool_registry_schemas() -> None:
     }
     assert set(gemini_registry.get_all_tool_names()) == {
         "read_code",
-        "edit_code",
-        "compile_model",
-        "probe_model",
-        "find_examples",
-    }
-    assert set(hybrid_openai_registry.get_all_tool_names()) == {
         "read_file",
-        "apply_patch",
-        "compile_model",
-        "probe_model",
-        "find_examples",
-    }
-    assert set(hybrid_gemini_registry.get_all_tool_names()) == {
-        "read_code",
         "edit_code",
         "compile_model",
         "probe_model",
         "find_examples",
     }
-
     openai_schemas = openai_registry.get_tool_schemas()
     apply_patch_schema = next(s for s in openai_schemas if s.get("name") == "apply_patch")
     read_file_schema = next(
@@ -57,9 +41,23 @@ def test_provider_tool_registry_schemas() -> None:
     find_examples_schema = next(
         s for s in openai_schemas if s.get("function", {}).get("name") == "find_examples"
     )
+    gemini_schemas = gemini_registry.get_tool_schemas()
+    edit_code_schema = next(
+        s for s in gemini_schemas if s.get("function", {}).get("name") == "edit_code"
+    )
     assert apply_patch_schema.get("type") == "custom"
+    apply_patch_description = apply_patch_schema["description"]
+    assert "current bound file" in apply_patch_description
+    assert "Single-file mode only" in apply_patch_description
+    assert "`*** Add File`, `*** Delete File`, or `*** Move to`" in apply_patch_description
     read_file_props = read_file_schema["function"]["parameters"]["properties"]
-    assert set(read_file_props.keys()) == {"offset", "limit"}
+    assert set(read_file_props.keys()) == {"path", "offset", "limit"}
+    edit_code_props = edit_code_schema["function"]["parameters"]["properties"]
+    assert set(edit_code_props.keys()) == {"old_string", "new_string", "replace_all"}
+    assert edit_code_schema["function"]["parameters"]["required"] == [
+        "old_string",
+        "new_string",
+    ]
     compile_model_props = compile_model_schema["function"]["parameters"]["properties"]
     assert set(compile_model_props.keys()) == set()
     assert (
@@ -101,14 +99,14 @@ def test_tool_registry_rejects_hidden_file_path_parameter() -> None:
         asyncio.run(
             openai_registry.build_invocation(
                 "read_file",
-                {"offset": 1, "limit": 20, "file_path": "/tmp/model.py"},
+                {"path": "model.py", "offset": 1, "limit": 20, "file_path": "/tmp/model.py"},
             )
         )
 
     with pytest.raises(ValidationError):
         asyncio.run(
             gemini_registry.build_invocation(
-                "read_code",
+                "read_file",
                 {"file_path": "/tmp/model.py"},
             )
         )
@@ -120,10 +118,11 @@ def test_openai_tool_registry_treats_null_optional_args_as_defaults() -> None:
     read_file = asyncio.run(
         openai_registry.build_invocation(
             "read_file",
-            {"offset": None, "limit": None},
+            {"path": "model.py", "offset": None, "limit": None},
         )
     )
     assert read_file is not None
+    assert read_file.params.path == "model.py"
     assert read_file.params.offset == 1
     assert read_file.params.limit == 200
 

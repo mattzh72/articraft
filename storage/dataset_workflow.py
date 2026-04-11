@@ -16,10 +16,8 @@ _NON_ALNUM_RE = re.compile(r"[^a-z0-9]+")
 
 
 def sdk_package_to_target_sdk_version(sdk_package: str) -> str | None:
-    if sdk_package == "sdk":
+    if sdk_package in {"sdk", "sdk_hybrid"}:
         return "base"
-    if sdk_package == "sdk_hybrid":
-        return "hybrid_cad"
     return None
 
 
@@ -57,11 +55,7 @@ def allocate_dataset_id(
     category_slug: str,
     reserved_dataset_ids: set[str] | None = None,
 ) -> str:
-    seen_dataset_ids = {
-        str(entry.get("dataset_id") or "")
-        for entry in datasets.list_entries()
-        if isinstance(entry, dict)
-    }
+    seen_dataset_ids = datasets.dataset_ids()
     if reserved_dataset_ids:
         seen_dataset_ids.update(reserved_dataset_ids)
 

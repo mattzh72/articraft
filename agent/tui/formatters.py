@@ -1,5 +1,15 @@
 """Formatting utilities for TUI display."""
 
+_PREFERRED_TOOL_ARG_KEYS = (
+    "path",
+    "query",
+    "offset",
+    "limit",
+    "old_string",
+    "new_string",
+    "replace_all",
+)
+
 
 def format_cost(cost: float) -> str:
     """Format cost as currency string.
@@ -96,12 +106,12 @@ def truncate_text(text: str, max_length: int, suffix: str = "...") -> str:
     return text[: max_length - len(suffix)] + suffix
 
 
-def format_tool_args(args, max_items: int = 3) -> list[str]:
+def format_tool_args(args, max_items: int | None = None) -> list[str]:
     """Format tool arguments for display.
 
     Args:
         args: Tool arguments dictionary or string
-        max_items: Maximum number of items to show
+        max_items: Maximum number of items to show, or None for all
 
     Returns:
         List of formatted argument strings like ["file: foo.py", "line: 42"]
@@ -117,9 +127,15 @@ def format_tool_args(args, max_items: int = 3) -> list[str]:
     if not isinstance(args, dict):
         return [str(args)] if args else []
 
+    preferred_order = {key: index for index, key in enumerate(_PREFERRED_TOOL_ARG_KEYS)}
+    ordered_items = sorted(
+        args.items(),
+        key=lambda item: (preferred_order.get(item[0], len(preferred_order)), item[0]),
+    )
+
     formatted = []
-    for i, (key, value) in enumerate(args.items()):
-        if i >= max_items:
+    for i, (key, value) in enumerate(ordered_items):
+        if max_items is not None and i >= max_items:
             formatted.append(f"... ({len(args) - max_items} more)")
             break
 

@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import asyncio
 import base64
+import json
 from datetime import datetime, timezone
 from types import SimpleNamespace
 
@@ -472,6 +473,44 @@ def test_convert_message_preserves_thought_flag_when_replaying_google_parts() ->
     assert tool_part.thought_signature == b"sig"
 
 
+def test_convert_response_serializes_edit_code_function_call_args() -> None:
+    provider = GeminiLLM(dry_run=True)
+
+    response = SimpleNamespace(
+        candidates=[
+            SimpleNamespace(
+                content=SimpleNamespace(
+                    parts=[
+                        SimpleNamespace(
+                            function_call=SimpleNamespace(
+                                id="call_edit",
+                                name="edit_code",
+                                args={
+                                    "old_string": '"draft_model"',
+                                    "new_string": '"draft_model_v2"',
+                                },
+                            ),
+                            thought_signature=None,
+                        )
+                    ]
+                )
+            )
+        ]
+    )
+
+    converted = provider._convert_response(response)
+
+    assert converted["content"] == ""
+    assert len(converted["tool_calls"]) == 1
+    tool_call = converted["tool_calls"][0]
+    assert tool_call["id"] == "call_edit"
+    assert tool_call["function"]["name"] == "edit_code"
+    assert json.loads(tool_call["function"]["arguments"]) == {
+        "old_string": '"draft_model"',
+        "new_string": '"draft_model_v2"',
+    }
+
+
 def test_count_generate_request_tokens_uses_sdk_count_tokens() -> None:
     provider = GeminiLLM(dry_run=True)
     captured: dict[str, object] = {}
@@ -532,6 +571,47 @@ def test_prepare_next_request_disables_prefix_token_count_after_unsupported_erro
             'Invalid JSON payload received. Unknown name \\"tools\\": Cannot find field.\\n'
             'Invalid JSON payload received. Unknown name \\"generationConfig\\": Cannot find field."}}'
         )
+
+    provider._count_prefix_tokens = fake_count_prefix_tokens  # type: ignore[method-assign]
+
+    first = asyncio.run(
+        provider.prepare_next_request(
+            system_prompt="system",
+            messages=[
+                {"role": "user", "content": "sdk docs"},
+                {"role": "user", "content": "task"},
+            ],
+            tools=[],
+            completed_turns=0,
+        )
+    )
+    second = asyncio.run(
+        provider.prepare_next_request(
+            system_prompt="system",
+            messages=[
+                {"role": "user", "content": "sdk docs"},
+                {"role": "user", "content": "task"},
+            ],
+            tools=[],
+            completed_turns=1,
+        )
+    )
+
+    assert count_attempts == 1
+    assert first.trace_events[0].payload["reason"] == "token_counting_disabled"
+    assert second.trace_events[0].payload["reason"] == "token_counting_disabled"
+
+
+def test_prepare_next_request_disables_prefix_token_count_after_sdk_value_error() -> None:
+    provider = GeminiLLM(dry_run=True)
+    count_attempts = 0
+
+    async def fake_count_prefix_tokens(
+        *, system_prompt: str, tools: list[dict], messages: list[dict]
+    ) -> int:
+        nonlocal count_attempts
+        count_attempts += 1
+        raise ValueError("system_instruction parameter is not supported in Gemini API.")
 
     provider._count_prefix_tokens = fake_count_prefix_tokens  # type: ignore[method-assign]
 

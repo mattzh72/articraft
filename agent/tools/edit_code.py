@@ -10,6 +10,7 @@ from agent.tools.base import (
     ToolParamsModel,
     ToolResult,
     make_tool_schema,
+    validate_tool_params,
 )
 from agent.tools.code_region import (
     extract_editable_code,
@@ -192,10 +193,10 @@ class EditCodeTool(BaseDeclarativeTool):
                     ),
                 },
             },
-            required=["old_string", "new_string", "replace_all"],
+            required=["old_string", "new_string"],
         )
         super().__init__("edit_code", schema)
 
     async def build(self, params: dict) -> EditCodeInvocation:
-        validated = EditCodeParams(**params)
+        validated = validate_tool_params(EditCodeParams, params)
         return EditCodeInvocation(validated)

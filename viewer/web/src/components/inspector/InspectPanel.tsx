@@ -10,7 +10,7 @@ import {
   saveRecordSecondaryRating,
 } from "@/lib/api";
 import { formatCost } from "@/lib/dashboard-stats";
-import { buildRecordPath, copyTextToClipboard } from "@/lib/record-path";
+import { buildRecordPath, buildRepoPath, copyTextToClipboard } from "@/lib/record-path";
 import { findStagingEntryInBootstrap } from "@/lib/record-summary";
 import { useViewer, useViewerDispatch } from "@/lib/viewer-context";
 import { Badge } from "@/components/ui/badge";
@@ -55,6 +55,64 @@ function SectionLabel({ children }: { children: React.ReactNode }): JSX.Element 
     <div className="flex items-center gap-2 pb-2">
       <span className="text-[10px] font-medium uppercase tracking-[0.05em] text-[var(--text-tertiary)]">{children}</span>
       <div className="h-px flex-1 bg-[var(--border-subtle)]" />
+    </div>
+  );
+}
+
+type PathCardProps = {
+  path: string | null;
+  copyState: "idle" | "copied" | "error";
+  openState: "idle" | "opened" | "error";
+  onCopy: () => void;
+  onOpen: () => void;
+};
+
+function PathCard({ path, copyState, openState, onCopy, onOpen }: PathCardProps): JSX.Element {
+  return (
+    <div className="rounded-lg border border-[var(--border-subtle)] bg-[var(--surface-1)] px-3 py-2.5">
+      <div className="flex items-center justify-between gap-2">
+        <span className="text-[10px] font-medium uppercase tracking-[0.05em] text-[var(--text-tertiary)]">
+          Path
+        </span>
+        <div className="flex shrink-0 items-center gap-0.5">
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <button
+                type="button"
+                aria-label={copyState === "copied" ? "Copied path" : "Copy path"}
+                className="flex size-5 cursor-pointer items-center justify-center rounded-md text-[var(--text-quaternary)] transition-colors duration-100 hover:bg-[var(--surface-0)] hover:text-[var(--text-secondary)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-soft)]"
+                onClick={onCopy}
+              >
+                <Copy className={`size-3 ${copyState === "copied" ? "text-[var(--success)]" : ""}`} />
+              </button>
+            </TooltipTrigger>
+            <TooltipContent side="top">
+              {copyState === "copied" ? "Copied!" : copyState === "error" ? "Failed" : "Copy path"}
+            </TooltipContent>
+          </Tooltip>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <button
+                type="button"
+                aria-label={openState === "opened" ? "Opened folder" : "Open folder"}
+                className="flex size-5 cursor-pointer items-center justify-center rounded-md text-[var(--text-quaternary)] transition-colors duration-100 hover:bg-[var(--surface-0)] hover:text-[var(--text-secondary)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-soft)]"
+                onClick={onOpen}
+              >
+                <FolderOpen className={`size-3 ${openState === "opened" ? "text-[var(--success)]" : ""}`} />
+              </button>
+            </TooltipTrigger>
+            <TooltipContent side="top">
+              {openState === "opened" ? "Opened!" : openState === "error" ? "Failed" : "Open folder"}
+            </TooltipContent>
+          </Tooltip>
+        </div>
+      </div>
+      <p
+        className="mt-2 break-all font-mono text-[10px] leading-[1.5] text-[var(--text-secondary)]"
+        title={path ?? undefined}
+      >
+        {path ?? "--"}
+      </p>
     </div>
   );
 }
@@ -300,6 +358,8 @@ export function InspectPanel({
   const joints = useMemo(() => urdfSpec?.joints ?? [], [urdfSpec?.joints]);
   const movableJointCount = joints.filter(isMovableJoint).length;
   const recordPath = bootstrap && selectedRecordId ? buildRecordPath(bootstrap.repo_root, selectedRecordId) : null;
+  const stagingPath =
+    bootstrap && stagingEntry ? buildRepoPath(bootstrap.repo_root, stagingEntry.staging_dir) : (stagingEntry?.staging_dir ?? null);
   const stagingSelectionKey =
     selection?.kind === "staging" ? `${selection.runId}:${selection.recordId}` : null;
   const recordSelectionKey = selection?.kind === "record" ? selection.recordId : null;
@@ -523,13 +583,14 @@ export function InspectPanel({
   }, [dispatch, record, savingSecondaryRating, selectedRecordId]);
 
   async function handleCopyRecordPath(): Promise<void> {
-    if (!recordPath) {
+    const pathToCopy = isStaging ? stagingPath : recordPath;
+    if (!pathToCopy) {
       setCopyState("error");
       return;
     }
 
     try {
-      await copyTextToClipboard(recordPath);
+      await copyTextToClipboard(pathToCopy);
       setCopyState("copied");
     } catch {
       setCopyState("error");
@@ -654,6 +715,13 @@ export function InspectPanel({
                   {stagingEntry.status ?? "unknown"}
                 </Badge>
               </div>
+              <PathCard
+                path={stagingPath}
+                copyState={copyState}
+                openState={openState}
+                onCopy={() => void handleCopyRecordPath()}
+                onOpen={() => void handleOpenRecordFolder()}
+              />
               <div className="space-y-0">
                 <div className="prop-row">
                   <span className="prop-label">Run ID</span>
@@ -690,24 +758,10 @@ export function InspectPanel({
                       ? "Loading..."
                       : stagingCostStatus === "loaded"
                         ? formatCost(stagingCostUsd)
-                        : "--"}
+                      : "--"}
                   </span>
                 </div>
               </div>
-              <button
-                type="button"
-                onClick={() => void handleOpenRecordFolder()}
-                className="flex w-full items-center gap-2 rounded-lg border border-[var(--border-subtle)] bg-[var(--surface-1)] px-3 py-2 text-left text-[11px] font-medium text-[var(--text-secondary)] transition-colors hover:bg-[var(--surface-0)] hover:text-[var(--text-primary)]"
-              >
-                <FolderOpen className={`size-3.5 ${openState === "opened" ? "text-[var(--success)]" : ""}`} />
-                <span>
-                  {openState === "opened"
-                    ? "Opened staging folder"
-                    : openState === "error"
-                      ? "Open failed"
-                      : "Open staging folder"}
-                </span>
-              </button>
             </div>
           </section>
 
@@ -852,51 +906,13 @@ export function InspectPanel({
         <section>
           <SectionLabel>Info</SectionLabel>
           <div className="space-y-3">
-            <div className="rounded-lg border border-[var(--border-subtle)] bg-[var(--surface-1)] px-3 py-2.5">
-              <div className="flex items-center justify-between gap-2">
-                <span className="text-[10px] font-medium uppercase tracking-[0.05em] text-[var(--text-tertiary)]">
-                  Path
-                </span>
-                <div className="flex shrink-0 items-center gap-0.5">
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <button
-                        type="button"
-                        aria-label={copyState === "copied" ? "Copied object path" : "Copy object path"}
-                        className="flex size-5 cursor-pointer items-center justify-center rounded-md text-[var(--text-quaternary)] transition-colors duration-100 hover:bg-[var(--surface-0)] hover:text-[var(--text-secondary)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-soft)]"
-                        onClick={() => void handleCopyRecordPath()}
-                      >
-                        <Copy className={`size-3 ${copyState === "copied" ? "text-[var(--success)]" : ""}`} />
-                      </button>
-                    </TooltipTrigger>
-                    <TooltipContent side="top">
-                      {copyState === "copied" ? "Copied!" : copyState === "error" ? "Failed" : "Copy path"}
-                    </TooltipContent>
-                  </Tooltip>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <button
-                        type="button"
-                        aria-label={openState === "opened" ? "Opened object folder" : "Open object folder"}
-                        className="flex size-5 cursor-pointer items-center justify-center rounded-md text-[var(--text-quaternary)] transition-colors duration-100 hover:bg-[var(--surface-0)] hover:text-[var(--text-secondary)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-soft)]"
-                        onClick={() => void handleOpenRecordFolder()}
-                      >
-                        <FolderOpen className={`size-3 ${openState === "opened" ? "text-[var(--success)]" : ""}`} />
-                      </button>
-                    </TooltipTrigger>
-                    <TooltipContent side="top">
-                      {openState === "opened" ? "Opened!" : openState === "error" ? "Failed" : "Open folder"}
-                    </TooltipContent>
-                  </Tooltip>
-                </div>
-              </div>
-              <p
-                className="mt-2 break-all font-mono text-[10px] leading-[1.5] text-[var(--text-secondary)]"
-                title={recordPath ?? undefined}
-              >
-                {recordPath ?? "--"}
-              </p>
-            </div>
+            <PathCard
+              path={recordPath}
+              copyState={copyState}
+              openState={openState}
+              onCopy={() => void handleCopyRecordPath()}
+              onOpen={() => void handleOpenRecordFolder()}
+            />
             <div className="space-y-0">
               <div className="prop-row">
                 <span className="prop-label">SDK</span>

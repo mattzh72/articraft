@@ -394,7 +394,10 @@ def test_compile_urdf_report_fails_when_model_has_multiple_root_parts(tmp_path: 
     script_path = tmp_path / "model.py"
     _write_multiple_root_model_script(script_path)
 
-    with pytest.raises(RuntimeError, match="check_single_root_part"):
+    with pytest.raises(
+        RuntimeError,
+        match="check_single_root_part|exactly one root part",
+    ):
         compile_urdf_report(script_path, run_checks=True, target="full")
 
 
@@ -523,7 +526,7 @@ def test_compile_urdf_report_does_not_ignore_non_geometry_failures(tmp_path: Pat
         compile_urdf_report(script_path, ignore_geom_qc=True)
 
 
-def test_compile_urdf_report_rejects_base_sdk_imports_for_hybrid_runs(tmp_path: Path) -> None:
+def test_compile_urdf_report_accepts_sdk_hybrid_alias(tmp_path: Path) -> None:
     script_path = tmp_path / "model.py"
     script_path.write_text(
         "\n".join(
@@ -540,14 +543,11 @@ def test_compile_urdf_report_rejects_base_sdk_imports_for_hybrid_runs(tmp_path: 
         encoding="utf-8",
     )
 
-    with pytest.raises(RuntimeError, match="import from `sdk_hybrid`, not `sdk`"):
-        compile_urdf_report(script_path, sdk_package="sdk_hybrid", run_checks=False)
+    report = compile_urdf_report(script_path, sdk_package="sdk_hybrid", run_checks=False)
+    assert "<robot" in report.urdf_xml
 
 
-def test_compile_urdf_report_runs_hybrid_dependency_preflight_before_execution(
-    tmp_path: Path,
-    monkeypatch: pytest.MonkeyPatch,
-) -> None:
+def test_compile_urdf_report_sdk_hybrid_alias_executes_like_sdk(tmp_path: Path) -> None:
     script_path = tmp_path / "model.py"
     marker_path = tmp_path / "executed.txt"
     script_path.write_text(
@@ -555,25 +555,19 @@ def test_compile_urdf_report_runs_hybrid_dependency_preflight_before_execution(
             [
                 "from __future__ import annotations",
                 "",
-                f"open({marker_path!r}, 'w', encoding='utf-8').write('ran')",
-                "object_model = None",
+                "from sdk import ArticulatedObject, Box, Origin",
+                "",
+                f"open({str(marker_path)!r}, 'w', encoding='utf-8').write('ran')",
+                "object_model = ArticulatedObject(name='alias_ok')",
+                "base = object_model.part('base')",
+                "base.visual(Box((0.1, 0.1, 0.1)), origin=Origin(xyz=(0.0, 0.0, 0.05)))",
             ]
         ),
         encoding="utf-8",
     )
 
-    def fail_preflight() -> None:
-        raise RuntimeError(
-            "`sdk_hybrid` requires the `cadquery` package, but it is not installed in the current environment. "
-            "Run `uv sync --group dev` from the repository root, then retry."
-        )
-
-    monkeypatch.setattr("agent.compiler.ensure_sdk_hybrid_dependencies", fail_preflight)
-
-    with pytest.raises(RuntimeError, match="`cadquery` package"):
-        compile_urdf_report(script_path, sdk_package="sdk_hybrid", run_checks=False)
-
-    assert not marker_path.exists()
+    compile_urdf_report(script_path, sdk_package="sdk_hybrid", run_checks=False)
+    assert marker_path.exists()
 
 
 def test_compile_urdf_report_visual_target_omits_collision_entries(tmp_path: Path) -> None:
@@ -705,6 +699,46 @@ def test_compile_urdf_report_can_skip_visual_glb_rewrite(tmp_path: Path) -> None
     assert "assets/meshes/part.glb" not in report.urdf_xml
     assert not (tmp_path / "assets" / "meshes" / "part.glb").exists()
     assert report.signal_bundle.status == "success"
+
+
+def test_compile_urdf_report_preserves_export_exception_details(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    script_path = tmp_path / "model.py"
+    script_path.write_text(
+        "\n".join(
+            [
+                "from __future__ import annotations",
+                "",
+                "from sdk import ArticulatedObject, Box, Origin",
+                "",
+                "object_model = ArticulatedObject(name='export_failure')",
+                "base = object_model.part('base')",
+                "base.visual(Box((0.1, 0.1, 0.1)), origin=Origin(xyz=(0.0, 0.0, 0.05)))",
+            ]
+        ),
+        encoding="utf-8",
+    )
+
+    import agent.compiler as compiler
+
+    original_import_sdk_module = compiler._import_sdk_module
+
+    class _FakeExportModule:
+        @staticmethod
+        def compile_object_to_urdf_xml(*_args, **_kwargs) -> str:
+            raise RuntimeError("Standard_Failure: BRep_API: command not done")
+
+    def fake_import_sdk_module(sdk_package: str, module_suffix: str = ""):
+        if module_suffix == ".v0._urdf_export":
+            return _FakeExportModule()
+        return original_import_sdk_module(sdk_package, module_suffix)
+
+    monkeypatch.setattr(compiler, "_import_sdk_module", fake_import_sdk_module)
+
+    with pytest.raises(RuntimeError, match="Standard_Failure: BRep_API: command not done"):
+        compile_urdf_report(script_path, run_checks=False)
 
 
 def test_compile_urdf_report_rejects_removed_collision_target(tmp_path: Path) -> None:

@@ -19,7 +19,7 @@ from agent.compiler import (
     persist_compile_success_artifacts,
 )
 from agent.cost import CostTracker, is_flash_model, pricing_for_provider_model
-from agent.defaults import DEFAULT_MAX_TURNS
+from agent.defaults import resolve_max_turns
 from agent.feedback import (
     compile_signal_bundle_from_exception,
     contains_code_in_text,
@@ -50,6 +50,7 @@ from agent.tools.base import ToolResult
 from agent.tools.code_region import extract_editable_code
 from agent.traces import TraceWriter
 from agent.tui.single_run import SingleRunDisplay
+from agent.workspace_docs import build_virtual_workspace
 from sdk._profiles import get_sdk_profile
 from sdk._profiles import normalize_scaffold_mode as _normalize_scaffold_mode
 
@@ -58,6 +59,7 @@ logger.setLevel(logging.INFO)
 CONSOLE = Console()
 _FIND_EXAMPLES_SKIPPED_CONTENT = "{Skipped: full content already returned earlier in this run.}"
 _MUTATING_TOOL_NAMES = frozenset({"apply_patch", "edit_code", "write_code"})
+_PARALLEL_SAFE_TOOL_NAMES = frozenset({"read_code", "read_file", "find_examples", "probe_model"})
 _EXACT_ELEMENT_KEYWORDS = frozenset(
     {"elem_a", "elem_b", "positive_elem", "negative_elem", "inner_elem", "outer_elem"}
 )
@@ -178,6 +180,19 @@ def _canonical_json(value: Any) -> str:
     return json.dumps(value, sort_keys=True, separators=(",", ":"), ensure_ascii=False)
 
 
+def _stable_tool_schema_payload(tools: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    def _tool_identity(tool: dict[str, Any]) -> tuple[str, str]:
+        tool_type = str(tool.get("type") or "")
+        if tool_type == "function":
+            function = tool.get("function")
+            if isinstance(function, dict):
+                return tool_type, str(function.get("name") or "")
+        return tool_type, str(tool.get("name") or "")
+
+    normalized = [tool for tool in tools if isinstance(tool, dict)]
+    return sorted(normalized, key=_tool_identity)
+
+
 def _prompt_cache_key_strategy_from_env() -> str:
     raw = os.environ.get("OPENAI_PROMPT_CACHE_KEY_STRATEGY")
     if raw is None:
@@ -197,7 +212,14 @@ def _prompt_cache_key_strategy_from_env() -> str:
 def _prompt_cache_retention_from_env(*, model_id: str) -> Optional[str]:
     raw = os.environ.get("OPENAI_PROMPT_CACHE_RETENTION")
     if raw is None:
-        if model_id.strip().lower().startswith("gpt-5.4"):
+        normalized = model_id.strip().lower()
+        if (
+            normalized == "gpt-5"
+            or normalized.startswith("gpt-5.1")
+            or normalized.startswith("gpt-5-codex")
+            or normalized.startswith("gpt-5.1-codex")
+            or normalized.startswith("gpt-4.1")
+        ):
             return "24h"
         return None
     value = raw.strip()
@@ -254,16 +276,15 @@ def build_openai_prompt_cache_settings(
         return None, retention
 
     normalized_sdk_package = _normalize_sdk_package(sdk_package)
-    normalized_docs_mode = _normalize_sdk_docs_mode(sdk_docs_mode)
+    _normalize_sdk_docs_mode(sdk_docs_mode)
     prefix = (os.environ.get("OPENAI_PROMPT_CACHE_KEY_PREFIX") or "").strip()
     key_payload = {
         "provider": "openai",
         "model_id": model_id.strip(),
         "sdk_package": normalized_sdk_package,
-        "sdk_docs_mode": normalized_docs_mode,
         "system_prompt_sha256": _sha256_text(system_prompt),
         "sdk_docs_sha256": _sha256_text(sdk_docs_context),
-        "tool_schema_sha256": _sha256_text(_canonical_json(tools)),
+        "tool_schema_sha256": _sha256_text(_canonical_json(_stable_tool_schema_payload(tools))),
     }
     digest = _short_cache_digest(_canonical_json(key_payload))
     visible_prefix = "".join(
@@ -292,7 +313,7 @@ class ArticraftAgent:
         model_id: Optional[str] = None,
         openai_transport: str = "http",
         thinking_level: str = "high",
-        max_turns: int = DEFAULT_MAX_TURNS,
+        max_turns: int | None = None,
         system_prompt_path: str = "designer_system_prompt.txt",
         trace_dir: Optional[str] = None,
         display_enabled: Optional[bool] = None,
@@ -309,7 +330,6 @@ class ArticraftAgent:
         runtime_limits: BatchRuntimeLimits | None = None,
     ):
         self.file_path = file_path
-        self.max_turns = max_turns
         self.sdk_package = _normalize_sdk_package(sdk_package)
         self.scaffold_mode = _normalize_scaffold_mode(scaffold_mode)
         self.sdk_docs_mode = _normalize_sdk_docs_mode(sdk_docs_mode)
@@ -359,6 +379,7 @@ class ArticraftAgent:
             raise ValueError(f"Unsupported provider: {provider}")
 
         actual_model_id = self.llm.model_id
+        self.max_turns = resolve_max_turns(model_id=actual_model_id, max_turns=max_turns)
         self._post_success_design_audit_enabled = _resolve_post_success_design_audit(
             provider=provider_norm,
             model_id=actual_model_id,
@@ -385,7 +406,7 @@ class ArticraftAgent:
             console=CONSOLE,
             model_id=actual_model_id,
             thinking_level=thinking_level,
-            max_turns=max_turns,
+            max_turns=self.max_turns,
             scaffold_mode=self.scaffold_mode,
             enabled=display_enabled,
         )
@@ -400,6 +421,11 @@ class ArticraftAgent:
         else:
             self.system_prompt = base_system_prompt
         repo_root = Path(__file__).resolve().parents[1]
+        self.virtual_workspace = build_virtual_workspace(
+            repo_root,
+            model_file_path=Path(self.file_path),
+            sdk_package=self.sdk_package,
+        )
         self.sdk_docs_context = load_sdk_docs_reference(
             repo_root,
             sdk_package=self.sdk_package,
@@ -667,7 +693,7 @@ class ArticraftAgent:
                 "content": (
                     "<edit_retry_guidance>\n"
                     "- Your last edit_code failed because `old_string` did not match the file exactly.\n"
-                    "- Do NOT guess. Call `read_code` again, then pick a smaller exact snippet from the current file as `old_string` and retry.\n"
+                    "- Do NOT guess. Call `read_code()` again, then pick a smaller exact snippet from the current editable code as `old_string` and retry.\n"
                     "- Keep edits surgical.\n"
                     "</edit_retry_guidance>"
                 ),
@@ -906,7 +932,7 @@ class ArticraftAgent:
             "- The previous assistant response pasted code and was discarded. Ignore it.\n"
             "- Source of truth is the file on disk, not the discarded text.\n"
             "- Use tools to apply your changes.\n"
-            "- Use read_code to fetch exact current text, then edit_code for edits.\n"
+            "- Use `read_code()` to fetch exact current editable text, then `edit_code` for edits.\n"
             "- If the latest compile already covers the current revision and you cannot name one specific defect, conclude.\n"
             '- If the editable section is empty, initialize it with edit_code using old_string="".\n'
             "</tool_use_rules>"
@@ -940,6 +966,13 @@ class ArticraftAgent:
         if isinstance(custom, dict):
             return {"input": custom.get("input", "")}
         return {}
+
+    def _tool_calls_are_parallelizable(self, tool_calls: list[dict]) -> bool:
+        if self.provider != "gemini" or len(tool_calls) <= 1:
+            return False
+        return all(
+            self._tool_call_name(tool_call) in _PARALLEL_SAFE_TOOL_NAMES for tool_call in tool_calls
+        )
 
     def _ensure_code_file(self) -> None:
         path = Path(self.file_path)
@@ -977,11 +1010,9 @@ class ArticraftAgent:
             if not isinstance(result, list):
                 continue
             for item in result:
-                if not isinstance(item, dict):
-                    continue
-                path = item.get("path")
-                if isinstance(path, str) and path:
-                    self._seen_find_example_paths.add(path)
+                cache_key = self._find_examples_cache_key(item)
+                if cache_key is not None:
+                    self._seen_find_example_paths.add(cache_key)
 
     def _compress_find_examples_output(self, output: Any) -> Any:
         if not isinstance(output, list):
@@ -989,22 +1020,30 @@ class ArticraftAgent:
 
         compressed: list[Any] = []
         for item in output:
-            if not isinstance(item, dict):
-                compressed.append(item)
-                continue
-            path = item.get("path")
-            if not isinstance(path, str) or not path:
+            cache_key = self._find_examples_cache_key(item)
+            if cache_key is None:
                 compressed.append(item)
                 continue
 
             entry = dict(item)
-            if path in self._seen_find_example_paths:
+            if cache_key in self._seen_find_example_paths:
                 entry["content"] = _FIND_EXAMPLES_SKIPPED_CONTENT
                 entry["content_skipped"] = True
             else:
-                self._seen_find_example_paths.add(path)
+                self._seen_find_example_paths.add(cache_key)
             compressed.append(entry)
         return compressed
+
+    def _find_examples_cache_key(self, item: Any) -> str | None:
+        if not isinstance(item, dict):
+            return None
+        example_id = item.get("example_id")
+        if isinstance(example_id, str) and example_id:
+            return example_id
+        path = item.get("path")
+        if isinstance(path, str) and path:
+            return path
+        return None
 
     async def _execute_tool(self, tool_call: dict) -> tuple[ToolResult, dict]:
         tool_id = tool_call["id"]
@@ -1123,7 +1162,7 @@ class ArticraftAgent:
                 result = ToolResult(
                     error=(
                         "old_string cannot be empty unless the editable code section is empty. "
-                        "Call read_code to copy exact current text and retry."
+                        "Call `read_code()` to copy exact current editable text and retry."
                     ),
                     tool_call_id=tool_id,
                 )
@@ -1178,6 +1217,9 @@ class ArticraftAgent:
                 bind_file_path = getattr(invocation, "bind_file_path", None)
                 if callable(bind_file_path):
                     bind_file_path(self.file_path)
+                bind_virtual_workspace = getattr(invocation, "bind_virtual_workspace", None)
+                if callable(bind_virtual_workspace):
+                    bind_virtual_workspace(self.virtual_workspace)
                 result = await invocation.execute()
                 result.tool_call_id = tool_id
                 if result.is_success() and func_name == "find_examples":
@@ -1218,6 +1260,47 @@ class ArticraftAgent:
         if thought_signature:
             tool_message["thought_signature"] = thought_signature
         return result, tool_message
+
+    async def _execute_tool_calls_batch(
+        self,
+        tool_calls: list[dict],
+    ) -> list[tuple[dict, ToolResult, dict, float]]:
+        if self._tool_calls_are_parallelizable(tool_calls):
+            tool_names = [self._tool_call_name(tool_call) for tool_call in tool_calls]
+            logger.info(
+                "Executing %s Gemini tool calls in parallel: %s",
+                len(tool_calls),
+                ", ".join(tool_names),
+            )
+
+            async def _run_single(tool_call: dict) -> tuple[ToolResult, dict, float]:
+                func_name = self._tool_call_name(tool_call)
+                tool_start = time.monotonic()
+                result, tool_message = await self._execute_tool(tool_call)
+                tool_duration = time.monotonic() - tool_start
+                logger.info("Tool %s finished in %.2fs", func_name, tool_duration)
+                return result, tool_message, tool_duration
+
+            batched_results = await asyncio.gather(
+                *(_run_single(tool_call) for tool_call in tool_calls)
+            )
+            return [
+                (tool_call, result, tool_message, tool_duration)
+                for tool_call, (result, tool_message, tool_duration) in zip(
+                    tool_calls, batched_results, strict=False
+                )
+            ]
+
+        executed: list[tuple[dict, ToolResult, dict, float]] = []
+        for tool_call in tool_calls:
+            func_name = self._tool_call_name(tool_call)
+            logger.info("Executing tool: %s", func_name)
+            tool_start = time.monotonic()
+            result, tool_message = await self._execute_tool(tool_call)
+            tool_duration = time.monotonic() - tool_start
+            logger.info("Tool %s finished in %.2fs", func_name, tool_duration)
+            executed.append((tool_call, result, tool_message, tool_duration))
+        return executed
 
     def _is_code_valid(self, tool_results: list[ToolResult]) -> bool:
         for result in reversed(tool_results):
@@ -1543,15 +1626,14 @@ class ArticraftAgent:
 
             turn_tool_results: list[ToolResult] = []
             tool_call_count += len(tool_calls)
-            for tool_call in tool_calls:
+            for (
+                tool_call,
+                result,
+                tool_message,
+                tool_duration,
+            ) in await self._execute_tool_calls_batch(tool_calls):
                 func_name = self._tool_call_name(tool_call)
                 func_args = self._tool_call_display_args(tool_call)
-                logger.info("Executing tool: %s", func_name)
-
-                tool_start = time.monotonic()
-                result, tool_message = await self._execute_tool(tool_call)
-                tool_duration = time.monotonic() - tool_start
-                logger.info("Tool %s finished in %.2fs", func_name, tool_duration)
                 turn_tool_results.append(result)
                 conversation.append(tool_message)
                 if self.trace_writer:

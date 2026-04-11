@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 from pathlib import Path
 
 from storage.categories import CategoryStore
@@ -156,3 +157,116 @@ def test_storage_repo_round_trips_records_collections_and_runs(tmp_path: Path) -
     assert '"record_id": "rec_123"' in results
     assert categories.delete("hinges")
     assert not repo.layout.category_dir("hinges").exists()
+
+
+def test_run_store_upsert_result_compacts_latest_rows(tmp_path: Path) -> None:
+    repo = StorageRepo(tmp_path)
+    repo.ensure_layout()
+    runs = RunStore(repo)
+    runs.write_run(
+        RunRecord(
+            schema_version=1,
+            run_id="run_123",
+            run_mode="dataset_batch",
+            collection="dataset",
+            created_at="2026-03-18T00:00:00Z",
+            updated_at="2026-03-18T00:00:01Z",
+            provider="openai",
+            model_id="gpt-5.4",
+            sdk_package="sdk",
+            status="running",
+            prompt_count=2,
+        )
+    )
+
+    runs.upsert_result("run_123", {"row_id": "row_a", "status": "running"}, key="row_id")
+    runs.upsert_result("run_123", {"row_id": "row_b", "status": "running"}, key="row_id")
+    runs.upsert_result("run_123", {"row_id": "row_a", "status": "success"}, key="row_id")
+
+    raw_rows = [
+        json.loads(line)
+        for line in repo.layout.run_results_path("run_123").read_text(encoding="utf-8").splitlines()
+    ]
+    assert [row["status"] for row in raw_rows] == ["running", "running", "success"]
+
+    latest_rows = runs.read_latest_results("run_123", key="row_id")
+    assert latest_rows == [
+        {"row_id": "row_a", "status": "success"},
+        {"row_id": "row_b", "status": "running"},
+    ]
+
+    runs.compact_results("run_123", key="row_id")
+    compacted_rows = [
+        json.loads(line)
+        for line in repo.layout.run_results_path("run_123").read_text(encoding="utf-8").splitlines()
+    ]
+    assert compacted_rows == latest_rows
+
+
+def test_dataset_store_updates_cached_dataset_id_index_after_promote(tmp_path: Path) -> None:
+    repo = StorageRepo(tmp_path)
+    repo.ensure_layout()
+    datasets = DatasetStore(repo)
+    record_store = RecordStore(repo)
+
+    first_record = Record(
+        schema_version=2,
+        record_id="rec_existing",
+        created_at="2026-03-18T00:00:00Z",
+        updated_at="2026-03-18T00:00:00Z",
+        rating=None,
+        kind="generated_model",
+        prompt_kind="single_prompt",
+        category_slug="hinges",
+        source=SourceRef(run_id="run_123", prompt_index=1),
+        sdk_package="sdk",
+        provider="openai",
+        model_id="gpt-5.4",
+        display=DisplayMetadata(title="Existing", prompt_preview="existing"),
+        artifacts=RecordArtifacts(
+            prompt_txt="prompt.txt",
+            prompt_series_json=None,
+            model_py="model.py",
+            provenance_json="provenance.json",
+            cost_json="cost.json",
+        ),
+    )
+    second_record = Record(
+        schema_version=2,
+        record_id="rec_new",
+        created_at="2026-03-18T00:00:00Z",
+        updated_at="2026-03-18T00:00:00Z",
+        rating=None,
+        kind="generated_model",
+        prompt_kind="single_prompt",
+        category_slug="hinges",
+        source=SourceRef(run_id="run_123", prompt_index=2),
+        sdk_package="sdk",
+        provider="openai",
+        model_id="gpt-5.4",
+        display=DisplayMetadata(title="New", prompt_preview="new"),
+        artifacts=RecordArtifacts(
+            prompt_txt="prompt.txt",
+            prompt_series_json=None,
+            model_py="model.py",
+            provenance_json="provenance.json",
+            cost_json="cost.json",
+        ),
+    )
+    record_store.write_record(first_record)
+    record_store.write_record(second_record)
+    datasets.promote_record(
+        record_id="rec_existing",
+        dataset_id="ds_hinges_existing",
+        category_slug="hinges",
+        promoted_at="2026-03-18T00:00:00Z",
+    )
+
+    assert datasets.find_record_id_by_dataset_id("ds_hinges_existing") == "rec_existing"
+    datasets.promote_record(
+        record_id="rec_new",
+        dataset_id="ds_hinges_new",
+        category_slug="hinges",
+        promoted_at="2026-03-18T00:00:01Z",
+    )
+    assert datasets.find_record_id_by_dataset_id("ds_hinges_new") == "rec_new"

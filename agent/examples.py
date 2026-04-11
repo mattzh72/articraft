@@ -169,11 +169,12 @@ def examples_root() -> Path:
     return _repo_root() / "sdk" / "_examples"
 
 
-def examples_dir_for_sdk(sdk_package: str) -> Path:
-    if sdk_package == "sdk_hybrid":
-        return examples_root() / "hybrid"
+def example_dirs_for_sdk(sdk_package: str) -> tuple[Path, ...]:
     if sdk_package == "sdk":
-        return examples_root() / "base"
+        return (
+            examples_root() / "base",
+            examples_root() / "cadquery",
+        )
     raise ValueError(f"Unsupported SDK package for examples: {sdk_package!r}")
 
 
@@ -442,10 +443,11 @@ def parse_example_document(path: Path) -> ExampleDocument:
 
 @lru_cache(maxsize=8)
 def load_example_documents(sdk_package: str) -> tuple[ExampleDocument, ...]:
-    root = examples_dir_for_sdk(sdk_package)
-    if not root.exists():
-        return ()
-    docs = [parse_example_document(path) for path in sorted(root.glob("*.md"))]
+    docs: list[ExampleDocument] = []
+    for root in example_dirs_for_sdk(sdk_package):
+        if not root.exists():
+            continue
+        docs.extend(parse_example_document(path) for path in sorted(root.glob("*.md")))
     return tuple(docs)
 
 

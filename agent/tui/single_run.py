@@ -416,13 +416,11 @@ class SingleRunDisplay:
         line.append(f" {format_duration(duration)}", style="dim")
         self.console.print(line)
 
-        # Print key args on next line, indented
-        formatted = format_tool_args(args, max_items=2)
+        # Print all formatted args on indented lines so the TUI does not
+        # collapse multi-argument tool calls into "... (N more)" summaries.
+        formatted = format_tool_args(args)
         if formatted:
-            detail = Text()
-            detail.append("            ", style="dim")
-            detail.append(truncate_text(", ".join(formatted), 80), style="dim")
-            self.console.print(detail)
+            self._print_indented_block("\n".join(formatted), style="dim")
 
         example_titles = self._find_examples_titles(result) if tool_name == "find_examples" else []
         if example_titles:

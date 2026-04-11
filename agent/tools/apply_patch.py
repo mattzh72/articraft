@@ -115,7 +115,9 @@ class ApplyPatchTool(BaseDeclarativeTool):
             name="apply_patch",
             description=(
                 "Apply a patch in Codex apply_patch format.\n\n"
-                "Provide only the patch text in `input`.\n\n"
+                "Provide only the patch text in `input`.\n"
+                "This tool edits only the current bound file.\n"
+                "Do not use `*** Add File`, `*** Delete File`, or `*** Move to`.\n\n"
                 "Patch envelope:\n"
                 "*** Begin Patch\n"
                 "*** Update File: CURRENT_FILE\n"
@@ -147,8 +149,9 @@ class ApplyPatchFreeformTool(BaseDeclarativeTool):
             "type": "custom",
             "name": "apply_patch",
             "description": (
-                "Use the `apply_patch` tool to edit files. "
-                "This is a FREEFORM tool, so do not wrap the patch in JSON."
+                "Use the `apply_patch` tool to edit the current bound file. "
+                "This is a FREEFORM tool, so do not wrap the patch in JSON. "
+                "Single-file mode only: do not use `*** Add File`, `*** Delete File`, or `*** Move to`."
             ),
             "format": {
                 "type": "grammar",

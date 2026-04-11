@@ -191,9 +191,14 @@ class ProbeModelTool(BaseDeclarativeTool):
         super().__init__("probe_model", schema)
 
     async def build(self, params: dict) -> ProbeModelInvocation:
-        validated = validate_tool_params(ProbeModelParams, params)
-        return ProbeModelInvocation(
+        normalized_params = dict(params)
+        legacy_file_path = normalized_params.pop("file_path", None)
+        validated = validate_tool_params(ProbeModelParams, normalized_params)
+        invocation = ProbeModelInvocation(
             validated,
             sdk_package=self.sdk_package,
             runtime_limits=self.runtime_limits,
         )
+        if isinstance(legacy_file_path, str) and legacy_file_path.strip():
+            invocation.bind_file_path(legacy_file_path)
+        return invocation

@@ -56,7 +56,7 @@ _OPEN_FILE_WORKER_RESERVE = 64
 _OPEN_FILE_WORKER_FD_BUDGET = 8
 _COMPILE_TARGETS = {"full", "visual"}
 _BASE_BULK_PRELOAD_MODULES = ("agent.compiler", "viewer.api.store")
-_CADQUERY_BULK_PRELOAD_MODULES = ("cadquery", "OCP", "sdk_hybrid")
+_CADQUERY_BULK_PRELOAD_MODULES = ("cadquery", "OCP", "sdk")
 _EXCEPTION_PREFIX_RE = re.compile(r"^(?:[A-Za-z_][A-Za-z0-9_]*(?:Error|Exception)):\s*")
 _GEOMETRY_QC_MARKERS = (
     "isolated parts detected",
@@ -180,9 +180,7 @@ def _make_candidate(
 
 def _normalize_sdk_package(value: object) -> str:
     normalized = str(value or "sdk").strip().lower()
-    if normalized in {"sdk_hybrid", "hybrid"}:
-        return "sdk_hybrid"
-    if normalized in {"sdk", "base"}:
+    if normalized in {"sdk_hybrid", "hybrid", "sdk", "base"}:
         return "sdk"
     return normalized or "sdk"
 
@@ -680,7 +678,7 @@ def _effective_mem_per_worker_gb(*, target: str, requested_mem_per_worker_gb: fl
 
 def _bulk_compile_preload_modules(candidates: list[CompileCandidate]) -> tuple[str, ...]:
     modules = list(_BASE_BULK_PRELOAD_MODULES)
-    if any(candidate.sdk_package == "sdk_hybrid" for candidate in candidates):
+    if candidates:
         modules.extend(_CADQUERY_BULK_PRELOAD_MODULES)
 
     deduped: list[str] = []

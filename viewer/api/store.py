@@ -24,6 +24,7 @@ from storage.models import CompileWarning
 from storage.queries import StorageQueries
 from storage.records import RecordStore
 from storage.repo import StorageRepo
+from storage.runs import RunStore
 from storage.search import SearchIndex
 from storage.supercategories import SupercategoryStore
 from viewer.api.schemas import (
@@ -750,6 +751,9 @@ class ViewerStore:
                 rows.append(parsed)
         return rows
 
+    def _read_run_results(self, run_id: str) -> list[dict[str, Any]]:
+        return RunStore(self.repo).read_latest_results(run_id, key="row_id")
+
     def _run_result_for_record(self, run_id: str, record_id: str) -> dict[str, Any] | None:
         results_path = self.repo.layout.run_results_path(run_id)
         try:
@@ -765,7 +769,7 @@ class ViewerStore:
 
         if cached_lookup is None:
             lookup: dict[str, dict[str, Any]] = {}
-            for row in self._read_jsonl(results_path):
+            for row in self._read_run_results(run_id):
                 row_record_id = _coerce_string(row.get("record_id"))
                 if row_record_id is None:
                     continue
@@ -1879,7 +1883,7 @@ class ViewerStore:
         )
 
     def _run_summary(self, run_id: str, run_metadata: dict[str, Any]) -> RunSummaryResponse:
-        results = self._read_jsonl(self.repo.layout.run_results_path(run_id))
+        results = self._read_run_results(run_id)
         success_count = sum(1 for row in results if str(row.get("status", "")).lower() == "success")
         failed_count = sum(1 for row in results if str(row.get("status", "")).lower() == "failed")
         return RunSummaryResponse(
@@ -1929,7 +1933,7 @@ class ViewerStore:
             return None
 
         summary = self._run_summary(run_id, run_metadata)
-        raw_results = self._read_jsonl(self.repo.layout.run_results_path(run_id))
+        raw_results = self._read_run_results(run_id)
         results: list[RunResultResponse] = []
         record_ids: list[str] = []
         for row in raw_results:

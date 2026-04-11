@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import pytest
 
-from sdk import ArticulatedObject, Box
+from sdk import ArticulatedObject, Box, Cylinder, Material
 
 
 def test_part_get_visual_returns_named_visual() -> None:
@@ -20,3 +20,43 @@ def test_part_get_visual_rejects_missing_name() -> None:
 
     with pytest.raises(Exception, match="Unknown visual"):
         part.get_visual("missing")
+
+
+def test_cylinder_accepts_height_alias() -> None:
+    cylinder = Cylinder(radius=0.1, height=0.4)
+
+    assert cylinder.radius == 0.1
+    assert cylinder.length == 0.4
+    assert cylinder.height == 0.4
+
+
+def test_cylinder_rejects_length_and_height_together() -> None:
+    with pytest.raises(TypeError, match="only one of 'length' or alias 'height'"):
+        Cylinder(radius=0.1, length=0.4, height=0.4)
+
+
+def test_part_visual_accepts_color_alias_as_named_material() -> None:
+    model = ArticulatedObject(name="visual_color_alias")
+    part = model.part("body")
+
+    visual = part.visual(Box((0.1, 0.1, 0.1)), color="steel_blue", name="shell")
+
+    assert visual.material == "steel_blue"
+
+
+def test_part_visual_accepts_color_alias_as_rgba_tuple() -> None:
+    model = ArticulatedObject(name="visual_color_alias")
+    part = model.part("body")
+
+    visual = part.visual(Box((0.1, 0.1, 0.1)), color=(0.1, 0.2, 0.3, 0.4), name="shell")
+
+    assert isinstance(visual.material, Material)
+    assert visual.material.rgba == (0.1, 0.2, 0.3, 0.4)
+
+
+def test_part_visual_rejects_material_and_color_together() -> None:
+    model = ArticulatedObject(name="visual_color_alias")
+    part = model.part("body")
+
+    with pytest.raises(TypeError, match="only one of 'material' or alias 'color'"):
+        part.visual(Box((0.1, 0.1, 0.1)), material="steel", color="blue")

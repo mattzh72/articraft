@@ -3,5 +3,5 @@
   "slug": "retractable_bollard",
   "title": "Retractable bollard",
   "description": "",
-  "target_sdk_version": "hybrid_cad"
+  "target_sdk_version": "base"
 }

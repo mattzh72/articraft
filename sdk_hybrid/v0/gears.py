@@ -24,7 +24,7 @@ from OCP.TopTools import TopTools_HSequenceOfShape, TopTools_ListOfShape
 
 from sdk._dependencies import require_cadquery
 
-cq = require_cadquery(feature="gear generation in `sdk_hybrid`")
+cq = require_cadquery(feature="gear generation in `sdk`")
 
 __all__ = [
     "GearBase",

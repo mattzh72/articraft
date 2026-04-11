@@ -21,7 +21,7 @@ def test_require_cadquery_reports_precise_install_command(
     monkeypatch.setattr(importlib, "import_module", fake_import_module)
 
     with pytest.raises(RuntimeError, match=r"Run `uv sync --group dev`"):
-        require_cadquery(feature="`sdk_hybrid`")
+        require_cadquery(feature="`sdk`")
 
 
 def test_ensure_sdk_hybrid_dependencies_requires_cadquery(
@@ -32,7 +32,7 @@ def test_ensure_sdk_hybrid_dependencies_requires_cadquery(
 
     monkeypatch.setattr("sdk._dependencies.require_cadquery", fail_require)
 
-    with pytest.raises(RuntimeError, match="`sdk_hybrid` missing cadquery"):
+    with pytest.raises(RuntimeError, match="`sdk` missing cadquery"):
         ensure_sdk_hybrid_dependencies()
 
 
@@ -49,7 +49,12 @@ def test_sdk_hybrid_gear_exports_are_lazy(
     monkeypatch.setattr(importlib, "import_module", fake_import_module)
 
     for name in list(sys.modules):
-        if name == "sdk_hybrid" or name.startswith("sdk_hybrid."):
+        if (
+            name == "sdk"
+            or name.startswith("sdk.")
+            or name == "sdk_hybrid"
+            or name.startswith("sdk_hybrid.")
+        ):
             sys.modules.pop(name, None)
 
     module = importlib.import_module("sdk_hybrid")

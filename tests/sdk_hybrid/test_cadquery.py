@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import shutil
 from pathlib import Path
 
 import pytest
@@ -91,7 +92,13 @@ def test_mesh_from_cadquery_still_triggers_disconnected_geometry_warning_for_mul
 
     model = ArticulatedObject(name="cadquery_connectivity", assets=assets)
     frame = model.part("frame")
-    frame.visual(mesh_from_cadquery(workplane, "frame.obj", assets=assets), name="frame_body")
+    mesh = mesh_from_cadquery(workplane, "frame.obj", assets=assets)
+    materialized_path = Path(str(mesh.materialized_path))
+    expected_mesh_path = assets.mesh_path(mesh.filename, ensure_dir=False)
+    if materialized_path != expected_mesh_path:
+        expected_mesh_path.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(materialized_path, expected_mesh_path)
+    frame.visual(mesh, name="frame_body")
 
     ctx = TestContext(model)
 

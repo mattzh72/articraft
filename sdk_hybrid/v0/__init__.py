@@ -1,33 +1,10 @@
-from .articulated_object import ArticulatedObject
-from .assets import mesh_from_input
-from .cadquery import (
-    CadQueryMeshExport,
-    cadquery_local_aabb,
-    export_cadquery_components,
-    export_cadquery_mesh,
-    mesh_components_from_cadquery,
-    mesh_from_cadquery,
-    tessellate_cadquery,
-)
-from .errors import SDKError, ValidationError
-from .placement import (
-    SurfaceFrame,
-    SurfaceWrapMapping,
-    align_centers,
-    part_local_aabb,
-    place_on_face,
-    place_on_face_uv,
-    place_on_surface,
-    proud_for_flush_mount,
-    surface_frame,
-    wrap_mesh_onto_surface,
-    wrap_profile_onto_surface,
-)
-from .testing import AllowedOverlap, TestContext, TestFailure, TestReport
-from .types import (
+from sdk.v0 import (
+    AllowedOverlap,
+    ArticulatedObject,
     Articulation,
     ArticulationType,
     Box,
+    CadQueryMeshExport,
     Cylinder,
     Inertia,
     Inertial,
@@ -37,30 +14,33 @@ from .types import (
     MotionProperties,
     Origin,
     Part,
+    SDKError,
     Sphere,
+    SurfaceFrame,
+    SurfaceWrapMapping,
+    TestContext,
+    TestFailure,
+    TestReport,
+    ValidationError,
     Visual,
+    align_centers,
+    cadquery_local_aabb,
+    export_cadquery_components,
+    export_cadquery_mesh,
+    mesh_components_from_cadquery,
+    mesh_from_cadquery,
+    mesh_from_input,
+    part_local_aabb,
+    place_on_face,
+    place_on_face_uv,
+    place_on_surface,
+    proud_for_flush_mount,
+    surface_frame,
+    tessellate_cadquery,
+    wrap_mesh_onto_surface,
+    wrap_profile_onto_surface,
 )
-
-_GEAR_EXPORTS = {
-    "GearBase",
-    "SpurGear",
-    "HerringboneGear",
-    "RingGear",
-    "HerringboneRingGear",
-    "PlanetaryGearset",
-    "HerringbonePlanetaryGearset",
-    "BevelGear",
-    "BevelGearPair",
-    "RackGear",
-    "HerringboneRackGear",
-    "Worm",
-    "CrossedHelicalGear",
-    "CrossedGearPair",
-    "HyperbolicGear",
-    "HyperbolicGearPair",
-    "gear",
-    "addGear",
-}
+from sdk.v0 import __getattr__ as _sdk_v0_getattr
 
 Link = Part
 Joint = Articulation
@@ -136,23 +116,7 @@ __all__ = [
 
 
 def __getattr__(name: str):
-    if name in _GEAR_EXPORTS:
-        from . import gears as _gears
-
-        value = getattr(_gears, name)
-        globals()[name] = value
-        return value
-    if name == "AssetContext":
-        from .assets import AssetContext
-
-        globals()[name] = AssetContext
-        return AssetContext
-    if name == "save_cadquery_obj":
-        from .cadquery import save_cadquery_obj
-
-        globals()[name] = save_cadquery_obj
-        return save_cadquery_obj
-    raise AttributeError(f"module {__name__!r} has no attribute {name!r}")
+    return _sdk_v0_getattr(name)
 
 
 def __dir__() -> list[str]:
