@@ -1,8 +1,10 @@
 from __future__ import annotations
 
-import cadquery as cq  # noqa: F401
+from sdk import ArticulatedObject, TestContext, TestReport
 
-from sdk import ArticulatedObject, TestContext, TestReport, mesh_from_cadquery  # noqa: F401
+# Advanced; only use CadQuery if the native sdk is not enough to represent the shapes you want:
+# import cadquery as cq
+# from sdk import mesh_from_cadquery
 
 
 def build_object_model() -> ArticulatedObject:

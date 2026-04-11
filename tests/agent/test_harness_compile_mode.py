@@ -3,6 +3,7 @@ from __future__ import annotations
 import asyncio
 import json
 from pathlib import Path
+from types import SimpleNamespace
 
 import pytest
 
@@ -195,6 +196,112 @@ def test_execute_compile_model_failure_leaves_latest_revision_stale() -> None:
     }
     assert "<compile_signals>" in str(result.output)
     assert "bad loft" in str(result.output)
+
+
+def test_execute_tool_calls_batch_runs_parallel_safe_gemini_calls_concurrently() -> None:
+    agent = ArticraftAgent.__new__(ArticraftAgent)
+    agent.provider = "gemini"
+
+    active_calls = 0
+    peak_calls = 0
+
+    async def fake_execute_tool(tool_call: dict) -> tuple[object, dict]:
+        nonlocal active_calls, peak_calls
+        active_calls += 1
+        peak_calls = max(peak_calls, active_calls)
+        await asyncio.sleep(0.01)
+        active_calls -= 1
+        return (
+            SimpleNamespace(
+                is_success=lambda: True,
+                output=tool_call["id"],
+                compilation=None,
+                error=None,
+            ),
+            {
+                "role": "tool",
+                "tool_call_id": tool_call["id"],
+                "name": agent._tool_call_name(tool_call),
+            },
+        )
+
+    agent._execute_tool = fake_execute_tool  # type: ignore[method-assign]
+
+    results = asyncio.run(
+        agent._execute_tool_calls_batch(
+            [
+                {
+                    "id": "call_read_code",
+                    "type": "function",
+                    "function": {"name": "read_code", "arguments": "{}"},
+                },
+                {
+                    "id": "call_find_examples",
+                    "type": "function",
+                    "function": {"name": "find_examples", "arguments": '{"query":"hinge"}'},
+                },
+            ]
+        )
+    )
+
+    assert [tool_call["id"] for tool_call, *_ in results] == [
+        "call_read_code",
+        "call_find_examples",
+    ]
+    assert peak_calls == 2
+
+
+def test_execute_tool_calls_batch_keeps_mutating_gemini_calls_serialized() -> None:
+    agent = ArticraftAgent.__new__(ArticraftAgent)
+    agent.provider = "gemini"
+
+    active_calls = 0
+    peak_calls = 0
+
+    async def fake_execute_tool(tool_call: dict) -> tuple[object, dict]:
+        nonlocal active_calls, peak_calls
+        active_calls += 1
+        peak_calls = max(peak_calls, active_calls)
+        await asyncio.sleep(0.01)
+        active_calls -= 1
+        return (
+            SimpleNamespace(
+                is_success=lambda: True,
+                output=tool_call["id"],
+                compilation=None,
+                error=None,
+            ),
+            {
+                "role": "tool",
+                "tool_call_id": tool_call["id"],
+                "name": agent._tool_call_name(tool_call),
+            },
+        )
+
+    agent._execute_tool = fake_execute_tool  # type: ignore[method-assign]
+
+    results = asyncio.run(
+        agent._execute_tool_calls_batch(
+            [
+                {
+                    "id": "call_read_code",
+                    "type": "function",
+                    "function": {"name": "read_code", "arguments": "{}"},
+                },
+                {
+                    "id": "call_edit_code",
+                    "type": "function",
+                    "function": {
+                        "name": "edit_code",
+                        "arguments": '{"old_string":"a","new_string":"b"}',
+                    },
+                },
+            ]
+        )
+    )
+
+    assert [tool_call["id"] for tool_call, *_ in results] == ["call_read_code", "call_edit_code"]
+    assert peak_calls == 1
 
 
 def test_run_discards_pasted_code_and_replaces_it_with_recovery_messages(

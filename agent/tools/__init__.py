@@ -66,7 +66,6 @@ _FIRST_TURN_RUNTIME_GUIDANCE_BY_PROVIDER: dict[str, str] = {
         "- Use tools deliberately. Prefer the smallest action that gives decisive evidence.\n"
         "- If the cause is obvious from `model.py` and `compile_model` output, fix it directly.\n"
         "- Use `probe_model` when geometry, pose, support path, or exact-element identity is ambiguous, or when a first repair attempt did not resolve the issue.\n"
-        "- Do not do blind self-correction passes without new evidence.\n"
         "</runtime_task_guidance>"
     ),
     "gemini": (
@@ -78,13 +77,13 @@ _FIRST_TURN_RUNTIME_GUIDANCE_BY_PROVIDER: dict[str, str] = {
         '- Use `read_file(path="model.py")` only when you need the full scaffolded artifact, not when copying `old_string` for `edit_code`.\n'
         "- Do not front-load unrelated docs, and do not re-read a reference file that is already in context.\n"
         "- Use `find_examples` for unfamiliar geometry, mechanisms, placement patterns, or testing structure, and adapt examples against current SDK docs.\n"
+        "- If you need multiple independent read-only lookups, issue them in one response; keep `edit_code` and `compile_model` in their own response.\n"
         "- Prefer small exact `edit_code` replacements over broad rewrites.\n"
         "- If `edit_code` fails, reread the exact current editable text with `read_code()` before retrying.\n"
         "- After each coherent chunk, run `compile_model` before moving on.\n"
         "- Use tools deliberately. Prefer the smallest action that gives decisive evidence.\n"
         "- If the cause is obvious from `model.py` and `compile_model` output, fix it directly.\n"
         "- Use `probe_model` when geometry, pose, support path, or exact-element identity is ambiguous, or when a first repair attempt did not resolve the issue.\n"
-        "- Do not do blind self-correction passes without new evidence.\n"
         "</runtime_task_guidance>"
     ),
 }

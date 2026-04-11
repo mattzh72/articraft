@@ -59,6 +59,7 @@ def test_first_turn_runtime_guidance_is_provider_specific() -> None:
     assert "read_code" in gemini_guidance
     assert "read_file" in gemini_guidance
     assert "edit_code" in gemini_guidance
+    assert "multiple independent read-only lookups" in gemini_guidance
 
 
 def test_prepend_runtime_guidance_supports_text_only_content() -> None:

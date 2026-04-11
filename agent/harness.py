@@ -59,6 +59,7 @@ logger.setLevel(logging.INFO)
 CONSOLE = Console()
 _FIND_EXAMPLES_SKIPPED_CONTENT = "{Skipped: full content already returned earlier in this run.}"
 _MUTATING_TOOL_NAMES = frozenset({"apply_patch", "edit_code", "write_code"})
+_PARALLEL_SAFE_TOOL_NAMES = frozenset({"read_code", "read_file", "find_examples", "probe_model"})
 _EXACT_ELEMENT_KEYWORDS = frozenset(
     {"elem_a", "elem_b", "positive_elem", "negative_elem", "inner_elem", "outer_elem"}
 )
@@ -966,6 +967,13 @@ class ArticraftAgent:
             return {"input": custom.get("input", "")}
         return {}
 
+    def _tool_calls_are_parallelizable(self, tool_calls: list[dict]) -> bool:
+        if self.provider != "gemini" or len(tool_calls) <= 1:
+            return False
+        return all(
+            self._tool_call_name(tool_call) in _PARALLEL_SAFE_TOOL_NAMES for tool_call in tool_calls
+        )
+
     def _ensure_code_file(self) -> None:
         path = Path(self.file_path)
         if path.exists():
@@ -1252,6 +1260,47 @@ class ArticraftAgent:
         if thought_signature:
             tool_message["thought_signature"] = thought_signature
         return result, tool_message
+
+    async def _execute_tool_calls_batch(
+        self,
+        tool_calls: list[dict],
+    ) -> list[tuple[dict, ToolResult, dict, float]]:
+        if self._tool_calls_are_parallelizable(tool_calls):
+            tool_names = [self._tool_call_name(tool_call) for tool_call in tool_calls]
+            logger.info(
+                "Executing %s Gemini tool calls in parallel: %s",
+                len(tool_calls),
+                ", ".join(tool_names),
+            )
+
+            async def _run_single(tool_call: dict) -> tuple[ToolResult, dict, float]:
+                func_name = self._tool_call_name(tool_call)
+                tool_start = time.monotonic()
+                result, tool_message = await self._execute_tool(tool_call)
+                tool_duration = time.monotonic() - tool_start
+                logger.info("Tool %s finished in %.2fs", func_name, tool_duration)
+                return result, tool_message, tool_duration
+
+            batched_results = await asyncio.gather(
+                *(_run_single(tool_call) for tool_call in tool_calls)
+            )
+            return [
+                (tool_call, result, tool_message, tool_duration)
+                for tool_call, (result, tool_message, tool_duration) in zip(
+                    tool_calls, batched_results, strict=False
+                )
+            ]
+
+        executed: list[tuple[dict, ToolResult, dict, float]] = []
+        for tool_call in tool_calls:
+            func_name = self._tool_call_name(tool_call)
+            logger.info("Executing tool: %s", func_name)
+            tool_start = time.monotonic()
+            result, tool_message = await self._execute_tool(tool_call)
+            tool_duration = time.monotonic() - tool_start
+            logger.info("Tool %s finished in %.2fs", func_name, tool_duration)
+            executed.append((tool_call, result, tool_message, tool_duration))
+        return executed
 
     def _is_code_valid(self, tool_results: list[ToolResult]) -> bool:
         for result in reversed(tool_results):
@@ -1577,15 +1626,14 @@ class ArticraftAgent:
 
             turn_tool_results: list[ToolResult] = []
             tool_call_count += len(tool_calls)
-            for tool_call in tool_calls:
+            for (
+                tool_call,
+                result,
+                tool_message,
+                tool_duration,
+            ) in await self._execute_tool_calls_batch(tool_calls):
                 func_name = self._tool_call_name(tool_call)
                 func_args = self._tool_call_display_args(tool_call)
-                logger.info("Executing tool: %s", func_name)
-
-                tool_start = time.monotonic()
-                result, tool_message = await self._execute_tool(tool_call)
-                tool_duration = time.monotonic() - tool_start
-                logger.info("Tool %s finished in %.2fs", func_name, tool_duration)
                 turn_tool_results.append(result)
                 conversation.append(tool_message)
                 if self.trace_writer:
