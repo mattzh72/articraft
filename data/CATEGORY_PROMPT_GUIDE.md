@@ -64,6 +64,11 @@ axis directions. **This is the most important section.** Be explicit about
 every joint. Tie every motion to a physical support. Do not specify numeric
 range-of-motion values — the agent will choose mechanically plausible limits.
 
+If the object has a keypad, button bank, control cluster, or other visible
+front-panel controls that are part of its identity, say so explicitly here.
+When those controls are individually visible, state that they articulate
+independently rather than reading as one fused static panel.
+
 ### 4. Scale or proportion hint (optional — 1 sentence)
 
 Only needed when the default would be ambiguous. E.g., "desktop-scale" vs
@@ -126,6 +131,14 @@ quality just to fit an outdated turn target.
 > joint (vertical axis), an upper arm link to an elbow revolute, and a forearm
 > link to a wrist revolute (roll axis).
 
+**Cash register with visible keys:**
+
+> A supermarket cash register with a front cash drawer, a sloped keypad
+> console, and a customer display on a rear neck. The drawer slides
+> prismatically from the base, the display tilts on a revolute hinge, and the
+> visible keypad buttons articulate independently as small push controls in the
+> console face.
+
 ### Bad — too verbose
 
 > Design a realistic, highly detailed single revolute hinge as a standalone
@@ -152,6 +165,15 @@ recognizable form.
 Why it's bad: No part structure, no articulation spec, no scale. The agent
 will produce something, but it may not match what you wanted.
 
+### Bad — vague controls
+
+> A cash register with a drawer, screen, and controls.
+
+Why it's bad: "Controls" is too vague. If the buttons or keys matter to the
+object's identity, say that the visible control cluster is present and that the
+controls articulate independently; otherwise the model may collapse them into a
+single static surface.
+
 ## Articulation Policy
 
 Include the articulations a reasonable person would expect on a normal instance
@@ -161,6 +183,10 @@ of the object. That often means more than one motion.
   normally has several canonical articulations.
 - Do not ignore motions of small parts (e.g., knobs, buttons, caster joints of
   the wheel, etc.).
+- If an object is recognizable partly because of a visible control surface,
+  call out that control surface explicitly in the prompt instead of hoping the
+  agent will infer independent buttons, keys, or dials from the category name
+  alone.
 - Do not add obscure or gimmicky motions that are not central to the category.
 - When several parts are really one rigid supported assembly in the prompt
   (e.g., one top tray carried by matched left/right supports, one seat carried
