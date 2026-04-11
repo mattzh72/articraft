@@ -19,6 +19,15 @@ def test_compile_signal_bundle_includes_loft_hint() -> None:
     assert "author it in XY first and rotate the mesh afterward" in rendered
 
 
+def test_compile_signal_bundle_includes_sdk_top_level_import_hint() -> None:
+    exc = RuntimeError("ModuleNotFoundError: No module named 'sdk.placement'")
+    rendered = render_compile_signals(build_compile_signal_bundle(status="failure", exc=exc))
+
+    assert "No module named 'sdk.placement'" in rendered
+    assert "Public authoring helpers import from top-level `sdk`." in rendered
+    assert "not guessed submodules like `sdk.placement`" in rendered
+
+
 def test_render_compile_signals_clean_success_uses_summary_only_block() -> None:
     rendered = render_compile_signals(build_compile_signal_bundle(status="success"))
 

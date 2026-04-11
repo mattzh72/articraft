@@ -23,6 +23,11 @@ LOFT_PROFILE_AREA_HINT = (
     "Use closed loops like `(x_i, y_i, z_const)`. "
     "If you need an XZ/YZ section, author it in XY first and rotate the mesh afterward."
 )
+SDK_SUBMODULE_IMPORT_HINT = (
+    "Hint: Public authoring helpers import from top-level `sdk`. "
+    "Use `from sdk import place_on_face`, `TestContext`, or `MotionLimits`, "
+    "not guessed submodules like `sdk.placement`, `sdk.testing`, or `sdk.core_types`."
+)
 MAX_RISK_PATTERN = re.compile(r"max_risk=(low|medium|high)", re.IGNORECASE)
 
 SignalSeverity: TypeAlias = Literal["failure", "warning", "note"]
@@ -326,6 +331,11 @@ def contains_code_in_text(text: str) -> bool:
 def _compile_hint_lines(detail_lines: list[str]) -> list[str]:
     if any(LOFT_PROFILE_AREA_ERROR in line for line in detail_lines):
         return [LOFT_PROFILE_AREA_HINT]
+    lower_lines = [line.lower() for line in detail_lines]
+    if any(
+        "no module named 'sdk." in line or 'no module named "sdk.' in line for line in lower_lines
+    ):
+        return [SDK_SUBMODULE_IMPORT_HINT]
     return []
 
 
