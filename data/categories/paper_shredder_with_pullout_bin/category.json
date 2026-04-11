@@ -1,0 +1,10 @@
+{
+  "schema_version": 1,
+  "slug": "paper_shredder_with_pullout_bin",
+  "title": "Paper shredder with pullout bin",
+  "description": "",
+  "prompt_batch_ids": [
+    "realism_articulation_v1"
+  ],
+  "target_sdk_version": "base"
+}
