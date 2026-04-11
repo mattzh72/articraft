@@ -21,16 +21,24 @@ class ReadFileParams(ToolParamsModel):
     """Parameters for read_file tool."""
 
     path: str
-    offset: int = 1
-    limit: int = 200
+    offset: int | None = None
+    limit: int | None = None
 
 
 class ReadFileInvocation(BoundFileToolInvocation[ReadFileParams, str]):
     """Invocation for reading the target file."""
 
-    def __init__(self, params: ReadFileParams):
+    def __init__(
+        self,
+        params: ReadFileParams,
+        *,
+        offset_provided: bool = False,
+        limit_provided: bool = False,
+    ):
         super().__init__(params)
         self.virtual_workspace: VirtualWorkspace | None = None
+        self.offset_provided = offset_provided
+        self.limit_provided = limit_provided
 
     def bind_virtual_workspace(self, workspace: VirtualWorkspace) -> None:
         self.virtual_workspace = workspace
@@ -43,10 +51,6 @@ class ReadFileInvocation(BoundFileToolInvocation[ReadFileParams, str]):
 
     async def execute(self) -> ToolResult:
         try:
-            if self.params.offset < 1:
-                return ToolResult(error="offset must be >= 1")
-            if self.params.limit < 1:
-                return ToolResult(error="limit must be >= 1")
             if self.virtual_workspace is None:
                 return ToolResult(error="virtual workspace is not available")
 
@@ -60,16 +64,29 @@ class ReadFileInvocation(BoundFileToolInvocation[ReadFileParams, str]):
                 return ToolResult(error=f"Unable to resolve {self.params.path}")
 
             lines = full_code.splitlines()
+            offset = self.params.offset or 1
+            if self.offset_provided and self.params.offset is None:
+                return ToolResult(error="offset must be >= 1")
+            if self.offset_provided and self.params.offset < 1:
+                return ToolResult(error="offset must be >= 1")
+            if self.limit_provided and self.params.limit is None:
+                return ToolResult(error="limit must be >= 1")
+            if self.limit_provided and self.params.limit < 1:
+                return ToolResult(error="limit must be >= 1")
+
             if not lines:
-                if self.params.offset > 1:
+                if self.offset_provided and offset > 1:
                     return ToolResult(error="offset exceeds file length")
                 return ToolResult(output="")
 
-            if self.params.offset > len(lines):
+            if self.offset_provided and self.params.offset > len(lines):
                 return ToolResult(error="offset exceeds file length")
 
-            start = self.params.offset - 1
-            end = min(len(lines), start + self.params.limit)
+            start = offset - 1
+            if self.limit_provided:
+                end = min(len(lines), start + self.params.limit)
+            else:
+                end = len(lines)
             formatted = [f"L{idx}: {lines[idx - 1]}" for idx in range(start + 1, end + 1)]
             return ToolResult(output="\n".join(formatted))
         except FileNotFoundError:
@@ -91,7 +108,9 @@ class ReadFileTool(BaseDeclarativeTool):
                 'Use `path="model.py"` for the editable artifact script. '
                 "Use `path` under `docs/` for read-only SDK guidance and references.\n\n"
                 "Returned lines are formatted as `L{line_number}: ...`.\n\n"
-                "Use offset/limit to read a slice before creating an apply_patch update."
+                "Use `offset` to choose the first line (1-indexed) and `limit` to cap the total number "
+                "of returned lines. Omit both for a full-file read. Omit `limit` with an explicit `offset` "
+                "to read from that offset to EOF."
             ),
             parameters={
                 "path": {
@@ -103,11 +122,11 @@ class ReadFileTool(BaseDeclarativeTool):
                 },
                 "offset": {
                     "type": "integer",
-                    "description": "1-indexed line to start from (default: 1).",
+                    "description": ("Optional. 1-indexed line to start from. Omit for `1`."),
                 },
                 "limit": {
                     "type": "integer",
-                    "description": "Maximum number of lines to return (default: 200).",
+                    "description": ("Optional. Maximum number of lines to return. Omit for EOF."),
                 },
             },
             required=["path"],
@@ -116,4 +135,8 @@ class ReadFileTool(BaseDeclarativeTool):
 
     async def build(self, params: dict) -> ReadFileInvocation:
         validated = validate_tool_params(ReadFileParams, params)
-        return ReadFileInvocation(validated)
+        return ReadFileInvocation(
+            validated,
+            offset_provided="offset" in params and params["offset"] is not None,
+            limit_provided="limit" in params and params["limit"] is not None,
+        )

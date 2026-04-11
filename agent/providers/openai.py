@@ -134,6 +134,8 @@ def _normalize_tool_json_schema_for_responses(
 
 def _normalize_function_parameters_for_responses(
     parameters: dict[str, Any] | None,
+    *,
+    required_override: list[str] | None = None,
 ) -> dict[str, Any]:
     normalized = _normalize_tool_json_schema_for_responses(parameters or {"type": "object"})
     properties = normalized.get("properties")
@@ -141,7 +143,9 @@ def _normalize_function_parameters_for_responses(
         properties = {}
         normalized["properties"] = properties
     normalized["type"] = "object"
-    normalized["required"] = list(properties.keys())
+    normalized["required"] = (
+        list(required_override) if required_override is not None else list(properties.keys())
+    )
     normalized["additionalProperties"] = False
     return normalized
 
@@ -1022,15 +1026,27 @@ class OpenAILLM:
                 func = tool.get("function") if isinstance(tool.get("function"), dict) else None
                 if not func:
                     continue
+                declared_parameters = (
+                    func.get("parameters") if isinstance(func.get("parameters"), dict) else None
+                )
+                required_override = (
+                    declared_parameters.get("required")
+                    if isinstance(declared_parameters, dict)
+                    and isinstance(declared_parameters.get("required"), list)
+                    and func.get("name") == "read_file"
+                    else None
+                )
+
                 converted.append(
                     {
                         "type": "function",
                         "name": func.get("name", ""),
                         "description": func.get("description", ""),
                         "parameters": _normalize_function_parameters_for_responses(
-                            func.get("parameters")
-                            if isinstance(func.get("parameters"), dict)
-                            else {"type": "object", "properties": {}}
+                            declared_parameters
+                            if isinstance(declared_parameters, dict)
+                            else {"type": "object", "properties": {}},
+                            required_override=required_override,
                         ),
                         "strict": True,
                     }

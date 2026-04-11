@@ -1,11 +1,13 @@
 from __future__ import annotations
 
 import asyncio
+from pathlib import Path
 
 import pytest
 from pydantic import ValidationError
 
 from agent.tools import build_tool_registry
+from agent.workspace_docs import build_virtual_workspace
 
 
 def test_provider_tool_registry_schemas() -> None:
@@ -123,8 +125,8 @@ def test_openai_tool_registry_treats_null_optional_args_as_defaults() -> None:
     )
     assert read_file is not None
     assert read_file.params.path == "model.py"
-    assert read_file.params.offset == 1
-    assert read_file.params.limit == 200
+    assert read_file.params.offset is None
+    assert read_file.params.limit is None
 
     probe_model = asyncio.run(
         openai_registry.build_invocation(
@@ -136,3 +138,29 @@ def test_openai_tool_registry_treats_null_optional_args_as_defaults() -> None:
     assert probe_model.params.code == "emit(1)"
     assert probe_model.params.timeout_ms == 10_000
     assert probe_model.params.include_stdout is False
+
+
+def test_openai_tool_registry_executes_full_read_without_paging_args(tmp_path: Path) -> None:
+    repo_root = Path(__file__).resolve().parents[2]
+    model_path = tmp_path / "model.py"
+    model_path.write_text("alpha\nbeta\ngamma\n", encoding="utf-8")
+
+    workspace = build_virtual_workspace(
+        repo_root,
+        model_file_path=model_path,
+        sdk_package="sdk",
+    )
+    openai_registry = build_tool_registry("openai", sdk_package="sdk")
+
+    invocation = asyncio.run(
+        openai_registry.build_invocation(
+            "read_file",
+            {"path": "model.py"},
+        )
+    )
+    assert invocation is not None
+    invocation.bind_virtual_workspace(workspace)
+    result = asyncio.run(invocation.execute())
+
+    assert result.error is None
+    assert result.output == "L1: alpha\nL2: beta\nL3: gamma"
