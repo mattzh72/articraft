@@ -29,8 +29,10 @@ def test_compiled_openai_prompt_keeps_compact_contract_and_visual_test_gate() ->
         assert "Start with a short context pass:" in text
         assert "preloaded SDK quickstart/router" in text
         assert "read the full file once, not a small slice" in text
+        assert "Prefer evidence over introspection." in text
         assert "Start with the smallest coherent backbone or subassembly" in text
         assert "Expand one coherent region at a time" in text
+        assert "Treat `compile_model` and `probe_model` as feedback tools." in text
         assert "Always run `compile_model` on the latest revision before concluding." in text
         assert "PHASE 1" not in text
 
@@ -43,18 +45,12 @@ def test_compiled_openai_prompt_keeps_compact_contract_and_visual_test_gate() ->
         assert "inspection-only" in text
         assert "lexical search over curated examples for the active SDK" in text
         assert "Prefer several small `apply_patch` edits over one giant patch" in text
-        assert "Treat `compile_model` as the full validation pass." in text
-        assert "Prefer the smallest action that gives decisive evidence." in text
         assert (
-            "If the cause is obvious from `model.py` and `compile_model` output, fix it directly."
+            'Read exact current file text with `read_file(path="model.py")` before you patch.'
             in text
         )
 
         # Modeling section stays as SDK-specific deltas
-        assert (
-            "Read mounted SDK docs as needed for placement, probe patterns, exact signatures, and testing guidance."
-            in text
-        )
         assert "Match the visible construction logic of the object." in text
         assert "Preserve correct joint origins, axes, limits, and articulation behavior." in text
         assert "Author visual geometry only; do not author collision geometry in `sdk`." in text

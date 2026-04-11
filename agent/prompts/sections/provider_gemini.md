@@ -1,21 +1,13 @@
 <tools>
 - Available tools: `read_code`, `read_file`, `edit_code`, `compile_model`, `probe_model`, and `find_examples`.
 - `read_code` reads the exact current editable code text from `model.py`. Use it before `edit_code` and after any `edit_code` mismatch.
-- `read_file` reads exact virtual workspace file text. Use `path="docs/..."` for read-only SDK docs, and `path="model.py"` only when you need the full scaffolded artifact.
+- `read_file` reads exact virtual workspace file text. Use it for read-only references such as `docs/...`, and for `model.py` only when you need wrapper or scaffold context outside the editable section.
 - `edit_code` performs surgical text replacement in the editable section.
 - `compile_model` runs full compile + QC on the current file and returns structured `<compile_signals>` feedback.
 - `probe_model` runs short read-only Python snippets for geometry inspection. See SDK docs for the helper catalog and signatures.
 - `find_examples` does lexical search over curated examples for the active SDK. Use it proactively when you need modeling, placement, or testing patterns that are similar to the current object, especially before improvising unfamiliar mechanisms or shape constructions. Results may be stale — adapt against current SDK docs. Entries marked `[weakly relevant]` are inspiration-only and should not be over-trusted.
-- Read exact current editable code with `read_code()` before editing.
-- Use `read_file(path="docs/...")` when you need exact SDK reference text beyond the preloaded quickstart.
-- Use `read_file(path="model.py")` only when you need wrapper or scaffold context outside the editable section.
 - Prefer small exact `edit_code` replacements over broad rewrites.
 - If `edit_code` fails because `old_string` did not match, call `read_code()` again and retry with a smaller exact snippet.
-- Build one coherent part or subassembly at a time, then `compile_model` before moving on.
-- Treat `compile_model` as the full validation pass. Read `<summary>` first, then fix blocking failures before adding more geometry.
-- Use tools deliberately. Prefer the smallest action that gives decisive evidence.
-- If the cause is obvious from `model.py` and `compile_model` output, fix it directly.
-- Use `probe_model` when geometry, pose, support path, or exact-element identity is ambiguous, or when a first repair attempt did not resolve the issue.
 - The scaffold has existing editable code; do not assume `old_string=""` for a blank start.
 - `probe_model` is inspection-only: no file writes, no modifying `object_model`, no subprocesses.
 - Never paste code in chat. All code changes go through tool calls.

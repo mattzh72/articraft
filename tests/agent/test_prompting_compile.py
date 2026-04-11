@@ -37,11 +37,15 @@ def _assert_shared_contract(text: str) -> None:
     # Shared process stub stays compact
     assert "Start with a short context pass:" in text
     assert "preloaded SDK quickstart/router" in text
-    assert "only for the specific `docs/` references needed for that next change" in text
+    assert "Read only the specific `docs/` references needed for the next change" in text
     assert "read the full file once, not a small slice" in text
     assert "Do not re-read it if it is already in context." in text
+    assert "Prefer evidence over introspection." in text
     assert "Start with the smallest coherent backbone or subassembly" in text
     assert "Expand one coherent region at a time" in text
+    assert "Treat `compile_model` and `probe_model` as feedback tools." in text
+    assert "Prefer the smallest action that gives decisive evidence." in text
+    assert "If the cause is obvious from `model.py` and compile output, fix it directly." in text
     assert "Always run `compile_model` on the latest revision before concluding." in text
     assert "PHASE 1" not in text
 
@@ -50,11 +54,6 @@ def _assert_shared_contract(text: str) -> None:
     assert "find_examples" in text
     assert "inspection-only" in text
 
-    # SDK docs deference
-    assert (
-        "Read mounted SDK docs as needed for placement, probe patterns, exact signatures, and testing guidance."
-        in text
-    )
     assert "Do not provide `file_path`" not in text
     assert "missing exact geometry" not in text
     assert "means a gap, not an overlap" not in text
@@ -80,7 +79,6 @@ def test_prompt_outputs_are_current() -> None:
     assert "write_code" not in openai_text
     assert "FREEFORM tool" in openai_text
     assert "Prefer several small `apply_patch` edits over one giant patch" in openai_text
-    assert "Build one coherent part or subassembly at a time" in openai_text
     assert "lexical search over curated examples for the active SDK" in openai_text
     assert "[weakly relevant]" in openai_text
     assert (
@@ -96,12 +94,6 @@ def test_prompt_outputs_are_current() -> None:
         in openai_text
     )
     assert "Author visual geometry only; do not author collision geometry in `sdk`." in openai_text
-    assert "Treat `compile_model` as the full validation pass." in openai_text
-    assert "Prefer the smallest action that gives decisive evidence." in openai_text
-    assert (
-        "If the cause is obvious from `model.py` and `compile_model` output, fix it directly."
-        in openai_text
-    )
 
     gemini_text = compiled_by_name["designer_system_prompt_gemini.txt"]
     _assert_shared_contract(gemini_text)
@@ -128,8 +120,3 @@ def test_prompt_outputs_are_current() -> None:
         in gemini_text
     )
     assert "Author visual geometry only; do not author collision geometry in `sdk`." in gemini_text
-    assert "Prefer the smallest action that gives decisive evidence." in gemini_text
-    assert (
-        "If the cause is obvious from `model.py` and `compile_model` output, fix it directly."
-        in gemini_text
-    )

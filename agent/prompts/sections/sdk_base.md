@@ -16,5 +16,4 @@ TESTING
 - Prefer `TestContext(object_model)`; do not pass asset roots in new code.
 - Use `run_tests()` for prompt-specific exact checks, targeted pose checks, and explicit allowances only.
 - Treat overlap findings as classification tasks first: decide whether the reported intersection is intentional design embedding that should be covered by a scoped `ctx.allow_overlap(...)`, or an unintended collision that needs geometry, mount, or pose changes.
-- Read mounted SDK docs as needed for placement, probe patterns, exact signatures, and testing guidance.
 </modeling>
