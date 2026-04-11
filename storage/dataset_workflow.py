@@ -16,7 +16,7 @@ _NON_ALNUM_RE = re.compile(r"[^a-z0-9]+")
 
 
 def sdk_package_to_target_sdk_version(sdk_package: str) -> str | None:
-    if sdk_package in {"sdk", "sdk_hybrid"}:
+    if sdk_package == "sdk":
         return "base"
     return None
 

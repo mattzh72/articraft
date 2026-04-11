@@ -8,9 +8,6 @@ import pytest
 cq = pytest.importorskip("cadquery")
 
 _PYTHON_FENCE_RE = re.compile(r"```python\n(.*?)```", re.DOTALL)
-# Keep this focused on representative CadQuery examples. The heavier gear-family
-# markdowns are covered by dedicated CadQuery gear tests, and re-executing all
-# of them here turns this smoke file into the slowest part of the suite.
 _EXAMPLE_PATHS = (
     "sdk/_examples/cadquery/bga_package.md",
     "sdk/_examples/cadquery/parametric_pin_header.md",
@@ -35,7 +32,7 @@ def _extract_python_fence(path: Path) -> str:
 
 
 @pytest.mark.parametrize("relative_path", _EXAMPLE_PATHS)
-def test_derived_hybrid_example_executes(relative_path: str) -> None:
+def test_derived_cadquery_example_executes(relative_path: str) -> None:
     path = _repo_root() / relative_path
     namespace = {"cq": cq, "cadquery": cq}
 

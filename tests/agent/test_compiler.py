@@ -8,6 +8,8 @@ import pytest
 from agent.compiler import compile_urdf_report, persist_compile_success_artifacts, update_manifest
 from agent.runner import compile_urdf
 
+_REMOVED_PACKAGE = "_".join(("sdk", "hybrid"))
+
 
 def _write_isolated_part_model_script(
     script_path: Path,
@@ -526,7 +528,7 @@ def test_compile_urdf_report_does_not_ignore_non_geometry_failures(tmp_path: Pat
         compile_urdf_report(script_path, ignore_geom_qc=True)
 
 
-def test_compile_urdf_report_accepts_sdk_hybrid_alias(tmp_path: Path) -> None:
+def test_compile_urdf_report_rejects_removed_legacy_sdk_package(tmp_path: Path) -> None:
     script_path = tmp_path / "model.py"
     script_path.write_text(
         "\n".join(
@@ -543,31 +545,8 @@ def test_compile_urdf_report_accepts_sdk_hybrid_alias(tmp_path: Path) -> None:
         encoding="utf-8",
     )
 
-    report = compile_urdf_report(script_path, sdk_package="sdk_hybrid", run_checks=False)
-    assert "<robot" in report.urdf_xml
-
-
-def test_compile_urdf_report_sdk_hybrid_alias_executes_like_sdk(tmp_path: Path) -> None:
-    script_path = tmp_path / "model.py"
-    marker_path = tmp_path / "executed.txt"
-    script_path.write_text(
-        "\n".join(
-            [
-                "from __future__ import annotations",
-                "",
-                "from sdk import ArticulatedObject, Box, Origin",
-                "",
-                f"open({str(marker_path)!r}, 'w', encoding='utf-8').write('ran')",
-                "object_model = ArticulatedObject(name='alias_ok')",
-                "base = object_model.part('base')",
-                "base.visual(Box((0.1, 0.1, 0.1)), origin=Origin(xyz=(0.0, 0.0, 0.05)))",
-            ]
-        ),
-        encoding="utf-8",
-    )
-
-    compile_urdf_report(script_path, sdk_package="sdk_hybrid", run_checks=False)
-    assert marker_path.exists()
+    with pytest.raises(ValueError, match="Unsupported SDK package"):
+        compile_urdf_report(script_path, sdk_package=_REMOVED_PACKAGE, run_checks=False)
 
 
 def test_compile_urdf_report_visual_target_omits_collision_entries(tmp_path: Path) -> None:

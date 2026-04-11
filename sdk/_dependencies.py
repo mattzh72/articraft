@@ -24,7 +24,3 @@ def require_cadquery(*, feature: str) -> Any:
         raise RuntimeError(
             _missing_dependency_message(feature=feature, dependency="cadquery")
         ) from exc
-
-
-def ensure_sdk_hybrid_dependencies() -> None:
-    require_cadquery(feature="`sdk`")

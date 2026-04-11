@@ -1,7 +1,7 @@
 # Repository Guidelines
 
 ## Project Structure & Module Organization
-`agent/` contains the generation runtime, providers, prompt compiler, and TUI helpers. `storage/` owns the canonical `data/` layout, batch spec storage, record models, and query helpers used by the dataset and workbench flows. `sdk/`, `sdk_hybrid/`, and `sdk/_core/` define the articulated-object SDK layers and shared geometry/export logic. `viewer/api/` exposes the FastAPI surface. `cli/` contains the repository entry points, while `tests/` mirrors the main packages with smoke-style checks such as `tests/storage/test_repo.py`.
+`agent/` contains the generation runtime, providers, prompt compiler, and TUI helpers. `storage/` owns the canonical `data/` layout, batch spec storage, record models, and query helpers used by the dataset and workbench flows. `sdk/` and `sdk/_core/` define the articulated-object SDK layers and shared geometry/export logic. `viewer/api/` exposes the FastAPI surface. `cli/` contains the repository entry points, while `tests/` mirrors the main packages with smoke-style checks such as `tests/storage/test_repo.py`.
 
 ## Build, Test, and Development Commands
 Use `uv` for direct Python workflows, and `just` for the agent-facing shortcuts that speed up common iteration loops. For additional shortcuts, run `just` or check [`justfile`](/Users/matthewzhou/articraft/justfile).

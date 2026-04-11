@@ -163,7 +163,7 @@ def _make_candidate(
 
 def _normalize_sdk_package(value: object) -> str:
     normalized = str(value or "sdk").strip().lower()
-    if normalized in {"sdk_hybrid", "hybrid", "sdk", "base"}:
+    if normalized in {"", "sdk"}:
         return "sdk"
     return normalized or "sdk"
 

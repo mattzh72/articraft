@@ -4,7 +4,7 @@ import importlib
 
 import pytest
 
-import sdk_hybrid
+import sdk
 
 cq = pytest.importorskip("cadquery")
 
@@ -69,7 +69,7 @@ def test_representative_vendored_gears_build(
     kwargs: dict[str, float | int],
     expected_type_name: str,
 ) -> None:
-    gear_cls = getattr(sdk_hybrid, gear_ctor)
+    gear_cls = getattr(sdk, gear_ctor)
     gear = gear_cls(**kwargs)
     body = gear.build()
 
@@ -78,13 +78,13 @@ def test_representative_vendored_gears_build(
 
 
 def test_workplane_gear_plugin_and_top_level_helpers() -> None:
-    spur = sdk_hybrid.SpurGear(module=0.5, teeth_number=12, width=3.0, bore_d=2.0)
+    spur = sdk.SpurGear(module=0.5, teeth_number=12, width=3.0, bore_d=2.0)
 
     wp = cq.Workplane("XY").gear(spur)
     assert isinstance(wp, cq.Workplane)
     assert len(wp.vals()) == 1
 
-    helper_wp = sdk_hybrid.gear(cq.Workplane("XY"), spur)
+    helper_wp = sdk.gear(cq.Workplane("XY"), spur)
     assert isinstance(helper_wp, cq.Workplane)
     assert len(helper_wp.vals()) == 1
 
@@ -93,10 +93,10 @@ def test_workplane_gear_plugin_and_top_level_helpers() -> None:
     assert union_wp.solids().vals()
 
 
-def test_sdk_hybrid_gears_module_reexports_classes() -> None:
-    from sdk_hybrid.gears import RingGear, SpurGear
+def test_sdk_gears_module_reexports_classes() -> None:
+    from sdk.v0.gears import RingGear, SpurGear
 
-    current_sdk_hybrid = importlib.import_module("sdk_hybrid")
+    current_sdk = importlib.import_module("sdk")
 
-    assert SpurGear.__name__ == current_sdk_hybrid.SpurGear.__name__
-    assert RingGear.__name__ == current_sdk_hybrid.RingGear.__name__
+    assert SpurGear.__name__ == current_sdk.SpurGear.__name__
+    assert RingGear.__name__ == current_sdk.RingGear.__name__

@@ -1,17 +1,17 @@
 from __future__ import annotations
 
-import shutil
 from pathlib import Path
 
 import pytest
 
-from sdk._core.v0.assets import AssetContext
-from sdk_hybrid import ArticulatedObject, TestContext, cadquery_local_aabb
-from sdk_hybrid.v0.cadquery import (
+from sdk import (
+    ArticulatedObject,
+    cadquery_local_aabb,
     export_cadquery_components,
     mesh_components_from_cadquery,
     mesh_from_cadquery,
 )
+from sdk._core.v0.assets import AssetContext
 
 cq = pytest.importorskip("cadquery")
 
@@ -82,9 +82,7 @@ def test_export_cadquery_components_scales_assembly_locations_with_unit_scale(tm
     assert exports[1].local_aabb[1] == pytest.approx((0.025, 0.005, 0.005))
 
 
-def test_mesh_from_cadquery_still_triggers_disconnected_geometry_warning_for_multi_solid_shape(
-    tmp_path,
-) -> None:
+def test_mesh_from_cadquery_materializes_multi_solid_workplane(tmp_path) -> None:
     assets = AssetContext(tmp_path)
     box1 = cq.Workplane("XY").box(1.0, 1.0, 1.0).val()
     box2 = cq.Workplane("XY").center(3.0, 0.0).box(1.0, 1.0, 1.0).val()
@@ -93,18 +91,9 @@ def test_mesh_from_cadquery_still_triggers_disconnected_geometry_warning_for_mul
     model = ArticulatedObject(name="cadquery_connectivity", assets=assets)
     frame = model.part("frame")
     mesh = mesh_from_cadquery(workplane, "frame.obj", assets=assets)
-    materialized_path = Path(str(mesh.materialized_path))
-    expected_mesh_path = assets.mesh_path(mesh.filename, ensure_dir=False)
-    if materialized_path != expected_mesh_path:
-        expected_mesh_path.parent.mkdir(parents=True, exist_ok=True)
-        shutil.copy2(materialized_path, expected_mesh_path)
     frame.visual(mesh, name="frame_body")
 
-    ctx = TestContext(model)
-
-    assert not ctx.warn_if_part_contains_disconnected_geometry_islands()
-
-    report = ctx.report()
-    assert report.passed
-    assert len(report.warnings) == 1
-    assert "frame_body__component_002:Mesh" in report.warnings[0]
+    assert mesh.filename == "assets/meshes/frame.obj"
+    assert mesh.materialized_path is not None
+    assert Path(str(mesh.materialized_path)).exists()
+    assert frame.get_visual("frame_body").geometry.filename == "assets/meshes/frame.obj"

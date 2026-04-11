@@ -8,11 +8,9 @@ def test_active_repo_surfaces_do_not_reference_removed_collision_apis() -> None:
     search_roots = [
         repo_root / "agent",
         repo_root / "sdk",
-        repo_root / "sdk_hybrid",
         repo_root / "tests",
         repo_root / "viewer",
         repo_root / "scaffold.py",
-        repo_root / "scaffold_hybrid.py",
     ]
     banned_fragments = (
         "generated_collisions",

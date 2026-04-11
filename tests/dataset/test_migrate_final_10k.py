@@ -58,7 +58,7 @@ def _build_synthetic_final_10k(source_root: Path) -> None:
             title = _category_title(index)
             is_empty = index >= CATEGORY_COUNT - EMPTY_CATEGORY_COUNT
             item_count = 0 if is_empty else 2 if index < DOUBLE_ITEM_CATEGORY_COUNT else 1
-            writer.writerow([title, str(item_count), "hybrid_cad" if index % 2 else "base"])
+            writer.writerow([title, str(item_count), "base"])
 
     for index in range(CATEGORY_COUNT):
         slug = _category_slug(index)
@@ -95,7 +95,7 @@ def _build_synthetic_final_10k(source_root: Path) -> None:
         item_count = 0 if is_empty else 2 if index < DOUBLE_ITEM_CATEGORY_COUNT else 1
         extra_run = index < EXTRA_RUN_CATEGORY_COUNT
         run_count = (1 if item_count > 0 else 0) + (1 if extra_run else 0)
-        target_sdk_version = "hybrid_cad" if index % 2 else "base"
+        target_sdk_version = "base"
 
         category_manifest_entries: list[dict[str, str]] = []
         if item_count > 0:
@@ -117,7 +117,7 @@ def _build_synthetic_final_10k(source_root: Path) -> None:
                     "max_turns": 30,
                     "system_prompt_path": "designer_system_prompt.txt",
                     "qc_blurb_path": None,
-                    "sdk_package": "sdk_hybrid" if index % 2 else "sdk",
+                    "sdk_package": "sdk",
                     "created_at": f"2026-03-16T01:{index % 60:02d}:00Z",
                 },
             )
@@ -201,7 +201,7 @@ def _build_synthetic_final_10k(source_root: Path) -> None:
                         "max_turns": 30,
                         "system_prompt_path": "designer_system_prompt.txt",
                         "qc_blurb_path": None,
-                        "sdk_package": "sdk_hybrid" if index % 2 else "sdk",
+                        "sdk_package": "sdk",
                         "status": "accepted",
                         "created_at": f"2026-03-16T01:{index % 60:02d}:{item_index:02d}Z",
                     },
@@ -270,7 +270,7 @@ def _build_synthetic_final_10k(source_root: Path) -> None:
                     "max_turns": 30,
                     "system_prompt_path": "designer_system_prompt.txt",
                     "qc_blurb_path": None,
-                    "sdk_package": "sdk_hybrid" if index % 2 else "sdk",
+                    "sdk_package": "sdk",
                     "created_at": f"2026-03-17T02:{index % 60:02d}:00Z",
                 },
             )

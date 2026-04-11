@@ -6,5 +6,5 @@
   "prompt_batch_ids": [
     "20260312_seed_prompts_v1"
   ],
-  "target_sdk_version": "hybrid_cad"
+  "target_sdk_version": "base"
 }

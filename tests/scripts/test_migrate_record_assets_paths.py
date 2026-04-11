@@ -74,7 +74,7 @@ def test_migrate_record_assets_paths_moves_rewrites_and_updates_metadata(tmp_pat
     assert "materialization" not in provenance
 
 
-def test_migrate_record_assets_paths_rewrites_hybrid_mesh_context_block(tmp_path) -> None:
+def test_migrate_record_assets_paths_rewrites_mesh_context_block(tmp_path) -> None:
     repo = StorageRepo(tmp_path)
     repo.ensure_layout()
 
@@ -88,7 +88,7 @@ def test_migrate_record_assets_paths_rewrites_hybrid_mesh_context_block(tmp_path
                 "",
                 "from pathlib import Path",
                 "",
-                "from sdk_hybrid import (",
+                "from sdk import (",
                 "    ArticulatedObject,",
                 "    Box,",
                 ")",

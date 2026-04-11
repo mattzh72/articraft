@@ -38,16 +38,6 @@ def normalize_sdk_docs_mode(docs_mode: str) -> str:
     return candidate
 
 
-def resolve_sdk_package_flags(
-    *,
-    hybrid_sdk: bool = False,
-    default_sdk_package: str = "sdk",
-) -> str:
-    if hybrid_sdk:
-        return "sdk"
-    return normalize_sdk_package(default_sdk_package)
-
-
 def resolve_system_prompt_path(
     prompt_path: str,
     *,

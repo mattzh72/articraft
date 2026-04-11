@@ -14,6 +14,8 @@ from agent.prompts import (
 )
 from agent.runner import build_provider_payload_preview
 
+_REMOVED_PACKAGE = "_".join(("sdk", "hybrid"))
+
 
 def _build_openai_preview(
     user_content: object = "a pair of scissors",
@@ -201,10 +203,13 @@ def test_openai_prompt_cache_key_is_stable_across_user_prompt_changes() -> None:
 def test_openai_prompt_cache_key_is_stable_when_sdk_inputs_normalize_to_same_prefix() -> None:
     full_payload = _build_openai_preview(sdk_package="sdk", sdk_docs_mode="full")
     core_payload = _build_openai_preview(sdk_package="sdk", sdk_docs_mode="core")
-    hybrid_payload = _build_openai_preview(sdk_package="sdk_hybrid", sdk_docs_mode="full")
 
     assert full_payload["prompt_cache_key"] == core_payload["prompt_cache_key"]
-    assert full_payload["prompt_cache_key"] == hybrid_payload["prompt_cache_key"]
+
+
+def test_openai_preview_rejects_removed_legacy_sdk_package() -> None:
+    with pytest.raises(ValueError, match="Unsupported SDK package"):
+        _build_openai_preview(sdk_package=_REMOVED_PACKAGE)
 
 
 def test_openai_prompt_cache_key_changes_for_system_prompt_contents(tmp_path: Path) -> None:

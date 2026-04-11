@@ -116,9 +116,7 @@ def _coerce_string(value: Any) -> str | None:
 
 def _normalize_sdk_package_value(value: Any) -> str | None:
     normalized = _coerce_string(value)
-    if normalized in {"sdk_hybrid", "hybrid", "base"}:
-        return "sdk"
-    return normalized
+    return "sdk" if normalized == "sdk" else normalized
 
 
 def _thinking_level_from_provenance(provenance: Any) -> str | None:
@@ -2247,7 +2245,7 @@ class ViewerStore:
                 if isinstance(category_payload, dict)
                 else ""
             )
-            if target_sdk_version in {"hybrid_cad", "base"}:
+            if target_sdk_version == "base":
                 category_sdk_packages[category] = "sdk"
             else:
                 record_sdk_packages = category_record_sdk_packages.get(category) or set()

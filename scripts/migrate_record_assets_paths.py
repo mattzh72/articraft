@@ -113,12 +113,10 @@ def _rewrite_model_py_mesh_paths(text: str) -> tuple[str, int]:
     if "AssetContext.from_script(__file__)" not in rewritten and any(
         marker in rewritten for marker in ('HERE / "meshes"', "HERE / 'meshes'")
     ):
-        for package_name in ("sdk_hybrid", "sdk"):
-            needle = f"from {package_name} import (\n"
-            if needle in rewritten and "AssetContext," not in rewritten:
-                rewritten = rewritten.replace(needle, needle + "    AssetContext,\n", 1)
-                count += 1
-                break
+        needle = "from sdk import (\n"
+        if needle in rewritten and "AssetContext," not in rewritten:
+            rewritten = rewritten.replace(needle, needle + "    AssetContext,\n", 1)
+            count += 1
 
     path_here_occurrences = len(HERE_FROM_PATH_RE.findall(rewritten))
     if path_here_occurrences and "AssetContext" in rewritten:

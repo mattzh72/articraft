@@ -7,5 +7,5 @@
     "20260312_seed_prompts_v1",
     "xyz_cartesian_stage_0002"
   ],
-  "target_sdk_version": "hybrid_cad"
+  "target_sdk_version": "base"
 }

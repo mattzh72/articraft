@@ -4,7 +4,6 @@ from sdk import ArticulatedObject, TestContext, TestReport
 
 # Advanced; only use CadQuery if the native sdk is not enough to represent the shapes you want:
 # import cadquery as cq
-# from sdk import mesh_from_cadquery
 
 
 def build_object_model() -> ArticulatedObject:

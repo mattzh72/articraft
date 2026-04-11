@@ -1,6 +1,10 @@
 from __future__ import annotations
 
+import pytest
+
 from sdk._profiles import get_sdk_profile
+
+_REMOVED_PACKAGE = "_".join(("sdk", "hybrid"))
 
 
 def test_sdk_docs_profile_includes_base_and_cadquery_topics() -> None:
@@ -17,3 +21,8 @@ def test_sdk_docs_profile_includes_base_and_cadquery_topics() -> None:
     assert "sdk/_docs/cadquery/39d_cadquery_gears.md" in base_docs
     assert "sdk/_docs/base/47_shell_partition.md" not in base_docs
     assert "sdk/_docs/cadquery/39a_cadquery_examples.md" not in base_docs
+
+
+def test_sdk_docs_profile_rejects_removed_legacy_sdk_package() -> None:
+    with pytest.raises(ValueError, match="Unsupported SDK package"):
+        get_sdk_profile(_REMOVED_PACKAGE)

@@ -7,5 +7,5 @@
     "20260312_seed_prompts_v1",
     "prismaticrevoluteprismatic_chain_0001"
   ],
-  "target_sdk_version": "hybrid_cad"
+  "target_sdk_version": "base"
 }

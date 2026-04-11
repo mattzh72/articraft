@@ -83,7 +83,6 @@ _SDK_PACKAGE_ALIASES = {
     "": "sdk",
     "base": "sdk",
     "sdk": "sdk",
-    "sdk_hybrid": "sdk",
 }
 
 

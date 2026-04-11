@@ -12,7 +12,7 @@ multiple believable records, and a clear `target_sdk_version`.
 A good category should be:
 
 - representable as a believable articulated object with explicit URDF joints
-- buildable reliably with `sdk` or `sdk_hybrid`
+- buildable reliably with `sdk`
 - specific enough to have a clear object identity
 - broad enough to support more than a single one-off design
 - distinct from categories we already have
@@ -135,13 +135,7 @@ Current default mapping:
 
 - use `base` for object-first categories where product identity, housing, body
   shell, and visible finished form matter more than CAD-style mechanism detail
-- use `hybrid_cad` for mechanism-first categories or categories whose geometry
-  is best expressed through explicit hard-surface members, brackets, rails,
-  hubs, and dimensional CAD structure
-
-Do not choose `hybrid_cad` just because something is mechanical.
-Do not choose `base` if the category really wants CAD-like member structure and
-precise rigid hardware.
+- use `base` for all current categories in this repo
 
 ## Decision Checklist
 
@@ -149,8 +143,7 @@ Before adding a category, check:
 
 1. Is the defining motion representable with explicit URDF joints and tree
    kinematics?
-2. Can we build multiple believable examples cleanly with `sdk` or
-   `sdk_hybrid`?
+2. Can we build multiple believable examples cleanly with `sdk`?
 3. Is the category scope stable and coherent?
 4. Is it meaningfully distinct from the categories already under
    `data/categories/`?

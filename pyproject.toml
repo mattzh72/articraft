@@ -43,7 +43,6 @@ packages = [
     "storage",
     "viewer",
     "sdk",
-    "sdk_hybrid",
 ]
 
 [dependency-groups]
@@ -65,7 +64,7 @@ extend-exclude = ["data"]
 [tool.ruff.lint]
 select = ["E", "F", "I"]
 ignore = ["E501"]
-per-file-ignores = { "scaffold.py" = ["F821"], "scaffold_hybrid.py" = ["F821"], "scaffold_lite.py" = ["F821"], "scaffold_hybrid_lite.py" = ["F821"] }
+per-file-ignores = { "scaffold.py" = ["F821"], "scaffold_lite.py" = ["F821"] }
 
 [tool.ruff.format]
 quote-style = "double"
