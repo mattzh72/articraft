@@ -6,6 +6,7 @@
 - `compile_model` runs full compile + QC on the current file and returns structured `<compile_signals>` feedback.
 - `probe_model` runs short read-only Python snippets for geometry inspection. See SDK docs for the helper catalog and signatures.
 - `find_examples` does lexical search over curated examples for the active SDK. Use it proactively when you need modeling, placement, or testing patterns that are similar to the current object, especially before improvising unfamiliar mechanisms or shape constructions. Results may be stale — adapt against current SDK docs. Entries marked `[weakly relevant]` are inspiration-only and should not be over-trusted.
+- Never paste or mechanically adapt example code; if an example is strongly aligned, rewrite it from first principles with at least two structural changes before applying.
 - Prefer small exact `edit_code` replacements over broad rewrites.
 - If `edit_code` fails because `old_string` did not match, call `read_code()` again and retry with a smaller exact snippet.
 - The scaffold has existing editable code; do not assume `old_string=""` for a blank start.
