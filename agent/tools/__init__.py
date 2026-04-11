@@ -47,7 +47,7 @@ _FIRST_TURN_RUNTIME_GUIDANCE_SHARED = (
     "- After each coherent chunk, run `compile_model` before moving on.\n"
     "- Use tools deliberately. Prefer the smallest action that gives decisive evidence.\n"
     "- If the cause is obvious from `model.py` and `compile_model` output, fix it directly.\n"
-    "- Use `probe_model` when geometry, pose, support path, or exact-element identity is ambiguous, or when a first repair attempt did not resolve the issue.\n"
+    "- Use `probe_model` when geometry, pose, support path, or exact-element identity is ambiguous. After a first ambiguous spatial repair does not resolve the issue, `probe_model` is often the best next step to gather evidence before patching again.\n"
     "- Do not do blind self-correction passes without new evidence.\n"
     "</runtime_task_guidance>"
 )
@@ -65,7 +65,7 @@ _FIRST_TURN_RUNTIME_GUIDANCE_BY_PROVIDER: dict[str, str] = {
         "- After each coherent chunk, run `compile_model` before moving on.\n"
         "- Use tools deliberately. Prefer the smallest action that gives decisive evidence.\n"
         "- If the cause is obvious from `model.py` and `compile_model` output, fix it directly.\n"
-        "- Use `probe_model` when geometry, pose, support path, or exact-element identity is ambiguous, or when a first repair attempt did not resolve the issue.\n"
+        "- Use `probe_model` when geometry, pose, support path, or exact-element identity is ambiguous. After a first ambiguous spatial repair does not resolve the issue, `probe_model` is often the best next step to gather evidence before patching again.\n"
         "</runtime_task_guidance>"
     ),
     "gemini": (
@@ -82,7 +82,7 @@ _FIRST_TURN_RUNTIME_GUIDANCE_BY_PROVIDER: dict[str, str] = {
         "- After each coherent chunk, run `compile_model` before moving on.\n"
         "- Use tools deliberately. Prefer the smallest action that gives decisive evidence.\n"
         "- If the cause is obvious from `model.py` and `compile_model` output, fix it directly.\n"
-        "- Use `probe_model` when geometry, pose, support path, or exact-element identity is ambiguous, or when a first repair attempt did not resolve the issue.\n"
+        "- Use `probe_model` when geometry, pose, support path, or exact-element identity is ambiguous. After a first ambiguous spatial repair does not resolve the issue, `probe_model` is often the best next step to gather evidence before patching again.\n"
         "</runtime_task_guidance>"
     ),
 }

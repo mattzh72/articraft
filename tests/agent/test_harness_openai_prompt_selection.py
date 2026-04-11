@@ -76,12 +76,7 @@ def test_openai_prompt_resolution_and_payload_preview() -> None:
     assert "FREEFORM tool" in instructions
     assert "write_code" not in instructions
     assert "Prefer several small `apply_patch` edits over one giant patch" in instructions
-    assert "Treat `compile_model` as the full validation pass." in instructions
     assert "Prefer the smallest action that gives decisive evidence." in instructions
-    assert (
-        "If the cause is obvious from `model.py` and `compile_model` output, fix it directly."
-        in instructions
-    )
 
     # Three hard requirements
     assert "NO FLOATING PARTS" in instructions
@@ -91,10 +86,13 @@ def test_openai_prompt_resolution_and_payload_preview() -> None:
     # Compact workflow + moved SDK guidance
     assert "Start with a short context pass:" in instructions
     assert "preloaded SDK quickstart/router" in instructions
-    assert "only for the specific `docs/` references needed for that next change" in instructions
+    assert "Read only the specific `docs/` references needed for the next change" in instructions
     assert "read the full file once, not a small slice" in instructions
     assert "Do not re-read it if it is already in context." in instructions
     assert "Start with the smallest coherent backbone or subassembly" in instructions
+    assert (
+        "When a spatial issue is ambiguous, use `probe_model` to gather evidence." in instructions
+    )
     assert "Always run `compile_model` on the latest revision before concluding." in instructions
     assert "PHASE 1" not in instructions
 
@@ -102,10 +100,6 @@ def test_openai_prompt_resolution_and_payload_preview() -> None:
     assert "inspection-only" in instructions
     assert "lexical search over curated examples for the active SDK" in instructions
     assert "<compile_signals>" in instructions
-    assert (
-        "Read mounted SDK docs as needed for placement, probe patterns, exact signatures, and testing guidance."
-        in instructions
-    )
     assert "Match the visible construction logic of the object." in instructions
     assert (
         "Preserve correct joint origins, axes, limits, and articulation behavior." in instructions
@@ -124,6 +118,7 @@ def test_openai_prompt_resolution_and_payload_preview() -> None:
         "Start with a short context pass: decide the next coherent edit, then read only the docs/examples needed for it."
         in task_message
     )
+    assert "After a first ambiguous spatial repair does not resolve the issue" in task_message
     assert 'read the full file with `read_file(path="docs/...")`' in task_message
     assert "do not re-read a reference file that is already in context" in task_message
     assert task_message.endswith("a pair of scissors")
@@ -336,12 +331,7 @@ def test_gemini_prompt_resolution_and_payload_preview() -> None:
     assert 'old_string=""' in gemini_instructions
     assert "write_code" not in gemini_instructions
     assert "Prefer small exact `edit_code` replacements over broad rewrites" in gemini_instructions
-    assert "Treat `compile_model` as the full validation pass." in gemini_instructions
     assert "Prefer the smallest action that gives decisive evidence." in gemini_instructions
-    assert (
-        "If the cause is obvious from `model.py` and `compile_model` output, fix it directly."
-        in gemini_instructions
-    )
 
     # Three hard requirements
     assert "NO FLOATING PARTS" in gemini_instructions
@@ -352,12 +342,16 @@ def test_gemini_prompt_resolution_and_payload_preview() -> None:
     assert "Start with a short context pass:" in gemini_instructions
     assert "preloaded SDK quickstart/router" in gemini_instructions
     assert (
-        "only for the specific `docs/` references needed for that next change"
+        "Read only the specific `docs/` references needed for the next change"
         in gemini_instructions
     )
     assert "read the full file once, not a small slice" in gemini_instructions
     assert "Do not re-read it if it is already in context." in gemini_instructions
     assert "Start with the smallest coherent backbone or subassembly" in gemini_instructions
+    assert (
+        "When a spatial issue is ambiguous, use `probe_model` to gather evidence."
+        in gemini_instructions
+    )
     assert (
         "Always run `compile_model` on the latest revision before concluding."
         in gemini_instructions
@@ -367,10 +361,6 @@ def test_gemini_prompt_resolution_and_payload_preview() -> None:
     # Provider/system guidance
     assert "inspection-only" in gemini_instructions
     assert "lexical search over curated examples for the active SDK" in gemini_instructions
-    assert (
-        "Read mounted SDK docs as needed for placement, probe patterns, exact signatures, and testing guidance."
-        in gemini_instructions
-    )
     assert "Match the visible construction logic of the object." in gemini_instructions
     assert (
         "Preserve correct joint origins, axes, limits, and articulation behavior."
@@ -386,6 +376,9 @@ def test_gemini_prompt_resolution_and_payload_preview() -> None:
     assert (
         "Start with a short context pass: decide the next coherent edit, then read only the docs/examples needed for it."
         in gemini_task_message
+    )
+    assert (
+        "After a first ambiguous spatial repair does not resolve the issue" in gemini_task_message
     )
     assert 'read_file(path="docs/...")' in gemini_task_message
     assert "do not re-read a reference file that is already in context" in gemini_task_message

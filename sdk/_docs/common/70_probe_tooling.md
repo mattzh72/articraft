@@ -205,6 +205,17 @@ Return approximate bilateral symmetry report.
 - Prefer a short focused probe that answers one spatial question over a large
   diagnostic script that mixes many checks at once.
 
+## Common Probe Use Cases
+
+- Overlap or collision classification: start with `pair_report(...)`,
+  `overlap_report(...)`, or `mount_report(...)`.
+- Floating-looking or weakly supported parts: start with
+  `find_floating_parts(...)`, `nearest_neighbors(...)`, or `mount_report(...)`.
+- Fit, containment, or directional clearance ambiguity: start with
+  `within_report(...)` or `gap_report(...)`.
+- Suspicious disconnected mesh islands inside one part: start with
+  `geometry_connectivity_report(...)`.
+
 ## Examples
 
 Mounted feature review:
@@ -220,6 +231,19 @@ Pose-aware contact check:
 ```python
 with pose(lid_hinge=1.0):
     emit(contact_report(part("lid"), part("frame")))
+```
+
+Overlap classification for a reported pair:
+
+```python
+emit(pair_report(part("spindle_head"), part("table"), elem_a="quill", elem_b="table_disk"))
+```
+
+Floating/support-path review for a suspicious part:
+
+```python
+handle = part("handle")
+emit({"floating": find_floating_parts(parts=[handle], limit=1), "neighbors": nearest_neighbors(handle, limit=3)})
 ```
 
 Repeated layout review:

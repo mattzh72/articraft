@@ -46,6 +46,8 @@ def _assert_shared_contract(text: str) -> None:
     assert "Treat `compile_model` and `probe_model` as feedback tools." in text
     assert "Prefer the smallest action that gives decisive evidence." in text
     assert "If the cause is obvious from `model.py` and compile output, fix it directly." in text
+    assert "When a spatial issue is ambiguous, use `probe_model` to gather evidence." in text
+    assert "After a first ambiguous repair does not resolve the issue" in text
     assert "Always run `compile_model` on the latest revision before concluding." in text
     assert "PHASE 1" not in text
 

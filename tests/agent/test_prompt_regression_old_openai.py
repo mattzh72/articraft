@@ -33,6 +33,7 @@ def test_compiled_openai_prompt_keeps_compact_contract_and_visual_test_gate() ->
         assert "Start with the smallest coherent backbone or subassembly" in text
         assert "Expand one coherent region at a time" in text
         assert "Treat `compile_model` and `probe_model` as feedback tools." in text
+        assert "When a spatial issue is ambiguous, use `probe_model` to gather evidence." in text
         assert "Always run `compile_model` on the latest revision before concluding." in text
         assert "PHASE 1" not in text
 
