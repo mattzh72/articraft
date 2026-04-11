@@ -1,0 +1,7 @@
+{
+  "schema_version": 1,
+  "slug": "camera_flash",
+  "title": "Camera flash",
+  "description": "",
+  "target_sdk_version": "base"
+}

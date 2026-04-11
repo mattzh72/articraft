@@ -1,0 +1,7 @@
+{
+  "schema_version": 1,
+  "slug": "cash_register",
+  "title": "Cash register",
+  "description": "",
+  "target_sdk_version": "base"
+}

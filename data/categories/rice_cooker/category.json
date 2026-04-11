@@ -1,0 +1,7 @@
+{
+  "schema_version": 1,
+  "slug": "rice_cooker",
+  "title": "Rice cooker",
+  "description": "",
+  "target_sdk_version": "base"
+}

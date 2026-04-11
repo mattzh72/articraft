@@ -3,13 +3,17 @@
 This document defines how to write category prompts for batch specs under
 `data/batch_specs/`.
 
+Current batch specs use the unified default modeling stack. Do not mention
+tooling variants or pipeline variants in prompts, and in normal batch CSVs you
+should not need extra stack-selection fields.
+
 ## Core Principle
 
 **Write the prompt a mechanical engineer would write on a napkin sketch — enough
 to build from, not enough to fill a spec sheet.**
 
-The system prompt already handles realism, material choices, validation, SDK
-tool selection, and the build process. The user prompt should specify *what* to
+The system prompt already handles realism, material choices, validation, tool
+selection, and the build process. The user prompt should specify *what* to
 build, *what parts it has*, and *how it moves*.
 
 More prompt detail = more geometry = more turns = more cost = more error
@@ -20,7 +24,7 @@ something it cannot infer from the object name alone.
 
 The agent's system prompt enforces these — **do not repeat them in prompts**:
 
-- Realistic geometry and appropriate SDK/CadQuery tool selection
+- Realistic geometry and appropriate modeling/CadQuery tool selection
 - No floating parts, no unintentional overlaps
 - Incremental build process with compile feedback
 - Testing and validation of placement, connectivity, and articulation
@@ -31,7 +35,7 @@ These phrases are **wasted tokens** — never include them:
 
 - "realistic, highly detailed"
 - "standalone mechanical study assembly"
-- "for the sdk_hybrid pipeline"
+- "for a specific tooling or pipeline variant"
 - "emphasize rigid brackets, exposed bearing hardware"
 - "disciplined machined-or-fabricated hard-surface geometry"
 - "avoid product styling, decorative housings"
@@ -69,12 +73,17 @@ Only needed when the default would be ambiguous. E.g., "desktop-scale" vs
 
 | Object complexity | Target parts | Prompt length | Suggested max turns |
 |---|---|---|---|
-| Simple (1-2 joints) | 3-6 parts | 2-3 sentences | 25 |
-| Medium (3-5 joints) | 6-12 parts | 3-4 sentences | 35 |
-| Complex (6+ joints) | 12-20 parts | 4-6 sentences | 50 |
+| Simple (1-2 joints) | 3-6 parts | 2-3 sentences | 100 |
+| Medium (3-5 joints) | 6-12 parts | 3-4 sentences | 140 |
+| Complex (6+ joints) | 12-20 parts | 4-6 sentences | 180 |
 
 If you find yourself writing more than 6 sentences, you are probably
 over-specifying. Split into two objects or simplify.
+
+These are current working budgets, not hard limits. New-category exploration in
+this repo commonly runs in the `100-200` turn range. Raise the budget when the
+object has real geometric or articulation complexity; do not lower prompt
+quality just to fit an outdated turn target.
 
 ## Examples
 
@@ -120,7 +129,7 @@ over-specifying. Split into two objects or simplify.
 ### Bad — too verbose
 
 > Design a realistic, highly detailed single revolute hinge as a standalone
-> mechanical study assembly for the sdk_hybrid pipeline, with one clear rotary
+> mechanical study assembly for a special pipeline variant, with one clear rotary
 > axis joining two rigid leaves or clevis members in a heavy-duty hinge. The
 > hinge pin, barrel segments, and support cheeks should be prominent and
 > mechanically plausible. Emphasize rigid brackets, exposed hinge hardware,

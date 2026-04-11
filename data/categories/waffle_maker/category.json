@@ -1,0 +1,7 @@
+{
+  "schema_version": 1,
+  "slug": "waffle_maker",
+  "title": "Waffle maker",
+  "description": "",
+  "target_sdk_version": "base"
+}
