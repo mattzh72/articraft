@@ -1,10 +1,9 @@
-# Panels and Grilles
+# Panels and Grilles (`sdk`)
 
 ## Purpose
 
-Use these helpers when the visible result should read as one connected panel
-face with repeated openings or louvers, rather than a hand-assembled set of
-floating bars and boxes.
+Use these helpers for panel faces with repeated openings, slots, or slats.
+They stay on the base `sdk` surface and export through `mesh_from_geometry(...)`.
 
 ## Import
 
@@ -13,19 +12,21 @@ from sdk import (
     PerforatedPanelGeometry,
     SlotPatternPanelGeometry,
     VentGrilleGeometry,
+    VentGrilleSlats,
+    VentGrilleFrame,
+    VentGrilleMounts,
+    VentGrilleSleeve,
     mesh_from_geometry,
 )
 ```
 
-## Recommended APIs
+## Recommended Surface
 
-| Shape intent | Helper |
-| --- | --- |
-| Round-hole speaker, appliance, or cover plate | `PerforatedPanelGeometry` |
-| Rounded-slot filter, grille, or intake face | `SlotPatternPanelGeometry` |
-| Complete vent/register shell with fused slats and rear sleeve | `VentGrilleGeometry` |
-
-## API Reference
+- `PerforatedPanelGeometry` for round-hole plates
+- `SlotPatternPanelGeometry` for repeated slot faces
+- `VentGrilleGeometry` for framed vent/register faces with slats and an optional rear sleeve
+- `VentGrilleSlats`, `VentGrilleFrame`, `VentGrilleMounts`, and `VentGrilleSleeve`
+  for vent-specific customization
 
 ### `PerforatedPanelGeometry`
 
@@ -36,18 +37,16 @@ PerforatedPanelGeometry(
     *,
     hole_diameter,
     pitch,
-    frame: float = 0.008,
-    corner_radius: float = 0.0,
-    stagger: bool = False,
-    center: bool = True,
+    frame=0.008,
+    corner_radius=0.0,
+    stagger=False,
+    center=True,
 )
 ```
 
-- Builds a rectangular plate with a centered grid of round through-holes.
-- `panel_size`: `(width, height)` in local XY.
-- `pitch`: either a scalar or `(x_pitch, y_pitch)`.
-- `stagger=True` offsets alternating rows by half of the X pitch.
-- `frame` reserves a solid border margin around the perforated region.
+- Builds a flat plate in local `XY` with round through-holes.
+- `pitch` can be a scalar or `(x_pitch, y_pitch)` tuple.
+- `stagger=True` offsets alternating rows.
 - `center=False` places the rear face on `z=0`.
 
 ### `SlotPatternPanelGeometry`
@@ -59,19 +58,17 @@ SlotPatternPanelGeometry(
     *,
     slot_size,
     pitch,
-    frame: float = 0.008,
-    corner_radius: float = 0.0,
-    slot_angle_deg: float = 0.0,
-    stagger: bool = False,
-    center: bool = True,
+    frame=0.008,
+    corner_radius=0.0,
+    slot_angle_deg=0.0,
+    stagger=False,
+    center=True,
 )
 ```
 
-- Builds a rectangular plate with rounded through-slots.
-- `slot_size`: `(length, width)` of each slot before rotation.
-- `pitch`: either a scalar or `(x_pitch, y_pitch)`.
-- `slot_angle_deg` uses degrees.
-- `frame` reserves a solid border margin around the slot field.
+- Builds a slotted face in local `XY`.
+- `slot_angle_deg` rotates each slot in plan view and uses degrees.
+- `pitch` can be a scalar or `(x_pitch, y_pitch)` tuple.
 - `center=False` places the rear face on `z=0`.
 
 ### `VentGrilleGeometry`
@@ -89,29 +86,82 @@ VentGrilleGeometry(
     slat_angle_deg: float = 35.0,
     slat_thickness: float | None = None,
     corner_radius: float = 0.0,
+    slats: VentGrilleSlats | None = None,
+    frame_profile: VentGrilleFrame | None = None,
+    mounts: VentGrilleMounts | None = None,
+    sleeve: VentGrilleSleeve | None = None,
+    center: bool = True,
 )
 ```
 
-- Builds a vent grille shell with true open slots, fused slats, and a shallow
-  rear sleeve.
-- `panel_size`: `(width, height)` of the front flange.
-- The front flange is centered on local `z=0`; the sleeve extends toward `-Z`.
-- `slat_pitch` must be greater than `slat_width`.
+- Builds a framed vent/register face with real slats and an optional rear sleeve.
+- The grille lies in local `XY` and extends along `Z`.
 - `slat_angle_deg` uses degrees.
-- Use this for a full vent/register face, not for a loose louver insert.
+- `center=False` places the rear-most face on `z=0`.
+- Use `VentGrilleSlats` for slat profile, direction, setback, and divider bars.
+- Use `VentGrilleFrame` for flush, beveled, or radiused frame treatments.
+- Use `VentGrilleMounts` for corner mounting holes.
+- Use `VentGrilleSleeve` to remove the sleeve or switch between short and full-depth sleeves.
 
-## Advice
+### `VentGrilleSlats`
 
-- Use a panel helper when the face should read as one stamped, cut, or molded
-  piece with repeated openings.
-- Use explicit bars, rods, or wires only when the object should read as a true
-  assembled cage or frame.
-- Leave a visible border frame on consumer and appliance panels unless the real
-  object is genuinely edge-to-edge perforated.
+```python
+VentGrilleSlats(
+    profile: Literal["flat", "airfoil", "boxed"] = "flat",
+    direction: Literal["down", "up"] = "down",
+    inset: float = 0.0,
+    divider_count: int = 0,
+    divider_width: float = 0.004,
+)
+```
+
+- `profile` changes the slat cross-section.
+- `direction` flips the slat angle upward or downward.
+- `inset` shifts the slats rearward into the sleeve.
+- `divider_count` and `divider_width` add vertical divider bars across the opening.
+
+### `VentGrilleFrame`
+
+```python
+VentGrilleFrame(
+    style: Literal["flush", "beveled", "radiused"] = "flush",
+    depth: float = 0.0,
+)
+```
+
+- `style="beveled"` adds a front chamfered face treatment.
+- `style="radiused"` rounds the front face perimeter.
+- `depth` controls the visible bevel or round-over amount.
+
+### `VentGrilleMounts`
+
+```python
+VentGrilleMounts(
+    style: Literal["none", "holes"] = "none",
+    inset: float = 0.008,
+    hole_diameter: float | None = None,
+)
+```
+
+- `style="holes"` cuts four corner mounting holes through the face.
+- `inset` controls the hole setback from the outer perimeter.
+
+### `VentGrilleSleeve`
+
+```python
+VentGrilleSleeve(
+    style: Literal["none", "short", "full"] = "full",
+    depth: float | None = None,
+    wall: float | None = None,
+)
+```
+
+- `style="none"` removes the rear sleeve entirely.
+- `style="short"` uses a shallow sleeve.
+- `style="full"` uses the full rear sleeve depth.
+- `depth` and `wall` override the default sleeve dimensions.
 
 ## Examples
-
-### Round perforated face
 
 ```python
 speaker_face = PerforatedPanelGeometry(
@@ -125,8 +175,6 @@ speaker_face = PerforatedPanelGeometry(
 )
 mesh = mesh_from_geometry(speaker_face, "speaker_face")
 ```
-
-### Slotted filter face
 
 ```python
 filter_face = SlotPatternPanelGeometry(
@@ -142,10 +190,8 @@ filter_face = SlotPatternPanelGeometry(
 mesh = mesh_from_geometry(filter_face, "filter_face")
 ```
 
-### Wall vent shell
-
 ```python
-wall_vent = VentGrilleGeometry(
+vent_grille = VentGrilleGeometry(
     (0.18, 0.10),
     frame=0.012,
     face_thickness=0.004,
@@ -153,14 +199,24 @@ wall_vent = VentGrilleGeometry(
     duct_wall=0.003,
     slat_pitch=0.018,
     slat_width=0.009,
-    slat_angle_deg=35.0,
+    slat_angle_deg=30.0,
     corner_radius=0.006,
+    slats=VentGrilleSlats(
+        profile="airfoil",
+        direction="down",
+        divider_count=2,
+        divider_width=0.004,
+    ),
+    frame_profile=VentGrilleFrame(style="beveled", depth=0.0012),
+    mounts=VentGrilleMounts(style="holes", inset=0.010, hole_diameter=0.0032),
+    sleeve=VentGrilleSleeve(style="full"),
 )
-mesh = mesh_from_geometry(wall_vent, "wall_vent")
+mesh = mesh_from_geometry(vent_grille, "vent_grille")
 ```
 
-## See Also
+## Clarifications for agent usage
 
-- `40_mesh_geometry.md` for low-level extrudes, sweeps, profiles, and export
-- `45_wires.md` for true wire/cage geometry
-- For a fuller worked script, see the base SDK wall vent/register example.
+- Use `VentGrilleGeometry` for a finished grille/register face. Do not fall back to
+  manual slat-by-slat mesh assembly when this helper matches the shape.
+- `VentGrilleSleeve(style="none")` is useful for shallow appliance vents and face-only grilles.
+- Divider bars are part of `VentGrilleSlats`, not a separate frame helper.
