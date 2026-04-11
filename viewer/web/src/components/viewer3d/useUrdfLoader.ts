@@ -35,6 +35,17 @@ export interface UrdfLoaderState {
   error: string | null;
 }
 
+function syncLoadedMeshVisibility(root: THREE.Object3D, showCollisionMeshes: boolean): void {
+  root.traverse((child) => {
+    if (child.userData.articraftVisual === true) {
+      child.visible = !showCollisionMeshes;
+    }
+    if (child.userData.articraftCollision === true) {
+      child.visible = showCollisionMeshes;
+    }
+  });
+}
+
 /**
  * Hook that fetches and loads a URDF from a base file URL.
  *
@@ -206,6 +217,9 @@ export function useUrdfLoader(
       .then(() => {
         if (cancelled || collisionMeshesLoadingKeyRef.current !== assetKey) {
           return;
+        }
+        for (const linkGroup of linkNodes.values()) {
+          syncLoadedMeshVisibility(linkGroup, true);
         }
         collisionMeshesLoadingKeyRef.current = null;
         collisionMeshesLoadedKeyRef.current = assetKey;
