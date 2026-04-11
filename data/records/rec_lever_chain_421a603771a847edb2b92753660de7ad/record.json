@@ -10,7 +10,7 @@
   "secondary_rated_by": "Zhaomou Song",
   "kind": "generated_model",
   "prompt_kind": "single_prompt",
-  "category_slug": "lever_chain",
+  "category_slug": "planar_revolute_chain",
   "source": {
     "run_id": "run_20260401_180928_379964_20260401-sdk-hybrid-one-each-gpt54-high",
     "prompt_batch_id": null,

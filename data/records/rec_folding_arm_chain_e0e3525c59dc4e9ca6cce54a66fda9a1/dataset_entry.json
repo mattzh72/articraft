@@ -2,6 +2,6 @@
   "schema_version": 1,
   "dataset_id": "ds_folding_arm_chain_e0e3525c59dc4e9ca6cce54a66fda9a1",
   "record_id": "rec_folding_arm_chain_e0e3525c59dc4e9ca6cce54a66fda9a1",
-  "category_slug": "folding_arm_chain",
+  "category_slug": "planar_revolute_chain",
   "promoted_at": "2026-03-30T18:14:18Z"
 }
