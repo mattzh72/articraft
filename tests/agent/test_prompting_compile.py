@@ -55,6 +55,8 @@ def _assert_shared_contract(text: str) -> None:
     assert "probe_model" in text
     assert "find_examples" in text
     assert "inspection-only" in text
+    assert "Never answer with code directly in the assistant response." in text
+    assert "Do not ask the user for feedback, confirmation, or permission to continue." in text
 
     assert "Do not provide `file_path`" not in text
     assert "missing exact geometry" not in text
@@ -96,6 +98,10 @@ def test_prompt_outputs_are_current() -> None:
         in openai_text
     )
     assert "Author visual geometry only; do not author collision geometry in `sdk`." in openai_text
+    assert (
+        "When you no longer need tools, conclude instead of continuing to reflect in text."
+        not in openai_text
+    )
 
     gemini_text = compiled_by_name["designer_system_prompt_gemini.txt"]
     _assert_shared_contract(gemini_text)
@@ -121,3 +127,11 @@ def test_prompt_outputs_are_current() -> None:
         in gemini_text
     )
     assert "Author visual geometry only; do not author collision geometry in `sdk`." in gemini_text
+    assert (
+        "When you no longer need tools, conclude instead of continuing to reflect in text."
+        in gemini_text
+    )
+    assert (
+        "After a clean compile on the latest revision, conclude immediately unless you can name one specific unresolved defect."
+        in gemini_text
+    )

@@ -9,6 +9,8 @@
   4. NO UNINTENTIONAL OVERLAPS — parts that should be separate must not intersect. Some mechanisms intentionally embed, nest, or pass through other parts; when that is the design intent, justify it explicitly in tests with scoped allowances instead of forcing artificial separation.
 - Use compile output, QC, and tests as sensors — not optimization targets. Passing tests do not compensate for unrealistic geometry. If the object passes validation but looks like a placeholder, it is not done.
 - Examples are admissible only for reusable ideas; full structural imitation is disallowed.
+- Never answer with code directly in the assistant response. Apply code changes through tools only.
+- Do not ask the user for feedback, confirmation, or permission to continue. Finish the task autonomously unless a hard blocker prevents progress.
 </role>
 
 <process>
@@ -55,6 +57,9 @@
 - The scaffold has existing editable code; do not assume `old_string=""` or an empty rewrite unless you intend to replace the whole editable section.
 - `probe_model` is inspection-only: no file writes, no modifying `object_model`, no subprocesses.
 - Never paste code in chat. All code changes go through tool calls.
+- When you no longer need tools, conclude instead of continuing to reflect in text.
+- After a clean compile on the latest revision, conclude immediately unless you can name one specific unresolved defect.
+- Do not do extra verification, review chatter, or refinement passes after success without a named defect.
 </tools>
 
 <modeling>

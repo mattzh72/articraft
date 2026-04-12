@@ -34,27 +34,8 @@ def _seed_gemini_messages() -> list[dict[str, str]]:
     ]
 
 
-def test_prepare_next_request_creates_prefix_cache_event() -> None:
+def test_prepare_next_request_skips_prefix_cache_event() -> None:
     provider = GeminiLLM(dry_run=True)
-
-    async def fake_count_prefix_tokens(
-        *, system_prompt: str, tools: list[dict], messages: list[dict]
-    ) -> int:
-        assert system_prompt == "system"
-        assert len(messages) == 2
-        return 5000
-
-    async def fake_create_prefix_cache(
-        *, system_prompt: str, tools: list[dict], messages: list[dict]
-    ) -> dict:
-        return {
-            "name": "cachedContents/cache_1",
-            "expire_time": "2026-04-02T12:00:00Z",
-            "usage_metadata": {"total_token_count": 5000, "cached_content_token_count": 5000},
-        }
-
-    provider._count_prefix_tokens = fake_count_prefix_tokens  # type: ignore[method-assign]
-    provider._create_prefix_cache = fake_create_prefix_cache  # type: ignore[method-assign]
 
     result = asyncio.run(
         provider.prepare_next_request(
@@ -69,9 +50,9 @@ def test_prepare_next_request_creates_prefix_cache_event() -> None:
     )
 
     assert result.compaction_event is None
-    assert result.maintenance_events[0]["kind"] == "cache_create"
-    assert result.maintenance_events[0]["cache_name"] == "cachedContents/cache_1"
-    assert provider._cached_content_name == "cachedContents/cache_1"
+    assert result.maintenance_events == []
+    assert result.trace_events == []
+    assert provider._cached_content_name is None
 
 
 def test_prepare_next_request_compacts_for_hard_pressure_and_preserves_raw_tail() -> None:
@@ -84,15 +65,6 @@ def test_prepare_next_request_compacts_for_hard_pressure_and_preserves_raw_tail(
         *, system_prompt: str, tools: list[dict], trace_events: list
     ) -> list[dict]:
         return []
-
-    counted_messages: list[list[str]] = []
-    token_counts = iter([750_000, 150_000])
-
-    async def fake_count_request_tokens(
-        *, system_prompt: str, tools: list[dict], messages: list[dict]
-    ) -> int:
-        counted_messages.append([str(message.get("content")) for message in messages])
-        return next(token_counts)
 
     async def fake_compact_messages(
         *, system_prompt: str, messages: list[dict]
@@ -107,7 +79,6 @@ def test_prepare_next_request_compacts_for_hard_pressure_and_preserves_raw_tail(
         )
 
     provider._ensure_prefix_cache = fake_ensure_prefix_cache  # type: ignore[method-assign]
-    provider._count_request_tokens = fake_count_request_tokens  # type: ignore[method-assign]
     provider._compact_messages = fake_compact_messages  # type: ignore[method-assign]
 
     messages = [
@@ -141,18 +112,13 @@ def test_prepare_next_request_compacts_for_hard_pressure_and_preserves_raw_tail(
 
     assert result.compaction_event is not None
     assert result.compaction_event.trigger == "hard_pressure"
-    assert result.compaction_event.before_next_input_tokens == 750_000
-    assert result.compaction_event.after_next_input_tokens == 150_000
-    assert result.compaction_event.estimated_saved_next_input_tokens == 600_000
-    assert counted_messages == [
-        ["latest assistant", "latest tool result", "fix latest"],
-        [
-            "[System-generated compaction summary]\nsummary",
-            "latest assistant",
-            "latest tool result",
-            "fix latest",
-        ],
-    ]
+    assert result.compaction_event.before_next_input_tokens is None
+    assert result.compaction_event.after_next_input_tokens is None
+    assert result.compaction_event.estimated_saved_next_input_tokens is None
+    assert (
+        result.compaction_event.estimate_error
+        == "Gemini preflight token counting is disabled by design."
+    )
 
     request_messages = provider._request_messages()
     assert request_messages[0]["content"].startswith("[System-generated compaction summary]")
@@ -172,11 +138,6 @@ def test_prepare_next_request_soft_compaction_resets_after_compile_streak_reset(
     ) -> list[dict]:
         return []
 
-    async def fake_count_request_tokens(
-        *, system_prompt: str, tools: list[dict], messages: list[dict]
-    ) -> int:
-        return 500_000
-
     async def fake_compact_messages(
         *, system_prompt: str, messages: list[dict]
     ) -> tuple[dict, dict[str, int]]:
@@ -186,7 +147,6 @@ def test_prepare_next_request_soft_compaction_resets_after_compile_streak_reset(
         )
 
     provider._ensure_prefix_cache = fake_ensure_prefix_cache  # type: ignore[method-assign]
-    provider._count_request_tokens = fake_count_request_tokens  # type: ignore[method-assign]
     provider._compact_messages = fake_compact_messages  # type: ignore[method-assign]
 
     messages = _seed_gemini_messages()
@@ -275,11 +235,6 @@ def test_prepare_next_request_requires_extra_failure_when_cache_hits_are_high() 
     ) -> list[dict]:
         return []
 
-    async def fake_count_request_tokens(
-        *, system_prompt: str, tools: list[dict], messages: list[dict]
-    ) -> int:
-        return 500_000
-
     async def fake_compact_messages(
         *, system_prompt: str, messages: list[dict]
     ) -> tuple[dict, dict[str, int]]:
@@ -291,7 +246,6 @@ def test_prepare_next_request_requires_extra_failure_when_cache_hits_are_high() 
         )
 
     provider._ensure_prefix_cache = fake_ensure_prefix_cache  # type: ignore[method-assign]
-    provider._count_request_tokens = fake_count_request_tokens  # type: ignore[method-assign]
     provider._compact_messages = fake_compact_messages  # type: ignore[method-assign]
 
     skipped = asyncio.run(
@@ -331,13 +285,7 @@ def test_prepare_next_request_soft_compaction_respects_cooldown() -> None:
     ) -> list[dict]:
         return []
 
-    token_counts = iter([500_000, 420_000])
     compact_calls = 0
-
-    async def fake_count_request_tokens(
-        *, system_prompt: str, tools: list[dict], messages: list[dict]
-    ) -> int:
-        return next(token_counts)
 
     async def fake_compact_messages(
         *, system_prompt: str, messages: list[dict]
@@ -350,7 +298,6 @@ def test_prepare_next_request_soft_compaction_respects_cooldown() -> None:
         )
 
     provider._ensure_prefix_cache = fake_ensure_prefix_cache  # type: ignore[method-assign]
-    provider._count_request_tokens = fake_count_request_tokens  # type: ignore[method-assign]
     provider._compact_messages = fake_compact_messages  # type: ignore[method-assign]
 
     first = asyncio.run(
@@ -511,68 +458,18 @@ def test_convert_response_serializes_replace_function_call_args() -> None:
     }
 
 
-def test_count_generate_request_tokens_uses_sdk_count_tokens() -> None:
+def test_prepare_next_request_never_attempts_prefix_cache_creation() -> None:
     provider = GeminiLLM(dry_run=True)
-    captured: dict[str, object] = {}
+    create_calls = 0
 
-    class _FakeModels:
-        async def count_tokens(
-            self, *, model: str, contents: list[object], config: object
-        ) -> object:
-            captured["model"] = model
-            captured["contents"] = contents
-            captured["config"] = config
-            return SimpleNamespace(total_tokens=321)
-
-    provider._clients = [SimpleNamespace(aio=SimpleNamespace(models=_FakeModels()))]
-
-    total_tokens = asyncio.run(
-        provider._count_generate_request_tokens(
-            system_prompt="system",
-            tools=[
-                {
-                    "type": "function",
-                    "function": {
-                        "name": "compile_model",
-                        "description": "Compile the model.",
-                        "parameters": {"type": "object", "properties": {}},
-                    },
-                }
-            ],
-            messages=[{"role": "user", "content": "task"}],
-            cached_content_name=None,
-            context="test",
-        )
-    )
-
-    config = captured["config"]
-    assert total_tokens == 321
-    assert captured["model"] == provider.model_id
-    assert len(captured["contents"]) == 1
-    assert getattr(config, "system_instruction") == "system"
-    assert len(getattr(config, "tools") or []) == 1
-
-
-def test_prepare_next_request_disables_prefix_token_count_after_unsupported_error() -> None:
-    provider = GeminiLLM(dry_run=True)
-    count_attempts = 0
-
-    class _UnsupportedCountTokensError(RuntimeError):
-        status_code = 400
-
-    async def fake_count_prefix_tokens(
+    async def fake_create_prefix_cache(
         *, system_prompt: str, tools: list[dict], messages: list[dict]
-    ) -> int:
-        nonlocal count_attempts
-        count_attempts += 1
-        raise _UnsupportedCountTokensError(
-            '400 INVALID_ARGUMENT. {"error": {"message": "Invalid JSON payload received. '
-            'Unknown name \\"systemInstruction\\": Cannot find field.\\n'
-            'Invalid JSON payload received. Unknown name \\"tools\\": Cannot find field.\\n'
-            'Invalid JSON payload received. Unknown name \\"generationConfig\\": Cannot find field."}}'
-        )
+    ) -> dict:
+        nonlocal create_calls
+        create_calls += 1
+        return {"name": "cachedContents/cache_1"}
 
-    provider._count_prefix_tokens = fake_count_prefix_tokens  # type: ignore[method-assign]
+    provider._create_prefix_cache = fake_create_prefix_cache  # type: ignore[method-assign]
 
     first = asyncio.run(
         provider.prepare_next_request(
@@ -597,50 +494,9 @@ def test_prepare_next_request_disables_prefix_token_count_after_unsupported_erro
         )
     )
 
-    assert count_attempts == 1
-    assert first.trace_events[0].payload["reason"] == "token_counting_disabled"
-    assert second.trace_events[0].payload["reason"] == "token_counting_disabled"
-
-
-def test_prepare_next_request_disables_prefix_token_count_after_sdk_value_error() -> None:
-    provider = GeminiLLM(dry_run=True)
-    count_attempts = 0
-
-    async def fake_count_prefix_tokens(
-        *, system_prompt: str, tools: list[dict], messages: list[dict]
-    ) -> int:
-        nonlocal count_attempts
-        count_attempts += 1
-        raise ValueError("system_instruction parameter is not supported in Gemini API.")
-
-    provider._count_prefix_tokens = fake_count_prefix_tokens  # type: ignore[method-assign]
-
-    first = asyncio.run(
-        provider.prepare_next_request(
-            system_prompt="system",
-            messages=[
-                {"role": "user", "content": "sdk docs"},
-                {"role": "user", "content": "task"},
-            ],
-            tools=[],
-            completed_turns=0,
-        )
-    )
-    second = asyncio.run(
-        provider.prepare_next_request(
-            system_prompt="system",
-            messages=[
-                {"role": "user", "content": "sdk docs"},
-                {"role": "user", "content": "task"},
-            ],
-            tools=[],
-            completed_turns=1,
-        )
-    )
-
-    assert count_attempts == 1
-    assert first.trace_events[0].payload["reason"] == "token_counting_disabled"
-    assert second.trace_events[0].payload["reason"] == "token_counting_disabled"
+    assert create_calls == 0
+    assert first.trace_events == []
+    assert second.trace_events == []
 
 
 def test_unsupported_gemini_api_value_error_is_not_retried() -> None:

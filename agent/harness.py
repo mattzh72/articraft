@@ -22,7 +22,6 @@ from agent.cost import CostTracker, is_flash_model, pricing_for_provider_model
 from agent.defaults import resolve_max_turns
 from agent.feedback import (
     compile_signal_bundle_from_exception,
-    contains_code_in_text,
     render_compile_signals,
 )
 from agent.models import AgentResult, CompileReport, CompileSignalBundle, TerminateReason
@@ -488,17 +487,6 @@ class ArticraftAgent:
         if trace_writer:
             trace_writer.write_message(msg)
 
-    def _append_code_paste_nudge(self, conversation: list[dict]) -> None:
-        marker = {
-            "role": "assistant",
-            "content": "[Previous response pasted code and was discarded.]",
-        }
-        conversation.append(marker)
-        trace_writer = getattr(self, "trace_writer", None)
-        if trace_writer:
-            trace_writer.write_message(marker)
-        self._append_guidance_message(conversation, self._code_paste_nudge_text())
-
     def _append_guidance_message(self, conversation: list[dict], content: str) -> None:
         msg = {"role": "user", "content": content}
         conversation.append(msg)
@@ -918,28 +906,6 @@ class ArticraftAgent:
         if usage:
             msg["usage"] = usage
         return msg
-
-    def _code_paste_nudge_text(self) -> str:
-        if self.provider == "openai":
-            return (
-                "<tool_use_rules>\n"
-                "- The previous assistant response pasted code and was discarded. Ignore it.\n"
-                "- Source of truth is the file on disk, not the discarded text.\n"
-                "- Use tools to apply your changes.\n"
-                "- Use read_file to fetch exact current lines, then apply_patch for edits.\n"
-                "- If the latest compile already covers the current revision and you cannot name one specific defect, conclude.\n"
-                "</tool_use_rules>"
-            )
-        return (
-            "<tool_use_rules>\n"
-            "- The previous assistant response pasted code and was discarded. Ignore it.\n"
-            "- Source of truth is the file on disk, not the discarded text.\n"
-            "- Use tools to apply your changes.\n"
-            '- Use `read_file(path="model.py")` to fetch exact current editable text, then `replace` or `write_file` for edits.\n'
-            "- If the latest compile already covers the current revision and you cannot name one specific defect, conclude.\n"
-            '- If the editable section is empty, initialize it with `write_file(content=...)` or `replace(old_string="", ...)`.\n'
-            "</tool_use_rules>"
-        )
 
     def _tool_call_name(self, tool_call: dict) -> str:
         if not isinstance(tool_call, dict):
@@ -1370,8 +1336,6 @@ class ArticraftAgent:
     ) -> AgentResult | None:
         if not self._latest_code_is_fresh():
             self._append_compile_required_reminder(conversation)
-        elif self._maybe_inject_post_success_design_audit(conversation):
-            pass
         else:
             if display_turn_override is not None:
                 self.display.current_turn = display_turn_override
@@ -1549,12 +1513,8 @@ class ArticraftAgent:
             has_assistant_payload = any(
                 key in assistant_message for key in ("content", "tool_calls", "thought_summary")
             )
-            pasted_code = contains_code_in_text(text)
-            if has_assistant_payload and not pasted_code:
+            if has_assistant_payload:
                 conversation.append(assistant_message)
-                if self.trace_writer:
-                    self.trace_writer.write_message(assistant_message)
-            elif has_assistant_payload and pasted_code:
                 if self.trace_writer:
                     self.trace_writer.write_message(assistant_message)
             else:
@@ -1611,11 +1571,6 @@ class ArticraftAgent:
                 continue
 
             completed_turns += 1
-
-            if pasted_code:
-                self._append_code_paste_nudge(conversation)
-                self.display.end_turn(success=True)
-                continue
 
             termination_message = self._termination_message(text, tool_calls)
             if termination_message is not None:

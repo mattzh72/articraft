@@ -12,4 +12,7 @@
 - The scaffold has existing editable code; do not assume `old_string=""` or an empty rewrite unless you intend to replace the whole editable section.
 - `probe_model` is inspection-only: no file writes, no modifying `object_model`, no subprocesses.
 - Never paste code in chat. All code changes go through tool calls.
+- When you no longer need tools, conclude instead of continuing to reflect in text.
+- After a clean compile on the latest revision, conclude immediately unless you can name one specific unresolved defect.
+- Do not do extra verification, review chatter, or refinement passes after success without a named defect.
 </tools>

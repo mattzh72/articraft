@@ -11,11 +11,6 @@ from typing import Iterable, Literal, Protocol, TypeAlias, runtime_checkable
 
 from agent.models import CompileSignal, CompileSignalBundle
 
-CODE_PATTERN = re.compile(
-    r"```(?:python)?\s*\n"
-    r"|^(?:from\s+\w+\s+import\s|import\s+\w+|def\s+\w+\s*\(|class\s+\w+)",
-    re.MULTILINE,
-)
 _EXCEPTION_PREFIX_RE = re.compile(r"^(?:[A-Za-z_][A-Za-z0-9_]*(?:Error|Exception|Failure)):\s*")
 LOFT_PROFILE_AREA_ERROR = "Loft profile area must be non-zero"
 LOFT_PROFILE_AREA_HINT = (
@@ -319,13 +314,6 @@ _MIN_DISTANCE_RE = re.compile(
 _TRACEBACK_FRAME_RE = re.compile(r'^\s*File "([^"]+)", line (\d+), in .+$')
 _WINDOWS_ABSOLUTE_PATH_RE = re.compile(r"^[A-Za-z]:[\\/]")
 _REPO_ROOT = Path(__file__).resolve().parents[1]
-
-
-def contains_code_in_text(text: str) -> bool:
-    """Check if a model text response pasted code instead of using tools."""
-    if not text:
-        return False
-    return bool(CODE_PATTERN.search(text))
 
 
 def _compile_hint_lines(detail_lines: list[str]) -> list[str]:

@@ -304,7 +304,7 @@ def test_execute_tool_calls_batch_keeps_mutating_gemini_calls_serialized() -> No
     assert peak_calls == 1
 
 
-def test_run_discards_pasted_code_and_replaces_it_with_recovery_messages(
+def test_run_keeps_pasted_code_in_conversation_without_recovery_messages(
     monkeypatch: pytest.MonkeyPatch,
     tmp_path: Path,
 ) -> None:
@@ -365,15 +365,13 @@ def test_run_discards_pasted_code_and_replaces_it_with_recovery_messages(
     result = asyncio.run(agent.run("make a hinge"))
 
     assert result.success is True
-    assert "print('bad')" not in json.dumps(result.conversation)
-    assert any(
-        message.get("role") == "assistant"
-        and message.get("content") == "[Previous response pasted code and was discarded.]"
+    assert "print('bad')" in json.dumps(result.conversation)
+    assert all(
+        message.get("content") != "[Previous response pasted code and was discarded.]"
         for message in result.conversation
     )
-    assert any(
-        message.get("role") == "user"
-        and "Source of truth is the file on disk" in str(message.get("content", ""))
+    assert all(
+        "Source of truth is the file on disk" not in str(message.get("content", ""))
         for message in result.conversation
     )
 
@@ -396,7 +394,7 @@ def test_mark_code_mutated_invalidates_fresh_compile_without_rearming_audit() ->
     assert agent._post_success_design_audit_sent is True
 
 
-def test_run_requires_compile_model_before_concluding_and_delays_design_audit(
+def test_run_requires_compile_model_before_concluding_without_design_audit(
     monkeypatch: pytest.MonkeyPatch,
     tmp_path: Path,
 ) -> None:
@@ -485,7 +483,7 @@ def test_run_requires_compile_model_before_concluding_and_delays_design_audit(
         if message.get("role") == "user"
     ]
     assert any("<compile_required>" in content for content in user_messages)
-    assert any("<design_audit>" in content for content in user_messages)
+    assert all("<design_audit>" not in content for content in user_messages)
 
     compile_tool_messages = [
         message
@@ -496,13 +494,9 @@ def test_run_requires_compile_model_before_concluding_and_delays_design_audit(
     compile_payload = json.loads(compile_tool_messages[0]["content"])
     assert "Compile passed cleanly." in compile_payload["result"]
 
-    compile_index = result.conversation.index(compile_tool_messages[0])
-    audit_index = next(
-        index
-        for index, message in enumerate(result.conversation)
-        if message.get("role") == "user" and "<design_audit>" in str(message.get("content", ""))
+    assert all(
+        "<design_audit>" not in str(message.get("content", "")) for message in result.conversation
     )
-    assert audit_index > compile_index + 1
 
 
 def test_run_accepts_gemini_replace_without_allow_multiple(
@@ -596,7 +590,7 @@ def test_run_accepts_gemini_replace_without_allow_multiple(
         ("openai", "OpenAILLM"),
     ],
 )
-def test_design_audit_only_fires_once_even_after_post_audit_edit_cycle(
+def test_finish_attempts_do_not_inject_design_audit_even_when_enabled(
     monkeypatch: pytest.MonkeyPatch,
     tmp_path: Path,
     provider_name: str,
@@ -712,8 +706,8 @@ def run_tests():
         for message in result.conversation
         if message.get("role") == "user"
     ]
-    assert sum("<design_audit>" in content for content in user_messages) == 1
-    assert sum("<compile_required>" in content for content in user_messages) == 2
+    assert sum("<design_audit>" in content for content in user_messages) == 0
+    assert sum("<compile_required>" in content for content in user_messages) == 1
 
 
 @pytest.mark.parametrize(
@@ -723,7 +717,7 @@ def run_tests():
         {},
     ],
 )
-def test_finish_attempt_paths_end_turn_and_share_compile_then_audit_gate(
+def test_finish_attempt_paths_end_turn_and_share_compile_gate_without_design_audit(
     monkeypatch: pytest.MonkeyPatch,
     tmp_path: Path,
     finish_response: dict[str, object],
@@ -787,7 +781,7 @@ def test_finish_attempt_paths_end_turn_and_share_compile_then_audit_gate(
 
     assert result.success is True
     assert result.reason == TerminateReason.CODE_VALID
-    assert agent.display.end_turn_calls == 4
+    assert agent.display.end_turn_calls == 3
 
     user_messages = [
         str(message.get("content", ""))
@@ -795,4 +789,74 @@ def test_finish_attempt_paths_end_turn_and_share_compile_then_audit_gate(
         if message.get("role") == "user"
     ]
     assert sum("<compile_required>" in content for content in user_messages) == 1
-    assert sum("<design_audit>" in content for content in user_messages) == 1
+    assert sum("<design_audit>" in content for content in user_messages) == 0
+
+
+def test_code_paste_response_uses_normal_finish_rules_without_nudge(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+) -> None:
+    class _SequenceLLM:
+        model_id = "gemini-2.5-pro"
+
+        def __init__(self, *args: object, **kwargs: object) -> None:
+            self._responses = [
+                {"content": "```python\nprint('done')\n```", "tool_calls": []},
+                {
+                    "content": "",
+                    "tool_calls": [
+                        {
+                            "id": "call_compile",
+                            "type": "function",
+                            "function": {"name": "compile_model", "arguments": "{}"},
+                        }
+                    ],
+                },
+                {"content": "```python\nprint('done')\n```", "tool_calls": []},
+            ]
+
+        async def generate_with_tools(
+            self, *, system_prompt: str, messages: list[dict], tools: list[dict]
+        ) -> dict:
+            assert tools
+            return self._responses.pop(0)
+
+        async def close(self) -> None:
+            return None
+
+    report = CompileReport(
+        urdf_xml="<robot />",
+        warnings=[],
+        signal_bundle=build_compile_signal_bundle(status="success"),
+    )
+
+    monkeypatch.setattr(harness, "GeminiLLM", _SequenceLLM)
+    agent = ArticraftAgent(
+        file_path=str(tmp_path / "model.py"),
+        provider="gemini",
+        max_turns=4,
+        post_success_design_audit=True,
+        display_enabled=False,
+    )
+    agent.tool_registry = ToolRegistry([CompileModelTool()])
+
+    async def fake_compile() -> CompileReport:
+        return report
+
+    async def fake_persist(_: str) -> None:
+        return None
+
+    agent._compile_urdf_report_async = fake_compile
+    agent._persist_compile_success_checkpoint_async = fake_persist
+
+    result = asyncio.run(agent.run("make a hinge"))
+
+    assert result.success is True
+    assert result.reason == TerminateReason.CODE_VALID
+
+    contents = [str(message.get("content", "")) for message in result.conversation]
+    assert any(content.startswith("<compile_required>") for content in contents)
+    assert all("<tool_use_rules>" not in content for content in contents)
+    assert all(
+        "[Previous response pasted code and was discarded.]" not in content for content in contents
+    )

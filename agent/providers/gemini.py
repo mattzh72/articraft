@@ -215,15 +215,7 @@ class GeminiLLM:
         before_item_count = self._effective_message_count()
         before_tokens: int | None = None
         after_tokens: int | None = None
-        estimate_error: str | None = None
-        try:
-            before_tokens = await self._count_request_tokens(
-                system_prompt=system_prompt,
-                tools=tools,
-                messages=self._request_messages(),
-            )
-        except Exception as exc:
-            estimate_error = str(exc)
+        estimate_error = "Gemini preflight token counting is disabled by design."
 
         summary_message, usage = await self._compact_messages(
             system_prompt=system_prompt,
@@ -235,18 +227,6 @@ class GeminiLLM:
             self._last_soft_compaction_failure_sig = last_compile_failure_sig
             self._last_soft_compaction_turn_number = turn_number
             self._last_soft_compaction_prompt_tokens = prompt_tokens
-
-        if estimate_error is None:
-            try:
-                after_tokens = await self._count_request_tokens(
-                    system_prompt=system_prompt,
-                    tools=tools,
-                    messages=self._request_messages(),
-                )
-            except Exception as exc:
-                estimate_error = str(exc)
-                before_tokens = None
-                after_tokens = None
 
         event = CompactionEvent(
             turn_before_request=completed_turns,
@@ -369,7 +349,6 @@ class GeminiLLM:
         self._cached_content_name: str | None = None
         self._cached_content_expire_time: datetime | None = None
         self._cached_prefix_digest: str | None = None
-        self._token_counting_disabled_reason: str | None = None
 
     def _sync_messages_state(self, messages: list[dict]) -> None:
         if not messages:
@@ -477,14 +456,6 @@ class GeminiLLM:
             return None
         return self._cached_content_name
 
-    def _maybe_disable_token_counting(self, exc: BaseException) -> str | None:
-        if self._token_counting_disabled_reason is not None:
-            return self._token_counting_disabled_reason
-        if not _is_unsupported_count_tokens_exception(exc):
-            return None
-        self._token_counting_disabled_reason = "Gemini token counting disabled for this run because count_tokens rejected the request shape."
-        return self._token_counting_disabled_reason
-
     def _build_generate_config(
         self,
         *,
@@ -514,133 +485,7 @@ class GeminiLLM:
         tools: list[dict],
         trace_events: list[ProviderTraceEvent],
     ) -> list[dict[str, Any]]:
-        immutable_prefix_count = self._immutable_prefix_count()
-        immutable_prefix_messages = self._conversation_messages[:immutable_prefix_count]
-        if not immutable_prefix_messages:
-            return []
-
-        min_prefix_tokens = _prefix_cache_min_tokens_for_model(self.model_id)
-        if min_prefix_tokens is None:
-            trace_events.append(
-                ProviderTraceEvent(
-                    event_type="cache_skip",
-                    payload={
-                        "kind": "cache_skip",
-                        "reason": "unsupported_cache_model",
-                        "model_id": self.model_id,
-                    },
-                )
-            )
-            return []
-
-        prefix_digest = _prefix_digest(system_prompt, tools, immutable_prefix_messages)
-        if self._token_counting_disabled_reason is not None:
-            trace_events.append(
-                ProviderTraceEvent(
-                    event_type="cache_skip",
-                    payload={
-                        "kind": "cache_skip",
-                        "reason": "token_counting_disabled",
-                        "model_id": self.model_id,
-                        "prefix_digest": prefix_digest,
-                        "error": self._token_counting_disabled_reason,
-                    },
-                )
-            )
-            return []
-        prefix_token_count: int | None = None
-        try:
-            prefix_token_count = await self._count_prefix_tokens(
-                system_prompt=system_prompt,
-                tools=tools,
-                messages=immutable_prefix_messages,
-            )
-        except Exception as exc:
-            disabled_reason = self._maybe_disable_token_counting(exc)
-            payload = {
-                "kind": "cache_skip",
-                "reason": (
-                    "token_counting_disabled"
-                    if disabled_reason is not None
-                    else "prefix_token_count_failed"
-                ),
-                "model_id": self.model_id,
-                "prefix_digest": prefix_digest,
-                "error": disabled_reason or str(exc),
-            }
-            trace_events.append(ProviderTraceEvent(event_type="cache_skip", payload=payload))
-            return []
-
-        if prefix_token_count < min_prefix_tokens:
-            payload = {
-                "kind": "cache_skip",
-                "reason": "prefix_below_min_tokens",
-                "model_id": self.model_id,
-                "prefix_digest": prefix_digest,
-                "prefix_token_count": prefix_token_count,
-                "min_prefix_tokens": min_prefix_tokens,
-            }
-            trace_events.append(ProviderTraceEvent(event_type="cache_skip", payload=payload))
-            return []
-
-        maintenance_events: list[dict[str, Any]] = []
-        if self._cached_prefix_digest != prefix_digest or not self._active_cached_content_name():
-            cache = await self._create_prefix_cache(
-                system_prompt=system_prompt,
-                tools=tools,
-                messages=immutable_prefix_messages,
-            )
-            self._cached_content_name = getattr(cache, "name", None) or (
-                cache.get("name") if isinstance(cache, dict) else None
-            )
-            self._cached_content_expire_time = _parse_cache_expire_time(cache)
-            self._cached_prefix_digest = prefix_digest
-            event_payload = {
-                "kind": "cache_create",
-                "type": "cache_create",
-                "model_id": self.model_id,
-                "cache_name": self._cached_content_name,
-                "prefix_digest": prefix_digest,
-                "prefix_token_count": prefix_token_count,
-                "min_prefix_tokens": min_prefix_tokens,
-                "ttl_seconds": _GEMINI_PREFIX_CACHE_TTL_SECONDS,
-                "expire_time": _isoformat_or_none(self._cached_content_expire_time),
-                "usage": None,
-                "accounting_status": "not_billed_v1",
-                "cache_usage": self._extract_cache_usage(cache),
-            }
-            trace_events.append(
-                ProviderTraceEvent(event_type="cache_create", payload=event_payload)
-            )
-            maintenance_events.append(event_payload)
-            return maintenance_events
-
-        if (
-            self._cached_content_expire_time
-            and _seconds_until(self._cached_content_expire_time)
-            <= _GEMINI_PREFIX_CACHE_REFRESH_WINDOW_SECONDS
-        ):
-            cache = await self._refresh_prefix_cache(self._cached_content_name)
-            self._cached_content_expire_time = _parse_cache_expire_time(cache)
-            event_payload = {
-                "kind": "cache_refresh",
-                "type": "cache_refresh",
-                "model_id": self.model_id,
-                "cache_name": self._cached_content_name,
-                "prefix_digest": prefix_digest,
-                "prefix_token_count": prefix_token_count,
-                "min_prefix_tokens": min_prefix_tokens,
-                "ttl_seconds": _GEMINI_PREFIX_CACHE_TTL_SECONDS,
-                "expire_time": _isoformat_or_none(self._cached_content_expire_time),
-                "usage": None,
-                "accounting_status": "not_billed_v1",
-                "cache_usage": self._extract_cache_usage(cache),
-            }
-            trace_events.append(
-                ProviderTraceEvent(event_type="cache_refresh", payload=event_payload)
-            )
-            maintenance_events.append(event_payload)
-        return maintenance_events
+        return []
 
     async def _create_prefix_cache(
         self,
@@ -718,125 +563,6 @@ class GeminiLLM:
             context=f"gemini.caches.delete(model={self.model_id})",
         )
         return None
-
-    async def _count_prefix_tokens(
-        self,
-        *,
-        system_prompt: str,
-        tools: list[dict],
-        messages: list[dict[str, Any]],
-    ) -> int:
-        return await self._count_uncached_tokens(
-            system_prompt=system_prompt,
-            tools=tools,
-            messages=messages,
-        )
-
-    async def _count_request_tokens(
-        self,
-        *,
-        system_prompt: str,
-        tools: list[dict],
-        messages: list[dict[str, Any]],
-    ) -> int:
-        cached_content_name = self._active_cached_content_name()
-        if cached_content_name:
-            return await self._count_cached_request_tokens(
-                system_prompt=system_prompt,
-                tools=tools,
-                messages=messages,
-                cached_content_name=cached_content_name,
-            )
-        return await self._count_uncached_tokens(
-            system_prompt=system_prompt,
-            tools=tools,
-            messages=messages,
-        )
-
-    async def _count_uncached_tokens(
-        self,
-        *,
-        system_prompt: str,
-        tools: list[dict],
-        messages: list[dict[str, Any]],
-    ) -> int:
-        return await self._count_generate_request_tokens(
-            system_prompt=system_prompt,
-            tools=tools,
-            messages=messages,
-            cached_content_name=None,
-            context=f"gemini.count_tokens(model={self.model_id})",
-        )
-
-    async def _count_cached_request_tokens(
-        self,
-        *,
-        system_prompt: str,
-        tools: list[dict],
-        messages: list[dict[str, Any]],
-        cached_content_name: str,
-    ) -> int:
-        return await self._count_generate_request_tokens(
-            system_prompt=system_prompt,
-            tools=tools,
-            messages=messages,
-            cached_content_name=cached_content_name,
-            context=f"gemini.count_tokens_cached(model={self.model_id})",
-        )
-
-    async def _count_generate_request_tokens(
-        self,
-        *,
-        system_prompt: str,
-        tools: list[dict],
-        messages: list[dict[str, Any]],
-        cached_content_name: str | None,
-        context: str,
-    ) -> int:
-        if self._token_counting_disabled_reason is not None:
-            raise RuntimeError(self._token_counting_disabled_reason)
-        if not self._clients:
-            raise RuntimeError("Gemini token counting requires a real API client")
-        from google.genai import types  # type: ignore
-
-        client = self._next_client()
-        tool_declarations = self._convert_tools(tools)
-        config = types.CountTokensConfig(
-            system_instruction=None if cached_content_name else system_prompt,
-            tools=(
-                [types.Tool(function_declarations=tool_declarations)]
-                if tool_declarations and not cached_content_name
-                else None
-            ),
-        )
-        contents = self._convert_messages(messages)
-
-        async def _call() -> int:
-            response = await client.aio.models.count_tokens(
-                model=self.model_id,
-                contents=contents,
-                config=config,
-            )
-            total_tokens = getattr(response, "total_tokens", None)
-            if not isinstance(total_tokens, int):
-                raise RuntimeError("Gemini countTokens response did not include totalTokens")
-            return total_tokens
-
-        try:
-            return await _async_retry(
-                _call,
-                max_attempts=1 + max(0, self.max_retries),
-                should_retry=_should_retry_gemini_exception,
-                base_delay=self.retry_base_seconds,
-                max_delay=self.retry_max_seconds,
-                logger=_logger,
-                context=context,
-            )
-        except Exception as exc:
-            disabled_reason = self._maybe_disable_token_counting(exc)
-            if disabled_reason is not None:
-                raise RuntimeError(disabled_reason) from exc
-            raise
 
     async def _compact_messages(
         self,
@@ -1323,15 +1049,6 @@ def _hard_pressure_threshold_for_model(model_id: str) -> int | None:
     return None
 
 
-def _prefix_cache_min_tokens_for_model(model_id: str) -> int | None:
-    normalized = (model_id or "").strip().lower()
-    if normalized.startswith(("gemini-3", "gemini-2.5")) and "flash" in normalized:
-        return 1024
-    if normalized.startswith(("gemini-3", "gemini-2.5")):
-        return 4096
-    return None
-
-
 def _prefix_digest(system_prompt: str, tools: list[dict], messages: list[dict[str, Any]]) -> str:
     payload = {
         "system_prompt": system_prompt,
@@ -1576,25 +1293,6 @@ def _extract_http_status(exc: BaseException) -> Optional[int]:
         return status
 
     return None
-
-
-def _is_unsupported_count_tokens_exception(exc: BaseException) -> bool:
-    status = _extract_http_status(exc)
-    if status is not None and status != 400:
-        return False
-    message = str(exc).lower().replace('\\"', '"')
-    if "system_instruction parameter is not supported in gemini api." in message:
-        return True
-    if "invalid json payload received" not in message or "unknown name" not in message:
-        return False
-    return any(
-        needle in message
-        for needle in (
-            'unknown name "systeminstruction"',
-            'unknown name "tools"',
-            'unknown name "generationconfig"',
-        )
-    )
 
 
 def _should_retry_gemini_exception(exc: BaseException) -> bool:
