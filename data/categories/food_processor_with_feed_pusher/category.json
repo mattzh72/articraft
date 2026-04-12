@@ -1,0 +1,10 @@
+{
+  "schema_version": 1,
+  "slug": "food_processor_with_feed_pusher",
+  "title": "Food processor with feed pusher",
+  "description": "",
+  "prompt_batch_ids": [
+    "realism_articulation_v1"
+  ],
+  "target_sdk_version": "base"
+}

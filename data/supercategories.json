@@ -99,6 +99,8 @@
         "chest_freezer_with_hinged_lid",
         "display_freezer_with_sliding_glass_lids",
         "blender",
+        "centrifugal_juicer_with_articulated_components",
+        "espresso_machine_with_articulated_components",
         "toaster_oven",
         "stove_top",
         "range_hood_with_articulated_controls",
@@ -196,6 +198,7 @@
         "platform_cart",
         "wheelbarrow",
         "drone",
+        "single_rotor_helicopter",
         "toy_car",
         "toy_model_planes",
         "jet_engine"
@@ -207,6 +210,7 @@
       "description": "Monitor mounts, spotlight yokes, mast heads, and articulated lamps",
       "category_slugs": [
         "monitor_mount",
+        "laptop_stand_with_articulated_height_adjustment",
         "tv_wall_mount",
         "studio_spotlight_on_yoke",
         "searchlight_tower",
@@ -226,6 +230,7 @@
         "drillpress_tilt_table",
         "miter_saw_arm_assembly",
         "paper_cutter_guillotine",
+        "desktop_hole_punch_with_articulated_components",
         "retractable_utility_knife",
         "syringe",
         "air_pump_with_t_handle",

@@ -1,0 +1,1 @@
+A realistic single-rotor helicopter with a clear fuselage, a roof-mounted main rotor, and a tail boom with a tail rotor. The main rotor assembly, tail rotor, and any normal access doors or panels should articulate naturally, and the aircraft should feel like a believable civilian, utility, or rescue helicopter.

@@ -1,0 +1,10 @@
+{
+  "schema_version": 1,
+  "slug": "top_load_washing_machine_with_hinged_lid",
+  "title": "Top-load washing machine with hinged lid",
+  "description": "",
+  "prompt_batch_ids": [
+    "realism_articulation_v1"
+  ],
+  "target_sdk_version": "base"
+}

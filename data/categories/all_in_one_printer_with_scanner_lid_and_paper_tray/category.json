@@ -1,0 +1,10 @@
+{
+  "schema_version": 1,
+  "slug": "all_in_one_printer_with_scanner_lid_and_paper_tray",
+  "title": "All-in-one printer with scanner lid and paper tray",
+  "description": "",
+  "prompt_batch_ids": [
+    "realism_articulation_v1"
+  ],
+  "target_sdk_version": "base"
+}

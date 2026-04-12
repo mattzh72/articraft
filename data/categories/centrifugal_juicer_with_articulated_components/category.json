@@ -1,0 +1,10 @@
+{
+  "schema_version": 1,
+  "slug": "centrifugal_juicer_with_articulated_components",
+  "title": "Centrifugal juicer with articulated components",
+  "description": "",
+  "prompt_batch_ids": [
+    "realism_articulation_v1"
+  ],
+  "target_sdk_version": "base"
+}

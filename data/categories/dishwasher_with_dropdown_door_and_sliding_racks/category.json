@@ -1,0 +1,10 @@
+{
+  "schema_version": 1,
+  "slug": "dishwasher_with_dropdown_door_and_sliding_racks",
+  "title": "Dishwasher with dropdown door and sliding racks",
+  "description": "",
+  "prompt_batch_ids": [
+    "realism_articulation_v1"
+  ],
+  "target_sdk_version": "base"
+}

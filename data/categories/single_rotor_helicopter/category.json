@@ -1,0 +1,10 @@
+{
+  "schema_version": 1,
+  "slug": "single_rotor_helicopter",
+  "title": "Single-rotor helicopter",
+  "description": "",
+  "prompt_batch_ids": [
+    "realism_articulation_v1"
+  ],
+  "target_sdk_version": "base"
+}

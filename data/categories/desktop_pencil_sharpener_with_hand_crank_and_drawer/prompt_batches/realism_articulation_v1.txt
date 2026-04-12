@@ -1,0 +1,1 @@
+A desktop pencil sharpener with a rigid body, a hand crank, a shavings drawer, and plausible user-facing controls such as a selector dial or dust flap. The crank, drawer, and other visible moving parts should articulate naturally, and the tool should read as a practical classroom or office sharpener.
