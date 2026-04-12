@@ -314,6 +314,11 @@ _MIN_DISTANCE_RE = re.compile(
 _TRACEBACK_FRAME_RE = re.compile(r'^\s*File "([^"]+)", line (\d+), in .+$')
 _WINDOWS_ABSOLUTE_PATH_RE = re.compile(r"^[A-Za-z]:[\\/]")
 _REPO_ROOT = Path(__file__).resolve().parents[1]
+_REPO_ROOT_NAME = _REPO_ROOT.name.casefold()
+try:
+    _REPO_TOP_LEVEL_ENTRY_NAMES = frozenset(path.name.casefold() for path in _REPO_ROOT.iterdir())
+except OSError:
+    _REPO_TOP_LEVEL_ENTRY_NAMES = frozenset()
 
 
 def _compile_hint_lines(detail_lines: list[str]) -> list[str]:
@@ -352,6 +357,13 @@ def _sanitize_display_path(path_text: str) -> str:
     for marker in ("site-packages", "dist-packages"):
         if marker in parts:
             return "/".join(parts[parts.index(marker) :])
+
+    for idx, part in enumerate(parts[:-1]):
+        if part.casefold() != _REPO_ROOT_NAME:
+            continue
+        remainder = parts[idx + 1 :]
+        if remainder and remainder[0].casefold() in _REPO_TOP_LEVEL_ENTRY_NAMES:
+            return "/".join(remainder)
 
     if len(parts) <= 2:
         return "/".join(parts)
