@@ -58,8 +58,10 @@ logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
 CONSOLE = Console()
 _FIND_EXAMPLES_SKIPPED_CONTENT = "{Skipped: full content already returned earlier in this run.}"
-_MUTATING_TOOL_NAMES = frozenset({"apply_patch", "edit_code", "write_code"})
-_PARALLEL_SAFE_TOOL_NAMES = frozenset({"read_code", "read_file", "find_examples", "probe_model"})
+_MUTATING_TOOL_NAMES = frozenset(
+    {"apply_patch", "edit_code", "write_code", "replace", "write_file"}
+)
+_PARALLEL_SAFE_TOOL_NAMES = frozenset({"read_file", "find_examples", "probe_model"})
 _EXACT_ELEMENT_KEYWORDS = frozenset(
     {"elem_a", "elem_b", "positive_elem", "negative_elem", "inner_elem", "outer_elem"}
 )
@@ -676,14 +678,15 @@ class ArticraftAgent:
     ) -> None:
         for tool_call, result in zip(tool_calls, tool_results, strict=False):
             func = tool_call.get("function", {}) if isinstance(tool_call, dict) else {}
-            if func.get("name") != "edit_code":
+            func_name = func.get("name")
+            if func_name not in {"edit_code", "replace"}:
                 continue
             if not getattr(result, "error", None):
                 continue
             if "Could not find the old_string in the code" not in result.error:
                 continue
 
-            sig = "edit_code_old_string_not_found"
+            sig = f"{func_name}_old_string_not_found"
             if sig in self._seen_tool_error_sigs:
                 return
             self._seen_tool_error_sigs.add(sig)
@@ -692,8 +695,8 @@ class ArticraftAgent:
                 "role": "user",
                 "content": (
                     "<edit_retry_guidance>\n"
-                    "- Your last edit_code failed because `old_string` did not match the file exactly.\n"
-                    "- Do NOT guess. Call `read_code()` again, then pick a smaller exact snippet from the current editable code as `old_string` and retry.\n"
+                    f"- Your last {func_name} failed because `old_string` did not match the file exactly.\n"
+                    '- Do NOT guess. Call `read_file(path="model.py")` again, then pick a smaller exact snippet from the current editable code as `old_string` and retry.\n'
                     "- Keep edits surgical.\n"
                     "</edit_retry_guidance>"
                 ),
@@ -932,9 +935,9 @@ class ArticraftAgent:
             "- The previous assistant response pasted code and was discarded. Ignore it.\n"
             "- Source of truth is the file on disk, not the discarded text.\n"
             "- Use tools to apply your changes.\n"
-            "- Use `read_code()` to fetch exact current editable text, then `edit_code` for edits.\n"
+            '- Use `read_file(path="model.py")` to fetch exact current editable text, then `replace` or `write_file` for edits.\n'
             "- If the latest compile already covers the current revision and you cannot name one specific defect, conclude.\n"
-            '- If the editable section is empty, initialize it with edit_code using old_string="".\n'
+            '- If the editable section is empty, initialize it with `write_file(content=...)` or `replace(old_string="", ...)`.\n'
             "</tool_use_rules>"
         )
 
@@ -1149,20 +1152,21 @@ class ArticraftAgent:
                 tool_message["thought_signature"] = thought_signature
             return result, tool_message
 
-        if func_name == "edit_code":
+        if func_name in {"edit_code", "replace"}:
+            old_string_key = "old_string"
             try:
                 editable = extract_editable_code(Path(self.file_path).read_text(encoding="utf-8"))
             except Exception:
                 editable = None
             if (
-                func_args.get("old_string") == ""
+                func_args.get(old_string_key) == ""
                 and editable is not None
                 and editable.strip() != ""
             ):
                 result = ToolResult(
                     error=(
                         "old_string cannot be empty unless the editable code section is empty. "
-                        "Call `read_code()` to copy exact current editable text and retry."
+                        'Call `read_file(path="model.py")` to copy exact current editable text and retry.'
                     ),
                     tool_call_id=tool_id,
                 )
@@ -1180,11 +1184,13 @@ class ArticraftAgent:
             if (
                 editable is not None
                 and editable.strip() == ""
-                and func_args.get("old_string") != ""
+                and func_args.get(old_string_key) != ""
             ):
                 result = ToolResult(
                     error=(
-                        "Editable code section is empty. Initialize it with edit_code using "
+                        "Editable code section is empty. Initialize it with "
+                        "`write_file(content=...)` or with "
+                        f"{func_name} using "
                         'old_string="" and new_string containing the initial '
                         "build_object_model() and run_tests() implementation."
                     ),

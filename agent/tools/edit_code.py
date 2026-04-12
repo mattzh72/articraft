@@ -200,3 +200,85 @@ class EditCodeTool(BaseDeclarativeTool):
     async def build(self, params: dict) -> EditCodeInvocation:
         validated = validate_tool_params(EditCodeParams, params)
         return EditCodeInvocation(validated)
+
+
+class ReplaceParams(ToolParamsModel):
+    """Parameters for Gemini-style replace tool."""
+
+    old_string: str
+    new_string: str
+    instruction: str | None = None
+    allow_multiple: bool = False
+
+
+class ReplaceInvocation(BoundFileToolInvocation[ReplaceParams, str]):
+    """Invocation for editable-region replacements under the official-style name."""
+
+    def get_description(self) -> str:
+        preview = self.params.old_string[:50]
+        if len(self.params.old_string) > 50:
+            preview += "..."
+        return f"Replace text in current target file: '{preview}'"
+
+    async def execute(self) -> ToolResult:
+        mapped = EditCodeParams(
+            old_string=self.params.old_string,
+            new_string=self.params.new_string,
+            replace_all=self.params.allow_multiple,
+        )
+        invocation = EditCodeInvocation(mapped)
+        invocation.bind_file_path(self.file_path or "")
+        return await invocation.execute()
+
+
+class ReplaceTool(BaseDeclarativeTool):
+    """Gemini-style replace tool scoped to the editable section."""
+
+    def __init__(self) -> None:
+        schema = make_tool_schema(
+            name="replace",
+            description=(
+                "Replace text within the current editable code section.\n\n"
+                "This is the Gemini-style edit tool for the bound `model.py` artifact.\n"
+                "It operates only on the editable user section, not on scaffold code.\n\n"
+                "Matching behavior:\n"
+                "- `old_string` must match EXACTLY, including whitespace, indentation, and newlines\n"
+                "- If the editable section is empty, `old_string` may be empty to insert the initial code\n"
+                "- By default, `old_string` must appear exactly once\n"
+                "- Set `allow_multiple=true` to replace all exact matches\n"
+                '- If exact matching fails, reread `read_file(path="model.py")` and retry with a smaller exact snippet'
+            ),
+            parameters={
+                "old_string": {
+                    "type": "string",
+                    "description": (
+                        "Exact literal text to find inside the editable code section. "
+                        "Must match including whitespace and indentation."
+                    ),
+                },
+                "new_string": {
+                    "type": "string",
+                    "description": "Replacement text. May be empty to delete the matched text.",
+                },
+                "instruction": {
+                    "type": "string",
+                    "description": (
+                        "Optional short description of the intended change. "
+                        "Accepted for official Gemini CLI parity."
+                    ),
+                },
+                "allow_multiple": {
+                    "type": "boolean",
+                    "description": (
+                        "If false (default), `old_string` must be unique. "
+                        "If true, replace all exact matches."
+                    ),
+                },
+            },
+            required=["old_string", "new_string"],
+        )
+        super().__init__("replace", schema)
+
+    async def build(self, params: dict) -> ReplaceInvocation:
+        validated = validate_tool_params(ReplaceParams, params)
+        return ReplaceInvocation(validated)

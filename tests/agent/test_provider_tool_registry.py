@@ -22,9 +22,9 @@ def test_provider_tool_registry_schemas() -> None:
         "find_examples",
     }
     assert set(gemini_registry.get_all_tool_names()) == {
-        "read_code",
         "read_file",
-        "edit_code",
+        "replace",
+        "write_file",
         "compile_model",
         "probe_model",
         "find_examples",
@@ -44,8 +44,11 @@ def test_provider_tool_registry_schemas() -> None:
         s for s in openai_schemas if s.get("function", {}).get("name") == "find_examples"
     )
     gemini_schemas = gemini_registry.get_tool_schemas()
-    edit_code_schema = next(
-        s for s in gemini_schemas if s.get("function", {}).get("name") == "edit_code"
+    replace_schema = next(
+        s for s in gemini_schemas if s.get("function", {}).get("name") == "replace"
+    )
+    write_file_schema = next(
+        s for s in gemini_schemas if s.get("function", {}).get("name") == "write_file"
     )
     assert apply_patch_schema.get("type") == "custom"
     apply_patch_description = apply_patch_schema["description"]
@@ -54,12 +57,20 @@ def test_provider_tool_registry_schemas() -> None:
     assert "`*** Add File`, `*** Delete File`, or `*** Move to`" in apply_patch_description
     read_file_props = read_file_schema["function"]["parameters"]["properties"]
     assert set(read_file_props.keys()) == {"path", "offset", "limit"}
-    edit_code_props = edit_code_schema["function"]["parameters"]["properties"]
-    assert set(edit_code_props.keys()) == {"old_string", "new_string", "replace_all"}
-    assert edit_code_schema["function"]["parameters"]["required"] == [
+    replace_props = replace_schema["function"]["parameters"]["properties"]
+    assert set(replace_props.keys()) == {
+        "old_string",
+        "new_string",
+        "instruction",
+        "allow_multiple",
+    }
+    assert replace_schema["function"]["parameters"]["required"] == [
         "old_string",
         "new_string",
     ]
+    write_file_props = write_file_schema["function"]["parameters"]["properties"]
+    assert set(write_file_props.keys()) == {"content", "path"}
+    assert write_file_schema["function"]["parameters"]["required"] == ["content"]
     compile_model_props = compile_model_schema["function"]["parameters"]["properties"]
     assert set(compile_model_props.keys()) == set()
     assert (
@@ -164,3 +175,51 @@ def test_openai_tool_registry_executes_full_read_without_paging_args(tmp_path: P
 
     assert result.error is None
     assert result.output == "L1: alpha\nL2: beta\nL3: gamma"
+
+
+def test_gemini_tool_registry_reads_only_editable_model_region(tmp_path: Path) -> None:
+    repo_root = Path(__file__).resolve().parents[2]
+    model_path = tmp_path / "model.py"
+    model_path.write_text(
+        "\n".join(
+            [
+                "from sdk import *",
+                "# >>> USER_CODE_START",
+                "def build_object_model():",
+                "    return 'alpha'",
+                "",
+                "def run_tests():",
+                "    return None",
+                "# >>> USER_CODE_END",
+                "FOOTER = True",
+            ]
+        )
+        + "\n",
+        encoding="utf-8",
+    )
+
+    workspace = build_virtual_workspace(
+        repo_root,
+        model_file_path=model_path,
+        sdk_package="sdk",
+    )
+    gemini_registry = build_tool_registry("gemini", sdk_package="sdk")
+
+    invocation = asyncio.run(
+        gemini_registry.build_invocation(
+            "read_file",
+            {"path": "model.py"},
+        )
+    )
+    assert invocation is not None
+    invocation.bind_virtual_workspace(workspace)
+    result = asyncio.run(invocation.execute())
+
+    assert result.error is None
+    assert result.output == (
+        "L1: def build_object_model():\n"
+        "L2:     return 'alpha'\n"
+        "L3: \n"
+        "L4: def run_tests():\n"
+        "L5:     return None"
+    )

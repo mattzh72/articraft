@@ -2,11 +2,14 @@
 
 _PREFERRED_TOOL_ARG_KEYS = (
     "path",
+    "content",
     "query",
     "offset",
     "limit",
+    "instruction",
     "old_string",
     "new_string",
+    "allow_multiple",
     "replace_all",
 )
 

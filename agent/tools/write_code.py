@@ -139,3 +139,66 @@ class WriteCodeTool(BaseDeclarativeTool):
     async def build(self, params: dict) -> WriteCodeInvocation:
         validated = WriteCodeParams(**params)
         return WriteCodeInvocation(validated)
+
+
+class WriteFileParams(ToolParamsModel):
+    """Parameters for Gemini-style write_file alias."""
+
+    content: str
+    path: str | None = None
+
+
+class WriteFileInvocation(BoundFileToolInvocation[WriteFileParams, str]):
+    """Invocation for full editable-section rewrites under the official-style name."""
+
+    def get_description(self) -> str:
+        preview = self.params.content[:50].replace("\n", "\\n")
+        if len(self.params.content) > 50:
+            preview += "..."
+        return f"Write editable code in current target file: '{preview}'"
+
+    async def execute(self) -> ToolResult:
+        mapped = WriteCodeParams(code=self.params.content)
+        invocation = WriteCodeInvocation(mapped)
+        invocation.bind_file_path(self.file_path or "")
+        return await invocation.execute()
+
+
+class WriteFileTool(BaseDeclarativeTool):
+    """Gemini-style write_file tool scoped to the editable section."""
+
+    def __init__(self) -> None:
+        schema = make_tool_schema(
+            name="write_file",
+            description=(
+                "Replace the entire editable code section in the current bound `model.py` artifact.\n\n"
+                "This is the Gemini-style full rewrite tool. It writes only the editable user section, "
+                "not scaffold imports or footer code.\n\n"
+                "Use this when a targeted `replace` would be awkward or when you intend to rewrite the "
+                "whole editable section from scratch."
+            ),
+            parameters={
+                "content": {
+                    "type": "string",
+                    "description": (
+                        "Full replacement content for the editable code section. "
+                        "In scaffolded files, include top-level build_object_model() and run_tests()."
+                    ),
+                },
+                "path": {
+                    "type": "string",
+                    "description": (
+                        "Optional virtual path for parity with Gemini CLI. "
+                        'If provided, use `"model.py"`.'
+                    ),
+                },
+            },
+            required=["content"],
+        )
+        super().__init__("write_file", schema)
+
+    async def build(self, params: dict) -> WriteFileInvocation:
+        validated = WriteFileParams(**params)
+        if validated.path not in {None, "model.py"}:
+            raise ValueError("write_file only supports path='model.py' in this harness")
+        return WriteFileInvocation(validated)

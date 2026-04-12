@@ -473,7 +473,7 @@ def test_convert_message_preserves_thought_flag_when_replaying_google_parts() ->
     assert tool_part.thought_signature == b"sig"
 
 
-def test_convert_response_serializes_edit_code_function_call_args() -> None:
+def test_convert_response_serializes_replace_function_call_args() -> None:
     provider = GeminiLLM(dry_run=True)
 
     response = SimpleNamespace(
@@ -484,7 +484,7 @@ def test_convert_response_serializes_edit_code_function_call_args() -> None:
                         SimpleNamespace(
                             function_call=SimpleNamespace(
                                 id="call_edit",
-                                name="edit_code",
+                                name="replace",
                                 args={
                                     "old_string": '"draft_model"',
                                     "new_string": '"draft_model_v2"',
@@ -504,7 +504,7 @@ def test_convert_response_serializes_edit_code_function_call_args() -> None:
     assert len(converted["tool_calls"]) == 1
     tool_call = converted["tool_calls"][0]
     assert tool_call["id"] == "call_edit"
-    assert tool_call["function"]["name"] == "edit_code"
+    assert tool_call["function"]["name"] == "replace"
     assert json.loads(tool_call["function"]["arguments"]) == {
         "old_string": '"draft_model"',
         "new_string": '"draft_model_v2"',

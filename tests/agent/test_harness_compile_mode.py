@@ -231,9 +231,9 @@ def test_execute_tool_calls_batch_runs_parallel_safe_gemini_calls_concurrently()
         agent._execute_tool_calls_batch(
             [
                 {
-                    "id": "call_read_code",
+                    "id": "call_read_file",
                     "type": "function",
-                    "function": {"name": "read_code", "arguments": "{}"},
+                    "function": {"name": "read_file", "arguments": '{"path":"model.py"}'},
                 },
                 {
                     "id": "call_find_examples",
@@ -245,7 +245,7 @@ def test_execute_tool_calls_batch_runs_parallel_safe_gemini_calls_concurrently()
     )
 
     assert [tool_call["id"] for tool_call, *_ in results] == [
-        "call_read_code",
+        "call_read_file",
         "call_find_examples",
     ]
     assert peak_calls == 2
@@ -284,15 +284,15 @@ def test_execute_tool_calls_batch_keeps_mutating_gemini_calls_serialized() -> No
         agent._execute_tool_calls_batch(
             [
                 {
-                    "id": "call_read_code",
+                    "id": "call_read_file",
                     "type": "function",
-                    "function": {"name": "read_code", "arguments": "{}"},
+                    "function": {"name": "read_file", "arguments": '{"path":"model.py"}'},
                 },
                 {
-                    "id": "call_edit_code",
+                    "id": "call_replace",
                     "type": "function",
                     "function": {
-                        "name": "edit_code",
+                        "name": "replace",
                         "arguments": '{"old_string":"a","new_string":"b"}',
                     },
                 },
@@ -300,7 +300,7 @@ def test_execute_tool_calls_batch_keeps_mutating_gemini_calls_serialized() -> No
         )
     )
 
-    assert [tool_call["id"] for tool_call, *_ in results] == ["call_read_code", "call_edit_code"]
+    assert [tool_call["id"] for tool_call, *_ in results] == ["call_read_file", "call_replace"]
     assert peak_calls == 1
 
 
@@ -389,7 +389,7 @@ def test_mark_code_mutated_invalidates_fresh_compile_without_rearming_audit() ->
     )
     agent._post_success_design_audit_sent = True
 
-    agent._mark_code_mutated("edit_code")
+    agent._mark_code_mutated("replace")
 
     assert agent._current_edit_revision == 4
     assert agent._latest_code_is_fresh() is False
@@ -412,12 +412,12 @@ def test_run_requires_compile_model_before_concluding_and_delays_design_audit(
                             "id": "call_edit",
                             "type": "function",
                             "function": {
-                                "name": "edit_code",
+                                "name": "replace",
                                 "arguments": json.dumps(
                                     {
                                         "old_string": '"draft_model"',
                                         "new_string": '"draft_model_v2"',
-                                        "replace_all": False,
+                                        "allow_multiple": False,
                                     }
                                 ),
                             },
@@ -505,7 +505,7 @@ def test_run_requires_compile_model_before_concluding_and_delays_design_audit(
     assert audit_index > compile_index + 1
 
 
-def test_run_accepts_gemini_edit_code_without_replace_all(
+def test_run_accepts_gemini_replace_without_allow_multiple(
     monkeypatch: pytest.MonkeyPatch,
     tmp_path: Path,
 ) -> None:
@@ -521,7 +521,7 @@ def test_run_accepts_gemini_edit_code_without_replace_all(
                             "id": "call_edit",
                             "type": "function",
                             "function": {
-                                "name": "edit_code",
+                                "name": "replace",
                                 "arguments": json.dumps(
                                     {
                                         "old_string": '"draft_model"',
