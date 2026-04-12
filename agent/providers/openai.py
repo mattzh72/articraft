@@ -1029,11 +1029,12 @@ class OpenAILLM:
                 declared_parameters = (
                     func.get("parameters") if isinstance(func.get("parameters"), dict) else None
                 )
+                is_read_file = func.get("name") == "read_file"
                 required_override = (
                     declared_parameters.get("required")
                     if isinstance(declared_parameters, dict)
                     and isinstance(declared_parameters.get("required"), list)
-                    and func.get("name") == "read_file"
+                    and is_read_file
                     else None
                 )
 
@@ -1048,7 +1049,7 @@ class OpenAILLM:
                             else {"type": "object", "properties": {}},
                             required_override=required_override,
                         ),
-                        "strict": True,
+                        "strict": False if is_read_file else True,
                     }
                 )
         return converted

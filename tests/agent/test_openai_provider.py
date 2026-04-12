@@ -230,7 +230,7 @@ def test_convert_tools_normalizes_function_schemas_for_responses_strict_mode() -
     converted = provider._convert_tools(registry.get_tool_schemas())
 
     read_file = next(tool for tool in converted if tool.get("name") == "read_file")
-    assert read_file["strict"] is True
+    assert read_file["strict"] is False
     assert read_file["parameters"]["required"] == ["path"]
     assert read_file["parameters"]["properties"]["path"]["type"] == "string"
     assert read_file["parameters"]["properties"]["offset"]["type"] == ["integer", "null"]
@@ -238,6 +238,7 @@ def test_convert_tools_normalizes_function_schemas_for_responses_strict_mode() -
     assert read_file["parameters"]["additionalProperties"] is False
 
     probe_model = next(tool for tool in converted if tool.get("name") == "probe_model")
+    assert probe_model["strict"] is True
     assert probe_model["parameters"]["required"] == ["code", "timeout_ms", "include_stdout"]
     assert probe_model["parameters"]["properties"]["code"]["type"] == "string"
     assert probe_model["parameters"]["properties"]["timeout_ms"]["type"] == ["integer", "null"]
