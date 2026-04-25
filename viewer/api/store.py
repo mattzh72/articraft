@@ -521,6 +521,18 @@ class ViewerStore:
             ]
         )
 
+    def _textured_usdz_path_for_record(self, record_id: str) -> str | None:
+        materialization_dir = self.repo.layout.record_materialization_dir(record_id)
+        if not materialization_dir.exists():
+            return None
+
+        candidates = sorted(
+            path.name
+            for path in materialization_dir.iterdir()
+            if path.is_file() and path.suffix.lower() == ".usdz"
+        )
+        return candidates[0] if candidates else None
+
     def _clear_derived_asset_outputs(
         self,
         record_id: str,
@@ -974,6 +986,7 @@ class ViewerStore:
             run_message=run_message,
             collections=[str(item) for item in record.get("collections", [])],
             materialization_status=materialization_status,
+            textured_usdz_path=self._textured_usdz_path_for_record(record_id),
             has_compile_report=compile_path.exists(),
             has_provenance=provenance_path.exists(),
             has_cost=(record_dir / str(cost_name)).exists() if cost_name else False,
@@ -1049,6 +1062,7 @@ class ViewerStore:
             run_message=None,
             collections=[str(item) for item in record.get("collections", [])],
             materialization_status=None,
+            textured_usdz_path=self._textured_usdz_path_for_record(record_id),
             has_compile_report=compile_path.exists(),
             has_provenance=provenance_path.exists(),
             has_cost=cost_path.exists() if cost_path else False,

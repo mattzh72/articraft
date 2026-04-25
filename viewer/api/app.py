@@ -122,6 +122,7 @@ def create_app(*, repo_root: Path | None = None) -> FastAPI:
         ".gltf": "model/gltf+json",
         ".stl": "model/stl",
         ".obj": "model/obj",
+        ".usdz": "model/vnd.usdz+zip",
     }
 
     def should_attempt_materialize_for_record_path(file_path: str) -> bool:
@@ -154,6 +155,9 @@ def create_app(*, repo_root: Path | None = None) -> FastAPI:
         elif requested_path.parts == ("compile_report.json",):
             root = repo.layout.record_materialization_dir(record_id).resolve()
             target = repo.layout.record_materialization_compile_report_path(record_id).resolve()
+        elif len(requested_path.parts) == 1 and requested_path.suffix.lower() == ".usdz":
+            root = repo.layout.record_materialization_dir(record_id).resolve()
+            target = (root / requested_path.name).resolve()
         elif len(requested_path.parts) >= 2 and requested_path.parts[0] == "assets":
             root = repo.layout.record_materialization_dir(record_id).resolve()
             target = (root / requested_path).resolve()

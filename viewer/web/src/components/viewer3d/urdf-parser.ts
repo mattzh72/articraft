@@ -424,6 +424,46 @@ export function findRootLink(urdfSpec: UrdfSpec): string | null {
   return rootLink?.name || null;
 }
 
+export function computeLinkWorldMatrices(urdfSpec: UrdfSpec): Map<string, THREE.Matrix4> {
+  const jointByChild = new Map<string, UrdfJoint>();
+  const knownLinks = new Set(urdfSpec.links.map((link) => link.name));
+  for (const joint of urdfSpec.joints) {
+    jointByChild.set(joint.child, joint);
+  }
+
+  const cache = new Map<string, THREE.Matrix4>();
+  const visiting = new Set<string>();
+
+  const resolve = (linkName: string): THREE.Matrix4 => {
+    const cached = cache.get(linkName);
+    if (cached) {
+      return cached.clone();
+    }
+    if (visiting.has(linkName)) {
+      throw new Error(`URDF contains a cyclic joint graph at link "${linkName}"`);
+    }
+
+    visiting.add(linkName);
+    const joint = jointByChild.get(linkName);
+    let matrix = new THREE.Matrix4().identity();
+    if (joint) {
+      if (!knownLinks.has(joint.parent)) {
+        throw new Error(`URDF joint "${joint.name}" references missing parent link "${joint.parent}"`);
+      }
+      matrix = resolve(joint.parent).multiply(originToMatrix4(joint.origin));
+    }
+    visiting.delete(linkName);
+    cache.set(linkName, matrix.clone());
+    return matrix;
+  };
+
+  for (const link of urdfSpec.links) {
+    resolve(link.name);
+  }
+
+  return cache;
+}
+
 /**
  * Parse URDF XML string into structured spec
  */

@@ -448,6 +448,7 @@ export default function ViewerShell(): JSX.Element {
     doubleSided: renderOptions.doubleSided,
     autoAnimate: renderOptions.autoAnimate,
     showJointOverlay: renderOptions.showJointOverlay,
+    useTexturedUsd: renderOptions.useTexturedUsd,
   };
 
   const baseFileUrl = selection
@@ -473,6 +474,7 @@ export default function ViewerShell(): JSX.Element {
       ? selectedStagingEntry?.checkpoint_updated_at ?? selectedStagingEntry?.updated_at ?? null
       : selectedRecord?.viewer_asset_updated_at ?? null
     : null;
+  const texturedUsdPath = selection?.kind === "record" ? selectedRecord?.textured_usdz_path ?? null : null;
   const selectionKey = selection
     ? selection.kind === "record"
       ? selection.recordId
@@ -609,6 +611,7 @@ export default function ViewerShell(): JSX.Element {
           <ViewportPanel
             baseFileUrl={baseFileUrl}
             assetRevisionKey={assetRevisionKey}
+            texturedUsdPath={texturedUsdPath}
             selectionKey={selectionKey}
             jointPoseSignal={displayedJointValues}
             renderOptions={renderOptions}
