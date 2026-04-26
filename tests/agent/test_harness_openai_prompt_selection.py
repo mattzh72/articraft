@@ -118,6 +118,7 @@ def test_openai_prompt_resolution_and_payload_preview() -> None:
     assert task_message.startswith("<runtime_task_guidance>")
     assert "Read the current `model.py` before editing." in task_message
     assert "Make one small coherent change at a time." in task_message
+    assert "silhouette, colors/materials, and major visible surface treatment." in task_message
     assert "Run `compile_model` to check your latest revision." in task_message
     assert (
         "If compile is clean and you cannot name one specific remaining defect, conclude."
@@ -192,6 +193,10 @@ def test_openai_multimodal_payload_preview_keeps_image_and_appends_guidance(
 
     assert task_parts[0]["type"] == "input_text"
     assert task_parts[0]["text"].startswith("<runtime_task_guidance>")
+    assert (
+        "silhouette, colors/materials, and major visible surface treatment."
+        in task_parts[0]["text"]
+    )
     assert "Run `compile_model` to check your latest revision." in task_parts[0]["text"]
     assert task_parts[1] == {"type": "input_text", "text": "a table lamp"}
     assert task_parts[2]["type"] == "input_image"
@@ -380,6 +385,9 @@ def test_gemini_prompt_resolution_and_payload_preview() -> None:
     assert gemini_task_message.startswith("<runtime_task_guidance>")
     assert "Read the current `model.py` before editing." in gemini_task_message
     assert "Make one small coherent change at a time." in gemini_task_message
+    assert (
+        "silhouette, colors/materials, and major visible surface treatment." in gemini_task_message
+    )
     assert "Run `compile_model` to check your latest revision." in gemini_task_message
     assert (
         "If compile is clean and you cannot name one specific remaining defect, conclude."
@@ -435,6 +443,10 @@ def test_gemini_multimodal_payload_preview_keeps_image_and_appends_guidance(
     task_parts = payload["contents"][1]["parts"]
 
     assert task_parts[0]["text"].startswith("<runtime_task_guidance>")
+    assert (
+        "silhouette, colors/materials, and major visible surface treatment."
+        in task_parts[0]["text"]
+    )
     assert any(
         isinstance(part, dict) and ("inline_data" in part or "inlineData" in part)
         for part in task_parts

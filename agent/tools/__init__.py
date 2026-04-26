@@ -43,6 +43,7 @@ _FIRST_TURN_RUNTIME_GUIDANCE_SHARED = (
     "<runtime_task_guidance>\n"
     "- Read the current `model.py` before editing.\n"
     "- Make one small coherent change at a time.\n"
+    "- Treat visual realism as part of the deliverable: make the object read clearly as the requested thing, with believable proportions, silhouette, colors/materials, and major visible surface treatment.\n"
     "- Run `compile_model` to check your latest revision.\n"
     "- If compile is clean and you cannot name one specific remaining defect, conclude.\n"
     "</runtime_task_guidance>"
