@@ -1829,12 +1829,12 @@ def default_overlap_tol_from_env() -> float:
 def default_overlap_volume_tol_from_env() -> float:
     raw = os.environ.get(
         "OBJECT_GEOMETRY_OVERLAP_VOLUME_TOL",
-        os.environ.get("URDF_GEOMETRY_OVERLAP_VOLUME_TOL", "0.0"),
+        os.environ.get("URDF_GEOMETRY_OVERLAP_VOLUME_TOL", "5e-7"),
     )
     try:
         return float(raw)
     except ValueError:
-        return 0.0
+        return 5e-7
 
 
 def default_contact_tol_from_env() -> float:

@@ -133,6 +133,35 @@ def _build_overlapping_parts_model() -> ArticulatedObject:
     return model
 
 
+def _build_small_overlap_parts_model(
+    *, child_center_xyz: tuple[float, float, float]
+) -> ArticulatedObject:
+    model = ArticulatedObject(name="small_overlap_parts")
+    root = model.part("root")
+
+    base = model.part("base")
+    base.visual(Box((0.02, 0.02, 0.02)), origin=Origin(xyz=(0.0, 0.0, 0.01)), name="base_box")
+
+    child = model.part("child")
+    child.visual(Box((0.02, 0.02, 0.02)), origin=Origin(xyz=child_center_xyz), name="child_box")
+    model.articulation(
+        "root_to_base",
+        ArticulationType.FIXED,
+        parent=root,
+        child=base,
+        origin=Origin(),
+    )
+    model.articulation(
+        "root_to_child",
+        ArticulationType.FIXED,
+        parent=root,
+        child=child,
+        origin=Origin(),
+    )
+
+    return model
+
+
 def _build_isolated_part_model() -> ArticulatedObject:
     model = ArticulatedObject(name="isolated_part")
 
@@ -751,6 +780,47 @@ def test_fail_if_parts_overlap_in_current_pose_aggregates_to_one_failure_per_par
     report = ctx.report()
     assert len(report.failures) == 1
     assert report.failures[0].details.count("pair=('base','child')") == 1
+
+
+def test_fail_if_parts_overlap_in_current_pose_uses_default_volume_tolerance_for_tiny_overlap(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.delenv("OBJECT_GEOMETRY_OVERLAP_TOL", raising=False)
+    monkeypatch.delenv("URDF_GEOMETRY_OVERLAP_TOL", raising=False)
+    monkeypatch.delenv("OBJECT_GEOMETRY_OVERLAP_VOLUME_TOL", raising=False)
+    monkeypatch.delenv("URDF_GEOMETRY_OVERLAP_VOLUME_TOL", raising=False)
+
+    ctx = SDKTestContext(
+        _build_small_overlap_parts_model(child_center_xyz=(0.014, 0.014, 0.024)),
+    )
+
+    assert ctx.fail_if_parts_overlap_in_current_pose()
+
+    report = ctx.report()
+    assert report.passed
+    assert report.failures == ()
+    assert report.checks == ("fail_if_parts_overlap_in_current_pose()",)
+
+
+def test_fail_if_parts_overlap_in_current_pose_still_fails_large_overlap_under_defaults(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.delenv("OBJECT_GEOMETRY_OVERLAP_TOL", raising=False)
+    monkeypatch.delenv("URDF_GEOMETRY_OVERLAP_TOL", raising=False)
+    monkeypatch.delenv("OBJECT_GEOMETRY_OVERLAP_VOLUME_TOL", raising=False)
+    monkeypatch.delenv("URDF_GEOMETRY_OVERLAP_VOLUME_TOL", raising=False)
+
+    ctx = SDKTestContext(
+        _build_small_overlap_parts_model(child_center_xyz=(0.01, 0.01, 0.02)),
+    )
+
+    assert not ctx.fail_if_parts_overlap_in_current_pose()
+
+    report = ctx.report()
+    assert not report.passed
+    assert report.checks == ("fail_if_parts_overlap_in_current_pose()",)
+    assert len(report.failures) == 1
+    assert "Part overlaps detected" in report.failures[0].details
 
 
 def test_allow_overlap_suppresses_fail_if_parts_overlap_in_current_pose() -> None:

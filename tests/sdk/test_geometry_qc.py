@@ -332,6 +332,15 @@ def test_find_geometry_overlaps_reports_mesh_component_name(tmp_path: Path) -> N
     assert overlap.elem_b_name == "frame_body__component_002"
 
 
+def test_default_overlap_volume_tol_from_env_uses_small_nonzero_default(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.delenv("OBJECT_GEOMETRY_OVERLAP_VOLUME_TOL", raising=False)
+    monkeypatch.delenv("URDF_GEOMETRY_OVERLAP_VOLUME_TOL", raising=False)
+
+    assert geometry_qc.default_overlap_volume_tol_from_env() == pytest.approx(5e-7)
+
+
 def test_find_unsupported_parts_keeps_single_mesh_behavior(tmp_path: Path) -> None:
     mesh_path = tmp_path / "assets" / "meshes" / "child.obj"
     _write_single_box_obj(mesh_path)

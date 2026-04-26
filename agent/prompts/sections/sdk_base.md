@@ -15,5 +15,6 @@ TESTING
 - Use `sdk.TestContext`, return `ctx.report()`, and let `compile_model` own the baseline sanity/QC pass.
 - Prefer `TestContext(object_model)`; do not pass asset roots in new code.
 - Use `run_tests()` for prompt-specific exact checks, targeted pose checks, and explicit allowances only.
-- Treat overlap findings as classification tasks first: decide whether the reported intersection is intentional design embedding that should be covered by a scoped `ctx.allow_overlap(...)`, or an unintended collision that needs geometry, mount, or pose changes.
+- Treat overlap findings as classification tasks first: decide whether the reported intersection is intentional design embedding that should be covered by a scoped `ctx.allow_overlap(...)`, or an unintended collision that needs geometry, mount, or pose changes. Accepted intentional cases include proxy nesting, captured pins or shafts, seated trim, and compliant compression.
+- Pair every `ctx.allow_overlap(...)` with at least one exact proof check such as `expect_within(...)`, `expect_overlap(...)`, `expect_gap(..., max_penetration=...)`, `expect_contact(...)`, or a decisive pose check.
 </modeling>

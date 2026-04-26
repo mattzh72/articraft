@@ -24,6 +24,8 @@ def test_compiled_openai_prompt_keeps_compact_contract_and_visual_test_gate() ->
         assert "NO UNINTENTIONAL OVERLAPS" in text
         assert "REALISTIC GEOMETRY" in text
         assert "ARTICULATE THE PRIMARY MECHANISMS" in text
+        assert "small local hidden overlap is acceptable" in text
+        assert "Pair every `ctx.allow_overlap(...)` with at least one exact proof check" in text
 
         # Compact shared workflow stub
         assert "Start with a short context pass:" in text

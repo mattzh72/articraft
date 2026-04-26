@@ -33,6 +33,8 @@ def _assert_shared_contract(text: str) -> None:
     assert "NO FLOATING PARTS" in text
     assert "NO UNINTENTIONAL OVERLAPS" in text
     assert "REALISTIC GEOMETRY" in text
+    assert "small local hidden overlap is acceptable" in text
+    assert "Keep intentional overlap local and element-scoped when possible" in text
 
     # Shared process stub stays compact
     assert "Start with a short context pass:" in text
@@ -98,6 +100,8 @@ def test_prompt_outputs_are_current() -> None:
         in openai_text
     )
     assert "Author visual geometry only; do not author collision geometry in `sdk`." in openai_text
+    assert "Accepted intentional cases include proxy nesting" in openai_text
+    assert "Pair every `ctx.allow_overlap(...)` with at least one exact proof check" in openai_text
     assert (
         "When you no longer need tools, conclude instead of continuing to reflect in text."
         not in openai_text
@@ -127,6 +131,8 @@ def test_prompt_outputs_are_current() -> None:
         in gemini_text
     )
     assert "Author visual geometry only; do not author collision geometry in `sdk`." in gemini_text
+    assert "Accepted intentional cases include proxy nesting" in gemini_text
+    assert "Pair every `ctx.allow_overlap(...)` with at least one exact proof check" in gemini_text
     assert (
         "When you no longer need tools, conclude instead of continuing to reflect in text."
         in gemini_text
