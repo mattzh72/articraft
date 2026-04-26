@@ -133,6 +133,7 @@ export function DashboardPage(): JSX.Element {
             costBounds={dashboard.cost_bounds}
             recordCount={dashboard.overview.total_records}
             categoryCount={dashboard.overview.category_count}
+            loading={loading}
           />
 
           {loadError ? (
@@ -164,10 +165,6 @@ export function DashboardPage(): JSX.Element {
             categoryStats={dashboard.category_stats}
             supercategories={dashboard.supercategories}
           />
-
-          {loading ? (
-            <p className="text-[10px] text-[var(--text-quaternary)]">Refreshing…</p>
-          ) : null}
         </div>
       </div>
     </main>

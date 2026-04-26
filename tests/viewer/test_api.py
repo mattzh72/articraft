@@ -149,6 +149,79 @@ def test_viewer_store_bootstrap_avoids_recursive_asset_scan(
     assert bootstrap.workbench_entries[0].record.viewer_asset_updated_at is not None
 
 
+def test_viewer_store_dashboard_reuses_cached_source_records(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    repo = StorageRepo(tmp_path)
+    repo.ensure_layout()
+
+    record_store = RecordStore(repo)
+    dataset_store = DatasetStore(repo)
+    for index, category_slug in enumerate(("hinges", "drawers"), start=1):
+        record_id = f"rec_dashboard_{index:03d}"
+        record_store.write_record(
+            Record(
+                schema_version=1,
+                record_id=record_id,
+                created_at="2026-03-18T08:00:00Z",
+                updated_at="2026-03-18T08:00:00Z",
+                rating=4,
+                kind="generated_model",
+                prompt_kind="single_prompt",
+                category_slug=category_slug,
+                source=SourceRef(run_id="run_dashboard_001"),
+                sdk_package="sdk",
+                provider="openai",
+                model_id="gpt-5.4",
+                display=DisplayMetadata(
+                    title=f"Dashboard record {index}",
+                    prompt_preview="dashboard prompt",
+                ),
+                artifacts=RecordArtifacts(
+                    prompt_txt="prompt.txt",
+                    prompt_series_json=None,
+                    model_py="model.py",
+                    provenance_json="provenance.json",
+                    cost_json=None,
+                ),
+                collections=["workbench"],
+            )
+        )
+        dataset_store.promote_record(
+            record_id=record_id,
+            dataset_id=f"000{index}",
+            promoted_at="2026-03-18T08:01:00Z",
+            category_slug=category_slug,
+        )
+
+    calls = 0
+    original = ViewerStore._dashboard_record
+
+    def wrapped_dashboard_record(
+        self: ViewerStore,
+        record_id: str,
+        *,
+        category_slug_override: str | None = None,
+    ):
+        nonlocal calls
+        calls += 1
+        return original(self, record_id, category_slug_override=category_slug_override)
+
+    monkeypatch.setattr(ViewerStore, "_dashboard_record", wrapped_dashboard_record)
+
+    store = ViewerStore(tmp_path, ensure_search_index=False)
+    first = store.compute_dashboard()
+    second = store.compute_dashboard(stars_min=4, stars_max=5)
+
+    assert first.overview.total_records == 2
+    assert second.overview.total_records == 2
+    assert calls == 2
+
+    store.invalidate_stats_cache()
+    store.compute_dashboard()
+    assert calls == 4
+
+
 def test_viewer_store_delete_record_removes_empty_ad_hoc_category(tmp_path: Path) -> None:
     repo = StorageRepo(tmp_path)
     repo.ensure_layout()

@@ -475,6 +475,7 @@ class ViewerStore:
         self._compile_locks: dict[str, threading.Lock] = {}
         self._run_results_cache_guard = threading.Lock()
         self._run_results_cache: dict[str, tuple[int | None, dict[str, dict[str, Any]]]] = {}
+        self._dashboard_records_cache: tuple[float, list[DashboardRecord]] | None = None
 
     def _record_compile_lock(self, record_id: str) -> threading.Lock:
         with self._compile_locks_guard:
@@ -1167,6 +1168,12 @@ class ViewerStore:
         )
 
     def _list_dashboard_records(self) -> list[DashboardRecord]:
+        now = time.monotonic()
+        if self._dashboard_records_cache is not None:
+            cached_at, cached = self._dashboard_records_cache
+            if now - cached_at < self._STATS_TTL:
+                return cached
+
         records: list[DashboardRecord] = []
         seen: set[str] = set()
         for item in self.datasets.list_entries():
@@ -1180,6 +1187,7 @@ class ViewerStore:
             )
             if record is not None:
                 records.append(record)
+        self._dashboard_records_cache = (now, records)
         return records
 
     def _dashboard_category_stats(
@@ -1807,6 +1815,7 @@ class ViewerStore:
             dataset_id=normalized_dataset_id or None,
             promoted_at=_utc_now(),
         )
+        self.invalidate_stats_cache()
         return DatasetEntryResponse(
             record_id=str(entry.get("record_id") or record_id),
             dataset_id=str(entry.get("dataset_id") or ""),
@@ -2137,6 +2146,7 @@ class ViewerStore:
     def invalidate_stats_cache(self) -> None:
         self._stats_cache = None
         self._data_size_cache = None
+        self._dashboard_records_cache = None
 
     def _compute_data_size_cached(self) -> int | None:
         now = time.monotonic()
@@ -2337,6 +2347,7 @@ class ViewerStore:
                 )
             self.datasets.write_dataset_manifest()
             self.search.rebuild()
+            self.invalidate_stats_cache()
         return deleted
 
     def delete_staging_entry(self, run_id: str, record_id: str) -> bool:

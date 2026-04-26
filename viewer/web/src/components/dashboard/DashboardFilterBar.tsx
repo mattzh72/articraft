@@ -40,6 +40,7 @@ type DashboardFilterBarProps = {
   costBounds: CostBounds | null;
   recordCount: number;
   categoryCount: number;
+  loading: boolean;
 };
 
 export function DashboardFilterBar({
@@ -61,6 +62,7 @@ export function DashboardFilterBar({
   costBounds,
   recordCount,
   categoryCount,
+  loading,
 }: DashboardFilterBarProps): JSX.Element {
   const timeFilterActive = timeFilter.oldest != null || timeFilter.newest != null;
   const starsFilterActive =
@@ -140,10 +142,26 @@ export function DashboardFilterBar({
           ) : null}
         </div>
 
-        <span className="shrink-0 text-[10px] tabular-nums text-[var(--text-quaternary)]">
-          {recordCount} records · {categoryCount} categories
-        </span>
+        <div className="flex shrink-0 items-center gap-3">
+          {loading ? (
+            <span
+              aria-live="polite"
+              className="inline-flex items-center gap-1.5 rounded-full border border-[var(--accent)]/30 bg-[var(--accent-soft)] px-2 py-1 text-[10px] text-[var(--accent)]"
+            >
+              <span className="size-1.5 animate-pulse rounded-full bg-current" />
+              Applying filters…
+            </span>
+          ) : null}
+          <span className="text-[10px] tabular-nums text-[var(--text-quaternary)]">
+            {recordCount} records · {categoryCount} categories
+          </span>
+        </div>
       </div>
+      {loading ? (
+        <p className="mt-2 text-[10px] text-[var(--text-quaternary)]">
+          Filtered views can take a few seconds to recompute, especially tighter rating ranges.
+        </p>
+      ) : null}
     </section>
   );
 }
