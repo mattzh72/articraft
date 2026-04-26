@@ -42,6 +42,7 @@ SUPPORTED_IMAGE_MIME_TYPES_BY_PROVIDER: dict[str, set[str]] = {
 _FIRST_TURN_RUNTIME_GUIDANCE_SHARED = (
     "<runtime_task_guidance>\n"
     "- Read the current `model.py` before editing.\n"
+    "- Prefer multiple small `apply_patch` edits over one giant patch.\n"
     "- Make one small coherent change at a time.\n"
     "- Treat visual realism as part of the deliverable: make the object read clearly as the requested thing, with believable proportions, silhouette, colors/materials, and major visible surface treatment.\n"
     "- Run `compile_model` to check your latest revision.\n"

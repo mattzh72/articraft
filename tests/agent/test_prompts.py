@@ -47,6 +47,7 @@ def test_first_turn_runtime_guidance_is_shared() -> None:
     expected = (
         "<runtime_task_guidance>\n"
         "- Read the current `model.py` before editing.\n"
+        "- Prefer multiple small `apply_patch` edits over one giant patch.\n"
         "- Make one small coherent change at a time.\n"
         "- Treat visual realism as part of the deliverable: make the object read clearly as the requested thing, with believable proportions, silhouette, colors/materials, and major visible surface treatment.\n"
         "- Run `compile_model` to check your latest revision.\n"
