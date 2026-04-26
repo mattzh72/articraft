@@ -125,11 +125,14 @@ Material(
     name: str,
     rgba: tuple[float, float, float, float] | None = None,
     texture: str | None = None,
+    *,
+    color: tuple[float, float, float] | tuple[float, float, float, float] | None = None,
 )
 ```
 
 - `name`: required material name.
 - `rgba`: 3 or 4 floats. A 3-tuple is expanded to `(r, g, b, 1.0)`.
+- `color`: compatibility alias for `rgba`. Use either `rgba` or `color`, not both.
 - `texture`: optional texture path.
 
 ### `Visual`
