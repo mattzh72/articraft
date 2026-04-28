@@ -3,6 +3,7 @@ from __future__ import annotations
 import json
 import os
 import re
+import tempfile
 import unicodedata
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -255,9 +256,6 @@ class SearchIndex:
     ) -> None:
         path = self.repo.layout.search_index_path()
         path.parent.mkdir(parents=True, exist_ok=True)
-        temporary_path = path.with_suffix(f"{path.suffix}.tmp")
-        if temporary_path.exists():
-            temporary_path.unlink()
 
         payload = {
             "schema_version": _INDEX_SCHEMA_VERSION,
@@ -266,8 +264,21 @@ class SearchIndex:
             "workbench_entry_count": workbench_entry_count,
             "documents": documents,
         }
-        temporary_path.write_text(json.dumps(payload, indent=2) + "\n", encoding="utf-8")
-        os.replace(temporary_path, path)
+        with tempfile.NamedTemporaryFile(
+            "w",
+            dir=path.parent,
+            encoding="utf-8",
+            prefix=f"{path.name}.",
+            suffix=".tmp",
+            delete=False,
+        ) as temporary_file:
+            temporary_path = Path(temporary_file.name)
+            temporary_file.write(json.dumps(payload, indent=2) + "\n")
+        try:
+            os.replace(temporary_path, path)
+        except OSError:
+            temporary_path.unlink(missing_ok=True)
+            raise
 
     def _cache_stats(
         self,
