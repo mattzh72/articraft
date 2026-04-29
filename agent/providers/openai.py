@@ -21,7 +21,13 @@ from pathlib import Path
 from typing import Any, Optional
 from urllib.parse import urlparse, urlunparse
 
-from agent.providers.base import CompactionEvent, PrepareRequestResult, ProviderTraceEvent
+from agent.providers.base import (
+    CompactionEvent,
+    ContextWindowPressure,
+    PrepareRequestResult,
+    ProviderTraceEvent,
+    build_context_window_pressure,
+)
 from agent.providers.compaction_policy import decide_compaction
 
 try:
@@ -281,6 +287,14 @@ class OpenAILLM:
             system_prompt=system_prompt,
             tools=converted_tools,
             input_items=self._input_items,
+        )
+
+    def context_window_pressure(self, usage: dict[str, int]) -> ContextWindowPressure:
+        return build_context_window_pressure(
+            provider="openai",
+            usage=usage,
+            max_context_tokens=_context_window_tokens_for_model(self.model_id),
+            hard_pressure_tokens=_hard_pressure_threshold_for_model(self.model_id),
         )
 
     async def prepare_next_request(
@@ -1298,6 +1312,19 @@ def _hard_pressure_threshold_for_model(model_id: str) -> int | None:
     return None
 
 
+def _context_window_tokens_for_model(model_id: str) -> int | None:
+    override = _env_int_or_none("OPENAI_CONTEXT_WINDOW_TOKENS")
+    if override is not None:
+        return override
+
+    normalized = (model_id or "").strip().lower()
+    if normalized.startswith(("gpt-5.2", "gpt-5.3-codex", "gpt-5.4", "gpt-5.5")):
+        return 400_000
+    if normalized.startswith("gpt-4.1"):
+        return 1_000_000
+    return None
+
+
 def _extract_reasoning_summary(summary: Any) -> str:
     if not summary:
         return ""
@@ -1386,6 +1413,17 @@ def _env_float(name: str, default: float) -> float:
         return float(raw.strip())
     except Exception:
         return default
+
+
+def _env_int_or_none(name: str) -> int | None:
+    raw = os.environ.get(name)
+    if raw is None:
+        return None
+    try:
+        value = int(raw.strip().replace("_", ""))
+    except Exception:
+        return None
+    return value if value > 0 else None
 
 
 def _image_path_to_data_url(image_path: str) -> str:

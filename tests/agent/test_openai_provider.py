@@ -83,6 +83,25 @@ def test_openai_api_key_from_env_uses_key_pool_when_primary_missing() -> None:
     assert key in {"sk-first", "sk-second"}
 
 
+def test_openai_context_window_pressure_reports_prompt_fraction() -> None:
+    provider = OpenAILLM(model_id="gpt-5.4", dry_run=True)
+
+    pressure = provider.context_window_pressure(
+        {
+            "prompt_tokens": 200_000,
+            "cached_tokens": 50_000,
+            "candidates_tokens": 10_000,
+            "total_tokens": 210_000,
+        }
+    )
+
+    assert pressure.max_context_tokens == 400_000
+    assert pressure.prompt_tokens == 200_000
+    assert pressure.remaining_context_tokens == 200_000
+    assert pressure.pressure_ratio == 0.5
+    assert pressure.output_tokens == 10_000
+
+
 def test_generate_with_tools_only_retries_without_reasoning_summary_for_supported_error(
     caplog: pytest.LogCaptureFixture,
 ) -> None:

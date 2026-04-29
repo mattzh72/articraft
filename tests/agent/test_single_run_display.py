@@ -31,6 +31,37 @@ def test_start_shows_run_header() -> None:
     assert "run gpt-5.4" in output
 
 
+def test_add_llm_call_shows_context_pressure() -> None:
+    display, buffer = _make_display()
+
+    display.add_llm_call(
+        {
+            "prompt_tokens": 245_000,
+            "cached_tokens": 50_000,
+            "candidates_tokens": 5_000,
+            "total_tokens": 250_000,
+        },
+        0.0125,
+        2.5,
+        context_pressure={
+            "prompt_tokens": 245_000,
+            "max_context_tokens": 400_000,
+            "pressure_ratio": 245_000 / 400_000,
+            "remaining_context_tokens": 155_000,
+            "cached_tokens": 50_000,
+            "output_tokens": 5_000,
+            "total_tokens": 250_000,
+        },
+    )
+
+    output = buffer.getvalue()
+    assert "250.0K tokens" in output
+    assert "ctx=245.0K/400.0K (61%)" in output
+    assert "left=155.0K" in output
+    assert "out=5.0K" in output
+    assert "cache=50.0K (20%)" in output
+
+
 def test_add_tool_call_shows_success_result_and_compilation() -> None:
     display, buffer = _make_display()
 

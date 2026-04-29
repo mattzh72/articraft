@@ -9,6 +9,7 @@ from rich.console import Console
 from rich.text import Text
 
 from agent.tui.formatters import (
+    format_context_pressure,
     format_cost,
     format_duration,
     format_timestamp,
@@ -275,16 +276,35 @@ class SingleRunDisplay:
 
     # ── events ────────────────────────────────────────────────
 
-    def add_llm_call(self, tokens: dict, cost: float, duration: float):
+    def add_llm_call(
+        self,
+        tokens: dict,
+        cost: float,
+        duration: float,
+        context_pressure: dict[str, Any] | None = None,
+    ):
         if not self.enabled:
             return
         total = tokens.get("total_tokens", 0)
         self.total_tokens += total
         self.total_cost += cost
 
+        pressure = context_pressure
+        if pressure is None:
+            pressure = {
+                "prompt_tokens": tokens.get("prompt_tokens"),
+                "cached_tokens": tokens.get("cached_tokens"),
+                "output_tokens": tokens.get("candidates_tokens"),
+                "total_tokens": tokens.get("total_tokens"),
+            }
+        context_text = format_context_pressure(pressure)
+
         line = Text()
         line.append("  llm     ", style="cyan")
         line.append(f"{format_tokens(total)} tokens", style="bold")
+        if context_text:
+            line.append("  ")
+            line.append(context_text, style="blue")
         line.append(f"  {format_cost(cost)}", style="green")
         line.append(f"  {format_duration(duration)}", style="dim")
         self.console.print(line)

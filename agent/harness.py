@@ -824,6 +824,21 @@ class ArticraftAgent:
                 cleaned[key] = value
         return cleaned or None
 
+    def _context_window_pressure(self, usage: dict[str, int]) -> dict[str, Any] | None:
+        context_window_pressure = getattr(self.llm, "context_window_pressure", None)
+        if not callable(context_window_pressure):
+            return None
+        try:
+            pressure = context_window_pressure(usage)
+        except Exception:
+            logger.exception("Failed to compute context-window pressure")
+            return None
+        to_dict = getattr(pressure, "to_dict", None)
+        if callable(to_dict):
+            payload = to_dict()
+            return payload if isinstance(payload, dict) else None
+        return pressure if isinstance(pressure, dict) else None
+
     def _extract_thinking(self, message: dict) -> Optional[str]:
         if not isinstance(message, dict):
             return None
@@ -1459,12 +1474,25 @@ class ArticraftAgent:
             else:
                 logger.warning("Skipping empty assistant message")
 
-            if usage and self.cost_tracker:
-                turn_cost = self.cost_tracker.add_turn(usage)
+            if usage:
                 llm_duration = time.monotonic() - llm_start
-                self.display.add_llm_call(usage, turn_cost.total_cost, llm_duration)
+                turn_cost_usd = 0.0
+                if self.cost_tracker:
+                    turn_cost = self.cost_tracker.add_turn(usage)
+                    turn_cost_usd = turn_cost.total_cost
+                context_pressure = self._context_window_pressure(usage)
+                try:
+                    self.display.add_llm_call(
+                        usage,
+                        turn_cost_usd,
+                        llm_duration,
+                        context_pressure=context_pressure,
+                    )
+                except TypeError:
+                    self.display.add_llm_call(usage, turn_cost_usd, llm_duration)
                 if (
-                    self.max_cost_usd is not None
+                    self.cost_tracker is not None
+                    and self.max_cost_usd is not None
                     and self._current_total_cost_usd() > self.max_cost_usd
                 ):
                     total_cost = self._current_total_cost_usd()

@@ -20,7 +20,13 @@ from pathlib import Path
 from typing import Any, Optional, Union
 
 from agent.prompts import load_prompt_section_text
-from agent.providers.base import CompactionEvent, PrepareRequestResult, ProviderTraceEvent
+from agent.providers.base import (
+    CompactionEvent,
+    ContextWindowPressure,
+    PrepareRequestResult,
+    ProviderTraceEvent,
+    build_context_window_pressure,
+)
 from agent.providers.compaction_policy import decide_compaction
 
 try:
@@ -109,6 +115,14 @@ class GeminiLLM:
             "contents": [c.model_dump(mode="json", exclude_none=True) for c in contents],
             "config": config.model_dump(mode="json", exclude_none=True),
         }
+
+    def context_window_pressure(self, usage: dict[str, int]) -> ContextWindowPressure:
+        return build_context_window_pressure(
+            provider="gemini",
+            usage=usage,
+            max_context_tokens=_context_window_tokens_for_model(self.model_id),
+            hard_pressure_tokens=_hard_pressure_threshold_for_model(self.model_id),
+        )
 
     async def prepare_next_request(
         self,
@@ -1071,6 +1085,17 @@ def _hard_pressure_threshold_for_model(model_id: str) -> int | None:
     normalized = (model_id or "").strip().lower()
     if normalized.startswith("gemini-3") or normalized.startswith("gemini-2.5"):
         return _GEMINI_DANGER_ZONE_TOKENS
+    return None
+
+
+def _context_window_tokens_for_model(model_id: str) -> int | None:
+    override = _env_int("GEMINI_CONTEXT_WINDOW_TOKENS", 0)
+    if override > 0:
+        return override
+
+    normalized = (model_id or "").strip().lower()
+    if normalized.startswith("gemini-3") or normalized.startswith("gemini-2.5"):
+        return 1_000_000
     return None
 
 

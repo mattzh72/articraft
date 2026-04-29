@@ -40,6 +40,25 @@ def _content_text(content: object) -> str:
     return "\n".join(text for text in texts if isinstance(text, str))
 
 
+def test_gemini_context_window_pressure_reports_prompt_fraction() -> None:
+    provider = GeminiLLM(model_id="gemini-3.1-pro-preview", dry_run=True)
+
+    pressure = provider.context_window_pressure(
+        {
+            "prompt_tokens": 250_000,
+            "cached_tokens": 100_000,
+            "candidates_tokens": 25_000,
+            "total_tokens": 275_000,
+        }
+    )
+
+    assert pressure.max_context_tokens == 1_000_000
+    assert pressure.prompt_tokens == 250_000
+    assert pressure.remaining_context_tokens == 750_000
+    assert pressure.pressure_ratio == 0.25
+    assert pressure.output_tokens == 25_000
+
+
 def test_prepare_next_request_skips_prefix_cache_event() -> None:
     provider = GeminiLLM(dry_run=True)
 
