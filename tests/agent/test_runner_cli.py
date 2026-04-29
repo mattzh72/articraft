@@ -15,7 +15,7 @@ def test_runner_help_text(capsys: pytest.CaptureFixture[str]) -> None:
     help_text = capsys.readouterr().out
     assert "--prompt" in help_text
     assert "--image" in help_text
-    assert "--provider {gemini,openai}" in help_text
+    assert "--provider {gemini,openai,openrouter}" in help_text
     assert "--design-audit" in help_text
     assert "--openai-transport {http,websocket}" in help_text
     assert "--collection {workbench,dataset}" in help_text
@@ -90,3 +90,30 @@ def test_runner_accepts_openai_api_keys_env(
 
     assert exit_code == 0
     assert captured["max_cost_usd"] == 1.25
+
+
+def test_runner_dump_provider_payload_supports_openrouter(
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    exit_code = runner.main(
+        [
+            "--prompt",
+            "test prompt",
+            "--provider",
+            "openrouter",
+            "--dump-provider-payload",
+        ]
+    )
+
+    assert exit_code == 0
+    payload = json.loads(capsys.readouterr().out)
+    assert payload["base_url"] == "https://openrouter.ai/api/v1"
+    assert payload["model"] == "tencent/hy3-preview:free"
+    assert payload["extra_body"]["reasoning"]["enabled"] is True
+    assert payload["extra_body"]["reasoning"]["effort"] == "high"
+    assert payload["messages"][0]["role"] == "system"
+    assert "<process>" in payload["messages"][0]["content"]
+    assert (
+        "Work evidence-first. Before editing, read `model.py`" in payload["messages"][0]["content"]
+    )
+    assert payload["messages"][1]["role"] == "user"

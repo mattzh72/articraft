@@ -22,7 +22,7 @@ def _opening_tag_count(text: str) -> int:
     return len(re.findall(r"^<(?!(?:/|compile_signals>))[a-z_]+>$", text, flags=re.MULTILINE))
 
 
-def _assert_shared_contract(text: str) -> None:
+def _assert_shared_contract(text: str, *, allow_process: bool = False) -> None:
     for tag in REQUIRED_TAGS:
         assert tag in text
     assert _opening_tag_count(text) >= 4
@@ -38,7 +38,8 @@ def _assert_shared_contract(text: str) -> None:
     assert "Keep intentional overlap local and element-scoped when possible" in text
 
     # Workflow guidance is intentionally omitted from the compiled system prompts.
-    assert "<process>" not in text
+    if not allow_process:
+        assert "<process>" not in text
     assert "Start with a short context pass:" not in text
     assert "preloaded SDK quickstart/router" not in text
     assert "Read only the specific `docs/` references needed for the next change" not in text
@@ -145,3 +146,19 @@ def test_prompt_outputs_are_current() -> None:
         "After a clean compile on the latest revision, conclude immediately unless you can name one specific unresolved defect."
         in gemini_text
     )
+
+    openrouter_text = compiled_by_name["designer_system_prompt_openrouter.txt"]
+    _assert_shared_contract(openrouter_text, allow_process=True)
+    assert "<process>" in openrouter_text
+    assert "Work evidence-first. Before editing, read `model.py`" in openrouter_text
+    assert "use `find_examples` for one or two relevant construction patterns" in openrouter_text
+    assert (
+        "Do not keep planning in assistant text. Once you know the next concrete step, use a tool."
+        in openrouter_text
+    )
+    assert (
+        "Available tools: `read_file`, `replace`, `write_file`, `compile_model`, `probe_model`, and `find_examples`."
+        in openrouter_text
+    )
+    assert "write_code" not in openrouter_text
+    assert "Prefer small exact `replace` edits over broad rewrites" in openrouter_text

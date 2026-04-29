@@ -39,6 +39,18 @@ PROMPT_VARIANTS: tuple[PromptVariant, ...] = (
         output=GENERATED_DIR / "designer_system_prompt_gemini.txt",
         description="Gemini designer prompt for the unified SDK.",
     ),
+    PromptVariant(
+        name="designer_openrouter",
+        sections=(
+            SECTIONS_DIR / "designer_common.md",
+            SECTIONS_DIR / "link_naming.md",
+            SECTIONS_DIR / "provider_gemini.md",
+            SECTIONS_DIR / "provider_openrouter_process.md",
+            SECTIONS_DIR / "sdk_base.md",
+        ),
+        output=GENERATED_DIR / "designer_system_prompt_openrouter.txt",
+        description="OpenRouter designer prompt for the unified SDK.",
+    ),
 )
 
 

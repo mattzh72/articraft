@@ -12,6 +12,14 @@ from scripts import pre_commit_hooks
     [
         ("".join(["OPENAI_API_", "KEY=sk-test-value"]), "OpenAI API key assignment"),
         ("".join(["OPENAI_API_", "KEYS=sk-test-value"]), "OpenAI API key assignment"),
+        (
+            "".join(["OPENROUTER_API_", "KEY=sk-or-test-value"]),
+            "OpenRouter API key assignment",
+        ),
+        (
+            "".join(["OPENROUTER_API_", "KEYS=sk-or-test-value"]),
+            "OpenRouter API key assignment",
+        ),
         ("".join(["GEMINI_API_", "KEYS=gemini-test-value"]), "Gemini API keys assignment"),
     ],
 )

@@ -4,6 +4,8 @@ from scripts.bootstrap_env import bootstrap_env
 
 OPENAI_API_KEY_NAME = "".join(["OPENAI_API_", "KEY"])
 OPENAI_API_KEYS_NAME = "".join(["OPENAI_API_", "KEYS"])
+OPENROUTER_API_KEY_NAME = "".join(["OPENROUTER_API_", "KEY"])
+OPENROUTER_API_KEYS_NAME = "".join(["OPENROUTER_API_", "KEYS"])
 GEMINI_API_KEYS_NAME = "".join(["GEMINI_API_", "KEYS"])
 
 
@@ -18,6 +20,8 @@ def test_bootstrap_env_imports_supported_keys_from_shell_environment(tmp_path) -
         environ={
             OPENAI_API_KEYS_NAME: "sk-a,sk-b",
             OPENAI_API_KEY_NAME: "sk-primary",
+            OPENROUTER_API_KEYS_NAME: "sk-or-a,sk-or-b",
+            OPENROUTER_API_KEY_NAME: "sk-or-primary",
             GEMINI_API_KEYS_NAME: "gem-a,gem-b",
             "GOOGLE_CLOUD_PROJECT": "articraft-dev",
             "GOOGLE_APPLICATION_CREDENTIALS": "/tmp/my creds.json",
@@ -31,6 +35,8 @@ def test_bootstrap_env_imports_supported_keys_from_shell_environment(tmp_path) -
         GEMINI_API_KEYS_NAME,
         "GOOGLE_CLOUD_PROJECT",
         OPENAI_API_KEYS_NAME,
+        OPENROUTER_API_KEYS_NAME,
+        OPENROUTER_API_KEY_NAME,
         "GOOGLE_APPLICATION_CREDENTIALS",
         "GOOGLE_CLOUD_LOCATION",
     ]
@@ -39,6 +45,8 @@ def test_bootstrap_env_imports_supported_keys_from_shell_environment(tmp_path) -
         f"{GEMINI_API_KEYS_NAME}=gem-a,gem-b\n"
         "GOOGLE_CLOUD_PROJECT=articraft-dev\n"
         f"{OPENAI_API_KEYS_NAME}=sk-a,sk-b\n"
+        f"{OPENROUTER_API_KEYS_NAME}=sk-or-a,sk-or-b\n"
+        f"{OPENROUTER_API_KEY_NAME}=sk-or-primary\n"
         "GOOGLE_APPLICATION_CREDENTIALS='/tmp/my creds.json'\n"
         "GOOGLE_CLOUD_LOCATION=europe-west2\n"
     )

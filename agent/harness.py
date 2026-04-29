@@ -37,6 +37,7 @@ from agent.prompts import (
 )
 from agent.providers.gemini import GeminiLLM
 from agent.providers.openai import OpenAILLM
+from agent.providers.openrouter import OpenRouterLLM
 from agent.runtime_limits import BatchRuntimeLimits, local_work_slot
 from agent.tools import (
     build_first_turn_messages as _build_first_turn_messages,
@@ -340,6 +341,11 @@ class ArticraftAgent:
                 self.llm = GeminiLLM(model_id=model_id, thinking_level=thinking_level)
             else:
                 self.llm = GeminiLLM(thinking_level=thinking_level)
+        elif provider_norm == "openrouter":
+            if model_id is not None:
+                self.llm = OpenRouterLLM(model_id=model_id, thinking_level=thinking_level)
+            else:
+                self.llm = OpenRouterLLM(thinking_level=thinking_level)
         elif provider_norm == "openai":
             if model_id is not None:
                 self.llm = OpenAILLM(

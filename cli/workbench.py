@@ -61,7 +61,7 @@ def _build_parser() -> argparse.ArgumentParser:
     init_record.add_argument(
         "--provider",
         default="openai",
-        choices=("openai", "gemini"),
+        choices=("openai", "gemini", "openrouter"),
         help="LLM provider metadata to attach to the draft record.",
     )
     init_record.add_argument(

@@ -24,6 +24,10 @@ FORBIDDEN_PATHS = (
 )
 SECRET_PATTERNS = (
     ("OpenAI API key assignment", re.compile(r"OPENAI_API_KEYS?\s*=\s*['\"]?[^'\"\s]+")),
+    (
+        "OpenRouter API key assignment",
+        re.compile(r"OPENROUTER_API_KEYS?\s*=\s*['\"]?[^'\"\s]+"),
+    ),
     ("Gemini API keys assignment", re.compile(r"GEMINI_API_KEYS\s*=\s*['\"]?[^'\"\s]+")),
     ("OpenAI secret token", re.compile(r"\bsk-[A-Za-z0-9_-]{16,}\b")),
     (

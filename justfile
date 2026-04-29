@@ -89,8 +89,11 @@ wb prompt:
       gemini-*)
         provider="gemini"
         ;;
+      */*|openrouter/*)
+        provider="openrouter"
+        ;;
       *)
-        echo "Unable to infer provider for model '$model'. Supported model prefixes: gpt-, o1, o3, o4, gemini-." >&2
+        echo "Unable to infer provider for model '$model'. Supported model prefixes: gpt-, o1, o3, o4, gemini-, or OpenRouter-style owner/model IDs." >&2
         exit 1
         ;;
     esac
@@ -136,8 +139,11 @@ wb-init prompt:
       gemini-*)
         provider="gemini"
         ;;
+      */*|openrouter/*)
+        provider="openrouter"
+        ;;
       *)
-        echo "Unable to infer provider for model '$model'. Supported model prefixes: gpt-, o1, o3, o4, gemini-." >&2
+        echo "Unable to infer provider for model '$model'. Supported model prefixes: gpt-, o1, o3, o4, gemini-, or OpenRouter-style owner/model IDs." >&2
         exit 1
         ;;
     esac
@@ -190,8 +196,11 @@ wb-category prompt:
       gemini-*)
         provider="gemini"
         ;;
+      */*|openrouter/*)
+        provider="openrouter"
+        ;;
       *)
-        echo "Unable to infer provider for model '$model'. Supported model prefixes: gpt-, o1, o3, o4, gemini-." >&2
+        echo "Unable to infer provider for model '$model'. Supported model prefixes: gpt-, o1, o3, o4, gemini-, or OpenRouter-style owner/model IDs." >&2
         exit 1
         ;;
     esac

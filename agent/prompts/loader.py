@@ -10,6 +10,7 @@ LEGACY_DESIGNER_PROMPT_NAME = "system_prompt.txt"
 DESIGNER_PROMPT_NAME = "designer_system_prompt.txt"
 OPENAI_DESIGNER_PROMPT_NAME = "designer_system_prompt_openai.txt"
 GEMINI_DESIGNER_PROMPT_NAME = "designer_system_prompt_gemini.txt"
+OPENROUTER_DESIGNER_PROMPT_NAME = "designer_system_prompt_openrouter.txt"
 
 SUPPORTED_SDK_DOCS_MODES = {"full", "core", "none"}
 LEGACY_SDK_DOCS_MODE_ALIASES = {
@@ -65,6 +66,7 @@ def resolve_system_prompt_path(
         DESIGNER_PROMPT_NAME,
         OPENAI_DESIGNER_PROMPT_NAME,
         GEMINI_DESIGNER_PROMPT_NAME,
+        OPENROUTER_DESIGNER_PROMPT_NAME,
     }
     profile_prompt_name = profile.prompt_name_for_provider(provider_norm)
     if path.name in default_names and profile_prompt_name is not None:

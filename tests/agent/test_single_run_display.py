@@ -31,6 +31,26 @@ def test_start_shows_run_header() -> None:
     assert "run gpt-5.4" in output
 
 
+def test_openrouter_run_header_and_zero_cost_llm_line() -> None:
+    buffer = StringIO()
+    console = Console(file=buffer, force_terminal=False, color_system=None, width=160)
+    display = SingleRunDisplay(
+        console=console,
+        model_id="tencent/hy3-preview:free",
+        thinking_level="high",
+        max_turns=100,
+        enabled=True,
+    )
+
+    display.start()
+    display.add_llm_call({"total_tokens": 60000}, 0.0, 1.25)
+
+    output = buffer.getvalue()
+    assert "run tencent/hy3-preview:free" in output
+    assert "thinking=high" in output
+    assert "llm     60.0K tokens  $0.0000" in output
+
+
 def test_add_llm_call_shows_context_pressure() -> None:
     display, buffer = _make_display()
 

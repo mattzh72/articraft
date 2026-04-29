@@ -43,6 +43,7 @@ from agent.prompts import (
 )
 from agent.providers.gemini import GeminiLLM, gemini_client_config_from_env
 from agent.providers.openai import OpenAILLM, openai_api_key_from_env
+from agent.providers.openrouter import OpenRouterLLM, openrouter_api_key_from_env
 from agent.runtime_limits import BatchRuntimeLimits, local_work_slot
 from agent.tools import (
     build_first_turn_messages as _build_first_turn_messages,
@@ -403,6 +404,8 @@ def _infer_provider_from_model_id(model_id: str | None) -> str | None:
         return "openai"
     if model_norm.startswith("gemini-"):
         return "gemini"
+    if "/" in model_norm or model_norm.startswith("openrouter/"):
+        return "openrouter"
     return None
 
 
@@ -419,6 +422,8 @@ def _default_model_id(
         return model_id
     if provider_norm == "gemini":
         return GeminiLLM(thinking_level=thinking_level, dry_run=True).model_id
+    if provider_norm == "openrouter":
+        return OpenRouterLLM(thinking_level=thinking_level, dry_run=True).model_id
     if provider_norm == "openai":
         return OpenAILLM(
             thinking_level=thinking_level,
@@ -1241,6 +1246,17 @@ def build_provider_payload_preview(
             transport=openai_transport,
             prompt_cache_key=prompt_cache_key,
             prompt_cache_retention=prompt_cache_retention,
+            dry_run=True,
+        )
+        return llm.build_request_preview(
+            system_prompt=system_prompt,
+            messages=conversation,
+            tools=tools,
+        )
+    if provider_norm == "openrouter":
+        llm = OpenRouterLLM(
+            model_id=model_id,
+            thinking_level=thinking_level,
             dry_run=True,
         )
         return llm.build_request_preview(
@@ -2117,7 +2133,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument(
         "--provider",
         default="openai",
-        choices=["gemini", "openai"],
+        choices=["gemini", "openai", "openrouter"],
         help="LLM provider.",
     )
     parser.add_argument(
@@ -2289,6 +2305,14 @@ def main(argv: list[str] | None = None) -> int:
             gemini_client_config_from_env()
         except ValueError as exc:
             print(str(exc), file=sys.stderr)
+            return 1
+    elif args.provider == "openrouter":
+        if not openrouter_api_key_from_env():
+            print(
+                "OpenRouter credentials are required. "
+                "Set OPENROUTER_API_KEY or OPENROUTER_API_KEYS.",
+                file=sys.stderr,
+            )
             return 1
     elif args.provider == "openai":
         if not openai_api_key_from_env():

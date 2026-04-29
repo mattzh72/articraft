@@ -37,6 +37,12 @@ SUPPORTED_IMAGE_MIME_TYPES_BY_PROVIDER: dict[str, set[str]] = {
         "image/heic",
         "image/heif",
     },
+    "openrouter": {
+        "image/png",
+        "image/jpeg",
+        "image/webp",
+        "image/gif",
+    },
 }
 
 _FIRST_TURN_RUNTIME_GUIDANCE_SHARED = (

@@ -5,6 +5,7 @@ from pathlib import Path
 
 OPENAI_DESIGNER_PROMPT_NAME = "designer_system_prompt_openai.txt"
 GEMINI_DESIGNER_PROMPT_NAME = "designer_system_prompt_gemini.txt"
+OPENROUTER_DESIGNER_PROMPT_NAME = "designer_system_prompt_openrouter.txt"
 
 
 @dataclass(slots=True, frozen=True)
@@ -15,6 +16,7 @@ class SdkProfile:
     docs_core: tuple[Path, ...]
     openai_prompt_name: str
     gemini_prompt_name: str
+    openrouter_prompt_name: str
 
     def docs_for_mode(self, docs_mode: str) -> tuple[Path, ...]:
         if docs_mode == "full":
@@ -31,6 +33,8 @@ class SdkProfile:
             return self.openai_prompt_name
         if provider_norm == "gemini":
             return self.gemini_prompt_name
+        if provider_norm == "openrouter":
+            return self.openrouter_prompt_name
         return None
 
 
@@ -89,6 +93,7 @@ SDK_PROFILES: dict[str, SdkProfile] = {
         ),
         openai_prompt_name=OPENAI_DESIGNER_PROMPT_NAME,
         gemini_prompt_name=GEMINI_DESIGNER_PROMPT_NAME,
+        openrouter_prompt_name=OPENROUTER_DESIGNER_PROMPT_NAME,
     ),
 }
 
