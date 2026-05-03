@@ -1299,7 +1299,8 @@ def set_joint_pose(joint_empties, joints, degrees: float):
 
         if j.jtype in ("continuous", "revolute"):
             je.rotation_mode = "QUATERNION"
-            je.rotation_quaternion = Quaternion(axis, value)
+            rpy_q = Euler(j.origin_rpy, "XYZ").to_quaternion()
+            je.rotation_quaternion = rpy_q @ Quaternion(axis, value)
             je.location = Vector(j.origin_xyz)
         else:
             je.rotation_mode = "XYZ"

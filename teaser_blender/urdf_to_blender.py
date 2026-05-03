@@ -33,7 +33,7 @@ from pathlib import Path
 from typing import Optional
 
 import bpy
-from mathutils import Matrix, Quaternion, Vector
+from mathutils import Euler, Matrix, Quaternion, Vector
 
 # Pull in the URDF builder. Prefer a local copy next to this script (so the
 # folder is portable); fall back to the project's plots/ copy if not present.
@@ -199,9 +199,10 @@ def spin_continuous(
 
         je.rotation_mode = "QUATERNION"
         je.location = Vector(j.origin_xyz)
+        rpy_q = Euler(j.origin_rpy, "XYZ").to_quaternion()
         for i in range(n_steps + 1):
             t = i / n_steps
-            je.rotation_quaternion = Quaternion(axis, total_rad * t)
+            je.rotation_quaternion = rpy_q @ Quaternion(axis, total_rad * t)
             je.keyframe_insert(
                 data_path="rotation_quaternion",
                 frame=start + round(t * duration),
