@@ -20,6 +20,12 @@ const MetadataPanel = lazy(() =>
   })),
 );
 
+const AnimationPanel = lazy(() =>
+  import("@/components/inspector/AnimationPanel").then((module) => ({
+    default: module.AnimationPanel,
+  })),
+);
+
 type InspectorTabsProps = {
   urdfSpec?: { joints: UrdfJoint[] } | null;
   jointValues?: Map<string, number>;
@@ -65,6 +71,7 @@ export function InspectorTabs({
     inspect: "Inspect",
     render: "Render",
     code: "Code",
+    animation: "Animation",
     metadata: "Metadata",
   } as const;
   const tabs = Object.keys(tabLabels) as Array<keyof typeof tabLabels>;
@@ -109,6 +116,14 @@ export function InspectorTabs({
         {selectedInspectorTab === "code" ? (
           <Suspense fallback={<InspectorTabFallback />}>
             <CodePanel />
+          </Suspense>
+        ) : null}
+      </TabsContent>
+
+      <TabsContent value="animation" className="min-h-0 flex-1 overflow-hidden px-3 pb-3 pt-3">
+        {selectedInspectorTab === "animation" ? (
+          <Suspense fallback={<InspectorTabFallback />}>
+            <AnimationPanel />
           </Suspense>
         ) : null}
       </TabsContent>

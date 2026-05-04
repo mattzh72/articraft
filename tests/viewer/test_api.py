@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 import logging
 import os
 from datetime import datetime, timezone
@@ -360,6 +361,274 @@ def test_effective_rating_filter_uses_bucket_ranges() -> None:
     assert _effective_rating(5, 4) == 4.5
     assert _within_rating_filter(4.5, ["4"]) is True
     assert _within_rating_filter(4.5, ["5"]) is False
+
+
+def test_record_animation_builds_frames_for_object_level_trace_changes(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    repo = StorageRepo(tmp_path)
+    repo.ensure_layout()
+
+    RecordStore(repo).write_record(
+        Record(
+            schema_version=1,
+            record_id="rec_animation_001",
+            created_at="2026-03-17T19:24:12Z",
+            updated_at="2026-03-17T19:25:24Z",
+            rating=None,
+            kind="generated_model",
+            prompt_kind="single_prompt",
+            category_slug=None,
+            source=SourceRef(run_id="run_001"),
+            sdk_package="sdk",
+            provider="openai",
+            model_id="gpt-5.4",
+            display=DisplayMetadata(
+                title="Animation record",
+                prompt_preview="create a one frame object",
+            ),
+            artifacts=RecordArtifacts(
+                prompt_txt="prompt.txt",
+                prompt_series_json=None,
+                model_py="model.py",
+                provenance_json="provenance.json",
+                cost_json=None,
+            ),
+            collections=["workbench"],
+        )
+    )
+    initial_source = "\n".join(
+        [
+            "from sdk import ArticulatedObject, Box, Cylinder, Origin",
+            "",
+            "",
+            "def build_object_model():",
+            '    model = ArticulatedObject(name="animation_object")',
+            '    base = model.part("base")',
+            "    return model",
+            "",
+            "",
+            "object_model = build_object_model()",
+            "",
+        ]
+    )
+    read_result = "\n".join(
+        f"L{index}: {line}" for index, line in enumerate(initial_source.splitlines(), start=1)
+    )
+    patch = """*** Begin Patch
+*** Update File: model.py
+@@
+     model = ArticulatedObject(name="animation_object")
+     base = model.part("base")
++    base.visual(
++        Box((0.20, 0.10, 0.04)),
++        origin=Origin(xyz=(0.0, 0.0, 0.02)),
++        name="base_box",
++    )
++    base.visual(
++        Cylinder(radius=0.03, length=0.18),
++        origin=Origin(xyz=(0.0, 0.0, 0.10)),
++        name="base_pin",
++    )
+     return model
+*** End Patch"""
+    trajectory_path = repo.layout.record_traces_dir("rec_animation_001") / "trajectory.jsonl"
+    trajectory_path.parent.mkdir(parents=True, exist_ok=True)
+    trajectory_path.write_text(
+        "\n".join(
+            [
+                json.dumps(
+                    {
+                        "message": {
+                            "role": "tool",
+                            "name": "read_file",
+                            "content": json.dumps({"result": read_result}),
+                        }
+                    }
+                ),
+                json.dumps(
+                    {
+                        "ts": 1.0,
+                        "message": {
+                            "tool_calls": [
+                                {
+                                    "custom": {
+                                        "name": "apply_patch",
+                                        "input": patch,
+                                    }
+                                }
+                            ]
+                        },
+                    }
+                ),
+            ]
+        )
+        + "\n",
+        encoding="utf-8",
+    )
+
+    compiled_sources: list[str] = []
+
+    def fake_compile_urdf_report(model_path: Path, **_: object) -> SimpleNamespace:
+        source = model_path.read_text(encoding="utf-8")
+        compiled_sources.append(source)
+        return SimpleNamespace(
+            urdf_xml=f"<robot name='frame_{len(compiled_sources)}'><link name='base'/></robot>",
+            warnings=[],
+        )
+
+    monkeypatch.setattr("agent.compiler.compile_urdf_report", fake_compile_urdf_report)
+
+    client = TestClient(create_app(repo_root=tmp_path))
+    response = client.get("/api/records/rec_animation_001/animation")
+
+    assert response.status_code == 200
+    payload = response.json()
+    assert payload["frame_count"] == 2
+    assert payload["skipped_count"] == 0
+    assert payload["frames"][0]["index"] == 1
+    assert payload["frames"][0]["tool_name"] == "add"
+    assert "Box((0.20, 0.10, 0.04))" in payload["frames"][0]["code_snippet"]
+    assert "Box((0.20, 0.10, 0.04))" in compiled_sources[0]
+    assert "Cylinder(radius=0.03, length=0.18)" not in compiled_sources[0]
+    assert payload["frames"][1]["index"] == 2
+    assert payload["frames"][1]["tool_name"] == "add"
+    assert "Cylinder(radius=0.03, length=0.18)" in payload["frames"][1]["code_snippet"]
+    assert "Cylinder(radius=0.03, length=0.18)" in compiled_sources[1]
+    assert len(compiled_sources) == 2
+
+    frame_file = client.get(f"{payload['frames'][0]['file_base_url']}/model.urdf")
+    assert frame_file.status_code == 200
+    assert "frame_1" in frame_file.text
+
+
+def test_record_animation_renders_unvalidated_fallback_frames(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    repo = StorageRepo(tmp_path)
+    repo.ensure_layout()
+
+    RecordStore(repo).write_record(
+        Record(
+            schema_version=1,
+            record_id="rec_animation_fallback_001",
+            created_at="2026-03-17T19:24:12Z",
+            updated_at="2026-03-17T19:25:24Z",
+            rating=None,
+            kind="generated_model",
+            prompt_kind="single_prompt",
+            category_slug=None,
+            source=SourceRef(run_id="run_001"),
+            sdk_package="sdk",
+            provider="openai",
+            model_id="gpt-5.4",
+            display=DisplayMetadata(
+                title="Animation fallback record",
+                prompt_preview="create a fallback object",
+            ),
+            artifacts=RecordArtifacts(
+                prompt_txt="prompt.txt",
+                prompt_series_json=None,
+                model_py="model.py",
+                provenance_json="provenance.json",
+                cost_json=None,
+            ),
+            collections=["workbench"],
+        )
+    )
+    initial_source = "\n".join(
+        [
+            "from sdk import ArticulatedObject, Box, Origin",
+            "",
+            "",
+            "def build_object_model():",
+            '    model = ArticulatedObject(name="animation_object")',
+            '    base = model.part("base")',
+            "    return model",
+            "",
+            "",
+            "object_model = build_object_model()",
+            "",
+        ]
+    )
+    read_result = "\n".join(
+        f"L{index}: {line}" for index, line in enumerate(initial_source.splitlines(), start=1)
+    )
+    patch = """*** Begin Patch
+*** Update File: model.py
+@@
+     model = ArticulatedObject(name="animation_object")
+     base = model.part("base")
++    base.visual(
++        Box((0.20, 0.10, 0.04)),
++        origin=Origin(xyz=(0.0, 0.0, 0.02)),
++        name="base_box",
++    )
+     return model
+*** End Patch"""
+    trajectory_path = (
+        repo.layout.record_traces_dir("rec_animation_fallback_001") / "trajectory.jsonl"
+    )
+    trajectory_path.parent.mkdir(parents=True, exist_ok=True)
+    trajectory_path.write_text(
+        "\n".join(
+            [
+                json.dumps(
+                    {
+                        "message": {
+                            "role": "tool",
+                            "name": "read_file",
+                            "content": json.dumps({"result": read_result}),
+                        }
+                    }
+                ),
+                json.dumps(
+                    {
+                        "message": {
+                            "tool_calls": [
+                                {
+                                    "custom": {
+                                        "name": "apply_patch",
+                                        "input": patch,
+                                    }
+                                }
+                            ]
+                        },
+                    }
+                ),
+            ]
+        )
+        + "\n",
+        encoding="utf-8",
+    )
+
+    def fake_compile_urdf_report(model_path: Path, **_: object) -> SimpleNamespace:
+        raise RuntimeError("strict compile failed")
+
+    monkeypatch.setattr("agent.compiler.compile_urdf_report", fake_compile_urdf_report)
+    monkeypatch.setattr(
+        ViewerStore,
+        "_compile_animation_frame_fallback_urdf",
+        lambda self, model_path, *, sdk_package: (
+            "<robot name='fallback'><link name='base'/></robot>"
+        ),
+    )
+
+    client = TestClient(create_app(repo_root=tmp_path))
+    response = client.get("/api/records/rec_animation_fallback_001/animation")
+
+    assert response.status_code == 200
+    payload = response.json()
+    assert payload["frame_count"] == 1
+    assert payload["skipped_count"] == 0
+    assert payload["frames"][0]["compile_status"] == "fallback"
+    assert payload["frames"][0]["compile_error"] == "strict compile failed"
+
+    frame_file = client.get(f"{payload['frames'][0]['file_base_url']}/model.urdf")
+    assert frame_file.status_code == 200
+    assert "fallback" in frame_file.text
 
 
 def test_viewer_api_end_to_end(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
