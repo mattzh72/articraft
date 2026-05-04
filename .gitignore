@@ -228,3 +228,5 @@ __marimo__/
 assets/
 
 .npm-cache/
+result_figure_plotting/composites
+result_figure_plotting/output
