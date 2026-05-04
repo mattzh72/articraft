@@ -926,6 +926,55 @@ JOINT_OVERLAY_STYLES: dict[str, dict] = {
         "icon_head_radius_factor": 0.20,
         "icon_head_height_factor": 0.36,
     },
+    # H — single arrow along axis (reference legend match):
+    #   prismatic = yellow arrow, revolute = red arrow + ring at base.
+    "H_axis_arrows": {
+        "icon_style": "axis_arrow",
+        "skip_ghost": True,
+        "pose_degrees": 0,
+        "color_mode": "type",
+        "type_colors": {
+            "revolute":   (0.91, 0.18, 0.18),  # red
+            "continuous": (0.91, 0.18, 0.18),
+            "prismatic":  (0.98, 0.83, 0.10),  # yellow
+        },
+        "shader": "solid",
+        "roughness": 0.45,
+        "metallic": 0.05,
+        # All factors relative to `unit` (~12% of model diagonal).
+        "icon_length_factor":       1.6,
+        "icon_shaft_radius_factor": 0.045,
+        "icon_head_radius_factor":  0.16,
+        "icon_head_height_factor":  0.32,
+        # Base ring (only used for revolute joints)
+        "icon_ring_radius_factor":  0.18,
+        "icon_ring_tube_factor":    0.022,
+    },
+    # I — same legend as H, but the shaft is symmetric about the joint origin
+    # (object sits in the middle of the marker) and the indicator renders
+    # always-in-front so geometry never occludes it.
+    "I_axis_through": {
+        "icon_style": "axis_arrow",
+        "skip_ghost": True,
+        "always_in_front": True,
+        "pose_degrees": 0,
+        "color_mode": "type",
+        "type_colors": {
+            "revolute":   (0.91, 0.18, 0.18),
+            "continuous": (0.91, 0.18, 0.18),
+            "prismatic":  (0.98, 0.83, 0.10),
+        },
+        "shader": "solid",
+        "roughness": 0.45,
+        "metallic": 0.05,
+        "icon_length_factor":       1.6,
+        "icon_shaft_radius_factor": 0.040,
+        "icon_head_radius_factor":  0.14,
+        "icon_head_height_factor":  0.28,
+        "icon_ring_radius_factor":  0.16,
+        "icon_ring_tube_factor":    0.020,
+        "symmetric": True,
+    },
     # F — arrow only: origin dot + curved arrow, no axis nub
     "F_arrow_only": {
         "color_mode": "single",
@@ -1028,15 +1077,124 @@ def _build_chair_style_overlay(joints, joint_empties, unit: float, style_name: s
     return roots, []
 
 
-def build_joint_overlay(joints, joint_empties, half_extents) -> tuple[list[bpy.types.Object], list[bpy.types.Object]]:
+def _build_axis_arrow_overlay(joints, joint_empties, unit: float, style_name: str,
+                              style: dict, link_diag: dict | None = None,
+                              link_center_world: dict | None = None) -> tuple[list[bpy.types.Object], list[bpy.types.Object]]:
+    """Single arrow along the joint axis: shaft + cone head. Revolute joints
+    additionally get a small torus ring at the base to flag rotation. Matches
+    the user's legend reference (yellow prismatic / red revolute)."""
+    type_colors = style["type_colors"]
+    rough = style.get("roughness", 0.45)
+    metal = style.get("metallic", 0.05)
+    mats = {
+        jtype: make_material_overlay_solid(f"joint_{style_name}_{jtype}",
+                                           type_colors.get(jtype, _AMBER), rough, metal)
+        for jtype in ("revolute", "continuous", "prismatic")
+    }
+
+    roots: list[bpy.types.Object] = []
+    # Per-joint scaling: arrows fit the *child link* they articulate, not the
+    # whole-model diagonal. Floor at 25% of the global unit so the sizing
+    # never collapses to invisible on tiny links (e.g. windmill blade hubs).
+    floor_unit = unit * 0.25
+    for joint in joints.values():
+        if joint.jtype not in JOINT_COLORS:
+            continue
+        joint_empty = joint_empties.get(joint.name)
+        if joint_empty is None:
+            continue
+
+        if link_diag and joint.child in link_diag:
+            j_unit = max(link_diag[joint.child] * 0.6, floor_unit)
+            j_unit = min(j_unit, unit)
+        else:
+            j_unit = unit
+
+        length    = j_unit * style["icon_length_factor"]
+        shaft_r   = j_unit * style["icon_shaft_radius_factor"]
+        head_r    = j_unit * style["icon_head_radius_factor"]
+        head_h    = j_unit * style["icon_head_height_factor"]
+        ring_r    = j_unit * style.get("icon_ring_radius_factor", 0.18)
+        ring_tube = j_unit * style.get("icon_ring_tube_factor", 0.022)
+
+        axis = Vector(joint.axis)
+        if axis.length < 1e-9:
+            axis = Vector((0, 0, 1))
+        axis.normalize()
+        mat = mats[joint.jtype]
+
+        root = bpy.data.objects.new(f"joint_overlay_{joint.name}", None)
+        root.empty_display_type = "PLAIN_AXES"
+        root.empty_display_size = 0.02
+        bpy.context.collection.objects.link(root)
+        root.parent = joint_empty.parent
+        # Revolute / continuous anchor at the joint origin so the ring sits on
+        # the rotation center. Prismatic anchors at the child link's bbox center
+        # so the arrow lines up with the visible moving part (e.g. keycap),
+        # since URDF prismatic origins typically sit on the parent mounting face.
+        if (joint.jtype == "prismatic" and link_center_world
+                and joint.child in link_center_world and root.parent is not None):
+            parent_inv = root.parent.matrix_world.inverted()
+            root.location = parent_inv @ link_center_world[joint.child]
+        else:
+            root.location = Vector(joint.origin_xyz)
+        root.rotation_mode = "XYZ"
+        root.rotation_euler = Euler(joint.origin_rpy, "XYZ")
+        root.hide_render = True
+        root.hide_viewport = True
+        roots.append(root)
+
+        if style.get("symmetric"):
+            shaft_base = axis * (-length / 2.0)
+            head_tip = axis * (length / 2.0)
+        else:
+            shaft_base = Vector((0.0, 0.0, 0.0))
+            head_tip = axis * length
+        shaft_top = head_tip - axis * head_h
+        shaft = _create_cylinder_between(f"joint_shaft_{joint.name}", shaft_base, shaft_top, shaft_r, mat)
+        head = _create_cone_head(f"joint_head_{joint.name}", head_tip, axis, head_h, head_r, mat)
+        shaft.parent = root
+        head.parent = root
+
+        if joint.jtype in ("revolute", "continuous"):
+            ring = _create_torus_ring(f"joint_ring_{joint.name}", shaft_base, axis, ring_r, ring_tube, mat)
+            ring.parent = root
+
+    return roots, []
+
+
+def build_joint_overlay(joints, joint_empties, half_extents, vis_objects=None) -> tuple[list[bpy.types.Object], list[bpy.types.Object]]:
     style_name, style = _resolve_overlay_style()
     print(f"[joint_overlay] style: {style_name}")
 
     model_extent = max((half_extents * 2).length, 1.0)
-    unit = max(0.10, min(model_extent * 0.12, 0.50))
+    # Scale freely with model size so per-joint sizing isn't capped on big
+    # objects (e.g. a 10 m windmill needs ~1 m markers, not 0.5 m).
+    unit = max(0.10, model_extent * 0.12)
+
+    # Per-link bbox diagonal + world center; used by per-joint sizing/anchoring
+    # so a tiny child link (e.g. one keyboard cap) gets a tiny indicator
+    # centered on the visible keycap, not on the case-side joint origin.
+    link_diag: dict[str, float] = {}
+    link_center_world: dict[str, Vector] = {}
+    if vis_objects:
+        bpy.context.view_layer.update()
+        per_link: dict[str, list[Vector]] = {}
+        for lname, obj, _ in vis_objects:
+            pts = per_link.setdefault(lname, [])
+            for corner in obj.bound_box:
+                pts.append(obj.matrix_world @ Vector(corner))
+        for lname, pts in per_link.items():
+            mn = Vector((min(p.x for p in pts), min(p.y for p in pts), min(p.z for p in pts)))
+            mx = Vector((max(p.x for p in pts), max(p.y for p in pts), max(p.z for p in pts)))
+            link_diag[lname] = max((mx - mn).length, 1e-4)
+            link_center_world[lname] = (mn + mx) / 2.0
 
     if style.get("icon_style") == "chair":
         return _build_chair_style_overlay(joints, joint_empties, unit, style_name, style)
+    if style.get("icon_style") == "axis_arrow":
+        return _build_axis_arrow_overlay(joints, joint_empties, unit, style_name, style,
+                                         link_diag, link_center_world)
 
     line_half  = unit * style["axis_len_factor"]
     line_thick = unit * style["axis_thick_factor"]
@@ -1601,6 +1759,110 @@ def set_mode_motion_halfway(joint_empties, joints, vis_objects, col_objects, lin
     set_joint_pose_halfway(joint_empties, joints)
 
 
+def compute_random_joint_values(joints):
+    """One sample per articulated joint for motion_random.
+
+    Spatial checkerboard: bin each joint into rows by its Y origin and assign
+    a column index inside each row by X origin. Joints with even (row + col)
+    parity are fully pressed; the rest stay at rest. Result is ~50% pressed,
+    evenly distributed across the layout. RANDOM_FLIP_PROB (default 0.0)
+    randomly flips individual joints for variation; RANDOM_SEED (default 0)
+    selects which parity is pressed.
+    """
+    import random as _r
+    from collections import defaultdict
+    try:
+        seed = int(os.environ.get("RANDOM_SEED", "0"))
+    except ValueError:
+        seed = 0
+    try:
+        flip_prob = float(os.environ.get("RANDOM_FLIP_PROB", "0.15"))
+    except ValueError:
+        flip_prob = 0.15
+    rng = _r.Random(seed)
+
+    try:
+        depth_mult = float(os.environ.get("RANDOM_PRESS_DEPTH", "2.0"))
+    except ValueError:
+        depth_mult = 2.0
+    artic = [(n, j) for n, j in joints.items()
+             if j.jtype in ("revolute", "continuous", "prismatic")]
+    pressed: set[str] = set()
+    if artic:
+        ys = [j.origin_xyz[1] for _, j in artic]
+        y_min, y_max = min(ys), max(ys)
+        y_range = max(y_max - y_min, 1e-9)
+        # ~6 rows for a keyboard; degenerate shapes collapse to one row.
+        row_step = y_range / 6
+        rows: dict[int, list] = defaultdict(list)
+        for n, j in artic:
+            r = int(round((j.origin_xyz[1] - y_min) / row_step)) if row_step > 1e-9 else 0
+            rows[r].append((n, j))
+        for r in rows:
+            rows[r].sort(key=lambda kj: kj[1].origin_xyz[0])
+        parity_target = rng.randint(0, 1)
+        for r, items in rows.items():
+            for c, (n, _) in enumerate(items):
+                if (r + c) % 2 == parity_target:
+                    pressed.add(n)
+        for n, _ in artic:
+            if flip_prob > 0.0 and rng.random() < flip_prob:
+                if n in pressed:
+                    pressed.discard(n)
+                else:
+                    pressed.add(n)
+
+    values: dict[str, float] = {}
+    for jname, j in joints.items():
+        if j.jtype not in ("revolute", "continuous", "prismatic"):
+            continue
+        f = depth_mult if jname in pressed else 0.0
+        if j.jtype == "revolute":
+            if j.limit_lower is not None and j.limit_upper is not None:
+                values[jname] = j.limit_lower + f * (j.limit_upper - j.limit_lower)
+            else:
+                values[jname] = 0.0
+        elif j.jtype == "continuous":
+            values[jname] = f * (math.pi / 2)
+        else:  # prismatic
+            if j.limit_lower is not None and j.limit_upper is not None:
+                values[jname] = j.limit_lower + f * (j.limit_upper - j.limit_lower)
+            else:
+                values[jname] = 0.05 * f
+    return values
+
+
+def set_joint_pose_random(joint_empties, joints, values):
+    bpy.context.scene.frame_set(0)
+    for jname, j in joints.items():
+        je = joint_empties.get(jname)
+        if je is None or j.jtype not in ("revolute", "continuous", "prismatic"):
+            continue
+        axis = Vector(j.axis)
+        if axis.length < 1e-9:
+            axis = Vector((0, 0, 1))
+        axis.normalize()
+        rpy_q = Euler(j.origin_rpy, "XYZ").to_quaternion()
+        src = values.get(j.mimic_joint, values.get(jname, 0.0))
+        value = src * j.mimic_multiplier
+
+        if j.jtype in ("revolute", "continuous"):
+            je.rotation_mode = "QUATERNION"
+            je.rotation_quaternion = rpy_q @ Quaternion(axis, value)
+            je.location = Vector(j.origin_xyz)
+        else:
+            je.rotation_mode = "XYZ"
+            je.rotation_euler = Euler(j.origin_rpy, "XYZ")
+            je.location = Vector(j.origin_xyz) + axis * value
+    bpy.context.view_layer.update()
+
+
+def set_mode_motion_random(joint_empties, joints, vis_objects, col_objects, link_vis_mats, values):
+    _show_vis(vis_objects, col_objects)
+    _restore_vis_mats(vis_objects, link_vis_mats)
+    set_joint_pose_random(joint_empties, joints, values)
+
+
 def set_mode_segmentation(vis_objects, col_objects, seg_mats):
     _show_vis(vis_objects, col_objects)
     for lname, obj, _ in vis_objects:
@@ -1709,6 +1971,17 @@ def main():
     for _, obj, _ in vis_objects:
         for corner in obj.bound_box:
             all_points.append(obj.matrix_world @ Vector(corner))
+    random_joint_values = compute_random_joint_values(joints)
+    # Only expand the camera frame for the random-press pose when the user is
+    # actually rendering motion_random — otherwise the frame zooms out to fit
+    # an unseen pose (visible as a "shift" in joint_overlay renders).
+    will_render_random = args.modes is None or "motion_random" in [m.strip() for m in args.modes.split(",")]
+    if will_render_random:
+        set_joint_pose_random(joint_empties, joints, random_joint_values)
+        bpy.context.view_layer.update()
+        for _, obj, _ in vis_objects:
+            for corner in obj.bound_box:
+                all_points.append(obj.matrix_world @ Vector(corner))
     set_joint_pose(joint_empties, joints, 0)
     bpy.context.view_layer.update()
 
@@ -1729,7 +2002,7 @@ def main():
           f"extents={tuple(round(v,2) for v in half_extents*2)}")
 
     ghost_mat = make_material_ghost_visual("joint_overlay_ghost_visual")
-    joint_overlay_roots, joint_overlay_labels = build_joint_overlay(joints, joint_empties, half_extents)
+    joint_overlay_roots, joint_overlay_labels = build_joint_overlay(joints, joint_empties, half_extents, vis_objects)
 
     cameras = setup_cameras(center, half_extents, res_x, res_y)
     setup_lighting(args.hdri)
@@ -1754,6 +2027,7 @@ def main():
         ("motion_15",        lambda: set_mode_motion_degrees(15, joint_empties, joints, vis_objects, col_objects, link_vis_mats)),
         ("motion_30",        lambda: set_mode_motion_degrees(30, joint_empties, joints, vis_objects, col_objects, link_vis_mats)),
         ("motion_half",      lambda: set_mode_motion_halfway(joint_empties, joints, vis_objects, col_objects, link_vis_mats)),
+        ("motion_random",    lambda: set_mode_motion_random(joint_empties, joints, vis_objects, col_objects, link_vis_mats, random_joint_values)),
         ("part_segmentation",lambda: (set_joint_pose(joint_empties, joints, 0), set_mode_segmentation(vis_objects, col_objects, seg_mats))),
         ("collision",        lambda: (set_joint_pose(joint_empties, joints, 0), set_mode_collision(vis_objects, col_objects, collision_mats))),
         ("joint_overlay",    lambda: set_mode_joint_overlay(joint_empties, joints, vis_objects, col_objects,
@@ -1769,7 +2043,7 @@ def main():
     done = 0
 
     # Motion renders that always carry the joint overlay baked in
-    _OVERLAY_ON_MOTION = set() if args.no_joint_overlay else {"motion_1", "motion_30", "motion_half"}
+    _OVERLAY_ON_MOTION = set() if args.no_joint_overlay else {"motion_1", "motion_30", "motion_half", "motion_random"}
 
     for cam_idx, cam in indexed_cameras:
         scene.camera = cam
@@ -1779,13 +2053,14 @@ def main():
         for mode_name, setup_fn in render_modes:
             _set_overlay_visibility(joint_overlay_roots, False)
             setup_fn()
-            if mode_name in _OVERLAY_ON_MOTION or mode_name == "joint_overlay":
+            overlay_on = mode_name in _OVERLAY_ON_MOTION or mode_name == "joint_overlay"
+            if overlay_on:
                 _set_overlay_visibility(joint_overlay_roots, True)
                 orient_joint_labels_to_camera(joint_overlay_labels, cam)
             out_path = angle_dir / f"{mode_name}.png"
 
             always_front = (
-                mode_name == "joint_overlay"
+                overlay_on
                 and bool(_resolve_overlay_style()[1].get("always_in_front"))
             )
             if always_front:
@@ -1794,8 +2069,8 @@ def main():
                 #   fg = overlay only (model hidden, transparent film)
                 # PIL composite happens in visualize.py since Blender's
                 # bundled Python doesn't ship Pillow.
-                bg_path = angle_dir / "joint_overlay__bg.png"
-                fg_path = angle_dir / "joint_overlay__fg.png"
+                bg_path = angle_dir / f"{mode_name}__bg.png"
+                fg_path = angle_dir / f"{mode_name}__fg.png"
 
                 _set_overlay_visibility(joint_overlay_roots, False)
                 scene.render.filepath = str(bg_path)

@@ -1,33 +1,19 @@
 # result_figure_plotting
 
-Standalone tool that turns one articraft record id into a multi-angle Blender Cycles figure (motion poses + part segmentation), compiling the record first if it has not been materialized yet.
+Render figures for one or more articraft records: motion poses, joint overlays, and part segmentation. Two layers:
 
-## What it produces
-
-For each record id you pass, an output directory like:
-
-```
-output/<record_id>/
-  angle_0/  motion_1.png  motion_half.png  part_segmentation.png  composite.png
-  angle_1/  ...
-  ...
-  angle_7/  ...
-  composite.png         ← contact sheet (one row per angle, one column per mode)
-  legend.json
-```
-
-Defaults: **8 azimuths** (every 45° around the object), elevation **35°**, **1.25×** bbox margin so motion poses never crop, samples **64**, resolution **1080×1080**, modes `motion_1, motion_half, part_segmentation`, no joint overlay.
-
-`motion_half` puts each joint at the **midpoint of its URDF range** (revolute / prismatic → `(lower + upper) / 2`, continuous → π/2). This is the "halfway-extended" pose you'd see in the middle of a teaser_blender oscillation, not a fixed 30°.
+- **Per-record rendering** (`render_object.sh`) — render one record from many camera angles, useful for browsing.
+- **Spec-driven figure pipeline** (`make_figures.py`) — given a picker JSON of `(record_id, camera_angle)` cells, produce the final per-record tile (3-panel composite) and a stacked contact sheet.
 
 ## Files
 
 ```
-render_object.sh               wrapper: compile → render
-visualize.py                   CLI that drives Blender (composes contact sheet)
+make_figures.py                end-to-end pipeline (render → crop → compose → contact sheet)
+visualize.py                   CLI that drives Blender for one record
 render_urdf_viz.py             Blender-side URDF parser + scene/camera/render code
+render_object.sh               wrapper: compile-if-needed → 8 angles × N modes for ONE record
+render_batch.sh                run render_object.sh over a list of record ids
 symmetrical_garden_02_4k.exr   default HDRI (sits next to visualize.py)
-output/                        renders land here by default
 ```
 
 ## Prerequisites
@@ -35,66 +21,77 @@ output/                        renders land here by default
 - `just` (homebrew: `brew install just`)
 - `uv` and a synced articraft env (`uv sync --group dev` once at the repo root)
 - Blender at `/Applications/Blender.app/Contents/MacOS/blender`
+- Python deps for the pipeline: `pillow` (already pulled in via the repo env)
 
-The tool assumes its parent directory is the articraft repo (it lives at `<articraft>/result_figure_plotting/`). To point at a different repo, pass `--repo /path/to/articraft`.
+## Quick start — figure pipeline
 
-## Quick start
+Given a picker JSON like `selecting.json` or `picker_layout_*.json` at the repo root, render and assemble all selected records:
 
 ```bash
 cd result_figure_plotting
 
-# Render one record at default 8 angles / 64 samples / 1080²
-bash render_object.sh rec_branching_tree_with_three_independent_rotary_branches_5587a586efc940938efbddd243355ec3
+# Default: 128 samples, 2160x2160, joint overlay on, 5% margin crop
+uv run python make_figures.py ../selecting.json --out output_selected_hq_cropped
+
+# Drop the overlay (motion-only + segmentation)
+uv run python make_figures.py ../selecting.json --out output_selected --no-overlay
+
+# Lower quality, faster iteration
+uv run python make_figures.py ../selecting.json --out output_selected_quick \
+    --samples 64 --resolution 1080x1080
+
+# Reuse cached renders if you only changed cropping/margin settings
+uv run python make_figures.py ../selecting.json --out output_selected_hq_cropped --skip-render
 ```
 
-If the record has not been materialized, the wrapper runs `just compile data/records/<id>` first. The materialization is cached at `data/cache/record_materialization/<id>/`.
+The picker JSON must contain a `cells` array of objects with at least `record_id` and `angle_idx`. `slot` and `short_name` are optional and used for tile folder names.
 
-## Flags
+### Output layout
 
 ```
---output <dir>        output root (default: ./output)
---angles N            azimuths around the object (default 8, evenly spaced)
---elevation D         camera elevation in degrees (default 35)
---samples N           Cycles samples (default 64; 256 with --high)
---resolution WxH      pixel size (default 1080x1080; 1440x1440 with --high)
---margin F            bbox padding multiplier so motion never crops (default 1.25)
---modes csv           subset of motion_1, motion_15, motion_30, motion_half,
-                      part_segmentation, collision (default the first three)
---high                preset: 256 samples + 1440x1440
---repo <path>         articraft repo root (default: parent dir of this folder)
+<out_dir>/
+  _renders/
+    no_overlay/<record_id>/angle_<n>/  motion_1.png motion_half.png part_segmentation.png
+    overlay/<record_id>/angle_<n>/     motion_1.png motion_half.png      (only if overlay on)
+  <NN>_<short_name>/
+    motion_1.png                cropped clean rest pose
+    motion_half.png             cropped clean halfway pose
+    part_segmentation.png       cropped segmentation
+    motion_1_overlay.png        cropped rest pose + joint overlay   (overlay on)
+    motion_half_overlay.png     cropped halfway pose + joint overlay (overlay on)
+    composite.png               3-panel: motion_1, motion_half + overlay, part_segmentation
+                                (transparent background, no padding)
+  all_records_contact_sheet.png stack of every record's composite.png
 ```
 
-## More examples
+`composite.png` and `all_records_contact_sheet.png` are RGBA PNGs with a transparent background and no inter-panel padding — ready to drop into a layout document.
+
+## Joint overlay
+
+There is one overlay style: **`I_axis_through`** (the `JOINT_OVERLAY_STYLE` env var). It renders a symmetric double-headed axis arrow through the joint origin — yellow for prismatic, red with a base ring for revolute / continuous — and uses an always-in-front two-pass composite so the marker is never occluded by the model. Revolute / continuous markers anchor at the joint origin (rotation center). Prismatic markers anchor at the child link's bbox center so the arrow rides the moving part. Per-joint sizing scales with the child link's bbox diagonal so a tiny part on a tall tower doesn't shrink to invisibility.
+
+This is also what `make_figures.py` bakes into `motion_1_overlay.png` / `motion_half_overlay.png` automatically.
+
+## Per-record rendering (browse mode)
+
+For browsing a single object across 8 camera angles, use the older wrapper:
 
 ```bash
-# Higher quality preset
-bash render_object.sh rec_xxx --high
-
-# Add the collision view
+bash render_object.sh rec_traditional_windmill_0002
 bash render_object.sh rec_xxx --modes motion_1,motion_half,part_segmentation,collision
-
-# 16 angles for a thorough turntable
-bash render_object.sh rec_xxx --angles 16
-
-# Custom output dir
-bash render_object.sh rec_xxx --output /tmp/myrender
-
-# Different articraft repo
-bash render_object.sh rec_xxx --repo /Users/me/other-articraft
+bash render_object.sh rec_xxx --high                # 256 samples + 1440x1440
+bash render_object.sh rec_xxx --angles 16           # 16 turntable angles
 ```
 
-## Calling the renderer directly
-
-The wrapper is a thin shell over `visualize.py`. The same command, written out:
+Or batch over a list:
 
 ```bash
-CAM_NUM_ANGLES=8 CAM_MARGIN=1.25 CAM_ELEVATION_DEG=35 \
-  python visualize.py \
-    --urdf ../data/cache/record_materialization/<id>/model.urdf \
-    --output ./output \
-    --modes motion_1,motion_half,part_segmentation \
-    --samples 64 --resolution 1080x1080 --no-joint-overlay
+bash render_batch.sh records.txt --high             # records.txt: one id per line
 ```
+
+These write into `output/<record_id>/angle_*/` with one `composite.png` per angle and a contact sheet at the record root. They use `--no-joint-overlay` by default — the figure pipeline above is the path that produces overlay tiles.
+
+## Camera environment vars
 
 `render_urdf_viz.py` reads three env vars to override the camera setup without command-line plumbing:
 
@@ -104,13 +101,12 @@ CAM_NUM_ANGLES=8 CAM_MARGIN=1.25 CAM_ELEVATION_DEG=35 \
 | `CAM_ELEVATION_DEG`  | 20      | Camera elevation                                           |
 | `CAM_MARGIN`         | 1.08    | Bbox padding multiplier; bigger = more breathing room      |
 | `JOINT_OVERLAY_ANGLES` | (all) | Comma-separated indices to render only specific cameras   |
+| `JOINT_OVERLAY_STYLE`  | `A_amber_arc` | Overlay preset; figure pipeline forces `I_axis_through` |
 
-## Why `motion_half` exists
-
-`motion_30` clamps to each joint's URDF upper limit, which means a joint with a 0.45 rad upper hits its stop while one with a 1.5 rad upper sits at 30° — visually inconsistent across records. `motion_half` is the same per-joint sweep the teaser_blender oscillation passes through at its midpoint, so every articulated joint reads as "half-extended" regardless of its limit magnitude.
+`make_figures.py` sets `CAM_NUM_ANGLES=8`, `CAM_MARGIN=1.25`, `CAM_ELEVATION_DEG=35`, and `JOINT_OVERLAY_ANGLES=<the cell's angle_idx>` so each record renders only the chosen camera.
 
 ## Notes
 
-- A render-blocking bug where joint origin `rpy` was discarded for revolute / continuous joints (cylinders mounted with a non-Z axis showed up vertical) is **fixed** here in `render_urdf_viz.py`'s `set_joint_pose`. If you copy `render_urdf_viz.py` somewhere else, keep the `rpy_q @ Quaternion(axis, value)` composition.
-- Outputs at 8 angles × 3 modes / 64 samples / 1080² take roughly 4–8 minutes per object on Apple Silicon.
-- The HDRI sits next to `visualize.py` so the folder is portable.
+- The pipeline assumes its parent directory is the articraft repo. Pass `--repo /path/to/articraft` to point elsewhere.
+- If a record hasn't been compiled yet, run `just compile data/records/<id>` from the repo root first.
+- Outputs at 2160² / 128 samples take roughly 10–20 s per render on Apple Silicon (≈1–2 minutes per record with the overlay pass).

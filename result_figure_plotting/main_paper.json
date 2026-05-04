@@ -1,0 +1,104 @@
+{
+  "layout": "3x3",
+  "caption_pos": "top",
+  "prompt": "A realistic, highly detailed box fan with a square housing, protective grille, integrated carry features, and a visible control knob.…",
+  "image_count": 9,
+  "column_headers": [
+    "State 1",
+    "State 2",
+    "Part Segmentation"
+  ],
+  "cells": [
+    {
+      "slot": 1,
+      "kind": "image",
+      "record_id": "rec_box_fan_with_control_knob_ca287b56ab194c40b4a8b3126296b960",
+      "source": "output",
+      "angle_idx": 6,
+      "path": "../data/output/rec_box_fan_with_control_knob_ca287b56ab194c40b4a8b3126296b960/angle_6/composite.png",
+      "short_name": "box fan with control knob",
+      "prompt_full": "A realistic, highly detailed box fan with a square housing, protective grille, integrated carry features, and a visible control knob. The fan blades and cont..."
+    },
+    {
+      "slot": 2,
+      "kind": "image",
+      "record_id": "rec_wheelchair_0003",
+      "source": "output",
+      "angle_idx": 1,
+      "path": "../data/output/rec_wheelchair_0003/angle_1/composite.png",
+      "short_name": "wheelchair",
+      "prompt_full": "A realistic, highly detailed Wheelchair in a rugged utility variant, with a rigid or foldable chair frame, large rear drive wheels, front casters, and footre..."
+    },
+    {
+      "slot": 3,
+      "kind": "image",
+      "record_id": "rec_traditional_windmill_0002",
+      "source": "output",
+      "angle_idx": 0,
+      "path": "../data/output/rec_traditional_windmill_0002/angle_0/composite.png",
+      "short_name": "traditional windmill",
+      "prompt_full": "A realistic, highly detailed Traditional Windmill in a rugged utility variant, with a tower body, rotor hub and blade lattice, and a roof or nacelle section..."
+    },
+    {
+      "slot": 4,
+      "kind": "image",
+      "record_id": "rec_keyboard_faa1b246986d4296941256131f23097d",
+      "source": "output",
+      "angle_idx": 5,
+      "path": "../data/output/rec_keyboard_faa1b246986d4296941256131f23097d/angle_5/composite.png",
+      "short_name": "keyboard",
+      "prompt_full": "Create a realistic mechanical keyboard. The keyborad has a typical 80% layout and a usb-c port for connectivity. It should have individual cherry mechanical..."
+    },
+    {
+      "slot": 5,
+      "kind": "image",
+      "record_id": "rec_zippo_lighter_b657572e1e8e4cd7a582560011f519a4",
+      "source": "output",
+      "angle_idx": 5,
+      "path": "../data/output/rec_zippo_lighter_b657572e1e8e4cd7a582560011f519a4/angle_5/composite.png",
+      "short_name": "zippo lighter",
+      "prompt_full": "A classic flip-top lighter with a rectangular outer case, an exposed perforated chimney insert, and a striker wheel beside the wick. The lid rotates upward o..."
+    },
+    {
+      "slot": 6,
+      "kind": "image",
+      "record_id": "rec_stove_top_acb31ee0dc114085ab1521da4209f87e",
+      "source": "output",
+      "angle_idx": 4,
+      "path": "../data/output/rec_stove_top_acb31ee0dc114085ab1521da4209f87e/angle_4/composite.png",
+      "short_name": "stove top",
+      "prompt_full": "A realistic, highly detailed stove top appliance with a substantial body, cooktop surface, front-facing controls, and an oven door below. The door and standa..."
+    },
+    {
+      "slot": 7,
+      "kind": "image",
+      "record_id": "rec_parabolic_dish_on_azimuth_elevation_mount_0004",
+      "source": "output",
+      "angle_idx": 3,
+      "path": "../data/output/rec_parabolic_dish_on_azimuth_elevation_mount_0004/angle_3/composite.png",
+      "short_name": "parabolic dish on azimuth elevation mount",
+      "prompt_full": "A satellite communication dish on a pedestal azimuth-elevation mount. A parabolic reflector sits on a rear support frame with a feed arm reaching to the dish..."
+    },
+    {
+      "slot": 8,
+      "kind": "image",
+      "record_id": "rec_sewing_box_with_simple_hinged_lid_834586f20cf8400b97e1ed9c20f5377b",
+      "source": "output",
+      "angle_idx": 5,
+      "path": "../data/output/rec_sewing_box_with_simple_hinged_lid_834586f20cf8400b97e1ed9c20f5377b/angle_5/composite.png",
+      "short_name": "sewing box with simple hinged lid",
+      "prompt_full": "A realistic, highly detailed sewing box with a compact storage body, practical carrying features, and a simple hinged lid. The lid and any standard organizer..."
+    },
+    {
+      "slot": 9,
+      "kind": "image",
+      "record_id": "rec_astronomical_telescope_on_tripod_0002",
+      "source": "output",
+      "angle_idx": 4,
+      "path": "../data/output/rec_astronomical_telescope_on_tripod_0002/angle_4/composite.png",
+      "short_name": "astronomical telescope on tripod",
+      "prompt_full": "A mid-range Newtonian reflector on a compact mount, with three adjustable-length tripod legs splaying from a central head casting, a fork-yoke carrying the t..."
+    }
+  ],
+  "generated_at": "2026-05-04T05:35:26.438Z"
+}

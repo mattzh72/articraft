@@ -1,0 +1,214 @@
+{
+  "layout": "10x2",
+  "caption_pos": "top",
+  "prompt": "A classic occ bottle with articulated cap",
+  "image_count": 20,
+  "column_headers": [
+    "State 1",
+    "State 2",
+    "Part Segmentation"
+  ],
+  "cells": [
+    {
+      "slot": 1,
+      "kind": "image",
+      "record_id": "rec_a-classic-occ-bottle-with-articulated-cap_20260321_164200_149541_6af2da87",
+      "source": "output",
+      "angle_idx": 1,
+      "path": "../data/output/rec_a-classic-occ-bottle-with-articulated-cap_20260321_164200_149541_6af2da87/angle_1/composite.png",
+      "short_name": "a-classic-occ-bottle-with-articulated-cap",
+      "prompt_full": "A classic occ bottle with articulated cap"
+    },
+    {
+      "slot": 2,
+      "kind": "image",
+      "record_id": "rec_adjustable_weight_bench_with_hinged_backrest_aaa3c7201718400dac2247f2f340608b",
+      "source": "output",
+      "angle_idx": 1,
+      "path": "../data/output/rec_adjustable_weight_bench_with_hinged_backrest_aaa3c7201718400dac2247f2f340608b/angle_1/composite.png",
+      "short_name": "adjustable weight bench with hinged backrest",
+      "prompt_full": "An adjustable decline bench with a hinged backrest, an articulated seat pad, a front leg-roller assembly, and small rear transport wheels under the frame. Th..."
+    },
+    {
+      "slot": 3,
+      "kind": "image",
+      "record_id": "rec_barrier_gate_9c0f7f484c3f4bd0b648e358e46ae2a2",
+      "source": "output",
+      "angle_idx": 5,
+      "path": "../data/output/rec_barrier_gate_9c0f7f484c3f4bd0b648e358e46ae2a2/angle_5/composite.png",
+      "short_name": "barrier gate",
+      "prompt_full": "A double-leaf decorative driveway swing gate with two equal rectangular ornamental frame panels, each on a pair of pintle hinges at opposite pillars. The lef..."
+    },
+    {
+      "slot": 4,
+      "kind": "image",
+      "record_id": "rec_barrier_gate_fae73e3eb6984a6a8b3e62ca0a47679a",
+      "source": "output",
+      "angle_idx": 6,
+      "path": "../data/output/rec_barrier_gate_fae73e3eb6984a6a8b3e62ca0a47679a/angle_6/composite.png",
+      "short_name": "barrier gate",
+      "prompt_full": "A realistic, highly detailed barrier gate with a solid base housing, long gate arm, and visible control hardware. The gate arm articulates naturally, and the..."
+    },
+    {
+      "slot": 5,
+      "kind": "image",
+      "record_id": "rec_cannon_7dfd5358e4ae4b988634b320b443c395",
+      "source": "output",
+      "angle_idx": 2,
+      "path": "../data/output/rec_cannon_7dfd5358e4ae4b988634b320b443c395/angle_2/composite.png",
+      "short_name": "cannon",
+      "prompt_full": "A civil war field cannon with a cast iron barrel on trunnion pins in a wheeled wooden carriage, the barrel elevating on a revolute trunnion joint and the whe..."
+    },
+    {
+      "slot": 6,
+      "kind": "image",
+      "record_id": "rec_crane_tower_6d8cd5ee74724f06a1be37a625472b4c",
+      "source": "output",
+      "angle_idx": 4,
+      "path": "../data/output/rec_crane_tower_6d8cd5ee74724f06a1be37a625472b4c/angle_4/composite.png",
+      "short_name": "crane tower",
+      "prompt_full": "A self-erecting tower crane with a square telescoping mast extending on a prismatic joint from a wheeled ground base, a horizontal jib on a slewing vertical..."
+    },
+    {
+      "slot": 7,
+      "kind": "image",
+      "record_id": "rec_desktop_pc_tower_0001",
+      "source": "output",
+      "angle_idx": 5,
+      "path": "../data/output/rec_desktop_pc_tower_0001/angle_5/composite.png",
+      "short_name": "desktop pc tower",
+      "prompt_full": "A realistic, highly detailed desktop PC tower with a rectangular chassis, side panel, front intake geometry, rear I/O area, and a believable enthusiast-compu..."
+    },
+    {
+      "slot": 8,
+      "kind": "image",
+      "record_id": "rec_display_freezer_with_sliding_glass_lids_4acf997e5af44a58a040fa7311f60367",
+      "source": "output",
+      "angle_idx": 3,
+      "path": "../data/output/rec_display_freezer_with_sliding_glass_lids_4acf997e5af44a58a040fa7311f60367/angle_3/composite.png",
+      "short_name": "display freezer with sliding glass lids",
+      "prompt_full": "A wide frozen-food merchandiser with three overlapping sliding lids. The deep rectangular cabinet has three glass lid panels across the top and removable pro..."
+    },
+    {
+      "slot": 9,
+      "kind": "image",
+      "record_id": "rec_playground_swing_0ab24f43d40c4877ba3ba824d4ccd84a",
+      "source": "output",
+      "angle_idx": 6,
+      "path": "../data/output/rec_playground_swing_0ab24f43d40c4877ba3ba824d4ccd84a/angle_6/composite.png",
+      "short_name": "playground swing",
+      "prompt_full": "A tire-style playground swing suspended from a gantry frame. A horizontal top beam spans between side supports, and a circular tire seat hangs below on three..."
+    },
+    {
+      "slot": 10,
+      "kind": "image",
+      "record_id": "rec_orchestra_style_music_stand_46f6ecfb0194451e8d731a2dcc5b7af5",
+      "source": "output",
+      "angle_idx": 1,
+      "path": "../data/output/rec_orchestra_style_music_stand_46f6ecfb0194451e8d731a2dcc5b7af5/angle_1/composite.png",
+      "short_name": "orchestra style music stand",
+      "prompt_full": "A perforated rehearsal music stand with a flat plate base, a telescoping post, and a shallow punched-metal desk. The height collar sits clearly around the ou..."
+    },
+    {
+      "slot": 11,
+      "kind": "image",
+      "record_id": "rec_pet_door_flap_a9e959259e334bfa804a2c869e04fa1f",
+      "source": "output",
+      "angle_idx": 3,
+      "path": "../data/output/rec_pet_door_flap_a9e959259e334bfa804a2c869e04fa1f/angle_3/composite.png",
+      "short_name": "pet door flap",
+      "prompt_full": "A larger insulated pet flap with a thick outer frame and a clear central door panel. The flap is supported near its upper corners by pivot pins inside the fr..."
+    },
+    {
+      "slot": 12,
+      "kind": "image",
+      "record_id": "rec_miter_saw_arm_assembly_8288f5516faf4febbaccc03d9944b0d1",
+      "source": "output",
+      "angle_idx": 2,
+      "path": "../data/output/rec_miter_saw_arm_assembly_8288f5516faf4febbaccc03d9944b0d1/angle_2/composite.png",
+      "short_name": "miter saw arm assembly",
+      "prompt_full": "A basic chop-style miter saw with a rotating table, a pivot arm, and a guarded circular blade. The fixed base carries the miter table and rear arm pivot, and..."
+    },
+    {
+      "slot": 13,
+      "kind": "image",
+      "record_id": "rec_singleleaf_drawbridge_05c2bb3a41104d2db99800bdbde0b668",
+      "source": "output",
+      "angle_idx": 4,
+      "path": "../data/output/rec_singleleaf_drawbridge_05c2bb3a41104d2db99800bdbde0b668/angle_4/composite.png",
+      "short_name": "singleleaf drawbridge",
+      "prompt_full": "Model Singleleaf drawbridge as an industrial safety-first variant for heavy duty cycles. Start from a fixed support frame and one rotating bridge leaf on sid..."
+    },
+    {
+      "slot": 14,
+      "kind": "image",
+      "record_id": "rec_simple_drying_rack_f992a09f21d04b5fa6fe8cf061944742",
+      "source": "output",
+      "angle_idx": 2,
+      "path": "../data/output/rec_simple_drying_rack_f992a09f21d04b5fa6fe8cf061944742/angle_2/composite.png",
+      "short_name": "simple drying rack",
+      "prompt_full": "A realistic, highly detailed drying rack with folding support frames, horizontal bars, and a practical household silhouette. The folding action articulates n..."
+    },
+    {
+      "slot": 15,
+      "kind": "image",
+      "record_id": "rec_lighthouse_with_rotating_beacon_assembly_25675b1af6b14a538289d6c44fefdd9c",
+      "source": "output",
+      "angle_idx": 2,
+      "path": "../data/output/rec_lighthouse_with_rotating_beacon_assembly_25675b1af6b14a538289d6c44fefdd9c/angle_2/composite.png",
+      "short_name": "lighthouse with rotating beacon assembly",
+      "prompt_full": "A squat harbor lighthouse with a polygonal lantern room and roof cap. The lantern enclosure surrounds a central pedestal that supports a multi-panel rotating..."
+    },
+    {
+      "slot": 16,
+      "kind": "image",
+      "record_id": "rec_wheelbarrow_efeca1d8fd874d919977bfb8e49377d1",
+      "source": "output",
+      "angle_idx": 0,
+      "path": "../data/output/rec_wheelbarrow_efeca1d8fd874d919977bfb8e49377d1/angle_0/composite.png",
+      "short_name": "wheelbarrow",
+      "prompt_full": "A realistic, highly detailed Wheelbarrow in a rugged utility variant, with a load tray, single front wheel fork, axle hardware, and rear support legs tied to..."
+    },
+    {
+      "slot": 17,
+      "kind": "image",
+      "record_id": "rec_folding_kick_scooter_60551210624947f2ad0d5dd8177e55d5",
+      "source": "output",
+      "angle_idx": 4,
+      "path": "../data/output/rec_folding_kick_scooter_60551210624947f2ad0d5dd8177e55d5/angle_4/composite.png",
+      "short_name": "folding kick scooter",
+      "prompt_full": "A commuter folding scooter with a long deck, a handlebar stem that collapses on a revolute hinge at the base, and front and rear wheels on revolute axles."
+    },
+    {
+      "slot": 18,
+      "kind": "image",
+      "record_id": "rec_gear_assemblies_5edb006b8c0447569d8901510d2ef8d9",
+      "source": "output",
+      "angle_idx": 6,
+      "path": "../data/output/rec_gear_assemblies_5edb006b8c0447569d8901510d2ef8d9/angle_6/composite.png",
+      "short_name": "gear assemblies",
+      "prompt_full": "A realistic, highly detailed gear assembly with multiple intermeshing gears, sturdy supports, and a clear industrial mechanical character. The gear rotation..."
+    },
+    {
+      "slot": 19,
+      "kind": "image",
+      "record_id": "rec_extension_ladder_0530571a7a484f65a0f4074792377b7d",
+      "source": "output",
+      "angle_idx": 1,
+      "path": "../data/output/rec_extension_ladder_0530571a7a484f65a0f4074792377b7d/angle_1/composite.png",
+      "short_name": "extension ladder",
+      "prompt_full": "A roof-hook extension ladder with two parallel aluminium rail stiles, a fly section extending upward on a prismatic joint through channel guide blocks on the..."
+    },
+    {
+      "slot": 20,
+      "kind": "image",
+      "record_id": "rec_syringe_8bad80ff7093463d89c3a6023d5f7507",
+      "source": "output",
+      "angle_idx": 5,
+      "path": "../data/output/rec_syringe_8bad80ff7093463d89c3a6023d5f7507/angle_5/composite.png",
+      "short_name": "syringe",
+      "prompt_full": "A realistic, highly detailed syringe with a clear barrel, plunger, finger grips, and a convincing medical-equipment appearance. The plunger articulates natur..."
+    }
+  ],
+  "generated_at": "2026-05-04T06:21:51.423Z"
+}

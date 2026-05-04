@@ -25,6 +25,7 @@ LABELS = {
     "motion_15":         "Motion 15 deg",
     "motion_30":         "Motion 30 deg",
     "motion_half":       "Motion Halfway",
+    "motion_random":     "Motion Random",
     "part_segmentation": "Part Segmentation",
     "collision":         "Collision",
     "joint_overlay":     "Joint Overlay",
@@ -194,21 +195,22 @@ def main():
 
     print(f"\nDone. Individual renders in: {out_dir}/angle_*/")
 
-    # If render_urdf_viz emitted joint_overlay__bg.png + joint_overlay__fg.png
-    # (always-in-front mode), alpha-composite them into the final overlay PNG.
+    # If render_urdf_viz emitted <mode>__bg.png + <mode>__fg.png
+    # (always-in-front overlay), alpha-composite them into the final PNG.
     try:
         from PIL import Image as _PILImage
         for angle_dir in sorted(out_dir.glob("angle_*")):
-            bg = angle_dir / "joint_overlay__bg.png"
-            fg = angle_dir / "joint_overlay__fg.png"
-            if bg.exists() and fg.exists():
+            for bg in sorted(angle_dir.glob("*__bg.png")):
+                fg = angle_dir / bg.name.replace("__bg.png", "__fg.png")
+                if not fg.exists():
+                    continue
+                final = angle_dir / bg.name.replace("__bg.png", ".png")
                 bg_img = _PILImage.open(bg).convert("RGBA")
                 fg_img = _PILImage.open(fg).convert("RGBA")
-                _PILImage.alpha_composite(bg_img, fg_img).save(
-                    angle_dir / "joint_overlay.png", "PNG")
+                _PILImage.alpha_composite(bg_img, fg_img).save(final, "PNG")
                 bg.unlink()
                 fg.unlink()
-                print(f"  Composited always-in-front overlay → {angle_dir.name}/joint_overlay.png")
+                print(f"  Composited always-in-front overlay → {angle_dir.name}/{final.name}")
     except ImportError:
         print("  Pillow missing, cannot composite always-in-front overlay")
 
