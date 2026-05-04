@@ -53,7 +53,7 @@ const URL_QUERY_PARAMS = {
   run: "run",
 } as const;
 
-const INSPECTOR_TABS = ["inspect", "render", "code", "metadata"] as const satisfies readonly InspectorTab[];
+const INSPECTOR_TABS = ["inspect", "render", "code", "animation", "metadata"] as const satisfies readonly InspectorTab[];
 const BROWSER_TABS = ["workbench", "dataset", "staging"] as const satisfies readonly BrowserTab[];
 const SOURCE_FILTERS = ["workbench", "dataset"] as const satisfies readonly SourceFilter[];
 const TIME_FILTER_POINTS = new Set<string>(["1y", "180d", "90d", "60d", "30d", "14d", "7d", "3d", "24h", "12h", "6h", "1h"]);

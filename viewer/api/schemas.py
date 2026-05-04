@@ -215,6 +215,26 @@ class RecordTextFileResponse(BaseModel):
     preview_byte_limit: int | None = None
 
 
+class RecordAnimationFrameResponse(BaseModel):
+    index: int
+    trace_line: int
+    timestamp: float | None = None
+    tool_name: str
+    patch: str
+    code_snippet: str
+    model_sha256: str
+    file_base_url: str
+    compile_status: str = "success"
+    compile_error: str | None = None
+
+
+class RecordAnimationResponse(BaseModel):
+    record_id: str
+    frame_count: int
+    skipped_count: int
+    frames: list[RecordAnimationFrameResponse] = Field(default_factory=list)
+
+
 class RunDetailResponse(BaseModel):
     run: RunSummaryResponse
     run_metadata: dict[str, Any]

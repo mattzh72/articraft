@@ -157,6 +157,26 @@ export type RecordSecondaryRatingResponse = {
   updated_at: string | null;
 };
 
+export type RecordAnimationFrame = {
+  index: number;
+  trace_line: number;
+  timestamp: number | null;
+  tool_name: string;
+  patch: string;
+  code_snippet: string;
+  model_sha256: string;
+  file_base_url: string;
+  compile_status: string;
+  compile_error: string | null;
+};
+
+export type RecordAnimation = {
+  record_id: string;
+  frame_count: number;
+  skipped_count: number;
+  frames: RecordAnimationFrame[];
+};
+
 export type DeleteRecordResult = {
   status: string;
   record_id: string;
@@ -296,7 +316,7 @@ export type CostFilter = {
 };
 export type RatingFilterValue = "1" | "2" | "3" | "4" | "5" | "unrated";
 export type RatingFilter = RatingFilterValue[];
-export type InspectorTab = "inspect" | "render" | "code" | "metadata";
+export type InspectorTab = "inspect" | "render" | "code" | "animation" | "metadata";
 
 export type ViewerState = {
   bootstrap: ViewerBootstrap | null;

@@ -7,6 +7,7 @@ import type {
   DeleteRecordResult,
   OpenRecordFolderResult,
   OpenStagingFolderResult,
+  RecordAnimation,
   RecordBrowseResponse,
   RecordRatingResponse,
   RecordSecondaryRatingResponse,
@@ -132,6 +133,10 @@ export async function fetchDatasetEntries(): Promise<DatasetEntry[]> {
 
 export async function fetchRecordSummary(recordId: string): Promise<RecordSummary> {
   return fetchJson<RecordSummary>(`/api/records/${encodeURIComponent(recordId)}/summary`);
+}
+
+export async function fetchRecordAnimation(recordId: string): Promise<RecordAnimation> {
+  return fetchJson<RecordAnimation>(`/api/records/${encodeURIComponent(recordId)}/animation`);
 }
 
 export async function browseRecords(params: {

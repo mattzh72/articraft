@@ -4,6 +4,7 @@ import type { PanelImperativeHandle, PanelSize } from "react-resizable-panels";
 import * as THREE from "three";
 
 import { useViewer } from "@/lib/viewer-context";
+import { useAnimation } from "@/lib/animation-context";
 import { updateUrlSearchParams } from "@/lib/url";
 import {
   ResizablePanelGroup,
@@ -450,7 +451,8 @@ export default function ViewerShell(): JSX.Element {
     showJointOverlay: renderOptions.showJointOverlay,
   };
 
-  const baseFileUrl = selection
+  const { activeFrame: activeAnimationFrame } = useAnimation();
+  const recordBaseFileUrl = selection
     ? selection.kind === "record"
       ? `/api/records/${selection.recordId}/files`
       : `/api/staging/${selection.runId}/${selection.recordId}/files`
@@ -468,16 +470,23 @@ export default function ViewerShell(): JSX.Element {
   const selectedRecord = useMemo(() => {
     return selection?.kind === "record" ? selectedRecordSummary : null;
   }, [selectedRecordSummary, selection]);
-  const assetRevisionKey = selection
+  const recordAssetRevisionKey = selection
     ? selection.kind === "staging"
       ? selectedStagingEntry?.checkpoint_updated_at ?? selectedStagingEntry?.updated_at ?? null
       : selectedRecord?.viewer_asset_updated_at ?? null
     : null;
-  const selectionKey = selection
+  const recordSelectionKey = selection
     ? selection.kind === "record"
       ? selection.recordId
       : `staging:${selection.runId}:${selection.recordId}`
     : null;
+  const baseFileUrl = activeAnimationFrame ? activeAnimationFrame.file_base_url : recordBaseFileUrl;
+  const assetRevisionKey = activeAnimationFrame
+    ? activeAnimationFrame.model_sha256
+    : recordAssetRevisionKey;
+  const selectionKey = activeAnimationFrame
+    ? `${recordSelectionKey ?? "animation"}:frame:${activeAnimationFrame.index}`
+    : recordSelectionKey;
   const missingArtifactsState = useMemo(() => {
     if (selection?.kind !== "record" || !selectedRecord) {
       return null;

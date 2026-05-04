@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import ast
+import hashlib
 import json
 import shutil
 import subprocess
@@ -40,6 +42,8 @@ from viewer.api.schemas import (
     DashboardOverviewResponse,
     DashboardResponse,
     DatasetEntryResponse,
+    RecordAnimationFrameResponse,
+    RecordAnimationResponse,
     RecordBrowseFacetsResponse,
     RecordBrowseResponse,
     RecordDetailResponse,
@@ -53,6 +57,13 @@ from viewer.api.schemas import (
     ViewerBootstrapResponse,
     WorkbenchEntryResponse,
 )
+
+
+@dataclass(frozen=True)
+class _AnimationCompileResult:
+    rendered: bool
+    status: str
+    error: str | None = None
 
 
 def _utc_now() -> str:
@@ -78,6 +89,342 @@ def _coerce_rating(value: Any) -> int | None:
     if isinstance(value, int) and 1 <= value <= 5:
         return value
     return None
+
+
+def _sha256_text(value: str) -> str:
+    return hashlib.sha256(value.encode("utf-8")).hexdigest()
+
+
+def _trace_tool_calls(row: dict[str, Any]) -> list[dict[str, Any]]:
+    message = row.get("message")
+    if not isinstance(message, dict):
+        return []
+    calls = message.get("tool_calls")
+    return calls if isinstance(calls, list) else []
+
+
+def _tool_call_name(call: dict[str, Any]) -> str | None:
+    custom = call.get("custom")
+    if isinstance(custom, dict) and isinstance(custom.get("name"), str):
+        return str(custom["name"])
+    function = call.get("function")
+    if isinstance(function, dict) and isinstance(function.get("name"), str):
+        return str(function["name"])
+    return None
+
+
+def _tool_call_patch_input(call: dict[str, Any]) -> str | None:
+    custom = call.get("custom")
+    if isinstance(custom, dict) and isinstance(custom.get("input"), str):
+        return str(custom["input"])
+    function = call.get("function")
+    if not isinstance(function, dict) or not isinstance(function.get("arguments"), str):
+        return None
+    try:
+        arguments = json.loads(str(function["arguments"]))
+    except json.JSONDecodeError:
+        return None
+    if isinstance(arguments, dict):
+        value = arguments.get("patch") or arguments.get("input")
+        if isinstance(value, str):
+            return value
+    return None
+
+
+def _strip_line_number_prefix(line: str) -> str:
+    if not line.startswith("L"):
+        return line
+    colon_index = line.find(": ")
+    if colon_index <= 1:
+        return line
+    line_number = line[1:colon_index]
+    return line[colon_index + 2 :] if line_number.isdigit() else line
+
+
+def _read_file_content_from_tool_row(row: dict[str, Any]) -> str | None:
+    message = row.get("message")
+    if not isinstance(message, dict) or message.get("role") != "tool":
+        return None
+    if message.get("name") != "read_file":
+        return None
+    content = message.get("content")
+    if not isinstance(content, str):
+        return None
+    try:
+        payload = json.loads(content)
+    except json.JSONDecodeError:
+        return None
+    result = payload.get("result") if isinstance(payload, dict) else None
+    if not isinstance(result, str) or "L1:" not in result:
+        return None
+    return "\n".join(_strip_line_number_prefix(line) for line in result.splitlines())
+
+
+def _read_file_paths_by_call_id(rows: list[dict[str, Any]]) -> dict[str, str]:
+    out: dict[str, str] = {}
+    for row in rows:
+        for call in _trace_tool_calls(row):
+            if _tool_call_name(call) != "read_file":
+                continue
+            call_id = call.get("id")
+            if not isinstance(call_id, str):
+                continue
+            function = call.get("function")
+            if isinstance(function, dict) and isinstance(function.get("arguments"), str):
+                try:
+                    args = json.loads(str(function["arguments"]))
+                except json.JSONDecodeError:
+                    args = None
+                if isinstance(args, dict) and isinstance(args.get("path"), str):
+                    out[call_id] = args["path"]
+    return out
+
+
+def _initial_model_source_from_trace(rows: list[dict[str, Any]]) -> str | None:
+    paths = _read_file_paths_by_call_id(rows)
+    latest_content: str | None = None
+    for row in rows:
+        if any(_tool_call_name(call) == "apply_patch" for call in _trace_tool_calls(row)):
+            return latest_content
+        message = row.get("message")
+        if not isinstance(message, dict) or message.get("name") != "read_file":
+            continue
+        call_id = message.get("tool_call_id")
+        path = paths.get(call_id) if isinstance(call_id, str) else None
+        if path is not None and Path(path).name != "model.py":
+            continue
+        content = _read_file_content_from_tool_row(row)
+        if content is not None:
+            latest_content = content
+    return latest_content
+
+
+def _normalize_hunk_line(line: str) -> str:
+    return line[1:] if line.startswith("\\ ") else line
+
+
+@dataclass(frozen=True)
+class _ModelPatchOperation:
+    old_block: tuple[str, ...]
+    new_block: tuple[str, ...]
+
+
+@dataclass(frozen=True)
+class _Primitive:
+    snippet: str
+    name: str | None
+    lineno: int
+    end_lineno: int
+
+
+def _primitive_method_name(func: ast.AST) -> str | None:
+    if not isinstance(func, ast.Attribute):
+        return None
+    if func.attr in ("visual", "collision"):
+        return func.attr
+    if (
+        func.attr == "append"
+        and isinstance(func.value, ast.Attribute)
+        and func.value.attr == "collisions"
+    ):
+        return "collisions.append"
+    return None
+
+
+def _extract_name_kwarg(call: ast.Call) -> str | None:
+    for keyword in call.keywords:
+        if keyword.arg != "name":
+            continue
+        if isinstance(keyword.value, ast.Constant) and isinstance(keyword.value.value, str):
+            return keyword.value.value
+    return None
+
+
+def _extract_primitives(source: str) -> list[_Primitive]:
+    try:
+        tree = ast.parse(source)
+    except SyntaxError:
+        return []
+    lines = source.splitlines()
+    seen: set[int] = set()
+    out: list[_Primitive] = []
+
+    class Walker(ast.NodeVisitor):
+        def __init__(self) -> None:
+            self.scope: list[str] = []
+
+        def visit_FunctionDef(self, node: ast.FunctionDef) -> None:
+            self.scope.append(node.name)
+            self.generic_visit(node)
+            self.scope.pop()
+
+        def visit_AsyncFunctionDef(self, node: ast.AsyncFunctionDef) -> None:
+            self.scope.append(node.name)
+            self.generic_visit(node)
+            self.scope.pop()
+
+        def visit_Call(self, node: ast.Call) -> None:
+            if _primitive_method_name(node.func) is not None:
+                if not self.scope or self.scope[-1] == "build_object_model":
+                    start = node.lineno
+                    end = node.end_lineno or start
+                    if start not in seen:
+                        seen.add(start)
+                        snippet = "\n".join(lines[start - 1 : end])
+                        if "for " in lines[start - 2]:
+                            snippet = lines[start - 2] + "\n" + snippet
+                        out.append(
+                            _Primitive(
+                                snippet=snippet,
+                                name=_extract_name_kwarg(node),
+                                lineno=start,
+                                end_lineno=end,
+                            )
+                        )
+            self.generic_visit(node)
+
+    Walker().visit(tree)
+    out.sort(key=lambda p: p.lineno)
+    return out
+
+
+def _ablate_primitive(source: str, snippet: str) -> str:
+    for primitive in _extract_primitives(source):
+        if primitive.snippet == snippet:
+            lines = source.splitlines(keepends=True)
+            first_line = lines[primitive.lineno - 1]
+            indent = first_line[: len(first_line) - len(first_line.lstrip())]
+            lines[primitive.lineno - 1 : primitive.end_lineno] = [f"{indent}pass\n"]
+            return "".join(lines)
+    return source
+
+
+def _frames_for_patch(before: str, after: str) -> list[tuple[str, str, str]]:
+    before_prims = _extract_primitives(before)
+    after_prims = _extract_primitives(after)
+    after_set = {p.snippet for p in after_prims}
+    before_set = {p.snippet for p in before_prims}
+
+    removed = [p for p in before_prims if p.snippet not in after_set]
+    added = [p for p in after_prims if p.snippet not in before_set]
+
+    removed_by_name = {p.name: p for p in removed if p.name}
+    added_by_name = {p.name: p for p in added if p.name}
+    update_names = set(removed_by_name) & set(added_by_name)
+    pure_removed = [p for p in removed if p.name not in update_names]
+    pure_added = [p for p in added if p.name not in update_names]
+
+    frames: list[tuple[str, str, str]] = []
+
+    state = before
+    for primitive in pure_removed:
+        state = _ablate_primitive(state, primitive.snippet)
+        frames.append(("remove", primitive.snippet, state))
+
+    for name in sorted(update_names):
+        new_p = added_by_name[name]
+        frames.append(("update", new_p.snippet, after))
+
+    for index, primitive in enumerate(pure_added):
+        state = after
+        for later in pure_added[index + 1 :]:
+            state = _ablate_primitive(state, later.snippet)
+        frames.append(("add", primitive.snippet, state))
+
+    return frames
+
+
+def _extract_model_patch_operations(patch: str) -> list[_ModelPatchOperation]:
+    operations: list[_ModelPatchOperation] = []
+    patch_lines = patch.splitlines()
+    i = 0
+    while i < len(patch_lines):
+        line = patch_lines[i]
+        if line.startswith("*** Add File: "):
+            filename = line.removeprefix("*** Add File: ").strip()
+            i += 1
+            new_block: list[str] = []
+            while i < len(patch_lines) and not patch_lines[i].startswith("*** "):
+                if patch_lines[i].startswith("+"):
+                    new_block.append(patch_lines[i][1:])
+                i += 1
+            if Path(filename).name == "model.py" and new_block:
+                operations.append(_ModelPatchOperation((), tuple(new_block)))
+            continue
+        if not line.startswith("*** Update File: "):
+            i += 1
+            continue
+        filename = line.removeprefix("*** Update File: ").strip()
+        if Path(filename).name != "model.py":
+            i += 1
+            continue
+        i += 1
+        while i < len(patch_lines) and not patch_lines[i].startswith("*** "):
+            if not patch_lines[i].startswith("@@"):
+                i += 1
+                continue
+            i += 1
+            old_block: list[str] = []
+            new_block: list[str] = []
+            while (
+                i < len(patch_lines)
+                and not patch_lines[i].startswith("@@")
+                and not patch_lines[i].startswith("*** ")
+            ):
+                hunk_line = _normalize_hunk_line(patch_lines[i])
+                if hunk_line.startswith("-"):
+                    old_block.append(hunk_line[1:])
+                elif hunk_line.startswith("+"):
+                    new_block.append(hunk_line[1:])
+                elif hunk_line.startswith(" "):
+                    old_block.append(hunk_line[1:])
+                    new_block.append(hunk_line[1:])
+                i += 1
+
+            if old_block != new_block:
+                operations.append(
+                    _ModelPatchOperation(
+                        old_block=tuple(old_block),
+                        new_block=tuple(new_block),
+                    )
+                )
+    return operations
+
+
+def _source_lines(source: str) -> list[str]:
+    lines = source.splitlines()
+    if source.endswith("\n"):
+        lines.append("")
+    return lines
+
+
+def _apply_model_patch_operations(source: str, operations: list[_ModelPatchOperation]) -> str:
+    output = _source_lines(source)
+    for operation in operations:
+        old_block = list(operation.old_block)
+        new_block = list(operation.new_block)
+        if not old_block:
+            output.extend(new_block)
+            continue
+
+        old_len = len(old_block)
+        match_at: int | None = None
+        for idx in range(0, len(output) - old_len + 1):
+            if output[idx : idx + old_len] == old_block:
+                match_at = idx
+                break
+        if match_at is None:
+            old_preview = "\n".join(old_block[:6])
+            raise ValueError(f"Could not apply patch hunk to model.py near:\n{old_preview}")
+        output[match_at : match_at + old_len] = new_block
+    if output and output[-1] == "":
+        return "\n".join(output[:-1]) + "\n"
+    return "\n".join(output)
+
+
+def _apply_unified_patch_to_text(source: str, patch: str) -> str:
+    operations = _extract_model_patch_operations(patch)
+    return _apply_model_patch_operations(source, operations)
 
 
 def _effective_rating(primary_rating: int | None, secondary_rating: int | None) -> float | None:
@@ -799,6 +1146,205 @@ class ViewerStore:
             if isinstance(parsed, dict):
                 rows.append(parsed)
         return rows
+
+    def _record_animation_root(self, record_id: str) -> Path:
+        return self.repo.root / "data" / "cache" / "record_animation" / record_id
+
+    def record_animation_frame_file_root(self, record_id: str, frame_index: int) -> Path:
+        return self._record_animation_root(record_id) / "frames" / f"{frame_index:04d}"
+
+    def _compile_animation_frame(
+        self,
+        record_id: str,
+        frame_index: int,
+        source: str,
+        *,
+        sdk_package: str,
+    ) -> _AnimationCompileResult:
+        frame_root = self.record_animation_frame_file_root(record_id, frame_index)
+        model_path = frame_root / "model.py"
+        compile_report_path = frame_root / "compile_report.json"
+        source_sha = _sha256_text(source)
+
+        existing_report = self.repo.read_json(compile_report_path)
+        if (
+            isinstance(existing_report, dict)
+            and existing_report.get("status") == "success"
+            and existing_report.get("model_sha256") == source_sha
+            and (frame_root / "model.urdf").exists()
+        ):
+            return _AnimationCompileResult(rendered=True, status="success")
+        if (
+            isinstance(existing_report, dict)
+            and existing_report.get("status") == "fallback"
+            and existing_report.get("model_sha256") == source_sha
+            and (frame_root / "model.urdf").exists()
+        ):
+            error = existing_report.get("error")
+            return _AnimationCompileResult(
+                rendered=True,
+                status="fallback",
+                error=error if isinstance(error, str) else None,
+            )
+
+        if frame_root.exists():
+            shutil.rmtree(frame_root)
+        frame_root.mkdir(parents=True, exist_ok=True)
+        self.repo.write_text(model_path, source)
+        record_dir = self.repo.layout.record_dir(record_id)
+        for asset_dir_name in ("assets", "inputs"):
+            source_dir = record_dir / asset_dir_name
+            if source_dir.exists() and source_dir.is_dir():
+                shutil.copytree(source_dir, frame_root / asset_dir_name, dirs_exist_ok=True)
+
+        from agent.compiler import compile_urdf_report
+
+        try:
+            result = compile_urdf_report(
+                model_path,
+                sdk_package=sdk_package,
+                run_checks=False,
+                target="visual",
+            )
+        except Exception as exc:
+            fallback_urdf = self._compile_animation_frame_fallback_urdf(
+                model_path,
+                sdk_package=sdk_package,
+            )
+            error = str(exc)
+            if fallback_urdf:
+                self.repo.write_text(frame_root / "model.urdf", fallback_urdf)
+                self.repo.write_json(
+                    compile_report_path,
+                    {
+                        "status": "fallback",
+                        "model_sha256": source_sha,
+                        "error": error,
+                        "fallback": "viewer_only_unvalidated_urdf",
+                    },
+                )
+                return _AnimationCompileResult(
+                    rendered=True,
+                    status="fallback",
+                    error=error,
+                )
+            self.repo.write_json(
+                compile_report_path,
+                {
+                    "status": "failure",
+                    "model_sha256": source_sha,
+                    "error": error,
+                },
+            )
+            return _AnimationCompileResult(rendered=False, status="failure", error=error)
+
+        self.repo.write_text(frame_root / "model.urdf", result.urdf_xml)
+        self.repo.write_json(
+            compile_report_path,
+            {
+                "status": "success",
+                "model_sha256": source_sha,
+                "warning_count": len(result.warnings),
+                "warnings": [str(item) for item in result.warnings],
+            },
+        )
+        return _AnimationCompileResult(rendered=True, status="success")
+
+    def _compile_animation_frame_fallback_urdf(
+        self,
+        model_path: Path,
+        *,
+        sdk_package: str,
+    ) -> str | None:
+        try:
+            from agent.compiler import load_model_globals
+            from agent.prompts import normalize_sdk_package
+
+            package = normalize_sdk_package(sdk_package)
+            globals_dict = load_model_globals(model_path, sdk_package=sdk_package)
+            object_model = globals_dict.get("object_model")
+            if object_model is None:
+                return None
+            compile_object_to_urdf_xml = __import__(
+                f"{package}.v0._urdf_export",
+                fromlist=["compile_object_to_urdf_xml"],
+            ).compile_object_to_urdf_xml
+            urdf_xml = compile_object_to_urdf_xml(
+                object_model,
+                asset_root=model_path.parent,
+                include_physical_collisions=False,
+                validate=False,
+            )
+        except Exception:
+            return None
+        return urdf_xml if isinstance(urdf_xml, str) and urdf_xml.strip() else None
+
+    def build_record_animation(self, record_id: str) -> RecordAnimationResponse:
+        record = self.records.load_record(record_id)
+        if not isinstance(record, dict):
+            raise FileNotFoundError(f"Record not found: {record_id}")
+
+        from agent.runner import _draft_model_template
+        from storage.trajectories import unroll_record_trajectory
+
+        trajectory_path = unroll_record_trajectory(self.repo, record_id)
+        rows = self._read_jsonl(trajectory_path)
+        sdk_package = _normalize_sdk_package_value(record.get("sdk_package")) or "sdk"
+        current_source = _initial_model_source_from_trace(rows) or _draft_model_template(
+            sdk_package=sdk_package
+        )
+
+        specs: list[tuple[str, str, str, int]] = []
+        skipped_count = 0
+
+        for line_number, row in enumerate(rows, start=1):
+            for call in _trace_tool_calls(row):
+                if _tool_call_name(call) != "apply_patch":
+                    continue
+                patch = _tool_call_patch_input(call)
+                if not patch or "model.py" not in patch:
+                    continue
+                try:
+                    next_source = _apply_unified_patch_to_text(current_source, patch)
+                except ValueError:
+                    skipped_count += 1
+                    continue
+                for kind, snippet, frame_source in _frames_for_patch(current_source, next_source):
+                    specs.append((kind, snippet, frame_source, line_number))
+                current_source = next_source
+
+        frames: list[RecordAnimationFrameResponse] = []
+        for index, (kind, snippet, frame_source, line_number) in enumerate(specs, start=1):
+            compile_result = self._compile_animation_frame(
+                record_id,
+                index,
+                frame_source,
+                sdk_package=sdk_package,
+            )
+            if not compile_result.rendered:
+                skipped_count += 1
+                continue
+            frames.append(
+                RecordAnimationFrameResponse(
+                    index=index,
+                    trace_line=line_number,
+                    timestamp=None,
+                    tool_name=kind,
+                    patch="",
+                    code_snippet=snippet,
+                    model_sha256=_sha256_text(frame_source),
+                    file_base_url=(f"/api/records/{record_id}/animation/frames/{index}/files"),
+                    compile_status=compile_result.status,
+                    compile_error=compile_result.error,
+                )
+            )
+
+        return RecordAnimationResponse(
+            record_id=record_id,
+            frame_count=len(frames),
+            skipped_count=skipped_count,
+            frames=frames,
+        )
 
     def _read_run_results(self, run_id: str) -> list[dict[str, Any]]:
         return RunStore(self.repo).read_latest_results(run_id, key="row_id")

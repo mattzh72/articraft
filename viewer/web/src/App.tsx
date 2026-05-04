@@ -2,6 +2,7 @@ import { lazy, Suspense, type JSX } from "react";
 
 import { useRoute } from "@/lib/useRoute";
 import { ViewerProvider } from "@/lib/viewer-context";
+import { AnimationProvider } from "@/lib/animation-context";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { AppHeader } from "@/components/layout/AppHeader";
 
@@ -36,14 +37,16 @@ function DashboardApp(): JSX.Element {
 function ViewerApp(): JSX.Element {
   return (
     <ViewerProvider>
-      <div className="flex h-screen flex-col bg-[var(--surface-2)]">
-        <AppHeader />
-        <Suspense
-          fallback={<AppLoadingFallback />}
-        >
-          <ViewerShell />
-        </Suspense>
-      </div>
+      <AnimationProvider>
+        <div className="flex h-screen flex-col bg-[var(--surface-2)]">
+          <AppHeader />
+          <Suspense
+            fallback={<AppLoadingFallback />}
+          >
+            <ViewerShell />
+          </Suspense>
+        </div>
+      </AnimationProvider>
     </ViewerProvider>
   );
 }

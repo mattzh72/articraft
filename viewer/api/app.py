@@ -35,6 +35,7 @@ from viewer.api.schemas import (
     OpenRecordFolderResponse,
     OpenStagingFolderResponse,
     PromoteRecordRequest,
+    RecordAnimationResponse,
     RecordBrowseResponse,
     RecordRatingRequest,
     RecordRatingResponse,
@@ -263,6 +264,33 @@ def create_app(*, repo_root: Path | None = None) -> FastAPI:
         }.get(target.suffix.lower(), "application/octet-stream")
         return target, media_type
 
+    def resolve_record_animation_frame_target(
+        record_id: str,
+        frame_index: int,
+        file_path: str,
+    ) -> tuple[Path, Path]:
+        if not record_id.startswith("rec_"):
+            raise HTTPException(status_code=400, detail="Invalid record ID format")
+        if frame_index < 1:
+            raise HTTPException(status_code=400, detail="Invalid animation frame index")
+
+        requested_path = Path(file_path)
+        if requested_path.is_absolute() or ".." in requested_path.parts:
+            raise HTTPException(status_code=400, detail="Invalid file path")
+
+        root = app.state.viewer_store.record_animation_frame_file_root(
+            record_id,
+            frame_index,
+        ).resolve()
+        target = (root / requested_path).resolve()
+        try:
+            target.relative_to(root)
+        except ValueError as exc:
+            raise HTTPException(status_code=403, detail="Access denied") from exc
+        if not target.exists() or not target.is_file():
+            raise HTTPException(status_code=404, detail=f"File not found: {file_path}")
+        return root, target
+
     async def resolve_record_target_with_materialization(
         record_id: str, file_path: str
     ) -> tuple[Path, Path]:
@@ -471,6 +499,29 @@ def create_app(*, repo_root: Path | None = None) -> FastAPI:
         if summary is None:
             raise HTTPException(status_code=404, detail=f"Record not found: {record_id}")
         return summary
+
+    @app.get("/api/records/{record_id}/animation", response_model=RecordAnimationResponse)
+    async def record_animation(record_id: str) -> RecordAnimationResponse:
+        if not record_id.startswith("rec_"):
+            raise HTTPException(status_code=400, detail="Invalid record ID format")
+        try:
+            return await asyncio.to_thread(app.state.viewer_store.build_record_animation, record_id)
+        except FileNotFoundError as exc:
+            raise HTTPException(status_code=404, detail=str(exc)) from exc
+        except RuntimeError as exc:
+            raise HTTPException(status_code=500, detail=str(exc)) from exc
+
+    @app.get("/api/records/{record_id}/animation/frames/{frame_index}/files/{file_path:path}")
+    async def record_animation_frame_file(
+        record_id: str,
+        frame_index: int,
+        file_path: str,
+    ) -> FileResponse:
+        _, target = resolve_record_animation_frame_target(record_id, frame_index, file_path)
+        return FileResponse(
+            target,
+            media_type=media_type_map.get(target.suffix.lower(), "application/octet-stream"),
+        )
 
     @app.get("/api/records/browse", response_model=RecordBrowseResponse)
     async def browse_records(
