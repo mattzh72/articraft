@@ -1,4 +1,4 @@
-# {Articraft}: An Agentic System for Scalable Articulated 3D Asset Generation
+# Articraft: An Agentic System for Scalable Articulated 3D Asset Generation
 
 Generate articulated 3D assets from prompts and inspect them locally.
 
