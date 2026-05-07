@@ -563,6 +563,107 @@ def test_collect_candidates_queues_mesh_backed_records_missing_assets(tmp_path) 
     assert candidates[0].reason == "missing generated assets"
 
 
+def test_collect_candidates_trusts_current_available_compile_report_by_default(tmp_path) -> None:
+    repo = StorageRepo(tmp_path)
+    repo.ensure_layout()
+
+    record_id = "rec_cached_available"
+    record_dir = repo.layout.record_dir(record_id)
+    record_dir.mkdir(parents=True, exist_ok=True)
+    materialization_dir = repo.layout.record_materialization_dir(record_id)
+    materialization_dir.mkdir(parents=True, exist_ok=True)
+    model_path = record_dir / "model.py"
+    model_path.write_text("object_model = None\n", encoding="utf-8")
+    fingerprint_inputs = build_compile_fingerprint_inputs(model_path=model_path)
+    (materialization_dir / "model.urdf").write_text(
+        "<robot name='mesh'><link name='base'><visual><geometry><mesh filename='assets/meshes/part.obj'/></geometry></visual></link></robot>",
+        encoding="utf-8",
+    )
+    (record_dir / "record.json").write_text(
+        json.dumps({"artifacts": {"model_py": "model.py"}}),
+        encoding="utf-8",
+    )
+    (materialization_dir / "compile_report.json").write_text(
+        json.dumps(
+            {
+                "status": "success",
+                "metrics": {
+                    "compile_level": "visual",
+                    "fingerprint_inputs": fingerprint_inputs,
+                    "materialization_fingerprint": build_compile_fingerprint_from_inputs(
+                        fingerprint_inputs
+                    ),
+                    "materialization_status": "available",
+                    **build_model_source_snapshot(model_path=model_path),
+                },
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    candidates, skipped_missing_script = _collect_candidates(
+        tmp_path,
+        force=False,
+        target="visual",
+    )
+
+    assert skipped_missing_script == 0
+    assert candidates == []
+
+
+def test_collect_candidates_verify_assets_detects_stale_available_compile_report(
+    tmp_path,
+) -> None:
+    repo = StorageRepo(tmp_path)
+    repo.ensure_layout()
+
+    record_id = "rec_stale_available"
+    record_dir = repo.layout.record_dir(record_id)
+    record_dir.mkdir(parents=True, exist_ok=True)
+    materialization_dir = repo.layout.record_materialization_dir(record_id)
+    materialization_dir.mkdir(parents=True, exist_ok=True)
+    model_path = record_dir / "model.py"
+    model_path.write_text("object_model = None\n", encoding="utf-8")
+    fingerprint_inputs = build_compile_fingerprint_inputs(model_path=model_path)
+    (materialization_dir / "model.urdf").write_text(
+        "<robot name='mesh'><link name='base'><visual><geometry><mesh filename='assets/meshes/part.obj'/></geometry></visual></link></robot>",
+        encoding="utf-8",
+    )
+    (record_dir / "record.json").write_text(
+        json.dumps({"artifacts": {"model_py": "model.py"}}),
+        encoding="utf-8",
+    )
+    (materialization_dir / "compile_report.json").write_text(
+        json.dumps(
+            {
+                "status": "success",
+                "metrics": {
+                    "compile_level": "visual",
+                    "fingerprint_inputs": fingerprint_inputs,
+                    "materialization_fingerprint": build_compile_fingerprint_from_inputs(
+                        fingerprint_inputs
+                    ),
+                    "materialization_status": "available",
+                    **build_model_source_snapshot(model_path=model_path),
+                },
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    candidates, skipped_missing_script = _collect_candidates(
+        tmp_path,
+        force=False,
+        target="visual",
+        verify_assets=True,
+    )
+
+    assert skipped_missing_script == 0
+    assert len(candidates) == 1
+    assert candidates[0].record_id == record_id
+    assert candidates[0].reason == "missing generated assets"
+
+
 def test_collect_candidates_queues_broken_success_records_missing_model_script(tmp_path) -> None:
     repo = StorageRepo(tmp_path)
     repo.ensure_layout()

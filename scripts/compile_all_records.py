@@ -140,6 +140,18 @@ def _compile_fingerprint(payload: object) -> str | None:
     return str(value) if isinstance(value, str) and value else None
 
 
+def _compile_materialization_status(payload: object) -> str | None:
+    if not isinstance(payload, dict) or payload.get("status") != "success":
+        return None
+    metrics = payload.get("metrics")
+    if not isinstance(metrics, dict):
+        return None
+    value = metrics.get("materialization_status")
+    if isinstance(value, str) and value in {"available", "missing"}:
+        return value
+    return None
+
+
 def _make_candidate(
     *,
     record_id: str,
@@ -197,11 +209,48 @@ def _artifact_materialization_status(
     return status
 
 
+def _compile_level_satisfies_target(compile_level: str | None, *, target: str) -> bool:
+    return target == "visual" or compile_level == "full"
+
+
+def _can_fast_skip_default_model_record(
+    *,
+    compile_report: object,
+    compile_status: str | None,
+    compile_level: str | None,
+    compile_fingerprint: str | None,
+    cached_materialization_status: str | None,
+    default_script_path: Path,
+    urdf_path: Path,
+    target: str,
+    force: bool,
+    verify_assets: bool,
+) -> bool:
+    if force or verify_assets:
+        return False
+    if (
+        compile_status != "success"
+        or not compile_fingerprint
+        or cached_materialization_status != "available"
+        or not _compile_level_satisfies_target(compile_level, target=target)
+    ):
+        return False
+    if not urdf_path.exists() or not default_script_path.exists():
+        return False
+    return bool(
+        compile_report_matches_model_source_snapshot(
+            compile_report,
+            model_path=default_script_path,
+        )
+    )
+
+
 def _collect_candidates(
     repo_root: Path,
     *,
     force: bool,
     target: str = "full",
+    verify_assets: bool = False,
 ) -> tuple[list[CompileCandidate], int]:
     target_key = _normalize_compile_target(target)
     repo = StorageRepo(repo_root)
@@ -214,11 +263,6 @@ def _collect_candidates(
 
     for record_dir in sorted(path for path in records_root.iterdir() if path.is_dir()):
         record_id = record_dir.name
-        record = repo.read_json(record_dir / "record.json")
-        sdk_package = _normalize_sdk_package(
-            record.get("sdk_package") if isinstance(record, dict) else "sdk"
-        )
-        script_path = _record_model_script_path(repo, record_id, record)
         materialization_dir = repo.layout.record_materialization_dir(record_id)
         urdf_path = materialization_dir / "model.urdf"
         compile_report_path = materialization_dir / "compile_report.json"
@@ -226,6 +270,28 @@ def _collect_candidates(
         compile_status = _compile_status(compile_report)
         compile_level = _compile_level(compile_report)
         compile_fingerprint = _compile_fingerprint(compile_report)
+        cached_materialization_status = _compile_materialization_status(compile_report)
+        default_script_path = record_dir / "model.py"
+
+        if _can_fast_skip_default_model_record(
+            compile_report=compile_report,
+            compile_status=compile_status,
+            compile_level=compile_level,
+            compile_fingerprint=compile_fingerprint,
+            cached_materialization_status=cached_materialization_status,
+            default_script_path=default_script_path,
+            urdf_path=urdf_path,
+            target=target_key,
+            force=force,
+            verify_assets=verify_assets,
+        ):
+            continue
+
+        record = repo.read_json(record_dir / "record.json")
+        sdk_package = _normalize_sdk_package(
+            record.get("sdk_package") if isinstance(record, dict) else "sdk"
+        )
+        script_path = _record_model_script_path(repo, record_id, record)
 
         if not script_path.exists():
             if isinstance(record, dict) or compile_status is not None or urdf_path.exists():
@@ -279,25 +345,31 @@ def _collect_candidates(
             )
             continue
 
-        materialization_status = _artifact_materialization_status(
-            repo,
-            record_id,
-            urdf_path=urdf_path,
-        )
-
-        if materialization_status == "missing":
-            candidates.append(
-                _make_candidate(
-                    record_id=record_id,
-                    reason="missing generated assets",
-                    force=False,
-                    sdk_package=sdk_package,
-                    compile_report=compile_report,
+        if not compile_fingerprint:
+            materialization_status = (
+                cached_materialization_status
+                if cached_materialization_status == "missing"
+                else _artifact_materialization_status(
+                    repo,
+                    record_id,
+                    urdf_path=urdf_path,
                 )
             )
-            continue
-
-        if compile_fingerprint and compile_report_matches_model_source_snapshot(
+            if materialization_status == "missing":
+                candidates.append(
+                    _make_candidate(
+                        record_id=record_id,
+                        reason="missing generated assets",
+                        force=False,
+                        sdk_package=sdk_package,
+                        compile_report=compile_report,
+                    )
+                )
+                continue
+            current_fingerprint = build_compile_fingerprint_from_inputs(
+                build_compile_fingerprint_inputs(model_path=script_path)
+            )
+        elif compile_report_matches_model_source_snapshot(
             compile_report,
             model_path=script_path,
         ):
@@ -318,12 +390,37 @@ def _collect_candidates(
             )
             continue
 
-        if target_key == "full" and compile_level != "full":
+        if not _compile_level_satisfies_target(compile_level, target=target_key):
             candidates.append(
                 _make_candidate(
                     record_id=record_id,
                     reason="compile level is visual",
                     force=True,
+                    sdk_package=sdk_package,
+                    compile_report=compile_report,
+                )
+            )
+            continue
+
+        if not verify_assets and cached_materialization_status == "available":
+            continue
+
+        materialization_status = (
+            cached_materialization_status
+            if cached_materialization_status == "missing"
+            else _artifact_materialization_status(
+                repo,
+                record_id,
+                urdf_path=urdf_path,
+            )
+        )
+
+        if materialization_status == "missing":
+            candidates.append(
+                _make_candidate(
+                    record_id=record_id,
+                    reason="missing generated assets",
+                    force=False,
                     sdk_package=sdk_package,
                     compile_report=compile_report,
                 )
@@ -1083,6 +1180,14 @@ def _build_parser() -> argparse.ArgumentParser:
         help="Show which records would be compiled without doing any compile work.",
     )
     parser.add_argument(
+        "--verify-assets",
+        action="store_true",
+        help=(
+            "Verify cached asset directories and URDF mesh references instead of trusting "
+            "successful compile reports. Slower, but detects manually deleted cache files."
+        ),
+    )
+    parser.add_argument(
         "--strict",
         action="store_true",
         help="Exit non-zero if any record compile fails.",
@@ -1142,6 +1247,7 @@ def main() -> int:
         repo_root,
         force=args.force,
         target=target_key,
+        verify_assets=bool(args.verify_assets),
     )
     if args.limit is not None:
         if args.limit <= 0:
