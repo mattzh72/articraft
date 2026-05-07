@@ -61,6 +61,49 @@ def test_detect_secrets_ignores_files_without_matches(
     assert capsys.readouterr().out == ""
 
 
+def test_detect_forbidden_paths_flags_workbench_only_record_files(
+    tmp_path,
+    monkeypatch: pytest.MonkeyPatch,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    monkeypatch.chdir(tmp_path)
+    record_dir = tmp_path / "data" / "records" / "rec_local"
+    record_dir.mkdir(parents=True)
+    (record_dir / "record.json").write_text(
+        '{\n  "collections": ["workbench"]\n}\n',
+        encoding="utf-8",
+    )
+    (record_dir / "model.py").write_text("# local experiment\n", encoding="utf-8")
+
+    exit_code = pre_commit_hooks.detect_forbidden_paths(["data/records/rec_local/model.py"])
+
+    assert exit_code == 1
+    output = capsys.readouterr().out
+    assert "Refusing to commit sensitive or local-only paths:" in output
+    assert "data/records/rec_local/model.py" in output
+
+
+def test_detect_forbidden_paths_allows_dataset_record_files(
+    tmp_path,
+    monkeypatch: pytest.MonkeyPatch,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    monkeypatch.chdir(tmp_path)
+    record_dir = tmp_path / "data" / "records" / "rec_dataset"
+    record_dir.mkdir(parents=True)
+    (record_dir / "record.json").write_text(
+        '{\n  "collections": ["dataset"]\n}\n',
+        encoding="utf-8",
+    )
+    (record_dir / "dataset_entry.json").write_text("{}\n", encoding="utf-8")
+    (record_dir / "model.py").write_text("# dataset record\n", encoding="utf-8")
+
+    exit_code = pre_commit_hooks.detect_forbidden_paths(["data/records/rec_dataset/model.py"])
+
+    assert exit_code == 0
+    assert capsys.readouterr().out == ""
+
+
 def test_run_smoke_tests_invokes_pytest(monkeypatch: pytest.MonkeyPatch) -> None:
     calls: list[tuple[list[str], object, bool]] = []
 

@@ -158,6 +158,49 @@ def test_storage_repo_round_trips_records_collections_and_runs(tmp_path: Path) -
     assert not repo.layout.category_dir("hinges").exists()
 
 
+def test_workbench_records_write_local_gitignore_marker(tmp_path: Path) -> None:
+    repo = StorageRepo(tmp_path)
+    repo.ensure_layout()
+
+    RecordStore(repo).write_record(
+        Record(
+            schema_version=2,
+            record_id="rec_workbench",
+            created_at="2026-03-18T00:00:00Z",
+            updated_at="2026-03-18T00:00:00Z",
+            rating=None,
+            kind="generated_model",
+            prompt_kind="single_prompt",
+            category_slug="hinges",
+            source=SourceRef(run_id="run_123"),
+            sdk_package="sdk",
+            provider="openai",
+            model_id="gpt-5.4",
+            display=DisplayMetadata(title="Workbench", prompt_preview="workbench"),
+            artifacts=RecordArtifacts(
+                prompt_txt="prompt.txt",
+                prompt_series_json=None,
+                model_py="model.py",
+                provenance_json="provenance.json",
+                cost_json="cost.json",
+            ),
+            collections=["workbench"],
+        )
+    )
+
+    marker = repo.layout.record_dir("rec_workbench") / ".gitignore"
+    assert marker.exists()
+    assert "*" in marker.read_text(encoding="utf-8")
+
+    DatasetStore(repo).promote_record(
+        record_id="rec_workbench",
+        dataset_id="ds_hinges_workbench",
+        category_slug="hinges",
+        promoted_at="2026-03-18T00:01:00Z",
+    )
+    assert not marker.exists()
+
+
 def test_run_store_upsert_result_compacts_latest_rows(tmp_path: Path) -> None:
     repo = StorageRepo(tmp_path)
     repo.ensure_layout()

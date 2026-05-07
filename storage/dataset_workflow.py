@@ -8,7 +8,7 @@ from storage.collections import CollectionStore
 from storage.datasets import DatasetStore
 from storage.models import CategoryRecord
 from storage.queries import StorageQueries
-from storage.records import RecordStore
+from storage.records import RecordStore, remove_workbench_record_gitignore_marker
 from storage.repo import StorageRepo
 from storage.search import SearchIndex, SearchIndexStats
 
@@ -239,6 +239,7 @@ def promote_record_workflow(
     record["collections"] = ["dataset"]
     record["updated_at"] = promoted_at
     record_store.repo.write_json(repo.layout.record_metadata_path(record_id), record)
+    remove_workbench_record_gitignore_marker(repo.layout.record_dir(record_id))
 
     source = record.get("source")
     run_id = str(source.get("run_id") or "") if isinstance(source, dict) else ""

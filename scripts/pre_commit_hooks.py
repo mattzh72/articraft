@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 import re
 import subprocess
 import sys
@@ -22,6 +23,7 @@ FORBIDDEN_PATHS = (
     re.compile(r"^data/records/[^/]+/model\.urdf$"),
     re.compile(r"^data/records/[^/]+/assets(?:/|$)"),
 )
+RECORD_PATH_RE = re.compile(r"^data/records/([^/]+)(?:/|$)")
 SECRET_PATTERNS = (
     ("OpenAI API key assignment", re.compile(r"OPENAI_API_KEYS?\s*=\s*['\"]?[^'\"\s]+")),
     (
@@ -41,6 +43,45 @@ SECRET_PATTERNS = (
 )
 
 
+def staged_deleted_paths(paths: list[str]) -> set[str]:
+    if not paths:
+        return set()
+    try:
+        result = subprocess.run(
+            ["git", "diff", "--cached", "--name-status", "--", *paths],
+            cwd=REPO_ROOT,
+            check=False,
+            capture_output=True,
+            text=True,
+        )
+    except OSError:
+        return set()
+    if result.returncode != 0:
+        return set()
+    deleted: set[str] = set()
+    for line in result.stdout.splitlines():
+        status, _, path = line.partition("\t")
+        if status == "D" and path:
+            deleted.add(path)
+    return deleted
+
+
+def is_workbench_only_record(record_id: str) -> bool:
+    record_dir = Path("data") / "records" / record_id
+    record_path = record_dir / "record.json"
+    if not record_path.exists() or (record_dir / "dataset_entry.json").exists():
+        return False
+    try:
+        record = json.loads(record_path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return False
+    collections = record.get("collections")
+    if not isinstance(collections, list):
+        return False
+    collection_names = {str(item) for item in collections}
+    return "workbench" in collection_names and "dataset" not in collection_names
+
+
 def iter_existing_files(paths: list[str]) -> list[Path]:
     files: list[Path] = []
     for raw_path in paths:
@@ -53,9 +94,15 @@ def iter_existing_files(paths: list[str]) -> list[Path]:
 
 def detect_forbidden_paths(paths: list[str]) -> int:
     violations: list[str] = []
+    deleted_paths = staged_deleted_paths(paths)
     for raw_path in paths:
         normalized = raw_path.replace("\\", "/")
-        if any(pattern.search(normalized) for pattern in FORBIDDEN_PATHS):
+        if normalized in deleted_paths:
+            continue
+        record_match = RECORD_PATH_RE.search(normalized)
+        if record_match and is_workbench_only_record(record_match.group(1)):
+            violations.append(normalized)
+        elif any(pattern.search(normalized) for pattern in FORBIDDEN_PATHS):
             violations.append(normalized)
     if not violations:
         return 0

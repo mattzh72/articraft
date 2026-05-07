@@ -10,35 +10,41 @@ repos:
         entry: uv run python scripts/pre_commit_hooks.py forbidden-paths
         language: system
         pass_filenames: true
+        stages: [pre-commit]
       - id: scan-staged-secrets
         name: scan staged content for secrets
         entry: uv run python scripts/pre_commit_hooks.py secrets
         language: system
         pass_filenames: true
+        stages: [pre-commit]
       - id: ruff-format
         name: ruff format
         entry: uv run ruff format --force-exclude
         language: system
         pass_filenames: true
         types_or: [python, pyi]
+        stages: [pre-commit]
       - id: ruff-check
         name: ruff check
         entry: uv run ruff check --fix --force-exclude
         language: system
         pass_filenames: true
         types_or: [python, pyi]
+        stages: [pre-commit]
       - id: viewer-lint
         name: viewer lint
         entry: npm --prefix viewer/web run lint
         language: system
         pass_filenames: false
         files: ^viewer/web/
+        stages: [pre-commit]
       - id: viewer-typecheck
         name: viewer typecheck
         entry: npm --prefix viewer/web run typecheck
         language: system
         pass_filenames: false
         files: ^viewer/web/
+        stages: [pre-commit]
       - id: smoke-tests
         name: push smoke tests
         entry: uv run python scripts/pre_commit_hooks.py smoke-tests

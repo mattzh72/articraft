@@ -4,6 +4,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 
 from storage.models import DatasetEntry
+from storage.records import remove_workbench_record_gitignore_marker
 from storage.repo import StorageRepo
 
 
@@ -116,6 +117,7 @@ class DatasetStore:
         )
         path = self.repo.layout.record_dataset_entry_path(record_id)
         self.repo.write_json(path, entry.to_dict())
+        remove_workbench_record_gitignore_marker(self.repo.layout.record_dir(record_id))
         if self._dataset_id_index_cache is not None:
             self._dataset_id_index_cache[dataset_id] = record_id
             self._dataset_id_index_token = self._dataset_id_index_fs_token()

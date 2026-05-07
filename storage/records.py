@@ -11,6 +11,28 @@ from storage.repo import StorageRepo
 
 logger = logging.getLogger(__name__)
 
+WORKBENCH_RECORD_GITIGNORE_TEXT = "# Articraft local workbench record. Do not commit.\n*\n"
+
+
+def write_workbench_record_gitignore_marker(record_dir: Path) -> None:
+    record_dir.mkdir(parents=True, exist_ok=True)
+    (record_dir / ".gitignore").write_text(
+        WORKBENCH_RECORD_GITIGNORE_TEXT,
+        encoding="utf-8",
+    )
+
+
+def remove_workbench_record_gitignore_marker(record_dir: Path) -> None:
+    marker = record_dir / ".gitignore"
+    if not marker.exists():
+        return
+    try:
+        marker_text = marker.read_text(encoding="utf-8")
+    except UnicodeDecodeError:
+        return
+    if marker_text == WORKBENCH_RECORD_GITIGNORE_TEXT:
+        marker.unlink()
+
 
 @dataclass(slots=True)
 class RecordStore:
@@ -30,6 +52,11 @@ class RecordStore:
         self.ensure_record_dirs(record.record_id)
         path = self.repo.layout.record_metadata_path(record.record_id)
         self.repo.write_json(path, record.to_dict())
+        record_dir = self.repo.layout.record_dir(record.record_id)
+        if "workbench" in record.collections and "dataset" not in record.collections:
+            write_workbench_record_gitignore_marker(record_dir)
+        else:
+            remove_workbench_record_gitignore_marker(record_dir)
         return path
 
     def write_provenance(self, record_id: str, provenance: Provenance) -> Path:
