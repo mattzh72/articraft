@@ -65,6 +65,35 @@ class ViewerStoreSearchMixin:
         offset: int = 0,
         limit: int = 100,
     ) -> RecordBrowseResponse:
+        if source_filter == "dataset":
+            source_total = len(self.dataset_browse_index.snapshot().rows)
+            query_candidate_ids: list[str] | None = None
+            query_text = (query or "").strip()
+            if query_text:
+                query_candidate_ids = self.search.search_record_ids(
+                    query_text,
+                    source_filter=source_filter,
+                    run_id=run_id,
+                    limit=max(source_total, 1000),
+                )
+            return self.dataset_browse_index.browse(
+                query_candidate_ids=query_candidate_ids,
+                run_id=run_id,
+                time_filter=time_filter,
+                time_filter_oldest=time_filter_oldest,
+                time_filter_newest=time_filter_newest,
+                model_filter=model_filter,
+                sdk_filter=sdk_filter,
+                author_filters=author_filters,
+                category_filters=category_filters,
+                cost_min=cost_min,
+                cost_max=cost_max,
+                rating_filter=rating_filter,
+                secondary_rating_filter=secondary_rating_filter,
+                offset=offset,
+                limit=limit,
+            )
+
         if cost_min is not None and cost_max is not None and cost_min > cost_max:
             cost_min, cost_max = cost_max, cost_min
 
@@ -225,6 +254,32 @@ class ViewerStoreSearchMixin:
             return []
         if cost_min is not None and cost_max is not None and cost_min > cost_max:
             cost_min, cost_max = cost_max, cost_min
+
+        if source_filter == "dataset":
+            source_total = len(self.dataset_browse_index.snapshot().rows)
+            record_ids = self.search.search_record_ids(
+                query,
+                source_filter=source_filter,
+                run_id=run_id,
+                limit=max(limit * 10, source_total, 1000),
+            )
+            return self.dataset_browse_index.summaries_for_ids(
+                record_ids,
+                run_id=run_id,
+                time_filter=time_filter,
+                time_filter_oldest=time_filter_oldest,
+                time_filter_newest=time_filter_newest,
+                model_filter=model_filter,
+                sdk_filter=sdk_filter,
+                author_filters=author_filters,
+                category_filters=category_filters,
+                cost_min=cost_min,
+                cost_max=cost_max,
+                rating_filter=rating_filter,
+                secondary_rating_filter=secondary_rating_filter,
+                limit=limit,
+            )
+
         effective_time_filter_oldest = _normalize_time_filter_value(
             time_filter_oldest
         ) or _normalize_time_filter_value(time_filter)

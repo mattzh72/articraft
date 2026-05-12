@@ -44,6 +44,7 @@ class ViewerStoreStatsMixin:
         self._stats_cache = None
         self._data_size_cache = None
         self._dashboard_records_cache = None
+        self.dataset_browse_index.invalidate()
 
     def _compute_data_size_cached(self) -> int | None:
         now = time.monotonic()

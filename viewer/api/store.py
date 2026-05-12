@@ -12,6 +12,7 @@ from storage.records import RecordStore
 from storage.repo import StorageRepo
 from storage.search import SearchIndex
 from storage.supercategories import SupercategoryStore
+from viewer.api.browse_index import DatasetBrowseIndex
 from viewer.api.store_common import (
     DashboardRecord,
     MaterializeRecordAssetsResult,
@@ -131,6 +132,7 @@ class ViewerStore(
         self.materializations = MaterializationStore(self.repo)
         self.supercategory_store = SupercategoryStore(self.repo)
         self.search = SearchIndex(self.repo)
+        self.dataset_browse_index = DatasetBrowseIndex(self.repo)
         if ensure_search_index:
             self.search.ensure_current()
         self._compile_locks_guard = threading.Lock()

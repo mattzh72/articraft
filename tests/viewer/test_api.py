@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import logging
 import os
+import time
 from datetime import datetime, timezone
 from pathlib import Path
 from types import SimpleNamespace
@@ -30,12 +31,58 @@ from storage.repo import StorageRepo
 from storage.runs import RunStore
 from storage.trajectories import compress_trajectory_file
 from viewer.api.app import create_app
+from viewer.api.browse_index import DatasetBrowseIndex
 from viewer.api.store import ViewerStore, _effective_rating, _within_rating_filter
 
 
 def _patch_dataset_tokens(monkeypatch: pytest.MonkeyPatch, *tokens: str) -> None:
     iterator = iter(tokens)
     monkeypatch.setattr(dataset_workflow, "new_dataset_token", lambda: next(iterator))
+
+
+def _write_dataset_record(
+    repo: StorageRepo,
+    *,
+    record_id: str,
+    dataset_id: str,
+    category_slug: str = "hinges",
+    rating: int | None = 4,
+    updated_at: str = "2026-03-18T08:00:00Z",
+) -> None:
+    RecordStore(repo).write_record(
+        Record(
+            schema_version=1,
+            record_id=record_id,
+            created_at="2026-03-18T08:00:00Z",
+            updated_at=updated_at,
+            rating=rating,
+            kind="generated_model",
+            prompt_kind="single_prompt",
+            category_slug=category_slug,
+            source=SourceRef(run_id="run_browse_001"),
+            sdk_package="sdk",
+            provider="openai",
+            model_id="gpt-5.4",
+            display=DisplayMetadata(
+                title=f"Browse record {record_id}",
+                prompt_preview="browse prompt",
+            ),
+            artifacts=RecordArtifacts(
+                prompt_txt="prompt.txt",
+                prompt_series_json=None,
+                model_py="model.py",
+                provenance_json="provenance.json",
+                cost_json=None,
+            ),
+            collections=["dataset"],
+        )
+    )
+    DatasetStore(repo).promote_record(
+        record_id=record_id,
+        dataset_id=dataset_id,
+        promoted_at="2026-03-18T08:01:00Z",
+        category_slug=category_slug,
+    )
 
 
 def test_viewer_store_staging_listing_avoids_recursive_tree_scan(
@@ -220,6 +267,91 @@ def test_viewer_store_dashboard_reuses_cached_source_records(
     store.invalidate_stats_cache()
     store.compute_dashboard()
     assert calls == 4
+
+
+def test_dataset_browse_uses_hot_index_without_record_json_reads(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    repo = StorageRepo(tmp_path)
+    repo.ensure_layout()
+    _write_dataset_record(repo, record_id="rec_browse_001", dataset_id="ds_browse_001")
+    _write_dataset_record(
+        repo,
+        record_id="rec_browse_002",
+        dataset_id="ds_browse_002",
+        rating=2,
+        updated_at="2026-03-18T09:00:00Z",
+    )
+
+    store = ViewerStore(tmp_path, ensure_search_index=False)
+    first = store.browse_records(source_filter="dataset")
+    assert first.total == 2
+
+    def fail_read_json(
+        self: StorageRepo, path: Path, *, default=None
+    ):  # pragma: no cover - assertion helper
+        raise AssertionError(f"unexpected canonical JSON read from hot browse index: {path}")
+
+    monkeypatch.setattr(StorageRepo, "read_json", fail_read_json)
+
+    filtered = store.browse_records(source_filter="dataset", rating_filter=["2"])
+
+    assert filtered.total == 1
+    assert filtered.records[0].record_id == "rec_browse_002"
+
+
+def test_dataset_browse_loads_persisted_cache_without_record_json_reads(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    repo = StorageRepo(tmp_path)
+    repo.ensure_layout()
+    _write_dataset_record(repo, record_id="rec_browse_001", dataset_id="ds_browse_001")
+
+    ViewerStore(tmp_path, ensure_search_index=False).browse_records(source_filter="dataset")
+    store = ViewerStore(tmp_path, ensure_search_index=False)
+
+    def fail_read_json(
+        self: StorageRepo, path: Path, *, default=None
+    ):  # pragma: no cover - assertion helper
+        raise AssertionError(f"unexpected canonical JSON read while loading browse cache: {path}")
+
+    monkeypatch.setattr(StorageRepo, "read_json", fail_read_json)
+
+    response = store.browse_records(source_filter="dataset")
+
+    assert response.total == 1
+    assert response.records[0].record_id == "rec_browse_001"
+
+
+def test_dataset_browse_index_detects_external_record_changes(tmp_path: Path) -> None:
+    repo = StorageRepo(tmp_path)
+    repo.ensure_layout()
+    _write_dataset_record(repo, record_id="rec_browse_001", dataset_id="ds_browse_001")
+
+    store = ViewerStore(tmp_path, ensure_search_index=False)
+    store.dataset_browse_index = DatasetBrowseIndex(
+        store.repo,
+        freshness_interval_seconds=0.0,
+    )
+    first = store.browse_records(source_filter="dataset", rating_filter=["4"])
+    assert first.total == 1
+
+    record_path = repo.layout.record_metadata_path("rec_browse_001")
+    record = repo.read_json(record_path)
+    record["rating"] = 2
+    record["updated_at"] = "2026-03-18T09:00:00Z"
+    repo.write_json(record_path, record)
+
+    stale_filter = store.browse_records(source_filter="dataset", rating_filter=["4"])
+    deadline = time.monotonic() + 2.0
+    updated_filter = store.browse_records(source_filter="dataset", rating_filter=["2"])
+    while updated_filter.total == 0 and time.monotonic() < deadline:
+        time.sleep(0.05)
+        updated_filter = store.browse_records(source_filter="dataset", rating_filter=["2"])
+
+    assert stale_filter.total == 1
+    assert updated_filter.total == 1
+    assert updated_filter.records[0].rating == 2
 
 
 def test_viewer_store_delete_record_removes_empty_ad_hoc_category(tmp_path: Path) -> None:
