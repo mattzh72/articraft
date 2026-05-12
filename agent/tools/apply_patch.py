@@ -13,7 +13,6 @@ from agent.tools.base import (
     BoundFileToolInvocation,
     ToolParamsModel,
     ToolResult,
-    make_tool_schema,
 )
 from agent.tools.code_region import map_syntax_error_line_to_editable
 
@@ -105,40 +104,6 @@ class ApplyPatchInvocation(BoundFileToolInvocation[ApplyPatchParams, str]):
             }
         except Exception as exc:
             return {"status": "error", "error": f"Validation error: {str(exc)}"}
-
-
-class ApplyPatchTool(BaseDeclarativeTool):
-    """Tool for applying Codex-style patches to a single bound file."""
-
-    def __init__(self) -> None:
-        schema = make_tool_schema(
-            name="apply_patch",
-            description=(
-                "Apply a patch in Codex apply_patch format.\n\n"
-                "Provide only the patch text in `input`.\n"
-                "This tool edits only the current bound file.\n"
-                "Do not use `*** Add File`, `*** Delete File`, or `*** Move to`.\n\n"
-                "Patch envelope:\n"
-                "*** Begin Patch\n"
-                "*** Update File: CURRENT_FILE\n"
-                "@@\n"
-                "-old line\n"
-                "+new line\n"
-                "*** End Patch"
-            ),
-            parameters={
-                "input": {
-                    "type": "string",
-                    "description": "Entire Codex-style patch text.",
-                }
-            },
-            required=["input"],
-        )
-        super().__init__("apply_patch", schema)
-
-    async def build(self, params: dict) -> ApplyPatchInvocation:
-        validated = ApplyPatchParams(**params)
-        return ApplyPatchInvocation(validated)
 
 
 class ApplyPatchFreeformTool(BaseDeclarativeTool):

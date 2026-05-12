@@ -61,9 +61,7 @@ logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
 CONSOLE = Console()
 _FIND_EXAMPLES_SKIPPED_CONTENT = "{Skipped: full content already returned earlier in this run.}"
-_MUTATING_TOOL_NAMES = frozenset(
-    {"apply_patch", "edit_code", "write_code", "replace", "write_file"}
-)
+_MUTATING_TOOL_NAMES = frozenset({"apply_patch", "replace", "write_file"})
 _PARALLEL_SAFE_TOOL_NAMES = frozenset({"read_file", "find_examples", "probe_model"})
 _EXACT_ELEMENT_KEYWORDS = frozenset(
     {"elem_a", "elem_b", "positive_elem", "negative_elem", "inner_elem", "outer_elem"}
@@ -605,7 +603,7 @@ class ArticraftAgent:
         for tool_call, result in zip(tool_calls, tool_results, strict=False):
             func = tool_call.get("function", {}) if isinstance(tool_call, dict) else {}
             func_name = func.get("name")
-            if func_name not in {"edit_code", "replace"}:
+            if func_name != "replace":
                 continue
             if not getattr(result, "error", None):
                 continue
@@ -1043,7 +1041,7 @@ class ArticraftAgent:
                 tool_message["thought_signature"] = thought_signature
             return result, tool_message
 
-        if func_name in {"edit_code", "replace"}:
+        if func_name == "replace":
             old_string_key = "old_string"
             try:
                 editable = extract_editable_code(Path(self.file_path).read_text(encoding="utf-8"))

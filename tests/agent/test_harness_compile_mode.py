@@ -13,7 +13,7 @@ from agent.harness import ArticraftAgent
 from agent.models import CompileReport, TerminateReason
 from agent.tools.compile_model import CompileModelTool
 from agent.tools.registry import ToolRegistry
-from agent.tools.write_code import WriteCodeTool
+from agent.tools.write_code import WriteFileTool
 
 
 class _CountingDisplay:
@@ -619,8 +619,8 @@ def run_tests():
                             "id": "call_write_1",
                             "type": "function",
                             "function": {
-                                "name": "write_code",
-                                "arguments": json.dumps({"code": rewritten_code}),
+                                "name": "write_file",
+                                "arguments": json.dumps({"content": rewritten_code}),
                             },
                         }
                     ],
@@ -644,8 +644,8 @@ def run_tests():
                             "id": "call_write_2",
                             "type": "function",
                             "function": {
-                                "name": "write_code",
-                                "arguments": json.dumps({"code": rewritten_code}),
+                                "name": "write_file",
+                                "arguments": json.dumps({"content": rewritten_code}),
                             },
                         }
                     ],
@@ -687,7 +687,7 @@ def run_tests():
         post_success_design_audit=True,
         display_enabled=False,
     )
-    agent.tool_registry = ToolRegistry([WriteCodeTool(), CompileModelTool()])
+    agent.tool_registry = ToolRegistry([WriteFileTool(), CompileModelTool()])
 
     async def fake_compile() -> CompileReport:
         return report

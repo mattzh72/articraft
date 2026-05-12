@@ -109,38 +109,6 @@ class WriteCodeInvocation(BoundFileToolInvocation[WriteCodeParams, str]):
             }
 
 
-class WriteCodeTool(BaseDeclarativeTool):
-    """Tool for replacing editable code in a single call"""
-
-    def __init__(self) -> None:
-        schema = make_tool_schema(
-            name="write_code",
-            description=(
-                "Replace the entire editable code section in one operation.\n\n"
-                "Use this tool when repeated edit_code attempts fail due to exact old_string matching.\n\n"
-                "Notes:\n"
-                "- In scaffolded files, you should provide the editable section only (not scaffold imports/footer).\n"
-                "- The harness validates Python syntax after writing.\n"
-                "- In scaffolded files, your code must include top-level build_object_model() and run_tests()."
-            ),
-            parameters={
-                "code": {
-                    "type": "string",
-                    "description": (
-                        "Full replacement content for the editable code section. "
-                        "In scaffolded files, include top-level build_object_model() and run_tests()."
-                    ),
-                }
-            },
-            required=["code"],
-        )
-        super().__init__("write_code", schema)
-
-    async def build(self, params: dict) -> WriteCodeInvocation:
-        validated = WriteCodeParams(**params)
-        return WriteCodeInvocation(validated)
-
-
 class WriteFileParams(ToolParamsModel):
     """Parameters for Gemini-style write_file alias."""
 
