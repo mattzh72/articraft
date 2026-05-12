@@ -3,7 +3,7 @@ from __future__ import annotations
 from argparse import ArgumentParser
 from pathlib import Path
 
-from scripts.git_hooks import get_post_commit_hook_status
+from cli.hooks import get_post_commit_hook_status
 
 
 def add_data_root_argument(parser: ArgumentParser) -> None:
@@ -30,5 +30,5 @@ def warn_if_post_commit_hook_missing(repo_root: Path) -> None:
         "Record metadata will not auto-sync after commits, including rated_by and "
         "secondary_rated_by. "
         "Run `just setup`, or `just hooks-install`, or "
-        "`uv run python scripts/git_hooks.py install-post-commit`."
+        "`uv run articraft hooks install`."
     )

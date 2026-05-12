@@ -38,9 +38,7 @@ dependencies = [
 ]
 
 [project.scripts]
-articraft-dataset = "cli.dataset:main"
-articraft-workbench = "cli.workbench:main"
-articraft-performance = "performance.runner:main"
+articraft = "cli.main:main"
 
 [project.urls]
 Homepage = "https://github.com/mattzh72/articraft"
@@ -55,7 +53,6 @@ build-backend = "hatchling.build"
 packages = [
     "agent",
     "cli",
-    "performance",
     "storage",
     "viewer",
     "sdk",
@@ -80,7 +77,14 @@ extend-exclude = ["data"]
 [tool.ruff.lint]
 select = ["E", "F", "I"]
 ignore = ["E501"]
-per-file-ignores = { "scaffold.py" = ["F821"] }
+
+[tool.ruff.lint.per-file-ignores]
+"scaffold.py" = ["F821"]
+"sdk/_core/v0/mesh.py" = ["F401"]
+"sdk/_core/v0/testing.py" = ["F401"]
+"sdk/_core/v0/_mesh/__init__.py" = ["F401"]
+"sdk/_core/v0/_mesh/*.py" = ["F401", "F403", "F405", "F821"]
+"sdk/_core/v0/_testing/*.py" = ["F401", "F403", "F405", "F821"]
 
 [tool.ruff.format]
 quote-style = "double"

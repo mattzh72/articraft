@@ -1162,7 +1162,7 @@ def _run_compile_pool(
 
 
 def _build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(prog="compile_all_records.py")
+    parser = argparse.ArgumentParser(prog="articraft compile-all")
     parser.add_argument(
         "--repo-root",
         type=Path,
@@ -1230,9 +1230,9 @@ def _build_parser() -> argparse.ArgumentParser:
     return parser
 
 
-def main() -> int:
+def main(argv: list[str] | None = None) -> int:
     parser = _build_parser()
-    args = parser.parse_args()
+    args = parser.parse_args(argv)
     repo_root = args.repo_root.resolve()
     target_key = _normalize_compile_target(args.target)
     console = Console()

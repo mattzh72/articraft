@@ -9,7 +9,7 @@ from viewer.api.store import ViewerStore
 
 
 def _build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(prog="materialize_record.py")
+    parser = argparse.ArgumentParser(prog="articraft compile")
     parser.add_argument(
         "record_dir",
         type=Path,
@@ -40,9 +40,9 @@ def _build_parser() -> argparse.ArgumentParser:
     return parser
 
 
-def main() -> int:
+def main(argv: list[str] | None = None) -> int:
     parser = _build_parser()
-    args = parser.parse_args()
+    args = parser.parse_args(argv)
 
     repo_root = args.repo_root.resolve()
     record_dir = args.record_dir.resolve()

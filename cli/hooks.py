@@ -25,9 +25,9 @@ set -euo pipefail
 repo_root="$(git rev-parse --show-toplevel)"
 cd "$repo_root"
 if command -v uv >/dev/null 2>&1; then
-  exec uv run python scripts/git_hooks.py post-commit-record-authors
+  exec uv run articraft hooks post-commit-record-authors
 fi
-exec python3 scripts/git_hooks.py post-commit-record-authors
+exec python3 -m cli.main hooks post-commit-record-authors
 """.format(marker=MANAGED_POST_COMMIT_MARKER)
 
 HookInstallStatus = Literal["installed", "missing", "unmanaged"]
@@ -226,11 +226,11 @@ def install_post_commit_hook(repo_root: Path) -> Path:
 
 
 def _build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(prog="git_hooks")
+    parser = argparse.ArgumentParser(prog="articraft hooks")
     subparsers = parser.add_subparsers(dest="command", required=True)
-    subparsers.add_parser("install-post-commit", help="Install the managed post-commit hook.")
+    subparsers.add_parser("install", help="Install the managed post-commit hook.")
     subparsers.add_parser(
-        "check-post-commit",
+        "check",
         help="Report whether the managed post-commit hook is installed, missing, or unmanaged.",
     )
     subparsers.add_parser(
@@ -244,12 +244,12 @@ def main(argv: list[str] | None = None) -> int:
     parser = _build_parser()
     args = parser.parse_args(argv)
 
-    if args.command == "install-post-commit":
+    if args.command == "install":
         hook_path = install_post_commit_hook(REPO_ROOT)
         print(f"Installed post-commit hook at {hook_path}")
         return 0
 
-    if args.command == "check-post-commit":
+    if args.command == "check":
         status = get_post_commit_hook_status(REPO_ROOT)
         print(f"status={status.status} hook_path={status.hook_path}")
         return 0

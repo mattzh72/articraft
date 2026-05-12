@@ -14,7 +14,7 @@ SMOKE_TEST_TARGETS = (
     "tests/workbench",
     "tests/dataset/test_imports.py",
     "tests/sdk/test_imports.py",
-    "tests/scripts/test_pre_commit_hooks.py",
+    "tests/cli",
 )
 FORBIDDEN_PATHS = (
     re.compile(r"(^|/)\.env(?!\.example)(\..*)?$"),
@@ -155,28 +155,29 @@ def run_smoke_tests() -> int:
 
 def run_data_format_validation() -> int:
     result = subprocess.run(
-        ["uv", "run", "articraft-dataset", "--repo-root", ".", "validate-format"],
+        ["uv", "run", "articraft", "data", "check", "--repo-root", "."],
         cwd=REPO_ROOT,
         check=False,
     )
     return result.returncode
 
 
-def main(argv: list[str]) -> int:
-    if len(argv) < 2:
+def main(argv: list[str] | None = None) -> int:
+    args = sys.argv[1:] if argv is None else argv
+    if not args:
         print(
-            "Usage: pre_commit_hooks.py "
-            "<forbidden-paths|secrets|data-format|smoke-tests> [paths...]"
+            "Usage: articraft internal pre-commit "
+            "<forbidden-paths|secrets|data-check|smoke-tests> [paths...]"
         )
         return 2
 
-    command = argv[1]
-    paths = argv[2:]
+    command = args[0]
+    paths = args[1:]
     if command == "forbidden-paths":
         return detect_forbidden_paths(paths)
     if command == "secrets":
         return detect_secrets(paths)
-    if command == "data-format":
+    if command in {"data-check", "data-format"}:
         return run_data_format_validation()
     if command == "smoke-tests":
         return run_smoke_tests()
@@ -186,4 +187,4 @@ def main(argv: list[str]) -> int:
 
 
 if __name__ == "__main__":
-    raise SystemExit(main(sys.argv))
+    raise SystemExit(main())

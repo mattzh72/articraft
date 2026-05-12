@@ -10,8 +10,7 @@ The SDK docs under `sdk/_docs/` are part of the agent authoring contract in this
 
 ## Common Commands
 
-Use `uv` for direct Python commands and `just` for the agent-facing shortcuts that help with record iteration. Run `just` or check [`justfile`](justfile) for the full recipe list.
-When a recipe supports optional settings, pass them as `just` overrides before the recipe name, for example `just model=gemini-3-flash-preview image=reference.png wb "prompt text"`.
+Use `uv run articraft ...` for the product CLI. `just` is intentionally limited to local setup, checks, and viewer startup.
 
 ```bash
 uv sync --group dev            # Install Python dependencies
@@ -21,22 +20,22 @@ uv run uvicorn viewer.api.app:app --reload --host 127.0.0.1 --port 8765  # Start
 
 just setup                     # First-time setup shortcut
 just smoke-tests               # Run pytest suite
-just compile-all               # Fast visual-only materialization for viewer browsing
-just compile-all-full          # Non-strict full bulk compile with collision-inclusive URDFs
-just compile-all-strict        # Full path with validation-heavy geometry checks
-just name=<batch-id> batch-spec-new   # Create an empty tracked batch CSV with the canonical header
-just row_concurrency=8 subprocess_concurrency=auto dataset-batch data/batch_specs/<batch-id>.csv  # Run a tracked dataset batch CSV
-just wb-init "prompt text"     # Create a draft workbench record to edit manually
-just compile data/records/<id> # Recompile model.py into cache-backed materialization outputs
-just rerun data/records/<id>   # Re-run generation for an existing record
-just search-index              # Rebuild the workbench search index
+uv run articraft compile-all               # Fast visual-only materialization for viewer browsing
+uv run articraft compile-all --target full # Non-strict full bulk compile with collision-inclusive URDFs
+uv run articraft compile-all --target full --strict  # Full path with validation-heavy geometry checks
+uv run articraft dataset batch-new <batch-id>   # Create an empty tracked batch CSV with the canonical header
+uv run articraft dataset batch --row-concurrency 8 --subprocess-concurrency auto data/batch_specs/<batch-id>.csv  # Run a tracked dataset batch CSV
+uv run articraft draft "prompt text"     # Create a draft workbench record to edit manually
+uv run articraft compile data/records/<id> # Recompile model.py into cache-backed materialization outputs
+uv run articraft rerun data/records/<id>   # Re-run generation for an existing record
+uv run articraft workbench search-index              # Rebuild the workbench search index
 just viewer                    # Start viewer
 just viewer-dev                # Start viewer in dev mode
-just wb "prompt text"          # Generate an object from a prompt
-just image=reference.png wb-init "prompt text"   # Draft a record with a stored reference image
-just model=gemini-3-flash-preview image=reference.png wb "prompt text"  # Override defaults
-uv run articraft-dataset --repo-root . run-batch data/batch_specs/<batch-id>.csv --row-concurrency 8 --subprocess-concurrency auto  # Run a dataset batch
-uv run articraft-dataset --repo-root . run-batch data/batch_specs/<batch-id>.csv --row-concurrency 8 --subprocess-concurrency auto --resume  # Resume latest run for that spec
+uv run articraft generate "prompt text"          # Generate an object from a prompt
+uv run articraft draft --image reference.png "prompt text"   # Draft a record with a stored reference image
+uv run articraft generate --model gemini-3-flash-preview --image reference.png "prompt text"  # Override defaults
+uv run articraft dataset batch data/batch_specs/<batch-id>.csv --row-concurrency 8 --subprocess-concurrency auto  # Run a dataset batch
+uv run articraft dataset batch data/batch_specs/<batch-id>.csv --row-concurrency 8 --subprocess-concurrency auto --resume  # Resume latest run for that spec
 ```
 
 ### Running a single test
@@ -64,7 +63,7 @@ npm --prefix viewer/web run typecheck   # tsc
 - **`sdk/`** — The articulated-object SDK that generated code imports. `sdk/v0/` is the main implementation. Exports geometry primitives (Box, Cylinder, Sphere, etc.), boolean ops, spline helpers, loft/sweep/extrude, placement utilities, and validation (overlap/collision checking). Models are `ArticulatedObject` composed of `Part`s with `Articulation`s.
 - **`storage/`** — On-disk data layer. `layout.py` defines the canonical `data/` directory structure; `repo.py` is `StorageRepo`; `records.py`, `collections.py`, `datasets.py`, `runs.py`, `manifests.py` handle CRUD. `batch_specs.py` manages tracked CSV specs and `dataset_workflow.py` holds shared dataset promotion helpers. `search.py` manages a SQLite search index.
 - **`viewer/`** — Local inspection tool. `viewer/api/` is a FastAPI app (`app.py`) served by uvicorn; `viewer/web/` is a React + TypeScript + Tailwind + Three.js SPA (Vite, shadcn/ui components).
-- **`cli/`** — CLI entrypoints registered as `articraft-dataset` and `articraft-workbench` in pyproject.toml.
+- **`cli/`** — CLI entrypoints registered as `articraft` in pyproject.toml.
 - **`tests/`** — pytest tests mirroring package structure. Smoke-level checks (imports, storage layout, API).
 
 ### Data flow
@@ -78,7 +77,7 @@ npm --prefix viewer/web run typecheck   # tsc
 Dataset batch flow:
 
 1. Tracked CSV spec in `data/batch_specs/<batch-id>.csv`
-2. `articraft-dataset run-batch ... --row-concurrency N --subprocess-concurrency auto` validates rows, preallocates collision-resistant dataset IDs, and creates one batch run record
+2. `articraft dataset batch ... --row-concurrency N --subprocess-concurrency auto` validates rows, preallocates collision-resistant dataset IDs, and creates one batch run record
 3. Rows execute concurrently with per-row `provider`, `model_id`, `thinking_level`, `max_turns`, and `sdk_package`
 4. Successful rows are promoted into canonical `data/records/<record_id>/` storage; resumable row state and latest row results stay under `data/cache/runs/<run_id>/`
 
@@ -117,10 +116,10 @@ The API (`viewer/api/app.py`) is a FastAPI app that serves both the REST API and
 
 ### Viewer compile guidance
 
-- For viewer-first inspection, run `just compile-all` before `just viewer`.
-- Use `just compile-all-full` when you want non-strict full URDFs in bulk.
-- Use `just compile-all-strict` when you need the validation-heavy full compile path.
-- For one-off records, use `just compile data/records/<id>`.
+- For viewer-first inspection, run `uv run articraft compile-all` before `just viewer`.
+- Use `uv run articraft compile-all --target full` when you want non-strict full URDFs in bulk.
+- Use `uv run articraft compile-all --target full --strict` when you need the validation-heavy full compile path.
+- For one-off records, use `uv run articraft compile data/records/<id>`.
 
 ## Code Style
 

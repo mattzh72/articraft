@@ -43,7 +43,7 @@ def _resolve_record_reference(repo: StorageRepo, record_ref: str) -> str:
 
 
 def _build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(prog="articraft-workbench")
+    parser = argparse.ArgumentParser(prog="articraft workbench")
     add_data_root_argument(parser)
     subparsers = parser.add_subparsers(dest="command", required=True)
 

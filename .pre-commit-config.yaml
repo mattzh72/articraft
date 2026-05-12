@@ -7,19 +7,19 @@ repos:
     hooks:
       - id: forbid-sensitive-paths
         name: prevent sensitive/local file commits
-        entry: uv run python scripts/pre_commit_hooks.py forbidden-paths
+        entry: uv run articraft internal pre-commit forbidden-paths
         language: system
         pass_filenames: true
         stages: [pre-commit]
       - id: scan-staged-secrets
         name: scan staged content for secrets
-        entry: uv run python scripts/pre_commit_hooks.py secrets
+        entry: uv run articraft internal pre-commit secrets
         language: system
         pass_filenames: true
         stages: [pre-commit]
       - id: validate-data-format
         name: validate canonical data format
-        entry: uv run python scripts/pre_commit_hooks.py data-format
+        entry: uv run articraft internal pre-commit data-check
         language: system
         pass_filenames: false
         files: ^data/
@@ -54,7 +54,7 @@ repos:
         stages: [pre-commit]
       - id: smoke-tests
         name: push smoke tests
-        entry: uv run python scripts/pre_commit_hooks.py smoke-tests
+        entry: uv run articraft internal pre-commit smoke-tests
         language: system
         pass_filenames: false
         stages: [pre-push]

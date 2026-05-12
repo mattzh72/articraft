@@ -73,10 +73,10 @@ def bootstrap_env(
 def main(argv: list[str] | None = None) -> int:
     args = sys.argv[1:] if argv is None else argv
     if args and args[0] in {"-h", "--help"}:
-        print("Usage: bootstrap_env.py [repo_root]")
+        print("Usage: articraft env bootstrap [repo_root]")
         return 0
     if len(args) > 1:
-        print("Usage: bootstrap_env.py [repo_root]", file=sys.stderr)
+        print("Usage: articraft env bootstrap [repo_root]", file=sys.stderr)
         return 2
     repo_root = Path(args[0]).resolve() if args else Path.cwd()
     created, imported_keys = bootstrap_env(repo_root)

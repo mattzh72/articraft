@@ -8,6 +8,7 @@ Thanks for improving Articraft. Keep changes scoped to one logical area and incl
 uv sync --group dev
 npm --prefix viewer/web ci
 uv run pre-commit install --hook-type pre-commit --hook-type pre-push
+uv run articraft hooks install
 ```
 
 ## Before Opening A PR

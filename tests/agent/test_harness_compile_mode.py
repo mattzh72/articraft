@@ -494,7 +494,6 @@ def test_run_requires_compile_model_before_concluding(
     assert "Compile passed cleanly." in compile_payload["result"]
 
 
-
 def test_run_accepts_gemini_replace_without_allow_multiple(
     monkeypatch: pytest.MonkeyPatch,
     tmp_path: Path,

@@ -11,8 +11,8 @@ from pathlib import Path
 import pytest
 
 from agent import runner
+from cli import hooks as git_hooks
 from cli.dataset import main as dataset_main
-from scripts import git_hooks
 from storage import dataset_workflow
 from storage.categories import CategoryStore
 from storage.collections import CollectionStore

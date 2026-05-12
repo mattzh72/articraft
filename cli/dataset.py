@@ -605,7 +605,7 @@ def _print_supercategories(repo: StorageRepo, store: SupercategoryStore) -> None
 
 
 def _build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(prog="articraft-dataset")
+    parser = argparse.ArgumentParser(prog="articraft dataset")
     add_data_root_argument(parser)
     subparsers = parser.add_subparsers(dest="command", required=True)
 

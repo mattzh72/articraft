@@ -46,7 +46,7 @@ This does the initial local setup:
 You can verify the hook setup with:
 
 ```bash
-uv run python scripts/git_hooks.py check-post-commit
+uv run articraft hooks check
 ```
 
 If you skip `just setup` and install pieces manually, record metadata will not auto-sync after commits until the managed post-commit hook is installed.
@@ -82,7 +82,7 @@ Set `ARTICRAFT_MAX_COST_USD` to a positive per-run USD budget default in `.env`
 If you just cloned the repo and want to browse saved records in the viewer, precompile the saved records first:
 
 ```bash
-just compile-all
+uv run articraft compile-all
 ```
 
 This materializes the viewer-ready artifacts for saved records.
@@ -100,52 +100,53 @@ This starts the local API, builds the web app if needed, and opens the viewer.
 Run:
 
 ```bash
-just wb "Create a realistic articulated desk lamp with a weighted base, two hinged arms, and an adjustable lamp head."
+uv run articraft generate "Create a realistic articulated desk lamp with a weighted base, two hinged arms, and an adjustable lamp head."
 ```
 
 This saves a generated record into the local workbench.
 
-If you do not pass overrides, `just wb` defaults to:
+If you do not pass overrides, `articraft generate` defaults to:
 
 ```bash
-model=gpt-5.5-2026-04-23
-thinking=high
+--model gpt-5.5-2026-04-23 --thinking-level high
 ```
 
 To change either setting, pass overrides on the same command:
 
 ```bash
 # Use a different model (same SDK)
-just model=gemini-3-flash-preview wb "Create a compact desk fan with adjustable tilt."
+uv run articraft generate --model gemini-3-flash-preview "Create a compact desk fan with adjustable tilt."
 
 # Change both model and prompt together
-just model=gpt-5.5-2026-04-23 wb "Create a compact desk fan with adjustable tilt."
+uv run articraft generate --model gpt-5.5-2026-04-23 "Create a compact desk fan with adjustable tilt."
 ```
 
-To stop a run after it exceeds a USD budget, pass `max_cost_usd=...`:
+To stop a run after it exceeds a USD budget, pass `--max-cost-usd ...`:
 
 ```bash
-just max_cost_usd=1.5 wb "Create a compact desk fan with adjustable tilt."
+uv run articraft generate --max-cost-usd 1.5 "Create a compact desk fan with adjustable tilt."
 ```
 
-`wb` and `wb-init` always use the canonical `sdk` pipeline. Record-based commands like `compile`, `compile-strict`, `compile-unsafe`, and `rerun` use the record's saved SDK metadata automatically.
+`generate` and `draft` always use the canonical `sdk` pipeline. Record-based commands like `compile` and `rerun` use the record's saved SDK metadata automatically.
 
 To run a single prompt directly into a dataset category instead of the workbench, use:
 
 ```bash
-just category=grill_with_hinged_lid wb-category "Create a backyard gas grill with a wheeled lower cart, a rectangular cookbox, side shelves, a front control panel, and a domed lid hinged along the rear edge of the cookbox."
+uv run articraft dataset run \
+  "Create a backyard gas grill with a wheeled lower cart, a rectangular cookbox, side shelves, a front control panel, and a domed lid hinged along the rear edge of the cookbox." \
+  --category-slug grill_with_hinged_lid
 ```
 
-`wb-category` accepts the same `model=...`, `thinking=...`, and `image=...` overrides as `wb`. It auto-allocates a collision-resistant `ds_<category>_<token>` dataset ID for the target category unless you also pass `dataset_id=...`.
+`dataset run` accepts the same `--model`, `--thinking-level`, `--image`, and `--max-cost-usd` overrides as `generate`. It auto-allocates a collision-resistant `ds_<category>_<token>` dataset ID for the target category unless you also pass `--dataset-id`.
 
 The underlying CLI command is:
 
 ```bash
-uv run articraft-dataset --repo-root . run-single \
+uv run articraft dataset run \
   "Create a backyard gas grill with a wheeled lower cart, a rectangular cookbox, side shelves, a front control panel, and a domed lid hinged along the rear edge of the cookbox." \
   --category-slug grill_with_hinged_lid \
   --provider openai \
-  --model-id gpt-5.5-2026-04-23 \
+  --model gpt-5.5-2026-04-23 \
   --thinking-level high \
   --max-cost-usd 2.0
 ```
@@ -167,7 +168,7 @@ That detail matters for resume:
 Start with the built-in template:
 
 ```bash
-just name=<batch-id> batch-spec-new
+uv run articraft dataset batch-new <batch-id>
 ```
 
 This creates:
@@ -218,15 +219,8 @@ hinge_02,hinge,Hinge,"Create a compact cabinet hinge with offset leaves and a sh
 Use `uv` directly:
 
 ```bash
-uv run articraft-dataset --repo-root . run-batch data/batch_specs/<batch-id>.csv --row-concurrency 8 --subprocess-concurrency auto
-uv run articraft-dataset --repo-root . run-batch data/batch_specs/<batch-id>.csv --row-concurrency 8 --subprocess-concurrency auto --max-cost-usd 2.0
-```
-
-Or use the `just` wrapper:
-
-```bash
-just row_concurrency=8 subprocess_concurrency=auto dataset-batch data/batch_specs/<batch-id>.csv
-just row_concurrency=8 subprocess_concurrency=auto max_cost_usd=2.0 dataset-batch data/batch_specs/<batch-id>.csv
+uv run articraft dataset batch data/batch_specs/<batch-id>.csv --row-concurrency 8 --subprocess-concurrency auto
+uv run articraft dataset batch data/batch_specs/<batch-id>.csv --row-concurrency 8 --subprocess-concurrency auto --max-cost-usd 2.0
 ```
 
 Useful execution controls:
@@ -242,13 +236,7 @@ If any row fails, the batch exits non-zero. That is expected. The normal recover
 The most common recovery command is:
 
 ```bash
-uv run articraft-dataset --repo-root . run-batch data/batch_specs/<batch-id>.csv --row-concurrency 8 --subprocess-concurrency auto --resume
-```
-
-or with `just`:
-
-```bash
-just row_concurrency=8 subprocess_concurrency=auto resume=true dataset-batch data/batch_specs/<batch-id>.csv
+uv run articraft dataset batch data/batch_specs/<batch-id>.csv --row-concurrency 8 --subprocess-concurrency auto --resume
 ```
 
 What `--resume` does:
@@ -262,9 +250,9 @@ What `--resume` does:
 Resume policies:
 
 ```bash
-uv run articraft-dataset --repo-root . run-batch data/batch_specs/<batch-id>.csv --resume --resume-policy failed_only
-uv run articraft-dataset --repo-root . run-batch data/batch_specs/<batch-id>.csv --resume --resume-policy failed_or_pending
-uv run articraft-dataset --repo-root . run-batch data/batch_specs/<batch-id>.csv --resume --resume-policy all
+uv run articraft dataset batch data/batch_specs/<batch-id>.csv --resume --resume-policy failed_only
+uv run articraft dataset batch data/batch_specs/<batch-id>.csv --resume --resume-policy failed_or_pending
+uv run articraft dataset batch data/batch_specs/<batch-id>.csv --resume --resume-policy all
 ```
 
 - `failed_only`: rerun only rows whose latest status is `failed`
@@ -275,19 +263,13 @@ Important resume rules:
 
 - keep the CSV filename stable so the `batch_spec_id` stays the same
 - keep `row_id` stable; changing or reordering implicit row ids can break resume matching
-- by default, resume rejects spec changes for `category_slug`, `prompt`, `provider`, `model_id`, `thinking_level`, `max_turns`, `max_cost_usd`
+- by default, resume rejects spec changes for `category_slug`, `prompt`, `provider`, `model_id`, `thinking_level`, `max_turns`, and `max_cost_usd`
 - if a row already produced a durable record but the cached state says `running`, resume reconciles that success instead of rerunning it
 
 You can bypass the spec-compatibility check:
 
 ```bash
-uv run articraft-dataset --repo-root . run-batch data/batch_specs/<batch-id>.csv --resume --allow-resume-spec-mismatch
-```
-
-or:
-
-```bash
-just resume=true allow_resume_spec_mismatch=true dataset-batch data/batch_specs/<batch-id>.csv
+uv run articraft dataset batch data/batch_specs/<batch-id>.csv --resume --allow-resume-spec-mismatch
 ```
 
 Use `--allow-resume-spec-mismatch` only for deliberate recovery work. It forces the current CSV to reuse the prior run's row allocations even though the row definitions no longer match.
@@ -303,13 +285,7 @@ Typical override workflow:
 Example:
 
 ```bash
-uv run articraft-dataset --repo-root . run-batch data/batch_specs/<batch-id>.csv --row-concurrency 8 --subprocess-concurrency auto --resume --resume-policy failed_only --allow-resume-spec-mismatch
-```
-
-or:
-
-```bash
-just row_concurrency=8 subprocess_concurrency=auto resume=true resume_policy=failed_only allow_resume_spec_mismatch=true dataset-batch data/batch_specs/<batch-id>.csv
+uv run articraft dataset batch data/batch_specs/<batch-id>.csv --row-concurrency 8 --subprocess-concurrency auto --resume --resume-policy failed_only --allow-resume-spec-mismatch
 ```
 
 When you do this:
@@ -349,50 +325,49 @@ Open the viewer in frontend dev mode:
 
 ```bash
 just viewer-dev
-just api_host=0.0.0.0 api_port=9000 viewer-dev
+just host=0.0.0.0 port=9000 viewer-dev
 ```
 
 Rebuild the viewer search index:
 
 ```bash
-just search-index
+uv run articraft workbench search-index
 ```
 
 Recompile one saved record:
 
 ```bash
-just compile data/records/<record-id>
-just compile-strict data/records/<record-id>
-just compile-unsafe data/records/<record-id>
+uv run articraft compile data/records/<record-id>
+uv run articraft compile data/records/<record-id> --validate --strict-geom-qc
 ```
 
 Bulk compile variants:
 
 ```bash
-just compile-all
-just compile-all-strict
-just force-compile-all
+uv run articraft compile-all
+uv run articraft compile-all --target full --strict
+uv run articraft compile-all --force
 ```
 
 Rerun generation for an existing record:
 
 ```bash
-just rerun data/records/<record-id>
+uv run articraft rerun data/records/<record-id>
 ```
 
 Generate with overrides:
 
 ```bash
-just model=gemini-3-flash-preview wb "Create a compact tabletop fan with an oscillating head and tilt adjustment."
-just image=reference.png wb "Create a weighted desk lamp with articulated arms."
-just model=gpt-5.5-2026-04-23 thinking=high image=reference.png wb "Create a tower crane with a rotating top and suspended hook."
+uv run articraft generate --model gemini-3-flash-preview "Create a compact tabletop fan with an oscillating head and tilt adjustment."
+uv run articraft generate --image reference.png "Create a weighted desk lamp with articulated arms."
+uv run articraft generate --model gpt-5.5-2026-04-23 --thinking-level high --image reference.png "Create a tower crane with a rotating top and suspended hook."
 ```
 
 Run a batch directly with `uv`:
 
 ```bash
-uv run articraft-dataset --repo-root . run-batch data/batch_specs/<batch-id>.csv --row-concurrency 8 --subprocess-concurrency auto
-uv run articraft-dataset --repo-root . run-batch data/batch_specs/<batch-id>.csv --row-concurrency 8 --subprocess-concurrency auto --resume
+uv run articraft dataset batch data/batch_specs/<batch-id>.csv --row-concurrency 8 --subprocess-concurrency auto
+uv run articraft dataset batch data/batch_specs/<batch-id>.csv --row-concurrency 8 --subprocess-concurrency auto --resume
 ```
 
 See Section 6 for the batch CSV schema, resume policies, and run-state details.

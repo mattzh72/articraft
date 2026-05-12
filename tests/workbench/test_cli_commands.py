@@ -12,8 +12,8 @@ import pytest
 
 from agent import runner
 from agent.defaults import DEFAULT_MAX_TURNS, GEMINI_3_FLASH_DEFAULT_MAX_TURNS
+from cli import hooks as git_hooks
 from cli.workbench import main as workbench_main
-from scripts import git_hooks
 from tests.helpers import FakeAgent
 
 
@@ -435,7 +435,7 @@ def test_workbench_init_record_command(
 
     assert (record_dir / "prompt.txt").read_text(encoding="utf-8") == "build a folding reading lamp"
     model_text = (record_dir / "model.py").read_text(encoding="utf-8")
-    assert "Draft scaffold created by `articraft-workbench init-record`." in model_text
+    assert "Draft scaffold created by `articraft draft`." in model_text
     _assert_draft_model_scaffold_contract(model_text)
 
     materialization_dir = repo_root / "data" / "cache" / "record_materialization" / record_dir.name
@@ -642,7 +642,7 @@ def test_workbench_init_record_warns_when_post_commit_hook_missing(tmp_path: Pat
     assert "Warning: managed post-commit hook is missing" in captured
     assert "just setup" in captured
     assert "just hooks-install" in captured
-    assert "install-post-commit" in captured
+    assert "uv run articraft hooks install" in captured
 
 
 def test_workbench_rerun_record_warns_when_post_commit_hook_missing(

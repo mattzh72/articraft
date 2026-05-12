@@ -4,33 +4,32 @@
 `agent/` contains the generation runtime, providers, prompt compiler, and TUI helpers. `storage/` owns the canonical `data/` layout, batch spec storage, record models, and query helpers used by the dataset and workbench flows. `sdk/` and `sdk/_core/` define the articulated-object SDK layers and shared geometry/export logic. `viewer/api/` exposes the FastAPI surface. `cli/` contains the repository entry points, while `tests/` mirrors the main packages with smoke-style checks such as `tests/storage/test_repo.py`.
 
 ## Build, Test, and Development Commands
-Use `uv` for direct Python workflows, and `just` for the agent-facing shortcuts that speed up common iteration loops. For additional shortcuts, run `just` or check [`justfile`](justfile).
-When a `just` recipe supports optional settings, pass them as overrides before the recipe name, for example `just model=gemini-3-flash-preview image=reference.png wb "prompt text"`.
+Use `uv run articraft ...` for the product CLI, and `just` only for developer setup/check/viewer shortcuts. For additional shortcuts, run `just` or check [`justfile`](justfile).
 
 - `uv sync --group dev` installs the project and development dependencies.
 - `uv build` creates the wheel and source distribution in `dist/`.
-- `uv run articraft-dataset --repo-root . init-storage` creates the canonical `data/` tree for dataset work.
-- `uv run articraft-dataset --repo-root . run-batch data/batch_specs/<batch-id>.csv --row-concurrency 8 --subprocess-concurrency auto` runs a tracked dataset batch CSV into canonical records.
-- `uv run articraft-dataset --repo-root . run-batch data/batch_specs/<batch-id>.csv --row-concurrency 8 --subprocess-concurrency auto --resume` resumes the latest prior run for that batch spec.
-- `uv run articraft-workbench --repo-root . status` inspects the workbench store state.
+- `uv run articraft init` creates the canonical `data/` tree and local workbench state.
+- `uv run articraft dataset batch data/batch_specs/<batch-id>.csv --row-concurrency 8 --subprocess-concurrency auto` runs a tracked dataset batch CSV into canonical records.
+- `uv run articraft dataset batch data/batch_specs/<batch-id>.csv --row-concurrency 8 --subprocess-concurrency auto --resume` resumes the latest prior run for that batch spec.
+- `uv run articraft workbench status` inspects the workbench store state.
 - `uv run uvicorn viewer.api.app:app --reload --host 127.0.0.1 --port 8765` starts the local API directly.
 - `uv run --group dev pytest -q` runs the full Python regression suite.
 - `just setup` handles first-time repo setup and storage initialization.
 - `just smoke-tests` runs the fast pre-push smoke suite.
 - `just test-all` runs the full Python regression suite.
-- `just compile-all` is the recommended path before `just viewer`; it now uses the faster visual-only bulk materialization path for viewer assets.
-- `just compile-all-full` runs the non-strict full bulk compile path when you need collision-inclusive URDFs without the validation-heavy strict checks.
-- `just compile-all-strict` runs the validation-heavy full compile path.
-- `just name=<batch-id> batch-spec-new` creates `data/batch_specs/<batch-id>.csv` with the canonical batch CSV header.
-- `just row_concurrency=8 subprocess_concurrency=auto dataset-batch data/batch_specs/<batch-id>.csv` runs the dataset batch shortcut; batch row provider/model settings come from the CSV.
-- `just wb-init "prompt text"` creates a draft workbench record without running generation, which is useful when you want an empty record directory to work in.
-- `just image=reference.png wb-init "prompt text"` stores a reference image with the draft so later reruns keep the same conditioning.
-- `just compile data/records/<id>` recompiles a record's `model.py` into cache-backed materialization outputs under `data/cache/record_materialization/<id>/`.
-- `just rerun data/records/<id>` reruns generation for an existing workbench record in place.
-- `just search-index` rebuilds the workbench search index after record changes.
+- `uv run articraft compile-all` is the recommended path before `just viewer`; it uses the faster visual-only bulk materialization path for viewer assets.
+- `uv run articraft compile-all --target full` runs the non-strict full bulk compile path when you need collision-inclusive URDFs without validation-heavy strict checks.
+- `uv run articraft compile-all --target full --strict` runs the validation-heavy full compile path.
+- `uv run articraft dataset batch-new <batch-id>` creates `data/batch_specs/<batch-id>.csv` with the canonical batch CSV header.
+- `uv run articraft dataset batch --row-concurrency 8 --subprocess-concurrency auto data/batch_specs/<batch-id>.csv` runs the dataset batch shortcut; batch row provider/model settings come from the CSV.
+- `uv run articraft draft "prompt text"` creates a draft workbench record without running generation, which is useful when you want an empty record directory to work in.
+- `uv run articraft draft --image reference.png "prompt text"` stores a reference image with the draft so later reruns keep the same conditioning.
+- `uv run articraft compile data/records/<id>` recompiles a record's `model.py` into cache-backed materialization outputs under `data/cache/record_materialization/<id>/`.
+- `uv run articraft rerun data/records/<id>` reruns generation for an existing workbench record in place.
+- `uv run articraft workbench search-index` rebuilds the workbench search index after record changes.
 - `just viewer` starts the local viewer flow.
 - `just viewer-dev` starts the API and Vite dev server together.
-- `just wb "prompt text"` runs generation in workbench mode.
+- `uv run articraft generate "prompt text"` runs generation in workbench mode.
 
 ## Coding Style & Naming Conventions
 Target Python 3.11+ and keep 4-space indentation. Follow the existing style: `from __future__ import annotations`, explicit type hints, and small module-level helpers for CLI wiring. Use `snake_case` for functions, modules, and variables, `PascalCase` for models/classes, and keep package names aligned with their surface area (`agent`, `storage`, `viewer`). No formatter or linter is configured in this repository today, so match the surrounding file style closely and keep imports ordered and minimal.
