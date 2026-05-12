@@ -85,6 +85,12 @@ class RecordBrowseResponse(BaseModel):
     facets: RecordBrowseFacetsResponse
 
 
+class RecordBrowseIdsResponse(BaseModel):
+    source: str
+    total: int
+    record_ids: list[str] = Field(default_factory=list)
+
+
 class WorkbenchEntryResponse(BaseModel):
     record_id: str
     added_at: str

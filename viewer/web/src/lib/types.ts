@@ -50,6 +50,12 @@ export type RecordBrowseResponse = {
   facets: RecordBrowseFacets;
 };
 
+export type RecordBrowseIdsResponse = {
+  source: SourceFilter;
+  total: number;
+  record_ids: string[];
+};
+
 export type WorkbenchEntry = {
   record_id: string;
   added_at: string;

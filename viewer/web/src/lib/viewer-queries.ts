@@ -3,6 +3,7 @@ import { queryOptions } from "@tanstack/react-query";
 import {
   browseRecords,
   fetchBootstrap,
+  fetchBrowseRecordIds,
   fetchCategories,
   fetchDashboard,
   fetchDatasetEntries,
@@ -13,6 +14,7 @@ import {
 } from "@/lib/api";
 
 type BrowseRecordsParams = Parameters<typeof browseRecords>[0];
+type BrowseRecordIdsParams = Parameters<typeof fetchBrowseRecordIds>[0];
 type DashboardParams = Parameters<typeof fetchDashboard>[0];
 type SearchRecordsParams = Parameters<typeof searchRecords>[0];
 
@@ -27,6 +29,8 @@ export const viewerQueryKeys = {
   recordSummary: (recordId: string) => [...viewerQueryKeys.root(), "record-summary", recordId] as const,
   browseRecords: (params: BrowseRecordsParams) =>
     [...viewerQueryKeys.root(), "browse-records", params] as const,
+  browseRecordIds: (params: BrowseRecordIdsParams) =>
+    [...viewerQueryKeys.root(), "browse-record-ids", params] as const,
   searchRecords: (params: SearchRecordsParams) =>
     [...viewerQueryKeys.root(), "search-records", params] as const,
 };
@@ -92,6 +96,14 @@ export function browseRecordsQueryOptions(params: BrowseRecordsParams) {
   return queryOptions({
     queryKey: viewerQueryKeys.browseRecords(params),
     queryFn: () => browseRecords(params),
+    staleTime: 10_000,
+  });
+}
+
+export function browseRecordIdsQueryOptions(params: BrowseRecordIdsParams) {
+  return queryOptions({
+    queryKey: viewerQueryKeys.browseRecordIds(params),
+    queryFn: () => fetchBrowseRecordIds(params),
     staleTime: 10_000,
   });
 }

@@ -13,6 +13,7 @@ from viewer.api.schemas import (
     OpenRecordFolderResponse,
     OpenStagingFolderResponse,
     PromoteRecordRequest,
+    RecordBrowseIdsResponse,
     RecordBrowseResponse,
     RecordRatingRequest,
     RecordRatingResponse,
@@ -78,6 +79,46 @@ async def browse_records(
             secondary_rating_filter=secondary_rating,
             offset=offset,
             limit=limit,
+        )
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+
+
+@router.get("/api/records/browse/ids", response_model=RecordBrowseIdsResponse)
+async def browse_record_ids(
+    store: ViewerStoreDep,
+    source: str,
+    q: str | None = None,
+    run_id: str | None = None,
+    time: str | None = None,
+    time_from: str | None = None,
+    time_to: str | None = None,
+    model: str | None = None,
+    sdk: str | None = None,
+    author: list[str] | None = Query(default=None),
+    category: list[str] | None = Query(default=None),
+    cost_min: float | None = None,
+    cost_max: float | None = None,
+    rating: list[str] | None = Query(default=None),
+    secondary_rating: list[str] | None = Query(default=None),
+) -> RecordBrowseIdsResponse:
+    try:
+        return await asyncio.to_thread(
+            store.browse_record_ids,
+            source_filter=source,
+            query=q,
+            run_id=run_id,
+            time_filter=time,
+            time_filter_oldest=time_from,
+            time_filter_newest=time_to,
+            model_filter=model,
+            sdk_filter=sdk,
+            author_filters=author,
+            category_filters=category,
+            cost_min=cost_min,
+            cost_max=cost_max,
+            rating_filter=rating,
+            secondary_rating_filter=secondary_rating,
         )
     except ValueError as exc:
         raise HTTPException(status_code=400, detail=str(exc)) from exc

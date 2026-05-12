@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from viewer.api.schemas import (
     RecordBrowseFacetsResponse,
+    RecordBrowseIdsResponse,
     RecordBrowseResponse,
     RecordSummaryResponse,
 )
@@ -17,6 +18,24 @@ from viewer.api.store_values import _parse_sort_key
 
 
 class ViewerStoreSearchMixin:
+    def _dataset_query_candidate_ids(
+        self,
+        query: str | None,
+        *,
+        run_id: str | None = None,
+    ) -> list[str] | None:
+        query_text = (query or "").strip()
+        if not query_text:
+            return None
+
+        source_total = len(self.dataset_browse_index.snapshot().rows)
+        return self.search.search_record_ids(
+            query_text,
+            source_filter="dataset",
+            run_id=run_id,
+            limit=max(source_total, 1000),
+        )
+
     def _source_record_ids(self, source_filter: str) -> list[str]:
         seen: set[str] = set()
         record_ids: list[str] = []
@@ -66,18 +85,8 @@ class ViewerStoreSearchMixin:
         limit: int = 100,
     ) -> RecordBrowseResponse:
         if source_filter == "dataset":
-            source_total = len(self.dataset_browse_index.snapshot().rows)
-            query_candidate_ids: list[str] | None = None
-            query_text = (query or "").strip()
-            if query_text:
-                query_candidate_ids = self.search.search_record_ids(
-                    query_text,
-                    source_filter=source_filter,
-                    run_id=run_id,
-                    limit=max(source_total, 1000),
-                )
             return self.dataset_browse_index.browse(
-                query_candidate_ids=query_candidate_ids,
+                query_candidate_ids=self._dataset_query_candidate_ids(query, run_id=run_id),
                 run_id=run_id,
                 time_filter=time_filter,
                 time_filter_oldest=time_filter_oldest,
@@ -94,6 +103,60 @@ class ViewerStoreSearchMixin:
                 limit=limit,
             )
 
+        source_total, facets, matching_summaries = self._matching_source_summaries(
+            source_filter=source_filter,
+            query=query,
+            run_id=run_id,
+            time_filter=time_filter,
+            time_filter_oldest=time_filter_oldest,
+            time_filter_newest=time_filter_newest,
+            model_filter=model_filter,
+            sdk_filter=sdk_filter,
+            author_filters=author_filters,
+            category_filters=category_filters,
+            cost_min=cost_min,
+            cost_max=cost_max,
+            rating_filter=rating_filter,
+            secondary_rating_filter=secondary_rating_filter,
+        )
+
+        normalized_offset = max(0, offset)
+        normalized_limit = max(0, min(limit, 500))
+        paged_summaries = (
+            matching_summaries[normalized_offset : normalized_offset + normalized_limit]
+            if normalized_limit > 0
+            else []
+        )
+
+        return RecordBrowseResponse(
+            source=source_filter,
+            total=len(matching_summaries),
+            source_total=source_total,
+            offset=normalized_offset,
+            limit=normalized_limit,
+            record_ids=[summary.record_id for summary in paged_summaries],
+            records=paged_summaries,
+            facets=facets,
+        )
+
+    def _matching_source_summaries(
+        self,
+        *,
+        source_filter: str,
+        query: str | None = None,
+        run_id: str | None = None,
+        time_filter: str | None = None,
+        time_filter_oldest: str | None = None,
+        time_filter_newest: str | None = None,
+        model_filter: str | None = None,
+        sdk_filter: str | None = None,
+        author_filters: list[str] | None = None,
+        category_filters: list[str] | None = None,
+        cost_min: float | None = None,
+        cost_max: float | None = None,
+        rating_filter: list[str] | None = None,
+        secondary_rating_filter: list[str] | None = None,
+    ) -> tuple[int, RecordBrowseFacetsResponse, list[RecordSummaryResponse]]:
         if cost_min is not None and cost_max is not None and cost_min > cost_max:
             cost_min, cost_max = cost_max, cost_min
 
@@ -212,24 +275,7 @@ class ViewerStoreSearchMixin:
                 reverse=True,
             )
 
-        normalized_offset = max(0, offset)
-        normalized_limit = max(0, min(limit, 500))
-        paged_summaries = (
-            matching_summaries[normalized_offset : normalized_offset + normalized_limit]
-            if normalized_limit > 0
-            else []
-        )
-
-        return RecordBrowseResponse(
-            source=source_filter,
-            total=len(matching_summaries),
-            source_total=source_total,
-            offset=normalized_offset,
-            limit=normalized_limit,
-            record_ids=[summary.record_id for summary in matching_summaries],
-            records=paged_summaries,
-            facets=facets,
-        )
+        return source_total, facets, matching_summaries
 
     def search_records(
         self,
@@ -320,3 +366,60 @@ class ViewerStoreSearchMixin:
             if len(results) >= limit:
                 break
         return results
+
+    def browse_record_ids(
+        self,
+        *,
+        source_filter: str,
+        query: str | None = None,
+        run_id: str | None = None,
+        time_filter: str | None = None,
+        time_filter_oldest: str | None = None,
+        time_filter_newest: str | None = None,
+        model_filter: str | None = None,
+        sdk_filter: str | None = None,
+        author_filters: list[str] | None = None,
+        category_filters: list[str] | None = None,
+        cost_min: float | None = None,
+        cost_max: float | None = None,
+        rating_filter: list[str] | None = None,
+        secondary_rating_filter: list[str] | None = None,
+    ) -> RecordBrowseIdsResponse:
+        if source_filter == "dataset":
+            return self.dataset_browse_index.record_ids(
+                query_candidate_ids=self._dataset_query_candidate_ids(query, run_id=run_id),
+                run_id=run_id,
+                time_filter=time_filter,
+                time_filter_oldest=time_filter_oldest,
+                time_filter_newest=time_filter_newest,
+                model_filter=model_filter,
+                sdk_filter=sdk_filter,
+                author_filters=author_filters,
+                category_filters=category_filters,
+                cost_min=cost_min,
+                cost_max=cost_max,
+                rating_filter=rating_filter,
+                secondary_rating_filter=secondary_rating_filter,
+            )
+
+        _, _, matching_summaries = self._matching_source_summaries(
+            source_filter=source_filter,
+            query=query,
+            run_id=run_id,
+            time_filter=time_filter,
+            time_filter_oldest=time_filter_oldest,
+            time_filter_newest=time_filter_newest,
+            model_filter=model_filter,
+            sdk_filter=sdk_filter,
+            author_filters=author_filters,
+            category_filters=category_filters,
+            cost_min=cost_min,
+            cost_max=cost_max,
+            rating_filter=rating_filter,
+            secondary_rating_filter=secondary_rating_filter,
+        )
+        return RecordBrowseIdsResponse(
+            source=source_filter,
+            total=len(matching_summaries),
+            record_ids=[summary.record_id for summary in matching_summaries],
+        )

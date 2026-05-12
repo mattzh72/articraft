@@ -7,6 +7,7 @@ import type {
   DeleteRecordResult,
   OpenRecordFolderResult,
   OpenStagingFolderResult,
+  RecordBrowseIdsResponse,
   RecordBrowseResponse,
   RecordRatingResponse,
   RecordSecondaryRatingResponse,
@@ -150,6 +151,32 @@ export async function browseRecords(params: {
   limit?: number;
 }): Promise<RecordBrowseResponse> {
   const searchParams = new URLSearchParams();
+  appendBrowseParams(searchParams, params);
+  if (params.offset != null) {
+    searchParams.set("offset", String(params.offset));
+  }
+  if (params.limit != null) {
+    searchParams.set("limit", String(params.limit));
+  }
+  return fetchJson<RecordBrowseResponse>(`/api/records/browse?${searchParams.toString()}`);
+}
+
+function appendBrowseParams(
+  searchParams: URLSearchParams,
+  params: {
+    source: SourceFilter;
+    query: string;
+    runId: string | null;
+    timeFilter: TimeFilter;
+    modelFilter: string | null;
+    sdkFilter: string | null;
+    authorFilters: string[];
+    categoryFilters: string[];
+    costFilter: CostFilter;
+    ratingFilter: RatingFilter;
+    secondaryRatingFilter: RatingFilter;
+  },
+): void {
   searchParams.set("source", params.source);
   if (params.query.trim()) {
     searchParams.set("q", params.query.trim());
@@ -187,13 +214,24 @@ export async function browseRecords(params: {
   for (const secondaryRatingFilter of params.secondaryRatingFilter) {
     searchParams.append("secondary_rating", secondaryRatingFilter);
   }
-  if (params.offset != null) {
-    searchParams.set("offset", String(params.offset));
-  }
-  if (params.limit != null) {
-    searchParams.set("limit", String(params.limit));
-  }
-  return fetchJson<RecordBrowseResponse>(`/api/records/browse?${searchParams.toString()}`);
+}
+
+export async function fetchBrowseRecordIds(params: {
+  source: SourceFilter;
+  query: string;
+  runId: string | null;
+  timeFilter: TimeFilter;
+  modelFilter: string | null;
+  sdkFilter: string | null;
+  authorFilters: string[];
+  categoryFilters: string[];
+  costFilter: CostFilter;
+  ratingFilter: RatingFilter;
+  secondaryRatingFilter: RatingFilter;
+}): Promise<RecordBrowseIdsResponse> {
+  const searchParams = new URLSearchParams();
+  appendBrowseParams(searchParams, params);
+  return fetchJson<RecordBrowseIdsResponse>(`/api/records/browse/ids?${searchParams.toString()}`);
 }
 
 export async function searchRecords(params: {

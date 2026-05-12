@@ -95,6 +95,18 @@ def test_viewer_api_smoke_bootstrap_browse_search_and_assets(tmp_path: Path) -> 
         record_id="rec_hinge_001",
         added_at="2026-03-18T08:01:00Z",
     )
+    _write_record(
+        repo,
+        record_id="rec_latch_001",
+        title="Cabinet latch",
+        prompt="create a cabinet latch with a catch plate",
+        category_slug="latches",
+        collections=["workbench"],
+    )
+    CollectionStore(repo).append_workbench_entry(
+        record_id="rec_latch_001",
+        added_at="2026-03-18T08:02:00Z",
+    )
     repo.write_json(
         repo.layout.record_materialization_compile_report_path("rec_hinge_001"),
         {
@@ -145,7 +157,10 @@ def test_viewer_api_smoke_bootstrap_browse_search_and_assets(tmp_path: Path) -> 
     assert client.get("/health").json()["status"] == "ok"
 
     bootstrap = client.get("/api/bootstrap").json()
-    assert [entry["record_id"] for entry in bootstrap["workbench_entries"]] == ["rec_hinge_001"]
+    assert {entry["record_id"] for entry in bootstrap["workbench_entries"]} == {
+        "rec_hinge_001",
+        "rec_latch_001",
+    }
     assert {entry["dataset_id"] for entry in bootstrap["dataset_entries"]} == {
         "dj_dataset_001",
         "knob_dataset_001",
@@ -159,6 +174,14 @@ def test_viewer_api_smoke_bootstrap_browse_search_and_assets(tmp_path: Path) -> 
     dataset_browse_ids = client.get("/api/records/browse/ids?source=dataset").json()
     assert dataset_browse_ids["total"] == 2
     assert set(dataset_browse_ids["record_ids"]) == {"rec_dj_001", "rec_knob_001"}
+
+    workbench_browse = client.get("/api/records/browse?source=workbench&limit=1").json()
+    assert workbench_browse["total"] == 2
+    assert len(workbench_browse["record_ids"]) == 1
+
+    workbench_browse_ids = client.get("/api/records/browse/ids?source=workbench").json()
+    assert workbench_browse_ids["total"] == 2
+    assert set(workbench_browse_ids["record_ids"]) == {"rec_hinge_001", "rec_latch_001"}
 
     search_results = client.get("/api/records/search?q=hinge&source=workbench").json()
     assert [item["record_id"] for item in search_results] == ["rec_hinge_001"]

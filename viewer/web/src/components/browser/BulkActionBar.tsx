@@ -17,7 +17,7 @@ import { Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip
 import { deleteRecord, openRecordFolder } from "@/lib/api";
 import { buildRecordPath, copyTextToClipboard } from "@/lib/record-path";
 import { cn } from "@/lib/utils";
-import { viewerQueryKeys } from "@/lib/viewer-queries";
+import { browseRecordIdsQueryOptions, viewerQueryKeys } from "@/lib/viewer-queries";
 import { useViewer, useViewerDispatch } from "@/lib/viewer-context";
 
 const MAX_OPEN_FOLDERS = 10;
@@ -27,13 +27,29 @@ interface BulkActionBarProps {
 }
 
 export function BulkActionBar({ visibleRecordIds }: BulkActionBarProps): JSX.Element {
-  const { bootstrap, multiSelection, recordCache } = useViewer();
+  const {
+    authorFilters,
+    bootstrap,
+    categoryFilters,
+    costFilter,
+    modelFilter,
+    multiSelection,
+    ratingFilter,
+    recordCache,
+    sdkFilter,
+    searchQuery,
+    secondaryRatingFilter,
+    selectedRunId,
+    sourceFilter,
+    timeFilter,
+  } = useViewer();
   const dispatch = useViewerDispatch();
   const queryClient = useQueryClient();
   const selectedCount = multiSelection.size;
 
   const [copyState, setCopyState] = useState<"idle" | "copied" | "error">("idle");
   const [openState, setOpenState] = useState<"idle" | "opened" | "error">("idle");
+  const [selectAllPending, setSelectAllPending] = useState(false);
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [deletePending, setDeletePending] = useState(false);
   const [deleteProgress, setDeleteProgress] = useState(0);
@@ -53,8 +69,33 @@ export function BulkActionBar({ visibleRecordIds }: BulkActionBarProps): JSX.Ele
 
   const selectedIds = [...multiSelection];
 
-  const handleSelectAll = () => {
-    dispatch({ type: "SET_MULTI_SELECT_ALL", payload: visibleRecordIds });
+  const handleSelectAll = async () => {
+    if (sourceFilter !== "dataset") {
+      dispatch({ type: "SET_MULTI_SELECT_ALL", payload: visibleRecordIds });
+      return;
+    }
+
+    setSelectAllPending(true);
+    try {
+      const response = await queryClient.fetchQuery(
+        browseRecordIdsQueryOptions({
+          source: "dataset",
+          query: searchQuery.trim(),
+          runId: selectedRunId,
+          timeFilter,
+          modelFilter,
+          sdkFilter,
+          authorFilters,
+          categoryFilters,
+          costFilter,
+          ratingFilter,
+          secondaryRatingFilter,
+        }),
+      );
+      dispatch({ type: "SET_MULTI_SELECT_ALL", payload: response.record_ids });
+    } finally {
+      setSelectAllPending(false);
+    }
   };
 
   const handleClear = () => {
@@ -134,10 +175,11 @@ export function BulkActionBar({ visibleRecordIds }: BulkActionBarProps): JSX.Ele
           <span className="font-medium text-[var(--text-secondary)]">{selectedCount}</span>
           <button
             type="button"
-            onClick={handleSelectAll}
+            onClick={() => void handleSelectAll()}
+            disabled={selectAllPending}
             className="text-[var(--text-tertiary)] transition-colors hover:text-[var(--text-primary)]"
           >
-            All
+            {selectAllPending ? "Loading" : "All"}
           </button>
           <span className="text-[var(--border-strong)]">·</span>
           <button

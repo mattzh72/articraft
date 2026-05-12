@@ -21,6 +21,7 @@ import type {
   TimeFilter,
 } from "@/lib/types";
 import {
+  browseRecordIdsQueryOptions,
   browseRecordsQueryOptions,
   searchRecordsQueryOptions,
 } from "@/lib/viewer-queries";
@@ -89,7 +90,7 @@ function recordSortTimestamp(record: RecordSummary): number {
 }
 
 type VirtualRowData = {
-  visibleIds: string[];
+  recordIdForIndex: (index: number) => string | null;
   recordForId: (recordId: string) => RecordSummary | null;
   repoRoot: string | null;
   selectedRecordId: string | null;
@@ -103,7 +104,7 @@ function VirtualRecordRow({
   ariaAttributes,
   index,
   style,
-  visibleIds,
+  recordIdForIndex,
   recordForId,
   repoRoot,
   selectedRecordId,
@@ -112,9 +113,22 @@ function VirtualRecordRow({
   onSelect,
   onMultiSelectToggle,
 }: RowComponentProps<VirtualRowData>): JSX.Element | null {
-  const recordId = visibleIds[index] ?? null;
+  const recordId = recordIdForIndex(index);
   if (!recordId) {
-    return null;
+    return (
+      <div
+        {...ariaAttributes}
+        style={{
+          ...style,
+          boxSizing: "border-box",
+          paddingInline: "2px",
+        }}
+      >
+        <div className="flex h-full items-center border-b border-[var(--border-default)] px-3 text-[11px] text-[var(--text-quaternary)]">
+          Loading...
+        </div>
+      </div>
+    );
   }
 
   return (
@@ -172,7 +186,6 @@ export function RecordList({
   const dispatch = useViewerDispatch();
   const listRef = useRef<ListImperativeAPI | null>(null);
   const previousSelectedRecordIdRef = useRef<string | null>(selectedRecordId);
-  const previousVisibleIdsRef = useRef<string[]>([]);
   const previousSelectedVisibleIndexRef = useRef<number | null>(null);
   const selectionAdvanceDirectionRef = useRef<1 | -1>(1);
   const followSelectionRef = useRef(true);
@@ -182,8 +195,9 @@ export function RecordList({
   const deferredSearchQuery = useDeferredValue(searchQuery.trim());
   const [searchedRecords, setSearchedRecords] = useState<RecordSummary[] | null>(null);
   const [searchPending, setSearchPending] = useState(false);
-  const [datasetRecordIds, setDatasetRecordIds] = useState<string[]>([]);
+  const [datasetRecordIdsByIndex, setDatasetRecordIdsByIndex] = useState<Record<number, string>>({});
   const [datasetRecordsById, setDatasetRecordsById] = useState<Record<string, RecordSummary>>({});
+  const [datasetMatchTotal, setDatasetMatchTotal] = useState(0);
   const [datasetSourceTotal, setDatasetSourceTotal] = useState(0);
   const [datasetLoading, setDatasetLoading] = useState(false);
 
@@ -365,9 +379,24 @@ export function RecordList({
             ? { min: response.facets.cost_min, max: response.facets.cost_max }
             : null,
       });
+      setDatasetMatchTotal(response.total);
       setDatasetSourceTotal(response.source_total);
     },
     [onDatasetMetadataChange],
+  );
+
+  const mergeDatasetPage = useCallback(
+    (response: RecordBrowseResponse) => {
+      mergeDatasetRecords(response.records);
+      setDatasetRecordIdsByIndex((current) => {
+        const next = { ...current };
+        response.records.forEach((record, index) => {
+          next[response.offset + index] = record.record_id;
+        });
+        return next;
+      });
+    },
+    [mergeDatasetRecords],
   );
 
   const loadDatasetPage = useCallback(
@@ -396,8 +425,7 @@ export function RecordList({
           loadingDatasetPagesRef.current.delete(pageIndex);
           loadedDatasetPagesRef.current.add(pageIndex);
           applyDatasetMetadata(response);
-          mergeDatasetRecords(response.records);
-          setDatasetRecordIds((current) => (current.length > 0 ? current : response.record_ids));
+          mergeDatasetPage(response);
         })
         .catch(() => {
           if (activeDatasetRequestIdRef.current !== requestId) {
@@ -406,15 +434,16 @@ export function RecordList({
           loadingDatasetPagesRef.current.delete(pageIndex);
         });
     },
-    [applyDatasetMetadata, datasetBrowseParams, mergeDatasetRecords, queryClient, sourceFilter],
+    [applyDatasetMetadata, datasetBrowseParams, mergeDatasetPage, queryClient, sourceFilter],
   );
 
   useEffect(() => {
     if (sourceFilter !== "dataset") {
       onDatasetMetadataChange?.(null);
       setDatasetLoading(false);
-      setDatasetRecordIds([]);
+      setDatasetRecordIdsByIndex({});
       setDatasetRecordsById({});
+      setDatasetMatchTotal(0);
       setDatasetSourceTotal(0);
       loadedDatasetPagesRef.current.clear();
       loadingDatasetPagesRef.current.clear();
@@ -427,8 +456,9 @@ export function RecordList({
     loadedDatasetPagesRef.current.clear();
     loadingDatasetPagesRef.current.clear();
     setDatasetLoading(true);
-    setDatasetRecordIds([]);
+    setDatasetRecordIdsByIndex({});
     setDatasetRecordsById({});
+    setDatasetMatchTotal(0);
     setDatasetSourceTotal(0);
 
     queryClient.fetchQuery(
@@ -444,8 +474,7 @@ export function RecordList({
         }
         loadedDatasetPagesRef.current.add(0);
         applyDatasetMetadata(response);
-        setDatasetRecordIds(response.record_ids);
-        mergeDatasetRecords(response.records);
+        mergeDatasetPage(response);
         setDatasetLoading(false);
       })
       .catch(() => {
@@ -453,8 +482,9 @@ export function RecordList({
           return;
         }
         onDatasetMetadataChange?.(null);
-        setDatasetRecordIds([]);
+        setDatasetRecordIdsByIndex({});
         setDatasetRecordsById({});
+        setDatasetMatchTotal(0);
         setDatasetSourceTotal(0);
         setDatasetLoading(false);
       });
@@ -466,7 +496,7 @@ export function RecordList({
     applyDatasetMetadata,
     datasetBrowseParams,
     datasetGeneratedAt,
-    mergeDatasetRecords,
+    mergeDatasetPage,
     onDatasetMetadataChange,
     queryClient,
     sourceFilter,
@@ -482,71 +512,54 @@ export function RecordList({
     [datasetRecordsById, recordCache, sourceFilter, workbenchRecordById],
   );
 
-  const visibleIds = useMemo(() => {
-    if (sourceFilter !== "dataset") {
-      return workbenchRecords.map((record) => record.record_id);
-    }
+  const workbenchVisibleIds = useMemo(
+    () => workbenchRecords.map((record) => record.record_id),
+    [workbenchRecords],
+  );
 
-    return datasetRecordIds.filter((recordId) => {
-      const record = recordCache[recordId] ?? datasetRecordsById[recordId] ?? null;
-      if (!record) {
-        return true;
+  const datasetLoadedIds = useMemo(
+    () =>
+      Object.entries(datasetRecordIdsByIndex)
+        .sort(([left], [right]) => Number(left) - Number(right))
+        .map(([, recordId]) => recordId),
+    [datasetRecordIdsByIndex],
+  );
+
+  const visibleIds = sourceFilter === "dataset" ? datasetLoadedIds : workbenchVisibleIds;
+  const rowCount = sourceFilter === "dataset" ? datasetMatchTotal : visibleIds.length;
+
+  const recordIndexById = useMemo(() => {
+    const entries =
+      sourceFilter === "dataset"
+        ? Object.entries(datasetRecordIdsByIndex).map(
+            ([index, recordId]) => [recordId, Number(index)] as const,
+          )
+        : workbenchVisibleIds.map((recordId, index) => [recordId, index] as const);
+    return new Map(entries);
+  }, [datasetRecordIdsByIndex, sourceFilter, workbenchVisibleIds]);
+
+  const recordIdForIndex = useCallback(
+    (index: number): string | null => {
+      if (sourceFilter === "dataset") {
+        return datasetRecordIdsByIndex[index] ?? null;
       }
-      if (selectedRunId && record.run_id !== selectedRunId) {
-        return false;
-      }
-      if (!withinTimeFilter(record.created_at, timeFilter)) {
-        return false;
-      }
-      if (!withinCostFilter(record.total_cost_usd, costFilter)) {
-        return false;
-      }
-      if (!withinRatingFilter(record.effective_rating, ratingFilter)) {
-        return false;
-      }
-      if (!withinRatingFilter(record.secondary_rating, secondaryRatingFilter)) {
-        return false;
-      }
-      if (modelFilter && record.model_id !== modelFilter) {
-        return false;
-      }
-      if (sdkFilter && record.sdk_package !== sdkFilter) {
-        return false;
-      }
-      if (authorFilters.length > 0 && (!record.author || !authorFilters.includes(record.author))) {
-        return false;
-      }
-      if (
-        categoryFilters.length > 0
-        && (!record.category_slug || !categoryFilters.includes(record.category_slug))
-      ) {
-        return false;
-      }
-      return true;
-    });
-  }, [
-    authorFilters,
-    categoryFilters,
-    costFilter,
-    datasetRecordIds,
-    datasetRecordsById,
-    modelFilter,
-    ratingFilter,
-    recordCache,
-    sdkFilter,
-    secondaryRatingFilter,
-    selectedRunId,
-    sourceFilter,
-    timeFilter,
-    workbenchRecords,
-  ]);
+      return workbenchVisibleIds[index] ?? null;
+    },
+    [datasetRecordIdsByIndex, sourceFilter, workbenchVisibleIds],
+  );
 
   const counts = useMemo(
     () => ({
-      visible: visibleIds.length,
+      visible: sourceFilter === "dataset" ? datasetMatchTotal : visibleIds.length,
       total: sourceFilter === "dataset" ? datasetSourceTotal : workbenchSourceRecords.length,
     }),
-    [datasetSourceTotal, sourceFilter, visibleIds.length, workbenchSourceRecords.length],
+    [
+      datasetMatchTotal,
+      datasetSourceTotal,
+      sourceFilter,
+      visibleIds.length,
+      workbenchSourceRecords.length,
+    ],
   );
 
   useEffect(() => {
@@ -558,15 +571,12 @@ export function RecordList({
   }, [counts, onCountsChange]);
 
   useEffect(() => {
-    const previousVisibleIds = previousVisibleIdsRef.current;
     const previousSelectedVisibleIndex = previousSelectedVisibleIndexRef.current;
-    const selectedVisibleIndex = selectedRecordId ? visibleIds.indexOf(selectedRecordId) : -1;
+    const selectedVisibleIndex = selectedRecordId ? (recordIndexById.get(selectedRecordId) ?? -1) : -1;
 
     if (selectedRecordId && selectedVisibleIndex === -1) {
-      const selectedWasEvicted =
-        previousSelectedVisibleIndex != null && previousVisibleIds[previousSelectedVisibleIndex] === selectedRecordId;
-      if (selectedWasEvicted) {
-        if (visibleIds.length === 0) {
+      if (previousSelectedVisibleIndex != null) {
+        if (rowCount === 0) {
           dispatch({ type: "SELECT_RECORD", payload: null });
           return;
         }
@@ -574,8 +584,8 @@ export function RecordList({
         const replacementIndex =
           selectionAdvanceDirectionRef.current === -1
             ? Math.max(previousSelectedVisibleIndex - 1, 0)
-            : Math.min(previousSelectedVisibleIndex, visibleIds.length - 1);
-        const replacementRecordId = visibleIds[replacementIndex] ?? null;
+            : Math.min(previousSelectedVisibleIndex, rowCount - 1);
+        const replacementRecordId = recordIdForIndex(replacementIndex);
         if (replacementRecordId) {
           if (sourceFilter === "dataset") {
             loadDatasetPage(Math.floor(replacementIndex / DATASET_PAGE_SIZE));
@@ -586,9 +596,16 @@ export function RecordList({
       }
     }
 
-    previousVisibleIdsRef.current = visibleIds;
     previousSelectedVisibleIndexRef.current = selectedVisibleIndex >= 0 ? selectedVisibleIndex : null;
-  }, [dispatch, loadDatasetPage, selectedRecordId, sourceFilter, visibleIds]);
+  }, [
+    dispatch,
+    loadDatasetPage,
+    recordIdForIndex,
+    recordIndexById,
+    rowCount,
+    selectedRecordId,
+    sourceFilter,
+  ]);
 
   useEffect(() => {
     const element = listRef.current?.element;
@@ -611,8 +628,6 @@ export function RecordList({
     };
   }, [visibleIds.length]);
 
-  const rowCount = visibleIds.length;
-
   useEffect(() => {
     if (selectedRecordId !== previousSelectedRecordIdRef.current) {
       followSelectionRef.current = true;
@@ -623,7 +638,7 @@ export function RecordList({
       return;
     }
 
-    const selectedIndex = visibleIds.indexOf(selectedRecordId);
+    const selectedIndex = recordIndexById.get(selectedRecordId) ?? -1;
     if (selectedIndex === -1) {
       return;
     }
@@ -637,7 +652,7 @@ export function RecordList({
       behavior: "instant",
       index: selectedIndex,
     });
-  }, [loadDatasetPage, selectedRecordId, sourceFilter, visibleIds]);
+  }, [loadDatasetPage, recordIndexById, selectedRecordId, sourceFilter, visibleIds]);
 
   const multiSelectActive = multiSelection.size > 0;
 
@@ -662,7 +677,7 @@ export function RecordList({
 
   const rowProps = useMemo<VirtualRowData>(
     () => ({
-      visibleIds,
+      recordIdForIndex,
       recordForId,
       repoRoot: bootstrap?.repo_root ?? null,
       selectedRecordId,
@@ -677,9 +692,9 @@ export function RecordList({
       multiSelection,
       onMultiSelectToggle,
       onSelect,
+      recordIdForIndex,
       recordForId,
       selectedRecordId,
-      visibleIds,
     ],
   );
 
@@ -717,9 +732,17 @@ export function RecordList({
 
     const handleKeyDown = (event: KeyboardEvent) => {
       if ((event.metaKey || event.ctrlKey) && event.key === "a" && !event.shiftKey && !event.altKey) {
-        if (!isTypingTarget(event.target) && visibleIds.length > 0) {
+        if (!isTypingTarget(event.target) && rowCount > 0) {
           event.preventDefault();
-          dispatch({ type: "SET_MULTI_SELECT_ALL", payload: visibleIds });
+          if (sourceFilter === "dataset") {
+            void queryClient
+              .fetchQuery(browseRecordIdsQueryOptions(datasetBrowseParams))
+              .then((response) => {
+                dispatch({ type: "SET_MULTI_SELECT_ALL", payload: response.record_ids });
+              });
+          } else {
+            dispatch({ type: "SET_MULTI_SELECT_ALL", payload: visibleIds });
+          }
           return;
         }
       }
@@ -739,32 +762,35 @@ export function RecordList({
       if (isTypingTarget(event.target)) {
         return;
       }
-      if (visibleIds.length === 0) {
+      if (rowCount === 0) {
         return;
       }
 
       event.preventDefault();
 
-      const currentIndex = selectedRecordId ? visibleIds.indexOf(selectedRecordId) : -1;
+      const currentIndex = selectedRecordId ? (recordIndexById.get(selectedRecordId) ?? -1) : -1;
       const fallbackIndex =
         previousSelectedVisibleIndexRef.current == null
           ? null
           : event.key === "ArrowDown"
-            ? Math.min(previousSelectedVisibleIndexRef.current, visibleIds.length - 1)
+            ? Math.min(previousSelectedVisibleIndexRef.current, rowCount - 1)
             : Math.max(previousSelectedVisibleIndexRef.current - 1, 0);
       const nextIndex =
         event.key === "ArrowDown"
           ? currentIndex >= 0
-            ? (currentIndex + 1) % visibleIds.length
+            ? (currentIndex + 1) % rowCount
             : fallbackIndex ?? 0
           : currentIndex >= 0
-            ? (currentIndex - 1 + visibleIds.length) % visibleIds.length
-            : fallbackIndex ?? visibleIds.length - 1;
+            ? (currentIndex - 1 + rowCount) % rowCount
+            : fallbackIndex ?? rowCount - 1;
       selectionAdvanceDirectionRef.current = event.key === "ArrowUp" ? -1 : 1;
 
-      const nextRecordId = visibleIds[nextIndex] ?? null;
-      if (sourceFilter === "dataset" && nextRecordId != null) {
+      const nextRecordId = recordIdForIndex(nextIndex);
+      if (sourceFilter === "dataset") {
         loadDatasetPage(Math.floor(nextIndex / DATASET_PAGE_SIZE));
+      }
+      if (!nextRecordId) {
+        return;
       }
       dispatch({ type: "SELECT_RECORD", payload: nextRecordId });
     };
@@ -773,7 +799,19 @@ export function RecordList({
     return () => {
       document.removeEventListener("keydown", handleKeyDown);
     };
-  }, [dispatch, loadDatasetPage, multiSelectActive, selectedRecordId, sourceFilter, visibleIds]);
+  }, [
+    datasetBrowseParams,
+    dispatch,
+    loadDatasetPage,
+    multiSelectActive,
+    queryClient,
+    recordIdForIndex,
+    recordIndexById,
+    rowCount,
+    selectedRecordId,
+    sourceFilter,
+    visibleIds,
+  ]);
 
   if (!bootstrap) {
     return (
@@ -791,7 +829,7 @@ export function RecordList({
     );
   }
 
-  if (sourceFilter === "dataset" && datasetLoading && visibleIds.length === 0) {
+  if (sourceFilter === "dataset" && datasetLoading && rowCount === 0) {
     return (
       <div className="flex flex-1 items-center justify-center p-4">
         <p className="text-[11px] text-[var(--text-quaternary)]">
@@ -801,7 +839,7 @@ export function RecordList({
     );
   }
 
-  if (visibleIds.length === 0) {
+  if (rowCount === 0) {
     return (
       <div className="flex flex-1 items-center justify-center p-4">
         <p className="text-[11px] text-[var(--text-quaternary)]">

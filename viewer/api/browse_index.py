@@ -5,6 +5,7 @@ import os
 import tempfile
 import threading
 import time
+from collections.abc import Iterator
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
@@ -12,6 +13,7 @@ from typing import Any
 from storage.repo import StorageRepo
 from viewer.api.schemas import (
     RecordBrowseFacetsResponse,
+    RecordBrowseIdsResponse,
     RecordBrowseResponse,
     RecordSummaryResponse,
 )
@@ -302,10 +304,108 @@ class DatasetBrowseIndex:
         offset: int = 0,
         limit: int = 100,
     ) -> RecordBrowseResponse:
+        snapshot = self.snapshot()
+        normalized_offset = max(0, offset)
+        normalized_limit = max(0, min(limit, 500))
+        page_end = normalized_offset + normalized_limit
+        total = 0
+        paged_rows: list[BrowseIndexRecord] = []
+        for row in self._matching_rows(
+            snapshot,
+            query_candidate_ids=query_candidate_ids,
+            run_id=run_id,
+            time_filter=time_filter,
+            time_filter_oldest=time_filter_oldest,
+            time_filter_newest=time_filter_newest,
+            model_filter=model_filter,
+            sdk_filter=sdk_filter,
+            author_filters=author_filters,
+            category_filters=category_filters,
+            cost_min=cost_min,
+            cost_max=cost_max,
+            rating_filter=rating_filter,
+            secondary_rating_filter=secondary_rating_filter,
+        ):
+            if normalized_offset <= total < page_end:
+                paged_rows.append(row)
+            total += 1
+
+        return RecordBrowseResponse(
+            source="dataset",
+            total=total,
+            source_total=len(snapshot.rows),
+            offset=normalized_offset,
+            limit=normalized_limit,
+            record_ids=[row.record_id for row in paged_rows],
+            records=[row.to_summary() for row in paged_rows],
+            facets=_facets_for_run(snapshot, run_id=run_id),
+        )
+
+    def record_ids(
+        self,
+        *,
+        query_candidate_ids: list[str] | None = None,
+        run_id: str | None = None,
+        time_filter: str | None = None,
+        time_filter_oldest: str | None = None,
+        time_filter_newest: str | None = None,
+        model_filter: str | None = None,
+        sdk_filter: str | None = None,
+        author_filters: list[str] | None = None,
+        category_filters: list[str] | None = None,
+        cost_min: float | None = None,
+        cost_max: float | None = None,
+        rating_filter: list[str] | None = None,
+        secondary_rating_filter: list[str] | None = None,
+    ) -> RecordBrowseIdsResponse:
+        snapshot = self.snapshot()
+        matching_ids = [
+            row.record_id
+            for row in self._matching_rows(
+                snapshot,
+                query_candidate_ids=query_candidate_ids,
+                run_id=run_id,
+                time_filter=time_filter,
+                time_filter_oldest=time_filter_oldest,
+                time_filter_newest=time_filter_newest,
+                model_filter=model_filter,
+                sdk_filter=sdk_filter,
+                author_filters=author_filters,
+                category_filters=category_filters,
+                cost_min=cost_min,
+                cost_max=cost_max,
+                rating_filter=rating_filter,
+                secondary_rating_filter=secondary_rating_filter,
+            )
+        ]
+
+        return RecordBrowseIdsResponse(
+            source="dataset",
+            total=len(matching_ids),
+            record_ids=matching_ids,
+        )
+
+    def _matching_rows(
+        self,
+        snapshot: BrowseIndexSnapshot,
+        *,
+        query_candidate_ids: list[str] | None = None,
+        run_id: str | None = None,
+        time_filter: str | None = None,
+        time_filter_oldest: str | None = None,
+        time_filter_newest: str | None = None,
+        model_filter: str | None = None,
+        sdk_filter: str | None = None,
+        author_filters: list[str] | None = None,
+        category_filters: list[str] | None = None,
+        cost_min: float | None = None,
+        cost_max: float | None = None,
+        rating_filter: list[str] | None = None,
+        secondary_rating_filter: list[str] | None = None,
+    ) -> Iterator[BrowseIndexRecord]:
         if cost_min is not None and cost_max is not None and cost_min > cost_max:
             cost_min, cost_max = cost_max, cost_min
 
-        snapshot = self.snapshot()
         effective_time_filter_oldest = _normalize_time_filter_value(
             time_filter_oldest
         ) or _normalize_time_filter_value(time_filter)
@@ -314,16 +414,13 @@ class DatasetBrowseIndex:
         if query_candidate_ids is None:
             candidate_rows = snapshot.sorted_rows
         else:
-            candidate_rows_list: list[BrowseIndexRecord] = []
-            for record_id in query_candidate_ids:
-                row = snapshot.rows_by_id.get(record_id)
-                if row is not None:
-                    candidate_rows_list.append(row)
-            candidate_rows = tuple(candidate_rows_list)
+            candidate_rows = (
+                row
+                for record_id in query_candidate_ids
+                if (row := snapshot.rows_by_id.get(record_id)) is not None
+            )
 
-        matching_rows = [
-            row
-            for row in candidate_rows
+        for row in candidate_rows:
             if _row_matches(
                 row,
                 run_id=run_id,
@@ -337,27 +434,8 @@ class DatasetBrowseIndex:
                 cost_max=cost_max,
                 rating_filter=rating_filter,
                 secondary_rating_filter=secondary_rating_filter,
-            )
-        ]
-
-        normalized_offset = max(0, offset)
-        normalized_limit = max(0, min(limit, 500))
-        paged_rows = (
-            matching_rows[normalized_offset : normalized_offset + normalized_limit]
-            if normalized_limit > 0
-            else []
-        )
-
-        return RecordBrowseResponse(
-            source="dataset",
-            total=len(matching_rows),
-            source_total=len(snapshot.rows),
-            offset=normalized_offset,
-            limit=normalized_limit,
-            record_ids=[row.record_id for row in matching_rows],
-            records=[row.to_summary() for row in paged_rows],
-            facets=_facets_for_run(snapshot, run_id=run_id),
-        )
+            ):
+                yield row
 
     def summaries_for_ids(
         self,
