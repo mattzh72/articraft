@@ -10,12 +10,12 @@ from pathlib import Path
 from typing import Any
 
 from articraft.values import PROVIDER_VALUE_SET, THINKING_LEVEL_VALUE_SET
+from storage.identifiers import RECORD_ID_RE as _RECORD_ID_RE
+from storage.identifiers import SLUG_RE as _SLUG_RE
 from storage.records import WORKBENCH_RECORD_GITIGNORE_TEXT
 from storage.repo import StorageRepo
 
-_SLUG_RE = re.compile(r"^[a-z0-9][a-z0-9_]*$")
 _SHA256_RE = re.compile(r"^[a-f0-9]{64}$")
-_RECORD_ID_RE = re.compile(r"^rec_[A-Za-z0-9_.-]+$")
 _ALLOWED_COLLECTIONS = {"dataset", "workbench"}
 _ALLOWED_PROMPT_KINDS = {"single_prompt", "prompt_series"}
 _ALLOWED_PROVIDERS = PROVIDER_VALUE_SET

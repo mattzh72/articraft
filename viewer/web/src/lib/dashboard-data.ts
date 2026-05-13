@@ -1,4 +1,5 @@
-import type { CostFilter, DatasetEntry, RecordSummary, TimeFilter } from "@/lib/types";
+import type { AgentHarness, CostFilter, DatasetEntry, RecordSummary, TimeFilter } from "@/lib/types";
+import { recordMatchesAgentHarnessFilters } from "@/lib/agent-harness";
 
 const TIME_FILTER_DURATIONS_MS: Record<string, number> = {
   "1h": 1 * 60 * 60 * 1000,
@@ -20,6 +21,7 @@ export type DashboardFilters = {
   starsFilter: [number, number];
   costFilter: CostFilter;
   sdkFilter: string | null;
+  agentHarnessFilters: AgentHarness[];
 };
 
 export type DashboardOverviewStats = {
@@ -94,6 +96,7 @@ export function hasActiveDashboardFilters(filters: DashboardFilters): boolean {
     filters.timeFilter.oldest != null ||
     filters.timeFilter.newest != null ||
     filters.sdkFilter != null ||
+    filters.agentHarnessFilters.length > 0 ||
     filters.costFilter.min != null ||
     filters.costFilter.max != null ||
     filters.starsFilter[0] > 0 ||
@@ -141,6 +144,10 @@ export function filterDashboardRecords(
 
   return records.filter((record) => {
     if (filters.sdkFilter && record.sdk_package !== filters.sdkFilter) {
+      return false;
+    }
+
+    if (!recordMatchesAgentHarnessFilters(record, filters.agentHarnessFilters)) {
       return false;
     }
 

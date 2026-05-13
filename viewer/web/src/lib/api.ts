@@ -84,6 +84,7 @@ export async function fetchDashboard(
     starsFilter: [number, number];
     costFilter: CostFilter;
     sdkFilter: string | null;
+    agentHarnessFilters: string[];
     authorFilters: string[];
     categoryFilters: string[];
     rollingWindowDays: number;
@@ -111,6 +112,9 @@ export async function fetchDashboard(
   }
   if (params.sdkFilter) {
     searchParams.set("sdk", params.sdkFilter);
+  }
+  for (const agentHarnessFilter of params.agentHarnessFilters) {
+    searchParams.append("agent_harness", agentHarnessFilter);
   }
   for (const authorFilter of params.authorFilters) {
     searchParams.append("author", authorFilter);
@@ -142,6 +146,7 @@ export async function browseRecords(params: {
   timeFilter: TimeFilter;
   modelFilter: string | null;
   sdkFilter: string | null;
+  agentHarnessFilters: string[];
   authorFilters: string[];
   categoryFilters: string[];
   costFilter: CostFilter;
@@ -170,6 +175,7 @@ function appendBrowseParams(
     timeFilter: TimeFilter;
     modelFilter: string | null;
     sdkFilter: string | null;
+    agentHarnessFilters: string[];
     authorFilters: string[];
     categoryFilters: string[];
     costFilter: CostFilter;
@@ -195,6 +201,9 @@ function appendBrowseParams(
   }
   if (params.sdkFilter) {
     searchParams.set("sdk", params.sdkFilter);
+  }
+  for (const agentHarnessFilter of params.agentHarnessFilters) {
+    searchParams.append("agent_harness", agentHarnessFilter);
   }
   for (const authorFilter of params.authorFilters) {
     searchParams.append("author", authorFilter);
@@ -223,6 +232,7 @@ export async function fetchBrowseRecordIds(params: {
   timeFilter: TimeFilter;
   modelFilter: string | null;
   sdkFilter: string | null;
+  agentHarnessFilters: string[];
   authorFilters: string[];
   categoryFilters: string[];
   costFilter: CostFilter;
@@ -241,6 +251,7 @@ export async function searchRecords(params: {
   timeFilter: TimeFilter;
   modelFilter: string | null;
   sdkFilter: string | null;
+  agentHarnessFilters: string[];
   authorFilters: string[];
   categoryFilters: string[];
   costFilter: CostFilter;
@@ -265,6 +276,9 @@ export async function searchRecords(params: {
   }
   if (params.sdkFilter) {
     searchParams.set("sdk", params.sdkFilter);
+  }
+  for (const agentHarnessFilter of params.agentHarnessFilters) {
+    searchParams.append("agent_harness", agentHarnessFilter);
   }
   for (const authorFilter of params.authorFilters) {
     searchParams.append("author", authorFilter);

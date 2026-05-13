@@ -5,26 +5,27 @@ from typing import Any
 
 from storage.dataset_workflow import reconcile_category_metadata
 from storage.queries import StorageQueries
+from viewer.api.store_components import ViewerStoreComponent
 from viewer.api.store_values import _utc_now
 
 
-class ViewerStoreMutationsMixin:
+class ViewerMutationStore(ViewerStoreComponent):
     def update_record_rating(self, record_id: str, rating: int | None) -> dict[str, Any] | None:
-        updated = self.records.update_rating(record_id, rating)
+        updated = self.record_store.update_rating(record_id, rating)
         if isinstance(updated, dict):
-            self.invalidate_stats_cache()
+            self.stats.invalidate_stats_cache()
         return updated if isinstance(updated, dict) else None
 
     def update_record_secondary_rating(
         self, record_id: str, secondary_rating: int | None
     ) -> dict[str, Any] | None:
-        updated = self.records.update_secondary_rating(record_id, secondary_rating)
+        updated = self.record_store.update_secondary_rating(record_id, secondary_rating)
         if isinstance(updated, dict):
-            self.invalidate_stats_cache()
+            self.stats.invalidate_stats_cache()
         return updated if isinstance(updated, dict) else None
 
     def delete_record(self, record_id: str) -> bool:
-        record = self.records.load_record(record_id)
+        record = self.record_store.load_record(record_id)
         if not isinstance(record, dict):
             return False
 
@@ -32,7 +33,7 @@ class ViewerStoreMutationsMixin:
         source = record.get("source")
         run_id = source.get("run_id") if isinstance(source, dict) else None
 
-        self.collections.remove_workbench_entries(record_id)
+        self.collection_store.remove_workbench_entries(record_id)
 
         if isinstance(run_id, str) and run_id:
             for path in (
@@ -42,7 +43,7 @@ class ViewerStoreMutationsMixin:
                 if path.exists():
                     shutil.rmtree(path)
 
-        deleted = self.records.delete_record(record_id)
+        deleted = self.record_store.delete_record(record_id)
         if deleted:
             if category_slug:
                 reconcile_category_metadata(
@@ -54,9 +55,9 @@ class ViewerStoreMutationsMixin:
                     now=_utc_now(),
                     sequence=None,
                 )
-            self.datasets.write_dataset_manifest()
-            self.search.rebuild()
-            self.invalidate_stats_cache()
+            self.dataset_store.write_dataset_manifest()
+            self.search_index.rebuild()
+            self.stats.invalidate_stats_cache()
         return deleted
 
     def delete_staging_entry(self, run_id: str, record_id: str) -> bool:

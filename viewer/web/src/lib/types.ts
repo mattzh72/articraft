@@ -16,6 +16,7 @@ export type RecordSummary = {
   model_id: string | null;
   creator_mode: string | null;
   external_agent: string | null;
+  agent_harness: AgentHarness;
   has_traces: boolean;
   thinking_level: string | null;
   turn_count: number | null;
@@ -36,6 +37,7 @@ export type RecordSummary = {
 export type RecordBrowseFacets = {
   models: string[];
   sdk_packages: string[];
+  agent_harnesses: AgentHarness[];
   authors: string[];
   categories: string[];
   cost_min: number | null;
@@ -270,6 +272,7 @@ export type DashboardData = {
   generated_at: string;
   supercategories: SupercategoryOption[];
   available_sdks: string[];
+  available_agent_harnesses: AgentHarness[];
   available_authors: string[];
   available_categories: string[];
   cost_bounds: DashboardCostBounds | null;
@@ -294,6 +297,7 @@ export type ViewerSelection =
 
 export type SourceFilter = "workbench" | "dataset";
 export type BrowserTab = SourceFilter | "staging";
+export type AgentHarness = "articraft" | "codex" | "claude-code";
 export type TimeFilterPoint = "1y" | "180d" | "90d" | "60d" | "30d" | "14d" | "7d" | "3d" | "24h" | "12h" | "6h" | "1h";
 export type TimeFilter = {
   oldest: TimeFilterPoint | null;
@@ -323,6 +327,7 @@ export type ViewerState = {
   timeFilter: TimeFilter;
   modelFilter: string | null;
   sdkFilter: string | null;
+  agentHarnessFilters: AgentHarness[];
   authorFilters: string[];
   categoryFilters: string[];
   costFilter: CostFilter;
@@ -348,6 +353,7 @@ export type ViewerAction =
         timeFilter: TimeFilter;
         modelFilter: string | null;
         sdkFilter: string | null;
+        agentHarnessFilters: AgentHarness[];
         authorFilters: string[];
         categoryFilters: string[];
         costFilter: CostFilter;
@@ -375,6 +381,7 @@ export type ViewerAction =
   | { type: "SET_TIME_FILTER"; payload: TimeFilter }
   | { type: "SET_MODEL_FILTER"; payload: string | null }
   | { type: "SET_SDK_FILTER"; payload: string | null }
+  | { type: "SET_AGENT_HARNESS_FILTERS"; payload: string[] }
   | { type: "SET_AUTHOR_FILTERS"; payload: string[] }
   | { type: "SET_CATEGORY_FILTERS"; payload: string[] }
   | { type: "SET_COST_FILTER"; payload: CostFilter }

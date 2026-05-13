@@ -12,6 +12,7 @@ from viewer.api.schemas import (
     StagingEntryResponse,
     ViewerBootstrapResponse,
 )
+from viewer.api.store_components import ViewerStoreComponent
 from viewer.api.store_filesystem import (
     _file_mtime_to_utc,
     _first_nonempty_line,
@@ -28,7 +29,7 @@ from viewer.api.store_values import (
 )
 
 
-class ViewerStoreRunsMixin:
+class ViewerRunsStore(ViewerStoreComponent):
     def _latest_staging_timestamp(self, staging_dir: Path, fallback: str | None) -> str | None:
         # Keep staging polling cheap by checking a small set of known files instead of
         # recursively scanning every artifact on each request.
@@ -115,7 +116,7 @@ class ViewerStoreRunsMixin:
                 continue
 
             result_by_record_id: dict[str, dict[str, Any]] = {}
-            for row in self._read_jsonl(self.repo.layout.run_results_path(run_id)):
+            for row in self.records._read_jsonl(self.repo.layout.run_results_path(run_id)):
                 record_id = row.get("record_id")
                 if isinstance(record_id, str) and record_id:
                     result_by_record_id[record_id] = row
@@ -128,13 +129,15 @@ class ViewerStoreRunsMixin:
                     continue
 
                 result = result_by_record_id.get(record_id, {})
-                persisted_record = self._record_summary(record_id, summary_cache=summary_cache)
+                persisted_record = self.records._record_summary(
+                    record_id, summary_cache=summary_cache
+                )
                 prompt_path = staging_dir / "prompt.txt"
                 model_script_path = staging_dir / "model.py"
                 checkpoint_urdf_path = staging_dir / "model.urdf"
                 cost_path = staging_dir / "cost.json"
                 traces_dir = staging_dir / "traces"
-                prompt_text = self._read_text(staging_dir / "prompt.txt")
+                prompt_text = self.records._read_text(staging_dir / "prompt.txt")
                 prompt_preview = ""
                 if prompt_text:
                     prompt_preview = _truncate_text(prompt_text)
@@ -215,7 +218,7 @@ class ViewerStoreRunsMixin:
         )
 
     def _run_summary(self, run_id: str, run_metadata: dict[str, Any]) -> RunSummaryResponse:
-        results = self._read_run_results(run_id)
+        results = self.records._read_run_results(run_id)
         success_count = sum(1 for row in results if str(row.get("status", "")).lower() == "success")
         failed_count = sum(1 for row in results if str(row.get("status", "")).lower() == "failed")
         return RunSummaryResponse(
@@ -265,7 +268,7 @@ class ViewerStoreRunsMixin:
             return None
 
         summary = self._run_summary(run_id, run_metadata)
-        raw_results = self._read_run_results(run_id)
+        raw_results = self.records._read_run_results(run_id)
         results: list[RunResultResponse] = []
         record_ids: list[str] = []
         for row in raw_results:
@@ -289,7 +292,7 @@ class ViewerStoreRunsMixin:
         summary_cache: dict[str, RecordSummaryResponse | None] = {}
         records: list[RecordDetailResponse] = []
         for record_id in record_ids:
-            detail = self._record_detail(record_id, summary_cache=summary_cache)
+            detail = self.records._record_detail(record_id, summary_cache=summary_cache)
             if detail is not None:
                 records.append(detail)
 
@@ -305,16 +308,16 @@ class ViewerStoreRunsMixin:
         return ViewerBootstrapResponse(
             repo_root=self.repo_root.as_posix(),
             generated_at=_utc_now(),
-            workbench_entries=self.list_workbench_entries(summary_cache=summary_cache),
+            workbench_entries=self.records.list_workbench_entries(summary_cache=summary_cache),
             dataset_entries=(
-                self.list_dataset_entries(
+                self.records.list_dataset_entries(
                     summary_cache=summary_cache,
                     include_records=False,
                 )
                 if include_dataset_entries
                 else []
             ),
-            staging_entries=self.list_staging_entries(summary_cache=summary_cache),
-            runs=self.list_runs(),
-            supercategories=self.list_supercategories(),
+            staging_entries=self.runs.list_staging_entries(summary_cache=summary_cache),
+            runs=self.runs.list_runs(),
+            supercategories=self.taxonomy.list_supercategories(),
         )

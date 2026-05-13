@@ -117,9 +117,91 @@ def test_viewer_api_surfaces_external_creator_metadata(tmp_path: Path) -> None:
     external_record = response.json()["workbench_entries"][0]["record"]
     assert external_record["creator_mode"] == "external_agent"
     assert external_record["external_agent"] == "codex"
+    assert external_record["agent_harness"] == "codex"
     assert external_record["has_traces"] is False
     assert external_record["provider"] == "openai"
     assert external_record["model_id"] == "gpt-5.5-2026-04-23"
+
+
+def test_viewer_api_filters_dataset_by_agent_harness(tmp_path: Path) -> None:
+    repo = StorageRepo(tmp_path)
+    repo.ensure_layout()
+    records = [
+        ("rec_articraft_001", "Articraft washer", "articraft_washers", None),
+        (
+            "rec_codex_001",
+            "Codex washer",
+            "codex_washers",
+            CreatorMetadata(mode="external_agent", agent="codex", trace_available=False),
+        ),
+        (
+            "rec_claude_001",
+            "Claude washer",
+            "claude_washers",
+            CreatorMetadata(mode="external_agent", agent="claude-code", trace_available=False),
+        ),
+    ]
+    for index, (record_id, title, category_slug, creator) in enumerate(records, start=1):
+        _write_record(
+            repo,
+            record_id=record_id,
+            title=title,
+            prompt=f"create a realistic washing machine variant {index}",
+            category_slug=category_slug,
+            collections=["dataset"],
+            source_run_id=None if creator else "run_001",
+            creator=creator,
+        )
+        DatasetStore(repo).promote_record(
+            record_id=record_id,
+            dataset_id=f"dataset_{index:03d}",
+            promoted_at=f"2026-03-18T08:0{index}:00Z",
+            category_slug=category_slug,
+        )
+
+    client = TestClient(create_app(repo_root=tmp_path))
+
+    dataset_browse = client.get("/api/records/browse?source=dataset").json()
+    assert dataset_browse["total"] == 3
+    assert dataset_browse["facets"]["agent_harnesses"] == [
+        "articraft",
+        "codex",
+        "claude-code",
+    ]
+
+    articraft_browse = client.get(
+        "/api/records/browse?source=dataset&agent_harness=articraft"
+    ).json()
+    assert articraft_browse["total"] == 1
+    assert articraft_browse["record_ids"] == ["rec_articraft_001"]
+    assert articraft_browse["records"][0]["agent_harness"] == "articraft"
+
+    external_browse = client.get(
+        "/api/records/browse?source=dataset&agent_harness=codex&agent_harness=claude-code"
+    ).json()
+    assert external_browse["total"] == 2
+    assert set(external_browse["record_ids"]) == {"rec_codex_001", "rec_claude_001"}
+
+    browse_ids = client.get(
+        "/api/records/browse/ids?source=dataset&agent_harness=claude-code"
+    ).json()
+    assert browse_ids["total"] == 1
+    assert browse_ids["record_ids"] == ["rec_claude_001"]
+
+    search_results = client.get(
+        "/api/records/search?q=washer&source=dataset&agent_harness=codex"
+    ).json()
+    assert [item["record_id"] for item in search_results] == ["rec_codex_001"]
+
+    dashboard = client.get("/api/dashboard?agent_harness=claude-code").json()
+    assert dashboard["available_agent_harnesses"] == [
+        "articraft",
+        "codex",
+        "claude-code",
+    ]
+    assert dashboard["overview"]["total_records"] == 1
+    assert dashboard["overview"]["is_filtered"] is True
+    assert set(dashboard["category_stats"]) == {"claude_washers"}
 
 
 def test_viewer_api_smoke_bootstrap_browse_search_and_assets(tmp_path: Path) -> None:
@@ -295,6 +377,31 @@ def test_viewer_api_promote_uses_category_slug_not_display_title(
     assert promote_response.json()["category_slug"] == "screwin_light_bulb_with_socket"
     assert promote_response.json()["dataset_id"] == "ds_screwin_light_bulb_with_socket_0001"
     assert not repo.layout.category_metadata_path("screw_in_light_bulb_with_socket").exists()
+
+
+def test_viewer_api_promote_rejects_invalid_category_slug(tmp_path: Path) -> None:
+    repo = StorageRepo(tmp_path)
+    repo.ensure_layout()
+    _write_record(
+        repo,
+        record_id="rec_invalid_slug_001",
+        title="Invalid slug",
+        prompt="A workbench record.",
+        category_slug=None,
+        collections=["workbench"],
+    )
+
+    client = TestClient(create_app(repo_root=tmp_path))
+    response = client.post(
+        "/api/records/rec_invalid_slug_001/promote",
+        json={
+            "category_slug": "../escape",
+            "category_title": "Escape",
+        },
+    )
+
+    assert response.status_code == 422
+    assert not (tmp_path / "data" / "escape").exists()
 
 
 def test_viewer_api_ensures_record_assets_on_demand(

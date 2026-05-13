@@ -60,6 +60,24 @@ packages = [
     "sdk",
 ]
 
+[tool.hatch.build.targets.sdist]
+exclude = [
+    "/.claude",
+    "/.mypy_cache",
+    "/.pytest_cache",
+    "/.ruff_cache",
+    "/.uv-cache",
+    "/.venv",
+    "/assets",
+    "/data/cache",
+    "/data/local",
+    "/data/records",
+    "/dist",
+    "/node_modules",
+    "/viewer/web/dist",
+    "/viewer/web/node_modules",
+]
+
 [dependency-groups]
 dev = [
     "pre-commit>=4.2.0",

@@ -10,9 +10,9 @@ router = APIRouter()
 
 @router.get("/api/collections/workbench", response_model=list[WorkbenchEntryResponse])
 async def workbench_entries(store: ViewerStoreDep) -> list[WorkbenchEntryResponse]:
-    return store.list_workbench_entries()
+    return store.records.list_workbench_entries()
 
 
 @router.get("/api/collections/dataset", response_model=list[DatasetEntryResponse])
 async def dataset_entries(store: ViewerStoreDep) -> list[DatasetEntryResponse]:
-    return store.list_dataset_entries()
+    return store.records.list_dataset_entries()

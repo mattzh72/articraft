@@ -3,6 +3,7 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from pathlib import Path
 
+from storage.identifiers import validate_category_slug, validate_dataset_id, validate_record_id
 from storage.models import DatasetEntry
 from storage.records import remove_workbench_record_gitignore_marker
 from storage.repo import StorageRepo
@@ -59,7 +60,8 @@ class DatasetStore:
         return set(self._dataset_id_index())
 
     def load_entry(self, record_id: str) -> dict | None:
-        return self.repo.read_json(self.repo.layout.record_dataset_entry_path(record_id))
+        validated_record_id = validate_record_id(record_id)
+        return self.repo.read_json(self.repo.layout.record_dataset_entry_path(validated_record_id))
 
     def find_record_id_by_dataset_id(self, dataset_id: str) -> str | None:
         record_id = self._dataset_id_index().get(dataset_id)
@@ -86,6 +88,9 @@ class DatasetStore:
         promoted_at: str,
         category_slug: str | None = None,
     ) -> dict:
+        record_id = validate_record_id(record_id)
+        dataset_id = validate_dataset_id(dataset_id)
+        category_slug = validate_category_slug(category_slug) if category_slug is not None else None
         record_path = self.repo.layout.record_metadata_path(record_id)
         record = self.repo.read_json(record_path)
         if record is None:
@@ -99,7 +104,12 @@ class DatasetStore:
                 f"Dataset ID already exists: {dataset_id} (record {existing_record_id})"
             )
 
-        record_category = record.get("category_slug")
+        raw_record_category = record.get("category_slug")
+        record_category = (
+            validate_category_slug(raw_record_category)
+            if isinstance(raw_record_category, str) and raw_record_category.strip()
+            else None
+        )
         entry_category = category_slug or record_category
         if not entry_category:
             raise ValueError(f"Category slug required for record: {record_id}")

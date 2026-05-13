@@ -10,6 +10,7 @@ import {
 import { useQuery } from "@tanstack/react-query";
 
 import { HttpError } from "@/lib/api";
+import { normalizeAgentHarnessFilters } from "@/lib/agent-harness";
 import { isRunActive } from "@/lib/dashboard-stats";
 import { useRoute } from "@/lib/useRoute";
 import {
@@ -44,6 +45,7 @@ const URL_QUERY_PARAMS = {
   timeTo: "time_to",
   model: "model",
   sdk: "sdk",
+  agentHarness: "agent_harness",
   author: "author",
   category: "category",
   costMin: "cost_min",
@@ -84,6 +86,7 @@ type ViewerUrlState = Pick<
   | "timeFilter"
   | "modelFilter"
   | "sdkFilter"
+  | "agentHarnessFilters"
   | "authorFilters"
   | "categoryFilters"
   | "costFilter"
@@ -102,6 +105,7 @@ const defaultViewerUrlState: ViewerUrlState = {
   timeFilter: { oldest: null, newest: null },
   modelFilter: null,
   sdkFilter: null,
+  agentHarnessFilters: [],
   authorFilters: [],
   categoryFilters: [],
   costFilter: { min: null, max: null },
@@ -248,6 +252,9 @@ function readViewerUrlState(): ViewerUrlState {
     };
     const modelFilter = normalizeOptionalQueryParam(params.get(URL_QUERY_PARAMS.model));
     const sdkFilter = normalizeOptionalQueryParam(params.get(URL_QUERY_PARAMS.sdk));
+    const agentHarnessFilters = normalizeAgentHarnessFilters(
+      params.getAll(URL_QUERY_PARAMS.agentHarness),
+    );
     const authorFilters = Array.from(
       new Set(
         params
@@ -286,6 +293,7 @@ function readViewerUrlState(): ViewerUrlState {
       timeFilter,
       modelFilter,
       sdkFilter,
+      agentHarnessFilters,
       authorFilters,
       categoryFilters,
       costFilter,
@@ -358,6 +366,13 @@ function syncViewerStateToUrl(state: ViewerUrlState): void {
     url.searchParams.set(URL_QUERY_PARAMS.sdk, state.sdkFilter);
   } else {
     url.searchParams.delete(URL_QUERY_PARAMS.sdk);
+  }
+
+  url.searchParams.delete(URL_QUERY_PARAMS.agentHarness);
+  if (state.browserTab !== "staging") {
+    for (const agentHarnessFilter of [...state.agentHarnessFilters].sort((left, right) => left.localeCompare(right))) {
+      url.searchParams.append(URL_QUERY_PARAMS.agentHarness, agentHarnessFilter);
+    }
   }
 
   url.searchParams.delete(URL_QUERY_PARAMS.author);
@@ -749,6 +764,7 @@ function viewerReducer(state: ViewerState, action: ViewerAction): ViewerState {
         sourceFilter: action.payload,
         modelFilter: null,
         sdkFilter: null,
+        agentHarnessFilters: [],
         ratingFilter: ratingFilterForBrowserTab(action.payload, state.ratingFilter),
         selectedRunId: null,
         multiSelection: new Set(),
@@ -760,6 +776,7 @@ function viewerReducer(state: ViewerState, action: ViewerAction): ViewerState {
         sourceFilter: action.payload,
         modelFilter: null,
         sdkFilter: null,
+        agentHarnessFilters: [],
         ratingFilter: ratingFilterForBrowserTab(action.payload, state.ratingFilter),
         selectedRunId: null,
         multiSelection: new Set(),
@@ -770,6 +787,8 @@ function viewerReducer(state: ViewerState, action: ViewerAction): ViewerState {
       return { ...state, modelFilter: action.payload };
     case "SET_SDK_FILTER":
       return { ...state, sdkFilter: action.payload };
+    case "SET_AGENT_HARNESS_FILTERS":
+      return { ...state, agentHarnessFilters: normalizeAgentHarnessFilters(action.payload) };
     case "SET_AUTHOR_FILTERS":
       return { ...state, authorFilters: Array.from(new Set(action.payload.filter((value) => value.trim().length > 0))) };
     case "SET_CATEGORY_FILTERS":
@@ -954,6 +973,7 @@ export function ViewerProvider({ children }: { children: ReactNode }): JSX.Eleme
       timeFilter: state.timeFilter,
       modelFilter: state.modelFilter,
       sdkFilter: state.sdkFilter,
+      agentHarnessFilters: state.agentHarnessFilters,
       authorFilters: state.authorFilters,
       categoryFilters: state.categoryFilters,
       costFilter: state.costFilter,
@@ -966,6 +986,7 @@ export function ViewerProvider({ children }: { children: ReactNode }): JSX.Eleme
     state.costFilter,
     state.modelFilter,
     state.sdkFilter,
+    state.agentHarnessFilters,
     state.authorFilters,
     state.ratingFilter,
     state.secondaryRatingFilter,

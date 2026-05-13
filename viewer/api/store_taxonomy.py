@@ -1,9 +1,10 @@
 from __future__ import annotations
 
 from viewer.api.schemas import CategoryOptionResponse, SupercategoryOptionResponse
+from viewer.api.store_components import ViewerStoreComponent
 
 
-class ViewerStoreTaxonomyMixin:
+class ViewerTaxonomyStore(ViewerStoreComponent):
     def list_supercategories(self) -> list[SupercategoryOptionResponse]:
         manifest = self.supercategory_store.load_manifest()
         if manifest is None:

@@ -1,4 +1,6 @@
 .idea
+.claude/
+.uv-cache/
 .DS_Store
 **/.DS_Store
 

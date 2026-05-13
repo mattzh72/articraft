@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState, type JSX } from "react";
 import { createPortal } from "react-dom";
 import { Check, ChevronDown, Search } from "lucide-react";
 
+import { agentHarnessLabel } from "@/lib/agent-harness";
 import { cn, formatCategoryLabel } from "@/lib/utils";
 import type { TimeFilter, TimeFilterPoint } from "@/lib/types";
 import { Slider } from "@/components/ui/slider";
@@ -453,6 +454,30 @@ export function DashboardAuthorFilter({
       onChange={onChange}
       searchPlaceholder="Filter authors..."
       noResultsLabel="No matching authors"
+    />
+  );
+}
+
+export function DashboardAgentHarnessFilter({
+  options,
+  value,
+  onChange,
+}: {
+  options: string[];
+  value: string[];
+  onChange: (value: string[]) => void;
+}): JSX.Element {
+  return (
+    <DashboardMultiSelectFilter
+      title="Agent harness"
+      emptyLabel="All agent harnesses"
+      summaryNoun="agent harnesses"
+      options={options}
+      value={value}
+      onChange={onChange}
+      formatOptionLabel={agentHarnessLabel}
+      searchPlaceholder="Filter agent harnesses..."
+      noResultsLabel="No matching agent harnesses"
     />
   );
 }

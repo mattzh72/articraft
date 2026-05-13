@@ -6,6 +6,11 @@ import uuid
 from storage.categories import CategoryStore
 from storage.collections import CollectionStore
 from storage.datasets import DatasetStore
+from storage.identifiers import (
+    validate_category_slug,
+    validate_dataset_id,
+    validate_record_id,
+)
 from storage.models import CategoryRecord
 from storage.queries import StorageQueries
 from storage.records import RecordStore, remove_workbench_record_gitignore_marker
@@ -36,6 +41,7 @@ def category_title_from_slug(category_slug: str) -> str:
 
 
 def parse_canonical_dataset_sequence(dataset_id: str, category_slug: str) -> int | None:
+    category_slug = validate_category_slug(category_slug)
     prefix = f"ds_{category_slug}_"
     if not dataset_id.startswith(prefix):
         return None
@@ -55,6 +61,7 @@ def allocate_dataset_id(
     category_slug: str,
     reserved_dataset_ids: set[str] | None = None,
 ) -> str:
+    category_slug = validate_category_slug(category_slug)
     seen_dataset_ids = datasets.dataset_ids()
     if reserved_dataset_ids:
         seen_dataset_ids.update(reserved_dataset_ids)
@@ -71,6 +78,7 @@ def next_dataset_id(
     category_slug: str,
     category: dict | None,
 ) -> tuple[str, int | None]:
+    category_slug = validate_category_slug(category_slug)
     del category
     return allocate_dataset_id(datasets, category_slug=category_slug), None
 
@@ -81,6 +89,7 @@ def _list_prompt_batch_ids(
     *,
     category_payload: dict | None = None,
 ) -> list[str]:
+    category_slug = validate_category_slug(category_slug)
     prompt_batches_dir = repo.layout.prompt_batches_dir(category_slug)
     batch_ids: set[str] = set()
     if prompt_batches_dir.exists():
@@ -108,6 +117,7 @@ def reconcile_category_metadata(
     category_title: str | None = None,
     record: dict | None = None,
 ) -> dict | None:
+    category_slug = validate_category_slug(category_slug)
     del now, sequence, record
     categories = CategoryStore(repo)
     existing = categories.load(category_slug)
@@ -164,6 +174,7 @@ def upsert_category_metadata(
     now: str,
     sequence: int | None,
 ) -> dict:
+    category_slug = validate_category_slug(category_slug)
     category = reconcile_category_metadata(
         repo,
         queries,
@@ -189,6 +200,7 @@ def promote_record_workflow(
     dataset_id: str | None,
     promoted_at: str,
 ) -> tuple[dict, dict, dict, SearchIndexStats]:
+    record_id = validate_record_id(record_id)
     record_store = RecordStore(repo)
     collections = CollectionStore(repo)
 
@@ -199,7 +211,7 @@ def promote_record_workflow(
     normalized_category_slug = str(category_slug or "").strip()
     normalized_category_title = str(category_title or "").strip()
     if normalized_category_slug:
-        category_slug = normalized_category_slug
+        category_slug = validate_category_slug(normalized_category_slug)
         if not normalized_category_title:
             existing_category = CategoryStore(repo).load(category_slug)
             normalized_category_title = (
@@ -214,7 +226,7 @@ def promote_record_workflow(
     category_title = normalized_category_title
 
     existing_entry = datasets.load_entry(record_id)
-    resolved_dataset_id = dataset_id
+    resolved_dataset_id = validate_dataset_id(dataset_id) if dataset_id else None
 
     if isinstance(existing_entry, dict):
         existing_category_slug = str(existing_entry.get("category_slug") or "")

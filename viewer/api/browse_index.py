@@ -11,6 +11,7 @@ from pathlib import Path
 from typing import Any
 
 from storage.repo import StorageRepo
+from viewer.api.agent_harness import agent_harness_from_record, within_agent_harness_filters
 from viewer.api.schemas import (
     RecordBrowseFacetsResponse,
     RecordBrowseIdsResponse,
@@ -36,7 +37,7 @@ from viewer.api.store_values import (
     _thinking_level_from_provenance,
 )
 
-_INDEX_SCHEMA_VERSION = 1
+_INDEX_SCHEMA_VERSION = 2
 _DEFAULT_FRESHNESS_INTERVAL_SECONDS = 2.0
 
 
@@ -99,6 +100,7 @@ class BrowseIndexRecord:
     model_id: str | None
     creator_mode: str | None
     external_agent: str | None
+    agent_harness: str
     has_traces: bool
     thinking_level: str | None
     turn_count: int | None
@@ -154,6 +156,7 @@ class BrowseIndexRecord:
             model_id=_coerce_string(payload.get("model_id")),
             creator_mode=_coerce_string(payload.get("creator_mode")),
             external_agent=_coerce_string(payload.get("external_agent")),
+            agent_harness=_coerce_string(payload.get("agent_harness")) or "articraft",
             has_traces=bool(payload.get("has_traces", False)),
             thinking_level=_coerce_string(payload.get("thinking_level")),
             turn_count=_coerce_int(payload.get("turn_count")),
@@ -191,6 +194,7 @@ class BrowseIndexRecord:
             "model_id": self.model_id,
             "creator_mode": self.creator_mode,
             "external_agent": self.external_agent,
+            "agent_harness": self.agent_harness,
             "has_traces": self.has_traces,
             "thinking_level": self.thinking_level,
             "turn_count": self.turn_count,
@@ -225,6 +229,7 @@ class BrowseIndexRecord:
             model_id=self.model_id,
             creator_mode=self.creator_mode,
             external_agent=self.external_agent,
+            agent_harness=self.agent_harness,
             has_traces=self.has_traces,
             thinking_level=self.thinking_level,
             turn_count=self.turn_count,
@@ -268,6 +273,9 @@ class BrowseIndexSnapshot:
             facets=RecordBrowseFacetsResponse(
                 models=sorted({row.model_id for row in rows if row.model_id}),
                 sdk_packages=sorted({row.sdk_package for row in rows if row.sdk_package}),
+                agent_harnesses=_sorted_agent_harnesses(
+                    {row.agent_harness for row in rows if row.agent_harness}
+                ),
                 authors=sorted({row.author for row in rows if row.author}),
                 categories=sorted({row.category_slug for row in rows if row.category_slug}),
                 cost_min=_minimum_cost(rows),
@@ -307,6 +315,7 @@ class DatasetBrowseIndex:
         time_filter_newest: str | None = None,
         model_filter: str | None = None,
         sdk_filter: str | None = None,
+        agent_harness_filters: list[str] | None = None,
         author_filters: list[str] | None = None,
         category_filters: list[str] | None = None,
         cost_min: float | None = None,
@@ -331,6 +340,7 @@ class DatasetBrowseIndex:
             time_filter_newest=time_filter_newest,
             model_filter=model_filter,
             sdk_filter=sdk_filter,
+            agent_harness_filters=agent_harness_filters,
             author_filters=author_filters,
             category_filters=category_filters,
             cost_min=cost_min,
@@ -363,6 +373,7 @@ class DatasetBrowseIndex:
         time_filter_newest: str | None = None,
         model_filter: str | None = None,
         sdk_filter: str | None = None,
+        agent_harness_filters: list[str] | None = None,
         author_filters: list[str] | None = None,
         category_filters: list[str] | None = None,
         cost_min: float | None = None,
@@ -382,6 +393,7 @@ class DatasetBrowseIndex:
                 time_filter_newest=time_filter_newest,
                 model_filter=model_filter,
                 sdk_filter=sdk_filter,
+                agent_harness_filters=agent_harness_filters,
                 author_filters=author_filters,
                 category_filters=category_filters,
                 cost_min=cost_min,
@@ -408,6 +420,7 @@ class DatasetBrowseIndex:
         time_filter_newest: str | None = None,
         model_filter: str | None = None,
         sdk_filter: str | None = None,
+        agent_harness_filters: list[str] | None = None,
         author_filters: list[str] | None = None,
         category_filters: list[str] | None = None,
         cost_min: float | None = None,
@@ -440,6 +453,7 @@ class DatasetBrowseIndex:
                 time_filter_newest=effective_time_filter_newest,
                 model_filter=model_filter,
                 sdk_filter=sdk_filter,
+                agent_harness_filters=agent_harness_filters,
                 author_filters=author_filters,
                 category_filters=category_filters,
                 cost_min=cost_min,
@@ -459,6 +473,7 @@ class DatasetBrowseIndex:
         time_filter_newest: str | None = None,
         model_filter: str | None = None,
         sdk_filter: str | None = None,
+        agent_harness_filters: list[str] | None = None,
         author_filters: list[str] | None = None,
         category_filters: list[str] | None = None,
         cost_min: float | None = None,
@@ -489,6 +504,7 @@ class DatasetBrowseIndex:
                 time_filter_newest=effective_time_filter_newest,
                 model_filter=model_filter,
                 sdk_filter=sdk_filter,
+                agent_harness_filters=agent_harness_filters,
                 author_filters=author_filters,
                 category_filters=category_filters,
                 cost_min=cost_min,
@@ -683,6 +699,7 @@ class DatasetBrowseIndex:
             if isinstance(creator, dict) and creator_mode == "external_agent"
             else None
         )
+        agent_harness = agent_harness_from_record(record)
         has_traces = not (isinstance(creator, dict) and creator.get("trace_available") is False)
         if has_traces:
             traces_dir = self.repo.layout.record_traces_dir(record_id)
@@ -715,6 +732,7 @@ class DatasetBrowseIndex:
             model_id=_coerce_string(record.get("model_id")),
             creator_mode=creator_mode,
             external_agent=external_agent,
+            agent_harness=agent_harness,
             has_traces=has_traces,
             thinking_level=thinking_level,
             turn_count=turn_count,
@@ -759,6 +777,11 @@ def _maximum_cost(rows: list[BrowseIndexRecord] | tuple[BrowseIndexRecord, ...])
     return max(values) if values else None
 
 
+def _sorted_agent_harnesses(values: set[str]) -> list[str]:
+    order = {"articraft": 0, "codex": 1, "claude-code": 2}
+    return sorted(values, key=lambda value: (order.get(value, len(order)), value))
+
+
 def _facets_for_run(
     snapshot: BrowseIndexSnapshot,
     *,
@@ -771,6 +794,7 @@ def _facets_for_run(
     return RecordBrowseFacetsResponse(
         models=snapshot.facets.models,
         sdk_packages=snapshot.facets.sdk_packages,
+        agent_harnesses=snapshot.facets.agent_harnesses,
         authors=snapshot.facets.authors,
         categories=snapshot.facets.categories,
         cost_min=_minimum_cost(cost_rows),
@@ -786,6 +810,7 @@ def _row_matches(
     time_filter_newest: str | None,
     model_filter: str | None,
     sdk_filter: str | None,
+    agent_harness_filters: list[str] | None,
     author_filters: list[str] | None,
     category_filters: list[str] | None,
     cost_min: float | None,
@@ -804,6 +829,8 @@ def _row_matches(
     if model_filter and row.model_id != model_filter:
         return False
     if sdk_filter and row.sdk_package != sdk_filter:
+        return False
+    if not within_agent_harness_filters(row.agent_harness, agent_harness_filters):
         return False
     if not _within_author_filters(row.author, author_filters):
         return False

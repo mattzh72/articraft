@@ -4,6 +4,7 @@ import { Check, ChevronDown, Search } from "lucide-react";
 
 import type { CostFilter, RatingFilter, RatingFilterValue, RecordSummary, SupercategoryOption, TimeFilter } from "@/lib/types";
 import { useViewer, useViewerDispatch } from "@/lib/viewer-context";
+import { agentHarnessLabel, sortAgentHarnesses } from "@/lib/agent-harness";
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
 import {
@@ -107,6 +108,7 @@ type CostBounds = {
 export type DatasetFilterMetadata = {
   availableModels: string[];
   availableSdks: string[];
+  availableAgentHarnesses: string[];
   availableAuthors: string[];
   availableCategories: string[];
   availableCostBounds: CostBounds | null;
@@ -383,6 +385,16 @@ function authorTriggerLabel(options: CategoryOption[], selectedValues: string[])
     return options.find((option) => option.value === selectedValues[0])?.label ?? selectedValues[0];
   }
   return `${selectedValues.length} authors`;
+}
+
+function agentHarnessTriggerLabel(options: CategoryOption[], selectedValues: string[]): string {
+  if (selectedValues.length === 0) {
+    return "All agent harnesses";
+  }
+  if (selectedValues.length === 1) {
+    return options.find((option) => option.value === selectedValues[0])?.label ?? selectedValues[0];
+  }
+  return `${selectedValues.length} agent harnesses`;
 }
 
 function formatCostValue(value: number): string {
@@ -776,7 +788,7 @@ export function ExplorerFilters({
 }: {
   datasetMetadata?: DatasetFilterMetadata | null;
 } = {}): JSX.Element | null {
-  const { bootstrap, sourceFilter, timeFilter, modelFilter, sdkFilter, authorFilters, categoryFilters, costFilter, ratingFilter, secondaryRatingFilter, selectedRunId } =
+  const { bootstrap, sourceFilter, timeFilter, modelFilter, sdkFilter, agentHarnessFilters, authorFilters, categoryFilters, costFilter, ratingFilter, secondaryRatingFilter, selectedRunId } =
     useViewer();
   const dispatch = useViewerDispatch();
 
@@ -804,6 +816,13 @@ export function ExplorerFilters({
     ).sort((left, right) => left.localeCompare(right));
   }, [datasetMetadata?.availableSdks, sourceFilter, sourceRecords]);
 
+  const availableAgentHarnesses = useMemo(() => {
+    if (sourceFilter === "dataset") {
+      return sortAgentHarnesses(datasetMetadata?.availableAgentHarnesses ?? []);
+    }
+    return sortAgentHarnesses(sourceRecords.map((record) => record.agent_harness));
+  }, [datasetMetadata?.availableAgentHarnesses, sourceFilter, sourceRecords]);
+
   const availableAuthors = useMemo(() => {
     if (sourceFilter === "dataset") {
       return datasetMetadata?.availableAuthors ?? [];
@@ -827,6 +846,7 @@ export function ExplorerFilters({
   const secondaryRatingFilterActive = secondaryRatingFilter.length > 0;
   const modelFilterActive = modelFilter !== null;
   const sdkFilterActive = sdkFilter !== null;
+  const agentHarnessFilterActive = agentHarnessFilters.length > 0;
   const authorFilterActive = sourceFilter === "dataset" && authorFilters.length > 0;
   const categoryFilterActive = sourceFilter === "dataset" && categoryFilters.length > 0;
 
@@ -895,6 +915,7 @@ export function ExplorerFilters({
     secondaryRatingFilterActive ||
     modelFilterActive ||
     sdkFilterActive ||
+    agentHarnessFilterActive ||
     authorFilterActive ||
     categoryFilterActive;
 
@@ -914,6 +935,7 @@ export function ExplorerFilters({
               dispatch({ type: "SET_SECONDARY_RATING_FILTER", payload: [] });
               dispatch({ type: "SET_MODEL_FILTER", payload: null });
               dispatch({ type: "SET_SDK_FILTER", payload: null });
+              dispatch({ type: "SET_AGENT_HARNESS_FILTERS", payload: [] });
               dispatch({ type: "SET_AUTHOR_FILTERS", payload: [] });
               dispatch({ type: "SET_CATEGORY_FILTERS", payload: [] });
             }}
@@ -1004,6 +1026,21 @@ export function ExplorerFilters({
               ))}
             </SelectContent>
           </Select>
+        ) : null}
+
+        {availableAgentHarnesses.length > 0 ? (
+          <MultiSelectFilter
+            options={availableAgentHarnesses.map((value) => ({
+              value,
+              label: agentHarnessLabel(value),
+            }))}
+            selectedValues={agentHarnessFilters}
+            onChange={(nextValues) => dispatch({ type: "SET_AGENT_HARNESS_FILTERS", payload: nextValues })}
+            title="Agent harness"
+            searchPlaceholder="Search agent harnesses..."
+            noMatchLabel="No agent harnesses match"
+            triggerLabel={agentHarnessTriggerLabel}
+          />
         ) : null}
 
         {sourceFilter === "dataset" && availableAuthors.length > 0 ? (

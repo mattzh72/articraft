@@ -2,6 +2,13 @@
 
 Generate articulated 3D assets from prompts and inspect them locally.
 
+## Security Note
+
+Articraft compiles and inspects generated records by executing their `model.py` files as
+Python code. Treat generated records, downloaded records, and model scripts from other
+people as trusted code only. Review them first, or run Articraft in an isolated
+container or disposable environment when working with untrusted inputs.
+
 ## 1. Install Prerequisites
 
 You need:

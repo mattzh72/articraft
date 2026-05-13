@@ -5,12 +5,14 @@ from pathlib import Path
 from typing import Any
 
 from storage.runs import RunStore
+from viewer.api.agent_harness import agent_harness_from_record
 from viewer.api.schemas import (
     DatasetEntryResponse,
     RecordDetailResponse,
     RecordSummaryResponse,
     WorkbenchEntryResponse,
 )
+from viewer.api.store_components import ViewerStoreComponent
 from viewer.api.store_values import (
     _coerce_int,
     _coerce_rating,
@@ -23,7 +25,7 @@ from viewer.api.store_values import (
 )
 
 
-class ViewerStoreRecordsMixin:
+class ViewerRecordsStore(ViewerStoreComponent):
     def _read_jsonl(self, path: Path) -> list[dict[str, Any]]:
         if not path.exists():
             return []
@@ -118,8 +120,9 @@ class ViewerStoreRecordsMixin:
         cost_name = artifacts.get("cost_json")
         provenance = self.repo.read_json(provenance_path)
         cost = self.repo.read_json(record_dir / str(cost_name)) if cost_name else None
-        materialization_status = self._materialization_status_for_record(record_id)
+        materialization_status = self.materialization._materialization_status_for_record(record_id)
         creator_mode, external_agent = self._record_creator_fields(record)
+        agent_harness = agent_harness_from_record(record)
         has_traces = self._record_has_traces(record_id, record)
 
         turn_count: int | None = None
@@ -156,12 +159,15 @@ class ViewerStoreRecordsMixin:
             secondary_rated_by=_coerce_string(record.get("secondary_rated_by")),
             created_at=record.get("created_at"),
             updated_at=record.get("updated_at"),
-            viewer_asset_updated_at=self._viewer_asset_updated_at_for_record(record_id),
+            viewer_asset_updated_at=self.materialization._viewer_asset_updated_at_for_record(
+                record_id
+            ),
             sdk_package=_normalize_sdk_package_value(record.get("sdk_package")),
             provider=record.get("provider"),
             model_id=record.get("model_id"),
             creator_mode=creator_mode,
             external_agent=external_agent,
+            agent_harness=agent_harness,
             has_traces=has_traces,
             thinking_level=thinking_level,
             turn_count=turn_count,
@@ -209,6 +215,7 @@ class ViewerStoreRecordsMixin:
         provenance = self.repo.read_json(provenance_path) if provenance_path.exists() else None
         cost = self.repo.read_json(cost_path) if cost_path and cost_path.exists() else None
         creator_mode, external_agent = self._record_creator_fields(record)
+        agent_harness = agent_harness_from_record(record)
         has_traces = self._record_has_traces(record_id, record)
 
         turn_count: int | None = None
@@ -242,6 +249,7 @@ class ViewerStoreRecordsMixin:
             model_id=record.get("model_id"),
             creator_mode=creator_mode,
             external_agent=external_agent,
+            agent_harness=agent_harness,
             has_traces=has_traces,
             thinking_level=thinking_level,
             turn_count=turn_count,
@@ -295,7 +303,7 @@ class ViewerStoreRecordsMixin:
         self,
         summary_cache: dict[str, RecordSummaryResponse | None] | None = None,
     ) -> list[WorkbenchEntryResponse]:
-        workbench = self.collections.load_workbench() or {"entries": []}
+        workbench = self.collection_store.load_workbench() or {"entries": []}
         entries: list[WorkbenchEntryResponse] = []
         for item in workbench.get("entries", []):
             record_id = str(item.get("record_id", ""))
@@ -320,7 +328,7 @@ class ViewerStoreRecordsMixin:
         include_records: bool = True,
     ) -> list[DatasetEntryResponse]:
         entries: list[DatasetEntryResponse] = []
-        for item in self.datasets.list_entries():
+        for item in self.dataset_store.list_entries():
             record_id = str(item.get("record_id", ""))
             dataset_id = str(item.get("dataset_id", ""))
             category_slug = str(item.get("category_slug", ""))

@@ -2,7 +2,9 @@ from __future__ import annotations
 
 from typing import Any
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, field_validator
+
+from storage.identifiers import validate_category_slug, validate_dataset_id
 
 
 class HealthResponse(BaseModel):
@@ -51,6 +53,7 @@ class RecordSummaryResponse(BaseModel):
     model_id: str | None = None
     creator_mode: str | None = None
     external_agent: str | None = None
+    agent_harness: str = "articraft"
     has_traces: bool = False
     thinking_level: str | None = None
     turn_count: int | None = None
@@ -71,6 +74,7 @@ class RecordSummaryResponse(BaseModel):
 class RecordBrowseFacetsResponse(BaseModel):
     models: list[str] = Field(default_factory=list)
     sdk_packages: list[str] = Field(default_factory=list)
+    agent_harnesses: list[str] = Field(default_factory=list)
     authors: list[str] = Field(default_factory=list)
     categories: list[str] = Field(default_factory=list)
     cost_min: float | None = None
@@ -214,6 +218,16 @@ class PromoteRecordRequest(BaseModel):
     category_slug: str | None = Field(default=None, min_length=1)
     dataset_id: str | None = None
 
+    @field_validator("category_slug")
+    @classmethod
+    def _validate_category_slug(cls, value: str | None) -> str | None:
+        return validate_category_slug(value) if value is not None else None
+
+    @field_validator("dataset_id")
+    @classmethod
+    def _validate_dataset_id(cls, value: str | None) -> str | None:
+        return validate_dataset_id(value) if value is not None else None
+
 
 class RecordTextFileResponse(BaseModel):
     record_id: str
@@ -313,6 +327,7 @@ class DashboardResponse(BaseModel):
     generated_at: str
     supercategories: list[SupercategoryOptionResponse] = Field(default_factory=list)
     available_sdks: list[str] = Field(default_factory=list)
+    available_agent_harnesses: list[str] = Field(default_factory=list)
     available_authors: list[str] = Field(default_factory=list)
     available_categories: list[str] = Field(default_factory=list)
     cost_bounds: DashboardCostBoundsResponse | None = None

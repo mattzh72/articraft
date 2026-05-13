@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import ast
 import asyncio
 import base64
 import hashlib
@@ -8,23 +7,19 @@ import json
 import logging
 import os
 import time
-from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Callable, Optional
 
 from rich.console import Console
 
-from agent.compiler import (
-    compile_urdf_report_maybe_timeout,
-    persist_compile_success_artifacts,
-)
+from agent.compiler import compile_urdf_report_maybe_timeout
 from agent.cost import CostTracker, pricing_for_provider_model
 from agent.defaults import resolve_max_turns
-from agent.feedback import (
-    compile_signal_bundle_from_exception,
-    render_compile_signals,
-)
-from agent.models import AgentResult, CompileReport, CompileSignalBundle, TerminateReason
+from agent.feedback import compile_signal_bundle_from_exception
+from agent.harness_codec import MessageCodec
+from agent.harness_compile import CompileFeedbackLoop, log_compile_signals
+from agent.harness_guidance import GuidanceInjector
+from agent.models import AgentResult, TerminateReason
 from agent.prompts import (
     load_sdk_docs_reference,
     load_system_prompt_text,
@@ -62,99 +57,6 @@ logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
 CONSOLE = Console()
 _FIND_EXAMPLES_SKIPPED_CONTENT = "{Skipped: full content already returned earlier in this run.}"
-_MUTATING_TOOL_NAMES = frozenset({"apply_patch", "replace", "write_file"})
-_PARALLEL_SAFE_TOOL_NAMES = frozenset({"read_file", "find_examples", "probe_model"})
-_EXACT_ELEMENT_KEYWORDS = frozenset(
-    {"elem_a", "elem_b", "positive_elem", "negative_elem", "inner_elem", "outer_elem"}
-)
-_BASELINE_QC_CALLS = frozenset(
-    {
-        "check_model_valid",
-        "check_mesh_assets_ready",
-        "fail_if_isolated_parts",
-        "warn_if_part_contains_disconnected_geometry_islands",
-        "fail_if_parts_overlap_in_current_pose",
-    }
-)
-
-
-@dataclass(frozen=True)
-class _CodeContractScan:
-    visual_names: tuple[str, ...]
-    referenced_exact_names: tuple[str, ...]
-    baseline_qc_calls: tuple[str, ...]
-
-
-def _constant_string(node: ast.AST) -> str | None:
-    if isinstance(node, ast.Constant) and isinstance(node.value, str):
-        value = node.value.strip()
-        return value or None
-    return None
-
-
-def _call_name(node: ast.AST) -> str | None:
-    if isinstance(node, ast.Attribute):
-        return node.attr
-    if isinstance(node, ast.Name):
-        return node.id
-    return None
-
-
-class _CodeContractVisitor(ast.NodeVisitor):
-    def __init__(self) -> None:
-        self.visual_names: set[str] = set()
-        self.referenced_exact_names: set[str] = set()
-        self.baseline_qc_calls: set[str] = set()
-        self._function_stack: list[str] = []
-
-    def visit_FunctionDef(self, node: ast.FunctionDef) -> None:
-        self._function_stack.append(node.name)
-        self.generic_visit(node)
-        self._function_stack.pop()
-
-    def visit_AsyncFunctionDef(self, node: ast.AsyncFunctionDef) -> None:
-        self._function_stack.append(node.name)
-        self.generic_visit(node)
-        self._function_stack.pop()
-
-    def visit_Call(self, node: ast.Call) -> None:
-        call_name = _call_name(node.func)
-        if call_name == "visual":
-            for keyword in node.keywords:
-                if keyword.arg != "name":
-                    continue
-                visual_name = _constant_string(keyword.value)
-                if visual_name is not None:
-                    self.visual_names.add(visual_name)
-
-        in_run_tests = bool(self._function_stack and self._function_stack[-1] == "run_tests")
-        if in_run_tests and call_name in _BASELINE_QC_CALLS and not node.args and not node.keywords:
-            self.baseline_qc_calls.add(f"{call_name}()")
-
-        if in_run_tests:
-            for keyword in node.keywords:
-                if keyword.arg not in _EXACT_ELEMENT_KEYWORDS:
-                    continue
-                elem_name = _constant_string(keyword.value)
-                if elem_name is not None:
-                    self.referenced_exact_names.add(elem_name)
-
-        self.generic_visit(node)
-
-
-def _scan_code_contracts(text: str) -> _CodeContractScan | None:
-    try:
-        tree = ast.parse(text)
-    except SyntaxError:
-        return None
-
-    visitor = _CodeContractVisitor()
-    visitor.visit(tree)
-    return _CodeContractScan(
-        visual_names=tuple(sorted(visitor.visual_names)),
-        referenced_exact_names=tuple(sorted(visitor.referenced_exact_names)),
-        baseline_qc_calls=tuple(sorted(visitor.baseline_qc_calls)),
-    )
 
 
 def _minimal_scaffold_text(
@@ -229,20 +131,6 @@ def _prompt_cache_retention_from_env(*, model_id: str) -> Optional[str]:
     return value
 
 
-def _log_compile_signals(bundle: CompileSignalBundle) -> None:
-    failures = sum(1 for signal in bundle.signals if signal.severity == "failure")
-    warnings = sum(1 for signal in bundle.signals if signal.severity == "warning")
-    notes = sum(1 for signal in bundle.signals if signal.severity == "note")
-    summary = " ".join(str(bundle.summary or "").split())
-    logger.warning(
-        "Compile signals: %s (failures=%s warnings=%s notes=%s)",
-        summary,
-        failures,
-        warnings,
-        notes,
-    )
-
-
 def build_openai_prompt_cache_settings(
     *,
     model_id: str,
@@ -314,26 +202,28 @@ class ArticraftAgent:
         self.file_path = file_path
         self.sdk_package = _normalize_sdk_package(sdk_package)
         self.runtime_limits = runtime_limits
-        self._seen_tool_error_sigs: set[str] = set()
         self._seen_find_example_paths: set[str] = set()
-        self._seen_exact_geometry_contract_sigs: set[str] = set()
-        self._seen_baseline_qc_guidance_sigs: set[str] = set()
-        self._last_compile_failure_sig: Optional[str] = None
-        self._consecutive_compile_failure_count = 0
         self.checkpoint_urdf_path = (
             Path(checkpoint_urdf_path).resolve() if checkpoint_urdf_path else None
         )
-        self._last_checkpoint_urdf_sig: Optional[str] = None
-        self._current_edit_revision = 0
-        self._last_successful_compile_revision: int | None = None
-        self._last_successful_compile_report: CompileReport | None = None
-        self._compile_attempt_count = 0
         self.trace_writer: Optional[TraceWriter] = (
             TraceWriter(Path(trace_dir)) if trace_dir else None
         )
 
         provider_norm = normalize_provider_name(provider)
         self.provider = provider_norm
+        self.message_codec = MessageCodec(provider=self.provider)
+        self.compile_feedback = CompileFeedbackLoop(
+            file_path=self.file_path,
+            sdk_package=self.sdk_package,
+            runtime_limits=self.runtime_limits,
+            checkpoint_urdf_path=self.checkpoint_urdf_path,
+        )
+        self.guidance_injector = GuidanceInjector(
+            file_path=self.file_path,
+            trace_writer=self.trace_writer,
+            tool_call_name=self.message_codec.tool_call_name,
+        )
         self.llm: ProviderClient = create_provider_client(
             ProviderConfig(
                 provider=provider_norm,
@@ -403,156 +293,128 @@ class ArticraftAgent:
             self.llm.prompt_cache_key = prompt_cache_key
             self.llm.prompt_cache_retention = prompt_cache_retention
 
-    def _compile_signal_signature(self, bundle: CompileSignalBundle) -> str:
-        sig_src = json.dumps(bundle.to_dict(), sort_keys=True, separators=(",", ":")).encode(
-            "utf-8"
+    def _ensure_message_codec(self) -> MessageCodec:
+        codec = getattr(self, "message_codec", None)
+        if isinstance(codec, MessageCodec):
+            return codec
+        codec = MessageCodec(provider=str(getattr(self, "provider", "")))
+        self.message_codec = codec
+        return codec
+
+    def _ensure_compile_feedback(self) -> CompileFeedbackLoop:
+        loop = getattr(self, "compile_feedback", None)
+        if isinstance(loop, CompileFeedbackLoop):
+            return loop
+
+        checkpoint_urdf_path = getattr(self, "checkpoint_urdf_path", None)
+        if checkpoint_urdf_path is not None:
+            checkpoint_urdf_path = Path(checkpoint_urdf_path)
+        loop = CompileFeedbackLoop(
+            file_path=str(getattr(self, "file_path", "")),
+            sdk_package=str(getattr(self, "sdk_package", "sdk")),
+            runtime_limits=getattr(self, "runtime_limits", None),
+            checkpoint_urdf_path=checkpoint_urdf_path,
         )
-        return hashlib.sha1(sig_src).hexdigest()
+        loop._last_checkpoint_urdf_sig = getattr(self, "_last_checkpoint_urdf_sig", None)
+        loop._current_edit_revision = getattr(self, "_current_edit_revision", 0)
+        loop._last_successful_compile_revision = getattr(
+            self,
+            "_last_successful_compile_revision",
+            None,
+        )
+        loop._last_successful_compile_report = getattr(
+            self,
+            "_last_successful_compile_report",
+            None,
+        )
+        loop._compile_attempt_count = getattr(self, "_compile_attempt_count", 0)
+        loop._last_compile_failure_sig = getattr(self, "_last_compile_failure_sig", None)
+        loop._consecutive_compile_failure_count = getattr(
+            self,
+            "_consecutive_compile_failure_count",
+            0,
+        )
+        self.compile_feedback = loop
+        return loop
+
+    def _sync_compile_feedback_legacy_attrs(self, loop: CompileFeedbackLoop | None = None) -> None:
+        loop = loop or self._ensure_compile_feedback()
+        self._last_checkpoint_urdf_sig = loop._last_checkpoint_urdf_sig
+        self._current_edit_revision = loop._current_edit_revision
+        self._last_successful_compile_revision = loop._last_successful_compile_revision
+        self._last_successful_compile_report = loop._last_successful_compile_report
+        self._compile_attempt_count = loop._compile_attempt_count
+        self._last_compile_failure_sig = loop._last_compile_failure_sig
+        self._consecutive_compile_failure_count = loop._consecutive_compile_failure_count
+
+    def _ensure_guidance_injector(self) -> GuidanceInjector:
+        injector = getattr(self, "guidance_injector", None)
+        if isinstance(injector, GuidanceInjector):
+            return injector
+
+        injector = GuidanceInjector(
+            file_path=str(getattr(self, "file_path", "")),
+            trace_writer=getattr(self, "trace_writer", None),
+            tool_call_name=self._tool_call_name,
+        )
+        injector._seen_tool_error_sigs = getattr(self, "_seen_tool_error_sigs", set())
+        injector._seen_exact_geometry_contract_sigs = getattr(
+            self,
+            "_seen_exact_geometry_contract_sigs",
+            set(),
+        )
+        injector._seen_baseline_qc_guidance_sigs = getattr(
+            self,
+            "_seen_baseline_qc_guidance_sigs",
+            set(),
+        )
+        self.guidance_injector = injector
+        return injector
 
     def _reset_run_compile_state(self) -> None:
-        self._current_edit_revision = 0
-        self._last_successful_compile_revision = None
-        self._last_successful_compile_report = None
-        self._compile_attempt_count = 0
-        self._last_compile_failure_sig = None
-        self._consecutive_compile_failure_count = 0
-        self._seen_exact_geometry_contract_sigs = set()
-        self._seen_baseline_qc_guidance_sigs = set()
+        loop = self._ensure_compile_feedback()
+        loop.reset()
+        self._sync_compile_feedback_legacy_attrs(loop)
+        self._ensure_guidance_injector().reset()
 
     def _latest_code_is_fresh(self) -> bool:
-        return (
-            self._last_successful_compile_report is not None
-            and self._last_successful_compile_revision == self._current_edit_revision
-        )
+        return self._ensure_compile_feedback().latest_code_is_fresh()
 
     def _mark_code_mutated(self, tool_name: str) -> None:
-        if tool_name not in _MUTATING_TOOL_NAMES:
-            return
-        self._current_edit_revision += 1
+        loop = self._ensure_compile_feedback()
+        loop.mark_code_mutated(tool_name)
+        self._sync_compile_feedback_legacy_attrs(loop)
 
     def _append_compile_required_reminder(self, conversation: list[dict]) -> None:
-        msg = {
-            "role": "user",
-            "content": (
-                "<compile_required>\n"
-                "The latest code has changed since the last successful compile.\n"
-                "Run `compile_model` before concluding.\n"
-                "</compile_required>"
-            ),
-        }
-        conversation.append(msg)
-        trace_writer = getattr(self, "trace_writer", None)
-        if trace_writer:
-            trace_writer.write_message(msg)
+        self._ensure_compile_feedback().append_compile_required_reminder(
+            conversation,
+            trace_writer=self.trace_writer,
+        )
 
-    def _append_guidance_message(self, conversation: list[dict], content: str) -> None:
-        msg = {"role": "user", "content": content}
-        conversation.append(msg)
-        trace_writer = getattr(self, "trace_writer", None)
-        if trace_writer:
-            trace_writer.write_message(msg)
-
-    def _guidance_signature_set(self, attr_name: str) -> set[str]:
-        current = getattr(self, attr_name, None)
-        if isinstance(current, set):
-            return current
-        created: set[str] = set()
-        setattr(self, attr_name, created)
-        return created
-
-    def _scan_current_code_contracts(self) -> _CodeContractScan | None:
-        try:
-            text = Path(self.file_path).read_text(encoding="utf-8")
-        except OSError:
-            return None
-        return _scan_code_contracts(text)
+    def _scan_current_code_contracts(self):
+        return self._ensure_guidance_injector()._scan_current_code_contracts()
 
     def _maybe_inject_exact_geometry_contract_guidance(
         self,
         conversation: list[dict],
         *,
-        scan: _CodeContractScan,
+        scan,
     ) -> bool:
-        missing_names = tuple(
-            sorted(set(scan.referenced_exact_names).difference(scan.visual_names))
-        )
-        if not missing_names:
-            return False
-
-        seen = self._guidance_signature_set("_seen_exact_geometry_contract_sigs")
-        sig = _sha256_text(json.dumps(missing_names))
-        if sig in seen:
-            return False
-        seen.add(sig)
-
-        joined = ", ".join(repr(name) for name in missing_names)
-        self._append_guidance_message(
+        return self._ensure_guidance_injector()._maybe_inject_exact_geometry_contract_guidance(
             conversation,
-            "\n".join(
-                [
-                    "<exact_geometry_contract>",
-                    (
-                        "- Authored exact checks reference names that are not present in the "
-                        f"current file: {joined}."
-                    ),
-                    "- These names became exact-geometry contracts when `ctx.expect_*` referenced them.",
-                    (
-                        "- Before more geometry edits, either restore those visual names or "
-                        "update/remove the dependent exact checks in the same edit."
-                    ),
-                    "</exact_geometry_contract>",
-                ]
-            ),
+            scan=scan,
         )
-        return True
 
     def _maybe_inject_baseline_qc_guidance(
         self,
         conversation: list[dict],
         *,
-        scan: _CodeContractScan,
+        scan,
     ) -> bool:
-        if not scan.baseline_qc_calls:
-            return False
-
-        seen = self._guidance_signature_set("_seen_baseline_qc_guidance_sigs")
-        sig = _sha256_text(json.dumps(scan.baseline_qc_calls))
-        if sig in seen:
-            return False
-        seen.add(sig)
-
-        joined = ", ".join(f"`{name}`" for name in scan.baseline_qc_calls)
-        self._append_guidance_message(
+        return self._ensure_guidance_injector()._maybe_inject_baseline_qc_guidance(
             conversation,
-            "\n".join(
-                [
-                    "<baseline_qc_guidance>",
-                    (
-                        "- `run_tests()` currently reintroduces compiler-owned baseline checks: "
-                        f"{joined}."
-                    ),
-                    "- Leave baseline sanity/QC to `compile_model`.",
-                    (
-                        "- Keep `run_tests()` for prompt-specific exact checks, targeted pose "
-                        "checks, and explicit allowances only."
-                    ),
-                    "</baseline_qc_guidance>",
-                ]
-            ),
+            scan=scan,
         )
-        return True
-
-    def _turn_had_successful_mutation(
-        self,
-        tool_calls: list[dict],
-        tool_results: list[ToolResult],
-    ) -> bool:
-        for tool_call, result in zip(tool_calls, tool_results, strict=False):
-            if not result.is_success():
-                continue
-            if self._tool_call_name(tool_call) in _MUTATING_TOOL_NAMES:
-                return True
-        return False
 
     def _maybe_inject_code_contract_guidance(
         self,
@@ -561,36 +423,10 @@ class ArticraftAgent:
         tool_calls: list[dict],
         tool_results: list[ToolResult],
     ) -> None:
-        if not self._turn_had_successful_mutation(tool_calls, tool_results):
-            return
-        scan = self._scan_current_code_contracts()
-        if scan is None:
-            return
-        self._maybe_inject_exact_geometry_contract_guidance(conversation, scan=scan)
-        self._maybe_inject_baseline_qc_guidance(conversation, scan=scan)
-
-    def _render_compile_tool_output(self, bundle: CompileSignalBundle) -> str:
-        failures = [signal for signal in bundle.signals if signal.severity == "failure"]
-        if failures:
-            sig = self._compile_signal_signature(bundle)
-            repeated = sig == self._last_compile_failure_sig
-            self._last_compile_failure_sig = sig
-            self._consecutive_compile_failure_count += 1
-            return render_compile_signals(
-                bundle,
-                repeated=repeated,
-                failure_streak=self._consecutive_compile_failure_count,
-            )
-
-        self._last_compile_failure_sig = None
-        self._consecutive_compile_failure_count = 0
-        return render_compile_signals(bundle)
-
-    def _render_reused_compile_tool_output(self, bundle: CompileSignalBundle) -> str:
-        return (
-            "Fresh compile already exists for the current code revision; `compile_model` was not re-run.\n"
-            "Treat that compile result as authoritative unless you are about to edit code for one specific unresolved defect.\n\n"
-            f"{self._render_compile_tool_output(bundle)}"
+        self._ensure_guidance_injector().maybe_inject_code_contract_guidance(
+            conversation,
+            tool_calls=tool_calls,
+            tool_results=tool_results,
         )
 
     def _maybe_inject_edit_code_guidance(
@@ -600,121 +436,84 @@ class ArticraftAgent:
         tool_calls: list[dict],
         tool_results: list[ToolResult],
     ) -> None:
-        for tool_call, result in zip(tool_calls, tool_results, strict=False):
-            func = tool_call.get("function", {}) if isinstance(tool_call, dict) else {}
-            func_name = func.get("name")
-            if func_name != "replace":
-                continue
-            if not getattr(result, "error", None):
-                continue
-            if "Could not find the old_string in the code" not in result.error:
-                continue
+        self._ensure_guidance_injector().maybe_inject_edit_code_guidance(
+            conversation,
+            tool_calls=tool_calls,
+            tool_results=tool_results,
+        )
 
-            sig = f"{func_name}_old_string_not_found"
-            if sig in self._seen_tool_error_sigs:
-                return
-            self._seen_tool_error_sigs.add(sig)
-
-            msg = {
-                "role": "user",
-                "content": (
-                    "<edit_retry_guidance>\n"
-                    f"- Your last {func_name} failed because `old_string` did not match the file exactly.\n"
-                    '- Do NOT guess. Call `read_file(path="model.py")` again, then pick a smaller exact snippet from the current editable code as `old_string` and retry.\n'
-                    "- Keep edits surgical.\n"
-                    "</edit_retry_guidance>"
-                ),
-            }
-            conversation.append(msg)
-            if self.trace_writer:
-                self.trace_writer.write_message(msg)
-            return
-
-    def _append_compile_failure_signals(
-        self,
-        conversation: list[dict],
-        *,
-        bundle: CompileSignalBundle,
-    ) -> str:
-        sig = self._compile_signal_signature(bundle)
-        repeated = sig == self._last_compile_failure_sig
-        self._last_compile_failure_sig = sig
-        streak = getattr(self, "_consecutive_compile_failure_count", 0) + 1
-        self._consecutive_compile_failure_count = streak
-        content = render_compile_signals(bundle, repeated=repeated, failure_streak=streak)
-
+    def _append_compile_failure_signals(self, conversation: list[dict], *, bundle) -> str:
+        loop = self._ensure_compile_feedback()
+        content = loop._render_compile_tool_output(bundle)
+        self._sync_compile_feedback_legacy_attrs(loop)
         msg = {"role": "user", "content": content}
         conversation.append(msg)
         if self.trace_writer:
             self.trace_writer.write_message(msg)
         return content
 
-    async def _compile_urdf_report_async(self) -> CompileReport:
-        async with local_work_slot(self.runtime_limits):
+    async def _compile_urdf_report_async(self):
+        async with local_work_slot(getattr(self, "runtime_limits", None)):
             return await asyncio.to_thread(
                 compile_urdf_report_maybe_timeout,
                 Path(self.file_path),
-                sdk_package=self.sdk_package,
+                sdk_package=getattr(self, "sdk_package", "sdk"),
                 rewrite_visual_glb=False,
             )
 
     async def _persist_compile_success_checkpoint_async(self, urdf_xml: str) -> None:
-        try:
-            self._last_checkpoint_urdf_sig = await asyncio.to_thread(
-                persist_compile_success_artifacts,
-                urdf_xml=urdf_xml,
-                urdf_out=self.checkpoint_urdf_path,
-                outputs_root=None,
-                previous_sig=self._last_checkpoint_urdf_sig,
-            )
-        except Exception as exc:
-            logger.warning("Failed to persist compile-success checkpoint: %s", exc)
+        await self._ensure_compile_feedback()._persist_compile_success_checkpoint_async(urdf_xml)
 
     async def _persist_compile_failure_checkpoint_async(self, exc: BaseException) -> bool:
-        compiled_urdf_xml = getattr(exc, "compiled_urdf_xml", None)
-        if not isinstance(compiled_urdf_xml, str) or not compiled_urdf_xml.strip():
-            return False
-        await self._persist_compile_success_checkpoint_async(compiled_urdf_xml)
-        return True
+        return await self._ensure_compile_feedback()._persist_compile_failure_checkpoint_async(exc)
 
     async def _execute_compile_model(self, *, tool_call_id: str) -> ToolResult:
-        cached_report = self._last_successful_compile_report
-        if self._latest_code_is_fresh() and cached_report is not None:
-            return ToolResult(
-                output=self._render_reused_compile_tool_output(cached_report.signal_bundle),
+        loop = self._ensure_compile_feedback()
+        cached_report = loop.last_successful_report
+        if loop.latest_code_is_fresh() and cached_report is not None:
+            result = ToolResult(
+                output=loop._render_reused_compile_tool_output(cached_report.signal_bundle),
                 compilation={"status": "success", "error": None},
                 tool_call_id=tool_call_id,
             )
+            self._sync_compile_feedback_legacy_attrs(loop)
+            return result
 
-        self._compile_attempt_count += 1
+        loop._compile_attempt_count += 1
 
         try:
             report = await self._compile_urdf_report_async()
             await self._persist_compile_success_checkpoint_async(report.urdf_xml)
-            self._last_successful_compile_report = report
-            self._last_successful_compile_revision = self._current_edit_revision
-            return ToolResult(
-                output=self._render_compile_tool_output(report.signal_bundle),
+            loop._last_successful_compile_report = report
+            loop._last_successful_compile_revision = loop._current_edit_revision
+            result = ToolResult(
+                output=loop._render_compile_tool_output(report.signal_bundle),
                 compilation={"status": "success", "error": None},
                 tool_call_id=tool_call_id,
             )
+            self._sync_compile_feedback_legacy_attrs(loop)
+            return result
         except TimeoutError as exc:
             bundle = compile_signal_bundle_from_exception(exc)
-            _log_compile_signals(bundle)
-            return ToolResult(
-                output=self._render_compile_tool_output(bundle),
+            log_compile_signals(bundle)
+            result = ToolResult(
+                output=loop._render_compile_tool_output(bundle),
                 compilation={"status": "error", "error": bundle.summary},
                 tool_call_id=tool_call_id,
             )
+            self._sync_compile_feedback_legacy_attrs(loop)
+            return result
         except Exception as exc:
             await self._persist_compile_failure_checkpoint_async(exc)
             bundle = compile_signal_bundle_from_exception(exc)
-            _log_compile_signals(bundle)
-            return ToolResult(
-                output=self._render_compile_tool_output(bundle),
+            log_compile_signals(bundle)
+            result = ToolResult(
+                output=loop._render_compile_tool_output(bundle),
                 compilation={"status": "error", "error": bundle.summary},
                 tool_call_id=tool_call_id,
             )
+            self._sync_compile_feedback_legacy_attrs(loop)
+            return result
 
     def _build_system_prompt(self, prompt_path: str) -> tuple[Path, str]:
         return load_system_prompt_text(
@@ -774,24 +573,13 @@ class ArticraftAgent:
         return billed_cost
 
     def _extract_tool_calls(self, message: dict) -> list[dict]:
-        return message.get("tool_calls", []) if isinstance(message, dict) else []
+        return self._ensure_message_codec().extract_tool_calls(message)
 
     def _extract_text(self, message: dict) -> str:
-        if not isinstance(message, dict):
-            return ""
-        return message.get("content", "") or ""
+        return self._ensure_message_codec().extract_text(message)
 
     def _extract_usage(self, message: dict) -> Optional[dict[str, int]]:
-        if not isinstance(message, dict):
-            return None
-        usage = message.get("usage")
-        if not isinstance(usage, dict):
-            return None
-        cleaned: dict[str, int] = {}
-        for key, value in usage.items():
-            if isinstance(key, str) and isinstance(value, int):
-                cleaned[key] = value
-        return cleaned or None
+        return self._ensure_message_codec().extract_usage(message)
 
     def _context_window_pressure(self, usage: dict[str, int]) -> dict[str, Any] | None:
         context_window_pressure = getattr(self.llm, "context_window_pressure", None)
@@ -809,65 +597,19 @@ class ArticraftAgent:
         return pressure if isinstance(pressure, dict) else None
 
     def _extract_thinking(self, message: dict) -> Optional[str]:
-        if not isinstance(message, dict):
-            return None
-        return message.get("thought_summary")
+        return self._ensure_message_codec().extract_thinking(message)
 
     def _build_assistant_message(self, message: dict) -> dict:
-        text = self._extract_text(message)
-        tool_calls = self._extract_tool_calls(message)
-        thinking = self._extract_thinking(message)
-        usage = self._extract_usage(message)
-        extra_content = message.get("extra_content") if isinstance(message, dict) else None
-
-        msg = {"role": "assistant"}
-        if thinking:
-            msg["thought_summary"] = thinking
-        if text:
-            msg["content"] = text
-        if tool_calls:
-            msg["tool_calls"] = tool_calls
-        if extra_content:
-            msg["extra_content"] = extra_content
-        if usage:
-            msg["usage"] = usage
-        return msg
+        return self._ensure_message_codec().build_assistant_message(message)
 
     def _tool_call_name(self, tool_call: dict) -> str:
-        if not isinstance(tool_call, dict):
-            return ""
-        func = tool_call.get("function")
-        if isinstance(func, dict):
-            name = func.get("name")
-            if isinstance(name, str):
-                return name
-        custom = tool_call.get("custom")
-        if isinstance(custom, dict):
-            name = custom.get("name")
-            if isinstance(name, str):
-                return name
-        name = tool_call.get("name")
-        if isinstance(name, str):
-            return name
-        return ""
+        return self._ensure_message_codec().tool_call_name(tool_call)
 
     def _tool_call_display_args(self, tool_call: dict) -> dict:
-        if not isinstance(tool_call, dict):
-            return {}
-        func = tool_call.get("function")
-        if isinstance(func, dict):
-            return func.get("arguments", {})
-        custom = tool_call.get("custom")
-        if isinstance(custom, dict):
-            return {"input": custom.get("input", "")}
-        return {}
+        return self._ensure_message_codec().tool_call_display_args(tool_call)
 
     def _tool_calls_are_parallelizable(self, tool_calls: list[dict]) -> bool:
-        if self.provider != ProviderName.GEMINI.value or len(tool_calls) <= 1:
-            return False
-        return all(
-            self._tool_call_name(tool_call) in _PARALLEL_SAFE_TOOL_NAMES for tool_call in tool_calls
-        )
+        return self._ensure_message_codec().tool_calls_are_parallelizable(tool_calls)
 
     def _ensure_code_file(self) -> None:
         path = Path(self.file_path)
@@ -1204,8 +946,7 @@ class ArticraftAgent:
         return False
 
     def _compile_warnings_snapshot(self) -> list[str]:
-        report = self._last_successful_compile_report
-        return list(report.warnings) if report else []
+        return self._ensure_compile_feedback().compile_warnings_snapshot()
 
     async def _read_final_code(self) -> str | None:
         try:
@@ -1232,7 +973,8 @@ class ArticraftAgent:
     ) -> AgentResult:
         final_code = await self._read_final_code()
         self._persist_cost_tracking()
-        report = self._last_successful_compile_report
+        compile_feedback = self._ensure_compile_feedback()
+        report = compile_feedback.last_successful_report
         return AgentResult(
             success=True,
             reason=TerminateReason.CODE_VALID,
@@ -1243,7 +985,7 @@ class ArticraftAgent:
             compile_warnings=self._compile_warnings_snapshot(),
             turn_count=turn_count,
             tool_call_count=tool_call_count,
-            compile_attempt_count=self._compile_attempt_count,
+            compile_attempt_count=compile_feedback.compile_attempt_count,
             usage=usage or None,
         )
 
@@ -1336,8 +1078,12 @@ class ArticraftAgent:
                         messages=conversation,
                         tools=self.tool_registry.get_tool_schemas(),
                         completed_turns=completed_turns,
-                        consecutive_compile_failure_count=self._consecutive_compile_failure_count,
-                        last_compile_failure_sig=self._last_compile_failure_sig,
+                        consecutive_compile_failure_count=(
+                            self._ensure_compile_feedback().consecutive_compile_failure_count
+                        ),
+                        last_compile_failure_sig=(
+                            self._ensure_compile_feedback().last_compile_failure_sig
+                        ),
                     )
                     for trace_event in getattr(prepare_result, "trace_events", []):
                         if self.trace_writer:
@@ -1400,7 +1146,9 @@ class ArticraftAgent:
                             compile_warnings=self._compile_warnings_snapshot(),
                             turn_count=completed_turns,
                             tool_call_count=tool_call_count,
-                            compile_attempt_count=self._compile_attempt_count,
+                            compile_attempt_count=(
+                                self._ensure_compile_feedback().compile_attempt_count
+                            ),
                             usage=usage_totals or None,
                         )
                 response = await self.llm.generate_with_tools(
@@ -1419,7 +1167,7 @@ class ArticraftAgent:
                     compile_warnings=self._compile_warnings_snapshot(),
                     turn_count=completed_turns,
                     tool_call_count=tool_call_count,
-                    compile_attempt_count=self._compile_attempt_count,
+                    compile_attempt_count=self._ensure_compile_feedback().compile_attempt_count,
                 )
             finally:
                 self.display.stop_llm_wait()
@@ -1479,7 +1227,9 @@ class ArticraftAgent:
                         compile_warnings=self._compile_warnings_snapshot(),
                         turn_count=completed_turns + 1,
                         tool_call_count=tool_call_count,
-                        compile_attempt_count=self._compile_attempt_count,
+                        compile_attempt_count=(
+                            self._ensure_compile_feedback().compile_attempt_count
+                        ),
                         usage=usage_totals or None,
                     )
 
@@ -1587,7 +1337,7 @@ class ArticraftAgent:
             compile_warnings=self._compile_warnings_snapshot(),
             turn_count=completed_turns,
             tool_call_count=tool_call_count,
-            compile_attempt_count=self._compile_attempt_count,
+            compile_attempt_count=self._ensure_compile_feedback().compile_attempt_count,
             usage=usage_totals or None,
         )
 

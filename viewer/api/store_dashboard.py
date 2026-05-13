@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import time
 
+from viewer.api.agent_harness import agent_harness_from_record, within_agent_harness_filters
 from viewer.api.schemas import (
     DashboardCategoryStatsResponse,
     DashboardCostBoundsResponse,
@@ -10,6 +11,7 @@ from viewer.api.schemas import (
     DashboardOverviewResponse,
     DashboardResponse,
 )
+from viewer.api.store_components import ViewerStoreComponent
 from viewer.api.store_filters import (
     _local_day_key_from_timestamp_ms,
     _local_day_start_ms_from_timestamp_ms,
@@ -31,7 +33,12 @@ from viewer.api.store_values import (
 )
 
 
-class ViewerStoreDashboardMixin:
+def _sorted_agent_harnesses(values: set[str]) -> list[str]:
+    order = {"articraft": 0, "codex": 1, "claude-code": 2}
+    return sorted(values, key=lambda value: (order.get(value, len(order)), value))
+
+
+class ViewerDashboardStore(ViewerStoreComponent):
     def _dashboard_record(
         self,
         record_id: str,
@@ -60,6 +67,7 @@ class ViewerStoreDashboardMixin:
             total_cost_usd=total_cost_usd,
             effective_rating=_effective_rating(primary_rating, secondary_rating),
             author=_coerce_string(record.get("author")),
+            agent_harness=agent_harness_from_record(record),
             run_id=_coerce_string(source.get("run_id")) if isinstance(source, dict) else None,
             category_slug=category_slug_override or _coerce_string(record.get("category_slug")),
             model_id=_coerce_string(record.get("model_id")),
@@ -76,7 +84,7 @@ class ViewerStoreDashboardMixin:
 
         records: list[DashboardRecord] = []
         seen: set[str] = set()
-        for item in self.datasets.list_entries():
+        for item in self.dataset_store.list_entries():
             record_id = _coerce_string(item.get("record_id"))
             if not record_id or record_id in seen:
                 continue
@@ -303,6 +311,7 @@ class ViewerStoreDashboardMixin:
         cost_min: float | None = None,
         cost_max: float | None = None,
         sdk_filter: str | None = None,
+        agent_harness_filters: list[str] | None = None,
         author_filters: list[str] | None = None,
         category_filters: list[str] | None = None,
         rolling_window_days: int = 14,
@@ -346,6 +355,13 @@ class ViewerStoreDashboardMixin:
                 if isinstance(record.author, str) and record.author
             }
         )
+        available_agent_harnesses = _sorted_agent_harnesses(
+            {
+                record.agent_harness
+                for record in source_records
+                if isinstance(record.agent_harness, str) and record.agent_harness
+            }
+        )
         available_categories = sorted(
             {
                 str(record.category_slug)
@@ -370,6 +386,10 @@ class ViewerStoreDashboardMixin:
             for record in source_records
             if (
                 (not sdk_filter or record.sdk_package == sdk_filter)
+                and within_agent_harness_filters(
+                    record.agent_harness,
+                    agent_harness_filters,
+                )
                 and _within_author_filters(record.author, author_filters)
                 and _within_category_filters(record.category_slug, category_filters)
                 and _within_dashboard_time_filter(
@@ -408,6 +428,7 @@ class ViewerStoreDashboardMixin:
                     sdk_filter,
                 )
             )
+            or bool(agent_harness_filters)
             or bool(author_filters)
             or bool(category_filters)
             or (normalized_stars_min is not None and normalized_stars_min > 0)
@@ -423,7 +444,7 @@ class ViewerStoreDashboardMixin:
                 if total_cost_value is not None and filtered_records
                 else None
             ),
-            data_size_bytes=self._compute_data_size_cached(),
+            data_size_bytes=self.stats._compute_data_size_cached(),
             category_count=len(
                 {record.category_slug for record in filtered_records if record.category_slug}
             ),
@@ -436,8 +457,9 @@ class ViewerStoreDashboardMixin:
 
         return DashboardResponse(
             generated_at=_utc_now(),
-            supercategories=self.list_supercategories(),
+            supercategories=self.taxonomy.list_supercategories(),
             available_sdks=available_sdks,
+            available_agent_harnesses=available_agent_harnesses,
             available_authors=available_authors,
             available_categories=available_categories,
             cost_bounds=cost_bounds,

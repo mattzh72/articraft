@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
+from storage.identifiers import validate_category_slug, validate_supercategory_slug
 from storage.models import SupercategoryEntry, SupercategoryManifest
 from storage.repo import StorageRepo
 
@@ -10,8 +11,10 @@ def _normalized_category_slugs(category_slugs: list[str]) -> list[str]:
     normalized: list[str] = []
     seen: set[str] = set()
     for value in category_slugs:
-        slug = str(value).strip()
-        if not slug or slug in seen:
+        if not str(value or "").strip():
+            continue
+        slug = validate_category_slug(value)
+        if slug in seen:
             continue
         seen.add(slug)
         normalized.append(slug)
@@ -50,6 +53,7 @@ class SupercategoryStore:
         self.repo.write_json(path, manifest.to_dict())
 
     def load_entry(self, supercategory_slug: str) -> SupercategoryEntry | None:
+        supercategory_slug = validate_supercategory_slug(supercategory_slug)
         manifest = self.load_manifest()
         if manifest is None:
             return None
@@ -61,7 +65,7 @@ class SupercategoryStore:
     def save_entry(self, entry: SupercategoryEntry) -> tuple[SupercategoryEntry, bool]:
         manifest = self.load_manifest_or_default()
         normalized_entry = SupercategoryEntry(
-            slug=str(entry.slug).strip(),
+            slug=validate_supercategory_slug(entry.slug),
             title=str(entry.title).strip(),
             description=str(entry.description).strip(),
             category_slugs=_normalized_category_slugs(entry.category_slugs),
@@ -85,6 +89,8 @@ class SupercategoryStore:
         return normalized_entry, created
 
     def assign_category(self, *, category_slug: str, supercategory_slug: str) -> str | None:
+        category_slug = validate_category_slug(category_slug)
+        supercategory_slug = validate_supercategory_slug(supercategory_slug)
         manifest = self.load_manifest_or_default()
         updated_entries: list[SupercategoryEntry] = []
         previous_supercategory_slug: str | None = None
@@ -120,6 +126,7 @@ class SupercategoryStore:
         return previous_supercategory_slug
 
     def remove_category(self, category_slug: str) -> str | None:
+        category_slug = validate_category_slug(category_slug)
         manifest = self.load_manifest()
         if manifest is None:
             return None
@@ -150,6 +157,7 @@ class SupercategoryStore:
         return previous_supercategory_slug
 
     def delete_supercategory(self, supercategory_slug: str) -> SupercategoryEntry | None:
+        supercategory_slug = validate_supercategory_slug(supercategory_slug)
         manifest = self.load_manifest()
         if manifest is None:
             return None

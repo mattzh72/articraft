@@ -29,6 +29,7 @@ interface BulkActionBarProps {
 export function BulkActionBar({ visibleRecordIds }: BulkActionBarProps): JSX.Element {
   const {
     authorFilters,
+    agentHarnessFilters,
     bootstrap,
     categoryFilters,
     costFilter,
@@ -85,6 +86,7 @@ export function BulkActionBar({ visibleRecordIds }: BulkActionBarProps): JSX.Ele
           timeFilter,
           modelFilter,
           sdkFilter,
+          agentHarnessFilters,
           authorFilters,
           categoryFilters,
           costFilter,

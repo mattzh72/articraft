@@ -1,8 +1,10 @@
 import type { JSX } from "react";
 
 import type { CostFilter, TimeFilter } from "@/lib/types";
+import { sortAgentHarnesses } from "@/lib/agent-harness";
 import { cn } from "@/lib/utils";
 import {
+  DashboardAgentHarnessFilter,
   DashboardAuthorFilter,
   DashboardCategoryFilter,
   pillClass,
@@ -30,11 +32,14 @@ type DashboardFilterBarProps = {
   onCostFilterChange: (value: CostFilter) => void;
   sdkFilter: string | null;
   onSdkFilterChange: (value: string | null) => void;
+  agentHarnessFilters: string[];
+  onAgentHarnessFiltersChange: (value: string[]) => void;
   authorFilters: string[];
   onAuthorFiltersChange: (value: string[]) => void;
   categoryFilters: string[];
   onCategoryFiltersChange: (value: string[]) => void;
   availableSdks: string[];
+  availableAgentHarnesses: string[];
   availableAuthors: string[];
   availableCategories: string[];
   costBounds: CostBounds | null;
@@ -52,11 +57,14 @@ export function DashboardFilterBar({
   onCostFilterChange,
   sdkFilter,
   onSdkFilterChange,
+  agentHarnessFilters,
+  onAgentHarnessFiltersChange,
   authorFilters,
   onAuthorFiltersChange,
   categoryFilters,
   onCategoryFiltersChange,
   availableSdks,
+  availableAgentHarnesses,
   availableAuthors,
   availableCategories,
   costBounds,
@@ -69,6 +77,7 @@ export function DashboardFilterBar({
     starsFilter[0] !== STAR_SLIDER_MIN || starsFilter[1] !== STAR_SLIDER_MAX;
   const costFilterActive = costFilter.min != null || costFilter.max != null;
   const sdkFilterActive = sdkFilter != null;
+  const agentHarnessFilterActive = agentHarnessFilters.length > 0;
   const authorFilterActive = authorFilters.length > 0;
   const categoryFilterActive = categoryFilters.length > 0;
   const anyFilterActive =
@@ -76,8 +85,10 @@ export function DashboardFilterBar({
     starsFilterActive ||
     costFilterActive ||
     sdkFilterActive ||
+    agentHarnessFilterActive ||
     authorFilterActive ||
     categoryFilterActive;
+  const sortedAgentHarnesses = sortAgentHarnesses(availableAgentHarnesses);
 
   return (
     <section>
@@ -95,6 +106,13 @@ export function DashboardFilterBar({
               options={availableAuthors}
               value={authorFilters}
               onChange={onAuthorFiltersChange}
+            />
+          ) : null}
+          {sortedAgentHarnesses.length > 0 ? (
+            <DashboardAgentHarnessFilter
+              options={sortedAgentHarnesses}
+              value={agentHarnessFilters}
+              onChange={onAgentHarnessFiltersChange}
             />
           ) : null}
           <DashboardStarsFilter value={starsFilter} onChange={onStarsFilterChange} />
@@ -132,6 +150,7 @@ export function DashboardFilterBar({
                 onStarsFilterChange([STAR_SLIDER_MIN, STAR_SLIDER_MAX]);
                 onCostFilterChange({ min: null, max: null });
                 onSdkFilterChange(null);
+                onAgentHarnessFiltersChange([]);
                 onAuthorFiltersChange([]);
                 onCategoryFiltersChange([]);
               }}

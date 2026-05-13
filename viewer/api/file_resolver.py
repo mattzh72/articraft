@@ -13,6 +13,7 @@ from agent.prompts import (
     LEGACY_DESIGNER_PROMPT_NAME,
     OPENAI_DESIGNER_PROMPT_NAME,
 )
+from storage.identifiers import validate_record_id
 from storage.repo import StorageRepo
 from storage.trajectories import (
     COMPRESSED_TRAJECTORY_FILENAME,
@@ -259,7 +260,9 @@ class ViewerFileResolver:
 
     @staticmethod
     def _validate_record_id(record_id: str) -> None:
-        if not record_id.startswith("rec_"):
+        try:
+            validate_record_id(record_id)
+        except ValueError:
             raise HTTPException(status_code=400, detail="Invalid record ID format")
 
     @staticmethod

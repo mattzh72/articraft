@@ -1,11 +1,13 @@
 from __future__ import annotations
 
+from viewer.api.agent_harness import within_agent_harness_filters
 from viewer.api.schemas import (
     RecordBrowseFacetsResponse,
     RecordBrowseIdsResponse,
     RecordBrowseResponse,
     RecordSummaryResponse,
 )
+from viewer.api.store_components import ViewerStoreComponent
 from viewer.api.store_filters import (
     _normalize_time_filter_value,
     _within_author_filters,
@@ -17,7 +19,12 @@ from viewer.api.store_filters import (
 from viewer.api.store_values import _parse_sort_key
 
 
-class ViewerStoreSearchMixin:
+def _sorted_agent_harnesses(values: set[str]) -> list[str]:
+    order = {"articraft": 0, "codex": 1, "claude-code": 2}
+    return sorted(values, key=lambda value: (order.get(value, len(order)), value))
+
+
+class ViewerSearchStore(ViewerStoreComponent):
     def _dataset_query_candidate_ids(
         self,
         query: str | None,
@@ -29,7 +36,7 @@ class ViewerStoreSearchMixin:
             return None
 
         source_total = len(self.dataset_browse_index.snapshot().rows)
-        return self.search.search_record_ids(
+        return self.search_index.search_record_ids(
             query_text,
             source_filter="dataset",
             run_id=run_id,
@@ -41,7 +48,7 @@ class ViewerStoreSearchMixin:
         record_ids: list[str] = []
 
         if source_filter == "workbench":
-            workbench = self.collections.load_workbench() or {"entries": []}
+            workbench = self.collection_store.load_workbench() or {"entries": []}
             for item in workbench.get("entries", []):
                 record_id = str(item.get("record_id", "")).strip()
                 if not record_id or record_id in seen:
@@ -51,7 +58,7 @@ class ViewerStoreSearchMixin:
             return record_ids
 
         if source_filter == "dataset":
-            for item in self.datasets.list_entries():
+            for item in self.dataset_store.list_entries():
                 record_id = str(item.get("record_id", "")).strip()
                 if not record_id or record_id in seen:
                     continue
@@ -62,7 +69,7 @@ class ViewerStoreSearchMixin:
         raise ValueError(f"Unsupported source filter: {source_filter}")
 
     def load_record_summary(self, record_id: str) -> RecordSummaryResponse | None:
-        return self._record_summary(record_id)
+        return self.records._record_summary(record_id)
 
     def browse_records(
         self,
@@ -75,6 +82,7 @@ class ViewerStoreSearchMixin:
         time_filter_newest: str | None = None,
         model_filter: str | None = None,
         sdk_filter: str | None = None,
+        agent_harness_filters: list[str] | None = None,
         author_filters: list[str] | None = None,
         category_filters: list[str] | None = None,
         cost_min: float | None = None,
@@ -93,6 +101,7 @@ class ViewerStoreSearchMixin:
                 time_filter_newest=time_filter_newest,
                 model_filter=model_filter,
                 sdk_filter=sdk_filter,
+                agent_harness_filters=agent_harness_filters,
                 author_filters=author_filters,
                 category_filters=category_filters,
                 cost_min=cost_min,
@@ -112,6 +121,7 @@ class ViewerStoreSearchMixin:
             time_filter_newest=time_filter_newest,
             model_filter=model_filter,
             sdk_filter=sdk_filter,
+            agent_harness_filters=agent_harness_filters,
             author_filters=author_filters,
             category_filters=category_filters,
             cost_min=cost_min,
@@ -150,6 +160,7 @@ class ViewerStoreSearchMixin:
         time_filter_newest: str | None = None,
         model_filter: str | None = None,
         sdk_filter: str | None = None,
+        agent_harness_filters: list[str] | None = None,
         author_filters: list[str] | None = None,
         category_filters: list[str] | None = None,
         cost_min: float | None = None,
@@ -171,7 +182,11 @@ class ViewerStoreSearchMixin:
         all_source_summaries = [
             summary
             for record_id in source_record_ids
-            if (summary := self._record_browser_summary(record_id, summary_cache=summary_cache))
+            if (
+                summary := self.records._record_browser_summary(
+                    record_id, summary_cache=summary_cache
+                )
+            )
             is not None
         ]
 
@@ -189,6 +204,13 @@ class ViewerStoreSearchMixin:
                 if isinstance(summary.sdk_package, str) and summary.sdk_package
             }
         )
+        available_agent_harnesses = _sorted_agent_harnesses(
+            {
+                summary.agent_harness
+                for summary in all_source_summaries
+                if isinstance(summary.agent_harness, str) and summary.agent_harness
+            }
+        )
         available_authors = sorted(
             {
                 str(summary.author)
@@ -200,7 +222,7 @@ class ViewerStoreSearchMixin:
             sorted(
                 {
                     str(item.get("category_slug", "")).strip()
-                    for item in self.datasets.list_entries()
+                    for item in self.dataset_store.list_entries()
                     if str(item.get("category_slug", "")).strip()
                 }
             )
@@ -220,6 +242,7 @@ class ViewerStoreSearchMixin:
         facets = RecordBrowseFacetsResponse(
             models=available_models,
             sdk_packages=available_sdk_packages,
+            agent_harnesses=available_agent_harnesses,
             authors=available_authors,
             categories=available_categories,
             cost_min=min(cost_values) if cost_values else None,
@@ -229,7 +252,7 @@ class ViewerStoreSearchMixin:
         candidate_ids: list[str]
         query_text = (query or "").strip()
         if query_text:
-            candidate_ids = self.search.search_record_ids(
+            candidate_ids = self.search_index.search_record_ids(
                 query_text,
                 source_filter=source_filter,
                 run_id=run_id,
@@ -242,7 +265,9 @@ class ViewerStoreSearchMixin:
         for record_id in candidate_ids:
             summary = summary_cache.get(record_id)
             if summary is None:
-                summary = self._record_browser_summary(record_id, summary_cache=summary_cache)
+                summary = self.records._record_browser_summary(
+                    record_id, summary_cache=summary_cache
+                )
             if summary is None:
                 continue
             if run_id and summary.run_id != run_id:
@@ -256,6 +281,8 @@ class ViewerStoreSearchMixin:
             if model_filter and summary.model_id != model_filter:
                 continue
             if sdk_filter and summary.sdk_package != sdk_filter:
+                continue
+            if not within_agent_harness_filters(summary.agent_harness, agent_harness_filters):
                 continue
             if not _within_author_filters(summary.author, author_filters):
                 continue
@@ -288,6 +315,7 @@ class ViewerStoreSearchMixin:
         time_filter_newest: str | None = None,
         model_filter: str | None = None,
         sdk_filter: str | None = None,
+        agent_harness_filters: list[str] | None = None,
         author_filters: list[str] | None = None,
         category_filters: list[str] | None = None,
         cost_min: float | None = None,
@@ -303,7 +331,7 @@ class ViewerStoreSearchMixin:
 
         if source_filter == "dataset":
             source_total = len(self.dataset_browse_index.snapshot().rows)
-            record_ids = self.search.search_record_ids(
+            record_ids = self.search_index.search_record_ids(
                 query,
                 source_filter=source_filter,
                 run_id=run_id,
@@ -317,6 +345,7 @@ class ViewerStoreSearchMixin:
                 time_filter_newest=time_filter_newest,
                 model_filter=model_filter,
                 sdk_filter=sdk_filter,
+                agent_harness_filters=agent_harness_filters,
                 author_filters=author_filters,
                 category_filters=category_filters,
                 cost_min=cost_min,
@@ -331,7 +360,7 @@ class ViewerStoreSearchMixin:
         ) or _normalize_time_filter_value(time_filter)
         effective_time_filter_newest = _normalize_time_filter_value(time_filter_newest)
 
-        record_ids = self.search.search_record_ids(
+        record_ids = self.search_index.search_record_ids(
             query,
             source_filter=source_filter,
             run_id=run_id,
@@ -339,7 +368,7 @@ class ViewerStoreSearchMixin:
         )
         results: list[RecordSummaryResponse] = []
         for record_id in record_ids:
-            summary = self._record_summary(record_id)
+            summary = self.records._record_summary(record_id)
             if summary is None:
                 continue
             if not _within_time_filter(
@@ -351,6 +380,8 @@ class ViewerStoreSearchMixin:
             if model_filter and summary.model_id != model_filter:
                 continue
             if sdk_filter and summary.sdk_package != sdk_filter:
+                continue
+            if not within_agent_harness_filters(summary.agent_harness, agent_harness_filters):
                 continue
             if not _within_author_filters(summary.author, author_filters):
                 continue
@@ -378,6 +409,7 @@ class ViewerStoreSearchMixin:
         time_filter_newest: str | None = None,
         model_filter: str | None = None,
         sdk_filter: str | None = None,
+        agent_harness_filters: list[str] | None = None,
         author_filters: list[str] | None = None,
         category_filters: list[str] | None = None,
         cost_min: float | None = None,
@@ -394,6 +426,7 @@ class ViewerStoreSearchMixin:
                 time_filter_newest=time_filter_newest,
                 model_filter=model_filter,
                 sdk_filter=sdk_filter,
+                agent_harness_filters=agent_harness_filters,
                 author_filters=author_filters,
                 category_filters=category_filters,
                 cost_min=cost_min,
@@ -411,6 +444,7 @@ class ViewerStoreSearchMixin:
             time_filter_newest=time_filter_newest,
             model_filter=model_filter,
             sdk_filter=sdk_filter,
+            agent_harness_filters=agent_harness_filters,
             author_filters=author_filters,
             category_filters=category_filters,
             cost_min=cost_min,

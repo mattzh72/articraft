@@ -19,6 +19,7 @@ from viewer.api.store_compile import (
     _compile_report_satisfies_target,
     _current_compile_fingerprint,
 )
+from viewer.api.store_components import ViewerStoreComponent
 from viewer.api.store_filesystem import (
     _latest_path_mtime_to_utc,
     _remove_path_if_exists,
@@ -28,7 +29,7 @@ from viewer.api.store_types import MaterializeRecordAssetsResult
 from viewer.api.store_values import _normalize_sdk_package_value
 
 
-class ViewerStoreMaterializationMixin:
+class ViewerMaterializationStore(ViewerStoreComponent):
     def _record_compile_lock(self, record_id: str) -> threading.Lock:
         with self._compile_locks_guard:
             lock = self._compile_locks.get(record_id)
@@ -156,7 +157,7 @@ class ViewerStoreMaterializationMixin:
             metrics=metrics,
             signal_bundle=signal_bundle,
         )
-        self.materializations.write_compile_report(record_id, report)
+        self.materialization_store.write_compile_report(record_id, report)
 
     def materialize_record_assets(
         self,
@@ -170,7 +171,7 @@ class ViewerStoreMaterializationMixin:
     ) -> MaterializeRecordAssetsResult:
         if target not in {"full", "visual"}:
             raise ValueError(f"Unsupported materialization target: {target!r}")
-        record = self.records.load_record(record_id)
+        record = self.record_store.load_record(record_id)
         if not isinstance(record, dict):
             raise FileNotFoundError(f"Record not found: {record_id}")
 
@@ -214,7 +215,7 @@ class ViewerStoreMaterializationMixin:
 
         lock = self._record_compile_lock(record_id)
         with lock:
-            refreshed_record = self.records.load_record(record_id)
+            refreshed_record = self.record_store.load_record(record_id)
             if not isinstance(refreshed_record, dict):
                 raise FileNotFoundError(f"Record not found: {record_id}")
 

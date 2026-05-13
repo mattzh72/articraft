@@ -4,10 +4,11 @@ import subprocess
 import time
 
 from viewer.api.schemas import CategoryStatsResponse, RecordSummaryResponse, RepoStatsResponse
+from viewer.api.store_components import ViewerStoreComponent
 from viewer.api.store_values import _coerce_string, _effective_rating_bucket
 
 
-class ViewerStoreStatsMixin:
+class ViewerStatsStore(ViewerStoreComponent):
     def _compute_data_size(self) -> int | None:
         data_dir = self.repo_root / "data"
         if not data_dir.exists():
@@ -65,9 +66,9 @@ class ViewerStoreStatsMixin:
                 return cached
 
         summary_cache: dict[str, RecordSummaryResponse | None] = {}
-        workbench_entries = self.list_workbench_entries(summary_cache=summary_cache)
-        dataset_entries = self.list_dataset_entries(summary_cache=summary_cache)
-        runs = self.list_runs()
+        workbench_entries = self.records.list_workbench_entries(summary_cache=summary_cache)
+        dataset_entries = self.records.list_dataset_entries(summary_cache=summary_cache)
+        runs = self.runs.list_runs()
 
         seen_ids: set[str] = set()
         summaries: list[RecordSummaryResponse] = []

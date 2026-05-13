@@ -13,6 +13,7 @@ import { List, type ListImperativeAPI, type RowComponentProps } from "react-wind
 
 import { RecordListItem } from "@/components/browser/RecordListItem";
 import type { DatasetFilterMetadata } from "@/components/browser/ExplorerFilters";
+import { recordMatchesAgentHarnessFilters } from "@/lib/agent-harness";
 import type {
   CostFilter,
   RatingFilter,
@@ -174,6 +175,7 @@ export function RecordList({
     timeFilter,
     modelFilter,
     sdkFilter,
+    agentHarnessFilters,
     authorFilters,
     categoryFilters,
     costFilter,
@@ -239,6 +241,7 @@ export function RecordList({
         timeFilter,
         modelFilter,
         sdkFilter,
+        agentHarnessFilters,
         authorFilters: [],
         categoryFilters: [],
         costFilter,
@@ -269,6 +272,7 @@ export function RecordList({
     deferredSearchQuery,
     dispatch,
     modelFilter,
+    agentHarnessFilters,
     ratingFilter,
     secondaryRatingFilter,
     sdkFilter,
@@ -300,6 +304,7 @@ export function RecordList({
       if (sdkFilter) {
         list = list.filter((record) => record.sdk_package === sdkFilter);
       }
+      list = list.filter((record) => recordMatchesAgentHarnessFilters(record, agentHarnessFilters));
       list.sort((left, right) => recordSortTimestamp(right) - recordSortTimestamp(left));
     }
 
@@ -309,6 +314,7 @@ export function RecordList({
     costFilter,
     deferredSearchQuery,
     modelFilter,
+    agentHarnessFilters,
     ratingFilter,
     secondaryRatingFilter,
     searchedRecords,
@@ -328,6 +334,7 @@ export function RecordList({
       timeFilter,
       modelFilter,
       sdkFilter,
+      agentHarnessFilters,
       authorFilters,
       categoryFilters,
       costFilter,
@@ -340,6 +347,7 @@ export function RecordList({
       costFilter,
       deferredSearchQuery,
       modelFilter,
+      agentHarnessFilters,
       ratingFilter,
       secondaryRatingFilter,
       selectedRunId,
@@ -372,6 +380,7 @@ export function RecordList({
       onDatasetMetadataChange?.({
         availableModels: response.facets.models,
         availableSdks: response.facets.sdk_packages,
+        availableAgentHarnesses: response.facets.agent_harnesses,
         availableAuthors: response.facets.authors,
         availableCategories: response.facets.categories,
         availableCostBounds:

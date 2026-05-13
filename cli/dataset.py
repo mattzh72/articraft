@@ -42,6 +42,7 @@ from storage.dataset_workflow import (
     upsert_category_metadata as _shared_upsert_category_metadata,
 )
 from storage.datasets import DatasetStore
+from storage.identifiers import validate_category_slug, validate_supercategory_slug
 from storage.models import CategoryRecord, SupercategoryEntry
 from storage.queries import StorageQueries
 from storage.record_authors import sync_record_authors, sync_record_rated_by
@@ -172,10 +173,9 @@ def _resolve_record_reference(repo: StorageRepo, record_ref: str) -> str:
 
 
 def _normalize_required_slug(value: str | None, label: str) -> str:
-    slug = str(value or "").strip()
-    if not slug:
-        raise ValueError(f"{label} is required.")
-    return slug
+    if "supercategory" in label.lower():
+        return validate_supercategory_slug(value, label=label)
+    return validate_category_slug(value, label=label)
 
 
 def _slugify_category_title(title: str) -> str:

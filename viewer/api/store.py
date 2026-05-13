@@ -52,15 +52,15 @@ from viewer.api.store_common import (
     _within_rating_filter,
     _within_time_filter,
 )
-from viewer.api.store_dashboard import ViewerStoreDashboardMixin
-from viewer.api.store_materialization import ViewerStoreMaterializationMixin
-from viewer.api.store_mutations import ViewerStoreMutationsMixin
-from viewer.api.store_promotion import ViewerStorePromotionMixin
-from viewer.api.store_records import ViewerStoreRecordsMixin
-from viewer.api.store_runs import ViewerStoreRunsMixin
-from viewer.api.store_search import ViewerStoreSearchMixin
-from viewer.api.store_stats import ViewerStoreStatsMixin
-from viewer.api.store_taxonomy import ViewerStoreTaxonomyMixin
+from viewer.api.store_dashboard import ViewerDashboardStore
+from viewer.api.store_materialization import ViewerMaterializationStore
+from viewer.api.store_mutations import ViewerMutationStore
+from viewer.api.store_promotion import ViewerPromotionStore
+from viewer.api.store_records import ViewerRecordsStore
+from viewer.api.store_runs import ViewerRunsStore
+from viewer.api.store_search import ViewerSearchStore
+from viewer.api.store_stats import ViewerStatsStore
+from viewer.api.store_taxonomy import ViewerTaxonomyStore
 
 time = _time
 
@@ -107,17 +107,7 @@ __all__ = [
 ]
 
 
-class ViewerStore(
-    ViewerStoreMaterializationMixin,
-    ViewerStoreRecordsMixin,
-    ViewerStoreDashboardMixin,
-    ViewerStoreSearchMixin,
-    ViewerStoreTaxonomyMixin,
-    ViewerStorePromotionMixin,
-    ViewerStoreRunsMixin,
-    ViewerStoreStatsMixin,
-    ViewerStoreMutationsMixin,
-):
+class ViewerStore:
     _stats_cache = None
     _data_size_cache = None
     _STATS_TTL = 30.0
@@ -126,17 +116,26 @@ class ViewerStore(
         self.repo_root = repo_root.resolve()
         self.repo = StorageRepo(self.repo_root)
         self.repo.ensure_layout()
-        self.collections = CollectionStore(self.repo)
-        self.datasets = DatasetStore(self.repo)
-        self.records = RecordStore(self.repo)
-        self.materializations = MaterializationStore(self.repo)
+        self.collection_store = CollectionStore(self.repo)
+        self.dataset_store = DatasetStore(self.repo)
+        self.record_store = RecordStore(self.repo)
+        self.materialization_store = MaterializationStore(self.repo)
         self.supercategory_store = SupercategoryStore(self.repo)
-        self.search = SearchIndex(self.repo)
+        self.search_index = SearchIndex(self.repo)
         self.dataset_browse_index = DatasetBrowseIndex(self.repo)
         if ensure_search_index:
-            self.search.ensure_current()
+            self.search_index.ensure_current()
         self._compile_locks_guard = threading.Lock()
         self._compile_locks: dict[str, threading.Lock] = {}
         self._run_results_cache_guard = threading.Lock()
         self._run_results_cache: dict[str, tuple[int | None, dict[str, dict[str, Any]]]] = {}
         self._dashboard_records_cache: tuple[float, list[DashboardRecord]] | None = None
+        self.materialization = ViewerMaterializationStore(self)
+        self.records = ViewerRecordsStore(self)
+        self.dashboards = ViewerDashboardStore(self)
+        self.search = ViewerSearchStore(self)
+        self.taxonomy = ViewerTaxonomyStore(self)
+        self.promotions = ViewerPromotionStore(self)
+        self.runs = ViewerRunsStore(self)
+        self.stats = ViewerStatsStore(self)
+        self.mutations = ViewerMutationStore(self)

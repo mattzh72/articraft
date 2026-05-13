@@ -51,7 +51,7 @@ def create_app(*, repo_root: Path | None = None) -> FastAPI:
 
     app.state.repo_root = resolved_repo_root
     app.state.viewer_store = store
-    app.state.file_resolver = ViewerFileResolver(store)
+    app.state.file_resolver = ViewerFileResolver(store.materialization)
 
     _install_middleware(app)
     app.include_router(status_router)

@@ -4,6 +4,7 @@ import asyncio
 
 from fastapi import APIRouter, HTTPException, Query
 
+from storage.identifiers import validate_record_id
 from viewer.api.dependencies import FileResolverDep, ViewerStoreDep
 from viewer.api.file_manager import open_in_file_manager
 from viewer.api.schemas import (
@@ -28,13 +29,13 @@ router = APIRouter()
 
 @router.get("/api/staging", response_model=list[StagingEntryResponse])
 async def staging_entries(store: ViewerStoreDep) -> list[StagingEntryResponse]:
-    return store.list_staging_entries()
+    return store.runs.list_staging_entries()
 
 
 @router.get("/api/records/{record_id}/summary", response_model=RecordSummaryResponse)
 async def record_summary(record_id: str, store: ViewerStoreDep) -> RecordSummaryResponse:
     _validate_record_id(record_id)
-    summary = await asyncio.to_thread(store.load_record_summary, record_id)
+    summary = await asyncio.to_thread(store.search.load_record_summary, record_id)
     if summary is None:
         raise HTTPException(status_code=404, detail=f"Record not found: {record_id}")
     return summary
@@ -51,6 +52,7 @@ async def browse_records(
     time_to: str | None = None,
     model: str | None = None,
     sdk: str | None = None,
+    agent_harness: list[str] | None = Query(default=None),
     author: list[str] | None = Query(default=None),
     category: list[str] | None = Query(default=None),
     cost_min: float | None = None,
@@ -62,7 +64,7 @@ async def browse_records(
 ) -> RecordBrowseResponse:
     try:
         return await asyncio.to_thread(
-            store.browse_records,
+            store.search.browse_records,
             source_filter=source,
             query=q,
             run_id=run_id,
@@ -71,6 +73,7 @@ async def browse_records(
             time_filter_newest=time_to,
             model_filter=model,
             sdk_filter=sdk,
+            agent_harness_filters=agent_harness,
             author_filters=author,
             category_filters=category,
             cost_min=cost_min,
@@ -95,6 +98,7 @@ async def browse_record_ids(
     time_to: str | None = None,
     model: str | None = None,
     sdk: str | None = None,
+    agent_harness: list[str] | None = Query(default=None),
     author: list[str] | None = Query(default=None),
     category: list[str] | None = Query(default=None),
     cost_min: float | None = None,
@@ -104,7 +108,7 @@ async def browse_record_ids(
 ) -> RecordBrowseIdsResponse:
     try:
         return await asyncio.to_thread(
-            store.browse_record_ids,
+            store.search.browse_record_ids,
             source_filter=source,
             query=q,
             run_id=run_id,
@@ -113,6 +117,7 @@ async def browse_record_ids(
             time_filter_newest=time_to,
             model_filter=model,
             sdk_filter=sdk,
+            agent_harness_filters=agent_harness,
             author_filters=author,
             category_filters=category,
             cost_min=cost_min,
@@ -135,6 +140,7 @@ async def search_records(
     time_to: str | None = None,
     model: str | None = None,
     sdk: str | None = None,
+    agent_harness: list[str] | None = Query(default=None),
     author: list[str] | None = Query(default=None),
     category: list[str] | None = Query(default=None),
     cost_min: float | None = None,
@@ -143,7 +149,7 @@ async def search_records(
     secondary_rating: list[str] | None = Query(default=None),
     limit: int = 200,
 ) -> list[RecordSummaryResponse]:
-    return store.search_records(
+    return store.search.search_records(
         q,
         source_filter=source,
         run_id=run_id,
@@ -152,6 +158,7 @@ async def search_records(
         time_filter_newest=time_to,
         model_filter=model,
         sdk_filter=sdk,
+        agent_harness_filters=agent_harness,
         author_filters=author,
         category_filters=category,
         cost_min=cost_min,
@@ -165,7 +172,7 @@ async def search_records(
 @router.delete("/api/records/{record_id}", response_model=DeleteRecordResponse)
 async def delete_record(record_id: str, store: ViewerStoreDep) -> DeleteRecordResponse:
     _validate_record_id(record_id)
-    deleted = store.delete_record(record_id)
+    deleted = store.mutations.delete_record(record_id)
     if not deleted:
         raise HTTPException(status_code=404, detail=f"Record not found: {record_id}")
 
@@ -181,7 +188,7 @@ async def promote_record(
     _validate_record_id(record_id)
     try:
         return await asyncio.to_thread(
-            store.promote_record_to_dataset,
+            store.promotions.promote_record_to_dataset,
             record_id,
             category_title=payload.category_title,
             category_slug=payload.category_slug,
@@ -200,7 +207,7 @@ async def delete_staging_entry(
 ) -> DeleteStagingResponse:
     resolver.resolve_staging_root(run_id, record_id)
 
-    deleted = store.delete_staging_entry(run_id, record_id)
+    deleted = store.mutations.delete_staging_entry(run_id, record_id)
     if not deleted:
         raise HTTPException(
             status_code=404,
@@ -270,7 +277,7 @@ async def update_record_rating(
     store: ViewerStoreDep,
 ) -> RecordRatingResponse:
     _validate_record_id(record_id)
-    updated = store.update_record_rating(record_id, payload.rating)
+    updated = store.mutations.update_record_rating(record_id, payload.rating)
     if not isinstance(updated, dict):
         raise HTTPException(status_code=404, detail=f"Record not found: {record_id}")
 
@@ -291,7 +298,7 @@ async def update_record_secondary_rating(
     store: ViewerStoreDep,
 ) -> RecordSecondaryRatingResponse:
     _validate_record_id(record_id)
-    updated = store.update_record_secondary_rating(
+    updated = store.mutations.update_record_secondary_rating(
         record_id,
         payload.secondary_rating,
     )
@@ -306,5 +313,7 @@ async def update_record_secondary_rating(
 
 
 def _validate_record_id(record_id: str) -> None:
-    if not record_id.startswith("rec_"):
+    try:
+        validate_record_id(record_id)
+    except ValueError:
         raise HTTPException(status_code=400, detail="Invalid record ID format")

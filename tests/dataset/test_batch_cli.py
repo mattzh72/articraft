@@ -907,7 +907,7 @@ def test_run_batch_persists_records_and_batch_metadata(
     }
 
     viewer_store = ViewerStore(tmp_path)
-    run_detail = viewer_store.load_run_detail(run_id)
+    run_detail = viewer_store.runs.load_run_detail(run_id)
     assert run_detail is not None
     assert run_detail.run.status == "success"
     assert len(run_detail.results) == 2

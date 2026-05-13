@@ -21,6 +21,7 @@ class DashboardRecord:
     total_cost_usd: float | None
     effective_rating: float | None
     author: str | None
+    agent_harness: str
     run_id: str | None
     category_slug: str | None
     model_id: str | None
