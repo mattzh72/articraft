@@ -119,6 +119,57 @@ def test_external_init_rejects_unknown_agent(tmp_path: Path) -> None:
     assert exc_info.value.code == 2
 
 
+def test_external_compile_command_is_removed(tmp_path: Path) -> None:
+    with pytest.raises(SystemExit) as exc_info:
+        external_cli.main(["--repo-root", str(tmp_path), "compile", "data/records/rec_one"])
+
+    assert exc_info.value.code == 2
+
+
+def test_external_check_runs_full_strict_compile(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    assert (
+        external_cli.main(
+            [
+                "--repo-root",
+                str(tmp_path),
+                "init",
+                "--agent",
+                "codex",
+                "washing machine",
+            ]
+        )
+        == 0
+    )
+    record_dir = next((tmp_path / "data" / "records").iterdir())
+    calls: list[list[str]] = []
+
+    compile_impl = _fake_compile(tmp_path)
+
+    def _capture_compile(argv: list[str]) -> int:
+        calls.append(argv)
+        return compile_impl(argv)
+
+    monkeypatch.setattr(external_cli.compile_record_cli, "main", _capture_compile)
+
+    exit_code = external_cli.main(["--repo-root", str(tmp_path), "check", str(record_dir)])
+
+    assert exit_code == 0
+    assert calls == [
+        [
+            "--repo-root",
+            str(tmp_path),
+            "--target",
+            "full",
+            str(record_dir),
+            "--validate",
+            "--strict-geom-qc",
+        ]
+    ]
+
+
 def test_external_finalize_workbench_keeps_record_local(
     tmp_path: Path,
     monkeypatch,

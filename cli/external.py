@@ -270,12 +270,6 @@ def _build_parser() -> argparse.ArgumentParser:
     init.add_argument("--tag", dest="tags", action="append", default=None)
     init.add_argument("--record-id", default=None)
 
-    compile_one = subparsers.add_parser("compile", help="Compile an external-agent record.")
-    _add_repo_root_override(compile_one)
-    compile_one.add_argument("record")
-    compile_one.add_argument("--target", choices=("full", "visual"), default="full")
-    compile_one.add_argument("--validate", action="store_true")
-
     check = subparsers.add_parser("check", help="Compile and validate an external-agent record.")
     _add_repo_root_override(check)
     check.add_argument("record")
@@ -384,14 +378,6 @@ def main(argv: list[str] | None = None) -> int:
         print(str(exc))
         return 1
     record_dir = repo.layout.record_dir(record_id)
-
-    if args.command == "compile":
-        return _compile_record(
-            args.repo_root,
-            record_dir,
-            target=args.target,
-            validate=bool(args.validate),
-        )
 
     if args.command == "check":
         status = _compile_record(args.repo_root, record_dir, target="full", validate=True)

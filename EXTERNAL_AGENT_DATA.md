@@ -37,7 +37,7 @@ Use this loop for high-quality output:
 2. Read the relevant SDK docs/examples before writing geometry.
 3. Build the object with realistic connected structure and articulated primary mechanisms.
 4. Add prompt-specific checks in `run_tests()` for the visual/mechanical claims you made.
-5. Compile, inspect failures/warnings, fix the model, and repeat until `external check` passes.
+5. Run `external check`, inspect failures/warnings, fix the model, and repeat until it passes.
 
 ## 1. Initialize The Repo
 
@@ -98,19 +98,13 @@ Your object must be a high-quality articulated asset: meaningful parts, correct 
 
 ## 4. Iterate
 
-Compile during development:
-
-```bash
-uv run articraft external compile data/records/<record_id>
-```
-
-Run the stricter external check before finalizing:
+Run the external check during development. This compiles the record with the strict validation gate used before finalizing:
 
 ```bash
 uv run articraft external check data/records/<record_id>
 ```
 
-Repeat authoring, compile, and check until the record passes.
+Repeat authoring and checking until the record passes.
 
 ## 5. Finalize
 
@@ -142,7 +136,7 @@ You must:
 - preserve `creator.mode=external_agent`
 - preserve `creator.agent=codex` or `creator.agent=claude-code`
 - preserve `creator.trace_available=false`
-- use `articraft external compile`, `check`, and `finalize`
+- use `articraft external check` and `finalize`
 - leave workbench-only records uncommitted
 
 You must not:
