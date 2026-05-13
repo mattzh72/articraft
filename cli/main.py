@@ -13,6 +13,7 @@ from cli import compile_all as compile_all_cli
 from cli import compile_record as compile_record_cli
 from cli import dataset as dataset_cli
 from cli import env as env_cli
+from cli import external as external_cli
 from cli import hooks as hooks_cli
 from cli import pre_commit as pre_commit_cli
 from cli import workbench as workbench_cli
@@ -44,6 +45,13 @@ def _dataset(args: argparse.Namespace, argv: list[str]) -> int:
 
 def _workbench(args: argparse.Namespace, argv: list[str]) -> int:
     return workbench_cli.main(["--repo-root", str(args.repo_root), *argv])
+
+
+def _external(args: argparse.Namespace) -> int:
+    external_args = list(args.external_args)
+    if not external_args:
+        external_args = ["--help"]
+    return external_cli.main(["--repo-root", str(args.repo_root), *external_args])
 
 
 def _run_init(args: argparse.Namespace) -> int:
@@ -503,6 +511,15 @@ def _build_parser() -> argparse.ArgumentParser:
     _add_repo_root(data_check)
     data_check.set_defaults(func=lambda args: _dataset(args, ["validate-format"]))
 
+    external = subparsers.add_parser(
+        "external",
+        help="External agent data authoring commands.",
+        add_help=False,
+    )
+    _add_repo_root(external)
+    external.add_argument("external_args", nargs=argparse.REMAINDER)
+    external.set_defaults(func=_external)
+
     dataset = subparsers.add_parser("dataset", help="Dataset commands.")
     dataset_sub = dataset.add_subparsers(dest="dataset_command", required=True)
     for name, old_name, help_text in (
@@ -708,6 +725,8 @@ def main(argv: list[str] | None = None) -> int:
         parser = _build_internal_parser()
         args = parser.parse_args(args_list[1:])
         return args.func(args)
+    if args_list and args_list[0] == "external":
+        return external_cli.main(args_list[1:] or ["--help"])
     parser = _build_parser()
     args = parser.parse_args(args_list)
     return args.func(args)

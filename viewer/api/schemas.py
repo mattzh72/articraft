@@ -49,6 +49,9 @@ class RecordSummaryResponse(BaseModel):
     sdk_package: str | None = None
     provider: str | None = None
     model_id: str | None = None
+    creator_mode: str | None = None
+    external_agent: str | None = None
+    has_traces: bool = False
     thinking_level: str | None = None
     turn_count: int | None = None
     input_tokens: int | None = None

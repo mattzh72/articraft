@@ -20,6 +20,8 @@ _ALLOWED_COLLECTIONS = {"dataset", "workbench"}
 _ALLOWED_PROMPT_KINDS = {"single_prompt", "prompt_series"}
 _ALLOWED_PROVIDERS = PROVIDER_VALUE_SET
 _ALLOWED_THINKING_LEVELS = THINKING_LEVEL_VALUE_SET
+_ALLOWED_CREATOR_MODES = {"internal_agent", "external_agent"}
+_ALLOWED_EXTERNAL_AGENTS = {"codex", "claude-code"}
 _BATCH_REQUIRED_COLUMNS = {
     "category_slug",
     "prompt",
@@ -417,10 +419,20 @@ class _DataFormatValidator:
                 self._add_error(record_path, f"{key} must be null or an integer from 1 to 5")
         if record.get("prompt_kind") not in _ALLOWED_PROMPT_KINDS:
             self._add_error(record_path, f"invalid prompt_kind={record.get('prompt_kind')!r}")
-        if record.get("provider") not in _ALLOWED_PROVIDERS:
-            self._add_error(record_path, f"invalid provider={record.get('provider')!r}")
-        if not isinstance(record.get("model_id"), str) or not record.get("model_id", "").strip():
-            self._add_error(record_path, "model_id must be a non-empty string")
+        creator = record.get("creator")
+        is_external_record = isinstance(creator, dict) and creator.get("mode") == "external_agent"
+        provider = record.get("provider")
+        if provider is None:
+            if not is_external_record:
+                self._add_error(record_path, "provider must be set for non-external records")
+        elif provider not in _ALLOWED_PROVIDERS:
+            self._add_error(record_path, f"invalid provider={provider!r}")
+        model_id = record.get("model_id")
+        if model_id is None:
+            if not is_external_record:
+                self._add_error(record_path, "model_id must be set for non-external records")
+        elif not isinstance(model_id, str) or not model_id.strip():
+            self._add_error(record_path, "model_id must be null or a non-empty string")
         category_slug = record.get("category_slug")
         if category_slug is not None:
             if not isinstance(category_slug, str) or not _SLUG_RE.fullmatch(category_slug):
@@ -439,6 +451,8 @@ class _DataFormatValidator:
         source = record.get("source")
         if not isinstance(source, dict):
             self._add_error(record_path, "source must be an object")
+        if creator is not None:
+            self._validate_creator(record_path, creator)
         display = record.get("display")
         if not isinstance(display, dict):
             self._add_error(record_path, "display must be an object")
@@ -446,6 +460,30 @@ class _DataFormatValidator:
             for key in ("title", "prompt_preview"):
                 if not isinstance(display.get(key), str):
                     self._add_error(record_path, f"display.{key} must be a string")
+
+    def _validate_creator(self, record_path: Path, creator: Any) -> None:
+        if not isinstance(creator, dict):
+            self._add_error(record_path, "creator must be an object")
+            return
+        mode = creator.get("mode")
+        if mode not in _ALLOWED_CREATOR_MODES:
+            self._add_error(record_path, f"invalid creator.mode={mode!r}")
+            return
+        if mode == "external_agent":
+            if creator.get("agent") not in _ALLOWED_EXTERNAL_AGENTS:
+                self._add_error(record_path, "creator.agent must be 'codex' or 'claude-code'")
+            if creator.get("trace_available") is not False:
+                self._add_error(record_path, "creator.trace_available must be false")
+            trace_dir = record_path.parent / "traces"
+            if trace_dir.exists() and any(trace_dir.iterdir()):
+                self._add_error(record_path, "external records must not include traces")
+        else:
+            if "agent" in creator and creator.get("agent") is not None:
+                self._add_error(record_path, "creator.agent is only supported for external records")
+            if "trace_available" in creator and not isinstance(
+                creator.get("trace_available"), bool
+            ):
+                self._add_error(record_path, "creator.trace_available must be a boolean")
 
     def _validate_record_artifacts(
         self, record_dir: Path, record_path: Path, record: dict[str, Any]

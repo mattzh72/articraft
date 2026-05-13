@@ -105,6 +105,12 @@ function formatDate(value: string | null): string | null {
       }).format(date);
 }
 
+function externalAgentLabel(agent: string | null | undefined): string {
+  if (agent === "codex") return "Codex";
+  if (agent === "claude-code") return "Claude Code";
+  return agent ?? "External";
+}
+
 function RecordListItemInner({
   recordId,
   record,
@@ -146,6 +152,9 @@ function RecordListItemInner({
   const alreadyInDataset = record?.collections.includes("dataset") ?? false;
   const summaryText = truncateWithEllipsis(record?.prompt_preview || record?.title || recordId);
   const metadata = [
+    record?.creator_mode === "external_agent"
+      ? externalAgentLabel(record.external_agent)
+      : null,
     record?.model_id ?? null,
     record?.turn_count != null
       ? `${record.turn_count} turn${record.turn_count === 1 ? "" : "s"}`

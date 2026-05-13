@@ -97,6 +97,9 @@ class BrowseIndexRecord:
     sdk_package: str | None
     provider: str | None
     model_id: str | None
+    creator_mode: str | None
+    external_agent: str | None
+    has_traces: bool
     thinking_level: str | None
     turn_count: int | None
     input_tokens: int | None
@@ -149,6 +152,9 @@ class BrowseIndexRecord:
             sdk_package=_normalize_sdk_package_value(payload.get("sdk_package")),
             provider=_coerce_string(payload.get("provider")),
             model_id=_coerce_string(payload.get("model_id")),
+            creator_mode=_coerce_string(payload.get("creator_mode")),
+            external_agent=_coerce_string(payload.get("external_agent")),
+            has_traces=bool(payload.get("has_traces", False)),
             thinking_level=_coerce_string(payload.get("thinking_level")),
             turn_count=_coerce_int(payload.get("turn_count")),
             input_tokens=_coerce_int(payload.get("input_tokens")),
@@ -183,6 +189,9 @@ class BrowseIndexRecord:
             "sdk_package": self.sdk_package,
             "provider": self.provider,
             "model_id": self.model_id,
+            "creator_mode": self.creator_mode,
+            "external_agent": self.external_agent,
+            "has_traces": self.has_traces,
             "thinking_level": self.thinking_level,
             "turn_count": self.turn_count,
             "input_tokens": self.input_tokens,
@@ -214,6 +223,9 @@ class BrowseIndexRecord:
             sdk_package=self.sdk_package,
             provider=self.provider,
             model_id=self.model_id,
+            creator_mode=self.creator_mode,
+            external_agent=self.external_agent,
+            has_traces=self.has_traces,
             thinking_level=self.thinking_level,
             turn_count=self.turn_count,
             input_tokens=self.input_tokens,
@@ -664,6 +676,17 @@ class DatasetBrowseIndex:
         primary_rating = _coerce_rating(record.get("rating"))
         secondary_rating = _coerce_rating(record.get("secondary_rating"))
         collections = record.get("collections")
+        creator = record.get("creator") if isinstance(record.get("creator"), dict) else {}
+        creator_mode = _coerce_string(creator.get("mode")) if isinstance(creator, dict) else None
+        external_agent = (
+            _coerce_string(creator.get("agent"))
+            if isinstance(creator, dict) and creator_mode == "external_agent"
+            else None
+        )
+        has_traces = not (isinstance(creator, dict) and creator.get("trace_available") is False)
+        if has_traces:
+            traces_dir = self.repo.layout.record_traces_dir(record_id)
+            has_traces = traces_dir.is_dir() and any(traces_dir.iterdir())
         source_files = [
             BrowseSourceFile.from_path(self.repo.root, record_path),
             BrowseSourceFile.from_path(self.repo.root, dataset_entry_path),
@@ -690,6 +713,9 @@ class DatasetBrowseIndex:
             sdk_package=_normalize_sdk_package_value(record.get("sdk_package")),
             provider=_coerce_string(record.get("provider")),
             model_id=_coerce_string(record.get("model_id")),
+            creator_mode=creator_mode,
+            external_agent=external_agent,
+            has_traces=has_traces,
             thinking_level=thinking_level,
             turn_count=turn_count,
             input_tokens=input_tokens,

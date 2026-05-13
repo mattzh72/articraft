@@ -126,6 +126,7 @@ class ViewerStoreMaterializationMixin:
         materialization_summary: dict[str, Any] | None = None,
         compile_elapsed_seconds: float | None = None,
         checks_run: list[str] | None = None,
+        signal_bundle: dict[str, Any] | None = None,
     ) -> None:
         existing_report = self.repo.read_json(compile_path)
         metrics = (
@@ -153,6 +154,7 @@ class ViewerStoreMaterializationMixin:
             warnings=[CompileWarning(code="warning", message=warning) for warning in warnings],
             checks_run=list(checks_run or ["compile_urdf"]),
             metrics=metrics,
+            signal_bundle=signal_bundle,
         )
         self.materializations.write_compile_report(record_id, report)
 
@@ -263,6 +265,10 @@ class ViewerStoreMaterializationMixin:
                 )
 
             from agent.compiler import compile_urdf_report, compile_urdf_report_maybe_timeout
+            from agent.feedback import (
+                build_compile_signal_bundle,
+                compile_signal_bundle_from_exception,
+            )
 
             sdk_package = _normalize_sdk_package_value(refreshed_record.get("sdk_package")) or "sdk"
             run_checks = bool(validate and target == "full")
@@ -294,6 +300,7 @@ class ViewerStoreMaterializationMixin:
                 )
                 if not warning_lines:
                     warning_lines = [str(exc)]
+                signal_bundle = compile_signal_bundle_from_exception(exc)
                 self._write_compile_report(
                     record_id=record_id,
                     compile_path=compile_path,
@@ -306,6 +313,7 @@ class ViewerStoreMaterializationMixin:
                     materialization_summary=build_materialization_summary(self.repo, record_id),
                     compile_elapsed_seconds=compile_elapsed_seconds,
                     checks_run=checks_run,
+                    signal_bundle=signal_bundle.to_dict(),
                 )
                 raise RuntimeError(f"Failed to compile assets for {record_id}: {exc}") from exc
 
@@ -313,6 +321,12 @@ class ViewerStoreMaterializationMixin:
             self.repo.write_text(urdf_path, compile_result.urdf_xml)
             self._promote_local_materialization_outputs(record_id, record_dir=record_dir)
             warning_lines = [str(item) for item in compile_result.warnings]
+            compile_signal_bundle = getattr(compile_result, "signal_bundle", None)
+            if compile_signal_bundle is None:
+                compile_signal_bundle = build_compile_signal_bundle(
+                    status="success",
+                    warnings=warning_lines,
+                )
             materialization_summary = build_materialization_summary(self.repo, record_id)
             self._write_compile_report(
                 record_id=record_id,
@@ -326,6 +340,7 @@ class ViewerStoreMaterializationMixin:
                 materialization_summary=materialization_summary,
                 compile_elapsed_seconds=compile_elapsed_seconds,
                 checks_run=checks_run,
+                signal_bundle=compile_signal_bundle.to_dict(),
             )
             materialization_status = str(materialization_summary["materialization_status"])
             return MaterializeRecordAssetsResult(

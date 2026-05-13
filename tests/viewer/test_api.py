@@ -12,6 +12,7 @@ from storage.collections import CollectionStore
 from storage.datasets import DatasetStore
 from storage.models import (
     CategoryRecord,
+    CreatorMetadata,
     DisplayMetadata,
     Record,
     RecordArtifacts,
@@ -39,7 +40,8 @@ def _write_record(
     category_slug: str | None = "hinges",
     collections: list[str] | None = None,
     rating: int | None = None,
-    source_run_id: str = "run_001",
+    source_run_id: str | None = "run_001",
+    creator: CreatorMetadata | None = None,
 ) -> None:
     record_dir = repo.layout.record_dir(record_id)
     RecordStore(repo).write_record(
@@ -65,6 +67,7 @@ def _write_record(
                 cost_json=None,
             ),
             collections=collections or ["workbench"],
+            creator=creator,
         )
     )
     (record_dir / "prompt.txt").write_text(prompt, encoding="utf-8")
@@ -77,6 +80,46 @@ def test_effective_rating_filter_uses_bucket_ranges() -> None:
     assert _effective_rating(5, 4) == 4.5
     assert _within_rating_filter(4.5, ["4"]) is True
     assert _within_rating_filter(4.5, ["5"]) is False
+
+
+def test_viewer_api_surfaces_external_creator_metadata(tmp_path: Path) -> None:
+    repo = StorageRepo(tmp_path)
+    repo.ensure_layout()
+    _write_record(
+        repo,
+        record_id="rec_external_001",
+        title="External washer",
+        prompt="create a washing machine",
+        category_slug=None,
+        collections=["workbench"],
+        source_run_id=None,
+        creator=CreatorMetadata(
+            mode="external_agent",
+            agent="codex",
+            trace_available=False,
+        ),
+    )
+    record_path = repo.layout.record_metadata_path("rec_external_001")
+    record = repo.read_json(record_path)
+    assert isinstance(record, dict)
+    record["provider"] = "openai"
+    record["model_id"] = "gpt-5.5-2026-04-23"
+    repo.write_json(record_path, record)
+    CollectionStore(repo).append_workbench_entry(
+        record_id="rec_external_001",
+        added_at="2026-03-18T08:01:00Z",
+    )
+
+    client = TestClient(create_app(repo_root=tmp_path))
+    response = client.get("/api/bootstrap")
+
+    assert response.status_code == 200
+    external_record = response.json()["workbench_entries"][0]["record"]
+    assert external_record["creator_mode"] == "external_agent"
+    assert external_record["external_agent"] == "codex"
+    assert external_record["has_traces"] is False
+    assert external_record["provider"] == "openai"
+    assert external_record["model_id"] == "gpt-5.5-2026-04-23"
 
 
 def test_viewer_api_smoke_bootstrap_browse_search_and_assets(tmp_path: Path) -> None:

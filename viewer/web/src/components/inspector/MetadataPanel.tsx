@@ -32,6 +32,12 @@ function SectionLabel({ children }: { children: React.ReactNode }): JSX.Element 
   );
 }
 
+function externalAgentLabel(agent: string | null | undefined): string {
+  if (agent === "codex") return "Codex";
+  if (agent === "claude-code") return "Claude Code";
+  return agent ?? "External";
+}
+
 export function MetadataPanel(): JSX.Element {
   const { bootstrap, selectedRecordId, selectedRecordSummary, selection } = useViewer();
   const [compileReport, setCompileReport] = useState<Record<string, unknown> | null>(null);
@@ -52,6 +58,8 @@ export function MetadataPanel(): JSX.Element {
   const hasSelectedRecord = Boolean(selectedRecordId && record);
   const recordHasCompileReport = record?.has_compile_report ?? false;
   const recordHasCost = record?.has_cost ?? false;
+  const recordHasTraces = record?.has_traces ?? false;
+  const isExternalRecord = record?.creator_mode === "external_agent";
   const stagingHasCost = stagingEntry?.has_cost ?? false;
   const stagingHasTraces = stagingEntry?.has_traces ?? false;
   const stagingRecordId = stagingEntry?.record_id ?? null;
@@ -143,15 +151,19 @@ export function MetadataPanel(): JSX.Element {
       setCost(null);
     }
 
-    promises.push(
-      fetchRecordTraceFile(selectedRecordId, "trajectory.jsonl")
-        .then((text) => {
-          if (!cancelled) setTraceText(text);
-        })
-        .catch(() => {
-          if (!cancelled) setTraceText(null);
-        }),
-    );
+    if (recordHasTraces) {
+      promises.push(
+        fetchRecordTraceFile(selectedRecordId, "trajectory.jsonl")
+          .then((text) => {
+            if (!cancelled) setTraceText(text);
+          })
+          .catch(() => {
+            if (!cancelled) setTraceText(null);
+          }),
+      );
+    } else {
+      setTraceText(null);
+    }
 
     Promise.all(promises).finally(() => {
       if (!cancelled) setLoadingExtras(false);
@@ -165,6 +177,7 @@ export function MetadataPanel(): JSX.Element {
     isStaging,
     recordHasCompileReport,
     recordHasCost,
+    recordHasTraces,
     recordSelectionKey,
     selectedRecordId,
     stagingHasCost,
@@ -308,6 +321,9 @@ export function MetadataPanel(): JSX.Element {
             <Badge variant={statusVariant(record.materialization_status)}>
               Assets: {record.materialization_status ?? "unknown"}
             </Badge>
+            {isExternalRecord ? (
+              <Badge variant="secondary">{externalAgentLabel(record.external_agent)}</Badge>
+            ) : null}
           </div>
           {record.run_message ? (
             <p className="mt-2 text-[11px] text-[var(--text-secondary)]">{record.run_message}</p>
@@ -361,7 +377,16 @@ export function MetadataPanel(): JSX.Element {
           </section>
         )}
 
-        {!loadingExtras && <TracePanel cost={cost} traceText={traceText} />}
+        {!loadingExtras && isExternalRecord && !recordHasTraces ? (
+          <section>
+            <SectionLabel>Agent Trace</SectionLabel>
+            <p className="text-[11px] text-[var(--text-quaternary)]">No Articraft agent trace</p>
+          </section>
+        ) : null}
+
+        {!loadingExtras && (!isExternalRecord || recordHasTraces) ? (
+          <TracePanel cost={cost} traceText={traceText} />
+        ) : null}
       </div>
     </ScrollArea>
   );

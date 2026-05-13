@@ -12,6 +12,8 @@ The SDK docs under `sdk/_docs/` are part of the agent authoring contract. Keep t
 
 Use `uv run articraft ...` for product workflows. `just` is intentionally limited to setup, checks, and viewer startup.
 
+If the user asks Claude Code to generate Articraft data, follow [`EXTERNAL_AGENT_DATA.md`](EXTERNAL_AGENT_DATA.md). Use `uv run articraft external ...`; do not manually create records or use an alternate workflow.
+
 ```bash
 uv sync --group dev
 uv build

@@ -8,6 +8,8 @@ CollectionName = Literal["dataset", "workbench"]
 PromptKind = Literal["single_prompt", "prompt_series"]
 RunMode = Literal["dataset_batch", "dataset_single", "workbench_batch", "workbench_single"]
 MaterializationStatus = Literal["missing", "available"]
+CreatorMode = Literal["internal_agent", "external_agent"]
+ExternalAgentName = Literal["codex", "claude-code"]
 
 
 @dataclass(slots=True, frozen=True)
@@ -45,6 +47,17 @@ class RecordHashes:
 
 
 @dataclass(slots=True, frozen=True)
+class CreatorMetadata:
+    mode: CreatorMode
+    agent: ExternalAgentName | None = None
+    trace_available: bool | None = None
+
+    def to_dict(self) -> dict[str, Any]:
+        payload = asdict(self)
+        return {key: value for key, value in payload.items() if value is not None}
+
+
+@dataclass(slots=True, frozen=True)
 class DisplayMetadata:
     title: str
     prompt_preview: str
@@ -65,19 +78,20 @@ class Record:
     category_slug: str | None
     source: SourceRef
     sdk_package: str
-    provider: str
-    model_id: str
+    provider: str | None
+    model_id: str | None
     display: DisplayMetadata
     artifacts: RecordArtifacts
     hashes: RecordHashes = field(default_factory=RecordHashes)
     collections: list[CollectionName] = field(default_factory=list)
+    creator: CreatorMetadata | None = None
     author: str | None = None
     rated_by: str | None = None
     secondary_rating: int | None = None
     secondary_rated_by: str | None = None
 
     def to_dict(self) -> dict[str, Any]:
-        return {
+        payload = {
             "schema_version": self.schema_version,
             "record_id": self.record_id,
             "created_at": self.created_at,
@@ -99,13 +113,16 @@ class Record:
             "hashes": self.hashes.to_dict(),
             "collections": list(self.collections),
         }
+        if self.creator is not None:
+            payload["creator"] = self.creator.to_dict()
+        return payload
 
 
 @dataclass(slots=True, frozen=True)
 class GenerationSettings:
-    provider: str
-    model_id: str
-    thinking_level: str
+    provider: str | None
+    model_id: str | None
+    thinking_level: str | None
     openai_transport: str | None = None
     openai_reasoning_summary: str | None = None
     max_turns: int | None = None
@@ -197,9 +214,10 @@ class CompileReport:
     checks_run: list[str] = field(default_factory=list)
     overlap_allowances: list[dict[str, Any]] = field(default_factory=list)
     metrics: dict[str, Any] = field(default_factory=dict)
+    signal_bundle: dict[str, Any] | None = None
 
     def to_dict(self) -> dict[str, Any]:
-        return {
+        payload = {
             "schema_version": self.schema_version,
             "record_id": self.record_id,
             "status": self.status,
@@ -209,6 +227,9 @@ class CompileReport:
             "overlap_allowances": list(self.overlap_allowances),
             "metrics": dict(self.metrics),
         }
+        if self.signal_bundle is not None:
+            payload["signal_bundle"] = dict(self.signal_bundle)
+        return payload
 
 
 @dataclass(slots=True, frozen=True)

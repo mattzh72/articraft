@@ -50,6 +50,12 @@ function jointBadgeVariant(joint: UrdfJoint): "secondary" | "success" {
   return isMovableJoint(joint) ? "success" : "secondary";
 }
 
+function externalAgentLabel(agent: string | null | undefined): string {
+  if (agent === "codex") return "Codex";
+  if (agent === "claude-code") return "Claude Code";
+  return agent ?? "External";
+}
+
 function SectionLabel({ children }: { children: React.ReactNode }): JSX.Element {
   return (
     <div className="flex items-center gap-2 pb-2">
@@ -919,6 +925,14 @@ export function InspectPanel({
               onOpen={() => void handleOpenRecordFolder()}
             />
             <div className="space-y-0">
+              {record.creator_mode === "external_agent" ? (
+                <div className="prop-row">
+                  <span className="prop-label">Creator</span>
+                  <span className="prop-value">
+                    <Badge variant="secondary">{externalAgentLabel(record.external_agent)}</Badge>
+                  </span>
+                </div>
+              ) : null}
               <div className="prop-row">
                 <span className="prop-label">SDK</span>
                 <span className="prop-value font-mono text-[10px]">{record.sdk_package || "--"}</span>

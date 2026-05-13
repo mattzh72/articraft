@@ -19,6 +19,7 @@ Use `uv run articraft ...` for product workflows, and `just` for local setup/che
 - `uv run articraft env bootstrap` creates `.env` from `.env.example` without overwriting existing secrets.
 
 ## Generation, Dataset, and Viewer Commands
+- External agent data generation must follow [`EXTERNAL_AGENT_DATA.md`](EXTERNAL_AGENT_DATA.md). If the user asks Codex, Claude Code, or another external harness to generate Articraft data, use `uv run articraft external ...`; do not manually create records or use an alternate workflow.
 - `uv run articraft generate "prompt text"` runs generation in workbench mode.
 - `uv run articraft generate --model gemini-3-flash-preview --image reference.png "prompt text"` overrides model and adds a reference image.
 - `uv run articraft draft "prompt text"` creates a draft workbench record without running generation.

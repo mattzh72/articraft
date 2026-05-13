@@ -14,6 +14,9 @@ export type RecordSummary = {
   sdk_package: string | null;
   provider: string | null;
   model_id: string | null;
+  creator_mode: string | null;
+  external_agent: string | null;
+  has_traces: boolean;
   thinking_level: string | null;
   turn_count: number | null;
   input_tokens: number | null;

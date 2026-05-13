@@ -47,6 +47,7 @@ from storage.models import (
 )
 from storage.models import (
     CompileWarning,
+    CreatorMetadata,
     DisplayMetadata,
     EnvironmentSettings,
     GenerationSettings,
@@ -374,6 +375,7 @@ def create_workbench_draft_record(
     label: str | None = None,
     tags: Optional[list[str]] = None,
     record_id: str | None = None,
+    external_agent: str | None = None,
     resolve_record_author_func: Callable[[Path], str | None] = _resolve_runtime_record_author,
 ) -> Path:
     normalized_prompt = prompt_text.strip()
@@ -397,21 +399,40 @@ def create_workbench_draft_record(
     if storage_repo.layout.record_dir(context.record_id).exists():
         raise ValueError(f"Record already exists: {context.record_id}")
 
-    selected_model_id = _default_model_id(
-        provider=provider,
-        model_id=model_id,
-        thinking_level=thinking_level,
-        openai_transport=openai_transport,
-        openai_reasoning_summary=openai_reasoning_summary,
-    )
-    resolved_max_turns = resolve_max_turns(model_id=selected_model_id, max_turns=max_turns)
-    loaded_system_prompt_path = resolve_system_prompt_path(
-        system_prompt_path,
-        provider=provider,
-        sdk_package=sdk_package,
-        repo_root=resolved_repo_root,
-    )
-    system_prompt_sha = _ensure_shared_system_prompt(storage_repo, loaded_system_prompt_path)
+    if external_agent is not None:
+        selected_provider = provider
+        selected_model_id = model_id
+        selected_thinking_level = thinking_level
+        selected_openai_transport = None
+        selected_openai_reasoning_summary = None
+        resolved_max_turns = max_turns
+        system_prompt_file = "EXTERNAL_AGENT_DATA.md"
+        system_prompt_sha = None
+    else:
+        selected_provider = provider
+        selected_model_id = _default_model_id(
+            provider=provider,
+            model_id=model_id,
+            thinking_level=thinking_level,
+            openai_transport=openai_transport,
+            openai_reasoning_summary=openai_reasoning_summary,
+        )
+        selected_thinking_level = thinking_level
+        selected_openai_transport = (
+            openai_transport if selected_provider == ProviderName.OPENAI.value else None
+        )
+        selected_openai_reasoning_summary = (
+            openai_reasoning_summary if selected_provider == ProviderName.OPENAI.value else None
+        )
+        resolved_max_turns = resolve_max_turns(model_id=selected_model_id, max_turns=max_turns)
+        loaded_system_prompt_path = resolve_system_prompt_path(
+            system_prompt_path,
+            provider=provider,
+            sdk_package=sdk_package,
+            repo_root=resolved_repo_root,
+        )
+        system_prompt_file = loaded_system_prompt_path.name
+        system_prompt_sha = _ensure_shared_system_prompt(storage_repo, loaded_system_prompt_path)
 
     record_store.ensure_record_dirs(context.record_id)
     storage_repo.write_text(context.record_prompt_path, normalized_prompt)
@@ -428,18 +449,16 @@ def create_workbench_draft_record(
         schema_version=2,
         record_id=context.record_id,
         generation=GenerationSettings(
-            provider=provider,
+            provider=selected_provider,
             model_id=selected_model_id,
-            thinking_level=thinking_level,
-            openai_transport=openai_transport if provider == ProviderName.OPENAI.value else None,
-            openai_reasoning_summary=(
-                openai_reasoning_summary if provider == ProviderName.OPENAI.value else None
-            ),
+            thinking_level=selected_thinking_level,
+            openai_transport=selected_openai_transport,
+            openai_reasoning_summary=selected_openai_reasoning_summary,
             max_turns=resolved_max_turns,
             max_cost_usd=max_cost_usd,
         ),
         prompting=PromptingSettings(
-            system_prompt_file=loaded_system_prompt_path.name,
+            system_prompt_file=system_prompt_file,
             system_prompt_sha256=system_prompt_sha,
         ),
         sdk=SdkSettings(
@@ -473,7 +492,7 @@ def create_workbench_draft_record(
         category_slug=None,
         source=SourceRef(run_id=None),
         sdk_package=sdk_package,
-        provider=provider,
+        provider=selected_provider,
         model_id=selected_model_id,
         display=DisplayMetadata(
             title=_display_title(normalized_prompt, label=label),
@@ -492,6 +511,15 @@ def create_workbench_draft_record(
             model_py_sha256=model_py_sha,
         ),
         collections=["workbench"],
+        creator=(
+            CreatorMetadata(
+                mode="external_agent",
+                agent=external_agent,  # type: ignore[arg-type]
+                trace_available=False,
+            )
+            if external_agent is not None
+            else None
+        ),
         author=record_author,
     )
     record_store.write_record(record)

@@ -77,6 +77,21 @@ class ViewerStoreRecordsMixin:
         except OSError:
             return None
 
+    def _record_creator_fields(self, record: dict[str, Any]) -> tuple[str | None, str | None]:
+        creator = record.get("creator")
+        if not isinstance(creator, dict):
+            return None, None
+        mode = _coerce_string(creator.get("mode"))
+        agent = _coerce_string(creator.get("agent")) if mode == "external_agent" else None
+        return mode, agent
+
+    def _record_has_traces(self, record_id: str, record: dict[str, Any]) -> bool:
+        creator = record.get("creator")
+        if isinstance(creator, dict) and creator.get("trace_available") is False:
+            return False
+        traces_dir = self.repo.layout.record_traces_dir(record_id)
+        return traces_dir.is_dir() and any(traces_dir.iterdir())
+
     def _record_summary(
         self,
         record_id: str,
@@ -104,6 +119,8 @@ class ViewerStoreRecordsMixin:
         provenance = self.repo.read_json(provenance_path)
         cost = self.repo.read_json(record_dir / str(cost_name)) if cost_name else None
         materialization_status = self._materialization_status_for_record(record_id)
+        creator_mode, external_agent = self._record_creator_fields(record)
+        has_traces = self._record_has_traces(record_id, record)
 
         turn_count: int | None = None
         thinking_level: str | None = None
@@ -143,6 +160,9 @@ class ViewerStoreRecordsMixin:
             sdk_package=_normalize_sdk_package_value(record.get("sdk_package")),
             provider=record.get("provider"),
             model_id=record.get("model_id"),
+            creator_mode=creator_mode,
+            external_agent=external_agent,
+            has_traces=has_traces,
             thinking_level=thinking_level,
             turn_count=turn_count,
             input_tokens=input_tokens,
@@ -188,6 +208,8 @@ class ViewerStoreRecordsMixin:
         cost_path = record_dir / str(cost_name) if cost_name else None
         provenance = self.repo.read_json(provenance_path) if provenance_path.exists() else None
         cost = self.repo.read_json(cost_path) if cost_path and cost_path.exists() else None
+        creator_mode, external_agent = self._record_creator_fields(record)
+        has_traces = self._record_has_traces(record_id, record)
 
         turn_count: int | None = None
         thinking_level: str | None = None
@@ -218,6 +240,9 @@ class ViewerStoreRecordsMixin:
             sdk_package=_normalize_sdk_package_value(record.get("sdk_package")),
             provider=record.get("provider"),
             model_id=record.get("model_id"),
+            creator_mode=creator_mode,
+            external_agent=external_agent,
+            has_traces=has_traces,
             thinking_level=thinking_level,
             turn_count=turn_count,
             input_tokens=input_tokens,

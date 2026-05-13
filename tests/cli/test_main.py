@@ -17,7 +17,7 @@ def _help_text(argv: list[str], capsys: pytest.CaptureFixture[str]) -> str:
 @pytest.mark.parametrize(
     ("argv", "expected_fragments"),
     [
-        (["--help"], ("generate", "dataset", "workbench", "hooks")),
+        (["--help"], ("generate", "dataset", "workbench", "external", "hooks")),
         (["dataset", "--help"], ("batch-new", "supercategory", "run")),
         (["workbench", "--help"], ("status", "search-index")),
         (["compile", "--help"], ("--target", "--validate")),

@@ -167,3 +167,56 @@ def test_validate_data_format_reports_cross_record_dataset_errors(tmp_path: Path
     assert any(
         "artifacts.model_py references missing path 'model.py'" in error for error in result.errors
     )
+
+
+def test_validate_data_format_accepts_external_dataset_record(tmp_path: Path) -> None:
+    repo = StorageRepo(tmp_path)
+    repo.ensure_layout()
+    _write_system_prompt(repo)
+    _write_category(repo)
+    _write_batch_spec(repo)
+    _write_record(repo, "rec_hinge_0001", "0" * 64, "ds_hinge_0001")
+    record_dir = repo.layout.record_dir("rec_hinge_0001")
+    record = json.loads((record_dir / "record.json").read_text(encoding="utf-8"))
+    provenance = json.loads((record_dir / "provenance.json").read_text(encoding="utf-8"))
+    record["provider"] = None
+    record["model_id"] = None
+    record["creator"] = {
+        "mode": "external_agent",
+        "agent": "codex",
+        "trace_available": False,
+    }
+    provenance["generation"]["provider"] = None
+    provenance["generation"]["model_id"] = None
+    provenance["generation"]["thinking_level"] = None
+    _write_json(record_dir / "record.json", record)
+    _write_json(record_dir / "provenance.json", provenance)
+
+    result = validate_data_format(repo)
+
+    assert result.errors == []
+
+
+def test_validate_data_format_rejects_external_trace_claims(tmp_path: Path) -> None:
+    repo = StorageRepo(tmp_path)
+    repo.ensure_layout()
+    _write_system_prompt(repo)
+    _write_category(repo)
+    _write_batch_spec(repo)
+    _write_record(repo, "rec_hinge_0001", "0" * 64, "ds_hinge_0001")
+    record_dir = repo.layout.record_dir("rec_hinge_0001")
+    record = json.loads((record_dir / "record.json").read_text(encoding="utf-8"))
+    record["creator"] = {
+        "mode": "external_agent",
+        "agent": "codex",
+        "trace_available": True,
+    }
+    _write_json(record_dir / "record.json", record)
+    traces_dir = record_dir / "traces"
+    traces_dir.mkdir()
+    (traces_dir / "trajectory.jsonl").write_text("{}\n", encoding="utf-8")
+
+    result = validate_data_format(repo)
+
+    assert any("creator.trace_available must be false" in error for error in result.errors)
+    assert any("external records must not include traces" in error for error in result.errors)

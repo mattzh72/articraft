@@ -3,7 +3,10 @@ from __future__ import annotations
 import argparse
 import time
 from pathlib import Path
+from typing import Any
 
+from agent.feedback import render_compile_signals
+from agent.models import CompileSignalBundle
 from storage.repo import StorageRepo
 from viewer.api.store import ViewerStore
 
@@ -40,6 +43,19 @@ def _build_parser() -> argparse.ArgumentParser:
     return parser
 
 
+def _render_compile_report_signals(payload: dict[str, Any] | None) -> str | None:
+    if not isinstance(payload, dict):
+        return None
+    signal_payload = payload.get("signal_bundle")
+    if not isinstance(signal_payload, dict):
+        return None
+    try:
+        bundle = CompileSignalBundle.from_dict(signal_payload)
+    except Exception:
+        return None
+    return render_compile_signals(bundle)
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = _build_parser()
     args = parser.parse_args(argv)
@@ -52,16 +68,41 @@ def main(argv: list[str] | None = None) -> int:
 
     viewer_store = ViewerStore(repo_root)
     started_at = time.perf_counter()
-    result = viewer_store.materialize_record_assets(
-        record_dir.name,
-        force=True,
-        validate=bool(args.validate),
-        ignore_geom_qc=not bool(args.strict_geom_qc),
-        target=str(args.target),
-    )
+    repo = StorageRepo(repo_root)
+    try:
+        result = viewer_store.materialize_record_assets(
+            record_dir.name,
+            force=True,
+            validate=bool(args.validate),
+            ignore_geom_qc=not bool(args.strict_geom_qc),
+            target=str(args.target),
+        )
+    except RuntimeError as exc:
+        elapsed_seconds = time.perf_counter() - started_at
+        compile_report = repo.read_json(
+            repo.layout.record_materialization_compile_report_path(record_dir.name)
+        )
+        rendered = _render_compile_report_signals(
+            compile_report if isinstance(compile_report, dict) else None
+        )
+        if rendered:
+            print(rendered)
+        else:
+            print(str(exc))
+        print(f"Elapsed: {elapsed_seconds:.2f}s")
+        return 1
     elapsed_seconds = time.perf_counter() - started_at
 
-    urdf_path = StorageRepo(repo_root).layout.record_materialization_urdf_path(record_dir.name)
+    compile_report = repo.read_json(
+        repo.layout.record_materialization_compile_report_path(record_dir.name)
+    )
+    rendered = _render_compile_report_signals(
+        compile_report if isinstance(compile_report, dict) else None
+    )
+    if rendered:
+        print(rendered)
+
+    urdf_path = repo.layout.record_materialization_urdf_path(record_dir.name)
     action = "Compiled visuals for" if args.target == "visual" else "Recompiled"
     print(f"{action} {model_path}")
     print(f"Wrote URDF to {urdf_path}")
