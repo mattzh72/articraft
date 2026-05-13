@@ -6,21 +6,12 @@ from pathlib import Path
 
 from storage.repo import StorageRepo
 
-_AUTHOR_ALIASES = {
-    "mattzh72": "mattzh72",
-    "matthew zhou": "mattzh72",
-    "zhaomou song": "Zhaomou Song",
-    "ruiningli": "RuiningLi",
-    "ruining li": "RuiningLi",
-    "shawlyu": "shawlyu",
-}
-
 
 def canonicalize_record_author(value: str | None) -> str | None:
     text = str(value or "").strip()
     if not text:
         return None
-    return _AUTHOR_ALIASES.get(text.casefold(), text)
+    return text
 
 
 def resolve_current_record_author(repo_root: Path) -> str | None:

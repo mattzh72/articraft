@@ -6,7 +6,6 @@ from pathlib import Path
 
 from storage.models import DisplayMetadata, Record, RecordArtifacts, SourceRef
 from storage.record_authors import (
-    canonicalize_record_author,
     sync_record_authors,
     sync_record_rated_by,
     sync_record_secondary_rated_by,
@@ -68,17 +67,17 @@ def test_sync_record_authors_backfills_from_model_py_add_commit(tmp_path: Path) 
         "-m",
         "Add author test record",
         env={
-            "GIT_AUTHOR_NAME": "Ruining Li",
-            "GIT_AUTHOR_EMAIL": "ruining@example.com",
-            "GIT_COMMITTER_NAME": "Ruining Li",
-            "GIT_COMMITTER_EMAIL": "ruining@example.com",
+            "GIT_AUTHOR_NAME": "Model Author",
+            "GIT_AUTHOR_EMAIL": "author@example.com",
+            "GIT_COMMITTER_NAME": "Model Author",
+            "GIT_COMMITTER_EMAIL": "author@example.com",
         },
     )
 
     summary = sync_record_authors(repo)
     record = repo.read_json(repo.layout.record_metadata_path(record_id))
 
-    assert record["author"] == "RuiningLi"
+    assert record["author"] == "Model Author"
     assert summary.updated_record_ids == [record_id]
     assert summary.already_set_record_ids == []
     assert summary.missing_git_author_record_ids == []
@@ -127,10 +126,10 @@ def test_sync_record_authors_preserves_existing_author_without_mutation(tmp_path
         "-m",
         "Add author keep record",
         env={
-            "GIT_AUTHOR_NAME": "shawlyu",
-            "GIT_AUTHOR_EMAIL": "shawlyu@example.com",
-            "GIT_COMMITTER_NAME": "shawlyu",
-            "GIT_COMMITTER_EMAIL": "shawlyu@example.com",
+            "GIT_AUTHOR_NAME": "Original Author",
+            "GIT_AUTHOR_EMAIL": "original@example.com",
+            "GIT_COMMITTER_NAME": "Original Author",
+            "GIT_COMMITTER_EMAIL": "original@example.com",
         },
     )
 
@@ -140,12 +139,6 @@ def test_sync_record_authors_preserves_existing_author_without_mutation(tmp_path
     assert record["author"] == "Manual Author"
     assert summary.updated_record_ids == []
     assert summary.already_set_record_ids == [record_id]
-
-
-def test_canonicalize_record_author_maps_known_aliases() -> None:
-    assert canonicalize_record_author("Matthew Zhou") == "mattzh72"
-    assert canonicalize_record_author("Ruining Li") == "RuiningLi"
-    assert canonicalize_record_author("Zhaomou Song") == "Zhaomou Song"
 
 
 def test_sync_record_rated_by_backfills_from_latest_rating_line_blame(tmp_path: Path) -> None:
@@ -189,10 +182,10 @@ def test_sync_record_rated_by_backfills_from_latest_rating_line_blame(tmp_path: 
         "-m",
         "Add unrated record",
         env={
-            "GIT_AUTHOR_NAME": "Matthew Zhou",
-            "GIT_AUTHOR_EMAIL": "matt@example.com",
-            "GIT_COMMITTER_NAME": "Matthew Zhou",
-            "GIT_COMMITTER_EMAIL": "matt@example.com",
+            "GIT_AUTHOR_NAME": "Initial Author",
+            "GIT_AUTHOR_EMAIL": "initial@example.com",
+            "GIT_COMMITTER_NAME": "Initial Author",
+            "GIT_COMMITTER_EMAIL": "initial@example.com",
         },
     )
 
@@ -207,17 +200,17 @@ def test_sync_record_rated_by_backfills_from_latest_rating_line_blame(tmp_path: 
         "-m",
         "Set rating",
         env={
-            "GIT_AUTHOR_NAME": "shawlyu",
-            "GIT_AUTHOR_EMAIL": "shawlyu@example.com",
-            "GIT_COMMITTER_NAME": "shawlyu",
-            "GIT_COMMITTER_EMAIL": "shawlyu@example.com",
+            "GIT_AUTHOR_NAME": "Rating Author",
+            "GIT_AUTHOR_EMAIL": "rating@example.com",
+            "GIT_COMMITTER_NAME": "Rating Author",
+            "GIT_COMMITTER_EMAIL": "rating@example.com",
         },
     )
 
     summary = sync_record_rated_by(repo)
     record = repo.read_json(record_path)
 
-    assert record["rated_by"] == "shawlyu"
+    assert record["rated_by"] == "Rating Author"
     assert summary.updated_record_ids == [record_id]
     assert summary.unchanged_record_ids == []
     assert summary.missing_git_author_record_ids == []
@@ -251,7 +244,7 @@ def test_sync_record_rated_by_updates_existing_value_when_rating_changes(tmp_pat
                 cost_json=None,
             ),
             collections=["dataset"],
-            rated_by="mattzh72",
+            rated_by="Existing Reviewer",
         )
     )
 
@@ -265,10 +258,10 @@ def test_sync_record_rated_by_updates_existing_value_when_rating_changes(tmp_pat
         "-m",
         "Add initially rated-by record",
         env={
-            "GIT_AUTHOR_NAME": "Matthew Zhou",
-            "GIT_AUTHOR_EMAIL": "matt@example.com",
-            "GIT_COMMITTER_NAME": "Matthew Zhou",
-            "GIT_COMMITTER_EMAIL": "matt@example.com",
+            "GIT_AUTHOR_NAME": "Initial Author",
+            "GIT_AUTHOR_EMAIL": "initial@example.com",
+            "GIT_COMMITTER_NAME": "Initial Author",
+            "GIT_COMMITTER_EMAIL": "initial@example.com",
         },
     )
 
@@ -283,17 +276,17 @@ def test_sync_record_rated_by_updates_existing_value_when_rating_changes(tmp_pat
         "-m",
         "Change rating",
         env={
-            "GIT_AUTHOR_NAME": "Ruining Li",
-            "GIT_AUTHOR_EMAIL": "ruining@example.com",
-            "GIT_COMMITTER_NAME": "Ruining Li",
-            "GIT_COMMITTER_EMAIL": "ruining@example.com",
+            "GIT_AUTHOR_NAME": "Updated Reviewer",
+            "GIT_AUTHOR_EMAIL": "updated@example.com",
+            "GIT_COMMITTER_NAME": "Updated Reviewer",
+            "GIT_COMMITTER_EMAIL": "updated@example.com",
         },
     )
 
     summary = sync_record_rated_by(repo)
     record = repo.read_json(record_path)
 
-    assert record["rated_by"] == "RuiningLi"
+    assert record["rated_by"] == "Updated Reviewer"
     assert summary.updated_record_ids == [record_id]
     assert summary.unchanged_record_ids == []
 
@@ -339,10 +332,10 @@ def test_sync_record_rated_by_ignores_secondary_rating_line_updates(tmp_path: Pa
         "-m",
         "Add record",
         env={
-            "GIT_AUTHOR_NAME": "Matthew Zhou",
-            "GIT_AUTHOR_EMAIL": "matt@example.com",
-            "GIT_COMMITTER_NAME": "Matthew Zhou",
-            "GIT_COMMITTER_EMAIL": "matt@example.com",
+            "GIT_AUTHOR_NAME": "Primary Reviewer",
+            "GIT_AUTHOR_EMAIL": "primary@example.com",
+            "GIT_COMMITTER_NAME": "Primary Reviewer",
+            "GIT_COMMITTER_EMAIL": "primary@example.com",
         },
     )
 
@@ -357,10 +350,10 @@ def test_sync_record_rated_by_ignores_secondary_rating_line_updates(tmp_path: Pa
         "-m",
         "Add secondary rating",
         env={
-            "GIT_AUTHOR_NAME": "shawlyu",
-            "GIT_AUTHOR_EMAIL": "shawlyu@example.com",
-            "GIT_COMMITTER_NAME": "shawlyu",
-            "GIT_COMMITTER_EMAIL": "shawlyu@example.com",
+            "GIT_AUTHOR_NAME": "Secondary Reviewer",
+            "GIT_AUTHOR_EMAIL": "secondary@example.com",
+            "GIT_COMMITTER_NAME": "Secondary Reviewer",
+            "GIT_COMMITTER_EMAIL": "secondary@example.com",
         },
     )
 
@@ -368,8 +361,8 @@ def test_sync_record_rated_by_ignores_secondary_rating_line_updates(tmp_path: Pa
     secondary_summary = sync_record_secondary_rated_by(repo)
     persisted = repo.read_json(record_path)
 
-    assert persisted["rated_by"] == "mattzh72"
-    assert persisted["secondary_rated_by"] == "shawlyu"
+    assert persisted["rated_by"] == "Primary Reviewer"
+    assert persisted["secondary_rated_by"] == "Secondary Reviewer"
     assert primary_summary.updated_record_ids == [record_id]
     assert secondary_summary.updated_record_ids == [record_id]
 
@@ -405,7 +398,7 @@ def test_sync_record_secondary_rated_by_clears_when_secondary_rating_is_null(
             ),
             collections=["dataset"],
             secondary_rating=4,
-            secondary_rated_by="mattzh72",
+            secondary_rated_by="Existing Secondary Reviewer",
         )
     )
 
@@ -419,10 +412,10 @@ def test_sync_record_secondary_rated_by_clears_when_secondary_rating_is_null(
         "-m",
         "Add rated secondary record",
         env={
-            "GIT_AUTHOR_NAME": "Matthew Zhou",
-            "GIT_AUTHOR_EMAIL": "matt@example.com",
-            "GIT_COMMITTER_NAME": "Matthew Zhou",
-            "GIT_COMMITTER_EMAIL": "matt@example.com",
+            "GIT_AUTHOR_NAME": "Initial Author",
+            "GIT_AUTHOR_EMAIL": "initial@example.com",
+            "GIT_COMMITTER_NAME": "Initial Author",
+            "GIT_COMMITTER_EMAIL": "initial@example.com",
         },
     )
 
@@ -437,10 +430,10 @@ def test_sync_record_secondary_rated_by_clears_when_secondary_rating_is_null(
         "-m",
         "Clear secondary rating",
         env={
-            "GIT_AUTHOR_NAME": "Ruining Li",
-            "GIT_AUTHOR_EMAIL": "ruining@example.com",
-            "GIT_COMMITTER_NAME": "Ruining Li",
-            "GIT_COMMITTER_EMAIL": "ruining@example.com",
+            "GIT_AUTHOR_NAME": "Clearing Reviewer",
+            "GIT_AUTHOR_EMAIL": "clearing@example.com",
+            "GIT_COMMITTER_NAME": "Clearing Reviewer",
+            "GIT_COMMITTER_EMAIL": "clearing@example.com",
         },
     )
 
