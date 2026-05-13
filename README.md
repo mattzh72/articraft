@@ -52,6 +52,24 @@ Then start the viewer API and React frontend:
 just viewer
 ```
 
+### 6. Contribute Data With Claude Code Or Codex
+
+You can use Claude Code or Codex to create Articraft records. Start the agent in this repo and ask it to follow [Data Authoring Guidelines](EXTERNAL_AGENT_DATA.md).
+
+For a dataset contribution, use a prompt like:
+
+```text
+Create a realistic articulated washing machine and add it to the Articraft dataset. Follow EXTERNAL_AGENT_DATA.md.
+```
+
+For local inspection only, ask for a workbench record instead:
+
+```text
+Create a realistic articulated washing machine for local workbench inspection. Follow EXTERNAL_AGENT_DATA.md.
+```
+
+To contribute data, open a pull request with the finalized dataset record. Include the prompt, category, external agent used, and the checks you ran. Workbench-only records are local drafts and should not be committed.
+
 ---
 
 ## 📚 Documentation & Advanced Usage
