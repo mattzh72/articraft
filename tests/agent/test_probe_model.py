@@ -140,7 +140,7 @@ async def _run_probe(
     script_path: Path,
     code: str,
     *,
-    timeout_ms: int = 1000,
+    timeout_ms: int = 5000,
     include_stdout: bool = False,
 ) -> dict[str, object]:
     tool = ProbeModelTool(sdk_package="sdk")
