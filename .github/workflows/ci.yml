@@ -14,8 +14,8 @@ permissions:
   contents: read
 
 jobs:
-  lint:
-    name: Lint
+  core:
+    name: Core CI
     runs-on: ubuntu-latest
 
     steps:
@@ -42,52 +42,8 @@ jobs:
       - name: Lint Python
         run: uv run --frozen ruff check .
 
-  data-format:
-    name: Data format
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Check out repository
-        uses: actions/checkout@v5
-
-      - name: Install uv
-        uses: astral-sh/setup-uv@v7
-        with:
-          version: "0.9.17"
-          enable-cache: true
-
-      - name: Set up Python
-        uses: actions/setup-python@v6
-        with:
-          python-version-file: ".python-version"
-
-      - name: Install dependencies
-        run: uv sync --frozen
-
       - name: Check data format
         run: uv run --frozen articraft data check
-
-  python-tests:
-    name: Python tests
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Check out repository
-        uses: actions/checkout@v5
-
-      - name: Install uv
-        uses: astral-sh/setup-uv@v7
-        with:
-          version: "0.9.17"
-          enable-cache: true
-
-      - name: Set up Python
-        uses: actions/setup-python@v6
-        with:
-          python-version-file: ".python-version"
-
-      - name: Install dependencies
-        run: uv sync --frozen --group dev
 
       - name: Run smoke tests
         run: |
@@ -101,7 +57,7 @@ jobs:
             tests/cli
 
   viewer:
-    name: Viewer
+    name: Viewer CI
     runs-on: ubuntu-latest
 
     defaults:
