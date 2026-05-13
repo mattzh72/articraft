@@ -86,6 +86,11 @@ dev = [
     "ruff>=0.11.0",
 ]
 
+[tool.uv]
+required-version = ">=0.9.17"
+exclude-newer = "7 days"
+exclude-newer-package = { anthropic = "2026-05-12T00:00:00Z" }
+
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 # Use `-n0` on an invocation to force serial execution for debugging.
