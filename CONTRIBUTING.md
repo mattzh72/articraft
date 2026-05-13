@@ -38,6 +38,8 @@ npm --prefix viewer/web run lint       # run ESLint
 ## Creating a Pull Request
 
 When submitting a PR, keep changes scoped to one logical addition or fix:
+
+### Validating Your Change
 1. Try to run the fastest checks prior to pushing:
    ```bash
    just smoke-tests
@@ -45,5 +47,15 @@ When submitting a PR, keep changes scoped to one logical addition or fix:
    npm --prefix viewer/web run lint
    ```
 2. For broader Python changes run `just test-all`.
-3. Fill out the Pull Request template indicating exactly what area (`agent`, `sdk`, `viewer`, etc.) is affected.
-4. **Data Caveat:** Do not commit `.env`, `data/cache/`, `data/local/`, generated URDFs, or record asset directories. The pre-commit checks will generally block sensitive paths.
+
+### Commit Guidelines
+We care deeply about commit hygiene.
+- Use short, imperative subjects (e.g., `Move prompt compiler under agent`, NOT `Moved prompt compiler` or `Moving prompt compiler`).
+- Keep commit titles concise (under 50 characters is a good rule of thumb) and scoped to **one logical change**.
+- If a commit fixes an issue, reference it in the body.
+
+### PR Requirements
+1. Fill out the Pull Request template indicating exactly what area (`agent`, `storage`, `sdk`, `viewer`, `cli`) is affected.
+2. Include the exact `uv`, `just`, and `npm` commands you ran to verify the change.
+3. Attach screenshots **only** when API or viewer behavior changes.
+4. **Data Caveat:** Do not commit `.env`, `data/cache/`, `data/local/`, generated URDFs, or record asset directories. The pre-commit checks will generally block sensitive paths. Files under `data/` are exempt from the trailing-newline requirement.
