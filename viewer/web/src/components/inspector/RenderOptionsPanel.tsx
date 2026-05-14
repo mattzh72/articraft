@@ -1,15 +1,17 @@
 import { useState, type JSX } from "react";
-import { AlertTriangle, Check, Copy, Sparkles, Zap } from "lucide-react";
+import { AlertTriangle, Camera, Check, Copy, Loader2, Sparkles, X, Zap } from "lucide-react";
 
 import { Label } from "@/components/ui/label";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Switch } from "@/components/ui/switch";
+import type { SnapshotExporter } from "@/components/viewer3d/SceneCanvas";
 import type { RenderOptions } from "@/components/viewer3d/useRenderOptions";
 import { copyTextToClipboard } from "@/lib/record-path";
 
 type RenderOptionsPanelProps = {
   options: RenderOptions;
   onOptionChange: <K extends keyof RenderOptions>(key: K, value: RenderOptions[K]) => void;
+  onSnapshot?: SnapshotExporter | null;
   collisionSupport?: {
     available: boolean;
     summary: string;
@@ -17,6 +19,8 @@ type RenderOptionsPanelProps = {
     compileCommand: string | null;
   } | null;
 };
+
+type SnapshotState = "idle" | "exporting" | "saved" | "error";
 
 type OptionRow = {
   key: Exclude<keyof RenderOptions, "fancyGraphics">;
@@ -79,12 +83,15 @@ const optionRows: OptionRow[] = [
 export function RenderOptionsPanel({
   options,
   onOptionChange,
+  onSnapshot = null,
   collisionSupport = null,
 }: RenderOptionsPanelProps): JSX.Element {
   const displayRows = optionRows.filter((row) => row.section === "display");
   const motionRows = optionRows.filter((row) => row.section === "motion");
   const [copiedCommand, setCopiedCommand] = useState(false);
+  const [snapshotState, setSnapshotState] = useState<SnapshotState>("idle");
   const collisionsUnavailable = collisionSupport != null && !collisionSupport.available;
+  const snapshotDisabled = !onSnapshot || snapshotState === "exporting";
 
   const handleCopyCommand = async (): Promise<void> => {
     if (!collisionSupport?.compileCommand) {
@@ -96,6 +103,38 @@ export function RenderOptionsPanel({
       setCopiedCommand(false);
     }, 1200);
   };
+
+  const handleSnapshot = async (): Promise<void> => {
+    if (!onSnapshot || snapshotState === "exporting") {
+      return;
+    }
+
+    setSnapshotState("exporting");
+    try {
+      await onSnapshot();
+      setSnapshotState("saved");
+    } catch {
+      setSnapshotState("error");
+    }
+    window.setTimeout(() => {
+      setSnapshotState("idle");
+    }, 1600);
+  };
+
+  const snapshotLabel =
+    snapshotState === "exporting"
+      ? "Saving…"
+      : snapshotState === "saved"
+        ? "Saved"
+        : snapshotState === "error"
+          ? "Retry"
+          : "Save PNG";
+  const snapshotStateClass =
+    snapshotState === "saved"
+      ? "bg-[var(--success)] text-white shadow-[0_1px_2px_rgba(26,138,74,0.30),inset_0_0.5px_0_rgba(255,255,255,0.18)]"
+      : snapshotState === "error"
+        ? "bg-[var(--destructive)] text-white shadow-[0_1px_2px_rgba(209,52,21,0.30),inset_0_0.5px_0_rgba(255,255,255,0.18)] hover:bg-[#e04125] hover:shadow-[0_2px_5px_rgba(209,52,21,0.36),inset_0_0.5px_0_rgba(255,255,255,0.20)]"
+        : "bg-[var(--text-primary)] text-white shadow-[0_1px_2px_rgba(15,15,15,0.22),inset_0_0.5px_0_rgba(255,255,255,0.12)] hover:bg-[#1f1f1f] hover:shadow-[0_2px_5px_rgba(15,15,15,0.28),inset_0_0.5px_0_rgba(255,255,255,0.16)] active:translate-y-[0.5px] active:shadow-[0_0_0_rgba(0,0,0,0),inset_0_0.5px_0_rgba(255,255,255,0.10)]";
 
   return (
     <ScrollArea className="h-full">
@@ -109,35 +148,51 @@ export function RenderOptionsPanel({
             <div className="min-w-0">
               <Label className="text-[12px] text-[var(--text-primary)]">Graphics</Label>
               <p className="text-[10px] leading-[1.3] text-[var(--text-tertiary)]">
-                {options.fancyGraphics ? "Reflections, shadows, and clean surfaces" : "Performance-oriented renderer"}
+                {options.fancyGraphics ? "Reflections, shadows, clean surfaces" : "Performance-oriented renderer"}
               </p>
             </div>
-            <div className="grid w-[116px] shrink-0 grid-cols-2 gap-0.5 rounded-md bg-[var(--surface-2)] p-0.5">
+            <div
+              role="radiogroup"
+              aria-label="Graphics quality"
+              className="relative grid h-7 w-[60px] shrink-0 grid-cols-2 rounded-md border border-[var(--border-subtle)] bg-[var(--surface-2)] p-[2px]"
+            >
+              <span
+                aria-hidden
+                className="pointer-events-none absolute top-[2px] bottom-[2px] left-[2px] w-[calc(50%-2px)] rounded-[4px] bg-[var(--surface-0)] shadow-[0_1px_2px_rgba(15,15,15,0.08),0_0_0_0.5px_rgba(15,15,15,0.06)]"
+                style={{
+                  transition: "transform 260ms cubic-bezier(0.32, 0.72, 0, 1)",
+                  transform: options.fancyGraphics ? "translateX(100%)" : "translateX(0)",
+                }}
+              />
               <button
                 type="button"
-                aria-pressed={!options.fancyGraphics}
+                role="radio"
+                aria-checked={!options.fancyGraphics}
+                aria-label="Fast graphics"
+                title="Fast"
                 onClick={() => onOptionChange("fancyGraphics", false)}
-                className={`inline-flex h-7 items-center justify-center rounded-[5px] text-[10px] font-medium transition-colors ${
+                className={`relative z-10 inline-flex items-center justify-center rounded-[4px] transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-1 ${
                   !options.fancyGraphics
-                    ? "bg-[var(--surface-0)] text-[var(--text-primary)] shadow-[0_1px_3px_rgba(0,0,0,0.06)]"
+                    ? "text-[var(--text-primary)]"
                     : "text-[var(--text-tertiary)] hover:text-[var(--text-secondary)]"
                 }`}
               >
-                <Zap className="size-3" />
-                <span className="sr-only">Fast</span>
+                <Zap className="size-[12px]" strokeWidth={2.25} />
               </button>
               <button
                 type="button"
-                aria-pressed={options.fancyGraphics}
+                role="radio"
+                aria-checked={options.fancyGraphics}
+                aria-label="Fancy graphics"
+                title="Fancy"
                 onClick={() => onOptionChange("fancyGraphics", true)}
-                className={`inline-flex h-7 items-center justify-center rounded-[5px] text-[10px] font-medium transition-colors ${
+                className={`relative z-10 inline-flex items-center justify-center rounded-[4px] transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-1 ${
                   options.fancyGraphics
-                    ? "bg-[var(--surface-0)] text-[var(--text-primary)] shadow-[0_1px_3px_rgba(0,0,0,0.06)]"
+                    ? "text-[var(--text-primary)]"
                     : "text-[var(--text-tertiary)] hover:text-[var(--text-secondary)]"
                 }`}
               >
-                <Sparkles className="size-3" />
-                <span className="sr-only">Fancy</span>
+                <Sparkles className="size-[12px]" strokeWidth={2.25} />
               </button>
             </div>
           </div>
@@ -217,6 +272,38 @@ export function RenderOptionsPanel({
               />
             </div>
           ))}
+        </div>
+        <div className="flex items-center gap-2 pb-2 pt-1">
+          <span className="text-[10px] font-medium uppercase tracking-[0.05em] text-[var(--text-tertiary)]">Export</span>
+          <div className="h-px flex-1 bg-[var(--border-subtle)]" />
+        </div>
+        <div className="flex items-center justify-between gap-3 py-1.5">
+          <div className="min-w-0">
+            <Label className="text-[12px] text-[var(--text-primary)]">Snapshot</Label>
+            <p className="text-[10px] leading-[1.3] text-[var(--text-tertiary)]">
+              Current pose on white background
+            </p>
+          </div>
+          <button
+            type="button"
+            onClick={() => void handleSnapshot()}
+            disabled={snapshotDisabled}
+            aria-label={snapshotLabel}
+            title={snapshotLabel}
+            className={`inline-flex h-7 shrink-0 items-center gap-1.5 rounded-md px-2.5 text-[11px] font-medium duration-150 ease-out [transition-property:background-color,box-shadow,transform] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-1 disabled:opacity-50 ${snapshotStateClass}`}
+            style={{ touchAction: "manipulation" }}
+          >
+            {snapshotState === "exporting" ? (
+              <Loader2 className="size-3 animate-spin" strokeWidth={2.5} />
+            ) : snapshotState === "saved" ? (
+              <Check className="size-3" strokeWidth={2.75} />
+            ) : snapshotState === "error" ? (
+              <X className="size-3" strokeWidth={2.75} />
+            ) : (
+              <Camera className="size-3" strokeWidth={2.25} />
+            )}
+            <span>{snapshotLabel}</span>
+          </button>
         </div>
       </div>
     </ScrollArea>

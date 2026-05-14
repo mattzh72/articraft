@@ -1,7 +1,7 @@
 import { type JSX, type ReactNode } from "react";
 import type * as THREE from "three";
 
-import { SceneCanvas } from "@/components/viewer3d/SceneCanvas";
+import { SceneCanvas, type SnapshotExporter } from "@/components/viewer3d/SceneCanvas";
 import type { RenderOptions } from "@/components/viewer3d/useRenderOptions";
 import type { UrdfSpec } from "@/components/viewer3d/urdf-parser";
 import { cn } from "@/lib/utils";
@@ -14,6 +14,7 @@ interface ViewportPanelProps {
   renderOptions: RenderOptions;
   onUrdfSpecChange: (spec: UrdfSpec | null, jointNodes: Map<string, THREE.Object3D> | null) => void;
   onInvalidateReady?: (invalidate: (() => void) | null) => void;
+  onSnapshotReady?: (snapshot: SnapshotExporter | null) => void;
   onLoadStateChange?: (state: {
     loading: boolean;
     error: string | null;
@@ -39,6 +40,7 @@ export function ViewportPanel({
   renderOptions,
   onUrdfSpecChange,
   onInvalidateReady,
+  onSnapshotReady,
   onLoadStateChange,
   overlayNotice,
   disabledOverlay,
@@ -73,6 +75,7 @@ export function ViewportPanel({
             renderOptions={sceneRenderOptions}
             onUrdfSpecChange={onUrdfSpecChange}
             onInvalidateReady={onInvalidateReady}
+            onSnapshotReady={onSnapshotReady}
             onLoadStateChange={onLoadStateChange}
           />
         </div>

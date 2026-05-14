@@ -3,6 +3,7 @@
 .uv-cache/
 .DS_Store
 **/.DS_Store
+/video/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

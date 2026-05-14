@@ -160,6 +160,7 @@ export function useThreeScene(
     const renderer = new THREE.WebGLRenderer({
       antialias: true,
       alpha: false,
+      preserveDrawingBuffer: true,
       ...resolveDepthBufferOptions(),
     });
     renderer.outputColorSpace = THREE.SRGBColorSpace;

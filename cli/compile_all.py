@@ -9,7 +9,7 @@ import queue
 import re
 import subprocess
 import time
-from collections import deque
+from collections import defaultdict, deque
 from contextlib import suppress
 from dataclasses import dataclass
 from pathlib import Path
@@ -73,6 +73,30 @@ _GEOMETRY_QC_MARKERS = (
     "expect_above",
     "expect_joint_motion_axis",
 )
+_GEOMETRY_CLASS_CALL_RE = re.compile(r"\b([A-Z][A-Za-z0-9_]*Geometry)\s*\(")
+_COMPILE_SCHEDULER_CLASS_PRIORITY = (
+    "SlotPatternPanelGeometry",
+    "PerforatedPanelGeometry",
+    "VentGrilleGeometry",
+    "LouverPanelGeometry",
+    "TireGeometry",
+    "WheelGeometry",
+    "KnobGeometry",
+    "FanRotorGeometry",
+    "BlowerWheelGeometry",
+    "BarrelHingeGeometry",
+    "PianoHingeGeometry",
+    "ClevisBracketGeometry",
+    "PivotForkGeometry",
+    "TrunnionYokeGeometry",
+    "BezelGeometry",
+    "ExtrudeWithHolesGeometry",
+    "LatheGeometry",
+    "LoftGeometry",
+    "SweepGeometry",
+    "ExtrudeGeometry",
+    "CadQuery",
+)
 
 
 @dataclass(slots=True, frozen=True)
@@ -84,6 +108,7 @@ class CompileCandidate:
     estimated_mesh_bytes: int = 0
     mesh_file_count: int = 0
     sdk_package: str = "sdk"
+    scheduler_class: str = "unknown"
 
 
 @dataclass(slots=True, frozen=True)
@@ -104,6 +129,59 @@ class WorkerState:
     task_queue: Any
     assigned: CompileCandidate | None = None
     started_at: float | None = None
+    scheduler_class: str | None = None
+
+
+@dataclass(slots=True)
+class _ClassAwareCompileQueue:
+    queues: dict[str, deque[CompileCandidate]]
+    class_order: list[str]
+    cursor: int = 0
+    remaining: int = 0
+
+    @classmethod
+    def from_candidates(cls, candidates: list[CompileCandidate]) -> _ClassAwareCompileQueue:
+        grouped: dict[str, list[CompileCandidate]] = defaultdict(list)
+        for candidate in _sort_candidates_for_compile(candidates):
+            grouped[_normalize_scheduler_class(candidate.scheduler_class)].append(candidate)
+
+        class_order = sorted(
+            grouped,
+            key=lambda class_name: _scheduler_class_sort_key(class_name, grouped[class_name]),
+        )
+        return cls(
+            queues={
+                class_name: deque(grouped[class_name])
+                for class_name in class_order
+                if grouped[class_name]
+            },
+            class_order=class_order,
+            remaining=len(candidates),
+        )
+
+    def __len__(self) -> int:
+        return self.remaining
+
+    def pop(self, *, preferred_class: str | None = None) -> CompileCandidate | None:
+        preferred_key = _normalize_scheduler_class(preferred_class)
+        preferred_queue = self.queues.get(preferred_key)
+        if preferred_queue:
+            self.remaining -= 1
+            return preferred_queue.popleft()
+
+        if not self.class_order:
+            return None
+
+        for offset in range(len(self.class_order)):
+            index = (self.cursor + offset) % len(self.class_order)
+            class_name = self.class_order[index]
+            class_queue = self.queues.get(class_name)
+            if not class_queue:
+                continue
+            self.cursor = (index + 1) % len(self.class_order)
+            self.remaining -= 1
+            return class_queue.popleft()
+        return None
 
 
 def _normalize_compile_target(target: str) -> str:
@@ -153,12 +231,63 @@ def _compile_materialization_status(payload: object) -> str | None:
     return None
 
 
+def _normalize_scheduler_class(value: object) -> str:
+    normalized = str(value or "unknown").strip()
+    return normalized or "unknown"
+
+
+def _scheduler_class_priority(class_name: str) -> int:
+    with suppress(ValueError):
+        return _COMPILE_SCHEDULER_CLASS_PRIORITY.index(class_name)
+    return len(_COMPILE_SCHEDULER_CLASS_PRIORITY)
+
+
+def _scheduler_class_sort_key(
+    class_name: str,
+    candidates: list[CompileCandidate],
+) -> tuple[int, float, int, int, str]:
+    heaviest = max(
+        candidates,
+        key=lambda candidate: (
+            candidate.estimated_compile_seconds,
+            candidate.estimated_mesh_bytes,
+            candidate.mesh_file_count,
+        ),
+    )
+    return (
+        _scheduler_class_priority(class_name),
+        -heaviest.estimated_compile_seconds,
+        -heaviest.estimated_mesh_bytes,
+        -len(candidates),
+        class_name,
+    )
+
+
+def _infer_compile_scheduler_class(script_path: Path) -> str:
+    try:
+        source = script_path.read_text(encoding="utf-8", errors="replace")
+    except OSError:
+        return "unknown"
+
+    geometry_classes = set(_GEOMETRY_CLASS_CALL_RE.findall(source))
+    if "mesh_from_cadquery(" in source or "import cadquery" in source:
+        geometry_classes.add("CadQuery")
+
+    for class_name in _COMPILE_SCHEDULER_CLASS_PRIORITY:
+        if class_name in geometry_classes:
+            return class_name
+    if geometry_classes:
+        return sorted(geometry_classes)[0]
+    return "primitive"
+
+
 def _make_candidate(
     *,
     record_id: str,
     reason: str,
     force: bool,
     sdk_package: str,
+    scheduler_class: str = "unknown",
     compile_report: object | None = None,
 ) -> CompileCandidate:
     estimated_mesh_bytes, mesh_file_count = compile_report_visual_mesh_footprint(compile_report)
@@ -171,6 +300,7 @@ def _make_candidate(
         estimated_mesh_bytes=estimated_mesh_bytes or 0,
         mesh_file_count=mesh_file_count or 0,
         sdk_package=sdk_package,
+        scheduler_class=_normalize_scheduler_class(scheduler_class),
     )
 
 
@@ -293,6 +423,7 @@ def _collect_candidates(
             record.get("sdk_package") if isinstance(record, dict) else "sdk"
         )
         script_path = _record_model_script_path(repo, record_id, record)
+        scheduler_class = sdk_package
 
         if not script_path.exists():
             if isinstance(record, dict) or compile_status is not None or urdf_path.exists():
@@ -302,12 +433,15 @@ def _collect_candidates(
                         reason="missing model.py",
                         force=False,
                         sdk_package=sdk_package,
+                        scheduler_class=scheduler_class,
                         compile_report=compile_report,
                     )
                 )
                 continue
             skipped_missing_script += 1
             continue
+
+        scheduler_class = _infer_compile_scheduler_class(script_path)
 
         if force:
             candidates.append(
@@ -316,6 +450,7 @@ def _collect_candidates(
                     reason="forced",
                     force=True,
                     sdk_package=sdk_package,
+                    scheduler_class=scheduler_class,
                     compile_report=compile_report,
                 )
             )
@@ -328,6 +463,7 @@ def _collect_candidates(
                     reason="missing model.urdf",
                     force=False,
                     sdk_package=sdk_package,
+                    scheduler_class=scheduler_class,
                     compile_report=compile_report,
                 )
             )
@@ -341,6 +477,7 @@ def _collect_candidates(
                     reason=f"compile status is {label}",
                     force=True,
                     sdk_package=sdk_package,
+                    scheduler_class=scheduler_class,
                     compile_report=compile_report,
                 )
             )
@@ -363,6 +500,7 @@ def _collect_candidates(
                         reason="missing generated assets",
                         force=False,
                         sdk_package=sdk_package,
+                        scheduler_class=scheduler_class,
                         compile_report=compile_report,
                     )
                 )
@@ -386,6 +524,7 @@ def _collect_candidates(
                     reason="compile inputs changed",
                     force=True,
                     sdk_package=sdk_package,
+                    scheduler_class=scheduler_class,
                     compile_report=compile_report,
                 )
             )
@@ -398,6 +537,7 @@ def _collect_candidates(
                     reason="compile level is visual",
                     force=True,
                     sdk_package=sdk_package,
+                    scheduler_class=scheduler_class,
                     compile_report=compile_report,
                 )
             )
@@ -423,6 +563,7 @@ def _collect_candidates(
                     reason="missing generated assets",
                     force=False,
                     sdk_package=sdk_package,
+                    scheduler_class=scheduler_class,
                     compile_report=compile_report,
                 )
             )
@@ -941,12 +1082,15 @@ def _shutdown_worker(worker: WorkerState, *, terminate: bool) -> None:
         worker.task_queue.close()
 
 
-def _dispatch_candidate(worker: WorkerState, pending: deque[CompileCandidate]) -> None:
-    if worker.assigned is not None or not pending:
+def _dispatch_candidate(worker: WorkerState, pending: _ClassAwareCompileQueue) -> None:
+    if worker.assigned is not None or len(pending) <= 0:
         return
-    candidate = pending.popleft()
+    candidate = pending.pop(preferred_class=worker.scheduler_class)
+    if candidate is None:
+        return
     worker.task_queue.put(candidate)
     worker.assigned = candidate
+    worker.scheduler_class = candidate.scheduler_class
     worker.started_at = None
 
 
@@ -988,7 +1132,7 @@ def _run_compile_pool(
             "Open-file limit reached while creating bulk compile queues. "
             "Lower --concurrency or raise the OS open-file limit."
         ) from exc
-    pending: deque[CompileCandidate] = deque(_sort_candidates_for_compile(candidates))
+    pending = _ClassAwareCompileQueue.from_candidates(candidates)
     compiled = 0
     failures: list[tuple[str, str]] = []
     completed = 0
@@ -1257,11 +1401,13 @@ def main(argv: list[str] | None = None) -> int:
         table = Table(title="Compile Queue")
         table.add_column("Record ID")
         table.add_column("Reason")
+        table.add_column("Scheduler Class")
         table.add_column("Mesh Footprint", justify="right")
         for candidate in candidates:
             table.add_row(
                 candidate.record_id,
                 candidate.reason,
+                candidate.scheduler_class,
                 _format_gib(candidate.estimated_mesh_bytes)
                 if candidate.estimated_mesh_bytes
                 else "0.0 GiB",

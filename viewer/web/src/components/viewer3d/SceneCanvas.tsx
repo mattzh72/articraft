@@ -1,4 +1,4 @@
-import { useRef, useEffect, useMemo, useState, type JSX } from 'react';
+import { useRef, useEffect, useMemo, useState, useCallback, type JSX } from 'react';
 import * as THREE from 'three';
 import { PartLegend, type PartLegendItem, type PartLegendSelection } from './PartLegend';
 import { useThreeScene } from './useThreeScene';
@@ -428,6 +428,7 @@ export interface SceneCanvasProps {
   renderOptions: RenderOptions;
   onUrdfSpecChange?: (spec: UrdfSpec | null, jointNodes: Map<string, THREE.Object3D> | null) => void;
   onInvalidateReady?: (invalidate: (() => void) | null) => void;
+  onSnapshotReady?: (snapshot: SnapshotExporter | null) => void;
   onLoadStateChange?: (state: {
     loading: boolean;
     error: string | null;
@@ -443,11 +444,60 @@ export interface SceneCanvasProps {
   }) => void;
 }
 
+export type SnapshotExporter = () => Promise<void>;
+
 function isMissingArtifactsError(error: string | null): boolean {
   if (!error) {
     return false;
   }
   return /404|not found|file not found/i.test(error);
+}
+
+function makeSnapshotFileName(selectionKey: string | null): string {
+  const baseName = selectionKey?.replace(/[^a-z0-9_-]+/gi, "-").replace(/^-+|-+$/g, "") || "object";
+  const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
+  return `articraft-${baseName}-${timestamp}.png`;
+}
+
+function canvasToBlob(canvas: HTMLCanvasElement): Promise<Blob> {
+  return new Promise((resolve, reject) => {
+    canvas.toBlob((blob) => {
+      if (!blob) {
+        reject(new Error("Snapshot export produced an empty image."));
+        return;
+      }
+      resolve(blob);
+    }, "image/png");
+  });
+}
+
+function downloadBlob(blob: Blob, fileName: string): void {
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = fileName;
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  window.setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+
+function setVisibleTemporarily(objects: Array<THREE.Object3D | null | undefined>, visible: boolean): () => void {
+  const previousVisibility = new Map<THREE.Object3D, boolean>();
+
+  for (const object of objects) {
+    if (!object || previousVisibility.has(object)) {
+      continue;
+    }
+    previousVisibility.set(object, object.visible);
+    object.visible = visible;
+  }
+
+  return () => {
+    for (const [object, wasVisible] of previousVisibility) {
+      object.visible = wasVisible;
+    }
+  };
 }
 
 export function SceneCanvas({
@@ -458,6 +508,7 @@ export function SceneCanvas({
   renderOptions,
   onUrdfSpecChange,
   onInvalidateReady,
+  onSnapshotReady,
   onLoadStateChange,
 }: SceneCanvasProps): JSX.Element {
   const containerRef = useRef<HTMLDivElement | null>(null);
@@ -520,6 +571,56 @@ export function SceneCanvas({
     !error;
   const isStagingBuffering = isStagingSelection && error?.startsWith("Failed to fetch URDF: 404");
 
+  const handleSnapshot = useCallback(async (): Promise<void> => {
+    if (!sceneReady || !scene || !camera || !renderer || loading || error || !selectionKey) {
+      throw new Error("Snapshot export is unavailable until the model is loaded.");
+    }
+
+    const previousBackground = scene.background;
+    const previousClearColor = renderer.getClearColor(new THREE.Color()).clone();
+    const previousClearAlpha = renderer.getClearAlpha();
+    const restoreVisibility = setVisibleTemporarily(
+      [
+        gridGroup,
+        axisGroup,
+        shadowPlaneRef.current,
+        ...jointOverlayRef.current,
+        ...partHighlightRef.current,
+        ...surfaceSampleRef.current,
+        ...edgeLinesRef.current,
+      ],
+      false,
+    );
+
+    try {
+      scene.background = new THREE.Color(0xffffff);
+      renderer.setClearColor(0xffffff, 1);
+      controls?.update();
+      renderer.render(scene, camera);
+
+      const blob = await canvasToBlob(renderer.domElement);
+      downloadBlob(blob, makeSnapshotFileName(selectionKey));
+    } finally {
+      restoreVisibility();
+      scene.background = previousBackground;
+      renderer.setClearColor(previousClearColor, previousClearAlpha);
+      renderer.render(scene, camera);
+      invalidate();
+    }
+  }, [
+    axisGroup,
+    camera,
+    controls,
+    error,
+    gridGroup,
+    invalidate,
+    loading,
+    renderer,
+    scene,
+    sceneReady,
+    selectionKey,
+  ]);
+
   useEffect(() => {
     onUrdfSpecChange?.(urdfSpec, jointNodes);
   }, [urdfSpec, jointNodes, onUrdfSpecChange]);
@@ -531,6 +632,14 @@ export function SceneCanvas({
       onInvalidateReady?.(null);
     };
   }, [invalidate, onInvalidateReady, sceneReady]);
+
+  useEffect(() => {
+    onSnapshotReady?.(sceneReady && !loading && !error && selectionKey ? handleSnapshot : null);
+
+    return () => {
+      onSnapshotReady?.(null);
+    };
+  }, [error, handleSnapshot, loading, onSnapshotReady, sceneReady, selectionKey]);
 
   useEffect(() => {
     onLoadStateChange?.({

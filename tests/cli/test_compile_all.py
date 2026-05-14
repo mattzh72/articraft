@@ -7,6 +7,50 @@ from types import SimpleNamespace
 from cli import compile_all
 
 
+def test_compile_all_infers_scheduler_class_from_model(tmp_path: Path) -> None:
+    model_path = tmp_path / "model.py"
+    model_path.write_text(
+        "\n".join(
+            [
+                "from sdk import SlotPatternPanelGeometry, TireGeometry",
+                "",
+                "panel = SlotPatternPanelGeometry((0.1, 0.05), 0.004, slot_size=(0.02, 0.004), pitch=0.03)",
+                "tire = TireGeometry(0.1, 0.03)",
+                "",
+            ]
+        ),
+        encoding="utf-8",
+    )
+
+    assert compile_all._infer_compile_scheduler_class(model_path) == "SlotPatternPanelGeometry"
+
+
+def test_compile_all_class_aware_queue_prefers_worker_class() -> None:
+    candidates = [
+        compile_all.CompileCandidate(
+            "panel_light", "forced", scheduler_class="Panel", estimated_compile_seconds=1.0
+        ),
+        compile_all.CompileCandidate(
+            "wheel", "forced", scheduler_class="Wheel", estimated_compile_seconds=8.0
+        ),
+        compile_all.CompileCandidate(
+            "panel_heavy", "forced", scheduler_class="Panel", estimated_compile_seconds=5.0
+        ),
+    ]
+    pending = compile_all._ClassAwareCompileQueue.from_candidates(candidates)
+
+    first = pending.pop(preferred_class="Panel")
+    second = pending.pop(preferred_class="Panel")
+    third = pending.pop(preferred_class="Panel")
+
+    assert first is not None
+    assert second is not None
+    assert third is not None
+    assert first.record_id == "panel_heavy"
+    assert second.record_id == "panel_light"
+    assert third.record_id == "wheel"
+
+
 def test_compile_all_worker_uses_materialization_component(
     tmp_path: Path,
     monkeypatch,

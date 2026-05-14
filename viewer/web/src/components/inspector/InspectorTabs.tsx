@@ -6,6 +6,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { InspectPanel } from "@/components/inspector/InspectPanel";
 import { RenderOptionsPanel } from "@/components/inspector/RenderOptionsPanel";
 import { defaultRenderOptions, type RenderOptions } from "@/components/viewer3d/useRenderOptions";
+import type { SnapshotExporter } from "@/components/viewer3d/SceneCanvas";
 import type { UrdfJoint } from "@/components/inspector/JointSlider";
 
 const CodePanel = lazy(() =>
@@ -27,6 +28,7 @@ type InspectorTabsProps = {
   onResetAll?: () => void;
   renderOptions?: RenderOptions;
   onRenderOptionChange?: <K extends keyof RenderOptions>(key: K, value: RenderOptions[K]) => void;
+  onSnapshot?: SnapshotExporter | null;
   collisionSupport?: {
     available: boolean;
     summary: string;
@@ -50,6 +52,7 @@ export function InspectorTabs({
   onResetAll = () => {},
   renderOptions,
   onRenderOptionChange,
+  onSnapshot = null,
   collisionSupport = null,
 }: InspectorTabsProps): JSX.Element {
   const { selectedInspectorTab, selection } = useViewer();
@@ -101,6 +104,7 @@ export function InspectorTabs({
         <RenderOptionsPanel
           options={activeOptions}
           onOptionChange={handleOptionChange}
+          onSnapshot={onSnapshot}
           collisionSupport={collisionSupport}
         />
       </TabsContent>

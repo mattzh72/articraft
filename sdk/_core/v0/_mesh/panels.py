@@ -6,9 +6,8 @@ from typing import List, Optional, Sequence, Union
 from sdk._dependencies import require_cadquery
 
 from .cadquery_helpers import _mesh_geometry_from_cadquery_model
-from .common import _copy_manifold_provenance, _point_in_polygon, rounded_rect_profile
+from .common import _copy_manifold_provenance
 from .primitives import (
-    ExtrudeWithHolesGeometry,
     MeshGeometry,
     _adopt_mesh_geometry,
     _centered_axis_positions,
@@ -520,157 +519,54 @@ class SlotPatternPanelGeometry(MeshGeometry):
         if not point_rows:
             raise ValueError("No slot columns fit panel; increase panel size or reduce pitch")
 
-        outer_radius = min(corner_radius, panel_w * 0.5 - 1e-4, panel_h * 0.5 - 1e-4)
-        outer_profile = rounded_rect_profile(
-            panel_w,
-            panel_h,
-            outer_radius,
-            corner_segments=8,
-        )
+        cq = require_cadquery(feature="SlotPatternPanelGeometry")
+        shape = cq.Workplane("XY").box(panel_w, panel_h, thickness)
+        if corner_radius > 0.0:
+            shape = shape.edges("|Z").fillet(
+                min(corner_radius, panel_w * 0.5 - 1e-4, panel_h * 0.5 - 1e-4)
+            )
 
-        hole_profiles: list[list[tuple[float, float]]] = []
+        cut_depth = thickness + max(0.002, thickness * 0.5)
+        slot_core_length = max(slot_length - slot_width, 0.0)
+
+        def build_slot_cut(center_xy: tuple[float, float]):
+            slot_cut = None
+            if slot_core_length > 1e-6:
+                slot_cut = cq.Workplane("XY").box(slot_core_length, slot_width, cut_depth)
+            cap_radius = slot_width * 0.5
+            cap_offset = slot_core_length * 0.5
+            left_cap = (
+                cq.Workplane("XY")
+                .circle(cap_radius)
+                .extrude(cut_depth, both=True)
+                .translate((-cap_offset, 0.0, 0.0))
+            )
+            right_cap = (
+                cq.Workplane("XY")
+                .circle(cap_radius)
+                .extrude(
+                    cut_depth,
+                    both=True,
+                )
+                .translate((cap_offset, 0.0, 0.0))
+            )
+            slot_cut = (
+                left_cap.union(right_cap)
+                if slot_cut is None
+                else slot_cut.union(left_cap).union(right_cap)
+            )
+            slot_cut = slot_cut.rotate((0.0, 0.0, 0.0), (0.0, 0.0, 1.0), slot_angle_deg)
+            return slot_cut.translate((center_xy[0], center_xy[1], 0.0))
+
+        cut_shape = None
         for row_points in point_rows:
             for point in row_points:
-                hole_profiles.append(
-                    _rounded_slot_profile(
-                        slot_length,
-                        slot_width,
-                        center_xy=point,
-                        angle_deg=slot_angle_deg,
-                    )
-                )
+                slot_cut = build_slot_cut(point)
+                cut_shape = slot_cut if cut_shape is None else cut_shape.union(slot_cut)
+        if cut_shape is not None:
+            shape = shape.cut(cut_shape)
 
-        if all(_point_in_polygon(point, outer_profile) for hole in hole_profiles for point in hole):
-            try:
-                geom = ExtrudeWithHolesGeometry(
-                    outer_profile,
-                    hole_profiles,
-                    thickness,
-                    center=center,
-                )
-            except ValueError:
-                geom = _cadquery_slot_pattern_panel_geometry(
-                    panel_w=panel_w,
-                    panel_h=panel_h,
-                    thickness=thickness,
-                    corner_radius=corner_radius,
-                    slot_length=slot_length,
-                    slot_width=slot_width,
-                    slot_angle_deg=slot_angle_deg,
-                    point_rows=point_rows,
-                    center=center,
-                )
-        else:
-            geom = _cadquery_slot_pattern_panel_geometry(
-                panel_w=panel_w,
-                panel_h=panel_h,
-                thickness=thickness,
-                corner_radius=corner_radius,
-                slot_length=slot_length,
-                slot_width=slot_width,
-                slot_angle_deg=slot_angle_deg,
-                point_rows=point_rows,
-                center=center,
-            )
+        geom = _mesh_geometry_from_cadquery_model(shape)
+        if not center:
+            geom = _mesh_geometry_shifted_to_z0(geom)
         _adopt_mesh_geometry(self, geom)
-
-
-def _rounded_slot_profile(
-    length: float,
-    width: float,
-    *,
-    center_xy: tuple[float, float],
-    angle_deg: float,
-    cap_segments: int = 8,
-) -> list[tuple[float, float]]:
-    length = float(length)
-    width = float(width)
-    radius = width * 0.5
-    core = max(length - width, 0.0)
-    cap_offset = core * 0.5
-    cap_segments = max(4, int(cap_segments))
-    angle_rad = float(angle_deg) * pi / 180.0
-    ca = cos(angle_rad)
-    sa = sin(angle_rad)
-    cx, cy = center_xy
-
-    if core <= 1e-9:
-        local = [
-            (
-                radius * cos(2.0 * pi * index / float(cap_segments * 2)),
-                radius * sin(2.0 * pi * index / float(cap_segments * 2)),
-            )
-            for index in range(cap_segments * 2)
-        ]
-    else:
-        local = []
-        for index in range(cap_segments + 1):
-            theta = -pi * 0.5 + pi * index / float(cap_segments)
-            local.append((cap_offset + radius * cos(theta), radius * sin(theta)))
-        for index in range(1, cap_segments + 1):
-            theta = pi * 0.5 + pi * index / float(cap_segments)
-            local.append((-cap_offset + radius * cos(theta), radius * sin(theta)))
-
-    return [(cx + x * ca - y * sa, cy + x * sa + y * ca) for x, y in local]
-
-
-def _cadquery_slot_pattern_panel_geometry(
-    *,
-    panel_w: float,
-    panel_h: float,
-    thickness: float,
-    corner_radius: float,
-    slot_length: float,
-    slot_width: float,
-    slot_angle_deg: float,
-    point_rows: list[list[tuple[float, float]]],
-    center: bool,
-) -> MeshGeometry:
-    cq = require_cadquery(feature="SlotPatternPanelGeometry")
-    shape = cq.Workplane("XY").box(panel_w, panel_h, thickness)
-    if corner_radius > 0.0:
-        shape = shape.edges("|Z").fillet(
-            min(corner_radius, panel_w * 0.5 - 1e-4, panel_h * 0.5 - 1e-4)
-        )
-
-    cut_depth = thickness + max(0.002, thickness * 0.5)
-    slot_core_length = max(slot_length - slot_width, 0.0)
-
-    def build_slot_cut(center_xy: tuple[float, float]):
-        slot_cut = None
-        if slot_core_length > 1e-6:
-            slot_cut = cq.Workplane("XY").box(slot_core_length, slot_width, cut_depth)
-        cap_radius = slot_width * 0.5
-        cap_offset = slot_core_length * 0.5
-        left_cap = (
-            cq.Workplane("XY")
-            .circle(cap_radius)
-            .extrude(cut_depth, both=True)
-            .translate((-cap_offset, 0.0, 0.0))
-        )
-        right_cap = (
-            cq.Workplane("XY")
-            .circle(cap_radius)
-            .extrude(cut_depth, both=True)
-            .translate((cap_offset, 0.0, 0.0))
-        )
-        slot_cut = (
-            left_cap.union(right_cap)
-            if slot_cut is None
-            else slot_cut.union(left_cap).union(right_cap)
-        )
-        slot_cut = slot_cut.rotate((0.0, 0.0, 0.0), (0.0, 0.0, 1.0), slot_angle_deg)
-        return slot_cut.translate((center_xy[0], center_xy[1], 0.0))
-
-    cut_shape = None
-    for row_points in point_rows:
-        for point in row_points:
-            slot_cut = build_slot_cut(point)
-            cut_shape = slot_cut if cut_shape is None else cut_shape.union(slot_cut)
-    if cut_shape is not None:
-        shape = shape.cut(cut_shape)
-
-    geom = _mesh_geometry_from_cadquery_model(shape)
-    if not center:
-        geom = _mesh_geometry_shifted_to_z0(geom)
-    return geom
