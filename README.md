@@ -6,19 +6,16 @@
 
 **An Agentic System for Scalable Articulated 3D Asset Generation.**
 
-Articraft transforms the creation of articulated 3D assets into a programmatic, code-generation workflow. Instead of relying on manual 3D modeling tools, Articraft enables LLMs to write compact Python programs against an articulation-focused SDK (the Articraft SDK). The harness executes the generated program, validates the mechanical structure, and autonomously feeds errors back to the model for iterative refinement. The final output is an object complete with semantic parts, robust geometry, physical joints, and rigid motion limits.
+Articraft transforms the creation of articulated 3D assets into a programmatic, code-generation workflow powered by LLMs. Engineered for large-scale dataset generation, it bypasses heavyweight manual tools to rapidly produce objects with semantic parts, robust geometry, and physical joints.
 
-Engineered for scalable, high-throughput dataset generation, Articraft bypasses heavyweight graphics pipelines and slow visual-feedback loops. It natively integrates with major LLM providers (OpenAI, Anthropic, Gemini, OpenRouter) and features lightweight, comprehensive tooling for local storage, iterative compilation, visual inspection, and curation. This very stack powered the creation of **Articraft-10K**: a curated dataset comprising over 10,000 highly-articulated 3D assets spanning 245 everyday object categories.
-
-### Security Note
-Articraft compiles and inspects generated records by executing their `model.py` files as Python code. Only run generated records and model scripts from trusted sources. Review them first, or run Articraft in an isolated container/disposable environment when working with untrusted inputs.
+> **Security Note:** Articraft compiles and inspects generated records by executing their `model.py` files as Python code. Only run generated records and model scripts from trusted sources.
 
 ---
 
 ## Quickstart
 
 ### 1. Prerequisites
-- Python 3.12 recommended (or 3.11). *Note: 3.13+ is not currently supported due to `cadquery` dependency wheels.*
+- Python 3.12 recommended (or 3.11). *Note: 3.13+ is not currently supported.*
 - [`uv`](https://docs.astral.sh/uv/) for incredibly fast Python package management.
 - [`just`](https://github.com/casey/just) as the command runner.
 - [`npm`](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm) (optional, but needed for local viewer frontend).
@@ -28,10 +25,13 @@ From the repo root, run:
 ```bash
 just setup
 ```
-This initializes the `.env` file, sets up the Python tools, installs the viewer dependencies (`npm`), sets up storage, and installs canonical git hooks for database synchronization.
 
 ### 3. Add API Keys
 Open `.env` and set one or more provider keys (e.g. `OPENAI_API_KEY`, `GEMINI_API_KEYS`, `ANTHROPIC_API_KEYS`).
+
+> **No API Keys?** No problem! If you don't have API keys set up, you can use external AI agents like Claude Code, Codex, or Cursor. Just point them to this repository and prompt them:
+> 
+> *"Create a realistic articulated [object name] and add it to the Articraft dataset. Follow EXTERNAL_AGENT_DATA.md."*
 
 ### 4. Create an Asset
 
@@ -46,47 +46,25 @@ uv run articraft generate --model gemini-3-flash-preview --max-cost-usd 1.5 "Cre
 ```
 
 ### 5. Open the Viewer
-Browse the objects you generated. First compile the records:
-```bash
-uv run articraft compile-all
-```
-Then start the viewer API and React frontend:
+Browse the objects you just generated. The local viewer API and React frontend can be started with:
 ```bash
 just viewer
 ```
 
-### 6. Contribute Data
+---
 
-A huge part of Articraft's mission is crowdsourcing a diverse, massive dataset of articulated 3D models. When you have generated objects that meet our quality bar, there are several pathways to contribute!
+## Contribute Data
 
-**A. Targeted Generation (CLI)**
-If you want to author specific items directly into a dataset category, use the harness:
-```bash
-uv run articraft dataset run "Create a backyard gas grill..." --category-slug grill
-```
+A huge part of Articraft's mission is crowdsourcing a diverse, massive dataset of articulated 3D models. We welcome generation via our CLI, batch processing, or through external AI agents (like Claude Code or Codex). 
 
-**B. Large-Scale Batch Generation**
-For contributing hundreds or thousands of variations, we lean heavily on automated batch specs. See our [Dataset Generation Guide](docs/dataset_generation.md) to learn how to drive batch curation.
+For full details on our data pipelines, generation guides, and opening pull requests, please read the complete **[Data Contribution Workflow in CONTRIBUTING.md](CONTRIBUTING.md)**.
 
-**C. No API Keys? Crowdsource with Claude Code or Codex**
-If you don't have API keys set up, or prefer to use external AI agents, simply point Claude Code, Codex, or Cursor to this repository! Just ask the agent to follow our authoring guidelines:
-```text
-Create a realistic articulated washing machine and add it to the Articraft dataset. Follow EXTERNAL_AGENT_DATA.md.
-```
-Your external agent will orchestrate the authoring, compilation, validation, and curation automatically behind the scenes. Once it finishes, open a Pull Request with the finalized record directory to contribute it upstream!
-
-Before submitting your PR, make sure to rate all assets that you generate in the viewer!
-
-For full details on opening pull requests, visual rating expectations, and our data pipelines, please read the complete **[Data Contribution Workflow in CONTRIBUTING.md](CONTRIBUTING.md)**.
-
-**Data Usage & Licensing**
+**Data Usage & Licensing**  
 By contributing data to the Articraft project, you acknowledge and agree that your submissions will be used to build, evaluate, and improve machine learning models, and will be distributed publicly as part of our datasets. You explicitly agree that all contributed data is released under the **[Creative Commons Attribution 4.0 International (CC-BY 4.0)](https://creativecommons.org/licenses/by/4.0/)** license.
 
 ---
 
 ## Documentation & Advanced Usage
-
-Articraft scales to massive pipelines using CSV batch specifications. For detailed architectural background and how to run dataset workflows, see our documentation:
 
 - **[Architecture & Project Structure](docs/architecture.md)**
 - **[Dataset Generation & Batch Processing](docs/dataset_generation.md)**
