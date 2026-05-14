@@ -71,9 +71,6 @@ By contributing data to the Articraft project, you acknowledge and agree that yo
 - **[Contributing Standards & Workflow](CONTRIBUTING.md)**
 - **[Security Policy](SECURITY.md)**
 
-## Contributing
-We welcome improvements to Articraft! Please refer to the [Contributor Guidelines](CONTRIBUTING.md) to get started on setting up a dev environment and submitting Pull Requests.
-
 ## Citation
 
 ```bibtex
@@ -85,3 +82,5 @@ We welcome improvements to Articraft! Please refer to the [Contributor Guideline
   howpublished = {\url{https://github.com/mattzh72/articraft}}
 }
 ```
+
+This repository is licensed under the [Apache-2.0 License](LICENSE).
