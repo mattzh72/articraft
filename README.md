@@ -10,6 +10,8 @@
 
 Articraft transforms the creation of articulated 3D assets into a programmatic, code-generation workflow powered by LLMs. Engineered for large-scale dataset generation, it bypasses heavyweight manual tools to rapidly produce objects with semantic parts, robust geometry, and physical joints.
 
+![Articraft viewer showing an articulated desk lamp with joint controls and dataset metadata](docs/images/viewer-demo.png)
+
 > **Security Note:** Articraft compiles and inspects generated records by executing their `model.py` files as Python code. Only run generated records and model scripts from trusted sources.
 
 ---
