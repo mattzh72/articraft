@@ -6,6 +6,8 @@
 
 **An Agentic System for Scalable Articulated 3D Asset Generation.**
 
+[Paper](https://arxiv.org/abs/2605.15187) | [Project Page](https://articraft3d.github.io/)
+
 Articraft transforms the creation of articulated 3D assets into a programmatic, code-generation workflow powered by LLMs. Engineered for large-scale dataset generation, it bypasses heavyweight manual tools to rapidly produce objects with semantic parts, robust geometry, and physical joints.
 
 > **Security Note:** Articraft compiles and inspects generated records by executing their `model.py` files as Python code. Only run generated records and model scripts from trusted sources.
@@ -83,12 +85,11 @@ By contributing data to the Articraft project, you acknowledge and agree that yo
 ## Citation
 
 ```bibtex
-@misc{zhou2026articraft,
-  title = {{Articraft}: An Agentic System for Scalable Articulated 3D Asset Generation},
-  author = {Zhou, Matt and Li, Ruining and Lyu, Xiaoyang and Song, Zhaomou and Huang, Zhening and Zheng, Chuanxia and Rupprecht, Christian and Vedaldi, Andrea and Wu, Shangzhe},
-  year = {2026},
-  note = {Preprint},
-  howpublished = {\url{https://github.com/mattzh72/articraft}}
+@article{zhou2026articraft,
+  title     = {Articraft: An Agentic System for Scalable Articulated 3D Asset Generation},
+  author    = {Zhou, Matt and Li, Ruining and Lyu, Xiaoyang and Song, Zhaomou and Huang, Zhening and Zheng, Chuanxia and Rupprecht, Christian and Vedaldi, Andrea and Wu, Shangzhe},
+  journal   = {arXiv preprint arXiv:2605.15187},
+  year      = {2026}
 }
 ```
 
