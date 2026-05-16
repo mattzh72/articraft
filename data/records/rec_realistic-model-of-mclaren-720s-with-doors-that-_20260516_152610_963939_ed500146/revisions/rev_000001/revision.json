@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "record_id": "rec_realistic-model-of-mclaren-720s-with-doors-that-_20260516_152610_963939_ed500146",
+  "revision_id": "rev_000001",
+  "created_at": "2026-05-16T15:26:10Z",
+  "prompt_kind": "single_prompt",
+  "prompt_sha256": "44e148270489e817690396941c47aa90d8492d13471eb9f979aee488ec6d9618",
+  "source": {
+    "run_id": null,
+    "prompt_batch_id": null,
+    "batch_spec_id": null,
+    "row_id": null,
+    "prompt_index": null
+  },
+  "generation": {
+    "provider": "openai",
+    "model_id": "gpt-5.5-2026-04-23",
+    "thinking_level": "high",
+    "openai_transport": null,
+    "openai_reasoning_summary": null,
+    "max_turns": null,
+    "max_cost_usd": null
+  },
+  "artifacts": {
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
+    "prompt_series_json": null,
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": null,
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
+  },
+  "hashes": {
+    "prompt_sha256": "44e148270489e817690396941c47aa90d8492d13471eb9f979aee488ec6d9618",
+    "model_py_sha256": "a5226110bbd7f7206e2cc05f9861b7d6ae419d337521e12ed0aa21ee22f8ea23"
+  },
+  "run_summary": {
+    "turn_count": 0,
+    "tool_call_count": 0,
+    "compile_attempt_count": 0,
+    "final_status": "draft"
+  },
+  "parent": null,
+  "seed": null,
+  "inherited_inputs": []
+}
