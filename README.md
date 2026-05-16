@@ -29,6 +29,10 @@ From the repo root, run:
 ```bash
 just setup
 ```
+To set up a checkout from another working directory, pass the repository root:
+```bash
+just setup ./path/to/checkout
+```
 
 ### 3. Add API Keys
 Open `.env` and set one or more provider keys (e.g. `OPENAI_API_KEY`, `GEMINI_API_KEYS`, `ANTHROPIC_API_KEYS`).
