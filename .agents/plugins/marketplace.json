@@ -1,0 +1,20 @@
+{
+  "name": "articraft-local",
+  "interface": {
+    "displayName": "Articraft Local"
+  },
+  "plugins": [
+    {
+      "name": "articraft",
+      "source": {
+        "source": "local",
+        "path": "./plugins/articraft"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Engineering"
+    }
+  ]
+}

@@ -1,0 +1,43 @@
+{
+  "name": "articraft",
+  "version": "0.1.0",
+  "description": "Codex workflows for authoring, checking, curating, and viewing Articraft articulated 3D assets.",
+  "author": {
+    "name": "Articraft contributors",
+    "url": "https://github.com/mattzh72/articraft"
+  },
+  "homepage": "https://articraft3d.github.io/",
+  "repository": "https://github.com/mattzh72/articraft",
+  "license": "Apache-2.0",
+  "keywords": [
+    "articraft",
+    "3d-assets",
+    "articulation",
+    "cad",
+    "dataset",
+    "viewer"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Articraft",
+    "shortDescription": "Author and inspect articulated 3D assets",
+    "longDescription": "Articraft gives Codex repo-specific workflows for creating, editing, validating, curating, and viewing articulated 3D asset records through the supported Articraft CLI and SDK documentation.",
+    "developerName": "Articraft contributors",
+    "category": "Engineering",
+    "capabilities": [
+      "Interactive",
+      "Read",
+      "Write"
+    ],
+    "websiteURL": "https://articraft3d.github.io/",
+    "privacyPolicyURL": "https://github.com/mattzh72/articraft/blob/main/SECURITY.md",
+    "termsOfServiceURL": "https://github.com/mattzh72/articraft/blob/main/LICENSE",
+    "defaultPrompt": [
+      "Create an articulated Articraft object",
+      "Check this Articraft record",
+      "Open the Articraft viewer"
+    ],
+    "brandColor": "#2563EB",
+    "screenshots": []
+  }
+}
