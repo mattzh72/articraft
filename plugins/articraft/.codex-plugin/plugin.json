@@ -1,7 +1,7 @@
 {
   "name": "articraft",
   "version": "0.1.0",
-  "description": "Codex workflows for authoring, checking, curating, and viewing Articraft articulated 3D assets.",
+  "description": "Create articulated 3D assets through Articraft's programmatic, LLM-powered code-generation workflow for semantic parts, robust geometry, physical joints, and large-scale datasets.",
   "author": {
     "name": "Articraft contributors",
     "url": "https://github.com/mattzh72/articraft"
@@ -20,8 +20,8 @@
   "skills": "./skills/",
   "interface": {
     "displayName": "Articraft",
-    "shortDescription": "Author and inspect articulated 3D assets",
-    "longDescription": "Articraft gives Codex repo-specific workflows for creating, editing, validating, curating, and viewing articulated 3D asset records through the supported Articraft CLI and SDK documentation.",
+    "shortDescription": "Create articulated 3D assets with LLMs",
+    "longDescription": "Articraft transforms articulated 3D asset creation into a programmatic code-generation workflow powered by LLMs. Engineered for large-scale dataset generation, it helps Codex rapidly author, validate, curate, and inspect objects with semantic parts, robust geometry, and physical joints while bypassing heavyweight manual tools.",
     "developerName": "Articraft contributors",
     "category": "Engineering",
     "capabilities": [
