@@ -65,6 +65,20 @@ Forking creates a new child record and leaves the parent unchanged. See [Editing
 
 ---
 
+## Codex Plugin Setup
+
+This repository includes a repo-local Codex plugin under `plugins/articraft/` for Articraft-specific Codex workflows.
+
+After completing the Quickstart setup above on a new computer:
+
+1. Open this repository in Codex.
+2. Restart or reload Codex so it can discover `.agents/plugins/marketplace.json`.
+3. In the Codex plugin or marketplace UI, install **Articraft** from **Articraft Local**.
+
+The plugin itself adds Codex guidance and does not introduce any additional credential requirements beyond the Articraft workflows you choose to run.
+
+---
+
 ## Contribute Data
 
 A huge part of Articraft's mission is crowdsourcing a diverse, massive dataset of articulated 3D models. We welcome generation via our CLI, batch processing, or through external AI agents (like Claude Code or Codex). 
