@@ -35,21 +35,21 @@ uv-version-ensure:
       uv --no-config self update "$required"; \
     fi
 
-setup:
+setup root='.':
     just uv-version-ensure
     # Create a local env template once; never overwrite an existing secrets file.
-    uv run --frozen articraft env bootstrap
-    uv sync --frozen --group dev
-    uv run --frozen pre-commit install --hook-type pre-commit --hook-type pre-push
-    uv run --frozen articraft hooks install
+    uv run --frozen --directory {{ quote(root) }} articraft env bootstrap
+    uv sync --frozen --group dev --directory {{ quote(root) }}
+    uv run --frozen --directory {{ quote(root) }} pre-commit install --hook-type pre-commit --hook-type pre-push
+    uv run --frozen --directory {{ quote(root) }} articraft hooks install
     @if command -v npm >/dev/null 2>&1; then \
-        npm --prefix viewer/web ci; \
-        npm --prefix viewer/web run typecheck; \
+        npm --prefix {{ quote(root + "/viewer/web") }} ci; \
+        npm --prefix {{ quote(root + "/viewer/web") }} run typecheck; \
     else \
         echo "npm not found; skipping viewer/web dependency install."; \
         echo "Install Node.js and npm to run the viewer and frontend hooks."; \
     fi
-    uv run --frozen articraft init
+    uv run --frozen --directory {{ quote(root) }} articraft init
 
 hooks-install:
     just uv-version-check
