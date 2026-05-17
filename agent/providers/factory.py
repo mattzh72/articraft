@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import os
+import shutil
 from collections.abc import Callable
 from dataclasses import dataclass, field
 
@@ -9,6 +11,7 @@ from agent.providers.anthropic import (
     anthropic_api_key_from_env,
 )
 from agent.providers.base import ProviderClient
+from agent.providers.codex_cli import DEFAULT_CODEX_CLI_MODEL, CodexCliLLM
 from agent.providers.gemini import (
     DEFAULT_GEMINI_MODEL,
     GeminiLLM,
@@ -54,6 +57,7 @@ class ProviderConfig:
 @dataclass(slots=True, frozen=True)
 class ProviderConstructors:
     anthropic: Callable[..., ProviderClient] = AnthropicLLM
+    codex_cli: Callable[..., ProviderClient] = CodexCliLLM
     gemini: Callable[..., ProviderClient] = GeminiLLM
     openai: Callable[..., ProviderClient] = OpenAILLM
     openrouter: Callable[..., ProviderClient] = OpenRouterLLM
@@ -74,6 +78,8 @@ def default_model_id(config: ProviderConfig) -> str:
     provider = _normalize_provider_name(config.provider)
     if provider is ProviderName.ANTHROPIC:
         return DEFAULT_ANTHROPIC_MODEL
+    if provider is ProviderName.CODEX_CLI:
+        return os.environ.get("ARTICRAFT_CODEX_MODEL", "").strip() or DEFAULT_CODEX_CLI_MODEL
     if provider is ProviderName.GEMINI:
         return DEFAULT_GEMINI_MODEL
     if provider is ProviderName.OPENROUTER:
@@ -94,6 +100,12 @@ def create_provider_client(
     provider_constructors = constructors or ProviderConstructors()
     if provider is ProviderName.ANTHROPIC:
         return provider_constructors.anthropic(
+            model_id=model_id,
+            thinking_level=config.thinking_level,
+            dry_run=dry_run,
+        )
+    if provider is ProviderName.CODEX_CLI:
+        return provider_constructors.codex_cli(
             model_id=model_id,
             thinking_level=config.thinking_level,
             dry_run=dry_run,
@@ -129,6 +141,14 @@ def validate_provider_credentials(provider: str) -> None:
         if not anthropic_api_key_from_env():
             raise ValueError(
                 "Anthropic credentials are required. Set ANTHROPIC_API_KEY or ANTHROPIC_API_KEYS."
+            )
+        return
+    if provider_norm is ProviderName.CODEX_CLI:
+        binary = os.environ.get("ARTICRAFT_CODEX_CLI_BIN", "codex").strip() or "codex"
+        if shutil.which(binary) is None:
+            raise ValueError(
+                "Codex CLI provider requires the `codex` executable. "
+                "Install/login to Codex CLI or set ARTICRAFT_CODEX_CLI_BIN."
             )
         return
     if provider_norm is ProviderName.GEMINI:

@@ -3,7 +3,7 @@ from __future__ import annotations
 import asyncio
 import logging
 from pathlib import Path
-from typing import Protocol
+from typing import Any, Protocol
 
 from fastapi import HTTPException
 
@@ -175,12 +175,15 @@ class ViewerFileResolver:
         self._raise_if_record_needs_hydration(record_id)
         record_dir = self.repo.layout.record_dir(record_id)
         record = self.repo.read_json(self.repo.layout.record_metadata_path(record_id))
-        provenance = self.repo.read_json(
-            active_provenance_path(self.repo, record_id, record=record)
-        )
 
         if not record_dir.exists() or not isinstance(record, dict):
             raise HTTPException(status_code=404, detail=f"Record not found: {record_id}")
+        if self._record_trace_unavailable(record):
+            raise HTTPException(status_code=404, detail=f"Trace file not found: {file_path}")
+
+        provenance = self.repo.read_json(
+            active_provenance_path(self.repo, record_id, record=record)
+        )
 
         requested_path = self._validated_relative_path(file_path)
         if len(requested_path.parts) != 1:
@@ -192,7 +195,11 @@ class ViewerFileResolver:
 
         if requested_name == TRAJECTORY_FILENAME:
             try:
-                target = unroll_record_trajectory(self.repo, record_id, revision_id=revision_id)
+                target = unroll_record_trajectory(
+                    self.repo,
+                    record_id,
+                    revision_id=revision_id if record.get("schema_version") == 3 else None,
+                )
             except FileNotFoundError as exc:
                 raise HTTPException(
                     status_code=404, detail=f"Trace file not found: {file_path}"
@@ -277,6 +284,12 @@ class ViewerFileResolver:
     ) -> tuple[Path, str]:
         self._validate_record_id(record_id)
         self._raise_if_record_needs_hydration(record_id)
+        record = self.repo.read_json(self.repo.layout.record_metadata_path(record_id))
+        if not isinstance(record, dict):
+            raise HTTPException(status_code=404, detail=f"Record not found: {record_id}")
+        if self._record_trace_unavailable(record):
+            raise HTTPException(status_code=404, detail=f"Trace file not found: {file_path}")
+
         requested_path = self._validated_relative_path(file_path)
         if len(requested_path.parts) != 1:
             raise HTTPException(status_code=400, detail="Invalid file path")
@@ -300,6 +313,10 @@ class ViewerFileResolver:
         if not target.exists() or not target.is_file():
             raise HTTPException(status_code=404, detail=f"Trace file not found: {file_path}")
         return target, trace_media_type(target)
+
+    def _record_trace_unavailable(self, record: dict[str, Any]) -> bool:
+        creator = record.get("creator")
+        return isinstance(creator, dict) and creator.get("trace_available") is False
 
     def resolve_staging_root(self, run_id: str, record_id: str) -> Path:
         self._validate_run_id(run_id)

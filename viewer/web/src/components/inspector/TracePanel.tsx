@@ -55,7 +55,7 @@ export function TracePanel({ cost, traceText, record = null }: TracePanelProps):
         ? String(record.turn_count)
         : "--";
 
-  const hasTrajectory = Boolean(cost || traceText);
+  const hasTrajectory = Boolean(traceText?.trim());
 
   return (
     <section>

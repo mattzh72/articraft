@@ -37,6 +37,7 @@ from storage.records import RecordStore
 from storage.repo import StorageRepo
 from storage.revisions import (
     INITIAL_REVISION_ID,
+    active_cost_path,
     active_inputs_dir,
     active_model_path,
     active_prompt_path,
@@ -278,16 +279,156 @@ def _validate_external_record(repo: StorageRepo, record_id: str) -> list[str]:
                 continue
             if not (repo.layout.record_dir(record_id) / value).exists():
                 errors.append(f"artifacts.{key} references missing path {value!r}")
+        if artifacts.get("cost_json") not in (None, ""):
+            errors.append("artifacts.cost_json must be unset for external records")
+
+    source = record.get("source")
+    if isinstance(source, dict) and source.get("run_id") is not None:
+        errors.append("source.run_id must be null for external records")
 
     compile_report = repo.layout.record_materialization_compile_report_path(record_id)
     if not compile_report.exists():
         errors.append(f"missing compile report: {compile_report}")
+    else:
+        report = repo.read_json(compile_report)
+        if not isinstance(report, dict):
+            errors.append(f"compile report must be a JSON object: {compile_report}")
+        else:
+            if report.get("record_id") != record_id:
+                errors.append("compile report record_id must match the checked record")
+            if report.get("status") != "success":
+                errors.append("compile report status must be 'success'")
+            if not isinstance(report.get("urdf_path"), str) or not report.get("urdf_path"):
+                errors.append("compile report urdf_path must be set")
+            checks_run = report.get("checks_run")
+            if not isinstance(checks_run, list) or not checks_run:
+                errors.append("compile report checks_run must be a non-empty list")
+            metrics = report.get("metrics")
+            if not isinstance(metrics, dict):
+                errors.append("compile report metrics must be an object")
+            else:
+                if metrics.get("compile_level") != "full":
+                    errors.append("compile report metrics.compile_level must be 'full'")
+                if metrics.get("validation_level") != "full":
+                    errors.append("compile report metrics.validation_level must be 'full'")
 
     traces_dir = active_traces_dir(repo, record_id, record=record)
     if traces_dir.exists() and any(traces_dir.iterdir()):
         errors.append("external records must not contain Articraft agent traces")
+    cost_path = active_cost_path(repo, record_id, record=record)
+    if cost_path.exists():
+        errors.append("external records must not contain Articraft cost telemetry")
+
+    provenance_path = active_provenance_path(repo, record_id, record=record)
+    provenance = repo.read_json(provenance_path)
+    if not isinstance(provenance, dict):
+        errors.append(f"missing provenance: {provenance_path}")
+    else:
+        run_summary = provenance.get("run_summary")
+        if not isinstance(run_summary, dict):
+            errors.append("provenance.run_summary must be an object")
+        else:
+            for key in ("turn_count", "tool_call_count", "compile_attempt_count"):
+                if run_summary.get(key) is not None:
+                    errors.append(f"provenance.run_summary.{key} must be null")
 
     return errors
+
+
+def _repo_relative(repo: StorageRepo, path: Path) -> str:
+    try:
+        return path.resolve().relative_to(repo.root).as_posix()
+    except ValueError:
+        return str(path)
+
+
+def _external_quality_report(
+    repo: StorageRepo,
+    record_id: str,
+    *,
+    validation_errors: list[str],
+    checked_at: str | None = None,
+) -> dict[str, Any]:
+    compile_report_path = repo.layout.record_materialization_compile_report_path(record_id)
+    compile_report = repo.read_json(compile_report_path)
+    report = compile_report if isinstance(compile_report, dict) else {}
+    metrics = report.get("metrics") if isinstance(report.get("metrics"), dict) else {}
+    warnings = report.get("warnings") if isinstance(report.get("warnings"), list) else []
+    checks_run = report.get("checks_run") if isinstance(report.get("checks_run"), list) else []
+    passed = not validation_errors and report.get("status") == "success"
+    return {
+        "schema_version": 1,
+        "checked_at": checked_at or _utc_now(),
+        "record_id": record_id,
+        "workflow": "external_agent_quality_parity",
+        "compile": {
+            "target": "full",
+            "validate": True,
+            "strict_geom_qc": True,
+            "report_path": (
+                _repo_relative(repo, compile_report_path) if compile_report_path.exists() else None
+            ),
+            "status": report.get("status"),
+            "record_id": report.get("record_id"),
+            "urdf_path": report.get("urdf_path"),
+            "checks_run": checks_run,
+            "warning_count": len(warnings),
+            "warnings": warnings,
+            "metrics": metrics,
+        },
+        "validation": {
+            "passed": passed,
+            "error_count": len(validation_errors),
+            "errors": list(validation_errors),
+        },
+        "telemetry": {
+            "source": "external_agent",
+            "trace_available": False,
+            "cost_available": False,
+            "turn_count": None,
+            "tool_call_count": None,
+            "compile_attempt_count": None,
+        },
+    }
+
+
+def _write_external_quality_report(
+    repo: StorageRepo,
+    record_id: str,
+    *,
+    validation_errors: list[str],
+) -> dict[str, Any]:
+    record = repo.read_json(repo.layout.record_metadata_path(record_id))
+    if not isinstance(record, dict):
+        raise ValueError(f"Missing record metadata: {repo.layout.record_metadata_path(record_id)}")
+    quality = _external_quality_report(repo, record_id, validation_errors=validation_errors)
+
+    provenance_path = active_provenance_path(repo, record_id, record=record)
+    provenance = repo.read_json(provenance_path)
+    if isinstance(provenance, dict):
+        provenance["external_quality"] = quality
+        repo.write_json(provenance_path, provenance)
+
+    revision_id = active_revision_id(repo, record_id, record=record)
+    revision_path = repo.layout.record_revision_metadata_path(record_id, revision_id)
+    revision = repo.read_json(revision_path)
+    if isinstance(revision, dict):
+        revision["external_quality"] = quality
+        repo.write_json(revision_path, revision)
+
+    return quality
+
+
+def _print_external_quality_summary(record_id: str, quality: dict[str, Any]) -> None:
+    validation = quality.get("validation") if isinstance(quality.get("validation"), dict) else {}
+    compile_info = quality.get("compile") if isinstance(quality.get("compile"), dict) else {}
+    print(
+        "external quality report "
+        f"record_id={record_id} "
+        f"passed={bool(validation.get('passed'))} "
+        f"compile_status={compile_info.get('status') or ''} "
+        f"warnings={compile_info.get('warning_count') or 0}"
+    )
 
 
 def _refresh_external_record(repo: StorageRepo, record_id: str, *, final_status: str) -> None:
@@ -379,9 +520,9 @@ def _external_provenance(
             uv_lock_sha256=None,
         ),
         run_summary=RunSummary(
-            turn_count=0,
-            tool_call_count=0,
-            compile_attempt_count=0,
+            turn_count=None,
+            tool_call_count=None,
+            compile_attempt_count=None,
             final_status="external_edit_draft",
         ),
     )
@@ -924,9 +1065,14 @@ def main(argv: list[str] | None = None) -> int:
 
     if args.command == "check":
         status = _compile_record(args.repo_root, record_dir, target="full", validate=True)
+        compile_errors: list[str] = []
+        if status != 0:
+            compile_errors.append(f"strict external compile exited with status {status}")
+        errors = compile_errors + _validate_external_record(repo, record_id)
+        quality = _write_external_quality_report(repo, record_id, validation_errors=errors)
+        _print_external_quality_summary(record_id, quality)
         if status != 0:
             return status
-        errors = _validate_external_record(repo, record_id)
         if errors:
             for error in errors:
                 print(error)
@@ -936,9 +1082,14 @@ def main(argv: list[str] | None = None) -> int:
 
     if args.command == "finalize":
         status = _compile_record(args.repo_root, record_dir, target="full", validate=True)
+        compile_errors = []
+        if status != 0:
+            compile_errors.append(f"strict external compile exited with status {status}")
+        errors = compile_errors + _validate_external_record(repo, record_id)
+        quality = _write_external_quality_report(repo, record_id, validation_errors=errors)
+        _print_external_quality_summary(record_id, quality)
         if status != 0:
             return status
-        errors = _validate_external_record(repo, record_id)
         if errors:
             for error in errors:
                 print(error)

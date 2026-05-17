@@ -42,6 +42,13 @@ def test_system_prompt_resolution_variants() -> None:
     )
     assert gemini_resolved.name == GEMINI_DESIGNER_PROMPT_NAME
 
+    codex_cli_resolved = resolve_system_prompt_path(
+        str(Path("agent/prompts/generated") / DESIGNER_PROMPT_NAME),
+        provider="codex-cli",
+        repo_root=repo_root,
+    )
+    assert codex_cli_resolved.name == GEMINI_DESIGNER_PROMPT_NAME
+
 
 def test_first_turn_runtime_guidance_is_shared() -> None:
     expected = (
