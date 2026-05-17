@@ -10,7 +10,7 @@ from pathlib import Path
 from shutil import which
 
 from agent import runner as agent_runner
-from agent.providers.factory import infer_provider_from_model_id
+from agent.providers.factory import ProviderConfig, default_model_id, infer_provider_from_model_id
 from articraft.values import PROVIDER_VALUES, THINKING_LEVEL_VALUES
 from cli import compile_all as compile_all_cli
 from cli import compile_record as compile_record_cli
@@ -38,13 +38,26 @@ def _infer_provider(model_id: str) -> str:
         return provider
     raise ValueError(
         f"Unable to infer provider for model '{model_id}'. "
-        "Pass --provider explicitly or use a known OpenAI, Gemini, Anthropic, or OpenRouter model ID."
+        "Pass --provider explicitly or use a known OpenAI, Gemini, Anthropic, "
+        "OpenRouter, or Codex CLI model ID."
     )
 
 
 def _model_and_provider(args: argparse.Namespace) -> tuple[str, str]:
+    if args.provider:
+        provider = str(args.provider)
+        model_id = str(
+            args.model
+            or default_model_id(
+                ProviderConfig(
+                    provider=provider,
+                    thinking_level=str(getattr(args, "thinking_level", DEFAULT_THINKING)),
+                )
+            )
+        )
+        return model_id, provider
     model_id = str(args.model or DEFAULT_MODEL)
-    provider = str(args.provider or _infer_provider(model_id))
+    provider = _infer_provider(model_id)
     return model_id, provider
 
 
@@ -566,7 +579,7 @@ def _add_repo_root(parser: argparse.ArgumentParser) -> None:
 
 def _add_generation_options(parser: argparse.ArgumentParser) -> None:
     parser.add_argument("--provider", choices=PROVIDER_VALUES)
-    parser.add_argument("--model", default=DEFAULT_MODEL, help="Model ID to use.")
+    parser.add_argument("--model", default=None, help="Model ID to use.")
     parser.add_argument(
         "--thinking-level",
         "--thinking",

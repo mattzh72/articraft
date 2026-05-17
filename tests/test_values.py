@@ -18,6 +18,8 @@ from articraft.values import (
     [
         ("gpt-5.5-2026-04-23", ProviderName.OPENAI),
         ("claude-sonnet-4-5", ProviderName.ANTHROPIC),
+        ("codex-cli-default", ProviderName.CODEX_CLI),
+        ("codex/gpt-5.5", ProviderName.CODEX_CLI),
         ("gemini-3-flash-preview", ProviderName.GEMINI),
         ("openai/gpt-5.4", ProviderName.OPENROUTER),
     ],

@@ -21,7 +21,7 @@
   "interface": {
     "displayName": "Articraft",
     "shortDescription": "Create articulated 3D assets with LLMs",
-    "longDescription": "Articraft transforms articulated 3D asset creation into a programmatic code-generation workflow powered by LLMs. Engineered for large-scale dataset generation, it helps Codex rapidly author, validate, curate, and inspect objects with semantic parts, robust geometry, and physical joints while bypassing heavyweight manual tools.",
+    "longDescription": "Articraft transforms articulated 3D asset creation into a programmatic code-generation workflow powered by LLMs. Engineered for large-scale dataset generation, it helps Codex launch Articraft-managed generation, including no-key Codex CLI runs, then validate, curate, and inspect objects with semantic parts, robust geometry, and physical joints while bypassing heavyweight manual tools.",
     "developerName": "Articraft contributors",
     "category": "Engineering",
     "capabilities": [

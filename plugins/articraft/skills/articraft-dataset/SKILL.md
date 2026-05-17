@@ -56,8 +56,10 @@ category_slug,prompt,provider,model_id,thinking_level,max_turns
 Supported providers:
 
 ```text
-openai, gemini, anthropic, openrouter
+openai, gemini, anthropic, openrouter, codex-cli
 ```
+
+Use `codex-cli` when the user wants no-key Codex generation while keeping Articraft's internal harness loop. For `codex-cli`, use `model_id=codex-cli-default` unless the user requests a specific Codex model.
 
 Supported thinking levels:
 
