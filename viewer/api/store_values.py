@@ -99,3 +99,12 @@ def _cost_totals(cost: Any) -> tuple[float | None, int | None, int | None]:
         output_tokens = _coerce_int(tokens.get("candidates_tokens"))
 
     return total_cost_usd, input_tokens, output_tokens
+
+
+def _cost_turn_count(cost: Any) -> int | None:
+    if not isinstance(cost, dict):
+        return None
+    turns = cost.get("turns")
+    if not isinstance(turns, list):
+        return None
+    return len(turns)
