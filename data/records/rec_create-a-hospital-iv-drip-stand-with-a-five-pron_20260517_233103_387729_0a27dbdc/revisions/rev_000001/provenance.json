@@ -1,0 +1,34 @@
+{
+  "schema_version": 2,
+  "record_id": "rec_create-a-hospital-iv-drip-stand-with-a-five-pron_20260517_233103_387729_0a27dbdc",
+  "generation": {
+    "provider": "anthropic",
+    "model_id": "claude-sonnet-4-6",
+    "thinking_level": "high",
+    "openai_transport": null,
+    "openai_reasoning_summary": null,
+    "max_turns": 100,
+    "max_cost_usd": 2.0
+  },
+  "prompting": {
+    "system_prompt_file": "designer_system_prompt_anthropic.txt",
+    "system_prompt_sha256": "4d8a1e009f320f29f830e795aa84e47e3fd31d01ffe3c7addd5344701029b730"
+  },
+  "sdk": {
+    "sdk_package": "sdk",
+    "sdk_version": "workspace",
+    "sdk_fingerprint": null
+  },
+  "environment": {
+    "python_version": "3.12.12",
+    "platform": "darwin-arm64",
+    "git_commit": "20fff894fffce596b79b8980a72b652e9aff92e9",
+    "uv_lock_sha256": "b742f5a69ccf0abb24b340b7f92d39666c6b95f1d59ccacafbb825ce39dcf8ee"
+  },
+  "run_summary": {
+    "turn_count": 14,
+    "tool_call_count": 17,
+    "compile_attempt_count": 2,
+    "final_status": "success"
+  }
+}
