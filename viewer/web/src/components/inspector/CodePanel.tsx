@@ -1,13 +1,10 @@
 import { useCallback, useEffect, useMemo, useRef, useState, type JSX } from "react";
-import { LightAsync as SyntaxHighlighter } from "react-syntax-highlighter";
-import python from "react-syntax-highlighter/dist/esm/languages/hljs/python";
-import xml from "react-syntax-highlighter/dist/esm/languages/hljs/xml";
-import { atomOneLight } from "react-syntax-highlighter/dist/esm/styles/hljs";
 
 import { useViewer } from "@/lib/viewer-context";
 import { fetchRecordTextFile, fetchStagingTextFile } from "@/lib/api";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
+import { codeTheme, SyntaxHighlighter } from "@/components/inspector/syntax-highlighting";
 
 type CodeTab = "model.py" | "model.urdf";
 type CodeLanguage = "python" | "xml";
@@ -25,18 +22,6 @@ const INITIAL_REQUEST_IDS: Record<CodeTab, number> = {
   "model.py": 0,
   "model.urdf": 0,
 };
-
-const codeTheme = {
-  ...atomOneLight,
-  hljs: {
-    ...atomOneLight.hljs,
-    background: "transparent",
-    color: "#1f2937",
-  },
-};
-
-SyntaxHighlighter.registerLanguage("python", python);
-SyntaxHighlighter.registerLanguage("xml", xml);
 
 function getLanguage(tab: CodeTab): CodeLanguage {
   return tab === "model.py" ? "python" : "xml";

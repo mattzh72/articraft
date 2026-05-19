@@ -5,22 +5,14 @@ from dataclasses import dataclass, field
 from pathlib import Path
 
 from storage.repo import StorageRepo
-
-_AUTHOR_ALIASES = {
-    "mattzh72": "mattzh72",
-    "matthew zhou": "mattzh72",
-    "zhaomou song": "Zhaomou Song",
-    "ruiningli": "RuiningLi",
-    "ruining li": "RuiningLi",
-    "shawlyu": "shawlyu",
-}
+from storage.revisions import active_model_path
 
 
 def canonicalize_record_author(value: str | None) -> str | None:
     text = str(value or "").strip()
     if not text:
         return None
-    return _AUTHOR_ALIASES.get(text.casefold(), text)
+    return text
 
 
 def resolve_current_record_author(repo_root: Path) -> str | None:
@@ -80,13 +72,7 @@ def _candidate_record_ids(
 
 
 def _record_model_path(repo: StorageRepo, record_id: str, record: dict) -> Path:
-    artifacts = record.get("artifacts")
-    model_name = (
-        str(artifacts.get("model_py"))
-        if isinstance(artifacts, dict) and artifacts.get("model_py")
-        else "model.py"
-    )
-    return repo.layout.record_dir(record_id) / model_name
+    return active_model_path(repo, record_id, record=record)
 
 
 def _pathspec_for_repo_path(repo_root: Path, path: Path) -> str:

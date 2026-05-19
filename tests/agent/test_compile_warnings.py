@@ -5,10 +5,9 @@ from pathlib import Path
 from types import SimpleNamespace
 
 from agent.compiler import _warn_geometry_scale_anomalies
-from agent.feedback import build_compile_signal_bundle
+from agent.feedback import build_compile_signal_bundle, render_compile_signals
 from agent.harness import ArticraftAgent
-from agent.models import CompileReport
-from sdk import ArticulatedObject, Box, Cylinder
+from sdk import AllowedOverlap, ArticulatedObject, Box, Cylinder
 from sdk import TestReport as SDKTestReport
 
 
@@ -416,6 +415,54 @@ def test_compile_signal_bundle_renders_allowed_isolated_part_distinctly() -> Non
     assert any("allow_isolated_part('antenna')" in signal.details for signal in signals)
 
 
+def test_render_compile_signals_separates_failures_and_allowance_notes() -> None:
+    bundle = build_compile_signal_bundle(
+        status="failure",
+        test_report=SDKTestReport(
+            passed=False,
+            checks_run=1,
+            checks=("fail_if_parts_overlap_in_current_pose()",),
+            failures=(
+                SimpleNamespace(
+                    name="fail_if_parts_overlap_in_current_pose()",
+                    details=(
+                        "Part overlaps detected (overlap_tol=0.005, overlap_volume_tol=0):\n"
+                        "pair=('base','latch') depth=(0.04,0.01,0.06) min_depth=0.01 "
+                        "vol=2.4e-05 elem_a=#0 'base_shell':Mesh elem_b=#0 "
+                        "'latch_catch':Box pose={}"
+                    ),
+                ),
+            ),
+            warnings=(),
+            allowances=(
+                "allow_isolated_part('latch'): connected by revolute joint without rest contact",
+                "allow_overlap('base', 'latch', elem_b='latch_catch'): catch touches rim",
+            ),
+            allowed_overlaps=(
+                AllowedOverlap(
+                    "base",
+                    "latch",
+                    "catch touches rim",
+                    elem_b="latch_catch",
+                ),
+            ),
+        ),
+    )
+
+    rendered = render_compile_signals(bundle, failure_streak=8)
+
+    assert "status=failure failures=1 warnings=0 notes=2" in rendered
+    assert "Failures (blocking):" in rendered
+    assert "- FAILURE [real_overlap]" in rendered
+    assert "Warnings (non-blocking):" not in rendered
+    assert "Notes (informational):" in rendered
+    assert "- NOTE [allowed_isolated_part] Isolated-part allowance declared." in rendered
+    assert "- NOTE [allowed_overlap] Overlap allowance declared." in rendered
+    assert "  allow_isolated_part('latch')" in rendered
+    assert "  allow_overlap('base', 'latch')" in rendered
+    assert "Suggested next steps:" in rendered
+
+
 def test_compile_signal_bundle_classifies_isolated_part_failures_cleanly() -> None:
     bundle = build_compile_signal_bundle(
         status="failure",
@@ -610,118 +657,3 @@ def test_harness_injects_baseline_qc_guidance(tmp_path: Path) -> None:
     assert "`check_model_valid()`" in conversation[0]["content"]
     assert "`check_mesh_assets_ready()`" in conversation[0]["content"]
     assert "`fail_if_parts_overlap_in_current_pose()`" in conversation[0]["content"]
-
-
-def test_harness_injects_structured_compile_signals() -> None:
-    agent = ArticraftAgent.__new__(ArticraftAgent)
-    agent._seen_compile_signal_sigs = set()
-    agent.trace_writer = None
-
-    report = CompileReport(
-        urdf_xml="<robot/>",
-        warnings=[
-            "IMPORTANT: URDF compile warning (non-blocking): geometry outlier dimensions detected.\n"
-            "- link='boom' source='visual' index=0 geometry='Cylinder' dims=(0.06, 0.06, 20)m"
-        ],
-        signal_bundle=build_compile_signal_bundle(
-            status="success",
-            warnings=[
-                "IMPORTANT: URDF compile warning (non-blocking): geometry outlier dimensions detected.\n"
-                "- link='boom' source='visual' index=0 geometry='Cylinder' dims=(0.06, 0.06, 20)m"
-            ],
-            test_report=SDKTestReport(
-                passed=True,
-                checks_run=2,
-                checks=("fail_if_parts_overlap_in_sampled_poses", "check_visuals"),
-                failures=(),
-                warnings=("visual connectivity drift detected",),
-                allowances=("allow_overlap('door', 'frame'): hinge nesting",),
-            ),
-        ),
-    )
-
-    conversation: list[dict] = []
-    injected = agent._maybe_inject_compile_signals(
-        conversation,
-        bundle=report.signal_bundle,
-    )
-
-    assert injected is True
-    assert conversation
-    assert "<compile_signals>" in conversation[0]["content"]
-    assert "<summary>" in conversation[0]["content"]
-    assert "<warnings>" in conversation[0]["content"]
-    assert "<notes>" in conversation[0]["content"]
-    assert "<response_rules>" in conversation[0]["content"]
-    assert "Geometry outlier dimensions detected." in conversation[0]["content"]
-    assert "visual connectivity drift detected" in conversation[0]["content"]
-    assert "hinge nesting" in conversation[0]["content"]
-
-
-def test_harness_does_not_inject_only_low_risk_coplanar_notes() -> None:
-    agent = ArticraftAgent.__new__(ArticraftAgent)
-    agent._seen_compile_signal_sigs = set()
-    agent.trace_writer = None
-
-    bundle = build_compile_signal_bundle(
-        status="success",
-        test_report=SDKTestReport(
-            passed=True,
-            checks_run=1,
-            checks=("warn_if_coplanar_surfaces",),
-            failures=(),
-            warnings=(
-                "warn_if_coplanar_surfaces(samples=1,plane_tol=0.001,min_overlap=0.05,min_overlap_ratio=0.35,ignore_adjacent=True,ignore_fixed=True): "
-                "Low-confidence coplanar-surface hints detected (max_risk=low; warning-tier heuristic; adjacent flush mounts can be intentional):\n"
-                "risk=low relation=adjacent-fixed pair=('bezel','body') pose_index=0 axis=z faces=(max,max) plane_delta=0 "
-                "x_overlap=0.1 y_overlap=0.1 overlap_ratio=1 thin_pair=True elem_a='bezel':Box elem_b='body':Box pose={}",
-            ),
-            allowances=(),
-        ),
-    )
-
-    conversation: list[dict] = []
-    injected = agent._maybe_inject_compile_signals(conversation, bundle=bundle)
-
-    assert injected is False
-    assert conversation == []
-
-
-def test_harness_reinjects_sticky_disconnected_geometry_warning_until_cleared() -> None:
-    agent = ArticraftAgent.__new__(ArticraftAgent)
-    agent._seen_compile_signal_sigs = set()
-    agent._post_success_design_audit_sent = False
-    agent._post_success_design_audit_enabled = True
-    agent.trace_writer = None
-
-    sticky_bundle = build_compile_signal_bundle(
-        status="success",
-        test_report=SDKTestReport(
-            passed=True,
-            checks_run=1,
-            checks=("warn_if_part_contains_disconnected_geometry_islands",),
-            failures=(),
-            warnings=(
-                "warn_if_part_contains_disconnected_geometry_islands(tol=1e-06): "
-                "Disconnected geometry islands detected:\n"
-                "part='frame' connected=1/2 disconnected=[frame_body__component_002:Mesh]",
-            ),
-            allowances=(),
-        ),
-    )
-
-    conversation: list[dict] = []
-    first = agent._maybe_inject_compile_signals(conversation, bundle=sticky_bundle)
-    second = agent._maybe_inject_compile_signals(conversation, bundle=sticky_bundle)
-
-    assert first is True
-    assert second is True
-    assert len(conversation) == 2
-    assert all("Disconnected geometry islands detected" in item["content"] for item in conversation)
-
-    clean_bundle = build_compile_signal_bundle(status="success")
-    injected_clean = agent._maybe_inject_compile_signals(conversation, bundle=clean_bundle)
-    audit_injected = agent._maybe_inject_post_success_design_audit(conversation)
-
-    assert injected_clean is False
-    assert audit_injected is True

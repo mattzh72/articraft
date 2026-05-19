@@ -1,395 +1,98 @@
-# articraft
+# Articraft
 
-Generate articulated 3D objects from prompts and inspect them locally.
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
+[![Python versions](https://img.shields.io/badge/Python-3.11%20%7C%203.12-blue)](https://www.python.org/)
+[![CI](https://github.com/mattzh72/articraft/actions/workflows/ci.yml/badge.svg)](https://github.com/mattzh72/articraft/actions/workflows/ci.yml)
 
-## 1. Install Prerequisites
+**An Agentic System for Scalable Articulated 3D Asset Generation.**
 
-You need:
+[Paper](https://arxiv.org/abs/2605.15187) | [Project Page](https://articraft3d.github.io/)
 
-- Python 3.12 recommended (`.python-version` is committed for `uv`), or Python 3.11
-- [`uv`](https://docs.astral.sh/uv/)
-- [`just`](https://github.com/casey/just)
-- [`npm`](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm) if you want the viewer and frontend hooks ready locally
+Articraft transforms the creation of articulated 3D assets into a programmatic, code-generation workflow powered by LLMs. Engineered for large-scale dataset generation, it bypasses heavyweight manual tools to rapidly produce objects with semantic parts, robust geometry, and physical joints.
 
-Important:
-`cadquery` depends on `vtk`, and the currently supported wheels for this repo do not install on CPython 3.13. The repo pins Python 3.12 for `uv` via `.python-version`. If you are not using `uv`'s pinned interpreter behavior, use Python 3.11 or 3.12 and avoid 3.13+.
+![Articraft viewer showing an articulated desk lamp with joint controls and dataset metadata](docs/images/viewer-demo.png)
 
-If you do not have `just` yet:
+> **Security Note:** Articraft compiles and inspects generated records by executing their `model.py` files as Python code. Only run generated records and model scripts from trusted sources.
 
-```bash
-# macOS with Homebrew
-brew install just
+---
 
-# cross-platform installer
-curl --proto '=https' --tlsv1.2 -sSf https://just.systems/install.sh | bash -s -- --to ~/bin
-export PATH="$PATH:$HOME/bin"
-```
+## Quickstart
 
-## 2. Run Setup
+### 1. Prerequisites
+- Python 3.12 recommended (or 3.11). *Note: 3.13+ is not currently supported.*
+- [`uv`](https://docs.astral.sh/uv/) for incredibly fast Python package management.
+- [`just`](https://github.com/casey/just) as the command runner.
+- [`npm`](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm) (optional, but needed for local viewer frontend).
 
-From the repo root:
-
+### 2. Setup
+From the repo root, run:
 ```bash
 just setup
 ```
 
-This does the initial local setup:
+### 3. Add API Keys
+Open `.env` and set one or more provider keys (e.g. `OPENAI_API_KEY`, `GEMINI_API_KEYS`, `ANTHROPIC_API_KEYS`).
 
-- creates `.env` from `.env.example` if `.env` does not exist yet, seeding supported provider env vars from your current shell when present
-- installs Python dev dependencies, including `pre-commit` and `ruff`
-- installs `viewer/web` dependencies when `npm` is available
-- installs the git `pre-commit` and `pre-push` hooks
-- installs the managed git `post-commit` hook used to auto-sync record metadata such as `author` and `rated_by`
-- initializes local storage under `data/`
-- builds the dataset manifest used by the viewer
+> **No API Keys?** No problem! If you don't have API keys set up, you can use external AI agents like Claude Code, Codex, or Cursor. Just point them to this repository and prompt them:
+> 
+> *"Create a realistic articulated [object name] and add it to the Articraft dataset. Follow EXTERNAL_AGENT_DATA.md."*
 
-You can verify the hook setup with:
+### 4. Create an Asset
 
+Generate your first model directly from a prompt using `articraft generate`:
 ```bash
-uv run python scripts/git_hooks.py check-post-commit
+uv run articraft generate "Create a realistic articulated desk lamp with a weighted base, two hinged arms, and an adjustable lamp head."
 ```
 
-If you skip `just setup` and install pieces manually, record metadata will not auto-sync after commits until the managed post-commit hook is installed.
-
-## 3. Add Your API Key
-
-Open `.env` and set one provider key:
-
-```text
-Set `OPENAI_API_KEY` to your OpenAI key in `.env`
-```
-
-or:
-
-```text
-Set `GEMINI_API_KEYS` to your Gemini keys in `.env`
-```
-
-Optional:
-
-```text
-Set `ARTICRAFT_MAX_COST_USD` to a positive per-run USD budget default in `.env`
-```
-
-## 4. Open The Viewer Fast
-
-If you just cloned the repo and want to browse saved records in the viewer, precompile the saved records first:
-
+If you specify no overrides, it defaults to `--model gpt-5.5-2026-04-23 --thinking-level high`. You can change models and caps:
 ```bash
-just compile-all
+uv run articraft generate --model gemini-3-flash-preview --max-cost-usd 1.5 "Create a compact desk fan with adjustable tilt."
 ```
 
-This materializes the viewer-ready artifacts for saved records.
-
-Then open the viewer:
-
+### 5. Open the Viewer
+Browse the objects you just generated. The local viewer API and React frontend can be started with:
 ```bash
 just viewer
 ```
 
-This starts the local API, builds the web app if needed, and opens the viewer.
-
-## 5. Generate Your First Object
-
-Run:
-
+### 6. Edit an Existing Asset
+Fork an existing record when you want to modify it:
 ```bash
-just wb "Create a realistic articulated desk lamp with a weighted base, two hinged arms, and an adjustable lamp head."
+uv run articraft fork data/records/<record_id> "make the handle longer"
 ```
 
-This saves a generated record into the local workbench.
+Forking creates a new child record and leaves the parent unchanged. See [Editing Existing Records](docs/record_editing.md) for model options, dataset behavior, and history viewing.
 
-If you do not pass overrides, `just wb` defaults to:
+---
 
-```bash
-model=gpt-5.4
-thinking=high
+## Contribute Data
+
+A huge part of Articraft's mission is crowdsourcing a diverse, massive dataset of articulated 3D models. We welcome generation via our CLI, batch processing, or through external AI agents (like Claude Code or Codex). 
+
+For full details on our data pipelines, generation guides, and opening pull requests, please read the complete **[Data Contribution Workflow in CONTRIBUTING.md](CONTRIBUTING.md)**.
+
+**Data Usage & Licensing**  
+By contributing data to the Articraft project, you acknowledge and agree that your submissions will be used to build, evaluate, and improve machine learning models, and will be distributed publicly as part of our datasets. You explicitly agree that all contributed data is released under the **[Creative Commons Attribution 4.0 International (CC-BY 4.0)](https://creativecommons.org/licenses/by/4.0/)** license.
+
+---
+
+## Documentation & Advanced Usage
+
+- **[Architecture & Project Structure](docs/architecture.md)**
+- **[Editing Existing Records](docs/record_editing.md)**
+- **[Dataset Generation & Batch Processing](docs/dataset_generation.md)**
+- **[Contributing Standards & Workflow](CONTRIBUTING.md)**
+- **[Security Policy](SECURITY.md)**
+
+## Citation
+
+```bibtex
+@article{zhou2026articraft,
+  title     = {Articraft: An Agentic System for Scalable Articulated 3D Asset Generation},
+  author    = {Zhou, Matt and Li, Ruining and Lyu, Xiaoyang and Song, Zhaomou and Huang, Zhening and Zheng, Chuanxia and Rupprecht, Christian and Vedaldi, Andrea and Wu, Shangzhe},
+  journal   = {arXiv preprint arXiv:2605.15187},
+  year      = {2026}
+}
 ```
 
-To change either setting, pass overrides on the same command:
-
-```bash
-# Use a different model (same SDK)
-just model=gemini-3-flash-preview wb "Create a compact desk fan with adjustable tilt."
-
-# Change both model and prompt together
-just model=gpt-5.4 wb "Create a compact desk fan with adjustable tilt."
-```
-
-To stop a run after it exceeds a USD budget, pass `max_cost_usd=...`:
-
-```bash
-just max_cost_usd=1.5 wb "Create a compact desk fan with adjustable tilt."
-```
-
-`wb` and `wb-init` always use the canonical `sdk` pipeline. Record-based commands like `compile`, `compile-strict`, `compile-unsafe`, and `rerun` use the record's saved SDK metadata automatically.
-
-To run a single prompt directly into a dataset category instead of the workbench, use:
-
-```bash
-just category=grill_with_hinged_lid wb-category "Create a backyard gas grill with a wheeled lower cart, a rectangular cookbox, side shelves, a front control panel, and a domed lid hinged along the rear edge of the cookbox."
-```
-
-`wb-category` accepts the same `model=...`, `thinking=...`, `image=...`, and `design_audit=...` overrides as `wb`. It auto-allocates a collision-resistant `ds_<category>_<token>` dataset ID for the target category unless you also pass `dataset_id=...`.
-
-The underlying CLI command is:
-
-```bash
-uv run articraft-dataset --repo-root . run-single \
-  "Create a backyard gas grill with a wheeled lower cart, a rectangular cookbox, side shelves, a front control panel, and a domed lid hinged along the rear edge of the cookbox." \
-  --category-slug grill_with_hinged_lid \
-  --provider openai \
-  --model-id gpt-5.4 \
-  --thinking-level high \
-  --max-cost-usd 2.0
-```
-
-If the target category slug already exists, the new record is appended under that category. If it does not exist yet, the command creates the category metadata automatically using a slug-derived title.
-
-## 6. Run And Resume Dataset Batches
-
-Dataset batches are driven by CSV specs under `data/batch_specs/`. The CSV filename stem becomes the batch's `batch_spec_id`.
-
-That detail matters for resume:
-
-- `--resume` looks up the latest prior run for the same `batch_spec_id`
-- if you rename `chairs_v1.csv` to `chairs_v2.csv`, resume will treat it as a different batch
-- resume also matches rows by `row_id`, so stable `row_id` values are important if you plan to retry or edit a spec later
-
-### 6.1 Create the spec
-
-Start with the built-in template:
-
-```bash
-just name=<batch-id> batch-spec-new
-```
-
-This creates:
-
-```text
-data/batch_specs/<batch-id>.csv
-```
-
-with the current v1 header:
-
-```csv
-row_id,category_slug,category_title,prompt,provider,model_id,thinking_level,max_turns,max_cost_usd,label,design_audit
-```
-
-### 6.2 Fill the CSV
-
-Each row is one dataset generation job.
-
-| Column | Required | Details |
-| --- | --- | --- |
-| `row_id` | Recommended | Stable row identifier used by resume. If omitted, it defaults to `row_0001`, `row_0002`, and so on, based on row order. For resumable batches, set this explicitly and do not change it after the first run. |
-| `category_slug` | Yes | Dataset category slug. |
-| `category_title` | Sometimes | Required for any row whose `category_slug` does not already exist in repo storage. If a new category appears on multiple rows, include the title on each of those rows. |
-| `prompt` | Yes | The generation prompt. |
-| `provider` | Yes | Must be `openai` or `gemini`. |
-| `model_id` | Yes | Model to use for that row. It must agree with `provider`. |
-| `thinking_level` | Yes | Must be `low`, `med`, or `high`. |
-| `max_turns` | Yes | Positive integer turn cap for the row. |
-| `max_cost_usd` | No | Optional positive per-row USD budget. If blank, the row inherits the batch CLI flag or `ARTICRAFT_MAX_COST_USD`. |
-| `label` | No | Optional free-form label for your own tracking. |
-| `design_audit` | No | `true` or `false`. If blank, the row inherits the CLI default for the batch. |
-
-Batch CSV v1 notes:
-
-- `image_path` is not supported in batch CSV v1
-- duplicate `row_id` values are rejected
-- if the batch introduces a new category and `category_title` is missing, validation fails before the run starts
-
-Example:
-
-```csv
-row_id,category_slug,category_title,prompt,provider,model_id,thinking_level,max_turns,max_cost_usd,label,design_audit
-hinge_01,hinge,Hinge,"Create a steel door hinge with two rectangular leaves and a center pin.",openai,gpt-5.4,high,12,1.5,baseline,true
-hinge_02,hinge,Hinge,"Create a compact cabinet hinge with offset leaves and a short pin.",gemini,gemini-3-flash-preview,med,10,,compact,false
-```
-
-### 6.3 Run the first pass
-
-Use `uv` directly:
-
-```bash
-uv run articraft-dataset --repo-root . run-batch data/batch_specs/<batch-id>.csv --row-concurrency 8 --subprocess-concurrency auto
-uv run articraft-dataset --repo-root . run-batch data/batch_specs/<batch-id>.csv --row-concurrency 8 --subprocess-concurrency auto --max-cost-usd 2.0
-```
-
-Or use the `just` wrapper:
-
-```bash
-just row_concurrency=8 subprocess_concurrency=auto dataset-batch data/batch_specs/<batch-id>.csv
-just row_concurrency=8 subprocess_concurrency=auto max_cost_usd=2.0 dataset-batch data/batch_specs/<batch-id>.csv
-```
-
-Useful execution controls:
-
-- `--row-concurrency`: maximum number of live batch rows at once; use `auto`, `max`, or a positive integer
-- `--subprocess-concurrency`: maximum number of compile/QC/probe subprocess-heavy operations at once; use `auto`, `max`, or a positive integer
-- `--max-cost-usd`: default per-row USD budget for rows whose `max_cost_usd` CSV cell is blank
-- `--design-audit` or `--no-design-audit`: set the batch-wide default for rows whose `design_audit` cell is blank
-
-If any row fails, the batch exits non-zero. That is expected. The normal recovery path is to fix the issue and rerun with `--resume`.
-
-### 6.4 Resume a batch safely
-
-The most common recovery command is:
-
-```bash
-uv run articraft-dataset --repo-root . run-batch data/batch_specs/<batch-id>.csv --row-concurrency 8 --subprocess-concurrency auto --resume
-```
-
-or with `just`:
-
-```bash
-just row_concurrency=8 subprocess_concurrency=auto resume=true dataset-batch data/batch_specs/<batch-id>.csv
-```
-
-What `--resume` does:
-
-- reuses the latest prior run for the same `batch_spec_id`
-- resumes that run in place under the existing `data/cache/runs/<run_id>/`
-- reuses the prior `dataset_id` and `record_id` allocations from `allocations.json`
-- preserves rows that already have durable successful outputs instead of rerunning them
-- by default, reruns rows whose latest status is `failed`, `pending`, or `running`
-
-Resume policies:
-
-```bash
-uv run articraft-dataset --repo-root . run-batch data/batch_specs/<batch-id>.csv --resume --resume-policy failed_only
-uv run articraft-dataset --repo-root . run-batch data/batch_specs/<batch-id>.csv --resume --resume-policy failed_or_pending
-uv run articraft-dataset --repo-root . run-batch data/batch_specs/<batch-id>.csv --resume --resume-policy all
-```
-
-- `failed_only`: rerun only rows whose latest status is `failed`
-- `failed_or_pending`: rerun `failed`, `pending`, and interrupted `running` rows; this is the default
-- `all`: rerun every row using the existing allocations
-
-Important resume rules:
-
-- keep the CSV filename stable so the `batch_spec_id` stays the same
-- keep `row_id` stable; changing or reordering implicit row ids can break resume matching
-- by default, resume rejects spec changes for `category_slug`, `prompt`, `provider`, `model_id`, `thinking_level`, `max_turns`, `max_cost_usd`, and `design_audit`
-- if a row already produced a durable record but the cached state says `running`, resume reconciles that success instead of rerunning it
-
-You can bypass the spec-compatibility check:
-
-```bash
-uv run articraft-dataset --repo-root . run-batch data/batch_specs/<batch-id>.csv --resume --allow-resume-spec-mismatch
-```
-
-or:
-
-```bash
-just resume=true allow_resume_spec_mismatch=true dataset-batch data/batch_specs/<batch-id>.csv
-```
-
-Use `--allow-resume-spec-mismatch` only for deliberate recovery work. It forces the current CSV to reuse the prior run's row allocations even though the row definitions no longer match.
-
-This is the escape hatch for "retry the same row, but with different execution settings." A common example is raising `max_turns` or `max_cost_usd` for failed rows, or switching a failed row to a different `provider`, `model_id`, `thinking_level`, `prompt`, or `design_audit` setting before resuming.
-
-Typical override workflow:
-
-1. Edit the existing row in `data/batch_specs/<batch-id>.csv` without changing its `row_id`.
-2. Resume with `--allow-resume-spec-mismatch`.
-3. Usually pair that with `--resume-policy failed_only` so already successful rows stay preserved.
-
-Example:
-
-```bash
-uv run articraft-dataset --repo-root . run-batch data/batch_specs/<batch-id>.csv --row-concurrency 8 --subprocess-concurrency auto --resume --resume-policy failed_only --allow-resume-spec-mismatch
-```
-
-or:
-
-```bash
-just row_concurrency=8 subprocess_concurrency=auto resume=true resume_policy=failed_only allow_resume_spec_mismatch=true dataset-batch data/batch_specs/<batch-id>.csv
-```
-
-When you do this:
-
-- the rerun uses the current CSV values for row execution settings
-- the rerun still keeps the existing `dataset_id`, `record_id`, and prompt allocation from the original run
-- only rows selected by the current `resume_policy` will actually rerun
-- keep `row_id` and the batch filename stable
-- do not treat `category_slug` as a routine override during resume; it is part of dataset identity, and changing it while reusing prior allocations can lead to confusing results
-
-### 6.5 Know where the outputs and state go
-
-After a successful row:
-
-- the canonical record is written under `data/records/<record-id>/`
-- dataset storage and category metadata are updated
-
-During the batch:
-
-- resumable run state lives under `data/cache/runs/<run_id>/`
-- `run.json` stores batch-level metadata
-- `allocations.json` stores the stable `dataset_id` and `record_id` assigned to each `row_id`
-- `results.jsonl` stores one result row per batch row
-- `state/<row_id>.json` stores per-row attempt status
-
-If you need to inspect or debug a resume decision, `allocations.json`, `results.jsonl`, and `state/<row_id>.json` are the first files to check.
-
-## 7. Reference
-
-List commands:
-
-```bash
-just
-```
-
-Open the viewer in frontend dev mode:
-
-```bash
-just viewer-dev
-just api_host=0.0.0.0 api_port=9000 viewer-dev
-```
-
-Rebuild the viewer search index:
-
-```bash
-just search-index
-```
-
-Recompile one saved record:
-
-```bash
-just compile data/records/<record-id>
-just compile-strict data/records/<record-id>
-just compile-unsafe data/records/<record-id>
-just compile-unsafe data/records/<record-id>
-```
-
-Bulk compile variants:
-
-```bash
-just compile-all
-just compile-all-strict
-just force-compile-all
-```
-
-Rerun generation for an existing record:
-
-```bash
-just rerun data/records/<record-id>
-```
-
-Generate with overrides:
-
-```bash
-just model=gemini-3-flash-preview wb "Create a compact tabletop fan with an oscillating head and tilt adjustment."
-just image=reference.png wb "Create a weighted desk lamp with articulated arms."
-just model=gpt-5.4 thinking=high image=reference.png wb "Create a tower crane with a rotating top and suspended hook."
-```
-
-Run a batch directly with `uv`:
-
-```bash
-uv run articraft-dataset --repo-root . run-batch data/batch_specs/<batch-id>.csv --row-concurrency 8 --subprocess-concurrency auto
-uv run articraft-dataset --repo-root . run-batch data/batch_specs/<batch-id>.csv --row-concurrency 8 --subprocess-concurrency auto --resume
-```
-
-See Section 6 for the batch CSV schema, resume policies, and run-state details.
+This repository is licensed under the [Apache-2.0 License](LICENSE).

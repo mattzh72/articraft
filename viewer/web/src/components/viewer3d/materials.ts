@@ -19,6 +19,25 @@ export function depthBiasForOrdinal(ordinal: number): number {
   return 1 + ordinal * 0.25;
 }
 
+function srgbColor(r: number, g: number, b: number): THREE.Color {
+  return new THREE.Color().setRGB(r, g, b, THREE.SRGBColorSpace);
+}
+
+function softenBrightDiffuse(spec: MaterialSpec): void {
+  const maxChannel = Math.max(spec.color.r, spec.color.g, spec.color.b);
+  const minChannel = Math.min(spec.color.r, spec.color.g, spec.color.b);
+  const isBrightNeutral = maxChannel > 0.78 && maxChannel - minChannel < 0.08;
+
+  if (!isBrightNeutral || spec.metalness > 0.2 || spec.transmission > 0.01) {
+    return;
+  }
+
+  spec.color.lerp(new THREE.Color(0.82, 0.82, 0.78), 0.38);
+  spec.roughness = Math.max(spec.roughness, 0.62);
+  spec.clearcoat = Math.min(spec.clearcoat, 0.08);
+  spec.envMapIntensity = Math.min(spec.envMapIntensity, 0.55);
+}
+
 /**
  * Resolve visual material specification from URDF data
  * Defaults to a neutral gray if no material specified
@@ -26,7 +45,7 @@ export function depthBiasForOrdinal(ordinal: number): number {
 export function resolveVisualMaterialSpec(visual: UrdfVisual): MaterialSpec {
   const defaultSpec: MaterialSpec = {
     name: undefined,
-    color: new THREE.Color(0.75, 0.75, 0.75),
+    color: srgbColor(0.74, 0.74, 0.72),
     opacity: 1.0,
     metalness: 0.05,
     roughness: 0.48,
@@ -47,11 +66,13 @@ export function resolveVisualMaterialSpec(visual: UrdfVisual): MaterialSpec {
 
   if (visual.material.color) {
     const [r, g, b, a] = visual.material.color.rgba;
-    spec.color = new THREE.Color(r, g, b);
+    spec.color = srgbColor(r, g, b);
     spec.opacity = a;
   }
 
-  return applyNamedMaterialPreset(spec);
+  const tuned = applyNamedMaterialPreset(spec);
+  softenBrightDiffuse(tuned);
+  return tuned;
 }
 
 function applyNamedMaterialPreset(spec: MaterialSpec): MaterialSpec {

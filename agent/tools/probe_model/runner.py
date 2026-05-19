@@ -4,7 +4,6 @@ import importlib
 import io
 import json
 import sys
-import time
 import traceback
 from contextlib import redirect_stderr, redirect_stdout
 from pathlib import Path
@@ -44,14 +43,12 @@ def _payload(
     result: Any = None,
     error_type: str | None = None,
     message: str | None = None,
-    elapsed_ms: float,
     stdout: str = "",
     stderr: str = "",
     traceback_text: str | None = None,
 ) -> dict[str, Any]:
     output: dict[str, Any] = {
         "ok": ok,
-        "elapsed_ms": float(elapsed_ms),
     }
     if ok:
         output["result"] = result
@@ -81,7 +78,6 @@ def _asset_root_from_globals(globals_dict: dict[str, Any], *, file_path: Path) -
 
 
 def main() -> int:
-    started = time.perf_counter()
     raw = sys.stdin.read()
     stdout_buffer = io.StringIO()
     stderr_buffer = io.StringIO()
@@ -97,7 +93,6 @@ def main() -> int:
             ok=False,
             error_type="invalid_request",
             message=str(exc),
-            elapsed_ms=(time.perf_counter() - started) * 1000.0,
         )
         sys.stdout.write(json.dumps(payload))
         return 0
@@ -144,7 +139,6 @@ def main() -> int:
             payload = _payload(
                 ok=True,
                 result=emitted_value,
-                elapsed_ms=(time.perf_counter() - started) * 1000.0,
                 stdout=stdout_buffer.getvalue(),
                 stderr=stderr_buffer.getvalue(),
             )
@@ -153,7 +147,6 @@ def main() -> int:
             ok=False,
             error_type="lookup_failure",
             message=str(exc),
-            elapsed_ms=(time.perf_counter() - started) * 1000.0,
             stdout=stdout_buffer.getvalue(),
             stderr=stderr_buffer.getvalue(),
         )
@@ -162,7 +155,6 @@ def main() -> int:
             ok=False,
             error_type="emit_contract",
             message=str(exc),
-            elapsed_ms=(time.perf_counter() - started) * 1000.0,
             stdout=stdout_buffer.getvalue(),
             stderr=stderr_buffer.getvalue(),
         )
@@ -172,7 +164,6 @@ def main() -> int:
                 ok=False,
                 error_type="non_serializable_result",
                 message=str(exc),
-                elapsed_ms=(time.perf_counter() - started) * 1000.0,
                 stdout=stdout_buffer.getvalue(),
                 stderr=stderr_buffer.getvalue(),
             )
@@ -181,7 +172,6 @@ def main() -> int:
                 ok=False,
                 error_type="snippet_exception",
                 message=str(exc),
-                elapsed_ms=(time.perf_counter() - started) * 1000.0,
                 stdout=stdout_buffer.getvalue(),
                 stderr=stderr_buffer.getvalue(),
                 traceback_text=traceback.format_exc(),
@@ -192,7 +182,6 @@ def main() -> int:
             ok=False,
             error_type=error_type,
             message=str(exc),
-            elapsed_ms=(time.perf_counter() - started) * 1000.0,
             stdout=stdout_buffer.getvalue(),
             stderr=stderr_buffer.getvalue(),
             traceback_text=traceback.format_exc(),

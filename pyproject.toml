@@ -4,6 +4,17 @@ version = "0.1.0"
 description = "Agentic articulated object generation, dataset curation, and workbench tooling."
 readme = "README.md"
 requires-python = ">=3.11,<3.13"
+license = { file = "LICENSE" }
+authors = [{ name = "Articraft contributors" }]
+keywords = ["3d-assets", "articulation", "cad", "urdf", "agentic-generation"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "License :: OSI Approved :: Apache Software License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Multimedia :: Graphics :: 3D Modeling",
+]
 dependencies = [
     "aiofiles>=24.1.0",
     "cadquery>=2.5",
@@ -24,12 +35,16 @@ dependencies = [
     "zstandard>=0.23.0",
     "bm25s>=0.3.2.post1",
     "scipy>=1.17.1",
+    "anthropic>=0.101.0",
 ]
 
 [project.scripts]
-articraft-dataset = "cli.dataset:main"
-articraft-workbench = "cli.workbench:main"
-articraft-performance = "performance.runner:main"
+articraft = "cli.main:main"
+
+[project.urls]
+Homepage = "https://github.com/mattzh72/articraft"
+Repository = "https://github.com/mattzh72/articraft"
+Issues = "https://github.com/mattzh72/articraft/issues"
 
 [build-system]
 requires = ["hatchling"]
@@ -37,24 +52,49 @@ build-backend = "hatchling.build"
 
 [tool.hatch.build.targets.wheel]
 packages = [
+    "articraft",
     "agent",
     "cli",
-    "performance",
     "storage",
     "viewer",
     "sdk",
+]
+
+[tool.hatch.build.targets.sdist]
+exclude = [
+    "/.claude",
+    "/.mypy_cache",
+    "/.pytest_cache",
+    "/.ruff_cache",
+    "/.uv-cache",
+    "/.venv",
+    "/assets",
+    "/data/cache",
+    "/data/local",
+    "/data/records",
+    "/dist",
+    "/node_modules",
+    "/viewer/web/dist",
+    "/viewer/web/node_modules",
 ]
 
 [dependency-groups]
 dev = [
     "pre-commit>=4.2.0",
     "pytest>=8.4.0",
+    "pytest-xdist>=3.8.0",
     "ruff>=0.11.0",
 ]
 
+[tool.uv]
+required-version = ">=0.9.17"
+exclude-newer = "7 days"
+exclude-newer-package = { anthropic = "2026-05-12T00:00:00Z" }
+
 [tool.pytest.ini_options]
 testpaths = ["tests"]
-addopts = ["--import-mode=importlib"]
+# Use `-n0` on an invocation to force serial execution for debugging.
+addopts = ["--import-mode=importlib", "-n", "auto", "--dist=worksteal"]
 
 [tool.ruff]
 line-length = 100
@@ -64,7 +104,14 @@ extend-exclude = ["data"]
 [tool.ruff.lint]
 select = ["E", "F", "I"]
 ignore = ["E501"]
-per-file-ignores = { "scaffold.py" = ["F821"] }
+
+[tool.ruff.lint.per-file-ignores]
+"scaffold.py" = ["F821"]
+"sdk/_core/v0/mesh.py" = ["F401"]
+"sdk/_core/v0/testing.py" = ["F401"]
+"sdk/_core/v0/_mesh/__init__.py" = ["F401"]
+"sdk/_core/v0/_mesh/*.py" = ["F401", "F403", "F405", "F821"]
+"sdk/_core/v0/_testing/*.py" = ["F401", "F403", "F405", "F821"]
 
 [tool.ruff.format]
 quote-style = "double"

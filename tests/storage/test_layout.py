@@ -12,9 +12,20 @@ def test_storage_layout_paths() -> None:
         "/tmp/articraft/data/system_prompts/abc123.txt"
     )
     assert layout.record_dataset_entry_path("rec_123") == Path(
-        "/tmp/articraft/data/records/rec_123/dataset_entry.json"
+        "/tmp/articraft/data/records/rec_123/collections/dataset.json"
     )
-    assert layout.record_traces_dir("rec_123") == Path("/tmp/articraft/data/records/rec_123/traces")
+    assert layout.record_workbench_entry_path("rec_123") == Path(
+        "/tmp/articraft/data/records/rec_123/collections/workbench.json"
+    )
+    assert layout.record_revision_dir("rec_123", "rev_000001") == Path(
+        "/tmp/articraft/data/records/rec_123/revisions/rev_000001"
+    )
+    assert layout.record_revision_model_path("rec_123", "rev_000001") == Path(
+        "/tmp/articraft/data/records/rec_123/revisions/rev_000001/model.py"
+    )
+    assert layout.record_traces_dir("rec_123") == Path(
+        "/tmp/articraft/data/records/rec_123/revisions/rev_000001/traces"
+    )
     assert layout.record_trajectory_unroll_path("rec_123") == Path(
         "/tmp/articraft/data/cache/trajectory_unroll/records/rec_123/trajectory.jsonl"
     )
@@ -28,7 +39,6 @@ def test_storage_layout_paths() -> None:
     assert layout.record_asset_viewer_dir("rec_123") == Path(
         "/tmp/articraft/data/records/rec_123/assets/viewer"
     )
-    assert layout.local_workbench_path() == Path("/tmp/articraft/data/local/workbench.json")
     assert layout.dataset_manifest_path() == Path(
         "/tmp/articraft/data/cache/manifests/dataset.json"
     )

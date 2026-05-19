@@ -9,7 +9,9 @@ import pytest
 
 from agent.providers.openai import (
     DEFAULT_OPENAI_COMPACTION_MODEL,
+    DEFAULT_OPENAI_MODEL,
     OpenAILLM,
+    _load_cwd_dotenv_override,
     _OpenAIWebSocketError,
     openai_api_key_from_env,
     openai_api_keys_from_env,
@@ -80,6 +82,36 @@ def test_openai_api_key_from_env_uses_key_pool_when_primary_missing() -> None:
     key = openai_api_key_from_env({"OPENAI_API_KEYS": "sk-first,sk-second"})
 
     assert key in {"sk-first", "sk-second"}
+
+
+def test_openai_provider_loads_dotenv_over_exported_key(monkeypatch, tmp_path) -> None:
+    env_name = "OPENAI_API_" + "KEY"
+    monkeypatch.chdir(tmp_path)
+    monkeypatch.setenv(env_name, "test-exported")
+    (tmp_path / ".env").write_text(f"{env_name}=test-dotenv\n", encoding="utf-8")
+
+    _load_cwd_dotenv_override()
+
+    assert openai_api_key_from_env() == "test-dotenv"
+
+
+def test_openai_context_window_pressure_reports_prompt_fraction() -> None:
+    provider = OpenAILLM(model_id="gpt-5.4", dry_run=True)
+
+    pressure = provider.context_window_pressure(
+        {
+            "prompt_tokens": 200_000,
+            "cached_tokens": 50_000,
+            "candidates_tokens": 10_000,
+            "total_tokens": 210_000,
+        }
+    )
+
+    assert pressure.max_context_tokens == 400_000
+    assert pressure.prompt_tokens == 200_000
+    assert pressure.remaining_context_tokens == 200_000
+    assert pressure.pressure_ratio == 0.5
+    assert pressure.output_tokens == 10_000
 
 
 def test_generate_with_tools_only_retries_without_reasoning_summary_for_supported_error(
@@ -183,8 +215,114 @@ def test_request_with_websocket_logs_full_context_fallback(
     assert "full-context fallback triggered" in caplog.text
 
 
+def test_generate_with_tools_keeps_prepare_appended_inputs_for_websocket_incremental() -> None:
+    provider = OpenAILLM(dry_run=True, transport="websocket")
+    provider._input_items = [
+        {"role": "user", "content": [{"type": "input_text", "text": "task"}]},
+        {
+            "type": "message",
+            "role": "assistant",
+            "content": [{"type": "output_text", "text": "calling tool"}],
+        },
+        {
+            "type": "function_call",
+            "call_id": "call_compile",
+            "name": "compile_model",
+            "arguments": "{}",
+        },
+    ]
+    provider._last_message_count = 2
+    provider._previous_response_id = "resp_prev"
+
+    messages = [
+        {"role": "user", "content": "task"},
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "id": "call_compile",
+                    "type": "function",
+                    "function": {"name": "compile_model", "arguments": "{}"},
+                }
+            ],
+        },
+        {
+            "role": "tool",
+            "tool_call_id": "call_compile",
+            "name": "compile_model",
+            "content": '{"result": "ok"}',
+        },
+    ]
+
+    asyncio.run(
+        provider.prepare_next_request(
+            system_prompt="system",
+            messages=messages,
+            tools=[],
+            completed_turns=1,
+        )
+    )
+
+    captured_incremental: dict[str, object] = {}
+
+    async def fake_request_with_transport(
+        *,
+        request_payload: dict,
+        incremental_request_payload: dict,
+        fallback_request_payload: dict,
+    ) -> dict:
+        captured_incremental.update(incremental_request_payload)
+        return {"id": "resp_next", "output": []}
+
+    provider._request_with_transport = fake_request_with_transport  # type: ignore[method-assign]
+
+    asyncio.run(
+        provider.generate_with_tools(
+            system_prompt="system",
+            messages=messages,
+            tools=[],
+        )
+    )
+
+    assert captured_incremental["previous_response_id"] == "resp_prev"
+    assert captured_incremental["input"] == [
+        {
+            "type": "function_call_output",
+            "call_id": "call_compile",
+            "output": '{"result": "ok"}',
+        }
+    ]
+    assert provider._pending_incremental_input_items == []
+
+
+def test_websocket_uses_full_payload_without_previous_response_id() -> None:
+    provider = OpenAILLM(dry_run=True, transport="websocket")
+    captured: list[dict[str, object]] = []
+
+    async def fake_request_with_websocket(
+        *,
+        request_payload: dict,
+        fallback_request_payload: dict,
+    ) -> dict:
+        captured.append(request_payload)
+        return {"output": []}
+
+    provider._request_with_websocket = fake_request_with_websocket  # type: ignore[method-assign]
+
+    asyncio.run(
+        provider._request_with_transport(
+            request_payload={"input": [{"role": "user"}]},
+            incremental_request_payload={"input": []},
+            fallback_request_payload={"input": [{"role": "user"}]},
+        )
+    )
+
+    assert captured == [{"input": [{"role": "user"}]}]
+
+
 def test_openai_client_disables_sdk_retries_and_uses_request_timeout(
     monkeypatch: pytest.MonkeyPatch,
+    tmp_path,
 ) -> None:
     captured: dict[str, object] = {}
 
@@ -192,6 +330,7 @@ def test_openai_client_disables_sdk_retries_and_uses_request_timeout(
         def __init__(self, **kwargs: object) -> None:
             captured.update(kwargs)
 
+    monkeypatch.chdir(tmp_path)
     monkeypatch.setenv("OPENAI_API_KEY", "sk-primary")
     monkeypatch.setenv("OPENAI_REQUEST_TIMEOUT_SECONDS", "37")
     monkeypatch.setitem(sys.modules, "openai", SimpleNamespace(AsyncOpenAI=_FakeAsyncOpenAI))
@@ -214,6 +353,13 @@ def test_openai_default_request_timeout_is_15_minutes(
     provider = OpenAILLM(dry_run=True)
 
     assert provider.request_timeout_seconds == 900.0
+
+
+def test_openai_default_model_is_latest_snapshot() -> None:
+    provider = OpenAILLM(dry_run=True)
+
+    assert DEFAULT_OPENAI_MODEL == "gpt-5.5-2026-04-23"
+    assert provider.model_id == "gpt-5.5-2026-04-23"
 
 
 def test_openai_default_compaction_model_is_mini() -> None:
@@ -258,6 +404,7 @@ def test_convert_tools_normalizes_function_schemas_for_responses_strict_mode() -
 
 def test_openai_sync_client_disables_sdk_retries_and_uses_request_timeout(
     monkeypatch: pytest.MonkeyPatch,
+    tmp_path,
 ) -> None:
     captured: dict[str, object] = {}
 
@@ -269,6 +416,7 @@ def test_openai_sync_client_disables_sdk_retries_and_uses_request_timeout(
         def __init__(self, **kwargs: object) -> None:
             raise RuntimeError("async unavailable")
 
+    monkeypatch.chdir(tmp_path)
     monkeypatch.setenv("OPENAI_API_KEY", "sk-primary")
     monkeypatch.setenv("OPENAI_REQUEST_TIMEOUT_SECONDS", "42")
     monkeypatch.setitem(

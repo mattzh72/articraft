@@ -34,6 +34,14 @@ class _DummyDisplay:
         return None
 
 
+class _CapturingCompactionDisplay(_DummyDisplay):
+    def __init__(self) -> None:
+        self.compaction_events: list[dict[str, object]] = []
+
+    def add_compaction_event(self, **kwargs: object) -> None:
+        self.compaction_events.append(dict(kwargs))
+
+
 class _DummyRegistry:
     def get_tool_schemas(self) -> list[dict]:
         return []
@@ -61,6 +69,14 @@ class _SingleResponseLLM:
 class _FakeCompactionEvent:
     def __init__(self, payload: dict[str, object]) -> None:
         self._payload = payload
+        self.trigger = str(payload.get("trigger") or "compaction")
+        self.estimated_saved_next_input_tokens = payload.get("estimated_saved_next_input_tokens")
+        self.previous_response_id_cleared = bool(payload.get("previous_response_id_cleared"))
+        self.estimate_error = (
+            str(payload.get("estimate_error"))
+            if isinstance(payload.get("estimate_error"), str)
+            else None
+        )
 
     def to_dict(self) -> dict[str, object]:
         return dict(self._payload)
@@ -121,20 +137,23 @@ class _MaintenanceOnlyLLM:
         return None
 
 
+class _CompactionThenDoneLLM(_MaintenanceOnlyLLM):
+    async def generate_with_tools(
+        self, system_prompt: str, messages: list[dict], tools: list[dict]
+    ) -> dict:
+        return {"content": "Done.", "tool_calls": []}
+
+
 def test_harness_cost_limit_trips_and_persists_cost_json(tmp_path: Path) -> None:
     agent = ArticraftAgent.__new__(ArticraftAgent)
     agent.file_path = str(tmp_path / "model.py")
     agent.max_turns = 3
     agent.sdk_package = "sdk"
-    agent.sdk_docs_mode = "full"
     agent.runtime_limits = None
-    agent._seen_compile_signal_sigs = set()
     agent._seen_tool_error_sigs = set()
     agent._seen_find_example_paths = set()
     agent._last_compile_failure_sig = None
     agent._consecutive_compile_failure_count = 0
-    agent._post_success_design_audit_sent = False
-    agent._post_success_design_audit_enabled = True
     agent.checkpoint_urdf_path = None
     agent.trace_writer = None
     agent.provider = "openai"
@@ -171,15 +190,11 @@ def test_harness_persists_compaction_maintenance_cost_and_trace(tmp_path: Path) 
     agent.file_path = str(tmp_path / "model.py")
     agent.max_turns = 3
     agent.sdk_package = "sdk"
-    agent.sdk_docs_mode = "full"
     agent.runtime_limits = None
-    agent._seen_compile_signal_sigs = set()
     agent._seen_tool_error_sigs = set()
     agent._seen_find_example_paths = set()
     agent._last_compile_failure_sig = None
     agent._consecutive_compile_failure_count = 0
-    agent._post_success_design_audit_sent = False
-    agent._post_success_design_audit_enabled = True
     agent.checkpoint_urdf_path = None
     agent.trace_writer = TraceWriter(tmp_path / "traces")
     agent.provider = "openai"
@@ -223,6 +238,47 @@ def test_harness_persists_compaction_maintenance_cost_and_trace(tmp_path: Path) 
         if line.strip()
     ]
     assert any(line.get("type") == "compaction" for line in trace_lines)
+
+
+def test_harness_reports_compaction_event_without_cost_tracker(tmp_path: Path) -> None:
+    captured_callbacks: list[tuple[dict[str, object], float]] = []
+    display = _CapturingCompactionDisplay()
+
+    agent = ArticraftAgent.__new__(ArticraftAgent)
+    agent.file_path = str(tmp_path / "model.py")
+    agent.max_turns = 1
+    agent.sdk_package = "sdk"
+    agent.runtime_limits = None
+    agent._seen_tool_error_sigs = set()
+    agent._seen_find_example_paths = set()
+    agent._last_compile_failure_sig = None
+    agent._consecutive_compile_failure_count = 0
+    agent.checkpoint_urdf_path = None
+    agent.trace_writer = None
+    agent.provider = "openai"
+    agent.llm = _CompactionThenDoneLLM()
+    agent.tool_registry = _DummyRegistry()
+    agent.on_turn_start = None
+    agent.on_compaction_event = lambda event, cost: captured_callbacks.append((event, cost))
+    agent.on_maintenance_event = None
+    agent.display = display
+    agent.loaded_system_prompt_path = "designer_system_prompt_openai.txt"
+    agent.system_prompt = "system"
+    agent.sdk_docs_context = ""
+    agent.cost_tracker = None
+    agent.max_cost_usd = None
+    agent._ensure_code_file = lambda: Path(agent.file_path).write_text(
+        "# draft\n", encoding="utf-8"
+    )
+
+    result = asyncio.run(agent.run("make a hinge"))
+
+    assert result.reason == TerminateReason.MAX_TURNS
+    assert captured_callbacks
+    assert captured_callbacks[0][0]["trigger"] == "hard_pressure"
+    assert captured_callbacks[0][1] == 0.0
+    assert display.compaction_events[0]["trigger"] == "hard_pressure"
+    assert display.compaction_events[0]["billed_cost"] == 0.0
 
 
 def test_cost_tracker_preserves_unbilled_maintenance_events() -> None:

@@ -31,6 +31,57 @@ def test_start_shows_run_header() -> None:
     assert "run gpt-5.4" in output
 
 
+def test_openrouter_run_header_and_zero_cost_llm_line() -> None:
+    buffer = StringIO()
+    console = Console(file=buffer, force_terminal=False, color_system=None, width=160)
+    display = SingleRunDisplay(
+        console=console,
+        model_id="tencent/hy3-preview:free",
+        thinking_level="high",
+        max_turns=100,
+        enabled=True,
+    )
+
+    display.start()
+    display.add_llm_call({"total_tokens": 60000}, 0.0, 1.25)
+
+    output = buffer.getvalue()
+    assert "run tencent/hy3-preview:free" in output
+    assert "thinking=high" in output
+    assert "llm     60.0K tokens  $0.0000" in output
+
+
+def test_add_llm_call_shows_context_pressure() -> None:
+    display, buffer = _make_display()
+
+    display.add_llm_call(
+        {
+            "prompt_tokens": 245_000,
+            "cached_tokens": 50_000,
+            "candidates_tokens": 5_000,
+            "total_tokens": 250_000,
+        },
+        0.0125,
+        2.5,
+        context_pressure={
+            "prompt_tokens": 245_000,
+            "max_context_tokens": 400_000,
+            "pressure_ratio": 245_000 / 400_000,
+            "remaining_context_tokens": 155_000,
+            "cached_tokens": 50_000,
+            "output_tokens": 5_000,
+            "total_tokens": 250_000,
+        },
+    )
+
+    output = buffer.getvalue()
+    assert "250.0K tokens" in output
+    assert "ctx=245.0K/400.0K (61%)" in output
+    assert "left=155.0K" in output
+    assert "out=5.0K" in output
+    assert "cache=50.0K (20%)" in output
+
+
 def test_add_tool_call_shows_success_result_and_compilation() -> None:
     display, buffer = _make_display()
 
@@ -220,6 +271,47 @@ def test_add_tool_call_renders_compile_model_failure_details() -> None:
     assert "Traceback line 1" in output
     assert "Traceback line 2" in output
     assert "Failures are blocking and should be investigated." in output
+
+
+def test_add_tool_call_renders_compile_model_severity_section_headings() -> None:
+    display, buffer = _make_display()
+
+    display.add_tool_call(
+        tool_name="compile_model",
+        args={},
+        success=True,
+        duration=0.25,
+        result=(
+            "<compile_signals>\n"
+            "<summary>\n"
+            "status=failure failures=1 warnings=0 notes=1\n"
+            "Primary issue: compiler-owned global QC reported part overlap that needs classification.\n"
+            "</summary>\n\n"
+            "<failures>\n"
+            "- FAILURE [real_overlap] Compiler-owned global QC reported real 3D overlap.\n"
+            "  pair=('base','latch')\n"
+            "</failures>\n"
+            "\n<notes>\n"
+            "- NOTE [allowed_isolated_part] Isolated-part allowance declared.\n"
+            "  allow_isolated_part('latch'): articulated but not touching at rest\n"
+            "</notes>\n"
+            "\n<response_rules>\n"
+            "- Compiler-owned overlap QC reported a real 3D overlap.\n"
+            "</response_rules>\n"
+            "</compile_signals>"
+        ),
+        compilation={
+            "status": "error",
+            "error": "Primary issue: compiler-owned global QC reported part overlap",
+        },
+    )
+
+    output = buffer.getvalue()
+    assert "Failures (blocking):" in output
+    assert "- FAILURE [real_overlap] Compiler-owned global QC reported real 3D overlap." in output
+    assert "Notes (informational):" in output
+    assert "- NOTE [allowed_isolated_part] Isolated-part allowance declared." in output
+    assert "Suggested next steps:" in output
 
 
 def test_add_tool_call_renders_all_compile_warnings_without_truncating_count() -> None:

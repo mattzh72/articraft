@@ -1,0 +1,7 @@
+{
+  "schema_version": 1,
+  "slug": "midi_keyboard_controller_with_pitch_wheel_and_sliders",
+  "title": "MIDI keyboard controller with pitch wheel and sliders",
+  "description": "Music-production MIDI controllers with piano-style keys, pitch/mod wheels, pads, knobs, and faders.",
+  "target_sdk_version": "base"
+}

@@ -11,8 +11,8 @@ from pathlib import Path
 import pytest
 
 from agent import runner
+from cli import hooks as git_hooks
 from cli.dataset import main as dataset_main
-from scripts import git_hooks
 from storage import dataset_workflow
 from storage.categories import CategoryStore
 from storage.collections import CollectionStore
@@ -28,6 +28,7 @@ from storage.models import (
 from storage.record_authors import RecordAuthorSyncSummary, RecordRatedBySyncSummary
 from storage.records import RecordStore
 from storage.repo import StorageRepo
+from storage.revisions import active_provenance_path
 from storage.runs import RunStore
 from tests.helpers import FakeAgent
 
@@ -160,8 +161,8 @@ def test_dataset_cli_commands_cover_promote_delete_and_prune(tmp_path: Path) -> 
         )
     )
     repo.layout.search_index_path().write_text("search-cache-placeholder", encoding="utf-8")
-    legacy_search_sqlite_path = repo.layout.cache_root / "search.sqlite"
-    legacy_search_sqlite_path.write_bytes(b"legacy sqlite placeholder")
+    stale_search_sqlite_path = repo.layout.cache_root / "search.sqlite"
+    stale_search_sqlite_path.write_bytes(b"stale sqlite placeholder")
     output = io.StringIO()
     with redirect_stdout(output):
         assert (
@@ -259,19 +260,19 @@ def test_dataset_cli_commands_cover_promote_delete_and_prune(tmp_path: Path) -> 
             },
         )
         search_index_before_prune = repo.layout.search_index_path().read_bytes()
-        assert legacy_search_sqlite_path.exists()
+        assert stale_search_sqlite_path.exists()
         assert dataset_main(["--repo-root", str(repo_root), "prune-cache"]) == 0
         assert empty_record_stage_dir.exists()
         assert empty_nested_failure_dir.exists()
         assert nonempty_stage_dir.exists()
         assert failed_stage_dir.exists()
-        assert legacy_search_sqlite_path.exists()
+        assert stale_search_sqlite_path.exists()
         assert dataset_main(["--repo-root", str(repo_root), "prune-cache", "--execute"]) == 0
         assert not empty_record_stage_dir.exists()
         assert not empty_nested_failure_dir.exists()
         assert nonempty_stage_dir.exists()
         assert not failed_stage_dir.exists()
-        assert not legacy_search_sqlite_path.exists()
+        assert not stale_search_sqlite_path.exists()
         assert repo.layout.search_index_path().read_bytes() == search_index_before_prune
 
     category_output = io.StringIO()
@@ -331,8 +332,8 @@ def test_dataset_cli_commands_cover_promote_delete_and_prune(tmp_path: Path) -> 
         in output.getvalue()
     )
     assert "failed_staging_dirs_to_remove=1" in output.getvalue()
-    assert "legacy_files_to_remove=1" in output.getvalue()
-    assert "sample_legacy_file=search.sqlite" in output.getvalue()
+    assert "stale_files_to_remove=1" in output.getvalue()
+    assert "sample_stale_file=search.sqlite" in output.getvalue()
     assert "empty_dirs_to_remove=" in output.getvalue()
     assert "Removed cache paths:" in output.getvalue()
     assert "Preview only. Re-run with --execute to remove these cache paths." in output.getvalue()
@@ -581,9 +582,7 @@ def test_run_single_generates_dataset_record_and_creates_category(
     assert record["collections"] == ["dataset"]
     assert record["category_slug"] == "internet_router"
     provenance = json.loads(
-        (repo.layout.record_dir("rec_router_single") / "provenance.json").read_text(
-            encoding="utf-8"
-        )
+        active_provenance_path(repo, "rec_router_single", record=record).read_text(encoding="utf-8")
     )
     assert provenance["generation"]["max_cost_usd"] == 1.5
 

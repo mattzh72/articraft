@@ -1,7 +1,14 @@
 import { useEffect, useState, type JSX } from "react";
 
-import { useViewer } from "@/lib/viewer-context";
-import { fetchRecordFile, fetchRecordTraceFile, fetchStagingFile, fetchStagingTraceFile } from "@/lib/api";
+import { useViewer, useViewerDispatch } from "@/lib/viewer-context";
+import {
+  fetchRecordFile,
+  fetchRecordHistory,
+  fetchRecordTraceFile,
+  fetchStagingFile,
+  fetchStagingTraceFile,
+} from "@/lib/api";
+import type { RecordHistory, RecordHistoryRevision, RecordSummary } from "@/lib/types";
 import { findStagingEntryInBootstrap } from "@/lib/record-summary";
 import { TracePanel } from "@/components/inspector/TracePanel";
 import { Badge } from "@/components/ui/badge";
@@ -32,11 +39,152 @@ function SectionLabel({ children }: { children: React.ReactNode }): JSX.Element 
   );
 }
 
+function externalAgentLabel(agent: string | null | undefined): string {
+  if (agent === "codex") return "Codex";
+  if (agent === "claude-code") return "Claude Code";
+  return agent ?? "External";
+}
+
+function formatCost(value: number | null | undefined): string {
+  return value != null ? `$${value.toFixed(4)}` : "--";
+}
+
+function HistoryRevisionRow({ row }: { row: RecordHistoryRevision }): JSX.Element {
+  const dispatch = useViewerDispatch();
+  const modelLabel = [row.provider, row.model_id].filter(Boolean).join(" / ");
+  const statusLabel = row.status && row.status !== "unknown" ? row.status : null;
+  const costLabel = row.total_cost_usd != null ? formatCost(row.total_cost_usd) : null;
+  const promptLabel = row.prompt_preview?.trim() || null;
+
+  return (
+    <li className="border-t border-[var(--border-subtle)] first:border-t-0">
+      <button
+        type="button"
+        onClick={() => dispatch({ type: "SELECT_RECORD", payload: row.record_id })}
+        className="-mx-2 block w-full rounded px-2 py-2 text-left transition-colors hover:bg-[var(--surface-2)]"
+        aria-label={`Select ${row.record_id}`}
+      >
+        <div className="flex items-start justify-between gap-2">
+          <span
+            className="min-w-0 flex-1 font-mono text-[10px] text-[var(--text-secondary)]"
+            style={{ overflowWrap: "anywhere", wordBreak: "break-word" }}
+          >
+            {row.record_id}
+          </span>
+          {costLabel ? (
+            <span className="shrink-0 font-mono text-[10px] text-[var(--text-tertiary)]">
+              {costLabel}
+            </span>
+          ) : null}
+        </div>
+        {promptLabel ? (
+          <p className="mt-1 line-clamp-2 text-[11px] text-[var(--text-secondary)]">
+            {promptLabel}
+          </p>
+        ) : null}
+        {modelLabel || statusLabel ? (
+          <div className="mt-1 flex items-center justify-between gap-2 text-[10px] text-[var(--text-tertiary)]">
+            {modelLabel ? <span className="min-w-0 truncate">{modelLabel}</span> : <span />}
+            {statusLabel ? <span className="shrink-0">{statusLabel}</span> : null}
+          </div>
+        ) : null}
+      </button>
+    </li>
+  );
+}
+
+function HistoryPanel({
+  history,
+  selectedRecord,
+}: {
+  history: RecordHistory | null;
+  selectedRecord: RecordSummary;
+}): JSX.Element | null {
+  const dispatch = useViewerDispatch();
+  if (!history) return null;
+  const hasAncestors = history.ancestors.length > 0;
+  const hasDescendants = history.descendants.length > 0;
+  const hasOrigin =
+    !!selectedRecord.origin_record_id &&
+    selectedRecord.origin_record_id !== selectedRecord.record_id;
+  if (!hasAncestors && !hasDescendants && !hasOrigin) return null;
+
+  return (
+    <section>
+      <SectionLabel>History</SectionLabel>
+      <div className="space-y-3">
+        {hasOrigin ? (
+          <div className="prop-row-stacked">
+            <span className="prop-label">Origin</span>
+            <span className="prop-value font-mono text-[10px]">
+              {selectedRecord.origin_record_id}
+            </span>
+          </div>
+        ) : null}
+
+        {hasAncestors ? (
+          <div>
+            <p className="pb-1 text-[10px] font-medium uppercase tracking-[0.05em] text-[var(--text-tertiary)]">
+              Ancestors
+            </p>
+            <ul>
+              {history.ancestors.map((row) => (
+                <HistoryRevisionRow
+                  key={`${row.record_id}:${row.revision_id}:ancestor`}
+                  row={row}
+                />
+              ))}
+            </ul>
+          </div>
+        ) : null}
+
+        {hasDescendants ? (
+          <div>
+            <p className="pb-1 text-[10px] font-medium uppercase tracking-[0.05em] text-[var(--text-tertiary)]">
+              Descendants
+            </p>
+            <ul>
+              {history.descendants.map((descendant) => (
+                <li
+                  key={descendant.record_id}
+                  className="border-t border-[var(--border-subtle)] first:border-t-0"
+                >
+                  <button
+                    type="button"
+                    onClick={() =>
+                      dispatch({ type: "SELECT_RECORD", payload: descendant.record_id })
+                    }
+                    className="-mx-2 block w-full rounded px-2 py-2 text-left transition-colors hover:bg-[var(--surface-2)]"
+                    aria-label={`Select ${descendant.record_id}`}
+                  >
+                    <span
+                      className="block font-mono text-[10px] text-[var(--text-secondary)]"
+                      style={{ overflowWrap: "anywhere", wordBreak: "break-word" }}
+                    >
+                      {descendant.record_id}
+                    </span>
+                    {descendant.title ? (
+                      <p className="mt-1 line-clamp-2 text-[11px] text-[var(--text-secondary)]">
+                        {descendant.title}
+                      </p>
+                    ) : null}
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ) : null}
+      </div>
+    </section>
+  );
+}
+
 export function MetadataPanel(): JSX.Element {
   const { bootstrap, selectedRecordId, selectedRecordSummary, selection } = useViewer();
   const [compileReport, setCompileReport] = useState<Record<string, unknown> | null>(null);
   const [cost, setCost] = useState<Record<string, unknown> | null>(null);
   const [traceText, setTraceText] = useState<string | null>(null);
+  const [history, setHistory] = useState<RecordHistory | null>(null);
   const [loadingExtras, setLoadingExtras] = useState(false);
 
   const isStaging = selection?.kind === "staging";
@@ -52,6 +200,8 @@ export function MetadataPanel(): JSX.Element {
   const hasSelectedRecord = Boolean(selectedRecordId && record);
   const recordHasCompileReport = record?.has_compile_report ?? false;
   const recordHasCost = record?.has_cost ?? false;
+  const recordHasTraces = record?.has_traces ?? false;
+  const isExternalRecord = record?.creator_mode === "external_agent";
   const stagingHasCost = stagingEntry?.has_cost ?? false;
   const stagingHasTraces = stagingEntry?.has_traces ?? false;
   const stagingRecordId = stagingEntry?.record_id ?? null;
@@ -106,6 +256,7 @@ export function MetadataPanel(): JSX.Element {
       setCompileReport(null);
       setCost(null);
       setTraceText(null);
+      setHistory(null);
       setLoadingExtras(false);
       return;
     }
@@ -143,15 +294,19 @@ export function MetadataPanel(): JSX.Element {
       setCost(null);
     }
 
-    promises.push(
-      fetchRecordTraceFile(selectedRecordId, "trajectory.jsonl")
-        .then((text) => {
-          if (!cancelled) setTraceText(text);
-        })
-        .catch(() => {
-          if (!cancelled) setTraceText(null);
-        }),
-    );
+    if (recordHasTraces) {
+      promises.push(
+        fetchRecordTraceFile(selectedRecordId, "trajectory.jsonl")
+          .then((text) => {
+            if (!cancelled) setTraceText(text);
+          })
+          .catch(() => {
+            if (!cancelled) setTraceText(null);
+          }),
+      );
+    } else {
+      setTraceText(null);
+    }
 
     Promise.all(promises).finally(() => {
       if (!cancelled) setLoadingExtras(false);
@@ -165,6 +320,7 @@ export function MetadataPanel(): JSX.Element {
     isStaging,
     recordHasCompileReport,
     recordHasCost,
+    recordHasTraces,
     recordSelectionKey,
     selectedRecordId,
     stagingHasCost,
@@ -173,6 +329,25 @@ export function MetadataPanel(): JSX.Element {
     stagingRunId,
     stagingSelectionKey,
   ]);
+
+  useEffect(() => {
+    if (!selectedRecordId || !record) {
+      setHistory(null);
+      return;
+    }
+
+    let cancelled = false;
+    fetchRecordHistory(selectedRecordId)
+      .then((payload) => {
+        if (!cancelled) setHistory(payload);
+      })
+      .catch(() => {
+        if (!cancelled) setHistory(null);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [record, selectedRecordId]);
 
   if (!selection) {
     return (
@@ -190,15 +365,15 @@ export function MetadataPanel(): JSX.Element {
           <section>
             <SectionLabel>Identity</SectionLabel>
             <div className="space-y-0">
-              <div className="prop-row">
+              <div className="prop-row-stacked">
                 <span className="prop-label">Run ID</span>
                 <span className="prop-value font-mono text-[10px]">{stagingEntry.run_id}</span>
               </div>
-              <div className="prop-row">
+              <div className="prop-row-stacked">
                 <span className="prop-label">Record ID</span>
                 <span className="prop-value font-mono text-[10px]">{stagingEntry.record_id}</span>
               </div>
-              <div className="prop-row">
+              <div className="prop-row-stacked">
                 <span className="prop-label">Staging Dir</span>
                 <span className="prop-value font-mono text-[10px]">{stagingEntry.staging_dir}</span>
               </div>
@@ -280,11 +455,11 @@ export function MetadataPanel(): JSX.Element {
         <section>
           <SectionLabel>Identity</SectionLabel>
           <div className="space-y-0">
-            <div className="prop-row">
+            <div className="prop-row-stacked">
               <span className="prop-label">Record ID</span>
               <span className="prop-value font-mono text-[10px]">{record.record_id}</span>
             </div>
-            <div className="prop-row">
+            <div className="prop-row-stacked">
               <span className="prop-label">Run ID</span>
               <span className="prop-value font-mono text-[10px]">{record.run_id ?? "--"}</span>
             </div>
@@ -308,6 +483,9 @@ export function MetadataPanel(): JSX.Element {
             <Badge variant={statusVariant(record.materialization_status)}>
               Assets: {record.materialization_status ?? "unknown"}
             </Badge>
+            {isExternalRecord ? (
+              <Badge variant="secondary">{externalAgentLabel(record.external_agent)}</Badge>
+            ) : null}
           </div>
           {record.run_message ? (
             <p className="mt-2 text-[11px] text-[var(--text-secondary)]">{record.run_message}</p>
@@ -337,6 +515,8 @@ export function MetadataPanel(): JSX.Element {
           </div>
         </section>
 
+        <HistoryPanel history={history} selectedRecord={record} />
+
         {loadingExtras && (
           <div className="space-y-1.5">
             <Skeleton className="h-3 w-24" />
@@ -361,7 +541,16 @@ export function MetadataPanel(): JSX.Element {
           </section>
         )}
 
-        {!loadingExtras && <TracePanel cost={cost} traceText={traceText} />}
+        {!loadingExtras && isExternalRecord && !recordHasTraces ? (
+          <section>
+            <SectionLabel>Agent Trace</SectionLabel>
+            <p className="text-[11px] text-[var(--text-quaternary)]">No Articraft agent trace</p>
+          </section>
+        ) : null}
+
+        {!loadingExtras && (!isExternalRecord || recordHasTraces) ? (
+          <TracePanel cost={cost} traceText={traceText} record={record} />
+        ) : null}
       </div>
     </ScrollArea>
   );

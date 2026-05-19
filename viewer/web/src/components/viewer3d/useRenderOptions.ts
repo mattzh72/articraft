@@ -3,6 +3,7 @@ import { useState, useCallback, useEffect, useRef } from 'react';
 import { updateUrlSearchParams } from '@/lib/url';
 
 export interface RenderOptions {
+  fancyGraphics: boolean;
   showEdges: boolean;
   showGrid: boolean;
   showCollisions: boolean;
@@ -14,7 +15,7 @@ export interface RenderOptions {
 }
 
 const STORAGE_KEY = 'articraft-render-options';
-const STORAGE_SCHEMA_VERSION = 5;
+const STORAGE_SCHEMA_VERSION = 6;
 const RENDER_QUERY_PARAM = 'render';
 const RENDER_OPTION_KEYS: Array<keyof RenderOptions> = [
   'showEdges',
@@ -25,9 +26,11 @@ const RENDER_OPTION_KEYS: Array<keyof RenderOptions> = [
   'autoAnimate',
   'showJointOverlay',
   'showSurfaceSamples',
+  'fancyGraphics',
 ];
 
-const DEFAULT_OPTIONS: RenderOptions = {
+export const defaultRenderOptions: RenderOptions = {
+  fancyGraphics: false,
   showEdges: true,
   showGrid: true,
   showCollisions: false,
@@ -38,7 +41,7 @@ const DEFAULT_OPTIONS: RenderOptions = {
   showJointOverlay: false,
 };
 
-const DEFAULT_RENDER_QUERY_VALUE = serializeOptions(DEFAULT_OPTIONS);
+const DEFAULT_RENDER_QUERY_VALUE = serializeOptions(defaultRenderOptions);
 
 export interface RenderOptionsState {
   options: RenderOptions;
@@ -50,20 +53,21 @@ export interface RenderOptionsState {
  * Read persisted render options from localStorage, falling back to defaults.
  */
 function loadOptions(): RenderOptions {
-  let options = { ...DEFAULT_OPTIONS };
+  let options = { ...defaultRenderOptions };
 
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (raw) {
       const parsed = JSON.parse(raw) as Partial<RenderOptions> & { schemaVersion?: number };
       if (parsed.schemaVersion === STORAGE_SCHEMA_VERSION) {
-        options = { ...DEFAULT_OPTIONS, ...parsed };
+        options = { ...defaultRenderOptions, ...parsed };
       } else {
         options = {
-          ...DEFAULT_OPTIONS,
+          ...defaultRenderOptions,
           ...parsed,
           showSegmentColors: false,
           doubleSided: true,
+          fancyGraphics: false,
         };
       }
     }
@@ -97,12 +101,14 @@ function parseOptions(value: string | null): RenderOptions | null {
     return null;
   }
 
-  const nextOptions = { ...DEFAULT_OPTIONS };
+  const nextOptions = { ...defaultRenderOptions };
   const keys =
     value.length === RENDER_OPTION_KEYS.length
       ? RENDER_OPTION_KEYS
       : value.length === RENDER_OPTION_KEYS.length - 1
         ? RENDER_OPTION_KEYS.slice(0, -1)
+      : value.length === RENDER_OPTION_KEYS.length - 2
+        ? RENDER_OPTION_KEYS.slice(0, -2)
         : null;
   if (!keys) {
     return null;
@@ -163,7 +169,7 @@ export function useRenderOptions(): RenderOptionsState {
   );
 
   const resetOptions = useCallback(() => {
-    setOptions({ ...DEFAULT_OPTIONS });
+    setOptions({ ...defaultRenderOptions });
   }, []);
 
   return { options, setOption, resetOptions };

@@ -1,0 +1,7 @@
+{
+  "schema_version": 1,
+  "slug": "typewriter_with_return_carriage",
+  "title": "Typewriter with return carriage",
+  "description": "Manual and electric typewriters with pressable keys, a sliding carriage, platen roller, and return lever.",
+  "target_sdk_version": "base"
+}

@@ -12,9 +12,11 @@ from agent.cost import max_cost_usd_from_env, parse_max_cost_usd
 from agent.prompts import normalize_sdk_package
 from agent.runner import run_from_input
 from agent.tools import build_initial_user_content, resolve_image_path
+from articraft.values import PROVIDER_VALUES, THINKING_LEVEL_VALUES
 from cli.common import add_data_root_argument, warn_if_post_commit_hook_missing
 from storage.categories import CategoryStore
 from storage.collections import CollectionStore
+from storage.data_validation import validate_data_format
 from storage.dataset_workflow import (
     category_title_from_slug as _shared_category_title_from_slug,
 )
@@ -40,6 +42,7 @@ from storage.dataset_workflow import (
     upsert_category_metadata as _shared_upsert_category_metadata,
 )
 from storage.datasets import DatasetStore
+from storage.identifiers import validate_category_slug, validate_supercategory_slug
 from storage.models import CategoryRecord, SupercategoryEntry
 from storage.queries import StorageQueries
 from storage.record_authors import sync_record_authors, sync_record_rated_by
@@ -83,7 +86,7 @@ class DeleteSupercategoryPreview:
 @dataclass(slots=True, frozen=True)
 class PruneCachePreview:
     failed_staging_dirs: list[Path]
-    legacy_files: list[Path]
+    stale_files: list[Path]
     empty_dirs: list[Path]
 
 
@@ -170,10 +173,9 @@ def _resolve_record_reference(repo: StorageRepo, record_ref: str) -> str:
 
 
 def _normalize_required_slug(value: str | None, label: str) -> str:
-    slug = str(value or "").strip()
-    if not slug:
-        raise ValueError(f"{label} is required.")
-    return slug
+    if "supercategory" in label.lower():
+        return validate_supercategory_slug(value, label=label)
+    return validate_category_slug(value, label=label)
 
 
 def _slugify_category_title(title: str) -> str:
@@ -279,7 +281,6 @@ def _run_single_category_workflow(
     max_cost_usd: float | None,
     system_prompt_path: str,
     sdk_package: str,
-    design_audit: bool,
     dataset_id: str | None,
     record_id: str | None,
 ) -> tuple[str, str, dict, object]:
@@ -321,8 +322,6 @@ def _run_single_category_workflow(
             max_cost_usd=max_cost_usd,
             system_prompt_path=system_prompt_path,
             sdk_package=sdk_package,
-            sdk_docs_mode="full",
-            post_success_design_audit=design_audit,
             collection="dataset",
             category_slug=normalized_category_slug,
             dataset_id=resolved_dataset_id,
@@ -401,7 +400,7 @@ def _print_delete_record_preview(preview: DeleteRecordPreview) -> None:
 
 def _build_prune_cache_preview(repo: StorageRepo) -> PruneCachePreview:
     cache_root = repo.layout.cache_root.resolve()
-    legacy_files = [
+    stale_files = [
         path for path in (cache_root / "search.sqlite",) if path.exists() and path.is_file()
     ]
     protected_dirs = {
@@ -464,11 +463,11 @@ def _build_prune_cache_preview(repo: StorageRepo) -> PruneCachePreview:
     if cache_root.exists():
         visit(cache_root)
     failed_staging_dirs.sort(key=lambda path: path.as_posix())
-    legacy_files.sort(key=lambda path: path.as_posix())
+    stale_files.sort(key=lambda path: path.as_posix())
     empty_dirs.sort(key=lambda path: (len(path.relative_to(cache_root).parts), path.as_posix()))
     return PruneCachePreview(
         failed_staging_dirs=failed_staging_dirs,
-        legacy_files=legacy_files,
+        stale_files=stale_files,
         empty_dirs=empty_dirs,
     )
 
@@ -478,7 +477,7 @@ def _print_prune_cache_preview(repo: StorageRepo, preview: PruneCachePreview) ->
     print("Prune cache preview")
     print(f"cache_root={cache_root}")
     print(f"failed_staging_dirs_to_remove={len(preview.failed_staging_dirs)}")
-    print(f"legacy_files_to_remove={len(preview.legacy_files)}")
+    print(f"stale_files_to_remove={len(preview.stale_files)}")
     print(f"empty_dirs_to_remove={len(preview.empty_dirs)}")
     if preview.failed_staging_dirs:
         for path in preview.failed_staging_dirs[:10]:
@@ -488,14 +487,14 @@ def _print_prune_cache_preview(repo: StorageRepo, preview: PruneCachePreview) ->
             print(f"sample_failed_staging_dirs_remaining={remaining_failed}")
     else:
         print("sample_failed_staging_dir=(none)")
-    if preview.legacy_files:
-        for path in preview.legacy_files[:10]:
-            print(f"sample_legacy_file={path.relative_to(cache_root)}")
-        remaining_legacy = len(preview.legacy_files) - 10
-        if remaining_legacy > 0:
-            print(f"sample_legacy_files_remaining={remaining_legacy}")
+    if preview.stale_files:
+        for path in preview.stale_files[:10]:
+            print(f"sample_stale_file={path.relative_to(cache_root)}")
+        remaining_stale = len(preview.stale_files) - 10
+        if remaining_stale > 0:
+            print(f"sample_stale_files_remaining={remaining_stale}")
     else:
-        print("sample_legacy_file=(none)")
+        print("sample_stale_file=(none)")
     if preview.empty_dirs:
         for path in preview.empty_dirs[:10]:
             print(f"sample_dir={path.relative_to(cache_root)}")
@@ -512,7 +511,7 @@ def _prune_cache(repo: StorageRepo, preview: PruneCachePreview) -> int:
         if path.exists() and path.is_dir():
             shutil.rmtree(path)
             removed += 1
-    for path in preview.legacy_files:
+    for path in preview.stale_files:
         if path.exists() and path.is_file():
             path.unlink()
             removed += 1
@@ -607,7 +606,7 @@ def _print_supercategories(repo: StorageRepo, store: SupercategoryStore) -> None
 
 
 def _build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(prog="articraft-dataset")
+    parser = argparse.ArgumentParser(prog="articraft dataset")
     add_data_root_argument(parser)
     subparsers = parser.add_subparsers(dest="command", required=True)
 
@@ -663,7 +662,7 @@ def _build_parser() -> argparse.ArgumentParser:
     run_single.add_argument(
         "--provider",
         default="openai",
-        choices=("openai", "gemini"),
+        choices=PROVIDER_VALUES,
         help="LLM provider to use for the generation run.",
     )
     run_single.add_argument(
@@ -674,7 +673,7 @@ def _build_parser() -> argparse.ArgumentParser:
     run_single.add_argument(
         "--thinking-level",
         default="high",
-        choices=("low", "med", "high"),
+        choices=THINKING_LEVEL_VALUES,
         help="Thinking budget level for the generation run.",
     )
     run_single.add_argument(
@@ -698,12 +697,6 @@ def _build_parser() -> argparse.ArgumentParser:
         "--sdk-package",
         default="sdk",
         help=argparse.SUPPRESS,
-    )
-    run_single.add_argument(
-        "--design-audit",
-        action=argparse.BooleanOptionalAction,
-        default=False,
-        help="Enable or disable post-success design-audit injection.",
     )
     run_single.add_argument(
         "--dataset-id",
@@ -841,6 +834,10 @@ def _build_parser() -> argparse.ArgumentParser:
     )
     subparsers.add_parser("validate", help="Validate record-local dataset entries.")
     subparsers.add_parser(
+        "validate-format",
+        help="Validate canonical checked-in data structure.",
+    )
+    subparsers.add_parser(
         "sync-authors",
         help="Populate record.json author fields from the git author that added each record's model.py.",
     )
@@ -899,12 +896,6 @@ def _build_parser() -> argparse.ArgumentParser:
         "--qc-blurb",
         default=None,
         help="Optional QC checklist file to append to every prompt.",
-    )
-    run_batch.add_argument(
-        "--design-audit",
-        action=argparse.BooleanOptionalAction,
-        default=False,
-        help="Enable or disable post-success design-audit injection for this batch.",
     )
     run_batch.add_argument(
         "--resume",
@@ -1066,7 +1057,6 @@ def main(argv: list[str] | None = None) -> int:
                 max_cost_usd=max_cost_usd,
                 system_prompt_path=args.system_prompt_path,
                 sdk_package=sdk_package,
-                design_audit=args.design_audit,
                 dataset_id=args.dataset_id,
                 record_id=args.record_id,
             )
@@ -1389,6 +1379,22 @@ def main(argv: list[str] | None = None) -> int:
         print(f"Dataset valid: entries={len(datasets.list_entries())}")
         return 0
 
+    if args.command == "validate-format":
+        result = validate_data_format(repo)
+        if result.errors:
+            for error in result.errors:
+                print(error)
+            return 1
+        print(
+            "Data format valid: "
+            f"categories={result.category_count} "
+            f"batch_specs={result.batch_spec_count} "
+            f"records={result.record_count} "
+            f"dataset_entries={result.dataset_entry_count} "
+            f"skipped_local_records={result.skipped_local_record_count}"
+        )
+        return 0
+
     if args.command == "sync-authors":
         repo.ensure_layout()
         try:
@@ -1480,7 +1486,6 @@ def main(argv: list[str] | None = None) -> int:
                 system_prompt_path=args.system_prompt_path,
                 max_cost_usd=args.max_cost_usd,
                 qc_blurb_path=args.qc_blurb,
-                post_success_design_audit=args.design_audit,
                 resume=args.resume,
                 resume_policy=args.resume_policy,
                 allow_resume_spec_mismatch=args.allow_resume_spec_mismatch,

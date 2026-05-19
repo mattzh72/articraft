@@ -65,6 +65,20 @@ function syncLoadedMeshVisibility(root: THREE.Object3D, showCollisionMeshes: boo
   });
 }
 
+function normalizeRobotGroupToGroundOrigin(robotGroup: THREE.Group): void {
+  robotGroup.updateMatrixWorld(true);
+  const box = new THREE.Box3().setFromObject(robotGroup);
+  if (box.isEmpty()) {
+    return;
+  }
+
+  const center = box.getCenter(new THREE.Vector3());
+  robotGroup.position.x -= center.x;
+  robotGroup.position.y -= box.min.y;
+  robotGroup.position.z -= center.z;
+  robotGroup.updateMatrixWorld(true);
+}
+
 /**
  * Hook that fetches and loads a URDF from a base file URL.
  *
@@ -74,7 +88,7 @@ function syncLoadedMeshVisibility(root: THREE.Object3D, showCollisionMeshes: boo
  * 3. Builds the scene graph with buildRobotSceneGraph
  * 4. Removes the previous robot group from the scene and adds the new one
  * 5. Fits the camera to the new model with computeFit
- * 6. Positions the grid and axis helpers underneath the model
+ * 6. Normalizes the model to the grid origin and scales the ground helpers
  */
 export function useUrdfLoader(
   baseFileUrl: string | null,
@@ -163,7 +177,7 @@ export function useUrdfLoader(
             meshCount: meshCollisionCount,
             loadedMeshCount: 0,
             failedMeshCount: 0,
-            loading: meshCollisionCount > 0,
+            loading: false,
           });
         }
 
@@ -184,6 +198,7 @@ export function useUrdfLoader(
         robotGroup.rotation.x = -Math.PI / 2;
         robotGroup.add(root);
         scene.add(robotGroup);
+        normalizeRobotGroupToGroundOrigin(robotGroup);
         robotGroupRef.current = robotGroup;
 
         // 5. Fit camera on first load, otherwise preserve the current view direction
@@ -258,6 +273,9 @@ export function useUrdfLoader(
       0,
     );
     if (meshCollisionCount === 0) {
+      return;
+    }
+    if (!showCollisionMeshes) {
       return;
     }
     if (collisionMeshesLoadedKeyRef.current === assetKey || collisionMeshesLoadingKeyRef.current === assetKey) {

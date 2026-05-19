@@ -93,11 +93,8 @@ def load_sdk_docs_reference(
     repo_root: Path,
     *,
     sdk_package: str = "sdk",
-    docs_mode: str = "full",
 ) -> str:
-    # Detailed docs now live behind `read_file(path=...)`, so the preloaded bundle stays small
-    # regardless of the legacy docs_mode setting.
-    del docs_mode
+    # Detailed docs now live behind `read_file(path=...)`, so the preloaded bundle stays small.
     bundle = load_sdk_docs_bundle(repo_root, sdk_package=sdk_package)
     preload_paths = bundle.default_read_virtual_paths()
 

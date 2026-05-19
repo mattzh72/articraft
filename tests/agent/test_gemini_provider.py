@@ -34,6 +34,31 @@ def _seed_gemini_messages() -> list[dict[str, str]]:
     ]
 
 
+def _content_text(content: object) -> str:
+    parts = getattr(content, "parts", None) or []
+    texts = [getattr(part, "text", None) for part in parts]
+    return "\n".join(text for text in texts if isinstance(text, str))
+
+
+def test_gemini_context_window_pressure_reports_prompt_fraction() -> None:
+    provider = GeminiLLM(model_id="gemini-3.1-pro-preview", dry_run=True)
+
+    pressure = provider.context_window_pressure(
+        {
+            "prompt_tokens": 250_000,
+            "cached_tokens": 100_000,
+            "candidates_tokens": 25_000,
+            "total_tokens": 275_000,
+        }
+    )
+
+    assert pressure.max_context_tokens == 1_000_000
+    assert pressure.prompt_tokens == 250_000
+    assert pressure.remaining_context_tokens == 750_000
+    assert pressure.pressure_ratio == 0.25
+    assert pressure.output_tokens == 25_000
+
+
 def test_prepare_next_request_skips_prefix_cache_event() -> None:
     provider = GeminiLLM(dry_run=True)
 
@@ -67,14 +92,16 @@ def test_prepare_next_request_compacts_for_hard_pressure_and_preserves_raw_tail(
         return []
 
     async def fake_compact_messages(
-        *, system_prompt: str, messages: list[dict]
-    ) -> tuple[dict, dict[str, int]]:
-        assert [message.get("content") for message in messages] == [
-            "old assistant",
-            "old tool result",
-        ]
+        *, system_prompt: str, messages: list[object]
+    ) -> tuple[object, dict[str, int]]:
+        assert [_content_text(message) for message in messages] == ["old assistant", ""]
+        function_response = getattr(messages[1].parts[0], "function_response", None)
+        assert function_response is not None
+        assert function_response.name == "compile_model"
         return (
-            {"role": "user", "content": "[System-generated compaction summary]\nsummary"},
+            provider._convert_message(
+                {"role": "user", "content": "[System-generated compaction summary]\nsummary"}
+            ),
             {"prompt_tokens": 10_000, "candidates_tokens": 500, "total_tokens": 10_500},
         )
 
@@ -120,13 +147,50 @@ def test_prepare_next_request_compacts_for_hard_pressure_and_preserves_raw_tail(
         == "Gemini preflight token counting is disabled by design."
     )
 
-    request_messages = provider._request_messages()
-    assert request_messages[0]["content"].startswith("[System-generated compaction summary]")
-    assert [message.get("content") for message in request_messages[1:]] == [
+    request_contents = provider._request_contents()
+    assert _content_text(request_contents[0]).startswith("[System-generated compaction summary]")
+    assert _content_text(request_contents[1]) == "latest assistant"
+    assert getattr(request_contents[2].parts[0], "function_response").name == "compile_model"
+    assert _content_text(request_contents[3]) == "fix latest"
+
+
+def test_request_contents_preserves_full_history_without_compaction_summary() -> None:
+    provider = GeminiLLM(dry_run=True)
+    messages = [
+        {"role": "user", "content": "sdk docs"},
+        {"role": "user", "content": "task"},
+        {"role": "assistant", "content": "old assistant"},
+        {
+            "role": "tool",
+            "name": "compile_model",
+            "tool_call_id": "call_old",
+            "content": "old tool result",
+        },
+        {"role": "assistant", "content": "latest assistant"},
+        {
+            "role": "tool",
+            "name": "compile_model",
+            "tool_call_id": "call_latest",
+            "content": "latest tool result",
+        },
+        {"role": "user", "content": "fix latest"},
+    ]
+
+    provider._append_new_contents(messages)
+
+    request_contents = provider._request_contents()
+
+    assert [_content_text(content) for content in request_contents] == [
+        "sdk docs",
+        "task",
+        "old assistant",
+        "",
         "latest assistant",
-        "latest tool result",
+        "",
         "fix latest",
     ]
+    assert getattr(request_contents[3].parts[0], "function_response").name == "compile_model"
+    assert getattr(request_contents[5].parts[0], "function_response").name == "compile_model"
 
 
 def test_prepare_next_request_soft_compaction_resets_after_compile_streak_reset() -> None:
@@ -139,10 +203,12 @@ def test_prepare_next_request_soft_compaction_resets_after_compile_streak_reset(
         return []
 
     async def fake_compact_messages(
-        *, system_prompt: str, messages: list[dict]
-    ) -> tuple[dict, dict[str, int]]:
+        *, system_prompt: str, messages: list[object]
+    ) -> tuple[object, dict[str, int]]:
         return (
-            {"role": "user", "content": "[System-generated compaction summary]\nsummary"},
+            provider._convert_message(
+                {"role": "user", "content": "[System-generated compaction summary]\nsummary"}
+            ),
             {"prompt_tokens": 1_000, "candidates_tokens": 50, "total_tokens": 1_050},
         )
 
@@ -181,6 +247,9 @@ def test_prepare_next_request_soft_compaction_resets_after_compile_streak_reset(
             last_compile_failure_sig=None,
         )
     )
+    provider._contents = []
+    provider._last_message_count = 0
+    provider._last_response_start_index = None
     third = asyncio.run(
         provider.prepare_next_request(
             system_prompt="system",
@@ -236,12 +305,14 @@ def test_prepare_next_request_requires_extra_failure_when_cache_hits_are_high() 
         return []
 
     async def fake_compact_messages(
-        *, system_prompt: str, messages: list[dict]
-    ) -> tuple[dict, dict[str, int]]:
+        *, system_prompt: str, messages: list[object]
+    ) -> tuple[object, dict[str, int]]:
         nonlocal compact_calls
         compact_calls += 1
         return (
-            {"role": "user", "content": "[System-generated compaction summary]\nsummary"},
+            provider._convert_message(
+                {"role": "user", "content": "[System-generated compaction summary]\nsummary"}
+            ),
             {"prompt_tokens": 1_000, "candidates_tokens": 50, "total_tokens": 1_050},
         )
 
@@ -288,12 +359,14 @@ def test_prepare_next_request_soft_compaction_respects_cooldown() -> None:
     compact_calls = 0
 
     async def fake_compact_messages(
-        *, system_prompt: str, messages: list[dict]
-    ) -> tuple[dict, dict[str, int]]:
+        *, system_prompt: str, messages: list[object]
+    ) -> tuple[object, dict[str, int]]:
         nonlocal compact_calls
         compact_calls += 1
         return (
-            {"role": "user", "content": "[System-generated compaction summary]\nsummary"},
+            provider._convert_message(
+                {"role": "user", "content": "[System-generated compaction summary]\nsummary"}
+            ),
             {"prompt_tokens": 1_000, "candidates_tokens": 50, "total_tokens": 1_050},
         )
 
@@ -311,6 +384,9 @@ def test_prepare_next_request_soft_compaction_respects_cooldown() -> None:
         )
     )
     provider._last_usage = {"prompt_tokens": 500_000}
+    provider._contents = []
+    provider._last_message_count = 0
+    provider._last_response_start_index = None
     skipped = asyncio.run(
         provider.prepare_next_request(
             system_prompt="system",
@@ -358,6 +434,8 @@ def test_prepare_next_request_emits_skip_for_unsupported_threshold_model() -> No
 def test_gemini_compaction_prompt_is_loaded_from_prompt_asset() -> None:
     prompt_text = _gemini_compaction_prompt_text()
     assert "Return JSON only." in prompt_text
+    assert "Do not invent missing details." in prompt_text
+    assert "return an empty array" in prompt_text
 
 
 def test_close_emits_cache_delete_event() -> None:
@@ -383,7 +461,7 @@ def test_close_emits_cache_delete_event() -> None:
     ]
 
 
-def test_convert_message_preserves_thought_flag_when_replaying_google_parts() -> None:
+def test_convert_message_prefers_raw_google_content_for_replay() -> None:
     provider = GeminiLLM(dry_run=True)
     signature = base64.b64encode(b"sig").decode("ascii")
 
@@ -392,6 +470,23 @@ def test_convert_message_preserves_thought_flag_when_replaying_google_parts() ->
             "role": "assistant",
             "extra_content": {
                 "google": {
+                    "content": {
+                        "role": "model",
+                        "parts": [
+                            {
+                                "type": "text",
+                                "text": "internal summary",
+                                "thought": True,
+                                "thought_signature": signature,
+                            },
+                            {
+                                "type": "function_call",
+                                "name": "compile_model",
+                                "arguments": {},
+                                "thought_signature": signature,
+                            },
+                        ],
+                    },
                     "parts": [
                         {
                             "type": "text",
@@ -405,7 +500,7 @@ def test_convert_message_preserves_thought_flag_when_replaying_google_parts() ->
                             "arguments": {},
                             "thought_signature": signature,
                         },
-                    ]
+                    ],
                 }
             },
         }
@@ -418,6 +513,56 @@ def test_convert_message_preserves_thought_flag_when_replaying_google_parts() ->
     assert thought_part.thought_signature == b"sig"
     assert tool_part.function_call.name == "compile_model"
     assert tool_part.thought_signature == b"sig"
+
+
+def test_append_new_contents_ignores_harness_assistant_after_canonical_model_turn() -> None:
+    provider = GeminiLLM(dry_run=True)
+    provider._append_new_contents(
+        [
+            {"role": "user", "content": "sdk docs"},
+            {"role": "user", "content": "task"},
+        ]
+    )
+    provider._contents.append(
+        provider._convert_message(
+            {
+                "role": "assistant",
+                "extra_content": {
+                    "google": {
+                        "content": {
+                            "role": "model",
+                            "parts": [
+                                {
+                                    "type": "text",
+                                    "text": "raw model reply",
+                                    "thought": False,
+                                }
+                            ],
+                        }
+                    }
+                },
+            }
+        )
+    )
+    provider._last_response_start_index = 2
+
+    provider._append_new_contents(
+        [
+            {"role": "user", "content": "sdk docs"},
+            {"role": "user", "content": "task"},
+            {"role": "assistant", "thought_summary": "internal summary"},
+            {
+                "role": "tool",
+                "name": "compile_model",
+                "tool_call_id": "call_latest",
+                "content": '{"result": "ok"}',
+            },
+        ]
+    )
+
+    assert len(provider._contents) == 4
+    assert _content_text(provider._contents[2]) == "raw model reply"
+    assert getattr(provider._contents[3].parts[0], "function_response").name == "compile_model"
 
 
 def test_convert_response_serializes_replace_function_call_args() -> None:
@@ -456,6 +601,110 @@ def test_convert_response_serializes_replace_function_call_args() -> None:
         "old_string": '"draft_model"',
         "new_string": '"draft_model_v2"',
     }
+
+
+def test_convert_response_serializes_full_google_content_for_replay() -> None:
+    provider = GeminiLLM(dry_run=True)
+    signature = b"sig"
+
+    response = SimpleNamespace(
+        candidates=[
+            SimpleNamespace(
+                content=SimpleNamespace(
+                    parts=[
+                        SimpleNamespace(
+                            text="internal summary",
+                            thought=True,
+                            thought_signature=signature,
+                            function_call=None,
+                        ),
+                        SimpleNamespace(
+                            text="final answer",
+                            thought=False,
+                            thought_signature=None,
+                            function_call=None,
+                        ),
+                        SimpleNamespace(
+                            text=None,
+                            thought=False,
+                            thought_signature=signature,
+                            function_call=SimpleNamespace(
+                                id="call_compile",
+                                name="compile_model",
+                                args={},
+                            ),
+                        ),
+                    ]
+                )
+            )
+        ]
+    )
+
+    converted = provider._convert_response(response)
+
+    assert converted["thought_summary"] == "internal summary"
+    assert converted["content"] == "final answer"
+    assert converted["extra_content"] == {
+        "google": {
+            "content": {
+                "role": "model",
+                "parts": [
+                    {
+                        "type": "text",
+                        "text": "internal summary",
+                        "thought": True,
+                        "thought_signature": base64.b64encode(signature).decode("ascii"),
+                    },
+                    {
+                        "type": "text",
+                        "text": "final answer",
+                        "thought": False,
+                        "thought_signature": None,
+                    },
+                    {
+                        "type": "function_call",
+                        "id": "call_compile",
+                        "name": "compile_model",
+                        "arguments": {},
+                        "thought_signature": base64.b64encode(signature).decode("ascii"),
+                    },
+                ],
+            }
+        }
+    }
+
+
+def test_history_content_from_response_preserves_thought_parts() -> None:
+    provider = GeminiLLM(dry_run=True)
+    signature = b"sig"
+
+    response = SimpleNamespace(
+        candidates=[
+            SimpleNamespace(
+                content=SimpleNamespace(
+                    role="model",
+                    parts=[
+                        SimpleNamespace(
+                            text="internal summary",
+                            thought=True,
+                            thought_signature=signature,
+                            function_call=None,
+                        ),
+                        SimpleNamespace(
+                            text="final answer",
+                            thought=False,
+                            thought_signature=None,
+                            function_call=None,
+                        ),
+                    ],
+                )
+            )
+        ]
+    )
+
+    history_content = provider._history_content_from_response(response)
+
+    assert history_content is response.candidates[0].content
 
 
 def test_prepare_next_request_never_attempts_prefix_cache_creation() -> None:

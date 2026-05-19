@@ -13,7 +13,7 @@ from agent.harness import ArticraftAgent
 from agent.models import CompileReport, TerminateReason
 from agent.tools.compile_model import CompileModelTool
 from agent.tools.registry import ToolRegistry
-from agent.tools.write_code import WriteCodeTool
+from agent.tools.write_code import WriteFileTool
 
 
 class _CountingDisplay:
@@ -95,6 +95,34 @@ def test_compile_async_uses_timeout_wrapper(
     }
 
 
+def test_assistant_message_preserves_provider_extra_content_without_text_or_tools() -> None:
+    agent = ArticraftAgent.__new__(ArticraftAgent)
+    response = {
+        "content": "",
+        "tool_calls": [],
+        "extra_content": {
+            "anthropic": {
+                "content": [
+                    {
+                        "type": "thinking",
+                        "thinking": "",
+                        "signature": "sig",
+                    }
+                ],
+                "stop_reason": "end_turn",
+            }
+        },
+        "usage": {"prompt_tokens": 1, "candidates_tokens": 1, "total_tokens": 2},
+    }
+
+    assistant_message = agent._build_assistant_message(response)
+
+    assert assistant_message["role"] == "assistant"
+    assert "content" not in assistant_message
+    assert "tool_calls" not in assistant_message
+    assert assistant_message["extra_content"]["anthropic"]["content"][0]["signature"] == "sig"
+
+
 def test_execute_compile_model_reuses_cached_success_for_current_revision() -> None:
     agent = ArticraftAgent.__new__(ArticraftAgent)
     agent._current_edit_revision = 2
@@ -135,30 +163,6 @@ def test_execute_compile_model_reuses_cached_success_for_current_revision() -> N
     assert "Compile passed cleanly." in str(first.output)
     assert "Fresh compile already exists for the current code revision" in str(second.output)
     assert "Treat that compile result as authoritative" in str(second.output)
-
-
-def test_flash_model_disables_post_success_design_audit_by_default(
-    monkeypatch: pytest.MonkeyPatch,
-    tmp_path: Path,
-) -> None:
-    class _FlashLLM:
-        model_id = "gemini-3-flash-preview"
-
-        def __init__(self, *args: object, **kwargs: object) -> None:
-            return None
-
-        async def close(self) -> None:
-            return None
-
-    monkeypatch.setattr(harness, "GeminiLLM", _FlashLLM)
-
-    agent = ArticraftAgent(
-        file_path=str(tmp_path / "model.py"),
-        provider="gemini",
-        display_enabled=False,
-    )
-
-    assert agent._post_success_design_audit_enabled is False
 
 
 def test_execute_compile_model_failure_leaves_latest_revision_stale() -> None:
@@ -349,7 +353,6 @@ def test_run_keeps_pasted_code_in_conversation_without_recovery_messages(
         provider="gemini",
         max_turns=6,
         display_enabled=False,
-        post_success_design_audit=False,
     )
     agent.tool_registry = ToolRegistry([CompileModelTool()])
 
@@ -376,7 +379,7 @@ def test_run_keeps_pasted_code_in_conversation_without_recovery_messages(
     )
 
 
-def test_mark_code_mutated_invalidates_fresh_compile_without_rearming_audit() -> None:
+def test_mark_code_mutated_invalidates_fresh_compile() -> None:
     agent = ArticraftAgent.__new__(ArticraftAgent)
     agent._current_edit_revision = 3
     agent._last_successful_compile_revision = 3
@@ -385,16 +388,14 @@ def test_mark_code_mutated_invalidates_fresh_compile_without_rearming_audit() ->
         warnings=[],
         signal_bundle=build_compile_signal_bundle(status="success"),
     )
-    agent._post_success_design_audit_sent = True
 
     agent._mark_code_mutated("replace")
 
     assert agent._current_edit_revision == 4
     assert agent._latest_code_is_fresh() is False
-    assert agent._post_success_design_audit_sent is True
 
 
-def test_run_requires_compile_model_before_concluding_without_design_audit(
+def test_run_requires_compile_model_before_concluding(
     monkeypatch: pytest.MonkeyPatch,
     tmp_path: Path,
 ) -> None:
@@ -457,7 +458,6 @@ def test_run_requires_compile_model_before_concluding_without_design_audit(
         file_path=str(tmp_path / "model.py"),
         provider="gemini",
         max_turns=6,
-        post_success_design_audit=True,
         display_enabled=False,
     )
 
@@ -483,7 +483,6 @@ def test_run_requires_compile_model_before_concluding_without_design_audit(
         if message.get("role") == "user"
     ]
     assert any("<compile_required>" in content for content in user_messages)
-    assert all("<design_audit>" not in content for content in user_messages)
 
     compile_tool_messages = [
         message
@@ -493,10 +492,6 @@ def test_run_requires_compile_model_before_concluding_without_design_audit(
     assert len(compile_tool_messages) == 1
     compile_payload = json.loads(compile_tool_messages[0]["content"])
     assert "Compile passed cleanly." in compile_payload["result"]
-
-    assert all(
-        "<design_audit>" not in str(message.get("content", "")) for message in result.conversation
-    )
 
 
 def test_run_accepts_gemini_replace_without_allow_multiple(
@@ -560,7 +555,6 @@ def test_run_accepts_gemini_replace_without_allow_multiple(
         file_path=str(tmp_path / "model.py"),
         provider="gemini",
         max_turns=5,
-        post_success_design_audit=False,
         display_enabled=False,
     )
 
@@ -590,7 +584,7 @@ def test_run_accepts_gemini_replace_without_allow_multiple(
         ("openai", "OpenAILLM"),
     ],
 )
-def test_finish_attempts_do_not_inject_design_audit_even_when_enabled(
+def test_finish_attempts_share_compile_gate(
     monkeypatch: pytest.MonkeyPatch,
     tmp_path: Path,
     provider_name: str,
@@ -617,8 +611,8 @@ def run_tests():
                             "id": "call_write_1",
                             "type": "function",
                             "function": {
-                                "name": "write_code",
-                                "arguments": json.dumps({"code": rewritten_code}),
+                                "name": "write_file",
+                                "arguments": json.dumps({"content": rewritten_code}),
                             },
                         }
                     ],
@@ -642,8 +636,8 @@ def run_tests():
                             "id": "call_write_2",
                             "type": "function",
                             "function": {
-                                "name": "write_code",
-                                "arguments": json.dumps({"code": rewritten_code}),
+                                "name": "write_file",
+                                "arguments": json.dumps({"content": rewritten_code}),
                             },
                         }
                     ],
@@ -682,10 +676,9 @@ def run_tests():
         file_path=str(tmp_path / f"{provider_name}_model.py"),
         provider=provider_name,
         max_turns=10,
-        post_success_design_audit=True,
         display_enabled=False,
     )
-    agent.tool_registry = ToolRegistry([WriteCodeTool(), CompileModelTool()])
+    agent.tool_registry = ToolRegistry([WriteFileTool(), CompileModelTool()])
 
     async def fake_compile() -> CompileReport:
         return report
@@ -706,7 +699,6 @@ def run_tests():
         for message in result.conversation
         if message.get("role") == "user"
     ]
-    assert sum("<design_audit>" in content for content in user_messages) == 0
     assert sum("<compile_required>" in content for content in user_messages) == 1
 
 
@@ -717,7 +709,7 @@ def run_tests():
         {},
     ],
 )
-def test_finish_attempt_paths_end_turn_and_share_compile_gate_without_design_audit(
+def test_finish_attempt_paths_end_turn_and_share_compile_gate(
     monkeypatch: pytest.MonkeyPatch,
     tmp_path: Path,
     finish_response: dict[str, object],
@@ -762,7 +754,6 @@ def test_finish_attempt_paths_end_turn_and_share_compile_gate_without_design_aud
         file_path=str(tmp_path / "model.py"),
         provider="gemini",
         max_turns=6,
-        post_success_design_audit=True,
         display_enabled=False,
     )
     agent.tool_registry = ToolRegistry([CompileModelTool()])
@@ -789,7 +780,6 @@ def test_finish_attempt_paths_end_turn_and_share_compile_gate_without_design_aud
         if message.get("role") == "user"
     ]
     assert sum("<compile_required>" in content for content in user_messages) == 1
-    assert sum("<design_audit>" in content for content in user_messages) == 0
 
 
 def test_code_paste_response_uses_normal_finish_rules_without_nudge(
@@ -835,7 +825,6 @@ def test_code_paste_response_uses_normal_finish_rules_without_nudge(
         file_path=str(tmp_path / "model.py"),
         provider="gemini",
         max_turns=4,
-        post_success_design_audit=True,
         display_enabled=False,
     )
     agent.tool_registry = ToolRegistry([CompileModelTool()])

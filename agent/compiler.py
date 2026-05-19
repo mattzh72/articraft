@@ -13,6 +13,7 @@ import statistics
 import sys
 import threading
 import traceback
+from contextlib import suppress
 from pathlib import Path
 from typing import Any
 
@@ -610,10 +611,8 @@ def _compile_worker(
             payload["signal_bundle"] = signal_bundle.to_dict()
         conn.send(payload)  # type: ignore[attr-defined]
     finally:
-        try:
+        with suppress(Exception):
             conn.close()  # type: ignore[attr-defined]
-        except Exception:
-            pass
 
 
 def compile_urdf_report_maybe_timeout(
@@ -658,18 +657,14 @@ def compile_urdf_report_maybe_timeout(
     )
     proc.start()
     try:
-        try:
+        with suppress(Exception):
             child_conn.close()
-        except Exception:
-            pass
 
         if parent_conn.poll(timeout_seconds):
             msg = parent_conn.recv()
         else:
-            try:
+            with suppress(Exception):
                 proc.terminate()
-            except Exception:
-                pass
             proc.join(timeout=2.0)
             raise TimeoutError(
                 f"URDF compile timed out after {timeout_seconds:.0f}s. "
@@ -679,17 +674,13 @@ def compile_urdf_report_maybe_timeout(
                 "(URDF_GEOMETRY_OVERLAP_MAX_SAMPLES / URDF_DISABLE_GEOMETRY_OVERLAP_CHECK=1)."
             )
     finally:
-        try:
+        with suppress(Exception):
             parent_conn.close()
-        except Exception:
-            pass
 
     proc.join(timeout=2.0)
     if proc.is_alive():
-        try:
+        with suppress(Exception):
             proc.terminate()
-        except Exception:
-            pass
         proc.join(timeout=2.0)
 
     if not isinstance(msg, dict):

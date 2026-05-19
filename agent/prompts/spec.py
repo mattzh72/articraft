@@ -21,7 +21,6 @@ PROMPT_VARIANTS: tuple[PromptVariant, ...] = (
         name="designer_openai",
         sections=(
             SECTIONS_DIR / "designer_common.md",
-            SECTIONS_DIR / "workflow.md",
             SECTIONS_DIR / "link_naming.md",
             SECTIONS_DIR / "provider_openai.md",
             SECTIONS_DIR / "sdk_base.md",
@@ -33,13 +32,36 @@ PROMPT_VARIANTS: tuple[PromptVariant, ...] = (
         name="designer_gemini",
         sections=(
             SECTIONS_DIR / "designer_common.md",
-            SECTIONS_DIR / "workflow.md",
             SECTIONS_DIR / "link_naming.md",
             SECTIONS_DIR / "provider_gemini.md",
             SECTIONS_DIR / "sdk_base.md",
         ),
         output=GENERATED_DIR / "designer_system_prompt_gemini.txt",
         description="Gemini designer prompt for the unified SDK.",
+    ),
+    PromptVariant(
+        name="designer_openrouter",
+        sections=(
+            SECTIONS_DIR / "designer_common.md",
+            SECTIONS_DIR / "link_naming.md",
+            SECTIONS_DIR / "provider_gemini.md",
+            SECTIONS_DIR / "provider_openrouter_process.md",
+            SECTIONS_DIR / "sdk_base.md",
+        ),
+        output=GENERATED_DIR / "designer_system_prompt_openrouter.txt",
+        description="OpenRouter designer prompt for the unified SDK.",
+    ),
+    PromptVariant(
+        name="designer_anthropic",
+        sections=(
+            SECTIONS_DIR / "designer_common.md",
+            SECTIONS_DIR / "link_naming.md",
+            SECTIONS_DIR / "provider_gemini.md",
+            SECTIONS_DIR / "provider_openrouter_process.md",
+            SECTIONS_DIR / "sdk_base.md",
+        ),
+        output=GENERATED_DIR / "designer_system_prompt_anthropic.txt",
+        description="Anthropic designer prompt for the unified SDK.",
     ),
 )
 

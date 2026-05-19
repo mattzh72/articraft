@@ -3,7 +3,7 @@ from __future__ import annotations
 import asyncio
 from pathlib import Path
 
-from agent.tools.edit_code import EditCodeTool
+from agent.tools.edit_code import ReplaceTool
 
 
 def _write_scaffold(script_path: Path, *, editable_code: str) -> None:
@@ -27,13 +27,13 @@ def _write_scaffold(script_path: Path, *, editable_code: str) -> None:
 
 
 async def _run_edit(script_path: Path, params: dict[str, object]):
-    tool = EditCodeTool()
+    tool = ReplaceTool()
     invocation = await tool.build(params)
     invocation.bind_file_path(str(script_path))
     return await invocation.execute()
 
 
-def test_edit_code_defaults_replace_all_to_false_when_omitted(tmp_path: Path) -> None:
+def test_replace_defaults_allow_multiple_to_false_when_omitted(tmp_path: Path) -> None:
     script_path = tmp_path / "model.py"
     _write_scaffold(
         script_path,
@@ -65,7 +65,7 @@ def run_tests():
     assert updated.count('"draft_model_v2"') == 1
 
 
-def test_edit_code_treats_null_replace_all_as_default_false(tmp_path: Path) -> None:
+def test_replace_treats_null_allow_multiple_as_default_false(tmp_path: Path) -> None:
     script_path = tmp_path / "model.py"
     _write_scaffold(
         script_path,
@@ -85,7 +85,7 @@ def run_tests():
             {
                 "old_string": '"draft_model"',
                 "new_string": '"draft_model_v2"',
-                "replace_all": None,
+                "allow_multiple": None,
             },
         )
     )

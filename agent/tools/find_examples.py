@@ -49,12 +49,7 @@ class FindExamplesInvocation(BaseToolInvocation[FindExamplesParams, list[dict[st
             sdk_package=self.sdk_package,
             limit=self.params.limit,
         )
-        return ToolResult(
-            output=[
-                self._serialize_match(doc)
-                for doc in matches
-            ]
-        )
+        return ToolResult(output=[self._serialize_match(doc) for doc in matches])
 
     def _serialize_match(self, doc: Any) -> dict[str, object]:
         relative_path = doc.path.relative_to(Path(__file__).resolve().parents[2]).as_posix()

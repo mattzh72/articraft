@@ -195,7 +195,9 @@ def autocollide_part(
 
     visual_aabbs = _visual_element_aabbs(part, asset_root=asset_root)
     if not visual_aabbs:
-        raise ValidationError(f"part {part.name!r} has no visual geometry to derive collisions from")
+        raise ValidationError(
+            f"part {part.name!r} has no visual geometry to derive collisions from"
+        )
 
     if mode_key == "per_visual":
         target_aabbs = list(visual_aabbs)
@@ -238,8 +240,8 @@ def make_capsule_collisions(
     """
 
     r = float(radius)
-    l = float(length)
-    if r <= 0 or l <= 0:
+    segment_length = float(length)
+    if r <= 0 or segment_length <= 0:
         raise ValueError("radius and length must be positive")
     ax = (axis or "z").strip().lower()
     if ax not in {"x", "y", "z"}:
@@ -252,7 +254,7 @@ def make_capsule_collisions(
         "z": (0.0, 0.0, 1.0),
     }
     axis_world = _rotate_vec(base.rpy, axis_local[ax])
-    offset = tuple(component * (l * 0.5) for component in axis_world)
+    offset = tuple(component * (segment_length * 0.5) for component in axis_world)
     cyl_rpy = _rpy_from_z_axis(axis_world)
     s1_xyz = (
         base.xyz[0] - offset[0],
@@ -267,7 +269,7 @@ def make_capsule_collisions(
 
     return [
         Collision(
-            geometry=Cylinder(radius=r, length=l),
+            geometry=Cylinder(radius=r, length=segment_length),
             origin=Origin(xyz=base.xyz, rpy=cyl_rpy),
             name=f"{name_prefix}_cyl",
         ),

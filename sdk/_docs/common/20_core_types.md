@@ -125,11 +125,14 @@ Material(
     name: str,
     rgba: tuple[float, float, float, float] | None = None,
     texture: str | None = None,
+    *,
+    color: tuple[float, float, float] | tuple[float, float, float, float] | None = None,
 )
 ```
 
 - `name`: required material name.
 - `rgba`: 3 or 4 floats. A 3-tuple is expanded to `(r, g, b, 1.0)`.
+- `color`: compatibility alias for `rgba`. Use either `rgba` or `color`, not both.
 - `texture`: optional texture path.
 
 ### `Visual`
@@ -146,6 +149,8 @@ Visual(
 - `geometry`: visible geometry descriptor.
 - `origin`: local transform of this visual on its part.
 - `material`: either a `Material` object or a registered material name.
+- Material assignment is per visual. Mesh subregions do not receive separate SDK
+  materials unless they are authored as separate visuals.
 - `color`: when adding visuals through `Part.visual(...)`, accepted as a
   compatibility alias for `material`; prefer `material` in new code.
 - `name`: optional visual name. Use this when tests or probe snippets need to

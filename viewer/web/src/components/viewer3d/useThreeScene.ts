@@ -1,7 +1,7 @@
 import { useRef, useEffect, useState, useCallback } from 'react';
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
-import { createLightingRig, createGridHelper, createAxisHelper } from './lighting';
+import { createLightingRig, createGridHelper, createAxisHelper, createEnvironmentMap } from './lighting';
 
 export interface ThreeSceneState {
   scene: THREE.Scene | null;
@@ -17,7 +17,15 @@ export interface ThreeSceneState {
 export interface ThreeSceneOptions {
   maxPixelRatio?: number;
   continuousRender?: boolean;
+  fancyGraphics?: boolean;
 }
+
+type NamedLight = THREE.Light & {
+  color: THREE.Color;
+  groundColor?: THREE.Color;
+};
+
+const VIEWPORT_BACKGROUND = 0xe8edf5;
 
 function resolveDepthBufferOptions(): Pick<
   THREE.WebGLRendererParameters,
@@ -31,6 +39,85 @@ function resolveDepthBufferOptions(): Pick<
   return supportsReversedDepth
     ? { reversedDepthBuffer: true }
     : { logarithmicDepthBuffer: true };
+}
+
+function getNamedLight(group: THREE.Group, name: string): NamedLight | null {
+  const object = group.getObjectByName(name);
+  return object instanceof THREE.Light ? object as NamedLight : null;
+}
+
+function getNamedDirectionalLight(group: THREE.Group, name: string): THREE.DirectionalLight | null {
+  const object = group.getObjectByName(name);
+  return object instanceof THREE.DirectionalLight ? object : null;
+}
+
+function applyLightingQuality(lightingRig: THREE.Group, fancyGraphics: boolean): void {
+  const hemiLight = getNamedLight(lightingRig, 'hemisphere-light');
+  const keyLight = getNamedDirectionalLight(lightingRig, 'key-light');
+  const fillLight = getNamedDirectionalLight(lightingRig, 'fill-light');
+  const rimLight = getNamedDirectionalLight(lightingRig, 'rim-light');
+  const frontFillLight = getNamedDirectionalLight(lightingRig, 'front-fill-light');
+
+  if (fancyGraphics) {
+    if (hemiLight) {
+      hemiLight.color.set(0xffffff);
+      hemiLight.groundColor?.set(0xdfe3e8);
+      hemiLight.intensity = 0.22;
+    }
+    if (keyLight) {
+      keyLight.color.set(0xffffff);
+      keyLight.intensity = 1.05;
+      keyLight.position.set(5, 9, 6);
+      keyLight.shadow.bias = -0.00008;
+      keyLight.shadow.normalBias = 0.035;
+      keyLight.shadow.radius = 3;
+    }
+    if (fillLight) {
+      fillLight.color.set(0xf4f7ff);
+      fillLight.intensity = 0.12;
+      fillLight.position.set(-7, 4, -5);
+    }
+    if (rimLight) {
+      rimLight.color.set(0xffffff);
+      rimLight.intensity = 0.48;
+      rimLight.position.set(-5, 5, -8);
+    }
+    if (frontFillLight) {
+      frontFillLight.color.set(0xffffff);
+      frontFillLight.intensity = 0.04;
+      frontFillLight.position.set(0, 4, 7);
+    }
+    return;
+  }
+
+  if (hemiLight) {
+    hemiLight.color.set(0xffffff);
+    hemiLight.groundColor?.set(0xd4d4d4);
+    hemiLight.intensity = 0.95;
+  }
+  if (keyLight) {
+    keyLight.color.set(0xfff5e6);
+    keyLight.intensity = 0.75;
+    keyLight.position.set(6, 12, 8);
+    keyLight.shadow.bias = 0;
+    keyLight.shadow.normalBias = 0;
+    keyLight.shadow.radius = 1;
+  }
+  if (fillLight) {
+    fillLight.color.set(0xf0f4ff);
+    fillLight.intensity = 0.65;
+    fillLight.position.set(-6, 5, -6);
+  }
+  if (rimLight) {
+    rimLight.color.set(0xffffff);
+    rimLight.intensity = 0.35;
+    rimLight.position.set(0, -6, 10);
+  }
+  if (frontFillLight) {
+    frontFillLight.color.set(0xfff9f0);
+    frontFillLight.intensity = 0.5;
+    frontFillLight.position.set(0, 6, 10);
+  }
 }
 
 /**
@@ -56,9 +143,13 @@ export function useThreeScene(
   const controlsRef = useRef<OrbitControls | null>(null);
   const gridGroupRef = useRef<THREE.Group | null>(null);
   const axisGroupRef = useRef<THREE.Group | null>(null);
+  const lightingRigRef = useRef<THREE.Group | null>(null);
+  const environmentMapRef = useRef<THREE.Texture | null>(null);
   const frameIdRef = useRef<number>(0);
   const lastFrameTimeRef = useRef<number | null>(null);
   const continuousRenderRef = useRef(Boolean(options.continuousRender));
+  const fancyGraphicsRef = useRef(Boolean(options.fancyGraphics));
+  const needsRenderRef = useRef(false);
   const invalidateRef = useRef<() => void>(() => {});
 
   useEffect(() => {
@@ -69,10 +160,10 @@ export function useThreeScene(
     const renderer = new THREE.WebGLRenderer({
       antialias: true,
       alpha: false,
+      preserveDrawingBuffer: true,
       ...resolveDepthBufferOptions(),
     });
-    renderer.toneMapping = THREE.LinearToneMapping;
-    renderer.toneMappingExposure = 1.0;
+    renderer.outputColorSpace = THREE.SRGBColorSpace;
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, options.maxPixelRatio ?? 2));
     renderer.setSize(container.clientWidth, container.clientHeight);
     renderer.domElement.style.display = 'block';
@@ -81,7 +172,6 @@ export function useThreeScene(
 
     // --- Scene ---
     const scene = new THREE.Scene();
-    scene.background = new THREE.Color(0xe8edf5);
     sceneRef.current = scene;
 
     // --- Camera ---
@@ -101,6 +191,7 @@ export function useThreeScene(
     // --- Lighting ---
     const lightingRig = createLightingRig();
     scene.add(lightingRig);
+    lightingRigRef.current = lightingRig;
 
     // --- Grid ---
     const gridGroup = createGridHelper();
@@ -112,7 +203,33 @@ export function useThreeScene(
     scene.add(axisGroup);
     axisGroupRef.current = axisGroup;
 
-    const renderScene = () => {
+    const applyGraphicsQuality = (fancyGraphics: boolean) => {
+      renderer.outputColorSpace = THREE.SRGBColorSpace;
+      renderer.toneMapping = fancyGraphics ? THREE.NoToneMapping : THREE.LinearToneMapping;
+      renderer.toneMappingExposure = 1.0;
+      renderer.shadowMap.enabled = fancyGraphics;
+      renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+      scene.background = new THREE.Color(VIEWPORT_BACKGROUND);
+      applyLightingQuality(lightingRig, fancyGraphics);
+
+      if (fancyGraphics) {
+        if (!environmentMapRef.current) {
+          environmentMapRef.current = createEnvironmentMap(renderer);
+        }
+        scene.environment = environmentMapRef.current;
+        return;
+      }
+
+      scene.environment = null;
+      environmentMapRef.current?.dispose();
+      environmentMapRef.current = null;
+    };
+
+    fancyGraphicsRef.current = Boolean(options.fancyGraphics);
+    applyGraphicsQuality(fancyGraphicsRef.current);
+
+    const renderScene = (deltaSeconds?: number) => {
+      void deltaSeconds;
       renderer.render(scene, camera);
     };
 
@@ -129,9 +246,11 @@ export function useThreeScene(
         lastFrameTimeRef.current == null ? null : (now - lastFrameTimeRef.current) / 1000;
       lastFrameTimeRef.current = now;
 
+      const hadInvalidation = needsRenderRef.current;
+      needsRenderRef.current = false;
       const controlsChanged = controls.update(deltaSeconds ?? undefined);
-      if (continuousRenderRef.current || controlsChanged) {
-        renderScene();
+      if (continuousRenderRef.current || hadInvalidation || controlsChanged) {
+        renderScene(deltaSeconds ?? undefined);
       }
 
       if (continuousRenderRef.current || controlsChanged) {
@@ -143,10 +262,8 @@ export function useThreeScene(
     };
 
     const invalidate = () => {
-      renderScene();
-      if (continuousRenderRef.current || controls.enableDamping) {
-        requestFrame();
-      }
+      needsRenderRef.current = true;
+      requestFrame();
     };
 
     invalidateRef.current = invalidate;
@@ -176,6 +293,7 @@ export function useThreeScene(
       controls.removeEventListener('change', invalidate);
       controls.dispose();
       renderer.domElement.remove();
+      environmentMapRef.current?.dispose();
       renderer.dispose();
 
       // Dispose scene contents.
@@ -197,7 +315,10 @@ export function useThreeScene(
       controlsRef.current = null;
       gridGroupRef.current = null;
       axisGroupRef.current = null;
+      lightingRigRef.current = null;
+      environmentMapRef.current = null;
       lastFrameTimeRef.current = null;
+      needsRenderRef.current = false;
       invalidateRef.current = () => {};
     };
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
@@ -213,6 +334,41 @@ export function useThreeScene(
     renderer.setSize(container.clientWidth, container.clientHeight, false);
     invalidateRef.current();
   }, [containerRef, options.maxPixelRatio, sceneReady]);
+
+  useEffect(() => {
+    const renderer = rendererRef.current;
+    const scene = sceneRef.current;
+    const camera = cameraRef.current;
+    const lightingRig = lightingRigRef.current;
+    const container = containerRef.current;
+    if (!renderer || !scene || !camera || !lightingRig || !container) {
+      return;
+    }
+
+    const fancyGraphics = Boolean(options.fancyGraphics);
+    fancyGraphicsRef.current = fancyGraphics;
+    renderer.outputColorSpace = THREE.SRGBColorSpace;
+    renderer.toneMapping = fancyGraphics ? THREE.NoToneMapping : THREE.LinearToneMapping;
+    renderer.toneMappingExposure = 1.0;
+    renderer.shadowMap.enabled = fancyGraphics;
+    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+    scene.background = new THREE.Color(VIEWPORT_BACKGROUND);
+    applyLightingQuality(lightingRig, fancyGraphics);
+
+    if (fancyGraphics) {
+      if (!environmentMapRef.current) {
+        environmentMapRef.current = createEnvironmentMap(renderer);
+      }
+      scene.environment = environmentMapRef.current;
+      invalidateRef.current();
+      return;
+    }
+
+    scene.environment = null;
+    environmentMapRef.current?.dispose();
+    environmentMapRef.current = null;
+    invalidateRef.current();
+  }, [containerRef, options.fancyGraphics, sceneReady]);
 
   useEffect(() => {
     continuousRenderRef.current = Boolean(options.continuousRender);

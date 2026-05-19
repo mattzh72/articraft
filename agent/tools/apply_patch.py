@@ -13,7 +13,6 @@ from agent.tools.base import (
     BoundFileToolInvocation,
     ToolParamsModel,
     ToolResult,
-    make_tool_schema,
 )
 from agent.tools.code_region import map_syntax_error_line_to_editable
 
@@ -67,14 +66,14 @@ class ApplyPatchInvocation(BoundFileToolInvocation[ApplyPatchParams, str]):
             if not self.params.input.strip():
                 return ToolResult(error="input cannot be empty")
 
-            async with aiofiles.open(self.file_path, mode="r") as f:
+            async with aiofiles.open(self.file_path, mode="r", encoding="utf-8") as f:
                 full_code = await f.read()
 
             hunks = _parse_patch(self.params.input)
             new_code = _apply_hunks(full_code, hunks)
             validation = self._validate_python_syntax(new_code, self.file_path)
 
-            async with aiofiles.open(self.file_path, mode="w") as f:
+            async with aiofiles.open(self.file_path, mode="w", encoding="utf-8") as f:
                 await f.write(new_code)
 
             return ToolResult(
@@ -105,40 +104,6 @@ class ApplyPatchInvocation(BoundFileToolInvocation[ApplyPatchParams, str]):
             }
         except Exception as exc:
             return {"status": "error", "error": f"Validation error: {str(exc)}"}
-
-
-class ApplyPatchTool(BaseDeclarativeTool):
-    """Tool for applying Codex-style patches to a single bound file."""
-
-    def __init__(self) -> None:
-        schema = make_tool_schema(
-            name="apply_patch",
-            description=(
-                "Apply a patch in Codex apply_patch format.\n\n"
-                "Provide only the patch text in `input`.\n"
-                "This tool edits only the current bound file.\n"
-                "Do not use `*** Add File`, `*** Delete File`, or `*** Move to`.\n\n"
-                "Patch envelope:\n"
-                "*** Begin Patch\n"
-                "*** Update File: CURRENT_FILE\n"
-                "@@\n"
-                "-old line\n"
-                "+new line\n"
-                "*** End Patch"
-            ),
-            parameters={
-                "input": {
-                    "type": "string",
-                    "description": "Entire Codex-style patch text.",
-                }
-            },
-            required=["input"],
-        )
-        super().__init__("apply_patch", schema)
-
-    async def build(self, params: dict) -> ApplyPatchInvocation:
-        validated = ApplyPatchParams(**params)
-        return ApplyPatchInvocation(validated)
 
 
 class ApplyPatchFreeformTool(BaseDeclarativeTool):

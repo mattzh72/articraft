@@ -6,7 +6,7 @@ from typing import Any
 
 from agent.prompts import normalize_sdk_package
 from agent.runtime_limits import BatchRuntimeLimits
-from agent.tools.apply_patch import ApplyPatchFreeformTool, ApplyPatchTool
+from agent.tools.apply_patch import ApplyPatchFreeformTool
 from agent.tools.base import (
     BaseDeclarativeTool,
     BaseToolInvocation,
@@ -15,77 +15,51 @@ from agent.tools.base import (
     make_tool_schema,
 )
 from agent.tools.compile_model import CompileModelTool
-from agent.tools.edit_code import EditCodeTool, ReplaceTool
+from agent.tools.edit_code import ReplaceTool
 from agent.tools.find_examples import FindExamplesTool
 from agent.tools.probe_model import ProbeModelTool
-from agent.tools.read_code import ReadCodeTool
 from agent.tools.read_file import ReadFileTool
 from agent.tools.registry import ToolRegistry
-from agent.tools.write_code import WriteCodeTool, WriteFileTool
+from agent.tools.write_code import WriteFileTool
+from articraft.values import ProviderName, normalize_provider_name
 
 SUPPORTED_IMAGE_MIME_TYPES_BY_PROVIDER: dict[str, set[str]] = {
-    "openai": {
+    ProviderName.ANTHROPIC.value: {
         "image/png",
         "image/jpeg",
         "image/webp",
         "image/gif",
     },
-    "gemini": {
+    ProviderName.OPENAI.value: {
+        "image/png",
+        "image/jpeg",
+        "image/webp",
+        "image/gif",
+    },
+    ProviderName.GEMINI.value: {
         "image/png",
         "image/jpeg",
         "image/webp",
         "image/heic",
         "image/heif",
     },
+    ProviderName.OPENROUTER.value: {
+        "image/png",
+        "image/jpeg",
+        "image/webp",
+        "image/gif",
+    },
 }
 
 _FIRST_TURN_RUNTIME_GUIDANCE_SHARED = (
     "<runtime_task_guidance>\n"
-    "- Start with a small coherent backbone or subassembly, then expand incrementally.\n"
-    "- For unfamiliar geometry or mechanisms, use `find_examples` before improvising.\n"
-    "- Check your work as you go. Do not batch the whole object into one edit.\n"
-    "- After each coherent chunk, run `compile_model` before moving on.\n"
-    "- Use tools deliberately. Prefer the smallest action that gives decisive evidence.\n"
-    "- If the cause is obvious from `model.py` and `compile_model` output, fix it directly.\n"
-    "- Use `probe_model` when geometry, pose, support path, or exact-element identity is ambiguous. After a first ambiguous spatial repair does not resolve the issue, `probe_model` is often the best next step to gather evidence before patching again.\n"
-    "- Do not do blind self-correction passes without new evidence.\n"
+    "- Read the current `model.py` before editing.\n"
+    "- Make one small coherent change at a time.\n"
+    "- Treat visual realism as part of the deliverable: make the object read clearly as the requested thing, with believable proportions, silhouette, colors/materials, and major visible surface treatment.\n"
+    "- Run `compile_model` to check your latest revision.\n"
+    "- If compile is clean and you cannot name one specific remaining defect, conclude.\n"
     "</runtime_task_guidance>"
 )
-
-_FIRST_TURN_RUNTIME_GUIDANCE_BY_PROVIDER: dict[str, str] = {
-    "openai": (
-        "<runtime_task_guidance>\n"
-        "- Start with a small coherent backbone or subassembly, then expand incrementally.\n"
-        '- Read the exact current code with `read_file(path="model.py")` before editing.\n'
-        "- Start with a short context pass: decide the next coherent edit, then read only the docs/examples needed for it.\n"
-        '- The SDK quickstart/router is preloaded. If a `docs/sdk/references/...` file is relevant, read the full file with `read_file(path="docs/...")`.\n'
-        "- Do not front-load unrelated docs, and do not re-read a reference file that is already in context.\n"
-        "- Use `find_examples` for unfamiliar geometry, mechanisms, placement patterns, or testing structure, and adapt examples against current SDK docs.\n"
-        "- Prefer multiple small `apply_patch` edits over one giant patch.\n"
-        "- After each coherent chunk, run `compile_model` before moving on.\n"
-        "- Use tools deliberately. Prefer the smallest action that gives decisive evidence.\n"
-        "- If the cause is obvious from `model.py` and `compile_model` output, fix it directly.\n"
-        "- Use `probe_model` when geometry, pose, support path, or exact-element identity is ambiguous. After a first ambiguous spatial repair does not resolve the issue, `probe_model` is often the best next step to gather evidence before patching again.\n"
-        "</runtime_task_guidance>"
-    ),
-    "gemini": (
-        "<runtime_task_guidance>\n"
-        "- Start with a small coherent backbone or subassembly, then expand incrementally.\n"
-        '- Read the exact current editable code with `read_file(path="model.py")` before editing.\n'
-        "- Start with a short context pass: decide the next coherent edit, then read only the docs/examples needed for it.\n"
-        '- The SDK quickstart/router is preloaded. If a `docs/sdk/references/...` file is relevant, read the full file with `read_file(path="docs/...")`.\n'
-        "- Do not front-load unrelated docs, and do not re-read a reference file that is already in context.\n"
-        "- Use `find_examples` for unfamiliar geometry, mechanisms, placement patterns, or testing structure, and adapt examples against current SDK docs.\n"
-        "- Prefer small exact `replace` edits over broad rewrites.\n"
-        '- If `replace` fails because `old_string` did not match, reread `read_file(path="model.py")` and retry with a smaller exact snippet.\n'
-        "- Use `write_file` when you intentionally want to rewrite the full editable section.\n"
-        "- After each coherent chunk, run `compile_model` before moving on.\n"
-        "- Use tools deliberately. Prefer the smallest action that gives decisive evidence.\n"
-        "- If the cause is obvious from `model.py` and `compile_model` output, fix it directly.\n"
-        "- Use `probe_model` when geometry, pose, support path, or exact-element identity is ambiguous. After a first ambiguous spatial repair does not resolve the issue, `probe_model` is often the best next step to gather evidence before patching again.\n"
-        "</runtime_task_guidance>"
-    ),
-}
 
 
 def build_tool_registry(
@@ -94,9 +68,9 @@ def build_tool_registry(
     sdk_package: str = "sdk",
     runtime_limits: BatchRuntimeLimits | None = None,
 ) -> ToolRegistry:
-    provider_norm = (provider or "openai").strip().lower()
+    provider_norm = normalize_provider_name(provider)
     package = normalize_sdk_package(sdk_package)
-    if provider_norm == "openai":
+    if provider_norm is ProviderName.OPENAI:
         tools: list[BaseDeclarativeTool] = [
             ReadFileTool(),
             ApplyPatchFreeformTool(),
@@ -111,21 +85,14 @@ def build_tool_registry(
             CompileModelTool(),
             ProbeModelTool(sdk_package=package, runtime_limits=runtime_limits),
         ]
-    tools.append(FindExamplesTool(sdk_package=package, include_paths=provider_norm == "openai"))
+    tools.append(
+        FindExamplesTool(sdk_package=package, include_paths=provider_norm is ProviderName.OPENAI)
+    )
     return ToolRegistry(tools)
 
 
-def provider_system_prompt_suffix(provider: str, *, sdk_package: str = "sdk") -> str:
-    normalize_sdk_package(sdk_package)
-    return ""
-
-
-def build_first_turn_runtime_guidance(provider: str) -> str:
-    provider_norm = (provider or "").strip().lower()
-    return _FIRST_TURN_RUNTIME_GUIDANCE_BY_PROVIDER.get(
-        provider_norm,
-        _FIRST_TURN_RUNTIME_GUIDANCE_SHARED,
-    )
+def build_first_turn_runtime_guidance(_provider: str) -> str:
+    return _FIRST_TURN_RUNTIME_GUIDANCE_SHARED
 
 
 def prepend_runtime_guidance(
@@ -207,17 +174,17 @@ def resolve_image_path(
         raise ValueError(f"Image path is not a file: {path}")
 
     mime_type, _ = mimetypes.guess_type(path.name)
-    provider_norm = (provider or "openai").strip().lower()
-    supported_mime_types = SUPPORTED_IMAGE_MIME_TYPES_BY_PROVIDER.get(provider_norm)
+    provider_norm = normalize_provider_name(provider)
+    supported_mime_types = SUPPORTED_IMAGE_MIME_TYPES_BY_PROVIDER.get(provider_norm.value)
     if supported_mime_types is None:
         raise ValueError(f"Unsupported provider for image validation: {provider}")
     if mime_type not in supported_mime_types:
         raise ValueError(
-            f"Unsupported image type for {provider_norm}: {path.name} ({mime_type or 'unknown'})"
+            f"Unsupported image type for {provider_norm.value}: {path.name} ({mime_type or 'unknown'})"
         )
 
     size_bytes = path.stat().st_size
-    if provider_norm == "gemini":
+    if provider_norm is ProviderName.GEMINI:
         if size_bytes >= 20 * 1024 * 1024:
             raise ValueError(
                 f"Image file exceeds Gemini inline request limit: {path} "
@@ -236,20 +203,15 @@ __all__ = [
     "ToolSchema",
     "make_tool_schema",
     "ApplyPatchFreeformTool",
-    "ApplyPatchTool",
     "CompileModelTool",
-    "EditCodeTool",
     "FindExamplesTool",
     "ProbeModelTool",
-    "ReadCodeTool",
     "ReadFileTool",
     "ReplaceTool",
-    "WriteCodeTool",
     "WriteFileTool",
     "ToolRegistry",
     "SUPPORTED_IMAGE_MIME_TYPES_BY_PROVIDER",
     "build_tool_registry",
-    "provider_system_prompt_suffix",
     "build_first_turn_runtime_guidance",
     "prepend_runtime_guidance",
     "build_first_turn_messages",

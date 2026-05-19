@@ -9,7 +9,7 @@ import {
   type MouseEvent as ReactMouseEvent,
 } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { ArrowUpRight, Check, ChevronDown, Copy, FolderOpen, MoreVertical, Search, Star, Trash2 } from "lucide-react";
+import { ArrowUpRight, Check, ChevronDown, Copy, FolderOpen, GitFork, MoreVertical, Search, Star, Trash2 } from "lucide-react";
 
 import {
   AlertDialog,
@@ -105,6 +105,12 @@ function formatDate(value: string | null): string | null {
       }).format(date);
 }
 
+function externalAgentLabel(agent: string | null | undefined): string {
+  if (agent === "codex") return "Codex";
+  if (agent === "claude-code") return "Claude Code";
+  return agent ?? "External";
+}
+
 function RecordListItemInner({
   recordId,
   record,
@@ -146,6 +152,9 @@ function RecordListItemInner({
   const alreadyInDataset = record?.collections.includes("dataset") ?? false;
   const summaryText = truncateWithEllipsis(record?.prompt_preview || record?.title || recordId);
   const metadata = [
+    record?.creator_mode === "external_agent"
+      ? externalAgentLabel(record.external_agent)
+      : null,
     record?.model_id ?? null,
     record?.turn_count != null
       ? `${record.turn_count} turn${record.turn_count === 1 ? "" : "s"}`
@@ -472,17 +481,31 @@ function RecordListItemInner({
               {summaryText}
             </p>
 
-            {(metadata.length > 0 || effectiveRating != null) ? (
+            {(metadata.length > 0 || effectiveRating != null || record?.parent_record_id) ? (
               <div className="mt-1 flex flex-wrap items-center gap-x-1 gap-y-0.5 text-[9.5px] text-[var(--text-tertiary)]">
+                {record?.parent_record_id ? (
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <span
+                        className="flex items-center"
+                        aria-label="Forked record"
+                      >
+                        <GitFork className="size-[9px] text-[var(--accent)]" />
+                      </span>
+                    </TooltipTrigger>
+                    <TooltipContent side="top">Forked from {record.parent_record_id}</TooltipContent>
+                  </Tooltip>
+                ) : null}
                 {effectiveRatingLabel ? (
                   <span className="flex items-center gap-x-0.5">
+                    {record?.parent_record_id ? <span className="text-[var(--border-strong)]">·</span> : null}
                     <Star className="size-[9px] fill-[#e0a100] text-[#e0a100]" />
                     <span className="text-[#c89400]">{effectiveRatingLabel}</span>
                   </span>
                 ) : null}
                 {metadata.map((item, index) => (
                   <span key={`${recordId}-${item}`} className="flex items-center gap-x-1">
-                    {(index > 0 || effectiveRatingLabel) ? <span className="text-[var(--border-strong)]">·</span> : null}
+                    {(index > 0 || effectiveRatingLabel || record?.parent_record_id) ? <span className="text-[var(--border-strong)]">·</span> : null}
                     <span>{item}</span>
                   </span>
                 ))}

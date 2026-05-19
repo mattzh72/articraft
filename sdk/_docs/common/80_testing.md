@@ -160,6 +160,24 @@ footprint or cavity.
 - `elem_a`, `elem_b`: optional element-level scope. If omitted, the allowance
   applies to the full part pair.
 
+### Acceptable Overlap Patterns
+
+Use `allow_overlap(...)` for small intentional overlap that is local, mostly
+hidden, and mechanically explanatory. Broad whole-part allowances are the wrong
+default.
+
+- Nested proxy fits: a slider, mast, or drawer member represented as moving
+  inside a simplified solid sleeve. Pair the allowance with
+  `expect_within(...)` and `expect_overlap(...)` on the retained-insertion axis.
+- Captured pins or shafts: a hinge pin, knob stem, or axle intentionally nested
+  inside a barrel, bushing, or hub proxy. Pair the allowance with
+  `expect_contact(...)`, `expect_gap(..., max_penetration=...)`, or a decisive
+  pose check showing the mechanism moves correctly.
+- Seated trim or compliant compression: a bezel, cap, plug, seal, or bumper
+  that needs a tiny local embed to read as seated or compressed. Pair the
+  allowance with `expect_contact(...)` or `expect_gap(..., max_penetration=...)`
+  on the seating interface.
+
 ### `allow_isolated_part(part, *, reason) -> None`
 
 Records that a named part is allowed to remain isolated in the compiler-owned
@@ -256,6 +274,11 @@ ctx.check(
     details=f"rest={rest_pos}, extended={extended_pos}",
 )
 ```
+
+The wrong default is a broad whole-part allowance such as
+`ctx.allow_overlap("cabinet", "drawer", ...)` when only one named sleeve/member
+interface is intentionally overlapping. Scope the allowance to the specific
+elements whenever the representation gives you stable names to target.
 
 ## Pose and World-Space Queries
 

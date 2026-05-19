@@ -29,7 +29,7 @@ class FakeAgent:
                 repo_root=Path(__file__).resolve().parents[1],
             )
         )
-        self.llm = SimpleNamespace(model_id=model_id or "gpt-5.4")
+        self.llm = SimpleNamespace(model_id=model_id or "gpt-5.5-2026-04-23")
 
     async def __aenter__(self) -> "FakeAgent":
         return self

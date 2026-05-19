@@ -121,24 +121,47 @@ class Mesh:
 Geometry = Union[Box, Cylinder, Sphere, Mesh]
 
 
-@dataclass
+def _normalize_material_rgba(
+    rgba: Optional[Sequence[float]],
+    *,
+    field_name: str = "material.rgba",
+) -> Optional[Tuple[float, float, float, float]]:
+    if rgba is None:
+        return None
+    normalized = tuple(float(v) for v in rgba)
+    if len(normalized) not in (3, 4):
+        raise ValidationError(f"{field_name} must have 3 or 4 values")
+    if len(normalized) == 3:
+        normalized = normalized + (1.0,)
+    return normalized
+
+
+@dataclass(init=False)
 class Material:
     name: str
     rgba: Optional[Tuple[float, float, float, float]] = None
     texture: Optional[str] = None
 
+    def __init__(
+        self,
+        name: str,
+        rgba: Optional[Sequence[float]] = None,
+        texture: Optional[str] = None,
+        *,
+        color: Optional[Sequence[float]] = None,
+    ) -> None:
+        if rgba is not None and color is not None:
+            raise ValidationError("Material cannot set both rgba and color")
+        self.name = str(name)
+        self.rgba = _normalize_material_rgba(rgba if rgba is not None else color)
+        self.texture = texture
+        self.__post_init__()
+
     def __post_init__(self) -> None:
         self.name = str(self.name)
         if not self.name:
             raise ValidationError("material.name is required")
-        if self.rgba is None:
-            return
-        rgba = tuple(float(v) for v in self.rgba)
-        if len(rgba) not in (3, 4):
-            raise ValidationError("material.rgba must have 3 or 4 values")
-        if len(rgba) == 3:
-            rgba = rgba + (1.0,)
-        self.rgba = rgba
+        self.rgba = _normalize_material_rgba(self.rgba)
 
 
 MaterialRef = Union[Material, str]

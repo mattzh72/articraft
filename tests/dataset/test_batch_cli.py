@@ -17,6 +17,7 @@ from storage.datasets import DatasetStore
 from storage.models import CategoryRecord
 from storage.queries import StorageQueries
 from storage.repo import StorageRepo
+from storage.revisions import active_provenance_path
 from storage.search import SearchIndex
 from viewer.api.store import ViewerStore
 
@@ -62,7 +63,7 @@ class SuccessBatchAgent:
                 repo_root=Path(__file__).resolve().parents[2],
             )
         )
-        self.llm = type("LLM", (), {"model_id": model_id or "gpt-5.4"})()
+        self.llm = type("LLM", (), {"model_id": model_id or "gpt-5.5-2026-04-23"})()
 
     async def __aenter__(self) -> "SuccessBatchAgent":
         return self
@@ -119,22 +120,27 @@ class FlakyBatchAgent(SuccessBatchAgent):
         record_id = self.file_path.parent.name
         self.attempts_by_record[record_id] = self.attempts_by_record.get(record_id, 0) + 1
         if "retry" in str(user_content).lower() and self.attempts_by_record[record_id] == 1:
-            await asyncio.sleep(0.05)
-            self.file_path.parent.mkdir(parents=True, exist_ok=True)
-            self.file_path.write_text("# failed\n", encoding="utf-8")
-            return AgentResult(
-                success=False,
-                reason=TerminateReason.MAX_TURNS,
-                message="synthetic failure",
-                conversation=[{"role": "user", "content": user_content}],
-                final_code=None,
-                urdf_xml=None,
-                compile_warnings=[],
-                turn_count=1,
-                tool_call_count=1,
-                compile_attempt_count=1,
-                usage=None,
-            )
+            type(self).active += 1
+            type(self).max_active = max(type(self).max_active, type(self).active)
+            try:
+                await asyncio.sleep(0.05)
+                self.file_path.parent.mkdir(parents=True, exist_ok=True)
+                self.file_path.write_text("# failed\n", encoding="utf-8")
+                return AgentResult(
+                    success=False,
+                    reason=TerminateReason.MAX_TURNS,
+                    message="synthetic failure",
+                    conversation=[{"role": "user", "content": user_content}],
+                    final_code=None,
+                    urdf_xml=None,
+                    compile_warnings=[],
+                    turn_count=1,
+                    tool_call_count=1,
+                    compile_attempt_count=1,
+                    usage=None,
+                )
+            finally:
+                type(self).active -= 1
         return await super().run(user_content)
 
 
@@ -161,7 +167,7 @@ class RecordingBatchDisplay:
         type(self).events.append("init")
         return None
 
-    def add_run(self, slug: str, prompt: str) -> None:
+    def add_run(self, slug: str, prompt: str, **kwargs: object) -> None:
         return None
 
     def start(self) -> None:
@@ -315,7 +321,6 @@ def test_build_batch_config_validates_csv_rows(tmp_path: Path) -> None:
                 spec_arg=str(spec_path),
                 concurrency=2,
                 system_prompt_path="designer_system_prompt.txt",
-                sdk_docs_mode="full",
                 qc_blurb_path=None,
                 resume=False,
                 resume_policy="failed_or_pending",
@@ -361,7 +366,6 @@ def test_build_batch_config_resolves_auto_concurrency_to_logical_cpu_count(
         spec_arg=str(spec_path),
         concurrency="auto",
         system_prompt_path="designer_system_prompt.txt",
-        sdk_docs_mode="full",
         qc_blurb_path=None,
         resume=False,
         resume_policy="failed_or_pending",
@@ -403,7 +407,6 @@ def test_build_batch_config_defaults_missing_sdk_package_to_sdk(tmp_path: Path) 
         spec_arg=str(spec_path),
         concurrency=1,
         system_prompt_path="designer_system_prompt.txt",
-        sdk_docs_mode="full",
         qc_blurb_path=None,
         resume=False,
         resume_policy="failed_or_pending",
@@ -415,80 +418,6 @@ def test_build_batch_config_defaults_missing_sdk_package_to_sdk(tmp_path: Path) 
 
     assert len(config.rows) == 1
     assert config.rows[0].sdk_package == "sdk"
-
-
-def test_build_batch_config_supports_design_audit_default_and_row_overrides(
-    tmp_path: Path,
-) -> None:
-    repo = StorageRepo(tmp_path)
-    repo.ensure_layout()
-    CategoryStore(repo).save(
-        CategoryRecord(schema_version=1, slug="hinge", title="Hinge", description="")
-    )
-
-    spec_path = tmp_path / "source_specs" / "design_audit_batch.csv"
-    _write_csv(
-        spec_path,
-        [
-            {
-                "row_id": "disabled_row",
-                "category_slug": "hinge",
-                "category_title": "Hinge",
-                "prompt": "make hinge",
-                "provider": "openai",
-                "model_id": "gpt-5.4",
-                "thinking_level": "high",
-                "max_turns": "10",
-                "sdk_package": "sdk",
-                "design_audit": "false",
-            },
-            {
-                "row_id": "enabled_row",
-                "category_slug": "hinge",
-                "category_title": "Hinge",
-                "prompt": "make another hinge",
-                "provider": "openai",
-                "model_id": "gpt-5.4",
-                "thinking_level": "high",
-                "max_turns": "10",
-                "sdk_package": "sdk",
-                "design_audit": "true",
-            },
-            {
-                "row_id": "defaulted_row",
-                "category_slug": "hinge",
-                "category_title": "Hinge",
-                "prompt": "make third hinge",
-                "provider": "openai",
-                "model_id": "gpt-5.4",
-                "thinking_level": "high",
-                "max_turns": "10",
-                "sdk_package": "sdk",
-            },
-        ],
-    )
-
-    config = batch_runner.build_batch_config(
-        repo_root=tmp_path,
-        spec_arg=str(spec_path),
-        concurrency=1,
-        system_prompt_path="designer_system_prompt.txt",
-        sdk_docs_mode="full",
-        qc_blurb_path=None,
-        post_success_design_audit=False,
-        resume=False,
-        resume_policy="failed_or_pending",
-        keep_awake=False,
-        pause_file=None,
-        pause_poll_seconds=1.0,
-        keyboard_pause_enabled=False,
-    )
-
-    assert len(config.rows) == 3
-    row_by_id = {row.row_id: row for row in config.rows}
-    assert row_by_id["disabled_row"].post_success_design_audit is False
-    assert row_by_id["enabled_row"].post_success_design_audit is True
-    assert row_by_id["defaulted_row"].post_success_design_audit is False
 
 
 def test_build_batch_config_supports_max_cost_default_and_row_overrides(
@@ -536,7 +465,6 @@ def test_build_batch_config_supports_max_cost_default_and_row_overrides(
         concurrency=1,
         system_prompt_path="designer_system_prompt.txt",
         max_cost_usd=2.5,
-        sdk_docs_mode="full",
         qc_blurb_path=None,
         resume=False,
         resume_policy="failed_or_pending",
@@ -584,52 +512,7 @@ def test_build_batch_config_rejects_invalid_max_cost_usd_value(tmp_path: Path) -
             spec_arg=str(spec_path),
             concurrency=1,
             system_prompt_path="designer_system_prompt.txt",
-            sdk_docs_mode="full",
             qc_blurb_path=None,
-            resume=False,
-            resume_policy="failed_or_pending",
-            keep_awake=False,
-            pause_file=None,
-            pause_poll_seconds=1.0,
-            keyboard_pause_enabled=False,
-        )
-
-
-def test_build_batch_config_rejects_invalid_design_audit_value(tmp_path: Path) -> None:
-    repo = StorageRepo(tmp_path)
-    repo.ensure_layout()
-    CategoryStore(repo).save(
-        CategoryRecord(schema_version=1, slug="hinge", title="Hinge", description="")
-    )
-
-    spec_path = tmp_path / "source_specs" / "invalid_design_audit.csv"
-    _write_csv(
-        spec_path,
-        [
-            {
-                "row_id": "bad_row",
-                "category_slug": "hinge",
-                "category_title": "Hinge",
-                "prompt": "make hinge",
-                "provider": "openai",
-                "model_id": "gpt-5.4",
-                "thinking_level": "high",
-                "max_turns": "10",
-                "sdk_package": "sdk",
-                "design_audit": "maybe",
-            }
-        ],
-    )
-
-    with pytest.raises(ValueError, match="invalid design_audit"):
-        batch_runner.build_batch_config(
-            repo_root=tmp_path,
-            spec_arg=str(spec_path),
-            concurrency=1,
-            system_prompt_path="designer_system_prompt.txt",
-            sdk_docs_mode="full",
-            qc_blurb_path=None,
-            post_success_design_audit=True,
             resume=False,
             resume_policy="failed_or_pending",
             keep_awake=False,
@@ -671,7 +554,6 @@ def test_build_batch_config_rejects_legacy_scaffold_mode_column(tmp_path: Path) 
             spec_arg=str(spec_path),
             concurrency=1,
             system_prompt_path="designer_system_prompt.txt",
-            sdk_docs_mode="full",
             qc_blurb_path=None,
             resume=False,
             resume_policy="failed_or_pending",
@@ -680,75 +562,6 @@ def test_build_batch_config_rejects_legacy_scaffold_mode_column(tmp_path: Path) 
             pause_poll_seconds=1.0,
             keyboard_pause_enabled=False,
         )
-
-
-def test_run_batch_design_audit_cli_override(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
-    repo = StorageRepo(tmp_path)
-    repo.ensure_layout()
-    CategoryStore(repo).save(
-        CategoryRecord(schema_version=1, slug="hinge", title="Hinge", description="")
-    )
-    spec_path = tmp_path / "source_specs" / "design_audit_cli.csv"
-    _write_csv(
-        spec_path,
-        [
-            {
-                "row_id": "row_1",
-                "category_slug": "hinge",
-                "category_title": "Hinge",
-                "prompt": "make a hinge",
-                "provider": "openai",
-                "model_id": "gpt-5.4",
-                "thinking_level": "high",
-                "max_turns": "12",
-                "sdk_package": "sdk",
-                "design_audit": "true",
-            },
-            {
-                "row_id": "row_2",
-                "category_slug": "hinge",
-                "category_title": "Hinge",
-                "prompt": "make another hinge",
-                "provider": "openai",
-                "model_id": "gpt-5.4",
-                "thinking_level": "high",
-                "max_turns": "12",
-                "sdk_package": "sdk",
-            },
-        ],
-    )
-
-    captured: list[bool] = []
-
-    async def fake_run_dataset_batch(config: object) -> dict[str, object]:
-        if hasattr(config, "rows"):
-            for row in getattr(config, "rows"):
-                captured.append(bool(getattr(row, "post_success_design_audit", False)))
-        return {
-            "run_id": "run_mocked",
-            "status": "success",
-            "prompt_count": 2,
-            "success_count": 2,
-            "failed_count": 0,
-        }
-
-    monkeypatch.setattr(batch_runner, "run_dataset_batch", fake_run_dataset_batch)
-
-    exit_code = dataset_main(
-        [
-            "--repo-root",
-            str(tmp_path),
-            "run-batch",
-            str(spec_path),
-            "--concurrency",
-            "1",
-            "--no-design-audit",
-        ]
-    )
-    assert exit_code == 0
-    assert captured == [True, False]
 
 
 def test_run_batch_max_cost_cli_override_and_csv_override(
@@ -868,7 +681,6 @@ def test_run_dataset_batch_continues_after_over_budget_row(
         spec_arg=str(spec_path),
         concurrency=1,
         system_prompt_path="designer_system_prompt.txt",
-        sdk_docs_mode="full",
         qc_blurb_path=None,
         resume=False,
         resume_policy="failed_or_pending",
@@ -1051,8 +863,10 @@ def test_run_batch_persists_records_and_batch_metadata(
     assert hinge_record["source"]["prompt_index"] == 1
     assert fan_record["source"]["row_id"] == "fan_row"
     assert fan_record["sdk_package"] == "sdk"
-    hinge_provenance = repo.read_json(repo.layout.record_dir("rec_hinge_0001") / "provenance.json")
-    fan_provenance = repo.read_json(repo.layout.record_dir("rec_fan_0001") / "provenance.json")
+    hinge_provenance = repo.read_json(
+        active_provenance_path(repo, "rec_hinge_0001", record=hinge_record)
+    )
+    fan_provenance = repo.read_json(active_provenance_path(repo, "rec_fan_0001", record=fan_record))
     assert "scaffold_mode" not in hinge_provenance["prompting"]
     assert "scaffold_mode" not in fan_provenance["prompting"]
 
@@ -1101,7 +915,7 @@ def test_run_batch_persists_records_and_batch_metadata(
     }
 
     viewer_store = ViewerStore(tmp_path)
-    run_detail = viewer_store.load_run_detail(run_id)
+    run_detail = viewer_store.runs.load_run_detail(run_id)
     assert run_detail is not None
     assert run_detail.run.status == "success"
     assert len(run_detail.results) == 2

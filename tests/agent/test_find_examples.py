@@ -347,8 +347,6 @@ def test_first_turn_no_tool_response_no_longer_injects_nudge(tmp_path: Path) -> 
     agent.cost_tracker = None
     agent.provider = "openai"
     agent._last_compile_failure_sig = None
-    agent._post_success_design_audit_sent = False
-    agent._seen_compile_signal_sigs = set()
     agent._seen_tool_error_sigs = set()
     agent._last_checkpoint_urdf_sig = None
     agent.checkpoint_urdf_path = None
@@ -360,10 +358,7 @@ def test_first_turn_no_tool_response_no_longer_injects_nudge(tmp_path: Path) -> 
     assert result.reason == TerminateReason.MAX_TURNS
     assert len(result.conversation) == 3
     assert result.conversation[0]["content"].startswith("<runtime_task_guidance>")
-    assert (
-        "Prefer multiple small `apply_patch` edits over one giant patch."
-        in result.conversation[0]["content"]
-    )
+    assert "Make one small coherent change at a time." in result.conversation[0]["content"]
     assert result.conversation[0]["content"].endswith("make a bracket")
     assert result.conversation[2]["content"].startswith("<compile_required>")
     assert all(

@@ -4,16 +4,30 @@ import { useRoute } from "@/lib/useRoute";
 import { ViewerProvider } from "@/lib/viewer-context";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { AppHeader } from "@/components/layout/AppHeader";
-import { DashboardPage } from "@/components/dashboard/DashboardPage";
 
 const ViewerShell = lazy(() => import("@/ViewerShell"));
+const DashboardPage = lazy(() =>
+  import("@/components/dashboard/DashboardPage").then((module) => ({
+    default: module.DashboardPage,
+  })),
+);
+
+function AppLoadingFallback(): JSX.Element {
+  return (
+    <div className="flex min-h-0 flex-1 items-center justify-center">
+      <p className="text-[12px] text-[var(--text-quaternary)]">Loading...</p>
+    </div>
+  );
+}
 
 function DashboardApp(): JSX.Element {
   return (
     <div className="flex h-screen flex-col bg-[var(--surface-2)]">
       <AppHeader />
       <div className="min-h-0 flex-1">
-        <DashboardPage />
+        <Suspense fallback={<AppLoadingFallback />}>
+          <DashboardPage />
+        </Suspense>
       </div>
     </div>
   );
@@ -25,11 +39,7 @@ function ViewerApp(): JSX.Element {
       <div className="flex h-screen flex-col bg-[var(--surface-2)]">
         <AppHeader />
         <Suspense
-          fallback={
-            <div className="flex min-h-0 flex-1 items-center justify-center">
-              <p className="text-[12px] text-[var(--text-quaternary)]">Loading viewer...</p>
-            </div>
-          }
+          fallback={<AppLoadingFallback />}
         >
           <ViewerShell />
         </Suspense>

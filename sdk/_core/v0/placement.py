@@ -3,6 +3,7 @@ from __future__ import annotations
 import logging
 import math
 import warnings
+import zlib
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Iterable, Literal, Optional, Tuple, Union
@@ -36,7 +37,7 @@ SurfaceSubject = Union[Part, Visual, Geometry]
 MeshSubject = Union[MeshGeometry, Mesh]
 SurfaceWrapMapping = Literal["auto", "intrinsic", "nearest"]
 _EPS = 1e-9
-_TRIMESH_CACHE: dict[Path, tuple[tuple[int, int], object]] = {}
+_TRIMESH_CACHE: dict[Path, tuple[tuple[int, int, int], object]] = {}
 logger = logging.getLogger(__name__)
 
 
@@ -655,12 +656,13 @@ def _resolve_mesh_path(mesh: Mesh, asset_root: Optional[Path]) -> Path:
     return resolve_mesh_path(mesh.filename, assets=asset_root)
 
 
-def _mesh_cache_fingerprint(mesh_path: Path) -> tuple[int, int]:
+def _mesh_cache_fingerprint(mesh_path: Path) -> tuple[int, int, int]:
     try:
         stat = mesh_path.stat()
+        content_crc = zlib.crc32(mesh_path.read_bytes())
     except FileNotFoundError as exc:
         raise ValidationError(f"Mesh file not found: {mesh_path}") from exc
-    return int(stat.st_mtime_ns), int(stat.st_size)
+    return int(stat.st_mtime_ns), int(stat.st_size), content_crc
 
 
 def _load_trimesh_mesh(mesh: Mesh, *, asset_root: Optional[Path]):

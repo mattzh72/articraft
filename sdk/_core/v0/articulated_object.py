@@ -24,6 +24,7 @@ from .types import (
     Sphere,
     Vec3,
     Visual,
+    _normalize_material_rgba,
 )
 
 _ALLOW_EXPLICIT_COLLISIONS_ATTR = "_sdk_allow_explicit_collisions"
@@ -213,14 +214,12 @@ class ArticulatedObject:
     ) -> Material:
         if rgba is not None and color is not None:
             raise ValidationError("Material cannot set both rgba and color")
-        rgba_values = rgba if rgba is not None else color
-        if rgba_values is not None and len(rgba_values) not in (3, 4):
-            raise ValidationError("Material rgba must have 3 or 4 values")
-        if rgba_values is not None and len(rgba_values) == 3:
-            rgba_values = tuple(rgba_values) + (1.0,)
         material = Material(
             name=name,
-            rgba=tuple(float(v) for v in rgba_values) if rgba_values is not None else None,
+            rgba=_normalize_material_rgba(
+                rgba if rgba is not None else color,
+                field_name="Material rgba",
+            ),
             texture=texture,
         )
         self.materials.append(material)

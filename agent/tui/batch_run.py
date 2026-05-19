@@ -44,11 +44,13 @@ class BatchRunDisplay:
 
         self.start_time = time.time()
         self.completed = 0
+        self.session_completed = 0
         self.successes = 0
         self.total_cost = 0.0
         self.runs: dict[str, float] = {}  # slug -> start_time
         self.run_numbers: dict[str, int] = {}
         self.run_turns: dict[str, int] = {}
+        self.run_metadata: dict[str, dict[str, str]] = {}
         self._next_run_number = 1
         self._checkpoint_every = self._compute_checkpoint_interval()
 
@@ -88,11 +90,13 @@ class BatchRunDisplay:
         failures = self.completed - self.successes
 
         completed_per_min = (
-            (self.completed / elapsed * 60.0) if elapsed > 0 and self.completed > 0 else 0.0
+            (self.session_completed / elapsed * 60.0)
+            if elapsed > 0 and self.session_completed > 0
+            else 0.0
         )
-        if self.completed > 0 and elapsed > 0:
-            remaining = max(0, self.total_runs - self.completed)
-            eta_seconds = (remaining / self.completed) * elapsed
+        if self.session_completed > 0 and elapsed > 0:
+            remaining = active + queued
+            eta_seconds = (remaining / self.session_completed) * elapsed
             eta_text = format_duration(eta_seconds)
         else:
             eta_text = "?"
@@ -140,6 +144,23 @@ class BatchRunDisplay:
             run_number = self._assign_run_number(slug)
             self.run_numbers[slug] = run_number
         return f"#{run_number:03d}/{self.total_runs}"
+
+    def _metadata_text(self, slug: str) -> str:
+        metadata = self.run_metadata.get(slug) or {}
+        parts = []
+        row_id = metadata.get("row_id")
+        provider = metadata.get("provider")
+        model_id = metadata.get("model_id")
+        thinking_level = metadata.get("thinking_level")
+        if row_id:
+            parts.append(row_id)
+        if provider:
+            parts.append(provider)
+        if model_id:
+            parts.append(model_id)
+        if thinking_level:
+            parts.append(f"thinking={thinking_level}")
+        return "  " + "  ".join(parts) if parts else ""
 
     def start(self):
         if not self.enabled:
@@ -284,15 +305,36 @@ class BatchRunDisplay:
         line.append(" succeeded", style="bold")
         line.append(f"  {format_cost(self.total_cost)}", style="green")
         line.append(f"  {format_duration(elapsed)}", style="dim")
-        if self.completed > 0:
-            avg_duration = elapsed / self.completed
+        if self.session_completed > 0:
+            avg_duration = elapsed / self.session_completed
             line.append("  avg=", style="dim")
             line.append(format_duration(avg_duration), style="bold blue")
         self.console.print(line)
 
-    def add_run(self, slug: str, prompt: str):
+    def add_run(
+        self,
+        slug: str,
+        prompt: str,
+        *,
+        row_id: str | None = None,
+        provider: str | None = None,
+        model_id: str | None = None,
+        thinking_level: str | None = None,
+    ):
         if slug not in self.run_numbers:
             self.run_numbers[slug] = self._assign_run_number(slug)
+        metadata = {
+            key: value
+            for key, value in {
+                "row_id": row_id,
+                "provider": provider,
+                "model_id": model_id,
+                "thinking_level": thinking_level,
+            }.items()
+            if value
+        }
+        if metadata:
+            self.run_metadata[slug] = metadata
 
     def start_run(self, slug: str):
         if not self.enabled:
@@ -303,6 +345,7 @@ class BatchRunDisplay:
         line.append("  start   ", style="bold cyan")
         line.append(f"[{self._run_label(slug)}] ", style="bold black on cyan")
         line.append(truncate_text(slug, 50), style="bold")
+        line.append(self._metadata_text(slug), style="dim")
         self.console.print(line)
 
     def update_run_progress(self, slug: str, turn: int, cost: float):
@@ -318,6 +361,7 @@ class BatchRunDisplay:
         line.append("  turn    ", style="bold blue")
         line.append(f"[{self._run_label(slug)}] ", style="bold black on bright_blue")
         line.append(truncate_text(slug, 50), style="bold")
+        line.append(self._metadata_text(slug), style="dim")
         line.append("  t=", style="dim")
         line.append(f"{turn}", style="bold yellow")
         if elapsed is not None:
@@ -339,7 +383,13 @@ class BatchRunDisplay:
         line.append(f"{queued}", style="bold yellow" if queued > 0 else "dim")
         self.console.print(line)
 
-    def complete_run(self, slug: str, success: bool, cost: float, error: Optional[str] = None):
+    def complete_run(
+        self,
+        slug: str,
+        success: bool,
+        cost: float,
+        error: Optional[str] = None,
+    ):
         if not self.enabled:
             return
 
@@ -349,9 +399,13 @@ class BatchRunDisplay:
             self.successes += 1
 
         now = time.time()
-        start_time = self.runs.pop(slug, now)
+        start_time = self.runs.pop(slug, None)
         last_turn = self.run_turns.pop(slug, 0)
-        duration = now - start_time
+        if start_time is None:
+            duration = 0.0
+        else:
+            self.session_completed += 1
+            duration = now - start_time
 
         line = Text()
         line.append(
@@ -363,6 +417,7 @@ class BatchRunDisplay:
             style="bold black on green" if success else "bold white on red",
         )
         line.append(truncate_text(slug, 50), style="bold")
+        line.append(self._metadata_text(slug), style="dim")
         if success:
             line.append(" ✓", style="green")
         else:
@@ -383,10 +438,10 @@ class BatchRunDisplay:
         if error:
             self._print_indented_block(error, style="bold white on red")
 
-        should_checkpoint = (
-            self.completed == 1
+        should_checkpoint = self.session_completed > 0 and (
+            self.session_completed == 1
             or self.completed == self.total_runs
-            or (self.completed % self._checkpoint_every == 0)
+            or (self.session_completed % self._checkpoint_every == 0)
         )
         if should_checkpoint and self.completed < self.total_runs:
             self._print_progress_rule()

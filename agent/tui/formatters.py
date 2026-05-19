@@ -52,6 +52,60 @@ def format_tokens(tokens: int) -> str:
         return f"{tokens / 1_000_000:.1f}M"
 
 
+def _format_percent(ratio: float) -> str:
+    percent = ratio * 100.0
+    if percent < 10:
+        return f"{percent:.1f}%"
+    return f"{percent:.0f}%"
+
+
+def _int_or_none(value) -> int | None:
+    return value if isinstance(value, int) else None
+
+
+def format_context_pressure(pressure: dict | None) -> str:
+    """Format model context-window pressure from provider usage metadata."""
+    if not isinstance(pressure, dict):
+        return ""
+
+    prompt_tokens = _int_or_none(pressure.get("prompt_tokens"))
+    max_context_tokens = _int_or_none(pressure.get("max_context_tokens"))
+    remaining_context_tokens = _int_or_none(pressure.get("remaining_context_tokens"))
+    output_tokens = _int_or_none(pressure.get("output_tokens"))
+    cached_tokens = _int_or_none(pressure.get("cached_tokens"))
+
+    parts: list[str] = []
+    if prompt_tokens is not None and max_context_tokens is not None:
+        ratio = pressure.get("pressure_ratio")
+        if not isinstance(ratio, (int, float)):
+            ratio = prompt_tokens / max_context_tokens if max_context_tokens > 0 else None
+        if isinstance(ratio, (int, float)):
+            parts.append(
+                f"ctx={format_tokens(prompt_tokens)}/{format_tokens(max_context_tokens)} "
+                f"({_format_percent(float(ratio))})"
+            )
+        else:
+            parts.append(f"ctx={format_tokens(prompt_tokens)}/{format_tokens(max_context_tokens)}")
+        if remaining_context_tokens is not None:
+            parts.append(f"left={format_tokens(max(0, remaining_context_tokens))}")
+    elif prompt_tokens is not None:
+        parts.append(f"ctx={format_tokens(prompt_tokens)}/?")
+
+    if output_tokens is not None:
+        parts.append(f"out={format_tokens(output_tokens)}")
+
+    if cached_tokens is not None:
+        if isinstance(prompt_tokens, int) and prompt_tokens > 0 and cached_tokens > 0:
+            parts.append(
+                f"cache={format_tokens(cached_tokens)} "
+                f"({_format_percent(cached_tokens / prompt_tokens)})"
+            )
+        elif cached_tokens > 0:
+            parts.append(f"cache={format_tokens(cached_tokens)}")
+
+    return "  ".join(parts)
+
+
 def format_duration(seconds: float) -> str:
     """Format duration as human-readable string.
 

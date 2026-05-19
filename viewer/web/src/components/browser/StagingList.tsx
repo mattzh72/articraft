@@ -26,10 +26,6 @@ import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
 import { deleteStagingEntry, openStagingFolder } from "@/lib/api";
 import { viewerQueryKeys } from "@/lib/viewer-queries";
-import {
-  getPreviewStagingEntries,
-  isPreviewStagingEntry,
-} from "@/components/browser/staging-preview";
 
 function truncateWithEllipsis(value: string, maxLength = 88): string {
   const normalized = value.replace(/\s+/g, " ").trim();
@@ -108,7 +104,6 @@ function StagingListItem({ entry }: { entry: StagingEntry }): JSX.Element {
   const { bootstrap, selection } = useViewer();
   const dispatch = useViewerDispatch();
   const queryClient = useQueryClient();
-  const isPreview = isPreviewStagingEntry(entry);
   const isSelected = isStagingSelected(selection, entry);
   const isFailed = isFailedEntry(entry);
   const [menuOpen, setMenuOpen] = useState(false);
@@ -195,12 +190,10 @@ function StagingListItem({ entry }: { entry: StagingEntry }): JSX.Element {
           className={cn(
             "group flex items-start gap-0.5 rounded-lg px-2.5 py-2 transition-colors duration-100",
             isSelected ? "bg-[rgba(26,138,74,0.08)]" : "hover:bg-[var(--surface-1)]",
-            isPreview && "border border-dashed border-[rgba(26,138,74,0.22)] bg-[rgba(26,138,74,0.04)]",
           )}
         >
           <button
             type="button"
-            disabled={isPreview}
             onClick={() =>
               dispatch({
                 type: "SELECT_ITEM",
@@ -219,16 +212,10 @@ function StagingListItem({ entry }: { entry: StagingEntry }): JSX.Element {
                     className={cn(
                       "break-words text-[11px] leading-[1.45]",
                       isSelected ? "font-medium text-[var(--text-primary)]" : "text-[var(--text-secondary)]",
-                      isPreview && "text-[var(--text-primary)]",
                     )}
                   >
                     {summaryText}
                   </p>
-                  {isPreview ? (
-                    <span className="shrink-0 rounded-full border border-[rgba(26,138,74,0.22)] bg-[rgba(26,138,74,0.07)] px-1.5 py-0.5 text-[8.5px] font-medium uppercase tracking-[0.06em] text-[var(--success)]">
-                      Preview
-                    </span>
-                  ) : null}
                 </div>
 
                 {isFailed ? (
@@ -249,58 +236,56 @@ function StagingListItem({ entry }: { entry: StagingEntry }): JSX.Element {
                 ) : null}
 
                 <p className="mt-1 text-[9.5px] text-[var(--text-quaternary)]">
-                  {isPreview ? "Temporary UI-only preview row" : entry.run_id}
+                  {entry.run_id}
                 </p>
               </div>
             </div>
           </button>
 
-          {!isPreview ? (
-            <DropdownMenu open={menuOpen} onOpenChange={setMenuOpen}>
-              <div className="relative shrink-0 pt-px">
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <DropdownMenuTrigger asChild>
-                      <button
-                        type="button"
-                        aria-label={`Open actions for ${entry.title || entry.record_id}`}
-                        className={cn(
-                          "flex size-6 items-center justify-center rounded-md text-[var(--text-tertiary)] opacity-0 transition-all duration-100 group-hover:opacity-100 focus-visible:opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[rgba(26,138,74,0.18)]",
-                          menuOpen
-                            ? "bg-[var(--surface-0)] text-[var(--text-primary)] opacity-100 shadow-[0_1px_3px_rgba(0,0,0,0.06)]"
-                            : "hover:bg-[var(--surface-0)] hover:text-[var(--text-primary)]",
-                        )}
-                        onClick={(event) => event.stopPropagation()}
-                      >
-                        <MoreVertical className="size-3" />
-                      </button>
-                    </DropdownMenuTrigger>
-                  </TooltipTrigger>
-                  {!menuOpen ? <TooltipContent side="right">Actions</TooltipContent> : null}
-                </Tooltip>
+          <DropdownMenu open={menuOpen} onOpenChange={setMenuOpen}>
+            <div className="relative shrink-0 pt-px">
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <DropdownMenuTrigger asChild>
+                    <button
+                      type="button"
+                      aria-label={`Open actions for ${entry.title || entry.record_id}`}
+                      className={cn(
+                        "flex size-6 items-center justify-center rounded-md text-[var(--text-tertiary)] opacity-0 transition-all duration-100 group-hover:opacity-100 focus-visible:opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[rgba(26,138,74,0.18)]",
+                        menuOpen
+                          ? "bg-[var(--surface-0)] text-[var(--text-primary)] opacity-100 shadow-[0_1px_3px_rgba(0,0,0,0.06)]"
+                          : "hover:bg-[var(--surface-0)] hover:text-[var(--text-primary)]",
+                      )}
+                      onClick={(event) => event.stopPropagation()}
+                    >
+                      <MoreVertical className="size-3" />
+                    </button>
+                  </DropdownMenuTrigger>
+                </TooltipTrigger>
+                {!menuOpen ? <TooltipContent side="right">Actions</TooltipContent> : null}
+              </Tooltip>
 
-                <DropdownMenuContent onClick={(event) => event.stopPropagation()}>
-                  <DropdownMenuItem onSelect={() => void handleOpenStagingFolder()}>
-                    <FolderOpen className="size-3.5" />
-                    <span>
-                      {openState === "opened"
-                        ? "Opened staging folder"
-                        : openState === "error"
-                          ? "Open failed"
-                          : "Open staging folder"}
-                    </span>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem
-                    onSelect={handleDeleteIntent}
-                    className="text-[var(--destructive)] focus:bg-[rgba(209,52,21,0.06)] focus:text-[var(--destructive)]"
-                  >
-                    <Trash2 className="size-3.5" />
-                    <span>Delete</span>
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </div>
-            </DropdownMenu>
-          ) : null}
+              <DropdownMenuContent onClick={(event) => event.stopPropagation()}>
+                <DropdownMenuItem onSelect={() => void handleOpenStagingFolder()}>
+                  <FolderOpen className="size-3.5" />
+                  <span>
+                    {openState === "opened"
+                      ? "Opened staging folder"
+                      : openState === "error"
+                        ? "Open failed"
+                        : "Open staging folder"}
+                  </span>
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  onSelect={handleDeleteIntent}
+                  className="text-[var(--destructive)] focus:bg-[rgba(209,52,21,0.06)] focus:text-[var(--destructive)]"
+                >
+                  <Trash2 className="size-3.5" />
+                  <span>Delete</span>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </div>
+          </DropdownMenu>
         </div>
       </div>
 
@@ -351,7 +336,7 @@ export function StagingList({
   const { bootstrap, loading, searchQuery } = useViewer();
 
   const entries = useMemo(
-    () => getPreviewStagingEntries((bootstrap?.staging_entries ?? []).filter(isVisibleStagingEntry)),
+    () => (bootstrap?.staging_entries ?? []).filter(isVisibleStagingEntry),
     [bootstrap],
   );
   const visibleEntries = useMemo(

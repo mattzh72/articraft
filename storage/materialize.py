@@ -8,6 +8,14 @@ from typing import Any, Mapping
 
 from storage.models import AssetStatus, CompileReport, MaterializationStatus
 from storage.repo import StorageRepo
+from storage.revisions import (
+    active_cost_path,
+    active_inputs_dir,
+    active_model_path,
+    active_prompt_path,
+    active_provenance_path,
+    active_traces_dir,
+)
 
 
 def build_materialization_fingerprint(
@@ -150,15 +158,14 @@ class MaterializationStore:
 
 
 def canonical_record_paths(repo: StorageRepo, record_id: str) -> dict[str, Path]:
-    record_dir = repo.layout.record_dir(record_id)
     return {
         "record_json": repo.layout.record_metadata_path(record_id),
-        "prompt_txt": record_dir / "prompt.txt",
-        "model_py": record_dir / "model.py",
-        "provenance_json": record_dir / "provenance.json",
-        "cost_json": record_dir / "cost.json",
-        "inputs_dir": repo.layout.record_inputs_dir(record_id),
-        "traces_dir": repo.layout.record_traces_dir(record_id),
+        "prompt_txt": active_prompt_path(repo, record_id),
+        "model_py": active_model_path(repo, record_id),
+        "provenance_json": active_provenance_path(repo, record_id),
+        "cost_json": active_cost_path(repo, record_id),
+        "inputs_dir": active_inputs_dir(repo, record_id),
+        "traces_dir": active_traces_dir(repo, record_id),
         "dataset_entry_json": repo.layout.record_dataset_entry_path(record_id),
     }
 

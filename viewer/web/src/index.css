@@ -124,7 +124,7 @@ textarea {
 /* Property row pattern - Figma-like key/value rows */
 .prop-row {
   display: flex;
-  align-items: center;
+  align-items: baseline;
   justify-content: space-between;
   padding: 5px 0;
   gap: 12px;
@@ -141,8 +141,29 @@ textarea {
   font-size: 11px;
   color: var(--text-primary);
   text-align: right;
-  word-break: break-word;
   min-width: 0;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+/* Stacked variant: label on top, value full-width below.
+   Use for long mono IDs (Record ID, Run ID, Origin, …). */
+.prop-row-stacked {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  padding: 5px 0;
+  gap: 2px;
+}
+
+.prop-row-stacked .prop-label {
+  text-align: left;
+}
+
+.prop-row-stacked .prop-value {
+  text-align: left;
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 /* Staging pulse animation */

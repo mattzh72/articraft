@@ -55,7 +55,9 @@ def find_stale_prompts() -> list[PromptVariant]:
 
 
 def main(argv: list[str] | None = None) -> int:
-    parser = argparse.ArgumentParser(description="Compile prompt sources into generated prompt files.")
+    parser = argparse.ArgumentParser(
+        description="Compile prompt sources into generated prompt files."
+    )
     parser.add_argument(
         "--check",
         action="store_true",

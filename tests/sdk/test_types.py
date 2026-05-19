@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import pytest
 
-from sdk import ArticulatedObject, Box, Cylinder, Material
+from sdk import ArticulatedObject, Box, Cylinder, Material, ValidationError
 
 
 def test_part_get_visual_returns_named_visual() -> None:
@@ -60,3 +60,26 @@ def test_part_visual_rejects_material_and_color_together() -> None:
 
     with pytest.raises(TypeError, match="only one of 'material' or alias 'color'"):
         part.visual(Box((0.1, 0.1, 0.1)), material="steel", color="blue")
+
+
+def test_material_accepts_color_alias_with_rgb_tuple() -> None:
+    material = Material(name="paint", color=(0.1, 0.2, 0.3))
+
+    assert material.rgba == (0.1, 0.2, 0.3, 1.0)
+
+
+def test_material_accepts_color_alias_with_rgba_tuple() -> None:
+    material = Material(name="paint", color=(0.1, 0.2, 0.3, 0.4))
+
+    assert material.rgba == (0.1, 0.2, 0.3, 0.4)
+
+
+def test_material_rejects_rgba_and_color_together() -> None:
+    with pytest.raises(ValidationError, match="Material cannot set both rgba and color"):
+        Material(name="paint", rgba=(0.1, 0.2, 0.3, 1.0), color=(0.2, 0.3, 0.4, 1.0))
+
+
+def test_material_preserves_positional_rgba_usage() -> None:
+    material = Material("paint", (0.1, 0.2, 0.3, 1.0))
+
+    assert material.rgba == (0.1, 0.2, 0.3, 1.0)

@@ -7,6 +7,8 @@ import type {
   DeleteRecordResult,
   OpenRecordFolderResult,
   OpenStagingFolderResult,
+  RecordHistory,
+  RecordBrowseIdsResponse,
   RecordBrowseResponse,
   RecordRatingResponse,
   RecordSecondaryRatingResponse,
@@ -70,7 +72,7 @@ async function fetchJson<T>(path: string, init?: RequestInit): Promise<T> {
 }
 
 export async function fetchBootstrap(): Promise<ViewerBootstrap> {
-  return fetchJson<ViewerBootstrap>("/api/bootstrap");
+  return fetchJson<ViewerBootstrap>("/api/bootstrap?include_dataset_entries=false");
 }
 
 export async function fetchRepoStats(): Promise<RepoStats> {
@@ -83,6 +85,7 @@ export async function fetchDashboard(
     starsFilter: [number, number];
     costFilter: CostFilter;
     sdkFilter: string | null;
+    agentHarnessFilters: string[];
     authorFilters: string[];
     categoryFilters: string[];
     rollingWindowDays: number;
@@ -111,6 +114,9 @@ export async function fetchDashboard(
   if (params.sdkFilter) {
     searchParams.set("sdk", params.sdkFilter);
   }
+  for (const agentHarnessFilter of params.agentHarnessFilters) {
+    searchParams.append("agent_harness", agentHarnessFilter);
+  }
   for (const authorFilter of params.authorFilters) {
     searchParams.append("author", authorFilter);
   }
@@ -134,6 +140,10 @@ export async function fetchRecordSummary(recordId: string): Promise<RecordSummar
   return fetchJson<RecordSummary>(`/api/records/${encodeURIComponent(recordId)}/summary`);
 }
 
+export async function fetchRecordHistory(recordId: string): Promise<RecordHistory> {
+  return fetchJson<RecordHistory>(`/api/records/${encodeURIComponent(recordId)}/history`);
+}
+
 export async function browseRecords(params: {
   source: SourceFilter;
   query: string;
@@ -141,6 +151,7 @@ export async function browseRecords(params: {
   timeFilter: TimeFilter;
   modelFilter: string | null;
   sdkFilter: string | null;
+  agentHarnessFilters: string[];
   authorFilters: string[];
   categoryFilters: string[];
   costFilter: CostFilter;
@@ -150,6 +161,33 @@ export async function browseRecords(params: {
   limit?: number;
 }): Promise<RecordBrowseResponse> {
   const searchParams = new URLSearchParams();
+  appendBrowseParams(searchParams, params);
+  if (params.offset != null) {
+    searchParams.set("offset", String(params.offset));
+  }
+  if (params.limit != null) {
+    searchParams.set("limit", String(params.limit));
+  }
+  return fetchJson<RecordBrowseResponse>(`/api/records/browse?${searchParams.toString()}`);
+}
+
+function appendBrowseParams(
+  searchParams: URLSearchParams,
+  params: {
+    source: SourceFilter;
+    query: string;
+    runId: string | null;
+    timeFilter: TimeFilter;
+    modelFilter: string | null;
+    sdkFilter: string | null;
+    agentHarnessFilters: string[];
+    authorFilters: string[];
+    categoryFilters: string[];
+    costFilter: CostFilter;
+    ratingFilter: RatingFilter;
+    secondaryRatingFilter: RatingFilter;
+  },
+): void {
   searchParams.set("source", params.source);
   if (params.query.trim()) {
     searchParams.set("q", params.query.trim());
@@ -169,6 +207,9 @@ export async function browseRecords(params: {
   if (params.sdkFilter) {
     searchParams.set("sdk", params.sdkFilter);
   }
+  for (const agentHarnessFilter of params.agentHarnessFilters) {
+    searchParams.append("agent_harness", agentHarnessFilter);
+  }
   for (const authorFilter of params.authorFilters) {
     searchParams.append("author", authorFilter);
   }
@@ -187,13 +228,25 @@ export async function browseRecords(params: {
   for (const secondaryRatingFilter of params.secondaryRatingFilter) {
     searchParams.append("secondary_rating", secondaryRatingFilter);
   }
-  if (params.offset != null) {
-    searchParams.set("offset", String(params.offset));
-  }
-  if (params.limit != null) {
-    searchParams.set("limit", String(params.limit));
-  }
-  return fetchJson<RecordBrowseResponse>(`/api/records/browse?${searchParams.toString()}`);
+}
+
+export async function fetchBrowseRecordIds(params: {
+  source: SourceFilter;
+  query: string;
+  runId: string | null;
+  timeFilter: TimeFilter;
+  modelFilter: string | null;
+  sdkFilter: string | null;
+  agentHarnessFilters: string[];
+  authorFilters: string[];
+  categoryFilters: string[];
+  costFilter: CostFilter;
+  ratingFilter: RatingFilter;
+  secondaryRatingFilter: RatingFilter;
+}): Promise<RecordBrowseIdsResponse> {
+  const searchParams = new URLSearchParams();
+  appendBrowseParams(searchParams, params);
+  return fetchJson<RecordBrowseIdsResponse>(`/api/records/browse/ids?${searchParams.toString()}`);
 }
 
 export async function searchRecords(params: {
@@ -203,6 +256,7 @@ export async function searchRecords(params: {
   timeFilter: TimeFilter;
   modelFilter: string | null;
   sdkFilter: string | null;
+  agentHarnessFilters: string[];
   authorFilters: string[];
   categoryFilters: string[];
   costFilter: CostFilter;
@@ -227,6 +281,9 @@ export async function searchRecords(params: {
   }
   if (params.sdkFilter) {
     searchParams.set("sdk", params.sdkFilter);
+  }
+  for (const agentHarnessFilter of params.agentHarnessFilters) {
+    searchParams.append("agent_harness", agentHarnessFilter);
   }
   for (const authorFilter of params.authorFilters) {
     searchParams.append("author", authorFilter);
@@ -352,6 +409,16 @@ export async function fetchRecordTraceFile(recordId: string, filePath: string): 
     throw new Error(await readErrorMessage(response));
   }
   return response.text();
+}
+
+export function recordRevisionTraceUrl(
+  recordId: string,
+  revisionId: string,
+  filePath = "trajectory.jsonl",
+): string {
+  return `/api/records/${encodeURIComponent(recordId)}/revisions/${encodeURIComponent(
+    revisionId,
+  )}/traces/${filePath}`;
 }
 
 export async function fetchStagingEntries(): Promise<StagingEntry[]> {

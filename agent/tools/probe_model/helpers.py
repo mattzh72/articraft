@@ -70,10 +70,27 @@ def _coerce_pose_map(values: dict[str, object] | None) -> dict[str, object]:
     return out
 
 
+def _pose_value_cache_key(value: object) -> object:
+    if isinstance(value, (int, float)):
+        return float(value)
+    xyz = getattr(value, "xyz", None)
+    rpy = getattr(value, "rpy", None)
+    if isinstance(xyz, (tuple, list)) and isinstance(rpy, (tuple, list)):
+        return (
+            type(value).__name__,
+            tuple(float(item) for item in xyz),
+            tuple(float(item) for item in rpy),
+        )
+    return repr(value)
+
+
 class ProbeSession:
     def __init__(self, object_model: object, ctx: object) -> None:
         self.object_model = object_model
         self.ctx = ctx
+        self._projection_interval_cache_pose_key: tuple[tuple[str, object], ...] | None = None
+        self._projection_interval_cache: dict[tuple[int, str], tuple[float, float]] = {}
+        self._projection_interval_cache_elements: dict[int, object] = {}
         self._parts = list(getattr(object_model, "parts", []) or [])
         raw_joints = getattr(object_model, "articulations", None)
         if not isinstance(raw_joints, list):
@@ -268,19 +285,19 @@ class ProbeSession:
                 summary["pose_value_kind"] = "origin"
             return summary
         target = self._resolve_target(obj)
-        parent_name = None if target["visual"] is None else self.name(target["part"])
-        return {
+        summary = {
             "kind": "visual" if target["visual"] is not None else "part",
             "name": self.name(target["visual"] or target["part"]),
-            "parent_part": parent_name,
             "position": self.position(target["visual"] or target["part"]),
             "center": self.center(target["visual"] or target["part"]),
             "dims": self.dims(target["visual"] or target["part"]),
             "aabb": self.aabb(target["visual"] or target["part"]),
-            "visual_names": [self.name(visual) for visual in self.visuals(target["part"])]
-            if target["visual"] is None
-            else None,
         }
+        if target["visual"] is not None:
+            summary["parent_part"] = self.name(target["part"])
+        else:
+            summary["visual_names"] = [self.name(visual) for visual in self.visuals(target["part"])]
+        return summary
 
     def pair_report(
         self,
@@ -317,8 +334,8 @@ class ProbeSession:
             "intervals": {},
         }
         for axis in ("x", "y", "z"):
-            min_a, max_a = self.ctx._elements_projection_interval(elements_a, axis=axis)
-            min_b, max_b = self.ctx._elements_projection_interval(elements_b, axis=axis)
+            min_a, max_a = self._elements_projection_interval(elements_a, axis=axis)
+            min_b, max_b = self._elements_projection_interval(elements_b, axis=axis)
             overlap = min(float(max_a), float(max_b)) - max(float(min_a), float(min_b))
             signed_gap = max(float(min_a) - float(max_b), float(min_b) - float(max_a))
             report["intervals"][axis] = {
@@ -363,11 +380,11 @@ class ProbeSession:
             raise ProbeLookupError(positive_error or "missing exact geometry for positive target")
         if negative_error or negative_elements is None:
             raise ProbeLookupError(negative_error or "missing exact geometry for negative target")
-        positive_min, positive_max = self.ctx._elements_projection_interval(
+        positive_min, positive_max = self._elements_projection_interval(
             positive_elements,
             axis=axis_name,
         )
-        negative_min, negative_max = self.ctx._elements_projection_interval(
+        negative_min, negative_max = self._elements_projection_interval(
             negative_elements,
             axis=axis_name,
         )
@@ -433,8 +450,8 @@ class ProbeSession:
         margins: dict[str, dict[str, float]] = {}
         within = True
         for axis in _normalize_axes(axes):
-            inner_min, inner_max = self.ctx._elements_projection_interval(inner_elements, axis=axis)
-            outer_min, outer_max = self.ctx._elements_projection_interval(outer_elements, axis=axis)
+            inner_min, inner_max = self._elements_projection_interval(inner_elements, axis=axis)
+            outer_min, outer_max = self._elements_projection_interval(outer_elements, axis=axis)
             lower_margin = float(inner_min) - float(outer_min)
             upper_margin = float(outer_max) - float(inner_max)
             axis_within = lower_margin >= 0.0 and upper_margin >= 0.0
@@ -497,14 +514,6 @@ class ProbeSession:
             positive_elem=elem_a,
             negative_elem=elem_b,
         )
-        child_center = self.center(elem_a or child)
-        parent_center = self.center(elem_b or parent)
-        center_offset_xy = None
-        if child_center is not None and parent_center is not None:
-            center_offset_xy = [
-                float(child_center[0] - parent_center[0]),
-                float(child_center[1] - parent_center[1]),
-            ]
         looks_mounted = bool(within_xy["within"]) and float(gap_z["gap"]) <= 0.02
         return {
             "metric_kind": "mount_review",
@@ -514,7 +523,6 @@ class ProbeSession:
             "within_xy": within_xy,
             "gap_z": gap_z,
             "pair": pair,
-            "center_offset_xy": center_offset_xy,
         }
 
     def containment_report(
@@ -962,6 +970,61 @@ class ProbeSession:
             return None
         return _transform_point(parent_tf, xyz)
 
+    def _current_pose_cache_key(self) -> tuple[tuple[str, object], ...]:
+        pose = getattr(self.ctx, "_pose", None)
+        if not isinstance(pose, dict):
+            return ()
+        return tuple(
+            sorted(
+                ((str(key), _pose_value_cache_key(value)) for key, value in pose.items()),
+                key=lambda item: item[0],
+            )
+        )
+
+    def _ensure_projection_interval_cache_current(self) -> None:
+        pose_key = self._current_pose_cache_key()
+        if pose_key == self._projection_interval_cache_pose_key:
+            return
+        self._projection_interval_cache_pose_key = pose_key
+        self._projection_interval_cache.clear()
+        self._projection_interval_cache_elements.clear()
+
+    def _element_projection_interval(
+        self,
+        element: object,
+        *,
+        axis: str,
+    ) -> tuple[float, float]:
+        self._ensure_projection_interval_cache_current()
+        element_id = id(element)
+        cache_key = (element_id, axis)
+        cached = self._projection_interval_cache.get(cache_key)
+        if cached is not None:
+            return cached
+
+        min_value, max_value = self.ctx._element_projection_interval(element, axis=axis)
+        cached = (float(min_value), float(max_value))
+        self._projection_interval_cache[cache_key] = cached
+        self._projection_interval_cache_elements[element_id] = element
+        return cached
+
+    def _elements_projection_interval(
+        self,
+        elements: Sequence[object],
+        *,
+        axis: str,
+    ) -> tuple[float, float]:
+        mins: list[float] = []
+        maxs: list[float] = []
+        for element in elements:
+            elem_min, elem_max = self._element_projection_interval(element, axis=axis)
+            mins.append(elem_min)
+            maxs.append(elem_max)
+        if not mins:
+            min_value, max_value = self.ctx._elements_projection_interval(elements, axis=axis)
+            return float(min_value), float(max_value)
+        return min(mins), max(maxs)
+
     def _exact_target_intervals(
         self,
         target: dict[str, object | None],
@@ -974,9 +1037,7 @@ class ProbeSession:
         if error or elements is None:
             return None
         return {
-            axis: tuple(
-                float(v) for v in self.ctx._elements_projection_interval(elements, axis=axis)
-            )
+            axis: self._elements_projection_interval(elements, axis=axis)
             for axis in ("x", "y", "z")
         }
 

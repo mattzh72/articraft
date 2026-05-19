@@ -4,15 +4,13 @@
 
 Use this stack for thin curved parts such as handles, loops, whisk cages, fan
 guards, baskets, and tubular frames. Start with the spline helpers for almost
-all continuously bent parts. Reach for `wire_from_points(...)` only when the
-straight runs and corners are intentionally part of the design.
+all continuously bent parts.
 
 ## Import
 
 ```python
 from sdk import (
     WirePath,
-    wire_from_points,
     tube_from_spline_points,
     sweep_profile_along_spline,
     rounded_rect_profile,
@@ -26,7 +24,6 @@ from sdk import (
 | Default for smooth circular rails, handles, loops, and frames | `tube_from_spline_points(...)` |
 | Default for smooth non-circular rails and trim | `sweep_profile_along_spline(...)` |
 | Readable manual path authoring for smooth arcs and bezier-like runs | `WirePath` plus a spline/sweep helper |
-| Intentional hard-corner wire geometry only | `wire_from_points(...)` |
 
 ## API Reference
 
@@ -74,31 +71,6 @@ sweep_profile_along_spline(
 - Fits a spline through the input points, then sweeps a closed 2D profile.
 - Use this when the section is not circular.
 
-### `wire_from_points(...)`
-
-```python
-wire_from_points(
-    points,
-    *,
-    radius: float,
-    radial_segments: int = 16,
-    closed_path: bool = False,
-    cap_ends: bool = False,
-    corner_mode: str = "fillet",
-    corner_radius: float = 0.0,
-    corner_segments: int = 8,
-    up_hint=(0.0, 0.0, 1.0),
-    min_segment_length: float = 1e-6,
-) -> MeshGeometry
-```
-
-- Builds one continuous tube from an explicit polyline path.
-- Treat this as a hard-corner polyline helper, not the default smooth-tube
-  helper.
-- `corner_mode`: `"fillet"`, `"miter"`, or `"bevel"`.
-- `corner_radius`: bend radius for filleted or beveled corners.
-- `closed_path`: closes the centerline loop.
-
 ### `WirePath`
 
 ```python
@@ -120,7 +92,7 @@ wp.to_points() -> list[tuple[float, float, float]]
 Use `WirePath` when readability matters more than fitting a spline from an
 existing point set. In most cases, finish with `wp.to_points()` and feed the
 result into `tube_from_spline_points(...)` or `sweep_profile_along_spline(...)`
-rather than `wire_from_points(...)`.
+so the final visible part remains a smooth swept tube.
 
 ## Advice
 
@@ -133,30 +105,11 @@ rather than `wire_from_points(...)`.
 - Use `WirePath` when the path is easier to author procedurally than to specify
   as a finished point list, then pass `wp.to_points()` into a spline/sweep
   helper.
-- Use `wire_from_points(...)` only when the corners themselves are part of the
-  design, such as elbows, basket corners, or welded rectangular guards.
-
-### Avoiding macaroni artifacts
-
-- A common failure mode is sparse points plus `wire_from_points(...)` plus
-  `corner_mode="fillet"` and `corner_radius` used to fake a smooth organic
-  bend.
-- That pattern often produces macaroni-like artifacts because the input is
-  still an explicit polyline with corner treatment, not a truly smooth
-  centerline.
-- If you are reaching for `corner_radius` to make a sparse polyline look
-  organic, you are probably using the wrong helper.
-- In that situation, move to `tube_from_spline_points(...)` or
-  `sweep_profile_along_spline(...)` and increase `samples_per_segment` first.
 
 ### Tuning smoothness
 
 - Increase `samples_per_segment` first when a spline-based result looks coarse.
 - Increase `radial_segments` when the tube still looks visibly faceted.
-- Use `corner_mode="miter"` only when the centerline is already smooth or when
-  you need explicit hard elbows.
-- Use `corner_mode="fillet"` only for intentionally piecewise-linear shapes
-  where softened corners are still visibly part of the silhouette.
 
 ## Examples
 
@@ -217,26 +170,6 @@ handle = tube_from_spline_points(
 
 Use this pattern when arcs or bezier-like runs are easier to author
 procedurally but the final part should still read as one continuous bend.
-
-### Intentional hard-corner wire
-
-```python
-loop = wire_from_points(
-    [
-        (-0.04, -0.02, 0.00),
-        (-0.04, 0.02, 0.00),
-        (0.04, 0.02, 0.00),
-        (0.04, -0.02, 0.00),
-    ],
-    radius=0.0015,
-    closed_path=True,
-    corner_mode="fillet",
-    corner_radius=0.006,
-)
-```
-
-This is a good fit because the part is intentionally boxy: the straight runs
-and elbow locations are part of the silhouette.
 
 ## See Also
 

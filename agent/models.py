@@ -127,7 +127,6 @@ class PromptPreviewRequest:
     thinking_level: str
     system_prompt_path: str
     sdk_package: str = "sdk"
-    sdk_docs_mode: str = "full"
     openai_transport: str = "http"
     openai_reasoning_summary: str | None = "auto"
 

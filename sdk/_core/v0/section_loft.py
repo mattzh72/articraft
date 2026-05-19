@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from contextlib import suppress
 from dataclasses import dataclass
 from typing import Literal, Mapping, Optional, Sequence
 
@@ -259,11 +260,8 @@ def _heal_shape(shape, *, solid: bool):
         shape = shape.fix()
 
     if solid:
-        try:
+        with suppress(Exception):
             shape = cq_shapes.solid(shape)
-        except Exception:
-            # Lofts with invalid shell topology may still be useful after tessellation.
-            pass
         if hasattr(shape, "fix"):
             shape = shape.fix()
 
@@ -313,10 +311,8 @@ def _repair_mesh_geometry(geometry: MeshGeometry) -> MeshGeometry:
         faces=[(int(f[0]), int(f[1]), int(f[2])) for f in mesh.faces],
     )
 
-    try:
+    with suppress(Exception):
         repaired = _geometry_from_manifold(_manifold_from_geometry(repaired, name="geometry"))
-    except Exception:
-        pass
 
     return repaired
 

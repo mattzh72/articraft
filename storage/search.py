@@ -3,12 +3,15 @@ from __future__ import annotations
 import json
 import os
 import re
+import tempfile
 import unicodedata
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
 
+from storage.collections import CollectionStore
 from storage.repo import StorageRepo
+from storage.revisions import active_prompt_path
 
 _INDEX_SCHEMA_VERSION = 1
 _TOKEN_PATTERN = re.compile(r"[a-z0-9]+")
@@ -108,11 +111,6 @@ class SearchIndex:
             latest_mtime_ns,
             self._path_mtime_ns(self.repo.layout.categories_root),
         )
-        latest_mtime_ns = self._max_mtime_ns(
-            latest_mtime_ns,
-            self._path_mtime_ns(self.repo.layout.local_workbench_path()),
-        )
-
         for category_path in self.repo.layout.categories_root.glob("*/category.json"):
             latest_mtime_ns = self._max_mtime_ns(
                 latest_mtime_ns,
@@ -133,17 +131,25 @@ class SearchIndex:
                 )
                 latest_mtime_ns = self._max_mtime_ns(
                     latest_mtime_ns,
-                    self._path_mtime_ns(record_dir / "prompt.txt"),
+                    self._path_mtime_ns(active_prompt_path(self.repo, record_dir.name)),
                 )
                 latest_mtime_ns = self._max_mtime_ns(
                     latest_mtime_ns,
-                    self._path_mtime_ns(record_dir / "dataset_entry.json"),
+                    self._path_mtime_ns(
+                        self.repo.layout.record_dataset_entry_path(record_dir.name)
+                    ),
+                )
+                latest_mtime_ns = self._max_mtime_ns(
+                    latest_mtime_ns,
+                    self._path_mtime_ns(
+                        self.repo.layout.record_workbench_entry_path(record_dir.name)
+                    ),
                 )
 
         return latest_mtime_ns
 
     def _load_workbench_entries(self) -> dict[str, dict[str, str]]:
-        raw = self.repo.read_json(self.repo.layout.local_workbench_path(), default={}) or {}
+        raw = CollectionStore(self.repo).load_workbench() or {}
         entries: dict[str, dict[str, str]] = {}
         for item in raw.get("entries", []):
             record_id = str(item.get("record_id", ""))
@@ -188,9 +194,12 @@ class SearchIndex:
 
             record_id = str(record.get("record_id") or record_dir.name)
             display = record.get("display") if isinstance(record.get("display"), dict) else {}
-            dataset_entry = self.repo.read_json(record_dir / "dataset_entry.json", default={}) or {}
+            dataset_entry = self.repo.read_json(
+                self.repo.layout.record_dataset_entry_path(record_dir.name),
+                default={},
+            )
             prompt_text = ""
-            prompt_path = record_dir / "prompt.txt"
+            prompt_path = active_prompt_path(self.repo, record_dir.name, record=record)
             if prompt_path.exists():
                 prompt_text = prompt_path.read_text(encoding="utf-8")
 
@@ -255,9 +264,6 @@ class SearchIndex:
     ) -> None:
         path = self.repo.layout.search_index_path()
         path.parent.mkdir(parents=True, exist_ok=True)
-        temporary_path = path.with_suffix(f"{path.suffix}.tmp")
-        if temporary_path.exists():
-            temporary_path.unlink()
 
         payload = {
             "schema_version": _INDEX_SCHEMA_VERSION,
@@ -266,8 +272,21 @@ class SearchIndex:
             "workbench_entry_count": workbench_entry_count,
             "documents": documents,
         }
-        temporary_path.write_text(json.dumps(payload, indent=2) + "\n", encoding="utf-8")
-        os.replace(temporary_path, path)
+        with tempfile.NamedTemporaryFile(
+            "w",
+            dir=path.parent,
+            encoding="utf-8",
+            prefix=f"{path.name}.",
+            suffix=".tmp",
+            delete=False,
+        ) as temporary_file:
+            temporary_path = Path(temporary_file.name)
+            temporary_file.write(json.dumps(payload, indent=2) + "\n")
+        try:
+            os.replace(temporary_path, path)
+        except OSError:
+            temporary_path.unlink(missing_ok=True)
+            raise
 
     def _cache_stats(
         self,

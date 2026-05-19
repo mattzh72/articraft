@@ -1,0 +1,85 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  core:
+    name: Core CI
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v5
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v7
+        with:
+          version: "0.9.17"
+          enable-cache: true
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version-file: ".python-version"
+
+      - name: Install dependencies
+        run: uv sync --frozen --group dev
+
+      - name: Check formatting
+        run: uv run --frozen ruff format --check .
+
+      - name: Lint Python
+        run: uv run --frozen ruff check .
+
+      - name: Check data format
+        run: uv run --frozen articraft data check
+
+      - name: Run smoke tests
+        run: |
+          uv run --frozen --group dev pytest -q \
+            tests/agent \
+            tests/storage \
+            tests/viewer/test_api.py \
+            tests/workbench \
+            tests/dataset/test_imports.py \
+            tests/sdk/test_imports.py \
+            tests/cli
+
+  viewer:
+    name: Viewer CI
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: viewer/web
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v5
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v5
+        with:
+          node-version: "24"
+          cache: npm
+          cache-dependency-path: viewer/web/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Lint viewer
+        run: npm run lint
+
+      - name: Typecheck viewer
+        run: npm run typecheck

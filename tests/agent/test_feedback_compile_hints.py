@@ -93,3 +93,6 @@ def test_render_compile_signals_generalizes_intentional_qc_allowance_guidance() 
     )
     assert expected in isolated_rendered
     assert expected in overlap_rendered
+    assert (
+        "Preserve prompt-critical visible geometry while repairing the overlap." in overlap_rendered
+    )

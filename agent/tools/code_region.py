@@ -5,8 +5,6 @@ Helpers for operating on the editable user-code region inside scaffolded files.
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Optional
-
 
 USER_CODE_START_MARKER = "# >>> USER_CODE_START"
 USER_CODE_END_MARKER = "# >>> USER_CODE_END"
@@ -53,7 +51,7 @@ def find_code_region(full_code: str) -> CodeRegion:
 
 def extract_editable_code(full_code: str) -> str:
     region = find_code_region(full_code)
-    return full_code[region.content_start:region.content_end]
+    return full_code[region.content_start : region.content_end]
 
 
 def replace_editable_code(full_code: str, new_code: str) -> str:
@@ -62,15 +60,11 @@ def replace_editable_code(full_code: str, new_code: str) -> str:
         normalized = new_code
         if normalized and not normalized.endswith("\n"):
             normalized += "\n"
-        return (
-            full_code[:region.content_start]
-            + normalized
-            + full_code[region.content_end:]
-        )
+        return full_code[: region.content_start] + normalized + full_code[region.content_end :]
     return new_code
 
 
-def map_syntax_error_line_to_editable(full_code: str, line_no: Optional[int]) -> Optional[int]:
+def map_syntax_error_line_to_editable(full_code: str, line_no: int | None) -> int | None:
     """
     Convert full-file syntax error line number to editable-region line number.
 

@@ -33,10 +33,6 @@ class StorageLayout:
         return self.data_root / "records"
 
     @property
-    def local_root(self) -> Path:
-        return self.data_root / "local"
-
-    @property
     def cache_root(self) -> Path:
         return self.data_root / "cache"
 
@@ -82,9 +78,6 @@ class StorageLayout:
     def batch_spec_path(self, batch_id: str) -> Path:
         return self.batch_specs_root / f"{batch_id}.csv"
 
-    def local_workbench_path(self) -> Path:
-        return self.local_root / "workbench.json"
-
     def dataset_manifest_path(self) -> Path:
         return self.manifests_root / "dataset.json"
 
@@ -97,14 +90,47 @@ class StorageLayout:
     def record_metadata_path(self, record_id: str) -> Path:
         return self.record_dir(record_id) / "record.json"
 
+    def record_collections_dir(self, record_id: str) -> Path:
+        return self.record_dir(record_id) / "collections"
+
     def record_dataset_entry_path(self, record_id: str) -> Path:
-        return self.record_dir(record_id) / "dataset_entry.json"
+        return self.record_collections_dir(record_id) / "dataset.json"
+
+    def record_workbench_entry_path(self, record_id: str) -> Path:
+        return self.record_collections_dir(record_id) / "workbench.json"
+
+    def record_revisions_dir(self, record_id: str) -> Path:
+        return self.record_dir(record_id) / "revisions"
+
+    def record_revision_dir(self, record_id: str, revision_id: str) -> Path:
+        return self.record_revisions_dir(record_id) / revision_id
+
+    def record_revision_metadata_path(self, record_id: str, revision_id: str) -> Path:
+        return self.record_revision_dir(record_id, revision_id) / "revision.json"
+
+    def record_revision_prompt_path(self, record_id: str, revision_id: str) -> Path:
+        return self.record_revision_dir(record_id, revision_id) / "prompt.txt"
+
+    def record_revision_model_path(self, record_id: str, revision_id: str) -> Path:
+        return self.record_revision_dir(record_id, revision_id) / "model.py"
+
+    def record_revision_provenance_path(self, record_id: str, revision_id: str) -> Path:
+        return self.record_revision_dir(record_id, revision_id) / "provenance.json"
+
+    def record_revision_cost_path(self, record_id: str, revision_id: str) -> Path:
+        return self.record_revision_dir(record_id, revision_id) / "cost.json"
+
+    def record_revision_inputs_dir(self, record_id: str, revision_id: str) -> Path:
+        return self.record_revision_dir(record_id, revision_id) / "inputs"
+
+    def record_revision_traces_dir(self, record_id: str, revision_id: str) -> Path:
+        return self.record_revision_dir(record_id, revision_id) / "traces"
 
     def record_inputs_dir(self, record_id: str) -> Path:
-        return self.record_dir(record_id) / "inputs"
+        return self.record_revision_inputs_dir(record_id, "rev_000001")
 
     def record_traces_dir(self, record_id: str) -> Path:
-        return self.record_dir(record_id) / "traces"
+        return self.record_revision_traces_dir(record_id, "rev_000001")
 
     def record_trajectory_unroll_path(self, record_id: str) -> Path:
         return self.trajectory_unroll_records_root / record_id / "trajectory.jsonl"
@@ -175,7 +201,6 @@ class StorageLayout:
             self.system_prompts_root,
             self.batch_specs_root,
             self.records_root,
-            self.local_root,
             self.manifests_root,
             self.trajectory_unroll_records_root,
             self.trajectory_unroll_staging_root,

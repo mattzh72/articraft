@@ -3,6 +3,7 @@ from __future__ import annotations
 import shutil
 from dataclasses import dataclass
 
+from storage.identifiers import validate_category_slug
 from storage.models import CategoryRecord
 from storage.repo import StorageRepo
 
@@ -12,11 +13,12 @@ class CategoryStore:
     repo: StorageRepo
 
     def save(self, category: CategoryRecord) -> None:
-        path = self.repo.layout.category_metadata_path(category.slug)
+        category_slug = validate_category_slug(category.slug)
+        path = self.repo.layout.category_metadata_path(category_slug)
         raw_payload = category.to_dict()
         payload = {
             "schema_version": raw_payload["schema_version"],
-            "slug": raw_payload["slug"],
+            "slug": category_slug,
             "title": raw_payload["title"],
             "description": raw_payload.get("description", ""),
         }
@@ -29,10 +31,12 @@ class CategoryStore:
         self.repo.write_json(path, payload)
 
     def load(self, category_slug: str) -> dict | None:
-        return self.repo.read_json(self.repo.layout.category_metadata_path(category_slug))
+        validated_slug = validate_category_slug(category_slug)
+        return self.repo.read_json(self.repo.layout.category_metadata_path(validated_slug))
 
     def delete(self, category_slug: str) -> bool:
-        category_dir = self.repo.layout.category_dir(category_slug)
+        validated_slug = validate_category_slug(category_slug)
+        category_dir = self.repo.layout.category_dir(validated_slug)
         if not category_dir.exists():
             return False
         shutil.rmtree(category_dir)

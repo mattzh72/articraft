@@ -120,7 +120,7 @@ export function createAxisHelper(size: number = 2): THREE.Group {
 }
 
 /**
- * Position the grid and axis helper underneath the model's bounding box.
+ * Keep the ground helpers at the normalized scene origin and scale them to the model footprint.
  */
 export function positionGroundHelpers(
   gridGroup: THREE.Group,
@@ -128,20 +128,16 @@ export function positionGroundHelpers(
   robotGroup: THREE.Object3D,
 ): void {
   const box = new THREE.Box3().setFromObject(robotGroup);
-  const center = box.getCenter(new THREE.Vector3());
   const size = box.getSize(new THREE.Vector3());
-  const bottomY = box.min.y;
 
-  // Position grid at the bottom of the model, centered on the model's XZ footprint
-  gridGroup.position.set(center.x, bottomY, center.z);
+  gridGroup.position.set(0, 0, 0);
 
   // Scale grid to fit the model - at least 3x the model's footprint
   const footprint = Math.max(size.x, size.z, 1) * 3;
   const gridScale = footprint / 10; // base grid is 10 units
   gridGroup.scale.set(gridScale, 1, gridScale);
 
-  // Position axis at the bottom center of the model
-  axisGroup.position.set(center.x, bottomY, center.z);
+  axisGroup.position.set(0, 0, 0);
 
   // Scale axis to be proportional to the model size
   const axisScale = Math.max(size.x, size.y, size.z, 0.5) * 0.4;
@@ -160,11 +156,11 @@ export function createEnvironmentMap(renderer: THREE.WebGLRenderer): THREE.Textu
   const envScene = new THREE.Scene();
 
   // Top hemisphere color
-  const topColor = new THREE.Color(0xdbe7ff);
+  const topColor = new THREE.Color(0xf7f8fa);
   // Bottom hemisphere color
-  const bottomColor = new THREE.Color(0x8a8f98);
+  const bottomColor = new THREE.Color(0xd9dde3);
   // Equator accent
-  const midColor = new THREE.Color(0xfafcff);
+  const midColor = new THREE.Color(0xffffff);
 
   // Use a large sphere with a gradient shader as environment
   const envGeometry = new THREE.SphereGeometry(100, 32, 16);

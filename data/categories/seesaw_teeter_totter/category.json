@@ -1,0 +1,7 @@
+{
+  "schema_version": 1,
+  "slug": "seesaw_teeter_totter",
+  "title": "Seesaw teeter-totter",
+  "description": "Playground seesaws with a single supported beam rotating about a central fulcrum.",
+  "target_sdk_version": "base"
+}

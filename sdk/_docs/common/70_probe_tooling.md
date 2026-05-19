@@ -12,7 +12,7 @@ in `run_tests()`.
 Tool parameters:
 
 - `code: str`
-- `timeout_ms: int = 10000`
+- `timeout_ms: int = 600000`
 - `include_stdout: bool = False`
 
 Execution rules:

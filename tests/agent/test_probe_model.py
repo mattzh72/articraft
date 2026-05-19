@@ -3,7 +3,9 @@ from __future__ import annotations
 import asyncio
 from pathlib import Path
 
+from agent.compiler import load_model_globals
 from agent.tools.probe_model import ProbeModelTool
+from agent.tools.probe_model.helpers import ProbeSession
 
 
 def _write_probe_fixture(script_path: Path, *, include_object_model: bool = True) -> None:
@@ -138,7 +140,7 @@ async def _run_probe(
     script_path: Path,
     code: str,
     *,
-    timeout_ms: int = 1000,
+    timeout_ms: int = 5000,
     include_stdout: bool = False,
 ) -> dict[str, object]:
     tool = ProbeModelTool(sdk_package="sdk")
@@ -177,6 +179,7 @@ def test_probe_model_returns_structured_measurements(tmp_path: Path) -> None:
     )
 
     assert output["ok"] is True
+    assert "elapsed_ms" not in output
     result = output["result"]
     assert isinstance(result, dict)
     assert result["part_names"] == ["panel", "keys", "arm"]
@@ -199,6 +202,7 @@ def test_probe_model_captures_stdout_when_requested(tmp_path: Path) -> None:
     )
 
     assert output["ok"] is True
+    assert "elapsed_ms" not in output
     assert "debug line" in output["stdout"]
 
 
@@ -403,6 +407,40 @@ def test_probe_model_non_aabb_measurements_use_exact_geometry(tmp_path: Path) ->
         assert abs(float(observed) - float(expected)) < 1e-6
 
 
+def test_probe_session_reuses_projection_interval_cache(tmp_path: Path) -> None:
+    from sdk import TestContext
+
+    script_path = tmp_path / "model.py"
+    _write_probe_fixture(script_path)
+    globals_dict = load_model_globals(script_path, sdk_package="sdk")
+    object_model = globals_dict["object_model"]
+    ctx = TestContext(object_model, asset_root=tmp_path)
+    session = ProbeSession(object_model, ctx)
+    target = session.visual("panel", "knob")
+
+    calls: list[tuple[int, str]] = []
+    original = ctx._element_projection_interval
+
+    def counting_projection_interval(element: object, *, axis: str) -> tuple[float, float]:
+        calls.append((id(element), axis))
+        min_value, max_value = original(element, axis=axis)
+        return float(min_value), float(max_value)
+
+    ctx._element_projection_interval = counting_projection_interval  # type: ignore[method-assign]
+
+    session.center(target)
+    session.dims(target)
+    session.projection(target, "xyz")
+    assert len(calls) == 3
+    element_id = calls[0][0]
+    assert calls == [(element_id, "x"), (element_id, "y"), (element_id, "z")]
+
+    session.center(target)
+    session.dims(target)
+    session.projection(target, "xyz")
+    assert len(calls) == 3
+
+
 def _write_floating_probe_fixture(script_path: Path) -> None:
     lines = [
         "from __future__ import annotations",
@@ -460,3 +498,37 @@ def test_probe_model_supports_floating_origin_pose_values(tmp_path: Path) -> Non
     assert result["summary"]["pose_value_kind"] == "origin"
     assert result["before"] == [0.3, 0.0, 0.0]
     assert result["after"] == [0.4, 0.2, 0.3]
+
+
+def test_probe_model_omits_null_placeholders_and_duplicate_mount_offsets(tmp_path: Path) -> None:
+    script_path = tmp_path / "model.py"
+    _write_probe_fixture(script_path)
+
+    output = asyncio.run(
+        _run_probe(
+            script_path,
+            "\n".join(
+                [
+                    "panel = part('panel')",
+                    "knob = visual('panel', 'knob')",
+                    "emit({",
+                    "    'part_summary': summary(panel),",
+                    "    'visual_summary': summary(knob),",
+                    "    'mount': mount_report(knob, panel),",
+                    "})",
+                ]
+            ),
+        )
+    )
+
+    assert output["ok"] is True
+    result = output["result"]
+    part_summary = result["part_summary"]
+    visual_summary = result["visual_summary"]
+    mount = result["mount"]
+
+    assert "parent_part" not in part_summary
+    assert part_summary["visual_names"] == ["panel_body", "knob"]
+    assert visual_summary["parent_part"] == "panel"
+    assert "visual_names" not in visual_summary
+    assert "center_offset_xy" not in mount

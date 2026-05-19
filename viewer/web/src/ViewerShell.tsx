@@ -14,11 +14,12 @@ import { Sidebar } from "@/components/layout/Sidebar";
 import { Inspector } from "@/components/layout/Inspector";
 import { ViewportPanel } from "@/components/layout/ViewportPanel";
 import { InspectorTabs } from "@/components/inspector/InspectorTabs";
-import type { RenderOptions as InspectorRenderOptions } from "@/components/inspector/RenderOptionsPanel";
+import type { RenderOptions as InspectorRenderOptions } from "@/components/viewer3d/useRenderOptions";
 import { RecordBrowser } from "@/components/browser/RecordBrowser";
 import { Button } from "@/components/ui/button";
 import { useRenderOptions } from "@/components/viewer3d/useRenderOptions";
 import { useJointController } from "@/components/viewer3d/useJointController";
+import type { SnapshotExporter } from "@/components/viewer3d/SceneCanvas";
 import type { UrdfJoint, UrdfSpec } from "@/components/viewer3d/urdf-parser";
 import { MissingArtifactsOverlay } from "@/components/layout/MissingArtifactsOverlay";
 
@@ -301,6 +302,7 @@ export default function ViewerShell(): JSX.Element {
   const [jointNodes, setJointNodes] = useState<Map<string, THREE.Object3D> | null>(null);
   const [previewJointValues, setPreviewJointValues] = useState<Map<string, number>>(new Map());
   const [inspectorCollapsed, setInspectorCollapsed] = useState(readInspectorCollapsedFromUrl);
+  const [snapshotExporter, setSnapshotExporter] = useState<SnapshotExporter | null>(null);
   const [modelLoadState, setModelLoadState] = useState<{
     loading: boolean;
     error: string | null;
@@ -354,6 +356,10 @@ export default function ViewerShell(): JSX.Element {
 
   const handleViewportInvalidateReady = useCallback((invalidate: (() => void) | null) => {
     viewportInvalidateRef.current = invalidate;
+  }, []);
+
+  const handleSnapshotReady = useCallback((snapshot: SnapshotExporter | null) => {
+    setSnapshotExporter(() => snapshot);
   }, []);
 
   useEffect(() => {
@@ -440,6 +446,7 @@ export default function ViewerShell(): JSX.Element {
   }, [applyJointValues, renderOptions.autoAnimate, urdfSpec]);
 
   const inspectorRenderOptions = {
+    fancyGraphics: renderOptions.fancyGraphics,
     showEdges: renderOptions.showEdges,
     showGrid: renderOptions.showGrid,
     showCollisions: renderOptions.showCollisions,
@@ -550,6 +557,15 @@ export default function ViewerShell(): JSX.Element {
       };
     }
 
+    if (meshCount > 0 && failedMeshCount === 0) {
+      return {
+        available: true,
+        summary: `${meshCount} collision ${meshCount === 1 ? "mesh" : "meshes"} available`,
+        detail: "Collision meshes will load when collision rendering is enabled.",
+        compileCommand: null,
+      };
+    }
+
     const compileRecordId =
       selection.kind === "record"
         ? selection.recordId
@@ -614,6 +630,7 @@ export default function ViewerShell(): JSX.Element {
             renderOptions={renderOptions}
             onUrdfSpecChange={handleUrdfSpecChange}
             onInvalidateReady={handleViewportInvalidateReady}
+            onSnapshotReady={handleSnapshotReady}
             onLoadStateChange={setModelLoadState}
             overlayNotice={collisionNotice}
             disabledOverlay={
@@ -656,6 +673,7 @@ export default function ViewerShell(): JSX.Element {
               onResetAll={resetAll}
               renderOptions={inspectorRenderOptions}
               onRenderOptionChange={handleRenderOptionChange}
+              onSnapshot={snapshotExporter}
               collisionSupport={collisionSupport}
             />
           </Inspector>

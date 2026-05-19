@@ -49,6 +49,7 @@ export function DashboardPage(): JSX.Element {
     max: null,
   });
   const [sdkFilter, setSdkFilter] = useState<string | null>(null);
+  const [agentHarnessFilters, setAgentHarnessFilters] = useState<string[]>([]);
   const [authorFilters, setAuthorFilters] = useState<string[]>([]);
   const [categoryFilters, setCategoryFilters] = useState<string[]>([]);
   const [rollingWindowDays, setRollingWindowDays] = useState(14);
@@ -59,11 +60,12 @@ export function DashboardPage(): JSX.Element {
       starsFilter,
       costFilter,
       sdkFilter,
+      agentHarnessFilters,
       authorFilters,
       categoryFilters,
       rollingWindowDays,
     }),
-    [authorFilters, categoryFilters, costFilter, rollingWindowDays, sdkFilter, starsFilter, timeFilter],
+    [agentHarnessFilters, authorFilters, categoryFilters, costFilter, rollingWindowDays, sdkFilter, starsFilter, timeFilter],
   );
   const deferredRequest = useDeferredValue(requestParams);
   const dashboardQuery = useQuery(
@@ -72,6 +74,7 @@ export function DashboardPage(): JSX.Element {
       starsFilter: deferredRequest.starsFilter,
       costFilter: deferredRequest.costFilter,
       sdkFilter: deferredRequest.sdkFilter,
+      agentHarnessFilters: deferredRequest.agentHarnessFilters,
       authorFilters: deferredRequest.authorFilters,
       categoryFilters: deferredRequest.categoryFilters,
       rollingWindowDays: deferredRequest.rollingWindowDays,
@@ -123,16 +126,20 @@ export function DashboardPage(): JSX.Element {
             onCostFilterChange={setCostFilter}
             sdkFilter={sdkFilter}
             onSdkFilterChange={setSdkFilter}
+            agentHarnessFilters={agentHarnessFilters}
+            onAgentHarnessFiltersChange={setAgentHarnessFilters}
             authorFilters={authorFilters}
             onAuthorFiltersChange={setAuthorFilters}
             categoryFilters={categoryFilters}
             onCategoryFiltersChange={setCategoryFilters}
             availableSdks={dashboard.available_sdks}
+            availableAgentHarnesses={dashboard.available_agent_harnesses}
             availableAuthors={dashboard.available_authors}
             availableCategories={dashboard.available_categories}
             costBounds={dashboard.cost_bounds}
             recordCount={dashboard.overview.total_records}
             categoryCount={dashboard.overview.category_count}
+            loading={loading}
           />
 
           {loadError ? (
@@ -164,10 +171,6 @@ export function DashboardPage(): JSX.Element {
             categoryStats={dashboard.category_stats}
             supercategories={dashboard.supercategories}
           />
-
-          {loading ? (
-            <p className="text-[10px] text-[var(--text-quaternary)]">Refreshing…</p>
-          ) : null}
         </div>
       </div>
     </main>

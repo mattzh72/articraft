@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 import time
+from contextlib import suppress
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
@@ -37,7 +38,5 @@ class TraceWriter:
         self._conversation_file.flush()
 
     def close(self) -> None:
-        try:
+        with suppress(Exception):
             self._conversation_file.close()
-        except Exception:
-            pass

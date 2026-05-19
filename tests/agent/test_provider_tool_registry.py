@@ -147,7 +147,7 @@ def test_openai_tool_registry_treats_null_optional_args_as_defaults() -> None:
     )
     assert probe_model is not None
     assert probe_model.params.code == "emit(1)"
-    assert probe_model.params.timeout_ms == 10_000
+    assert probe_model.params.timeout_ms == 600_000
     assert probe_model.params.include_stdout is False
 
 

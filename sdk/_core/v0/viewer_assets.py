@@ -4,6 +4,7 @@ import json
 import math
 import struct
 import xml.etree.ElementTree as ET
+from contextlib import suppress
 from pathlib import Path
 
 import numpy as np
@@ -363,8 +364,6 @@ def convert_urdf_visual_meshes_to_glb(
 
         mesh_el.set("filename", filename[:-4] + ".glb")
 
-    try:
+    with suppress(Exception):
         ET.indent(root, space="  ")
-    except Exception:
-        pass
     return ET.tostring(root, encoding="unicode"), warnings

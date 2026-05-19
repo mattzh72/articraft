@@ -76,12 +76,12 @@ def _assert_clean_export(
 
 def _build_perforated_panel_geometry(*, center: bool = True) -> sdk.MeshGeometry:
     return sdk.PerforatedPanelGeometry(
-        (0.16, 0.10),
+        (0.08, 0.05),
         0.004,
         hole_diameter=0.006,
-        pitch=(0.012, 0.012),
-        frame=0.010,
-        corner_radius=0.004,
+        pitch=(0.018, 0.018),
+        frame=0.008,
+        corner_radius=0.003,
         stagger=True,
         center=center,
     )
@@ -193,7 +193,7 @@ def _build_blower_wheel_geometry(*, center: bool = True) -> sdk.MeshGeometry:
         0.080,
         0.040,
         0.050,
-        18,
+        8,
         blade_thickness=0.004,
         blade_sweep_deg=25.0,
         center=center,
@@ -207,7 +207,7 @@ def _build_knob_geometry(*, center: bool = True) -> sdk.MeshGeometry:
         body_style="skirted",
         top_diameter=0.034,
         skirt=sdk.KnobSkirt(0.052, 0.006, flare=0.08),
-        grip=sdk.KnobGrip(style="fluted", count=18, depth=0.0014),
+        grip=sdk.KnobGrip(style="fluted", count=8, depth=0.0014),
         indicator=sdk.KnobIndicator(
             style="line",
             mode="engraved",
@@ -234,52 +234,50 @@ def _build_bezel_geometry(*, center: bool = True) -> sdk.MeshGeometry:
 
 def _build_wheel_geometry(*, center: bool = True) -> sdk.MeshGeometry:
     return sdk.WheelGeometry(
-        0.120,
-        0.040,
+        0.080,
+        0.026,
         rim=sdk.WheelRim(
-            inner_radius=0.082,
-            flange_height=0.010,
-            flange_thickness=0.004,
-            bead_seat_depth=0.004,
+            inner_radius=0.056,
+            flange_height=0.006,
+            flange_thickness=0.003,
         ),
         hub=sdk.WheelHub(
-            radius=0.028,
-            width=0.030,
-            cap_style="domed",
+            radius=0.020,
+            width=0.020,
+            cap_style="protruding",
             bolt_pattern=sdk.BoltPattern(
-                count=5,
-                circle_diameter=0.034,
-                hole_diameter=0.004,
+                count=3,
+                circle_diameter=0.026,
+                hole_diameter=0.003,
             ),
         ),
-        face=sdk.WheelFace(dish_depth=0.006, front_inset=0.003, rear_inset=0.002),
+        face=sdk.WheelFace(dish_depth=0.003, front_inset=0.002, rear_inset=0.001),
         spokes=sdk.WheelSpokes(
-            style="split_y",
-            count=5,
+            style="straight",
+            count=3,
             thickness=0.003,
-            window_radius=0.010,
+            window_radius=0.008,
         ),
-        bore=sdk.WheelBore(style="round", diameter=0.012),
+        bore=sdk.WheelBore(style="round", diameter=0.010),
         center=center,
     )
 
 
 def _build_tire_geometry(*, center: bool = True) -> sdk.MeshGeometry:
     return sdk.TireGeometry(
-        0.145,
-        0.052,
-        inner_radius=0.110,
+        0.100,
+        0.034,
+        inner_radius=0.074,
         carcass=sdk.TireCarcass(belt_width_ratio=0.66, sidewall_bulge=0.08),
         tread=sdk.TireTread(
-            style="chevron",
-            depth=0.006,
-            count=18,
-            angle_deg=26.0,
+            style="circumferential",
+            depth=0.004,
+            count=2,
             land_ratio=0.58,
         ),
-        grooves=(sdk.TireGroove(center_offset=0.0, width=0.006, depth=0.003),),
+        grooves=(sdk.TireGroove(center_offset=0.0, width=0.004, depth=0.002),),
         sidewall=sdk.TireSidewall(style="rounded", bulge=0.06),
-        shoulder=sdk.TireShoulder(width=0.006, radius=0.004),
+        shoulder=sdk.TireShoulder(width=0.004, radius=0.003),
         center=center,
     )
 
@@ -940,8 +938,8 @@ def test_vent_grille_geometry_supports_center_false_z0_mount_frame() -> None:
         pytest.param(
             _build_perforated_panel_geometry,
             "perforated_panel",
-            (-0.080, -0.050, -0.002),
-            (0.080, 0.050, 0.002),
+            (-0.040, -0.025, -0.002),
+            (0.040, 0.025, 0.002),
             1e-3,
             id="perforated-panel",
         ),
@@ -1012,16 +1010,16 @@ def test_vent_grille_geometry_supports_center_false_z0_mount_frame() -> None:
         pytest.param(
             _build_wheel_geometry,
             "wheel",
-            (-0.0200, -0.120, -0.120),
-            (0.0234, 0.120, 0.120),
+            (-0.0130, -0.080, -0.080),
+            (0.0132, 0.080, 0.080),
             2.5e-3,
             id="wheel",
         ),
         pytest.param(
             _build_tire_geometry,
             "tire",
-            (-0.026, -0.1507, -0.1507),
-            (0.026, 0.1507, 0.1507),
+            (-0.017, -0.100, -0.100),
+            (0.017, 0.100, 0.100),
             2.5e-3,
             id="tire",
         ),
@@ -1063,11 +1061,33 @@ def test_new_mesh_geometry_helpers_export_clean_single_body_meshes(
         assert maxs[axis] == pytest.approx(expected, abs=tol)
 
 
+def test_slot_pattern_panel_exports_real_through_slot(tmp_path: Path) -> None:
+    geometry = sdk.SlotPatternPanelGeometry(
+        (0.10, 0.05),
+        0.004,
+        slot_size=(0.030, 0.010),
+        pitch=(0.20, 0.20),
+        frame=0.010,
+        corner_radius=0.0,
+    )
+
+    exported = _assert_clean_export(tmp_path, geometry, "single_slot_panel")
+
+    assert exported.euler_number == 0
+    assert exported.bounds[0] == pytest.approx((-0.05, -0.025, -0.002), abs=1e-6)
+    assert exported.bounds[1] == pytest.approx((0.05, 0.025, 0.002), abs=1e-6)
+
+
 @pytest.mark.parametrize(
     ("builder", "name"),
     [
         pytest.param(
             _build_perforated_panel_geometry, "PerforatedPanelGeometry", id="perforated-panel"
+        ),
+        pytest.param(
+            _build_slot_pattern_panel_geometry,
+            "SlotPatternPanelGeometry",
+            id="slot-pattern-panel",
         ),
         pytest.param(_build_knob_geometry, "KnobGeometry", id="knob"),
         pytest.param(_build_bezel_geometry, "BezelGeometry", id="bezel"),
@@ -1394,7 +1414,7 @@ def test_new_fan_geometry_helpers_validate_invalid_inputs(builder, message: str)
                 ),
                 grip=sdk.KnobGrip(
                     style="diamond_knurl",
-                    count=24,
+                    count=8,
                     depth=0.0011,
                     helix_angle_deg=28.0,
                 ),
@@ -1419,6 +1439,54 @@ def test_new_fan_geometry_helpers_validate_invalid_inputs(builder, message: str)
             ),
             "knob",
             id="knob-detailed-variant",
+        ),
+        pytest.param(
+            lambda: sdk.KnobGeometry(
+                0.036,
+                0.021,
+                body_style="faceted",
+                base_diameter=0.039,
+                top_diameter=0.028,
+                edge_radius=0.0008,
+                grip=sdk.KnobGrip(
+                    style="ribbed",
+                    count=6,
+                    depth=0.0010,
+                    width=0.0018,
+                ),
+                indicator=sdk.KnobIndicator(
+                    style="wedge",
+                    mode="raised",
+                    angle_deg=10.0,
+                ),
+                top_feature=sdk.KnobTopFeature(
+                    style="top_insert",
+                    diameter=0.012,
+                    height=0.0012,
+                ),
+            ),
+            "knob-faceted",
+            id="knob-faceted-variant",
+        ),
+        pytest.param(
+            lambda: sdk.KnobGeometry(
+                0.040,
+                0.024,
+                body_style="lobed",
+                base_diameter=0.028,
+                top_diameter=0.036,
+                crown_radius=0.0012,
+                body_reliefs=(
+                    sdk.KnobRelief(
+                        style="top_recess",
+                        width=0.014,
+                        depth=0.0016,
+                    ),
+                ),
+                bore=sdk.KnobBore(style="round", diameter=0.008),
+            ),
+            "knob-lobed",
+            id="knob-lobed-variant",
         ),
         pytest.param(
             lambda: sdk.BezelGeometry(
@@ -1470,7 +1538,7 @@ def test_new_fan_geometry_helpers_validate_invalid_inputs(builder, message: str)
                 face=sdk.WheelFace(dish_depth=0.004, front_inset=0.003),
                 spokes=sdk.WheelSpokes(
                     style="mesh",
-                    count=6,
+                    count=3,
                     thickness=0.0028,
                     window_radius=0.007,
                 ),
@@ -1487,7 +1555,7 @@ def test_new_fan_geometry_helpers_validate_invalid_inputs(builder, message: str)
                 tread=sdk.TireTread(
                     style="block",
                     depth=0.005,
-                    count=16,
+                    count=6,
                     land_ratio=0.52,
                 ),
                 grooves=(

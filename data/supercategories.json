@@ -113,7 +113,20 @@
         "screwin_light_bulb_with_socket",
         "stand_mixer",
         "stick_vacuum_with_folding_joint",
-        "vacuum_cleaner_with_articulated_wand"
+        "vacuum_cleaner_with_articulated_wand",
+        "air_conditioning_machine",
+        "air_fryer_with_pullout_basket",
+        "bread_maker_with_hinged_lid",
+        "dehumidifier_with_pullout_water_bucket",
+        "dishwasher_with_dropdown_door_and_sliding_racks",
+        "food_processor_with_feed_pusher",
+        "electric_kettle_with_hinged_lid",
+        "panini_press_with_clamshell_lid",
+        "rice_cooker",
+        "top_load_washing_machine_with_hinged_lid",
+        "tower_fan_with_rotary_controls",
+        "waffle_maker",
+        "pepper_salt_mill_with_rotating_top"
       ]
     },
     {
@@ -127,6 +140,7 @@
         "drawer_cabinet_with_sliding_drawers",
         "hingeddoor_cabinet",
         "office_chair",
+        "folding_chair",
         "swivel_bar_stool",
         "lounge_chair_with_independent_backrest_and_footrest",
         "floor_lamp",
@@ -170,7 +184,14 @@
         "tripodmounted_device",
         "remote",
         "usb_drive_with_swivel_cover",
-        "overear_headphones_with_folding_earcups"
+        "overear_headphones_with_folding_earcups",
+        "all_in_one_printer_with_scanner_lid_and_paper_tray",
+        "camcorder_with_flipout_screen",
+        "camera_flash",
+        "desktop_monitor_with_tilt_swivel_stand",
+        "film_clapperboard_with_hinged_slate",
+        "typewriter_with_return_carriage",
+        "midi_keyboard_controller_with_pitch_wheel_and_sliders"
       ]
     },
     {
@@ -200,7 +221,8 @@
         "single_rotor_helicopter",
         "toy_car",
         "toy_model_planes",
-        "jet_engine"
+        "jet_engine",
+        "blimp"
       ]
     },
     {
@@ -236,7 +258,14 @@
         "pump_bottle",
         "screwcap_bottle",
         "louvered_shutter_assembly",
-        "padlock_with_shackle"
+        "padlock_with_shackle",
+        "clamp_meter_with_hinged_jaw_and_rotary_selector",
+        "desktop_pencil_sharpener_with_hand_crank_and_drawer",
+        "desktop_stapler_with_hinged_top_arm",
+        "digital_multimeter_with_tilt_stand_and_rotary_selector",
+        "paper_shredder_with_pullout_bin",
+        "rolling_toolbox_with_telescoping_handle",
+        "zippo_lighter"
       ]
     },
     {
@@ -255,7 +284,8 @@
         "service_access_panel",
         "pet_door_flap",
         "mailbox_with_front_access_door",
-        "wall_safe_with_hinged_door_and_dial"
+        "wall_safe_with_hinged_door_and_dial",
+        "retractable_bollard"
       ]
     },
     {
@@ -273,7 +303,8 @@
         "bell_tower_with_swinging_bell",
         "clock_tower_with_rotating_hour_and_minute_hands",
         "roof_vent_tower_with_hinged_flap",
-        "singleleaf_drawbridge"
+        "singleleaf_drawbridge",
+        "sluice_gate_with_vertical_lift_panel"
       ]
     },
     {
@@ -289,7 +320,9 @@
         "overshot_waterwheel",
         "undershot_waterwheel",
         "stationary_exercise_bike",
-        "fidget_toy"
+        "fidget_toy",
+        "adjustable_weight_bench_with_hinged_backrest",
+        "seesaw_teeter_totter"
       ]
     },
     {
@@ -309,7 +342,8 @@
       "category_slugs": [
         "arcade_machine",
         "candy_vending_machine",
-        "casino_machine"
+        "casino_machine",
+        "cash_register"
       ]
     }
   ]

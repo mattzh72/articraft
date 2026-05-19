@@ -14,6 +14,10 @@ export type RecordSummary = {
   sdk_package: string | null;
   provider: string | null;
   model_id: string | null;
+  creator_mode: string | null;
+  external_agent: string | null;
+  agent_harness: AgentHarness;
+  has_traces: boolean;
   thinking_level: string | null;
   turn_count: number | null;
   input_tokens: number | null;
@@ -23,6 +27,11 @@ export type RecordSummary = {
   run_id: string | null;
   run_status: string | null;
   run_message: string | null;
+  active_revision_id: string | null;
+  origin_record_id: string | null;
+  parent_record_id: string | null;
+  revision_count: number;
+  has_history: boolean;
   collections: string[];
   materialization_status: string | null;
   has_compile_report: boolean;
@@ -33,6 +42,7 @@ export type RecordSummary = {
 export type RecordBrowseFacets = {
   models: string[];
   sdk_packages: string[];
+  agent_harnesses: AgentHarness[];
   authors: string[];
   categories: string[];
   cost_min: number | null;
@@ -48,6 +58,12 @@ export type RecordBrowseResponse = {
   record_ids: string[];
   records: RecordSummary[];
   facets: RecordBrowseFacets;
+};
+
+export type RecordBrowseIdsResponse = {
+  source: SourceFilter;
+  total: number;
+  record_ids: string[];
 };
 
 export type WorkbenchEntry = {
@@ -143,6 +159,33 @@ export type RecordDetail = {
   compile_report: Record<string, unknown> | null;
   provenance: Record<string, unknown> | null;
   cost: Record<string, unknown> | null;
+};
+
+export type RecordHistoryRevision = {
+  record_id: string;
+  revision_id: string;
+  active: boolean;
+  created_at: string | null;
+  prompt_preview: string;
+  provider: string | null;
+  model_id: string | null;
+  run_id: string | null;
+  parent_record_id: string | null;
+  parent_revision_id: string | null;
+  status: string | null;
+  total_cost_usd: number | null;
+  has_cost: boolean;
+  has_traces: boolean;
+  has_model: boolean;
+  has_provenance: boolean;
+};
+
+export type RecordHistory = {
+  record_id: string;
+  active_revision_id: string | null;
+  ancestors: RecordHistoryRevision[];
+  revisions: RecordHistoryRevision[];
+  descendants: RecordSummary[];
 };
 
 export type RecordRatingResponse = {
@@ -261,6 +304,7 @@ export type DashboardData = {
   generated_at: string;
   supercategories: SupercategoryOption[];
   available_sdks: string[];
+  available_agent_harnesses: AgentHarness[];
   available_authors: string[];
   available_categories: string[];
   cost_bounds: DashboardCostBounds | null;
@@ -285,6 +329,7 @@ export type ViewerSelection =
 
 export type SourceFilter = "workbench" | "dataset";
 export type BrowserTab = SourceFilter | "staging";
+export type AgentHarness = "articraft" | "codex" | "claude-code";
 export type TimeFilterPoint = "1y" | "180d" | "90d" | "60d" | "30d" | "14d" | "7d" | "3d" | "24h" | "12h" | "6h" | "1h";
 export type TimeFilter = {
   oldest: TimeFilterPoint | null;
@@ -314,6 +359,7 @@ export type ViewerState = {
   timeFilter: TimeFilter;
   modelFilter: string | null;
   sdkFilter: string | null;
+  agentHarnessFilters: AgentHarness[];
   authorFilters: string[];
   categoryFilters: string[];
   costFilter: CostFilter;
@@ -339,6 +385,7 @@ export type ViewerAction =
         timeFilter: TimeFilter;
         modelFilter: string | null;
         sdkFilter: string | null;
+        agentHarnessFilters: AgentHarness[];
         authorFilters: string[];
         categoryFilters: string[];
         costFilter: CostFilter;
@@ -366,6 +413,7 @@ export type ViewerAction =
   | { type: "SET_TIME_FILTER"; payload: TimeFilter }
   | { type: "SET_MODEL_FILTER"; payload: string | null }
   | { type: "SET_SDK_FILTER"; payload: string | null }
+  | { type: "SET_AGENT_HARNESS_FILTERS"; payload: string[] }
   | { type: "SET_AUTHOR_FILTERS"; payload: string[] }
   | { type: "SET_CATEGORY_FILTERS"; payload: string[] }
   | { type: "SET_COST_FILTER"; payload: CostFilter }

@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import ast
 import asyncio
 import io
 import json
@@ -11,8 +12,10 @@ import pytest
 
 from agent import runner
 from agent.defaults import DEFAULT_MAX_TURNS, GEMINI_3_FLASH_DEFAULT_MAX_TURNS
+from agent.run_context import RunExecutionOutcome
+from cli import hooks as git_hooks
+from cli import workbench as workbench_cli
 from cli.workbench import main as workbench_main
-from scripts import git_hooks
 from tests.helpers import FakeAgent
 
 
@@ -21,8 +24,139 @@ def fake_agent(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setattr(runner, "ArticraftAgent", FakeAgent)
 
 
+def _active_revision_dir(record_dir: Path) -> Path:
+    record = json.loads((record_dir / "record.json").read_text(encoding="utf-8"))
+    return record_dir / "revisions" / record.get("active_revision_id", "rev_000001")
+
+
+def _artifact_path(record_dir: Path, filename: str) -> Path:
+    return _active_revision_dir(record_dir) / filename
+
+
 def _init_git_repo(repo_root: Path) -> None:
     subprocess.run(["git", "init"], cwd=repo_root, check=True, capture_output=True, text=True)
+
+
+def _assert_draft_model_scaffold_contract(model_text: str) -> None:
+    tree = ast.parse(model_text)
+
+    cadquery_imports = [
+        alias
+        for node in tree.body
+        if isinstance(node, ast.Import)
+        for alias in node.names
+        if alias.name == "cadquery"
+    ]
+    assert any(alias.asname == "cq" for alias in cadquery_imports)
+
+    sdk_imports = [
+        alias.name
+        for node in tree.body
+        if isinstance(node, ast.ImportFrom) and node.module == "sdk"
+        for alias in node.names
+    ]
+    assert {"ArticulatedObject", "TestContext", "TestReport", "mesh_from_cadquery"} <= set(
+        sdk_imports
+    )
+
+    functions = {node.name for node in tree.body if isinstance(node, ast.FunctionDef)}
+    assert {"build_object_model", "run_tests"} <= functions
+
+    legacy_fragments = (
+        "ctx.check_model_valid()",
+        "ctx.check_mesh_assets_ready()",
+        "ctx.fail_if_isolated_parts()",
+        "ctx.warn_if_part_contains_disconnected_geometry_islands()",
+        "ctx.fail_if_parts_overlap_in_current_pose()",
+        "ctx.warn_if_articulation_origin_far_from_geometry",
+        "ctx.warn_if_articulation_overlaps(max_pose_samples=128)",
+        "ctx.warn_if_overlaps(max_pose_samples=128, ignore_adjacent=True, ignore_fixed=True)",
+        "with ctx.pose({lid_hinge: hinge_limits.lower}):",
+        'ctx.fail_if_isolated_parts(name="lid_hinge_upper_no_floating")',
+        "expect_aabb_",
+    )
+    for fragment in legacy_fragments:
+        assert fragment not in model_text
+
+
+def test_workbench_fork_record_command_uses_internal_edit(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    record_dir = tmp_path / "data" / "records" / "rec_parent"
+    record_dir.mkdir(parents=True)
+    (record_dir / "record.json").write_text(
+        '{"record_id":"rec_parent","provider":"openai","active_revision_id":"rev_000001"}\n',
+        encoding="utf-8",
+    )
+    calls: list[dict] = []
+
+    async def _fake_edit_record(**kwargs):
+        calls.append(kwargs)
+        output_record_id = kwargs.get("record_id") or kwargs["parent_record_id"]
+        output_dir = tmp_path / "data" / "records" / output_record_id
+        output_dir.mkdir(parents=True, exist_ok=True)
+        (output_dir / "record.json").write_text(
+            '{"record_id":"%s","provider":"openai","active_revision_id":"rev_000001"}\n'
+            % output_record_id,
+            encoding="utf-8",
+        )
+        return RunExecutionOutcome(
+            exit_code=0,
+            run_id="run_fake",
+            record_id=output_record_id,
+            status="success",
+        )
+
+    class _FakeSearchIndex:
+        def __init__(self, repo):
+            self.repo = repo
+
+        def rebuild(self):
+            return type(
+                "Stats",
+                (),
+                {
+                    "path": tmp_path / "data" / "cache" / "search_index.json",
+                    "record_count": 1,
+                    "category_count": 0,
+                    "workbench_entry_count": 0,
+                },
+            )()
+
+    monkeypatch.setattr(workbench_cli, "resolve_image_path", lambda *_args, **_kwargs: None)
+    monkeypatch.setattr(workbench_cli, "edit_record", _fake_edit_record)
+    monkeypatch.setattr(workbench_cli, "SearchIndex", _FakeSearchIndex)
+
+    assert (
+        workbench_main(
+            [
+                "--repo-root",
+                str(tmp_path),
+                "fork-record",
+                "rec_parent",
+                "make it longer",
+                "--record-id",
+                "rec_child",
+            ]
+        )
+        == 0
+    )
+    with pytest.raises(SystemExit) as exc_info:
+        workbench_main(
+            [
+                "--repo-root",
+                str(tmp_path),
+                "revise-record",
+                "rec_parent",
+                "make it wider",
+            ]
+        )
+
+    assert exc_info.value.code == 2
+    assert "in_place" not in calls[0]
+    assert calls[0]["record_id"] == "rec_child"
+    assert len(calls) == 1
 
 
 def test_workbench_rerun_record_command(
@@ -43,7 +177,6 @@ def test_workbench_rerun_record_command(
             max_turns=30,
             system_prompt_path="designer_system_prompt.txt",
             sdk_package="sdk",
-            sdk_docs_mode="full",
             label="hinge rerun",
             tags=["hinge"],
         )
@@ -96,7 +229,6 @@ def test_workbench_rerun_record_command_accepts_model_and_thinking_overrides(
             max_turns=30,
             system_prompt_path="designer_system_prompt.txt",
             sdk_package="sdk",
-            sdk_docs_mode="full",
             label="mixer rerun",
             tags=["mixer"],
         )
@@ -123,7 +255,9 @@ def test_workbench_rerun_record_command_accepts_model_and_thinking_overrides(
     )
 
     updated_record = json.loads((record_dir / "record.json").read_text(encoding="utf-8"))
-    updated_provenance = json.loads((record_dir / "provenance.json").read_text(encoding="utf-8"))
+    updated_provenance = json.loads(
+        _artifact_path(record_dir, "provenance.json").read_text(encoding="utf-8")
+    )
     assert updated_record["provider"] == "gemini"
     assert updated_record["model_id"] == "gemini-3-flash-preview"
     assert updated_provenance["generation"]["provider"] == "gemini"
@@ -154,7 +288,6 @@ def test_workbench_rerun_record_command_prefers_source_run_thinking_parameters(
             max_turns=30,
             system_prompt_path="designer_system_prompt.txt",
             sdk_package="sdk",
-            sdk_docs_mode="full",
             label="keyboard rerun",
             tags=["keyboard"],
         )
@@ -170,7 +303,7 @@ def test_workbench_rerun_record_command_prefers_source_run_thinking_parameters(
     run_metadata["settings_summary"]["thinking_level"] = "low"
     run_metadata_path.write_text(json.dumps(run_metadata, indent=2) + "\n", encoding="utf-8")
 
-    provenance_path = record_dir / "provenance.json"
+    provenance_path = _artifact_path(record_dir, "provenance.json")
     provenance = json.loads(provenance_path.read_text(encoding="utf-8"))
     provenance["generation"]["thinking_level"] = "high"
     provenance_path.write_text(json.dumps(provenance, indent=2) + "\n", encoding="utf-8")
@@ -187,7 +320,9 @@ def test_workbench_rerun_record_command_prefers_source_run_thinking_parameters(
         == 0
     )
 
-    updated_provenance = json.loads((record_dir / "provenance.json").read_text(encoding="utf-8"))
+    updated_provenance = json.loads(
+        _artifact_path(record_dir, "provenance.json").read_text(encoding="utf-8")
+    )
     assert updated_provenance["generation"]["thinking_level"] == "low"
 
 
@@ -210,7 +345,6 @@ def test_workbench_rerun_record_command_accepts_sdk_override(
             max_turns=30,
             system_prompt_path="designer_system_prompt.txt",
             sdk_package="sdk",
-            sdk_docs_mode="full",
             label="boom arm rerun",
             tags=["boom"],
         )
@@ -235,7 +369,9 @@ def test_workbench_rerun_record_command_accepts_sdk_override(
     )
 
     updated_record = json.loads((record_dir / "record.json").read_text(encoding="utf-8"))
-    updated_provenance = json.loads((record_dir / "provenance.json").read_text(encoding="utf-8"))
+    updated_provenance = json.loads(
+        _artifact_path(record_dir, "provenance.json").read_text(encoding="utf-8")
+    )
     assert updated_record["sdk_package"] == "sdk"
     assert updated_provenance["sdk"]["sdk_package"] == "sdk"
     assert (
@@ -247,7 +383,7 @@ def test_workbench_rerun_record_command_accepts_sdk_override(
     assert "search_index=" in captured
 
 
-def test_workbench_rerun_record_command_accepts_legacy_sdk_docs_mode(
+def test_workbench_rerun_record_command_ignores_legacy_sdk_docs_mode(
     fake_agent: None,
     tmp_path: Path,
     capsys: pytest.CaptureFixture[str],
@@ -265,7 +401,6 @@ def test_workbench_rerun_record_command_accepts_legacy_sdk_docs_mode(
             max_turns=30,
             system_prompt_path="designer_system_prompt.txt",
             sdk_package="sdk",
-            sdk_docs_mode="full",
             label="coffee rerun",
             tags=["coffee"],
         )
@@ -274,7 +409,7 @@ def test_workbench_rerun_record_command_accepts_legacy_sdk_docs_mode(
     capsys.readouterr()
 
     record_dir = next((repo_root / "data" / "records").iterdir())
-    provenance_path = record_dir / "provenance.json"
+    provenance_path = _artifact_path(record_dir, "provenance.json")
     provenance = json.loads(provenance_path.read_text(encoding="utf-8"))
     provenance["prompting"]["sdk_docs_mode"] = "legacy_import"
     provenance_path.write_text(json.dumps(provenance, indent=2) + "\n", encoding="utf-8")
@@ -314,7 +449,6 @@ def test_workbench_rerun_record_command_replaces_cached_materialization_outputs(
             max_turns=30,
             system_prompt_path="designer_system_prompt.txt",
             sdk_package="sdk",
-            sdk_docs_mode="full",
             label="turret rerun",
             tags=["turret"],
         )
@@ -396,51 +530,32 @@ def test_workbench_init_record_command(
     assert record["collections"] == ["workbench"]
     assert record["display"]["title"] == "reading lamp draft"
 
-    assert (record_dir / "prompt.txt").read_text(encoding="utf-8") == "build a folding reading lamp"
-    model_text = (record_dir / "model.py").read_text(encoding="utf-8")
-    assert "Draft scaffold created by `articraft-workbench init-record`." in model_text
-    assert "import cadquery as cq" in model_text
-    assert "mesh_from_cadquery" in model_text
-    assert "def build_object_model() -> ArticulatedObject:" in model_text
-    assert "def run_tests() -> TestReport:" in model_text
-    assert "ctx.check_model_valid()" not in model_text
-    assert "ctx.check_mesh_assets_ready()" not in model_text
-    assert "ctx.fail_if_isolated_parts()" not in model_text
-    assert "ctx.warn_if_part_contains_disconnected_geometry_islands()" not in model_text
-    assert "ctx.fail_if_parts_overlap_in_current_pose()" not in model_text
-    assert "ctx.warn_if_articulation_origin_far_from_geometry" not in model_text
-    assert "ctx.warn_if_articulation_overlaps(max_pose_samples=128)" not in model_text
     assert (
-        "ctx.warn_if_overlaps(max_pose_samples=128, ignore_adjacent=True, ignore_fixed=True)"
-        not in model_text
+        _artifact_path(record_dir, "prompt.txt").read_text(encoding="utf-8")
+        == "build a folding reading lamp"
     )
-    assert "`compile_model` automatically runs baseline sanity/QC:" in model_text
-    assert "- exactly one root part" in model_text
-    assert "Use `run_tests()` only for prompt-specific exact checks" in model_text
-    assert "Keep pose-specific checks lean." in model_text
-    assert 'hinge_leaf = lid.get_visual("hinge_leaf")' in model_text
-    assert 'ctx.expect_gap(lid, body, axis="z", max_gap=0.001, max_penetration=0.0)' in model_text
-    assert "ctx.expect_contact(lid, body, elem_a=hinge_leaf, elem_b=body_leaf)" in model_text
-    assert "with ctx.pose({lid_hinge: hinge_limits.lower}):" not in model_text
-    assert 'ctx.fail_if_isolated_parts(name="lid_hinge_upper_no_floating")' not in model_text
-    assert "expect_aabb_" not in model_text
+    model_text = _artifact_path(record_dir, "model.py").read_text(encoding="utf-8")
+    assert "Draft scaffold created by `articraft draft`." in model_text
+    _assert_draft_model_scaffold_contract(model_text)
 
     materialization_dir = repo_root / "data" / "cache" / "record_materialization" / record_dir.name
     assert not (materialization_dir / "compile_report.json").exists()
 
-    provenance = json.loads((record_dir / "provenance.json").read_text(encoding="utf-8"))
+    provenance = json.loads(
+        _artifact_path(record_dir, "provenance.json").read_text(encoding="utf-8")
+    )
     assert provenance["generation"]["provider"] == "openai"
     assert provenance["generation"]["model_id"] == "gpt-5.4"
     assert provenance["generation"]["max_turns"] == DEFAULT_MAX_TURNS
     assert provenance["generation"]["max_cost_usd"] == 2.5
     assert provenance["run_summary"]["final_status"] == "draft"
 
-    workbench = json.loads(
-        (repo_root / "data" / "local" / "workbench.json").read_text(encoding="utf-8")
+    workbench_entry = json.loads(
+        (record_dir / "collections" / "workbench.json").read_text(encoding="utf-8")
     )
-    assert workbench["entries"][0]["record_id"] == record_dir.name
-    assert workbench["entries"][0]["label"] == "reading lamp draft"
-    assert workbench["entries"][0]["tags"] == ["draft", "lamp"]
+    assert workbench_entry["record_id"] == record_dir.name
+    assert workbench_entry["label"] == "reading lamp draft"
+    assert workbench_entry["tags"] == ["draft", "lamp"]
 
     assert (repo_root / "data" / "cache" / "search_index.json").exists()
 
@@ -473,56 +588,11 @@ def test_workbench_init_record_uses_model_specific_default_max_turns(
     assert len(records) == 1
     record_dir = records[0]
 
-    provenance = json.loads((record_dir / "provenance.json").read_text(encoding="utf-8"))
+    provenance = json.loads(
+        _artifact_path(record_dir, "provenance.json").read_text(encoding="utf-8")
+    )
     assert provenance["generation"]["model_id"] == "gemini-3-flash-preview"
     assert provenance["generation"]["max_turns"] == GEMINI_3_FLASH_DEFAULT_MAX_TURNS
-
-
-def test_workbench_rerun_record_command_accepts_design_audit_override(
-    fake_agent: None,
-    tmp_path: Path,
-    capsys: pytest.CaptureFixture[str],
-) -> None:
-    repo_root = tmp_path
-    exit_code = asyncio.run(
-        runner.run_from_input(
-            "make a coffee machine",
-            prompt_text="make a coffee machine",
-            display_prompt="make a coffee machine",
-            repo_root=repo_root,
-            image_path=None,
-            provider="openai",
-            thinking_level="high",
-            max_turns=30,
-            system_prompt_path="designer_system_prompt.txt",
-            sdk_package="sdk",
-            sdk_docs_mode="full",
-            label="coffee rerun",
-            tags=["coffee"],
-        )
-    )
-    assert exit_code == 0
-    capsys.readouterr()
-
-    record_dir = next((repo_root / "data" / "records").iterdir())
-    assert (
-        workbench_main(
-            [
-                "--repo-root",
-                str(repo_root),
-                "rerun-record",
-                str(record_dir),
-                "--no-design-audit",
-            ]
-        )
-        == 0
-    )
-
-    provenance = json.loads((record_dir / "provenance.json").read_text(encoding="utf-8"))
-    assert provenance["prompting"]["post_success_design_audit"] is False
-    output = capsys.readouterr().out
-    assert f"reran record_id={record_dir.name}" in output
-    assert "search_index=" in output
 
 
 def test_workbench_rerun_record_command_reuses_stored_max_cost_usd_and_accepts_override(
@@ -544,7 +614,6 @@ def test_workbench_rerun_record_command_reuses_stored_max_cost_usd_and_accepts_o
             max_cost_usd=2.5,
             system_prompt_path="designer_system_prompt.txt",
             sdk_package="sdk",
-            sdk_docs_mode="full",
             label="coffee rerun",
             tags=["coffee"],
         )
@@ -564,7 +633,9 @@ def test_workbench_rerun_record_command_reuses_stored_max_cost_usd_and_accepts_o
         )
         == 0
     )
-    provenance = json.loads((record_dir / "provenance.json").read_text(encoding="utf-8"))
+    provenance = json.loads(
+        _artifact_path(record_dir, "provenance.json").read_text(encoding="utf-8")
+    )
     assert provenance["generation"]["max_cost_usd"] == 2.5
     capsys.readouterr()
 
@@ -581,42 +652,10 @@ def test_workbench_rerun_record_command_reuses_stored_max_cost_usd_and_accepts_o
         )
         == 0
     )
-    provenance = json.loads((record_dir / "provenance.json").read_text(encoding="utf-8"))
-    assert provenance["generation"]["max_cost_usd"] == 1.0
-
-
-def test_workbench_init_record_command_accepts_design_audit_override(
-    tmp_path: Path,
-    capsys: pytest.CaptureFixture[str],
-) -> None:
-    repo_root = tmp_path
-
-    assert (
-        workbench_main(
-            [
-                "--repo-root",
-                str(repo_root),
-                "init-record",
-                "build a folding reading lamp",
-                "--provider",
-                "openai",
-                "--model-id",
-                "gpt-5.4",
-                "--thinking-level",
-                "high",
-                "--no-design-audit",
-            ]
-        )
-        == 0
+    provenance = json.loads(
+        _artifact_path(record_dir, "provenance.json").read_text(encoding="utf-8")
     )
-
-    records = sorted((repo_root / "data" / "records").iterdir())
-    assert len(records) == 1
-    record_dir = records[0]
-
-    provenance = json.loads((record_dir / "provenance.json").read_text(encoding="utf-8"))
-    assert provenance["prompting"]["post_success_design_audit"] is False
-    assert f"initialized record_id={record_dir.name}" in capsys.readouterr().out
+    assert provenance["generation"]["max_cost_usd"] == 1.0
 
 
 def test_workbench_init_record_command_uses_single_scaffold(
@@ -644,7 +683,7 @@ def test_workbench_init_record_command_uses_single_scaffold(
     )
 
     record_dir = next((repo_root / "data" / "records").iterdir())
-    model_text = (record_dir / "model.py").read_text(encoding="utf-8")
+    model_text = _artifact_path(record_dir, "model.py").read_text(encoding="utf-8")
 
     assert "with ctx.pose({lid_hinge: hinge_limits.lower}):" not in model_text
     assert f"initialized record_id={record_dir.name}" in capsys.readouterr().out
@@ -678,7 +717,11 @@ def test_workbench_init_record_command_persists_input_image(
     assert len(records) == 1
     record_dir = records[0]
 
-    assert (record_dir / "inputs" / image_path.name).read_bytes() == image_path.read_bytes()
+    assert (
+        _active_revision_dir(record_dir) / "inputs" / image_path.name
+    ).read_bytes() == image_path.read_bytes()
+    record = json.loads((record_dir / "record.json").read_text(encoding="utf-8"))
+    assert record["model_id"] == "gpt-5.5-2026-04-23"
 
     captured = capsys.readouterr().out
     assert f"initialized record_id={record_dir.name}" in captured
@@ -709,7 +752,7 @@ def test_workbench_init_record_warns_when_post_commit_hook_missing(tmp_path: Pat
     assert "Warning: managed post-commit hook is missing" in captured
     assert "just setup" in captured
     assert "just hooks-install" in captured
-    assert "install-post-commit" in captured
+    assert "uv run articraft hooks install" in captured
 
 
 def test_workbench_rerun_record_warns_when_post_commit_hook_missing(
@@ -732,7 +775,6 @@ def test_workbench_rerun_record_warns_when_post_commit_hook_missing(
             max_turns=30,
             system_prompt_path="designer_system_prompt.txt",
             sdk_package="sdk",
-            sdk_docs_mode="full",
             label="hinge rerun",
             tags=["hinge"],
         )

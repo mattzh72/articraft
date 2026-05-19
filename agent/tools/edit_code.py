@@ -42,7 +42,7 @@ class EditCodeInvocation(BoundFileToolInvocation[EditCodeParams, str]):
                 return ToolResult(error="file_path is required")
 
             # Load current code
-            async with aiofiles.open(self.file_path, mode="r") as f:
+            async with aiofiles.open(self.file_path, mode="r", encoding="utf-8") as f:
                 full_code = await f.read()
 
             editable_code = extract_editable_code(full_code)
@@ -58,7 +58,7 @@ class EditCodeInvocation(BoundFileToolInvocation[EditCodeParams, str]):
                 new_editable_code = self.params.new_string
                 new_code = replace_editable_code(full_code, new_editable_code)
                 validation = self._validate_python_syntax(new_code, self.file_path or "<string>")
-                async with aiofiles.open(self.file_path, mode="w") as f:
+                async with aiofiles.open(self.file_path, mode="w", encoding="utf-8") as f:
                     await f.write(new_code)
                 return ToolResult(output="Code edited successfully", compilation=validation)
 
@@ -93,7 +93,7 @@ class EditCodeInvocation(BoundFileToolInvocation[EditCodeParams, str]):
             validation = self._validate_python_syntax(new_code, self.file_path or "<string>")
 
             # Save updated code
-            async with aiofiles.open(self.file_path, mode="w") as f:
+            async with aiofiles.open(self.file_path, mode="w", encoding="utf-8") as f:
                 await f.write(new_code)
 
             # Build success message
@@ -138,68 +138,6 @@ class EditCodeInvocation(BoundFileToolInvocation[EditCodeParams, str]):
                 "status": "error",
                 "error": f"Validation error: {str(e)}",
             }
-
-
-class EditCodeTool(BaseDeclarativeTool):
-    """Tool for making precise edits to code files"""
-
-    def __init__(self):
-        schema = make_tool_schema(
-            name="edit_code",
-            description=(
-                "Edit a code file by replacing old_string with new_string.\n\n"
-                "In scaffolded files, this edits only the editable user section.\n\n"
-                "After every edit, the code is automatically validated for Python syntax. "
-                "You will receive immediate feedback on whether the code is valid or contains syntax errors.\n\n"
-                "Matching behavior:\n"
-                "- old_string must match EXACTLY, including whitespace, indentation, and newlines\n"
-                "- Exception: if the editable section is empty, old_string may be an empty string to insert initial code\n"
-                "- By default, old_string must appear exactly once in the file\n"
-                "- If old_string appears multiple times, you must either provide more context to make it unique, "
-                "or set replace_all=true\n"
-                "- If exact matching keeps failing, re-read the file and keep edits narrow\n\n"
-                "Response format:\n"
-                "On success, you receive:\n"
-                "- output: 'Code edited successfully' (or 'replaced N occurrences' if replace_all=true)\n"
-                "- compilation.status: 'success' or 'error'\n"
-                "- compilation.error: error message with line number (if invalid)\n\n"
-                "Possible errors:\n"
-                "- 'Could not find the old_string in the code' - old_string doesn't match exactly\n"
-                "- 'The old_string appears N times' - need longer context or replace_all=true\n"
-                "- 'old_string cannot be empty' - must provide text to replace\n"
-                "- compilation.error contains syntax errors with line numbers"
-            ),
-            parameters={
-                "old_string": {
-                    "type": "string",
-                    "description": (
-                        "The exact string to find and replace. Must match exactly including whitespace, "
-                        "indentation, and newlines. May be empty only when the editable section is empty "
-                        "and you are inserting the initial code. Must be unique unless replace_all=true."
-                    ),
-                },
-                "new_string": {
-                    "type": "string",
-                    "description": (
-                        "The replacement string. Can be empty to delete the old_string. "
-                        "Must have valid Python syntax and proper indentation."
-                    ),
-                },
-                "replace_all": {
-                    "type": "boolean",
-                    "description": (
-                        "If false (default), old_string must appear exactly once. "
-                        "If true, replaces all occurrences. Use for renaming variables or functions."
-                    ),
-                },
-            },
-            required=["old_string", "new_string"],
-        )
-        super().__init__("edit_code", schema)
-
-    async def build(self, params: dict) -> EditCodeInvocation:
-        validated = validate_tool_params(EditCodeParams, params)
-        return EditCodeInvocation(validated)
 
 
 class ReplaceParams(ToolParamsModel):

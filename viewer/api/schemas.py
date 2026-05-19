@@ -2,7 +2,9 @@ from __future__ import annotations
 
 from typing import Any
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, field_validator
+
+from storage.identifiers import validate_category_slug, validate_dataset_id
 
 
 class HealthResponse(BaseModel):
@@ -49,6 +51,10 @@ class RecordSummaryResponse(BaseModel):
     sdk_package: str | None = None
     provider: str | None = None
     model_id: str | None = None
+    creator_mode: str | None = None
+    external_agent: str | None = None
+    agent_harness: str = "articraft"
+    has_traces: bool = False
     thinking_level: str | None = None
     turn_count: int | None = None
     input_tokens: int | None = None
@@ -58,6 +64,11 @@ class RecordSummaryResponse(BaseModel):
     run_id: str | None = None
     run_status: str | None = None
     run_message: str | None = None
+    active_revision_id: str | None = None
+    origin_record_id: str | None = None
+    parent_record_id: str | None = None
+    revision_count: int = 0
+    has_history: bool = False
     collections: list[str] = Field(default_factory=list)
     materialization_status: str | None = None
     has_compile_report: bool = False
@@ -68,6 +79,7 @@ class RecordSummaryResponse(BaseModel):
 class RecordBrowseFacetsResponse(BaseModel):
     models: list[str] = Field(default_factory=list)
     sdk_packages: list[str] = Field(default_factory=list)
+    agent_harnesses: list[str] = Field(default_factory=list)
     authors: list[str] = Field(default_factory=list)
     categories: list[str] = Field(default_factory=list)
     cost_min: float | None = None
@@ -83,6 +95,12 @@ class RecordBrowseResponse(BaseModel):
     record_ids: list[str] = Field(default_factory=list)
     records: list[RecordSummaryResponse] = Field(default_factory=list)
     facets: RecordBrowseFacetsResponse
+
+
+class RecordBrowseIdsResponse(BaseModel):
+    source: str
+    total: int
+    record_ids: list[str] = Field(default_factory=list)
 
 
 class WorkbenchEntryResponse(BaseModel):
@@ -180,6 +198,33 @@ class RecordDetailResponse(BaseModel):
     cost: dict[str, Any] | None = None
 
 
+class RecordHistoryRevisionResponse(BaseModel):
+    record_id: str
+    revision_id: str
+    active: bool = False
+    created_at: str | None = None
+    prompt_preview: str = ""
+    provider: str | None = None
+    model_id: str | None = None
+    run_id: str | None = None
+    parent_record_id: str | None = None
+    parent_revision_id: str | None = None
+    status: str | None = None
+    total_cost_usd: float | None = None
+    has_cost: bool = False
+    has_traces: bool = False
+    has_model: bool = False
+    has_provenance: bool = False
+
+
+class RecordHistoryResponse(BaseModel):
+    record_id: str
+    active_revision_id: str | None = None
+    ancestors: list[RecordHistoryRevisionResponse] = Field(default_factory=list)
+    revisions: list[RecordHistoryRevisionResponse] = Field(default_factory=list)
+    descendants: list[RecordSummaryResponse] = Field(default_factory=list)
+
+
 class RecordRatingRequest(BaseModel):
     rating: int = Field(ge=1, le=5)
 
@@ -204,6 +249,16 @@ class PromoteRecordRequest(BaseModel):
     category_title: str | None = Field(default=None, min_length=1)
     category_slug: str | None = Field(default=None, min_length=1)
     dataset_id: str | None = None
+
+    @field_validator("category_slug")
+    @classmethod
+    def _validate_category_slug(cls, value: str | None) -> str | None:
+        return validate_category_slug(value) if value is not None else None
+
+    @field_validator("dataset_id")
+    @classmethod
+    def _validate_dataset_id(cls, value: str | None) -> str | None:
+        return validate_dataset_id(value) if value is not None else None
 
 
 class RecordTextFileResponse(BaseModel):
@@ -304,6 +359,7 @@ class DashboardResponse(BaseModel):
     generated_at: str
     supercategories: list[SupercategoryOptionResponse] = Field(default_factory=list)
     available_sdks: list[str] = Field(default_factory=list)
+    available_agent_harnesses: list[str] = Field(default_factory=list)
     available_authors: list[str] = Field(default_factory=list)
     available_categories: list[str] = Field(default_factory=list)
     cost_bounds: DashboardCostBoundsResponse | None = None

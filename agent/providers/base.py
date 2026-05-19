@@ -56,6 +56,71 @@ class PrepareRequestResult:
     trace_events: list[ProviderTraceEvent] = field(default_factory=list)
 
 
+@dataclass(slots=True, frozen=True)
+class ContextWindowPressure:
+    provider: str
+    prompt_tokens: int | None
+    max_context_tokens: int | None
+    pressure_ratio: float | None
+    remaining_context_tokens: int | None
+    cached_tokens: int | None = None
+    output_tokens: int | None = None
+    total_tokens: int | None = None
+    hard_pressure_tokens: int | None = None
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "provider": self.provider,
+            "prompt_tokens": self.prompt_tokens,
+            "max_context_tokens": self.max_context_tokens,
+            "pressure_ratio": self.pressure_ratio,
+            "remaining_context_tokens": self.remaining_context_tokens,
+            "cached_tokens": self.cached_tokens,
+            "output_tokens": self.output_tokens,
+            "total_tokens": self.total_tokens,
+            "hard_pressure_tokens": self.hard_pressure_tokens,
+        }
+
+
+def _int_or_none(value: Any) -> int | None:
+    return value if isinstance(value, int) else None
+
+
+def build_context_window_pressure(
+    *,
+    provider: str,
+    usage: dict[str, int],
+    max_context_tokens: int | None,
+    hard_pressure_tokens: int | None = None,
+) -> ContextWindowPressure:
+    prompt_tokens = _int_or_none(usage.get("prompt_tokens"))
+    output_tokens = _int_or_none(usage.get("candidates_tokens"))
+    total_tokens = _int_or_none(usage.get("total_tokens"))
+    cached_tokens = _int_or_none(usage.get("cached_tokens"))
+    if not isinstance(max_context_tokens, int) or max_context_tokens <= 0:
+        max_context_tokens = None
+    if not isinstance(hard_pressure_tokens, int) or hard_pressure_tokens <= 0:
+        hard_pressure_tokens = None
+
+    pressure_ratio: float | None = None
+    remaining_context_tokens: int | None = None
+    if isinstance(prompt_tokens, int) and isinstance(max_context_tokens, int):
+        pressure_ratio = prompt_tokens / max_context_tokens
+        remaining_context_tokens = max_context_tokens - prompt_tokens
+
+    return ContextWindowPressure(
+        provider=provider,
+        prompt_tokens=prompt_tokens,
+        max_context_tokens=max_context_tokens,
+        pressure_ratio=pressure_ratio,
+        remaining_context_tokens=remaining_context_tokens,
+        cached_tokens=cached_tokens,
+        output_tokens=output_tokens,
+        total_tokens=total_tokens,
+        hard_pressure_tokens=hard_pressure_tokens,
+    )
+
+
 class ProviderClient(Protocol):
     """Common interface for model providers used by the runtime."""
 

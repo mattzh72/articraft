@@ -207,6 +207,13 @@ save_cadquery_obj(
 Use CadQuery for visible mesh authoring, then attach the result as a normal
 visual on an `ArticulatedObject` part.
 
+SDK materials are assigned to the resulting `Visual`, not to CadQuery faces or
+sub-bodies inside one exported mesh. CadQuery face colors, per-face materials,
+UVs, and texture coordinates are not preserved by `mesh_from_cadquery(...)`.
+If different regions need different materials, export them as separate
+CadQuery meshes or components and attach each one as its own visual with its
+own `material=...`.
+
 door_shape = (
     cq.Workplane("XY")
     .box(0.58, 0.02, 0.78)
@@ -265,6 +272,8 @@ def build_object_model() -> ArticulatedObject:
 - Choose one unit story per authored CadQuery model: either author the shape and assembly locations directly in meters, or keep them in source units and pass the matching `unit_scale` when exporting to `sdk`.
 - Export preserves the CadQuery local frame of the authored shape/component. The SDK does not recenter meshes, infer hinge pivots, or move geometry to an articulation axis automatically.
 - If an articulation pivot should be at a hinge, either model the CadQuery shape in that local frame or attach the mesh with `visual(origin=Origin(...))` so the mesh frame and joint frame line up explicitly.
+- Materials are applied per SDK visual. Split multi-material CadQuery geometry
+  into separate exported meshes/components before attaching visuals.
 - When you need one mesh per CadQuery component instead of a single combined
   mesh, use `export_cadquery_components(...)` or
   `mesh_components_from_cadquery(...)`.
