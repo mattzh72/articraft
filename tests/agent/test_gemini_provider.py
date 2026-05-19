@@ -6,7 +6,9 @@ import json
 from datetime import datetime, timezone
 from types import SimpleNamespace
 
+from agent.providers.factory import ProviderConfig, default_model_id
 from agent.providers.gemini import (
+    DEFAULT_GEMINI_MODEL,
     GeminiLLM,
     _gemini_compaction_prompt_text,
     _should_retry_gemini_exception,
@@ -38,6 +40,16 @@ def _content_text(content: object) -> str:
     parts = getattr(content, "parts", None) or []
     texts = [getattr(part, "text", None) for part in parts]
     return "\n".join(text for text in texts if isinstance(text, str))
+
+
+def test_gemini_default_model_is_35_flash() -> None:
+    provider = GeminiLLM(dry_run=True)
+
+    assert provider.model_id == DEFAULT_GEMINI_MODEL
+
+
+def test_gemini_factory_default_model_is_35_flash() -> None:
+    assert default_model_id(ProviderConfig(provider="gemini")) == DEFAULT_GEMINI_MODEL
 
 
 def test_gemini_context_window_pressure_reports_prompt_fraction() -> None:
