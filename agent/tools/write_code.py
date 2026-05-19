@@ -42,7 +42,7 @@ class WriteCodeInvocation(BoundFileToolInvocation[WriteCodeParams, str]):
             if not self.file_path:
                 return ToolResult(error="file_path is required")
 
-            async with aiofiles.open(self.file_path, mode="r") as f:
+            async with aiofiles.open(self.file_path, mode="r", encoding="utf-8") as f:
                 full_code = await f.read()
 
             region = find_code_region(full_code)
@@ -59,7 +59,7 @@ class WriteCodeInvocation(BoundFileToolInvocation[WriteCodeParams, str]):
             new_full_code = replace_editable_code(full_code, self.params.code)
             validation = self._validate_python_syntax(new_full_code, self.file_path or "<string>")
 
-            async with aiofiles.open(self.file_path, mode="w") as f:
+            async with aiofiles.open(self.file_path, mode="w", encoding="utf-8") as f:
                 await f.write(new_full_code)
 
             return ToolResult(output="Code rewritten successfully", compilation=validation)

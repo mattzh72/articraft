@@ -42,7 +42,7 @@ class EditCodeInvocation(BoundFileToolInvocation[EditCodeParams, str]):
                 return ToolResult(error="file_path is required")
 
             # Load current code
-            async with aiofiles.open(self.file_path, mode="r") as f:
+            async with aiofiles.open(self.file_path, mode="r", encoding="utf-8") as f:
                 full_code = await f.read()
 
             editable_code = extract_editable_code(full_code)
@@ -58,7 +58,7 @@ class EditCodeInvocation(BoundFileToolInvocation[EditCodeParams, str]):
                 new_editable_code = self.params.new_string
                 new_code = replace_editable_code(full_code, new_editable_code)
                 validation = self._validate_python_syntax(new_code, self.file_path or "<string>")
-                async with aiofiles.open(self.file_path, mode="w") as f:
+                async with aiofiles.open(self.file_path, mode="w", encoding="utf-8") as f:
                     await f.write(new_code)
                 return ToolResult(output="Code edited successfully", compilation=validation)
 
@@ -93,7 +93,7 @@ class EditCodeInvocation(BoundFileToolInvocation[EditCodeParams, str]):
             validation = self._validate_python_syntax(new_code, self.file_path or "<string>")
 
             # Save updated code
-            async with aiofiles.open(self.file_path, mode="w") as f:
+            async with aiofiles.open(self.file_path, mode="w", encoding="utf-8") as f:
                 await f.write(new_code)
 
             # Build success message
