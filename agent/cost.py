@@ -20,6 +20,12 @@ GEMINI_FLASH_PRICING: dict[str, float] = {
     "output": 3.00,
 }
 
+GEMINI_3_5_FLASH_PRICING: dict[str, float] = {
+    "input_uncached": 1.50,
+    "input_cached": 0.15,
+    "output": 9.00,
+}
+
 GEMINI_3_PRO_PRICING: dict[str, float] = {
     "input_uncached": 2.00,
     "input_cached": 2.00,
@@ -317,6 +323,11 @@ def is_flash_model(model_id: str) -> bool:
     return "flash" in model_id.lower()
 
 
+def is_gemini_3_5_flash_model(model_id: str) -> bool:
+    normalized = (model_id or "").strip().lower()
+    return normalized.startswith("gemini-3.5-flash")
+
+
 def is_gemini_3_pro_model(model_id: str) -> bool:
     normalized = (model_id or "").strip().lower()
     return normalized.startswith("gemini-3") and "pro" in normalized
@@ -376,6 +387,8 @@ def pricing_for_provider_model(provider: str, model_id: str) -> dict[str, float]
         return ANTHROPIC_SONNET_4_PRICING
     if provider_norm is ProviderName.ANTHROPIC and is_claude_haiku_4_5_model(model_id):
         return ANTHROPIC_HAIKU_4_5_PRICING
+    if provider_norm is ProviderName.GEMINI and is_gemini_3_5_flash_model(model_id):
+        return GEMINI_3_5_FLASH_PRICING
     if provider_norm is ProviderName.GEMINI and is_flash_model(model_id):
         return GEMINI_FLASH_PRICING
     if provider_norm is ProviderName.GEMINI and is_gemini_3_pro_model(model_id):
