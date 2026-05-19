@@ -43,6 +43,7 @@ _GEMINI_DANGER_ZONE_TOKENS = 700_000
 _GEMINI_PREFIX_CACHE_TTL_SECONDS = 3600
 _GEMINI_PREFIX_CACHE_REFRESH_WINDOW_SECONDS = 300
 _GEMINI_COMPACTION_PROMPT_FILE = "gemini_compaction.md"
+DEFAULT_GEMINI_MODEL = "gemini-3.5-flash"
 DEFAULT_GEMINI_COMPACTION_MODEL = "gemini-3-flash-preview"
 
 
@@ -57,7 +58,7 @@ class GeminiLLM:
 
     def __init__(
         self,
-        model_id: str = "gemini-3.1-pro-preview",
+        model_id: str = DEFAULT_GEMINI_MODEL,
         thinking_level: str = "high",
         *,
         compaction_model_id: str | None = None,

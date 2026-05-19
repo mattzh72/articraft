@@ -9,7 +9,11 @@ from agent.providers.anthropic import (
     anthropic_api_key_from_env,
 )
 from agent.providers.base import ProviderClient
-from agent.providers.gemini import GeminiLLM, gemini_client_config_from_env
+from agent.providers.gemini import (
+    DEFAULT_GEMINI_MODEL,
+    GeminiLLM,
+    gemini_client_config_from_env,
+)
 from agent.providers.openai import DEFAULT_OPENAI_MODEL, OpenAILLM, openai_api_key_from_env
 from agent.providers.openrouter import (
     DEFAULT_OPENROUTER_MODEL,
@@ -27,7 +31,6 @@ from articraft.values import (
     normalize_provider_name as _normalize_provider_name,
 )
 
-DEFAULT_GEMINI_MODEL = "gemini-3.1-pro-preview"
 SUPPORTED_PROVIDERS = PROVIDER_VALUE_SET
 
 
