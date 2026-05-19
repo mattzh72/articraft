@@ -50,10 +50,11 @@ from storage.revisions import (
 )
 from storage.search import SearchIndex
 
-ALLOWED_EXTERNAL_AGENTS = ("codex", "claude-code")
+ALLOWED_EXTERNAL_AGENTS = ("codex", "claude-code", "cursor")
 DEFAULT_PROVIDER_BY_AGENT = {
     "codex": "openai",
     "claude-code": "anthropic",
+    "cursor": "anthropic",
 }
 MAX_EXTERNAL_EDIT_SLUG_LEN = 80
 
@@ -262,7 +263,7 @@ def _validate_external_record(repo: StorageRepo, record_id: str) -> list[str]:
         if creator.get("mode") != "external_agent":
             errors.append("creator.mode must be 'external_agent'")
         if creator.get("agent") not in ALLOWED_EXTERNAL_AGENTS:
-            errors.append("creator.agent must be 'codex' or 'claude-code'")
+            errors.append("creator.agent must be 'codex', 'claude-code', or 'cursor'")
         if creator.get("trace_available") is not False:
             errors.append("creator.trace_available must be false for external records")
 

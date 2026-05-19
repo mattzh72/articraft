@@ -67,7 +67,7 @@ Forking creates a new child record and leaves the parent unchanged. See [Editing
 
 ## Contribute Data
 
-A huge part of Articraft's mission is crowdsourcing a diverse, massive dataset of articulated 3D models. We welcome generation via our CLI, batch processing, or through external AI agents (like Claude Code or Codex). 
+A huge part of Articraft's mission is crowdsourcing a diverse, massive dataset of articulated 3D models. We welcome generation via our CLI, batch processing, or through external AI agents (like Claude Code, Codex, or Cursor).
 
 For full details on our data pipelines, generation guides, and opening pull requests, please read the complete **[Data Contribution Workflow in CONTRIBUTING.md](CONTRIBUTING.md)**.
 

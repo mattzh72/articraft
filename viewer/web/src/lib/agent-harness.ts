@@ -1,11 +1,12 @@
 import type { AgentHarness, RecordSummary } from "@/lib/types";
 
-export const AGENT_HARNESSES = ["articraft", "codex", "claude-code"] as const satisfies readonly AgentHarness[];
+export const AGENT_HARNESSES = ["articraft", "codex", "claude-code", "cursor"] as const satisfies readonly AgentHarness[];
 
 const AGENT_HARNESS_LABELS: Record<AgentHarness, string> = {
   articraft: "Articraft",
   codex: "Codex",
   "claude-code": "Claude Code",
+  cursor: "Cursor",
 };
 
 export function agentHarnessLabel(value: string): string {

@@ -55,15 +55,17 @@ Create the record through the external CLI and identify yourself explicitly:
 ```bash
 uv run articraft external init --agent codex "washing machine"
 uv run articraft external init --agent claude-code "washing machine"
+uv run articraft external init --agent cursor "washing machine"
 ```
 
-`codex` records default to provider metadata `openai`; `claude-code` records default to `anthropic`.
+`codex` records default to provider metadata `openai`; `claude-code` and `cursor` records default to `anthropic`.
 
 Strongly prefer registering your configured model and thinking/reasoning level. If you know either value, include it in `external init`:
 
 ```bash
 uv run articraft external init --agent claude-code --model-id claude-sonnet-4-6 --thinking-level high "washing machine"
 uv run articraft external init --agent codex --model-id gpt-5.5-2026-04-23 --thinking-level high "washing machine"
+uv run articraft external init --agent cursor --model-id claude-sonnet-4-6 --thinking-level high "washing machine" # adjust to your configured model
 ```
 
 The command prints `record_id` and `record_dir`. Edit only that generated record unless the user explicitly asks for broader repository changes.
@@ -72,6 +74,7 @@ Allowed external agent ids are:
 
 - `codex`
 - `claude-code`
+- `cursor`
 
 ## 3. Edit Existing Records
 
@@ -80,6 +83,7 @@ When the user asks you to modify an existing Articraft asset, fork it instead of
 ```bash
 uv run articraft external fork --agent codex data/records/<record_id> "make the handle longer"
 uv run articraft external fork --agent claude-code data/records/<record_id> "make the handle longer"
+uv run articraft external fork --agent cursor data/records/<record_id> "make the handle longer"
 ```
 
 `fork` creates a child record and prints the active `model=` and `prompt=` paths. Edit only the printed active `model=` path. In-place modification of an existing record is intentionally unsupported for external agents.
@@ -154,7 +158,7 @@ You must:
 - use `articraft external init` before writing a new record from scratch
 - use `articraft external fork` before modifying an existing record
 - preserve `creator.mode=external_agent`
-- preserve `creator.agent=codex` or `creator.agent=claude-code`
+- preserve `creator.agent=codex`, `creator.agent=claude-code`, or `creator.agent=cursor`
 - preserve `creator.trace_available=false`
 - use `articraft external check` and `finalize`
 - leave workbench-only records uncommitted

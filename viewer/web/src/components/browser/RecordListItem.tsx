@@ -108,6 +108,7 @@ function formatDate(value: string | null): string | null {
 function externalAgentLabel(agent: string | null | undefined): string {
   if (agent === "codex") return "Codex";
   if (agent === "claude-code") return "Claude Code";
+  if (agent === "cursor") return "Cursor";
   return agent ?? "External";
 }
 

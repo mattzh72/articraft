@@ -96,14 +96,18 @@ def test_external_init_creates_identified_workbench_record(tmp_path: Path) -> No
     assert provenance["run_summary"]["final_status"] == "draft"
 
 
-def test_external_init_defaults_claude_code_to_anthropic(tmp_path: Path) -> None:
+@pytest.mark.parametrize("agent", ["claude-code", "cursor"])
+def test_external_init_defaults_anthropic_agents_to_anthropic(
+    tmp_path: Path,
+    agent: str,
+) -> None:
     exit_code = external_cli.main(
         [
             "--repo-root",
             str(tmp_path),
             "init",
             "--agent",
-            "claude-code",
+            agent,
             "washing machine",
         ]
     )
@@ -114,6 +118,7 @@ def test_external_init_defaults_claude_code_to_anthropic(tmp_path: Path) -> None
     provenance = _provenance_payload(tmp_path, record_dir)
     assert record["provider"] == "anthropic"
     assert record["model_id"] is None
+    assert record["creator"]["agent"] == agent
     assert provenance["generation"]["provider"] == "anthropic"
     assert provenance["generation"]["model_id"] is None
     assert provenance["generation"]["openai_transport"] is None
