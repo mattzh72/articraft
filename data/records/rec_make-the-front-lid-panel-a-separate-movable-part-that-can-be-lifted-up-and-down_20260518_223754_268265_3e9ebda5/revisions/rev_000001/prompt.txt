@@ -1,0 +1,1 @@
+make the front lid panel a separate movable part that can be lifted up and down vertically without being attached to the fixed lid rims

@@ -1,0 +1,53 @@
+{
+  "schema_version": 1,
+  "record_id": "rec_make-the-front-lid-panel-a-separate-movable-part-that-can-be-lifted-up-and-down_20260518_223754_268265_3e9ebda5",
+  "revision_id": "rev_000001",
+  "created_at": "2026-05-18T22:37:54Z",
+  "prompt_kind": "single_prompt",
+  "prompt_sha256": "1e6bb46c165b0909a3797d49f6866ff4389488d85ca7ef57ecc47d9ea59a9414",
+  "source": {
+    "run_id": null,
+    "prompt_batch_id": null,
+    "batch_spec_id": null,
+    "row_id": null,
+    "prompt_index": null
+  },
+  "generation": {
+    "provider": "openai",
+    "model_id": "gpt-5.5",
+    "thinking_level": "high",
+    "openai_transport": null,
+    "openai_reasoning_summary": null,
+    "max_turns": null,
+    "max_cost_usd": null
+  },
+  "artifacts": {
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
+    "prompt_series_json": null,
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": null,
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
+  },
+  "hashes": {
+    "prompt_sha256": "1e6bb46c165b0909a3797d49f6866ff4389488d85ca7ef57ecc47d9ea59a9414",
+    "model_py_sha256": "634a88c92038367df1af32ed993bec76d592590ceeefaf13c5e666c9d534f76c"
+  },
+  "run_summary": {
+    "turn_count": 0,
+    "tool_call_count": 0,
+    "compile_attempt_count": 0,
+    "final_status": "external_edit_draft"
+  },
+  "parent": {
+    "record_id": "rec_realistic-articulated-water-filter-jug_20260518_214632_682430_999fe34f",
+    "revision_id": "rev_000001"
+  },
+  "seed": {
+    "record_id": "rec_realistic-articulated-water-filter-jug_20260518_214632_682430_999fe34f",
+    "revision_id": "rev_000001",
+    "artifact": "model.py"
+  },
+  "inherited_inputs": []
+}

@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "record_id": "rec_realistic-articulated-water-filter-jug_20260518_214632_682430_999fe34f",
+  "revision_id": "rev_000001",
+  "created_at": "2026-05-18T21:46:32Z",
+  "prompt_kind": "single_prompt",
+  "prompt_sha256": "660a133417708e86450f558c9d1b7011769622f006d97cc781bd1af4ffb0bdc1",
+  "source": {
+    "run_id": null,
+    "prompt_batch_id": null,
+    "batch_spec_id": null,
+    "row_id": null,
+    "prompt_index": null
+  },
+  "generation": {
+    "provider": "openai",
+    "model_id": "gpt-5.5",
+    "thinking_level": "high",
+    "openai_transport": null,
+    "openai_reasoning_summary": null,
+    "max_turns": null,
+    "max_cost_usd": null
+  },
+  "artifacts": {
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
+    "prompt_series_json": null,
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": null,
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": null
+  },
+  "hashes": {
+    "prompt_sha256": "660a133417708e86450f558c9d1b7011769622f006d97cc781bd1af4ffb0bdc1",
+    "model_py_sha256": "b59b055a11a0d13b33e7767b57b7a633435913ca35833ba922f23048770549ba"
+  },
+  "run_summary": {
+    "turn_count": 0,
+    "tool_call_count": 0,
+    "compile_attempt_count": 0,
+    "final_status": "draft"
+  },
+  "parent": null,
+  "seed": null,
+  "inherited_inputs": []
+}
