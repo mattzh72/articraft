@@ -96,6 +96,42 @@ def test_anthropic_sonnet_and_haiku_pricing_are_available() -> None:
     }
 
 
+def test_gemini35_flash_pricing_uses_explicit_model_rates() -> None:
+    assert pricing_for_provider_model("gemini", "gemini-3.5-flash") == {
+        "input_uncached": 1.50,
+        "input_cached": 0.15,
+        "output": 9.00,
+    }
+
+
+def test_gemini35_flash_pricing_calculates_cache_hits() -> None:
+    pricing = pricing_for_provider_model("gemini", "gemini-3.5-flash")
+    assert pricing is not None
+
+    cost = calculate_cost(
+        {
+            "prompt_tokens": 1_000_000,
+            "cached_tokens": 400_000,
+            "candidates_tokens": 100_000,
+            "total_tokens": 1_100_000,
+        },
+        pricing,
+    )
+
+    assert cost.input_uncached_cost == pytest.approx(0.9)
+    assert cost.input_cached_cost == pytest.approx(0.06)
+    assert cost.output_cost == pytest.approx(0.9)
+    assert cost.total_cost == pytest.approx(1.86)
+
+
+def test_gemini_flash_preview_pricing_remains_generic_flash_rates() -> None:
+    assert pricing_for_provider_model("gemini", "gemini-3-flash-preview") == {
+        "input_uncached": 0.50,
+        "input_cached": 0.05,
+        "output": 3.00,
+    }
+
+
 def test_gpt55_pricing_uses_explicit_model_rates() -> None:
     pricing = pricing_for_provider_model("openai", "gpt-5.5-2026-04-23")
 
