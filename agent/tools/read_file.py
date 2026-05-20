@@ -61,7 +61,7 @@ class ReadFileInvocation(BoundFileToolInvocation[ReadFileParams, str]):
             if resolved.content is not None:
                 full_code = resolved.content
             elif resolved.disk_path is not None:
-                async with aiofiles.open(resolved.disk_path, mode="r") as f:
+                async with aiofiles.open(resolved.disk_path, mode="r", encoding="utf-8") as f:
                     full_code = await f.read()
             else:
                 return ToolResult(error=f"Unable to resolve {self.params.path}")

@@ -66,14 +66,14 @@ class ApplyPatchInvocation(BoundFileToolInvocation[ApplyPatchParams, str]):
             if not self.params.input.strip():
                 return ToolResult(error="input cannot be empty")
 
-            async with aiofiles.open(self.file_path, mode="r") as f:
+            async with aiofiles.open(self.file_path, mode="r", encoding="utf-8") as f:
                 full_code = await f.read()
 
             hunks = _parse_patch(self.params.input)
             new_code = _apply_hunks(full_code, hunks)
             validation = self._validate_python_syntax(new_code, self.file_path)
 
-            async with aiofiles.open(self.file_path, mode="w") as f:
+            async with aiofiles.open(self.file_path, mode="w", encoding="utf-8") as f:
                 await f.write(new_code)
 
             return ToolResult(

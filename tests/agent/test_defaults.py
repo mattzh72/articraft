@@ -12,6 +12,7 @@ def test_default_max_turns_for_model_uses_gemini_3_flash_override() -> None:
         GEMINI_3_FLASH_DEFAULT_MAX_TURNS
     )
     assert default_max_turns_for_model("gemini-3.0-flash") == GEMINI_3_FLASH_DEFAULT_MAX_TURNS
+    assert default_max_turns_for_model("gemini-3.5-flash") == GEMINI_3_FLASH_DEFAULT_MAX_TURNS
 
 
 def test_default_max_turns_for_model_keeps_baseline_for_other_models() -> None:
