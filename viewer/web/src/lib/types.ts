@@ -329,7 +329,7 @@ export type ViewerSelection =
 
 export type SourceFilter = "workbench" | "dataset";
 export type BrowserTab = SourceFilter | "staging";
-export type AgentHarness = "articraft" | "codex" | "claude-code";
+export type AgentHarness = "articraft" | "codex" | "claude-code" | "cursor";
 export type TimeFilterPoint = "1y" | "180d" | "90d" | "60d" | "30d" | "14d" | "7d" | "3d" | "24h" | "12h" | "6h" | "1h";
 export type TimeFilter = {
   oldest: TimeFilterPoint | null;
