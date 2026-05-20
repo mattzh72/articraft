@@ -36,6 +36,12 @@ SUPPORTED_IMAGE_MIME_TYPES_BY_PROVIDER: dict[str, set[str]] = {
         "image/webp",
         "image/gif",
     },
+    ProviderName.CODEX_CLI.value: {
+        "image/png",
+        "image/jpeg",
+        "image/webp",
+        "image/gif",
+    },
     ProviderName.GEMINI.value: {
         "image/png",
         "image/jpeg",

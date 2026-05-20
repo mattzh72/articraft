@@ -35,6 +35,7 @@ from viewer.api.store_values import (
     _coerce_rating,
     _coerce_string,
     _cost_totals,
+    _cost_turn_count,
     _effective_rating,
     _normalize_sdk_package_value,
     _thinking_level_from_provenance,
@@ -778,6 +779,8 @@ class DatasetBrowseIndex:
             thinking_level = _thinking_level_from_provenance(provenance)
 
         total_cost_usd, input_tokens, output_tokens = _cost_totals(cost)
+        if turn_count is None:
+            turn_count = _cost_turn_count(cost)
         primary_rating = _coerce_rating(record.get("rating"))
         secondary_rating = _coerce_rating(record.get("secondary_rating"))
         collections = record.get("collections")

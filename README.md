@@ -41,12 +41,10 @@ uv run articraft data hydrate --last 7d
 uv run articraft data hydrate --all
 ```
 
-### 3. Add API Keys
-Open `.env` and set one or more provider keys (e.g. `OPENAI_API_KEY`, `GEMINI_API_KEYS`, `ANTHROPIC_API_KEYS`).
+### 3. Choose Model Access
+Open `.env` and set one or more provider keys when using direct API providers such as `OPENAI_API_KEY`, `GEMINI_API_KEYS`, or `ANTHROPIC_API_KEYS`.
 
-> **No API Keys?** No problem! If you don't have API keys set up, you can use external AI agents like Claude Code, Codex, or Cursor. Just point them to this repository and prompt them:
-> 
-> *"Create a realistic articulated [object name] and add it to the Articraft dataset. Follow EXTERNAL_AGENT_DATA.md."*
+For no-key Codex generation, install/login to the Codex CLI and use Articraft's `codex-cli` provider. This keeps Articraft in control of the generation loop, compile feedback, turn count, tool-call count, compile-attempt count, record persistence, and trajectory. Articraft records the total token count when Codex CLI emits its `tokens used` line; dollar cost remains unavailable because Codex CLI does not expose billable cost accounting.
 
 ### 4. Create an Asset
 
@@ -58,6 +56,24 @@ uv run articraft generate "Create a realistic articulated desk lamp with a weigh
 If you specify no overrides, it defaults to `--model gpt-5.5-2026-04-23 --thinking-level high`. You can change models and caps:
 ```bash
 uv run articraft generate --model gemini-3-flash-preview --max-cost-usd 1.5 "Create a compact desk fan with adjustable tilt."
+```
+
+Run the same internal Articraft harness through no-key Codex:
+
+```bash
+uv run articraft generate --provider codex-cli "Create a compact desk fan with adjustable tilt."
+```
+
+Use an explicit Codex model when needed:
+
+```bash
+uv run articraft generate --provider codex-cli --model gpt-5.5 "Create a compact desk fan with adjustable tilt."
+```
+
+Reference images also stay inside the internal harness:
+
+```bash
+uv run articraft generate --provider codex-cli --image reference.png "Create an articulated object matching this reference."
 ```
 
 ### 5. Open the Viewer
@@ -75,6 +91,22 @@ uv run articraft fork data/records/<record_id> "make the handle longer"
 ```
 
 Forking creates a new child record and leaves the parent unchanged. See [Editing Existing Records](docs/record_editing.md) for model options, dataset behavior, and history viewing.
+
+---
+
+## Codex Plugin Setup
+
+This repository includes a repo-local Codex plugin under `plugins/articraft/` for Articraft-specific Codex workflows.
+
+After completing the Quickstart setup above on a new computer:
+
+1. Open this repository in Codex.
+2. Restart or reload Codex so it can discover `.agents/plugins/marketplace.json`.
+3. In the Codex plugin or marketplace UI, install **Articraft** from **Articraft Local**.
+
+The plugin itself adds Codex guidance and does not introduce any additional credential requirements beyond the Articraft workflows you choose to run.
+
+Use `uv run articraft generate --provider codex-cli "<prompt>"` for no-key Codex generation with the internal Articraft harness. Use direct API providers when you need billable cost accounting or provider-native usage breakdowns. The legacy `articraft external ...` workflow remains available for manual external-agent drafting, but it is not the quality-parity path.
 
 ---
 

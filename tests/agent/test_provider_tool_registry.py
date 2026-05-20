@@ -12,6 +12,7 @@ from agent.workspace_docs import build_virtual_workspace
 
 def test_provider_tool_registry_schemas() -> None:
     openai_registry = build_tool_registry("openai", sdk_package="sdk")
+    codex_cli_registry = build_tool_registry("codex-cli", sdk_package="sdk")
     gemini_registry = build_tool_registry("gemini", sdk_package="sdk")
 
     assert set(openai_registry.get_all_tool_names()) == {
@@ -29,6 +30,7 @@ def test_provider_tool_registry_schemas() -> None:
         "probe_model",
         "find_examples",
     }
+    assert set(codex_cli_registry.get_all_tool_names()) == set(gemini_registry.get_all_tool_names())
     openai_schemas = openai_registry.get_tool_schemas()
     apply_patch_schema = next(s for s in openai_schemas if s.get("name") == "apply_patch")
     read_file_schema = next(

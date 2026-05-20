@@ -150,6 +150,46 @@ def test_dataset_run_delegates_without_removed_audit_flag(
     ]
 
 
+def test_generate_with_codex_cli_provider_uses_provider_default_model(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    calls: list[list[str]] = []
+
+    def _fake_runner(argv: list[str]) -> int:
+        calls.append(argv)
+        return 0
+
+    monkeypatch.setattr(articraft_cli.agent_runner, "main", _fake_runner)
+
+    exit_code = articraft_cli.main(
+        [
+            "generate",
+            "make a folding chair",
+            "--provider",
+            "codex-cli",
+            "--repo-root",
+            str(tmp_path),
+        ]
+    )
+
+    assert exit_code == 0
+    assert calls == [
+        [
+            "--repo-root",
+            str(tmp_path),
+            "--prompt",
+            "make a folding chair",
+            "--provider",
+            "codex-cli",
+            "--model",
+            "codex-cli-default",
+            "--thinking",
+            "high",
+        ]
+    ]
+
+
 def test_workbench_status_delegates_to_workbench_module(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,

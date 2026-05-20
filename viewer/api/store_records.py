@@ -30,6 +30,7 @@ from viewer.api.store_values import (
     _coerce_rating,
     _coerce_string,
     _cost_totals,
+    _cost_turn_count,
     _effective_rating,
     _normalize_sdk_package_value,
     _parse_sort_key,
@@ -99,6 +100,7 @@ class ViewerRecordsStore(ViewerStoreComponent):
         active: bool,
         revision: dict[str, Any],
         prompt: str | None,
+        trace_available: bool = True,
     ) -> RecordHistoryRevisionResponse:
         generation = (
             revision.get("generation") if isinstance(revision.get("generation"), dict) else {}
@@ -126,7 +128,8 @@ class ViewerRecordsStore(ViewerStoreComponent):
             status=_coerce_string(run_summary.get("final_status")),
             total_cost_usd=total_cost_usd,
             has_cost=cost_path.exists(),
-            has_traces=(revision_dir / "traces").is_dir()
+            has_traces=trace_available
+            and (revision_dir / "traces").is_dir()
             and any((revision_dir / "traces").iterdir()),
             has_model=(revision_dir / "model.py").exists(),
             has_provenance=(revision_dir / "provenance.json").exists(),
@@ -140,9 +143,12 @@ class ViewerRecordsStore(ViewerStoreComponent):
         agent = _coerce_string(creator.get("agent")) if mode == "external_agent" else None
         return mode, agent
 
-    def _record_has_traces(self, record_id: str, record: dict[str, Any]) -> bool:
+    def _record_trace_available(self, record: dict[str, Any]) -> bool:
         creator = record.get("creator")
-        if isinstance(creator, dict) and creator.get("trace_available") is False:
+        return not (isinstance(creator, dict) and creator.get("trace_available") is False)
+
+    def _record_has_traces(self, record_id: str, record: dict[str, Any]) -> bool:
+        if not self._record_trace_available(record):
             return False
         traces_dir = active_traces_dir(self.repo, record_id, record=record)
         return traces_dir.is_dir() and any(traces_dir.iterdir())
@@ -264,6 +270,8 @@ class ViewerRecordsStore(ViewerStoreComponent):
             thinking_level = _thinking_level_from_provenance(provenance)
 
         total_cost_usd, input_tokens, output_tokens = _cost_totals(cost)
+        if turn_count is None:
+            turn_count = _cost_turn_count(cost)
 
         run_id = _coerce_string(source.get("run_id")) if isinstance(source, dict) else None
         if run_id is not None:
@@ -379,6 +387,8 @@ class ViewerRecordsStore(ViewerStoreComponent):
             thinking_level = _thinking_level_from_provenance(provenance)
 
         total_cost_usd, input_tokens, output_tokens = _cost_totals(cost)
+        if turn_count is None:
+            turn_count = _cost_turn_count(cost)
 
         run_id = _coerce_string(source.get("run_id")) if isinstance(source, dict) else None
         primary_rating = _coerce_rating(record.get("rating"))
@@ -493,6 +503,7 @@ class ViewerRecordsStore(ViewerStoreComponent):
                 active=row.active,
                 revision=row.revision,
                 prompt=row.prompt,
+                trace_available=self._record_trace_available(record),
             )
             for row in list_record_revisions(self.repo, record_id)
         ]
@@ -511,6 +522,10 @@ class ViewerRecordsStore(ViewerStoreComponent):
             parent_revision = (
                 self.repo.read_json(parent_revision_dir / "revision.json", default={}) or {}
             )
+            parent_record = self.repo.read_json(
+                self.repo.layout.record_metadata_path(parent_record_id),
+                default={},
+            )
             prompt = self._read_text(parent_revision_dir / "prompt.txt")
             ancestors.append(
                 self._history_revision_response(
@@ -519,10 +534,12 @@ class ViewerRecordsStore(ViewerStoreComponent):
                     active=False,
                     revision=parent_revision if isinstance(parent_revision, dict) else {},
                     prompt=prompt,
+                    trace_available=(
+                        self._record_trace_available(parent_record)
+                        if isinstance(parent_record, dict)
+                        else True
+                    ),
                 )
-            )
-            parent_record = self.repo.read_json(
-                self.repo.layout.record_metadata_path(parent_record_id)
             )
             parent_lineage = (
                 parent_record.get("lineage")

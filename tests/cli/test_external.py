@@ -32,6 +32,12 @@ def _fake_compile(repo_root: Path):
                     "record_id": record_id,
                     "status": "success",
                     "urdf_path": "model.urdf",
+                    "warnings": [],
+                    "checks_run": ["compile_urdf", "validate_geometry"],
+                    "metrics": {
+                        "compile_level": "full",
+                        "validation_level": "full",
+                    },
                 },
                 indent=2,
             )
@@ -52,6 +58,14 @@ def _provenance_payload(repo_root: Path, record_dir: Path) -> dict:
     record = _record_payload(record_dir)
     return json.loads(
         active_provenance_path(repo, record_dir.name, record=record).read_text(encoding="utf-8")
+    )
+
+
+def _revision_payload(record_dir: Path) -> dict:
+    record = _record_payload(record_dir)
+    revision_id = record["active_revision_id"]
+    return json.loads(
+        (record_dir / "revisions" / revision_id / "revision.json").read_text(encoding="utf-8")
     )
 
 
@@ -93,6 +107,9 @@ def test_external_init_creates_identified_workbench_record(tmp_path: Path) -> No
     assert provenance["generation"]["thinking_level"] == "high"
     assert provenance["generation"]["openai_transport"] is None
     assert provenance["generation"]["openai_reasoning_summary"] is None
+    assert provenance["run_summary"]["turn_count"] is None
+    assert provenance["run_summary"]["tool_call_count"] is None
+    assert provenance["run_summary"]["compile_attempt_count"] is None
     assert provenance["run_summary"]["final_status"] == "draft"
 
 
@@ -181,6 +198,11 @@ def test_external_fork_workbench_creates_child_revision_without_parent_mutation(
         "agent": "codex",
         "trace_available": False,
     }
+    child_provenance = _provenance_payload(tmp_path, child_dir)
+    assert child_provenance["run_summary"]["turn_count"] is None
+    assert child_provenance["run_summary"]["tool_call_count"] is None
+    assert child_provenance["run_summary"]["compile_attempt_count"] is None
+    assert child_provenance["run_summary"]["final_status"] == "external_edit_draft"
     assert (child_dir / "collections" / "workbench.json").exists()
     assert not (child_dir / "cost.json").exists()
     assert not (child_dir / "traces").exists()
@@ -366,6 +388,26 @@ def test_external_check_runs_full_strict_compile(
             "--strict-geom-qc",
         ]
     ]
+    provenance = _provenance_payload(tmp_path, record_dir)
+    revision = _revision_payload(record_dir)
+    quality = provenance["external_quality"]
+    assert revision["external_quality"] == quality
+    assert quality["workflow"] == "external_agent_quality_parity"
+    assert quality["compile"]["target"] == "full"
+    assert quality["compile"]["validate"] is True
+    assert quality["compile"]["strict_geom_qc"] is True
+    assert quality["compile"]["status"] == "success"
+    assert quality["compile"]["checks_run"] == ["compile_urdf", "validate_geometry"]
+    assert quality["compile"]["warning_count"] == 0
+    assert quality["validation"] == {"passed": True, "error_count": 0, "errors": []}
+    assert quality["telemetry"] == {
+        "source": "external_agent",
+        "trace_available": False,
+        "cost_available": False,
+        "turn_count": None,
+        "tool_call_count": None,
+        "compile_attempt_count": None,
+    }
 
 
 def test_external_finalize_workbench_keeps_record_local(
@@ -397,6 +439,8 @@ def test_external_finalize_workbench_keeps_record_local(
     assert record["kind"] == "external_model"
     assert (record_dir / ".gitignore").exists()
     assert provenance["run_summary"]["final_status"] == "external_ready"
+    assert provenance["external_quality"]["validation"]["passed"] is True
+    assert provenance["external_quality"]["telemetry"]["turn_count"] is None
 
 
 def test_external_finalize_with_category_promotes_to_dataset(
@@ -449,6 +493,46 @@ def test_external_finalize_with_category_promotes_to_dataset(
     assert dataset_entry["category_slug"] == "washing_machine"
     assert not (record_dir / ".gitignore").exists()
     assert provenance["run_summary"]["final_status"] == "external_finalized"
+    assert provenance["external_quality"]["validation"]["passed"] is True
+
+
+def test_external_check_reports_trace_and_cost_artifacts_as_errors(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    assert (
+        external_cli.main(
+            [
+                "--repo-root",
+                str(tmp_path),
+                "init",
+                "--agent",
+                "codex",
+                "washing machine",
+            ]
+        )
+        == 0
+    )
+    record_dir = next((tmp_path / "data" / "records").iterdir())
+    revision_dir = record_dir / "revisions" / "rev_000001"
+    (revision_dir / "cost.json").write_text("{}\n", encoding="utf-8")
+    (revision_dir / "traces").mkdir()
+    (revision_dir / "traces" / "trajectory.jsonl").write_text("{}\n", encoding="utf-8")
+    monkeypatch.setattr(external_cli.compile_record_cli, "main", _fake_compile(tmp_path))
+
+    exit_code = external_cli.main(["--repo-root", str(tmp_path), "check", str(record_dir)])
+
+    assert exit_code == 1
+    quality = _provenance_payload(tmp_path, record_dir)["external_quality"]
+    assert quality["validation"]["passed"] is False
+    assert (
+        "external records must not contain Articraft agent traces"
+        in quality["validation"]["errors"]
+    )
+    assert (
+        "external records must not contain Articraft cost telemetry"
+        in quality["validation"]["errors"]
+    )
 
 
 def test_external_categories_prints_counts(tmp_path: Path, capsys) -> None:

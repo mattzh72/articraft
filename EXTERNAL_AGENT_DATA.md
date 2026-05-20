@@ -4,6 +4,12 @@ You are an external agent harness authoring Articraft data in this repository. T
 
 Do not manually create `data/records/<id>` folders, invent record metadata, write Articraft agent traces, or bypass these commands.
 
+If the user wants no-key Codex generation with Articraft-managed turns, tools, compile feedback, and trajectory, use the internal Codex CLI provider instead of this external workflow:
+
+```bash
+uv run articraft generate --provider codex-cli "<prompt>"
+```
+
 ## Read This First
 
 Before you create or edit a record, read the core Articraft authoring requirements:

@@ -454,6 +454,13 @@ def create_workbench_draft_record(
     prompt_sha = _sha256_text(normalized_prompt)
     model_py_sha = _sha256_file(context.record_model_path)
 
+    run_summary = RunSummary(
+        turn_count=None if external_agent is not None else 0,
+        tool_call_count=None if external_agent is not None else 0,
+        compile_attempt_count=None if external_agent is not None else 0,
+        final_status="draft",
+    )
+
     provenance = Provenance(
         schema_version=2,
         record_id=context.record_id,
@@ -481,12 +488,7 @@ def create_workbench_draft_record(
             git_commit=_detect_git_commit(resolved_repo_root),
             uv_lock_sha256=_detect_uv_lock_sha256(resolved_repo_root),
         ),
-        run_summary=RunSummary(
-            turn_count=0,
-            tool_call_count=0,
-            compile_attempt_count=0,
-            final_status="draft",
-        ),
+        run_summary=run_summary,
     )
     record_store.write_provenance(context.record_id, provenance, revision_id=context.revision_id)
     artifacts_payload = revision_artifacts_payload(
@@ -503,12 +505,7 @@ def create_workbench_draft_record(
         max_turns=resolved_max_turns,
         max_cost_usd=max_cost_usd,
     ).to_dict()
-    run_summary_payload = RunSummary(
-        turn_count=0,
-        tool_call_count=0,
-        compile_attempt_count=0,
-        final_status="draft",
-    ).to_dict()
+    run_summary_payload = run_summary.to_dict()
     storage_repo.write_json(
         storage_repo.layout.record_revision_metadata_path(context.record_id, context.revision_id),
         build_revision_payload(

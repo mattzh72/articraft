@@ -1,0 +1,43 @@
+{
+  "name": "articraft",
+  "version": "0.1.0",
+  "description": "Create articulated 3D assets through Articraft's programmatic, LLM-powered code-generation workflow for semantic parts, robust geometry, physical joints, and large-scale datasets.",
+  "author": {
+    "name": "Articraft contributors",
+    "url": "https://github.com/mattzh72/articraft"
+  },
+  "homepage": "https://articraft3d.github.io/",
+  "repository": "https://github.com/mattzh72/articraft",
+  "license": "Apache-2.0",
+  "keywords": [
+    "articraft",
+    "3d-assets",
+    "articulation",
+    "cad",
+    "dataset",
+    "viewer"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Articraft",
+    "shortDescription": "Create articulated 3D assets with LLMs",
+    "longDescription": "Articraft transforms articulated 3D asset creation into a programmatic code-generation workflow powered by LLMs. Engineered for large-scale dataset generation, it helps Codex launch Articraft-managed generation, including no-key Codex CLI runs, then validate, curate, and inspect objects with semantic parts, robust geometry, and physical joints while bypassing heavyweight manual tools.",
+    "developerName": "Articraft contributors",
+    "category": "Engineering",
+    "capabilities": [
+      "Interactive",
+      "Read",
+      "Write"
+    ],
+    "websiteURL": "https://articraft3d.github.io/",
+    "privacyPolicyURL": "https://github.com/mattzh72/articraft/blob/main/SECURITY.md",
+    "termsOfServiceURL": "https://github.com/mattzh72/articraft/blob/main/LICENSE",
+    "defaultPrompt": [
+      "Create an articulated Articraft object",
+      "Check this Articraft record",
+      "Open the Articraft viewer"
+    ],
+    "brandColor": "#2563EB",
+    "screenshots": []
+  }
+}
