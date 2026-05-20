@@ -1,0 +1,43 @@
+{
+  "schema_version": 2,
+  "record_id": "rec_create-a-realistic-fully-articulated-6-dof-robot_20260515_013626_467384_e7334473",
+  "created_at": "2026-05-15T01:36:26Z",
+  "updated_at": "2026-05-19T23:56:34Z",
+  "rating": 5,
+  "secondary_rating": 5,
+  "author": "ytw25",
+  "rated_by": null,
+  "secondary_rated_by": null,
+  "kind": "generated_model",
+  "prompt_kind": "single_prompt",
+  "category_slug": "robotic_arms",
+  "source": {
+    "run_id": "run_20260515_013626_467384_e7334473",
+    "prompt_batch_id": null,
+    "batch_spec_id": null,
+    "row_id": null,
+    "prompt_index": null
+  },
+  "sdk_package": "sdk",
+  "provider": "openai",
+  "model_id": "gpt-5.5-2026-04-23",
+  "display": {
+    "title": "Create a realistic, fully-articulated 6-DOF robotic arm mounted on a sturdy industrial base, designed to look like somet",
+    "prompt_preview": "Create a realistic, fully-articulated 6-DOF robotic arm mounted on a sturdy industrial base, designed to look like something you'd find in an actual factory..."
+  },
+  "artifacts": {
+    "prompt_txt": "prompt.txt",
+    "prompt_series_json": null,
+    "model_py": "model.py",
+    "provenance_json": "provenance.json",
+    "cost_json": "cost.json",
+    "inputs_dir": "inputs"
+  },
+  "hashes": {
+    "prompt_sha256": "59bd82cd3a022dce2cb66abc6f94985ea437ad0c694010e72078a03fbd3c0549",
+    "model_py_sha256": "60da1fe91da7a552d7fdab8bd8cf640e62c81b33794e18fe8bc3887e983adf0c"
+  },
+  "collections": [
+    "dataset"
+  ]
+}
