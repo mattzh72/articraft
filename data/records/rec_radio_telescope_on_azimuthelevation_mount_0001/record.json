@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_radio_telescope_on_azimuthelevation_mount_0001",
   "created_at": "2026-03-17T02:40:23Z",
   "updated_at": "2026-03-20T22:37:44Z",
@@ -20,16 +20,17 @@
     "prompt_preview": "A realistic, highly detailed radio telescope with a large dish, substantial azimuth-elevation mount, and an observatory-grade support structure. The aiming m..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "549a35ae1f46d4ad5d86e247c265f539e47cbb03fe8c0664f0a4179146c58449",
-    "model_py_sha256": "e1a76de3526aefc7c2e3bc2177baaffd1cd9d0a742fb507fb26edd375f21bb8f"
+    "model_py_sha256": "2418e4a527196f47afff1702fbf0a1ceae7c3c3c82c0330c6de1011d72ce46f6"
   },
   "collections": [
     "dataset"
@@ -37,5 +38,12 @@
   "author": "mattzh72",
   "rated_by": "mattzh72",
   "secondary_rating": null,
-  "secondary_rated_by": null
+  "secondary_rated_by": null,
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_radio_telescope_on_azimuthelevation_mount_0001",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

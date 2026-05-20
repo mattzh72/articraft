@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_internet_router_8f74675a4fb643a98a9d45cb4a564ca4",
   "created_at": "2026-04-27T13:49:17Z",
   "updated_at": "2026-04-28T00:43:39Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A gaming router with a faceted body and six folding antennas. The broad low housing has four rear antennas and one on each side, plus a rotary mode knob near..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "bb109df1d2ba782ba568489987465f73c5a8b9ceaea057b6a0158853ab66df10",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_internet_router_8f74675a4fb643a98a9d45cb4a564ca4",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_single_prismatic_slider_a56b965dc9844e1d82c4f607213b3a53",
   "created_at": "2026-03-29T15:31:29Z",
   "updated_at": "2026-04-01T11:24:00Z",
@@ -22,16 +22,17 @@
     "prompt_preview": "A precision single-axis stage with a grounded lower beam, a narrow carriage shoe, and a square instrument pad fixed to the moving shoe. The beam should feel..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "e01c83df3877a9cb41ba42e146e3d0b6bc83183fa30dc7546d779bb41487effe",
-    "model_py_sha256": "a8776d47b45f9116260f1c60c1816ebb2e3fc44d7d300f10f47ed0b25154a3f8"
+    "model_py_sha256": "832ebf2b965298cbf4179fb3b4cb30b9cc5120bb70b3aa136214d6292081f2cd"
   },
   "collections": [
     "dataset"
@@ -39,5 +40,12 @@
   "author": "mattzh72",
   "rated_by": "mattzh72",
   "secondary_rating": 5,
-  "secondary_rated_by": "Zhaomou Song"
+  "secondary_rated_by": "Zhaomou Song",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_single_prismatic_slider_a56b965dc9844e1d82c4f607213b3a53",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

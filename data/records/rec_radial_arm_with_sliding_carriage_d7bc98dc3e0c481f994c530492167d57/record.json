@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_radial_arm_with_sliding_carriage_d7bc98dc3e0c481f994c530492167d57",
   "created_at": "2026-04-03T21:46:47Z",
   "updated_at": "2026-04-06T01:21:54Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A pedestal radial beam slide. A fixed pedestal carries a long radial arm, and the arm carries a short sliding truck with a plain output face. The arm rotates..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "08d02a59aa1343299acb038b808a2938c4b01d3a3977334cec52578852942604",
-    "model_py_sha256": "05d866121acfb3b0f8e6468ec06b4c1869ca45d7c0bce0f0aa5cf1f7d2351bb7"
+    "model_py_sha256": "528b7f4d9a5466cd45c7bb378008de3c45c329dbdddcbb4d20c4b728662add23"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_radial_arm_with_sliding_carriage_d7bc98dc3e0c481f994c530492167d57",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

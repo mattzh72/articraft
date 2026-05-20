@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_toaster_oven_394b528a678f49a6b66fa7666481245a",
   "created_at": "2026-04-12T15:42:05Z",
   "updated_at": "2026-04-12T16:01:34Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A toaster oven with a front door, a pull-out crumb tray, and a side latch that locks the tray in place. The door rotates downward on a lower hinge, the crumb..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "39dac63456920279a1f042b2ed543b62270e5171a2798d185d0e2c3a935fdbf3",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_toaster_oven_394b528a678f49a6b66fa7666481245a",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

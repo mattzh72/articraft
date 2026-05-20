@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_rotary_base_with_vertical_slide_9407659096544b3880cb2f657fcc88ca",
   "created_at": "2026-03-29T04:00:44Z",
   "updated_at": "2026-04-01T10:02:39Z",
@@ -22,16 +22,17 @@
     "prompt_preview": "A compact welding positioner with a square lower turret, a short upright frame, and a narrow Z ram rising from the frame. The lower and upper motions should..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "8733359c33328fe846e03691a3e60aa37be5a3c0c7320d1a6fc8646eff3b766c",
-    "model_py_sha256": "703934fd7c88edffaf361cd3d2032dcabb1fd73622333563d54514a5d8da120c"
+    "model_py_sha256": "beb51ab5d13c87a9c73c0d4c2a76f830c0b974e5f0031ff1afb751c50d717fbf"
   },
   "collections": [
     "dataset"
@@ -39,5 +40,12 @@
   "author": "mattzh72",
   "rated_by": "mattzh72",
   "secondary_rating": 5,
-  "secondary_rated_by": "Zhaomou Song"
+  "secondary_rated_by": "Zhaomou Song",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_rotary_base_with_vertical_slide_9407659096544b3880cb2f657fcc88ca",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

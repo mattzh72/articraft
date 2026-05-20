@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_dual_independent_finger_chains_0002",
   "created_at": "2026-03-12T18:19:42Z",
   "updated_at": "2026-04-01T10:30:59Z",
@@ -20,16 +20,17 @@
     "prompt_preview": "A parallel pair of mechanical finger chains, each with serial hinge joints and rectangular phalanx segments, designed like a CAD gripper."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "eb5348ebce14dac414f2a59904c8ed19fe8b82afa2d3e9d65deb0d129821b008",
-    "model_py_sha256": "1d09c60fec384e2a04d9a6ae39a85365cf693ba50f971071d3f9b41db11aef64"
+    "model_py_sha256": "3635935c0bcdc9d048a0a7c40d7e906686df396890bd53ac62998fc678ab193a"
   },
   "collections": [
     "dataset"
@@ -37,5 +38,12 @@
   "author": "mattzh72",
   "rated_by": "mattzh72",
   "secondary_rating": 4,
-  "secondary_rated_by": "Zhaomou Song"
+  "secondary_rated_by": "Zhaomou Song",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_dual_independent_finger_chains_0002",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

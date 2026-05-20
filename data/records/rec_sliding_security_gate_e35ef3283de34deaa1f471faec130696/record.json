@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_sliding_security_gate_e35ef3283de34deaa1f471faec130696",
   "created_at": "2026-04-27T13:08:45Z",
   "updated_at": "2026-04-28T07:25:56Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "Design Sliding security gate as a field-service workhorse. Build it around a rigid gate leaf guided by track/roller hardware and latch geometry. Prioritize c..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "ab5fb464a3b515a31c3c833276b8d55b516deb13f92b1223c27e292bdaab04ae",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_sliding_security_gate_e35ef3283de34deaa1f471faec130696",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

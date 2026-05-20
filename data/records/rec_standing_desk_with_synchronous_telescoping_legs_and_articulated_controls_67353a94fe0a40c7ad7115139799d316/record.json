@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_standing_desk_with_synchronous_telescoping_legs_and_articulated_controls_67353a94fe0a40c7ad7115139799d316",
   "created_at": "2026-04-27T13:55:55Z",
   "updated_at": "2026-04-28T00:32:20Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A bench-style standing desk with a long top, three lifting columns, and a front paddle controller beneath the center edge, plus a memory-control bank with th..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "d3ef5fe4975ba538b09f87f34d8cc3682a38b418b36570fba9815377e34a1548",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_standing_desk_with_synchronous_telescoping_legs_and_articulated_controls_67353a94fe0a40c7ad7115139799d316",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

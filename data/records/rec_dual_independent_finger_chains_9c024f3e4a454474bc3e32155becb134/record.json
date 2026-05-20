@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_dual_independent_finger_chains_9c024f3e4a454474bc3e32155becb134",
   "created_at": "2026-03-31T17:20:51Z",
   "updated_at": "2026-04-06T01:39:39Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A forked palm with two independent finger chains. A grounded palm beam supports two side-by-side fingers, each built from proximal, middle, and distal rigid..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "15b72c87ed37a312ad717faf3a6c0170b0a6783bf20ef78eebedb2c1a9cdbae3",
-    "model_py_sha256": "b137482934c7235662ee2799eb49464c7f31f24801bcf1cdd9f526f896f968a8"
+    "model_py_sha256": "3dcd19bfbed262cfbea2d21aa227e98a41da0b755fc56877108a6ffa929901bd"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_dual_independent_finger_chains_9c024f3e4a454474bc3e32155becb134",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

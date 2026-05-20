@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_electrical_cabinet_door_ce200d3f0c534f25beaead0e8b3077dd",
   "created_at": "2026-04-27T12:56:18Z",
   "updated_at": "2026-04-28T07:40:01Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A surface-mount electrical enclosure with a shallow steel box and a full-front door on two piano-hinge knuckles on a revolute joint."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "39ae6b7f78aceb930c84c6e08dc47ba5aeeca1ed37be6a04d059f5c4a558e0b4",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_electrical_cabinet_door_ce200d3f0c534f25beaead0e8b3077dd",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

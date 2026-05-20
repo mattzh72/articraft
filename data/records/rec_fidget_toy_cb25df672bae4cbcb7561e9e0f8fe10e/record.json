@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_fidget_toy_cb25df672bae4cbcb7561e9e0f8fe10e",
   "created_at": "2026-03-28T12:22:11Z",
   "updated_at": "2026-03-29T11:58:35Z",
@@ -22,12 +22,13 @@
     "prompt_preview": "A fidget cube with a rectangular body carrying a rounded joystick nub on a revolute joint on one face, a rotating dial wheel on a revolute joint on a second..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "78573a3517788c18f47a70f7a24eb26fc974bfb37714f2cbf1e7e2b1b9f6eba9",
@@ -39,5 +40,12 @@
   "author": "Zhaomou Song",
   "rated_by": "Zhaomou Song",
   "secondary_rating": null,
-  "secondary_rated_by": null
+  "secondary_rated_by": null,
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_fidget_toy_cb25df672bae4cbcb7561e9e0f8fe10e",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_pump_bottle_4d5171bf67374210b392156daebea6ef",
   "created_at": "2026-03-29T15:10:02Z",
   "updated_at": "2026-04-01T13:46:58Z",
@@ -22,12 +22,13 @@
     "prompt_preview": "A foaming soap pump bottle with a broad top actuator and a rotating lock collar. The fixed bottle body supports a neck collar, a vertical pump stem, and a wi..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "0788a471f4b86e078f4d3fdb2d951d4e0417e5525a9405aef75b6fa7c72ef35d",
@@ -39,5 +40,12 @@
   "author": "RuiningLi",
   "rated_by": "RuiningLi",
   "secondary_rating": 5,
-  "secondary_rated_by": "shawlyu"
+  "secondary_rated_by": "shawlyu",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_pump_bottle_4d5171bf67374210b392156daebea6ef",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

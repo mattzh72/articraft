@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_single_yaw_axis_module_3185ec805ccb4b329a7e65ae9fdfbf5c",
   "created_at": "2026-04-27T03:20:46Z",
   "updated_at": "2026-04-27T07:38:32Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A boxed service yaw stage. A grounded box body exposes a short rotary cartridge and a round output plate without wrapping the head in a decorative shell. One..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "b5629433be31144b0e3039453b49df7c9162cc6d224ae89665cd8f190b64fe93",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_single_yaw_axis_module_3185ec805ccb4b329a7e65ae9fdfbf5c",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

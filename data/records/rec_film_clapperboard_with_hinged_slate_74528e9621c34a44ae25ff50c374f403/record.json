@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_film_clapperboard_with_hinged_slate_74528e9621c34a44ae25ff50c374f403",
   "created_at": "2026-04-11T23:05:11Z",
   "updated_at": "2026-04-22T14:19:40Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A compact insert clapperboard with a narrow writing board and a short striped clapstick above it. The clapstick is mounted on a visible top hinge rail that s..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "701004c0c3fc6c94e8fc45af77cd6c0d92b26811ae6967a3c2dcb73ecdc9e1e1",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_film_clapperboard_with_hinged_slate_74528e9621c34a44ae25ff50c374f403",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

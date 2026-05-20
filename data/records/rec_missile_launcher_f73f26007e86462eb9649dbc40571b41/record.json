@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_missile_launcher_f73f26007e86462eb9649dbc40571b41",
   "created_at": "2026-04-27T14:22:08Z",
   "updated_at": "2026-04-27T21:43:56Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A coastal-defense launcher with a rotating pedestal and an elevating enclosed pod. The heavy base supports a yaw ring, and the enclosed launch pod is carried..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "8a5069086062fe984d545313c5435ed2f2999a8b93308e552fc82745466aa1a7",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_missile_launcher_f73f26007e86462eb9649dbc40571b41",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

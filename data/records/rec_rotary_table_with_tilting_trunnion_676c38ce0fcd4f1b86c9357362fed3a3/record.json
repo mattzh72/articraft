@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_rotary_table_with_tilting_trunnion_676c38ce0fcd4f1b86c9357362fed3a3",
   "created_at": "2026-04-27T12:31:45Z",
   "updated_at": "2026-04-28T07:50:12Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A trunnion table like a small machine-tool fixture, with a low rotary base, two upright side cheeks, and a rectangular table suspended between the cheeks. Th..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "5cc1642df5a31b41b39f40266672235e587e785aa580b27264b1d066fc5d857b",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_rotary_table_with_tilting_trunnion_676c38ce0fcd4f1b86c9357362fed3a3",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

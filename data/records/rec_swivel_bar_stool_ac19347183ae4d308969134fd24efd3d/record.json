@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_swivel_bar_stool_ac19347183ae4d308969134fd24efd3d",
   "created_at": "2026-04-27T02:34:32Z",
   "updated_at": "2026-04-27T09:32:45Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A drafting stool with a five-leg base on casters, a circular foot ring, and a curved tractor seat with a small hinged backrest. The seat rotates continuously..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "970ed966e8fe255021e173970dae68b9310f46790ea5b17b564f2669530b760e",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_swivel_bar_stool_ac19347183ae4d308969134fd24efd3d",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

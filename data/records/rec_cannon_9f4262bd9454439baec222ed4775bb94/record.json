@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_cannon_9f4262bd9454439baec222ed4775bb94",
   "created_at": "2026-04-27T02:52:04Z",
   "updated_at": "2026-04-27T08:28:30Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A naval pivot-mounted deck cannon on a heavy cylindrical pedestal. A rotating carriage sits atop the pedestal and traverses continuously on the vertical pede..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "d43b464442db46ab091dd537244167f42eb8d9b91640c4ea46bd6f98f5a27fac",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_cannon_9f4262bd9454439baec222ed4775bb94",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

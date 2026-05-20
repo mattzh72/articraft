@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_astronomical_telescope_on_tripod_a6a09207e8af42fc95fe2b4a48e677d7",
   "created_at": "2026-04-27T13:59:31Z",
   "updated_at": "2026-04-28T00:31:21Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A refractor telescope on a wooden alt-azimuth tripod with an altitude revolute axis and an azimuth revolute axis for two-axis pointing."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "263c4cf16c87f8d22978ef628d0fe8e8505aac4e17b3903dd8191beb08fc75ed",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_astronomical_telescope_on_tripod_a6a09207e8af42fc95fe2b4a48e677d7",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

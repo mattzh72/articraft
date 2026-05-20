@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_digital_multimeter_with_tilt_stand_and_rotary_selector_6c9bbaae84ab44b4b51ce6c9003fc05b",
   "created_at": "2026-04-11T18:43:53Z",
   "updated_at": "2026-04-11T20:35:07Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A compact service digital multimeter with a tall narrow body, a large rotary selector below the display, a short flip-out stand on the back, and a row of thr..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "b8e145013c1dfdc36abe3dfc174536e53e05c39d21c106b38001e00903642e24",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_digital_multimeter_with_tilt_stand_and_rotary_selector_6c9bbaae84ab44b4b51ce6c9003fc05b",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

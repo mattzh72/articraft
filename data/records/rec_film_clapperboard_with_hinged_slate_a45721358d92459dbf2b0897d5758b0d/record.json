@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_film_clapperboard_with_hinged_slate_a45721358d92459dbf2b0897d5758b0d",
   "created_at": "2026-04-11T23:05:11Z",
   "updated_at": "2026-04-22T14:19:28Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A compact documentary slate with a whiteboard face, a short clapstick, and a marker clip fixed to the back edge of the board. The clip is mounted as a separa..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "e9d662d07dd0ddf4978a3a4577ca3e29a8f5faf3880d149ecda603fc40591d81",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_film_clapperboard_with_hinged_slate_a45721358d92459dbf2b0897d5758b0d",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

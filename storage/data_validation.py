@@ -381,24 +381,23 @@ class _DataFormatValidator:
                 record_path, "record_id must start with rec_ and contain only safe path characters"
             )
         schema_version = record.get("schema_version")
-        if schema_version not in {1, 2, 3}:
+        if schema_version != 3:
             self._add_error(
                 record_path, f"unsupported schema_version={record.get('schema_version')!r}"
             )
-        if schema_version == 3:
-            for stale_name in (
-                "prompt.txt",
-                "model.py",
-                "provenance.json",
-                "cost.json",
-                "dataset_entry.json",
-                "traces",
-                "inputs",
-            ):
-                if (record_dir / stale_name).exists():
-                    self._add_error(
-                        record_dir / stale_name, "v3 records must not use flat v2 artifact paths"
-                    )
+        for stale_name in (
+            "prompt.txt",
+            "model.py",
+            "provenance.json",
+            "cost.json",
+            "dataset_entry.json",
+            "traces",
+            "inputs",
+        ):
+            if (record_dir / stale_name).exists():
+                self._add_error(
+                    record_dir / stale_name, "records must store artifacts under revisions"
+                )
         self._validate_record_fields(record_path, record)
         self._validate_record_artifacts(record_dir, record_path, record)
         self._validate_provenance(record_dir, record_path, record)
@@ -669,10 +668,7 @@ class _DataFormatValidator:
     ) -> None:
         path = self.repo.layout.record_dataset_entry_path(record_dir.name)
         if not path.exists():
-            legacy_path = self.repo.layout.legacy_record_dataset_entry_path(record_dir.name)
-            if not legacy_path.exists():
-                return
-            path = legacy_path
+            return
         collections = record.get("collections")
         collection_names = set(collections) if isinstance(collections, list) else set()
         self.dataset_entry_count += 1

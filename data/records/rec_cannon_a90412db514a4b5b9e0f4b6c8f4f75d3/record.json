@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_cannon_a90412db514a4b5b9e0f4b6c8f4f75d3",
   "created_at": "2026-04-26T13:59:43Z",
   "updated_at": "2026-04-27T23:05:23Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A Swedish Regimental three-pounder field gun with a slim cast-iron barrel on trunnion revolute joints in a two-wheel wooden trail carriage, two large spoked..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "a702eccf6def192c0da9a775c12d8cfd5043194842be610d50d68ca3775f146e",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_cannon_a90412db514a4b5b9e0f4b6c8f4f75d3",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

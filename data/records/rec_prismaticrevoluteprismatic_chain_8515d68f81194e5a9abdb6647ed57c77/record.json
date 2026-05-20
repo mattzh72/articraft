@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_prismaticrevoluteprismatic_chain_8515d68f81194e5a9abdb6647ed57c77",
   "created_at": "2026-03-28T03:32:30Z",
   "updated_at": "2026-04-01T10:10:51Z",
@@ -22,16 +22,17 @@
     "prompt_preview": "A three-joint linear and rotary transfer chain. A base guide carries a sliding carriage, the carriage supports a hinged middle arm, and the arm carries a sho..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "a172c39ba88bdd27dc3ee69f9f498d06c292a25d6f5318ea81f54f4f665583a2",
-    "model_py_sha256": "4b0aa7a3ce246a5b4d1efa0525070cc14679d43d57f77e754a48473e7ab4d39c"
+    "model_py_sha256": "ba47627aa618af30b2577a0399788634cb9ebdfc8fe2bcbfa55fd949842da6f8"
   },
   "collections": [
     "dataset"
@@ -39,5 +40,12 @@
   "author": "mattzh72",
   "rated_by": "mattzh72",
   "secondary_rating": 4,
-  "secondary_rated_by": "Zhaomou Song"
+  "secondary_rated_by": "Zhaomou Song",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_prismaticrevoluteprismatic_chain_8515d68f81194e5a9abdb6647ed57c77",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_box_fan_with_control_knob_67eb0eb1c46d4fc4aec95eb8bdb5cfba",
   "created_at": "2026-04-27T02:08:32Z",
   "updated_at": "2026-04-27T10:19:16Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A table tilt-stand box fan with a small square housing on a round tilt-stand base. The housing tilts on a revolute hinge at the stand arms about a horizontal..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "81d6641c76748cf82246ba3c3750ee06d3528c53a989fe1d050a3756cbf3335d",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_box_fan_with_control_knob_67eb0eb1c46d4fc4aec95eb8bdb5cfba",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

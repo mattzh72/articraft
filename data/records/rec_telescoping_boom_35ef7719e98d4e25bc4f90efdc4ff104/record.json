@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_telescoping_boom_35ef7719e98d4e25bc4f90efdc4ff104",
   "created_at": "2026-03-30T17:57:46Z",
   "updated_at": "2026-04-01T11:02:24Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A service boom with nested square tubes. A grounded root bracket supports a large outer box and smaller inner members that project in sequence from the front..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "5fe74276e30b8d7fac8552fbd29dfbccc7abcf47adeab3b7e110ae6822640000",
-    "model_py_sha256": "23ec49f6a3cb325a94ce1ea9dcde1c561a512df0ca9ea57cb191d5cd32af5800"
+    "model_py_sha256": "37d5dca56a222425f823c39bb16411ff9c555888873d5f964aac70710187e79e"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_telescoping_boom_35ef7719e98d4e25bc4f90efdc4ff104",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

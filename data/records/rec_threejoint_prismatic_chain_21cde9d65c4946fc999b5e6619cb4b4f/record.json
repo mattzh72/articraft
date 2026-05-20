@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_threejoint_prismatic_chain_21cde9d65c4946fc999b5e6619cb4b4f",
   "created_at": "2026-04-01T18:09:34Z",
   "updated_at": "2026-04-06T01:36:57Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A compact service three-stage axis. A broad grounded body supports three carried sliders with plain rectangular faces and visible overlap. The stage stack is..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "24133f137b3ae65783413950de5112a3b70afceeac52b530cbc22a2e20e284ff",
-    "model_py_sha256": "89aef1baaeae4cc2830c19d4c7c476c96b598f017a5b96cebe812cff73ad05c4"
+    "model_py_sha256": "a3bbf142bae0ea41e76fb9f86207e5775ae4e55adecfb9794565861640990570"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_threejoint_prismatic_chain_21cde9d65c4946fc999b5e6619cb4b4f",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_wall_thermostat_with_articulated_controls_e7f4234a88764109a79ed3ca2395d673",
   "created_at": "2026-04-12T15:35:53Z",
   "updated_at": "2026-04-22T08:01:59Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A smart thermostat with a circular body, a rotating outer ring, and a small side mode slider. The outer ring rotates continuously around the center display,..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "d940780bea10179b9432643d8651f6699233058f295f8dcf7b23d9675c7eca18",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_wall_thermostat_with_articulated_controls_e7f4234a88764109a79ed3ca2395d673",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

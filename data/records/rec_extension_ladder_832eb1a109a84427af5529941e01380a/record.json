@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_extension_ladder_832eb1a109a84427af5529941e01380a",
   "created_at": "2026-04-03T22:04:04Z",
   "updated_at": "2026-04-04T15:38:07Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A rolling library ladder with an upper wall rail and a floor-level guide track. The stile frame hooks onto the upper wall rail on continuous-rotation wheels...."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "8e64ce9105f4291617ee14ef81e8e2e7d3f86efb661c7c33b2e64c51fe2a3b6f",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_extension_ladder_832eb1a109a84427af5529941e01380a",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

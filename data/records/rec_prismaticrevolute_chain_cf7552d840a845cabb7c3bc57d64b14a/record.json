@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_prismaticrevolute_chain_cf7552d840a845cabb7c3bc57d64b14a",
   "created_at": "2026-03-30T17:57:46Z",
   "updated_at": "2026-04-07T10:14:35Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A prismatic-revolute chain. A grounded base rail carries a sliding carriage, and the carriage supports a short hinged arm on a side clevis. The root motion i..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "1d1c9d63a703f8559efe4b1464cf91423edd097f1e4dafeaa9b25e10c8710dde",
-    "model_py_sha256": "500887a3b911f05083307987b91f80a5f613b40b661dfe09937477df54a9653a"
+    "model_py_sha256": "f1fc219098d910250496f8d6e26cdf47056497fc4eb5e1dfe3d0d1c59e5a43c0"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_prismaticrevolute_chain_cf7552d840a845cabb7c3bc57d64b14a",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

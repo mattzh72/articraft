@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_screwin_light_bulb_with_socket_0001",
   "created_at": "2026-03-16T13:21:55Z",
   "updated_at": "2026-03-20T22:37:44Z",
@@ -20,16 +20,17 @@
     "prompt_preview": "A realistic, highly detailed screw-in light bulb with a glass bulb envelope, a metal Edison screw base, a rigid socket housing, and believable electrical-fix..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "2ca497b56e05248befce893f24943cee72aa54a1e6139703d78d88aa34a18141",
-    "model_py_sha256": "c865fbcfa5da1f5ab6e9d90464abb007744a1907facafee97847fad55c3b6edd"
+    "model_py_sha256": "9bb45ebff2f736ddad35d6690c2da2c1a7fcf2e55492dc0e4bde58177f587c86"
   },
   "collections": [
     "dataset"
@@ -37,5 +38,12 @@
   "author": "mattzh72",
   "rated_by": "mattzh72",
   "secondary_rating": null,
-  "secondary_rated_by": null
+  "secondary_rated_by": null,
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_screwin_light_bulb_with_socket_0001",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

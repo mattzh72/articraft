@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_candy_vending_machine_ae2c9d28298f44e096cc0766837167c6",
   "created_at": "2026-04-02T22:48:25Z",
   "updated_at": "2026-04-06T01:29:54Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A compact capsule-and-candy vending machine with a clear hopper, a rectangular lower body, and a front service panel beneath the dispensing wheel. The dispen..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "861845d209b30df04337abd43351a75d63ada681a5f1b846180ec8a299fcddac",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_candy_vending_machine_ae2c9d28298f44e096cc0766837167c6",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

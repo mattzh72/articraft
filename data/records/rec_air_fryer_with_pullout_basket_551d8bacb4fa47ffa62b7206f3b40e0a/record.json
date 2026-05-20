@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_air_fryer_with_pullout_basket_551d8bacb4fa47ffa62b7206f3b40e0a",
   "created_at": "2026-04-11T18:03:18Z",
   "updated_at": "2026-04-22T14:21:20Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A glass-window air fryer with a vertical body, a pullout basket drawer, and a front interface made of one selector knob and four program buttons around a sma..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "7c9cdddca14e78b7c5ad7878b9482966b689c2038794254c2746b5774e370767",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_air_fryer_with_pullout_basket_551d8bacb4fa47ffa62b7206f3b40e0a",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

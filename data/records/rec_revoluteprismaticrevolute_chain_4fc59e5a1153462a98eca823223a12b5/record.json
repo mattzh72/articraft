@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_revoluteprismaticrevolute_chain_4fc59e5a1153462a98eca823223a12b5",
   "created_at": "2026-03-31T17:20:51Z",
   "updated_at": "2026-03-31T18:40:40Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A side-wall swing-slide-rotary mechanism. A grounded side plate supports a hinged body with a carried slide and a small tip fork. The motion order is revolut..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "f5ae0b1d6601a586812fa0f396a4451a1b215f11e7c25380d2c1434b8ee2854a",
-    "model_py_sha256": "0fae1f438e4ab023d713bed890e520b3fba78b86297235dcda9dd734fa3df0cf"
+    "model_py_sha256": "17e313ba206daa43d8db9214a17e439bede83be8d84de1bf71cf727ccc8be7f3"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_revoluteprismaticrevolute_chain_4fc59e5a1153462a98eca823223a12b5",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

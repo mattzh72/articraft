@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_barrier_gate_1c8d9388de064584a84f575e83b6c9d0",
   "created_at": "2026-04-07T14:56:20Z",
   "updated_at": "2026-04-07T16:53:01Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A folding pedestrian barrier with a wall-anchor bracket and three rectangular panel sections linked in a Z-fold chain. The first panel pivots on a revolute j..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "10d757816189e004c13a9a59df7008c5f4b815ecac557bf55a3d4472f22374b0",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_barrier_gate_1c8d9388de064584a84f575e83b6c9d0",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

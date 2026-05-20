@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_desktop_pc_tower_0003",
   "created_at": "2026-03-26T14:15:24Z",
   "updated_at": "2026-03-27T12:32:38Z",
@@ -22,12 +22,13 @@
     "prompt_preview": "A mini-ITX small form-factor case with an aluminum side panel removable by unlocking two captive thumb screws and sliding back, a front mesh intake panel cli..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "8c24d70b7d4a849e86d30ccb51f3b5238001d00cfdf5f8670df5b69cbfbd225a",
@@ -39,5 +40,12 @@
   "author": "Zhaomou Song",
   "rated_by": "Zhaomou Song",
   "secondary_rating": null,
-  "secondary_rated_by": null
+  "secondary_rated_by": null,
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_desktop_pc_tower_0003",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

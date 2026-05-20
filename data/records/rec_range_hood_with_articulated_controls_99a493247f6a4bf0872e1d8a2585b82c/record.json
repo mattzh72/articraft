@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_range_hood_with_articulated_controls_99a493247f6a4bf0872e1d8a2585b82c",
   "created_at": "2026-04-12T14:13:27Z",
   "updated_at": "2026-04-22T08:34:01Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "An island-mount range hood with a rectangular canopy, a chimney support above, and a narrow front control strip with one dial and three separate push buttons..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "ab4d1136cb0f93f9d2281f0be08521ddd4ebb8b801a5ed75d753a886d9c152eb",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_range_hood_with_articulated_controls_99a493247f6a4bf0872e1d8a2585b82c",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

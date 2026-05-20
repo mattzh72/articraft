@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_paper_shredder_with_pullout_bin_d507dfdb172340ff982257df8bbbf2bb",
   "created_at": "2026-04-11T18:03:18Z",
   "updated_at": "2026-04-22T14:20:41Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A heavy-duty shredder with a pullout waste bin, a main paper slot flap, a secondary card-slot flap, and a front panel carrying a selector dial beside a rever..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "13627cc5437cadffbd3ead39d3a7f6927f618c276c2e730635226cca2e411658",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_paper_shredder_with_pullout_bin_d507dfdb172340ff982257df8bbbf2bb",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

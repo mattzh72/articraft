@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_easel_f90aa62746fc4d8d8c6ec01e337b4f35",
   "created_at": "2026-04-12T15:20:47Z",
   "updated_at": "2026-04-12T15:54:30Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A field easel with three folding legs, a telescoping mast, and a lower shelf that slides on the mast. The three legs rotate on their crown hinges, the mast s..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "a9277b2ce78696952a8124552030e2d13690d5dce3fd975886aff988492f2bf8",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_easel_f90aa62746fc4d8d8c6ec01e337b4f35",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

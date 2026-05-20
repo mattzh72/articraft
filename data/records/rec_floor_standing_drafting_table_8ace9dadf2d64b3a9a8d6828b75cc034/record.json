@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_floor_standing_drafting_table_8ace9dadf2d64b3a9a8d6828b75cc034",
   "created_at": "2026-04-02T22:48:25Z",
   "updated_at": "2026-04-06T01:27:30Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A floor-standing drafting table with two outer posts tied by a center carriage, a rectangular board, and a shallow tool drawer under the working edge. The bo..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "f94421fc55cecdc374c87dbd51bbf54c6c139d314de24c1ee145157dd6de23a8",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_floor_standing_drafting_table_8ace9dadf2d64b3a9a8d6828b75cc034",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

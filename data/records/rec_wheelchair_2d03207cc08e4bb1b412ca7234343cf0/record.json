@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_wheelchair_2d03207cc08e4bb1b412ca7234343cf0",
   "created_at": "2026-03-30T17:07:21Z",
   "updated_at": "2026-04-01T21:53:58Z",
@@ -22,12 +22,13 @@
     "prompt_preview": "Generate a compact apartment/desktop version of Wheelchair. Keep footprint and envelope efficient while preserving full functional articulation from a chair..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "849bdac50b9b8637e23a6563c89274792308c4da341c7bc836f37985feb8f371",
@@ -39,5 +40,12 @@
   "rated_by": "shawlyu",
   "author": "shawlyu",
   "secondary_rating": 5,
-  "secondary_rated_by": "RuiningLi"
+  "secondary_rated_by": "RuiningLi",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_wheelchair_2d03207cc08e4bb1b412ca7234343cf0",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

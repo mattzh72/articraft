@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_desktop_monitor_with_tilt_swivel_stand_abd25cbb444f40c695f99e4d017d2030",
   "created_at": "2026-04-11T22:02:14Z",
   "updated_at": "2026-04-11T22:19:20Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A compact business monitor with a boxy screen housing, a telescoping stand neck, a rounded pedestal base, and a lower-edge power rocker beside three menu but..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "d85ca06b68b42719925dc877b8ebeddf5d6b79a377f2fc734b4a4db5c6ec2d7c",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_desktop_monitor_with_tilt_swivel_stand_abd25cbb444f40c695f99e4d017d2030",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_camera_lens_17c307f516ce4e8fb540d2c037186353",
   "created_at": "2026-04-12T14:44:13Z",
   "updated_at": "2026-04-22T08:12:17Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A telephoto zoom lens with a long barrel, separate zoom and focus rings, and a tripod collar around the midsection. The zoom ring rotates continuously, the f..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "ef25e0ed25ed75352b1cdab1a1c676a0aec5842196b5b1e006e3289b66209cc7",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_camera_lens_17c307f516ce4e8fb540d2c037186353",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

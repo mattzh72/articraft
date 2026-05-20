@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_yawpitch_module_24e621d7df2641ac9889e6a08c3bc421",
   "created_at": "2026-04-26T13:35:59Z",
   "updated_at": "2026-04-28T07:54:29Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A pan-tilt surveillance head with a rotary base and tilting upper fork, using simple cast-like housings and flat equipment brackets."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "9cd97aed32076d23e2f2cf611d0a428967c51e7d62bcc66e0cc90431a9b14e29",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_yawpitch_module_24e621d7df2641ac9889e6a08c3bc421",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

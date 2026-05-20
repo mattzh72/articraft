@@ -1,0 +1,43 @@
+{
+  "schema_version": 1,
+  "record_id": "rec_robotic_arms_0001",
+  "revision_id": "rev_000001",
+  "created_at": "2026-03-15T17:42:50Z",
+  "prompt_kind": "single_prompt",
+  "prompt_sha256": "1bc0f62b8065c40bb15428d6e89d88280d85f0d4428fa490a18d4249095a5768",
+  "source": {
+    "run_id": "run_import_robotic_arms_manual-import-20260315-174250",
+    "prompt_batch_id": null,
+    "prompt_index": 1
+  },
+  "generation": {
+    "provider": "openai",
+    "model_id": "gpt-5.4",
+    "thinking_level": "high",
+    "openai_transport": null,
+    "openai_reasoning_summary": null,
+    "max_turns": 30
+  },
+  "artifacts": {
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
+    "prompt_series_json": null,
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
+  },
+  "hashes": {
+    "prompt_sha256": "1bc0f62b8065c40bb15428d6e89d88280d85f0d4428fa490a18d4249095a5768",
+    "model_py_sha256": "a8d2cf57a78ac6226f885e5660d68eddca0246e426649c837ec0f5be218c56e0"
+  },
+  "run_summary": {
+    "turn_count": 10,
+    "tool_call_count": null,
+    "compile_attempt_count": null,
+    "final_status": "success"
+  },
+  "parent": null,
+  "seed": null,
+  "inherited_inputs": []
+}

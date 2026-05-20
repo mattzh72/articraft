@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_clamp_meter_with_hinged_jaw_and_rotary_selector_c144249da59242578345ac7a0ad75df3",
   "created_at": "2026-04-11T23:12:12Z",
   "updated_at": "2026-04-22T14:06:34Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A compact HVAC clamp meter with a narrow split jaw, a pistol-grip body, a central rotary selector, and a lower handle trigger, plus a non-contact-voltage but..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "c6835834350bedbddeba9930670423f745673c0553312707e3ace01d97f058e0",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_clamp_meter_with_hinged_jaw_and_rotary_selector_c144249da59242578345ac7a0ad75df3",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

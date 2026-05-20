@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_threejoint_prismatic_chain_0003",
   "created_at": "2026-03-21T23:57:23Z",
   "updated_at": "2026-04-01T10:29:07Z",
@@ -22,16 +22,17 @@
     "prompt_preview": "A three-stage telescoping antenna mast with a sturdy fixed base, three nested rectangular sliding sections extending along one axis, compact guide collars be..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "7c546effebf164161a3a0aee47a10ce0adb159c75c772b8cac6d54641e67bd18",
-    "model_py_sha256": "d945779edb7d7dc45ca2bc96ffc0689f06e7d7eea6edfb85aae825f5fcf06f27"
+    "model_py_sha256": "11e2664b395a545003a018b4ba15812cbd2eb4f71b29ffee1143de28b3e9027e"
   },
   "collections": [
     "dataset"
@@ -39,5 +40,12 @@
   "author": "mattzh72",
   "rated_by": "mattzh72",
   "secondary_rating": 5,
-  "secondary_rated_by": "Zhaomou Song"
+  "secondary_rated_by": "Zhaomou Song",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_threejoint_prismatic_chain_0003",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

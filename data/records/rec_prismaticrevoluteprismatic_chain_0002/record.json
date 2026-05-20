@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_prismaticrevoluteprismatic_chain_0002",
   "created_at": "2026-03-12T18:26:49Z",
   "updated_at": "2026-04-01T10:31:29Z",
@@ -20,16 +20,17 @@
     "prompt_preview": "A linear positioning module carrying a rotary elbow and a final telescoping extension, built from slide rails, machined plates, and compact actuator covers."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "96197ea27a0e68b1cd1b8cf9c021f47b8c399f1ca792437b8006b0379de36cde",
-    "model_py_sha256": "fb37e0013b8e94203b257e8c43c156c6a720caecdc5b01107039ff46f93d4a48"
+    "model_py_sha256": "a0af33e07aeb35017f17e87136b3001258c6084e63577334feb041d6c79f4ed9"
   },
   "collections": [
     "dataset"
@@ -37,5 +38,12 @@
   "author": "mattzh72",
   "rated_by": "mattzh72",
   "secondary_rating": 5,
-  "secondary_rated_by": "Zhaomou Song"
+  "secondary_rated_by": "Zhaomou Song",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_prismaticrevoluteprismatic_chain_0002",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

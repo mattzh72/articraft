@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_multisegment_foldout_arm_0001",
   "created_at": "2026-03-12T18:21:35Z",
   "updated_at": "2026-04-01T10:31:54Z",
@@ -20,16 +20,17 @@
     "prompt_preview": "A multi-segment fold-out boom with repeated revolute joints, slim rectangular links, and simple bracket details suitable for CAD modeling."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "b8eb9f00dcd144df87ef3c95c2c53268684f978ba98c83114305da130fd34808",
-    "model_py_sha256": "7110abd2d1fe00964fd204d3ee49c4f01fd4a91e2debcf5062be10374bad05f6"
+    "model_py_sha256": "c586cdd5f6f1e220bcc426e7d3dee4665709c8c2afcd3fdd9a6b74c6227e4e94"
   },
   "collections": [
     "dataset"
@@ -37,5 +38,12 @@
   "author": "mattzh72",
   "rated_by": "mattzh72",
   "secondary_rating": 5,
-  "secondary_rated_by": "Zhaomou Song"
+  "secondary_rated_by": "Zhaomou Song",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_multisegment_foldout_arm_0001",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

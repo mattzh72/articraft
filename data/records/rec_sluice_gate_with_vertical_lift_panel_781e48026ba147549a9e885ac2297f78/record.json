@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_sluice_gate_with_vertical_lift_panel_781e48026ba147549a9e885ac2297f78",
   "created_at": "2026-04-11T23:37:03Z",
   "updated_at": "2026-04-22T08:38:48Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A stormwater sluice gate with a rectangular channel frame, a lift panel, and a side crank gearbox above the opening, plus a locking pawl beside the handwheel..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "0e67e3acd60dde26e14121baf887b2538251ae521579d039f806e12c8c82e18a",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_sluice_gate_with_vertical_lift_panel_781e48026ba147549a9e885ac2297f78",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

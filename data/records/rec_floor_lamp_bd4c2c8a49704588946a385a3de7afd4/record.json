@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_floor_lamp_bd4c2c8a49704588946a385a3de7afd4",
   "created_at": "2026-03-28T12:25:10Z",
   "updated_at": "2026-03-29T17:25:31Z",
@@ -22,12 +22,13 @@
     "prompt_preview": "A swing-arm floor lamp with a rectangular weighted base, a fixed vertical column, and a horizontal boom arm on a revolute hinge at the column top that swings..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "0bb216ccbaff9a8a863a95f4769d18ae1e0d2b3dfc9621c3604d9bb2c242d6a4",
@@ -39,5 +40,12 @@
   "author": "Zhaomou Song",
   "rated_by": "Zhaomou Song",
   "secondary_rating": null,
-  "secondary_rated_by": null
+  "secondary_rated_by": null,
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_floor_lamp_bd4c2c8a49704588946a385a3de7afd4",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_dualcolumn_lift_carriage_f2b5362a0fb842278d7594803d6c97c5",
   "created_at": "2026-04-03T21:46:47Z",
   "updated_at": "2026-04-06T01:21:45Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A channel-post vertical lift carriage. Two upright channels and a top bridge frame support a moving carriage with a plain tool plate at the front. One prisma..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "ca5ffc6619a87ae48958b6d3c517ae7ad09251317838499861f1c53d8abe7743",
-    "model_py_sha256": "f04623443ac439c4005689065cce3e396caf1fa4de6940d5e8d55fe2e8f8c246"
+    "model_py_sha256": "ccc70695fb50eadded292f783ff16a005a97b694355969f25126f9996032fd4c"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_dualcolumn_lift_carriage_f2b5362a0fb842278d7594803d6c97c5",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

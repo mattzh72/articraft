@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_knee_scooter_0001",
   "created_at": "2026-03-16T01:37:33Z",
   "updated_at": "2026-03-20T22:37:44Z",
@@ -20,16 +20,17 @@
     "prompt_preview": "A realistic, highly detailed knee scooter with a stable wheeled frame, padded knee platform, steering column, and practical hand controls. The steering and r..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "f77d5b063958de2f35dea7c101e9100b4bcc0b024e8e0894e9cb62e37e35a4cb",
-    "model_py_sha256": "1953cbefdf30cf71103ec7177c741d0edf3b80e45d7864b36a1521966cbb79cf"
+    "model_py_sha256": "b2bde3c2db14e77a37973c62d9624a6143bc66f5918dcec19866048512a9c836"
   },
   "collections": [
     "dataset"
@@ -37,5 +38,12 @@
   "author": "mattzh72",
   "rated_by": "mattzh72",
   "secondary_rating": null,
-  "secondary_rated_by": null
+  "secondary_rated_by": null,
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_knee_scooter_0001",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

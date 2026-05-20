@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_drone_456cea3ca6b74cfe9d77a06909bb21d2",
   "created_at": "2026-04-03T21:57:21Z",
   "updated_at": "2026-04-04T15:07:46Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A folding travel quadcopter with a rectangular body and four radial arms that fold back alongside the body. Each arm folds on a revolute hinge at the arm-to-..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "e2a451c7c5a43a680ada5f85caf7215b4985fe62bf1101b104ca2855b6940c14",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_drone_456cea3ca6b74cfe9d77a06909bb21d2",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_panini_press_with_clamshell_lid_2aba1945d9274af99f8f15cc0332a0b5",
   "created_at": "2026-04-11T23:25:09Z",
   "updated_at": "2026-04-22T08:40:56Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A cafe-style panini press with a rectangular lower grill base, a deep upper cooking platen, and a bent tubular front handle, plus a timer knob on the front f..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "5edb811c3ec370c69950369f1904ebf3fc31a792645d79d68e7370d49e945ea3",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_panini_press_with_clamshell_lid_2aba1945d9274af99f8f15cc0332a0b5",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

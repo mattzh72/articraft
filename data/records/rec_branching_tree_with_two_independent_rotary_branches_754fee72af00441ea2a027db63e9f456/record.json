@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_branching_tree_with_two_independent_rotary_branches_754fee72af00441ea2a027db63e9f456",
   "created_at": "2026-03-31T17:20:51Z",
   "updated_at": "2026-04-06T01:39:37Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A ladder-frame two-branch fixture. A narrow central frame supports two stub arms on distinct cheek blocks, and the branch heights and reach lengths are inten..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "24e5032fbe26b605d34c881afc48e45cb4449b1eed6bee0e925ba8e07ce93298",
-    "model_py_sha256": "fdae64644dde2813f62d2c6bc5d1f8e8bcb76335f4e9e82b7d8e92123cd6afe1"
+    "model_py_sha256": "a37d6f75d50bb8360c6a398cbb8bc8b9d5611a73ec5ccc24753e838b86e7420a"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_branching_tree_with_two_independent_rotary_branches_754fee72af00441ea2a027db63e9f456",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

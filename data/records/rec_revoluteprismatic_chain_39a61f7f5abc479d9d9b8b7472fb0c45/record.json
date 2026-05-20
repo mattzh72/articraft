@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_revoluteprismatic_chain_39a61f7f5abc479d9d9b8b7472fb0c45",
   "created_at": "2026-04-01T18:09:34Z",
   "updated_at": "2026-04-06T01:35:43Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A compact service arm with linear nose. A broad grounded base supports one rigid link and one tip slider that stays clearly smaller than the link. The mechan..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "f802a64c0151bb1363dc3a2e39e5cd77bf7ca1f195e6c645a18562ec014f13ab",
-    "model_py_sha256": "13070641eb9faaed52bccf537b6b937f725f0818f0a4aade1359fd51c6c682e3"
+    "model_py_sha256": "38594062b53edc6b07bc66d1ccd6e98262748d68dcf1703850e91ab3dae09b67"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_revoluteprismatic_chain_39a61f7f5abc479d9d9b8b7472fb0c45",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

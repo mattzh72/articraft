@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_cannon_3fb4bbf2911f45c9a16c7d0135a69501",
   "created_at": "2026-03-28T12:10:08Z",
   "updated_at": "2026-03-29T11:25:39Z",
@@ -22,12 +22,13 @@
     "prompt_preview": "A medieval siege bombard with a short squat wrought-iron barrel set in a timber trough cradle, the barrel resting on two trunnion revolute joints in the crad..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "28024cb03ad55821f53736c0453399e77e07dbbeccda61b86399efaf55590a98",
@@ -39,5 +40,12 @@
   "author": "Zhaomou Song",
   "rated_by": "Zhaomou Song",
   "secondary_rating": null,
-  "secondary_rated_by": null
+  "secondary_rated_by": null,
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_cannon_3fb4bbf2911f45c9a16c7d0135a69501",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

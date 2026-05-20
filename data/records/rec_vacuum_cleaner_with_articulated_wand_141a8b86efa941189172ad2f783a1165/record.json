@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_vacuum_cleaner_with_articulated_wand_141a8b86efa941189172ad2f783a1165",
   "created_at": "2026-04-27T03:38:20Z",
   "updated_at": "2026-04-27T06:39:18Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A vacuum cleaner with an articulated wand. A main body connects to a rigid wand chain ending in a floor nozzle. Joints: the wand bends on one or two revolute..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "92cf1fda7239dddad08438b88597e09ea9f146b5011a68686ea3a659a24d7530",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_vacuum_cleaner_with_articulated_wand_141a8b86efa941189172ad2f783a1165",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

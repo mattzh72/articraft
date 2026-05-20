@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_single_roll_axis_module_0005",
   "created_at": "2026-03-25T18:37:12Z",
   "updated_at": "2026-04-01T10:28:57Z",
@@ -22,16 +22,17 @@
     "prompt_preview": "Design a realistic, highly detailed single roll axis module as a standalone mechanical study assembly for the sdk_hybrid pipeline, with a single-axis roll st..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "58e3e2137379b361f22a84d8f072f44e8dae21a6755368a102a506a621a32a4c",
-    "model_py_sha256": "bb2fc805d72a6d59dd2f04f828719b26c2885f48a31cfe2debd31fa1342d45a3"
+    "model_py_sha256": "c1b84659369cd197201e62d237357c7ecc6e2a68d1517f9ea98eff035ed06957"
   },
   "collections": [
     "dataset"
@@ -39,5 +40,12 @@
   "author": "mattzh72",
   "rated_by": "mattzh72",
   "secondary_rating": 5,
-  "secondary_rated_by": "Zhaomou Song"
+  "secondary_rated_by": "Zhaomou Song",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_single_roll_axis_module_0005",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

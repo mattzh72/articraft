@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_single_prismatic_slider_0004",
   "created_at": "2026-03-25T23:15:42Z",
   "updated_at": "2026-04-01T10:17:07Z",
@@ -22,16 +22,17 @@
     "prompt_preview": "A single prismatic slider. A fixed base rail carries one rectangular carriage with guide blocks and an end plate. One prismatic joint moves the carriage alon..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "04c5333a6ed4899f1b3d60aa420db91419c338125d51fe0c540d07d63fd7fd77",
-    "model_py_sha256": "cb8c3c1bf60eaa49152ad9520d6e0f8fb608255557764cf3348a5af898c42a29"
+    "model_py_sha256": "be4994bd0d165b0be957c023984a3b4e4f040592ede7a3a056f8b068d875b69e"
   },
   "collections": [
     "dataset"
@@ -39,5 +40,12 @@
   "author": "mattzh72",
   "rated_by": "shawlyu",
   "secondary_rating": 5,
-  "secondary_rated_by": "Zhaomou Song"
+  "secondary_rated_by": "Zhaomou Song",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_single_prismatic_slider_0004",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_rolling_toolbox_with_telescoping_handle_e12836d443fe49449bba272aeabf31ae",
   "created_at": "2026-04-11T02:10:02Z",
   "updated_at": "2026-04-11T04:52:25Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A molded rolling toolbox with a broad base, a recessed telescoping handle, and twin clear organizer covers on the lid. The handle slides prismatically upward..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "9890695be0486c3e2cfcee615482fd9eb4a015f0e7ab11bd4e29394be0e8b725",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_rolling_toolbox_with_telescoping_handle_e12836d443fe49449bba272aeabf31ae",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

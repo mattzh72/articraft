@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_single_pitch_axis_module_0005",
   "created_at": "2026-03-25T18:37:12Z",
   "updated_at": "2026-04-01T10:24:21Z",
@@ -22,16 +22,17 @@
     "prompt_preview": "Design a realistic, highly detailed single pitch axis module as a standalone mechanical study assembly for the sdk_hybrid pipeline, with a single-axis pitch..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "2ea9e9272e2c214fd64f5e950f5cb382a1e765269b4572f36f47c996593c4afb",
-    "model_py_sha256": "25fa82888936042b32f39fb684861b0618ff760c46f2c3a376cfcb3a945d7dd1"
+    "model_py_sha256": "fe382a37ea39a75726fccad7f1a8be1d98465fb60d5370f0e09173e62edc5a91"
   },
   "collections": [
     "dataset"
@@ -39,5 +40,12 @@
   "author": "mattzh72",
   "rated_by": "mattzh72",
   "secondary_rating": 4,
-  "secondary_rated_by": "Zhaomou Song"
+  "secondary_rated_by": "Zhaomou Song",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_single_pitch_axis_module_0005",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

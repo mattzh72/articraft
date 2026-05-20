@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_stove_top_3217750cb8d848ce8627d930839d6cd1",
   "created_at": "2026-04-27T03:10:18Z",
   "updated_at": "2026-04-27T08:06:57Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A retro enamel stove with four burners, a shallow backsplash, and a windowed oven door. A single large oven-selector knob sits at center, with two burner kno..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "1366d91776752abe698cb085a2f4508c00eb9f07fdd140a598a15374bca9524b",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_stove_top_3217750cb8d848ce8627d930839d6cd1",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

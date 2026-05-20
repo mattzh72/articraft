@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_single_continuous_rotary_shaft_3e569652e36246b09e7573612d867925",
   "created_at": "2026-03-30T17:57:46Z",
   "updated_at": "2026-04-01T11:01:21Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A low-profile rotary spindle module. A broad foot carries paired bearing blocks and a short, thick shaft with a flange at one end and a clamp hub near the mi..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "7848537042373f864cc9e32d7065a201e4abba8a5bc8bd57c388953966c61437",
-    "model_py_sha256": "7e024a506689da2f4e510d268a9a9537bdb1c928e11d6fc39566cfd22386711e"
+    "model_py_sha256": "dd6fcfec831c354926cdee748d8996c9160968662f7a5076ae10778ee83dd766"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_single_continuous_rotary_shaft_3e569652e36246b09e7573612d867925",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

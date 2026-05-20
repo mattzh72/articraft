@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_paper_shredder_with_pullout_bin_35ccea9a73ad415fbf287f6561325bfe",
   "created_at": "2026-04-11T18:03:18Z",
   "updated_at": "2026-04-22T14:21:01Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "An office shredder with a pullout waste bin, a wide feed slot, and a front command panel carrying start, stop, and reverse buttons beside a selector dial. Th..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "72753f15ed2242e8393885f64af34bf10b4a32882e7c0ec5352072c849eccdbe",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_paper_shredder_with_pullout_bin_35ccea9a73ad415fbf287f6561325bfe",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

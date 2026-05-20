@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "record_id": "rec_drone_2f9339cf07e54cccafa577c5e4159960",
+  "revision_id": "rev_000001",
+  "created_at": "2026-05-04T21:12:52Z",
+  "prompt_kind": "single_prompt",
+  "prompt_sha256": "1701f29d86ff38c142fa5b30564773dcbc127e252e42f309ad386ce654c8b0d2",
+  "source": {
+    "run_id": "run_20260504_211250_486287_20260504-drone-openended-frontier-thinking-ablat",
+    "prompt_batch_id": null,
+    "batch_spec_id": "20260504_drone_openended_frontier_thinking_ablation",
+    "row_id": "drone_openai_high",
+    "prompt_index": 3
+  },
+  "generation": {
+    "provider": "openai",
+    "model_id": "gpt-5.5-2026-04-23",
+    "thinking_level": "high",
+    "openai_transport": "http",
+    "openai_reasoning_summary": "auto",
+    "max_turns": 250,
+    "max_cost_usd": null
+  },
+  "artifacts": {
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
+    "prompt_series_json": null,
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
+  },
+  "hashes": {
+    "prompt_sha256": "1701f29d86ff38c142fa5b30564773dcbc127e252e42f309ad386ce654c8b0d2",
+    "model_py_sha256": "beec110aa56423f6e9f1bbe257ad50915981a91018af0471170b7afa0881313e"
+  },
+  "run_summary": {
+    "turn_count": 22,
+    "tool_call_count": 27,
+    "compile_attempt_count": 6,
+    "final_status": "success"
+  },
+  "parent": null,
+  "seed": null,
+  "inherited_inputs": []
+}

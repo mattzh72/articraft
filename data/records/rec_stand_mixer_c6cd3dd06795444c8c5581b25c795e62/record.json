@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_stand_mixer_c6cd3dd06795444c8c5581b25c795e62",
   "created_at": "2026-04-05T05:05:29Z",
   "updated_at": "2026-04-05T07:25:23Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A narrow-footprint stand mixer with a tall rear neck, a smaller bowl on a compact bowl carriage, and a lightweight head carrying a paddle. The bowl should sl..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "8e61905104bab39d69b31de1c6cb48bc444bf71dad971fa77190cf14998733f9",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_stand_mixer_c6cd3dd06795444c8c5581b25c795e62",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

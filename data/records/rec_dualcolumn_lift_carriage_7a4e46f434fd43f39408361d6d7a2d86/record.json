@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_dualcolumn_lift_carriage_7a4e46f434fd43f39408361d6d7a2d86",
   "created_at": "2026-04-03T21:46:47Z",
   "updated_at": "2026-04-06T01:25:49Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A crosshead-guided dual-post lift. A broad base and top tie member support two guide posts, and a compact carriage slides between them with a centered output..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "b4b340116a75d84d8d1649a29a664d0881ca5235bc85ceed2c827fc5959aa0d8",
-    "model_py_sha256": "f70875653f3b553df4e90fda73ece9236142af3f927bd4f545fdf002f5e04c75"
+    "model_py_sha256": "ec255c833164ee187955218a35ffd6f1cc659c61f4f0ffc7fcb5070d0dbeae93"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_dualcolumn_lift_carriage_7a4e46f434fd43f39408361d6d7a2d86",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

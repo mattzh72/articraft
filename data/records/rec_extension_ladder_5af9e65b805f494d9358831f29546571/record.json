@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_extension_ladder_5af9e65b805f494d9358831f29546571",
   "created_at": "2026-04-03T22:03:14Z",
   "updated_at": "2026-04-04T15:38:14Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A three-section aluminium extension ladder with three hollow stile sets that telescope outward. The middle section slides prismatically on guide rails along..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "020936b223fb3e41d48790f1066ae5a400c15ba40744070ab97ee6cfe26faf22",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_extension_ladder_5af9e65b805f494d9358831f29546571",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_single_pitch_axis_module_8214dacf2c8a4af6b41ce6daa24ac0ab",
   "created_at": "2026-04-02T16:32:45Z",
   "updated_at": "2026-04-06T01:32:39Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A compact production pitch module. A grounded box body supports a short trunnion stage ending in a small output face, with the support path explicit from bod..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "ea4b37097729283227896217a37da5da393f74955b9325d9adbcdf020a2dbe82",
-    "model_py_sha256": "7d2fd4e9f6ecf8596d2a8c68307e2078166ae57e3a8e72efb652f2ffede6fe59"
+    "model_py_sha256": "0debd9c4833258c2532587458f3a519f6de3a0dbf3c665d6b2217c8dc42cd0a8"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_single_pitch_axis_module_8214dacf2c8a4af6b41ce6daa24ac0ab",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

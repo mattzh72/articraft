@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_drillpress_tilt_table_cd2e50dc8449411786ae17818b6a4660",
   "created_at": "2026-04-27T03:45:17Z",
   "updated_at": "2026-04-27T05:52:55Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A multi-spindle gang drill press with a wide rectangular cast-iron column and a gang head carrying three equally-spaced chuck spindles each on a revolute axl..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "6b1b82d0e75ed52b816691ed236538f6d194f636b5723f4fa255b0784e320c75",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_drillpress_tilt_table_cd2e50dc8449411786ae17818b6a4660",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

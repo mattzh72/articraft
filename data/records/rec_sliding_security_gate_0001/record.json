@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_sliding_security_gate_0001",
   "created_at": "2026-03-16T01:20:58Z",
   "updated_at": "2026-03-20T22:37:45Z",
@@ -20,16 +20,17 @@
     "prompt_preview": "A realistic, highly detailed sliding security gate with a strong track-guided gate body, support posts, and robust access-control hardware. The sliding motio..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "69a7bcd9f228a8783b8400bdab091b91b165bbdb513ec9165865c8c2dc573b1c",
-    "model_py_sha256": "8bbebec3b30b3b8192c10e67cf5957214d449adf1fcba0c657e4bea5d4dd65c6"
+    "model_py_sha256": "95f54d68eae5dd8ac16be547216b08d68b262a1da8da5b2d679c3d67290c8351"
   },
   "collections": [
     "dataset"
@@ -37,5 +38,12 @@
   "author": "mattzh72",
   "rated_by": "mattzh72",
   "secondary_rating": null,
-  "secondary_rated_by": null
+  "secondary_rated_by": null,
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_sliding_security_gate_0001",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

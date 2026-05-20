@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_single_continuous_rotary_shaft_7f1a81d47b874802aee6750da7f81e82",
   "created_at": "2026-04-02T16:32:45Z",
   "updated_at": "2026-04-06T01:33:21Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A compact service spindle. A broad grounded body supports a short spindle cartridge, with one rigid shaft passing through the cartridge to a simple nose plat..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "7b9ca8847b19413a1524279734362ac63ba9922a0f7c2dc15b88fee1e29d9eb2",
-    "model_py_sha256": "03d12960007a7f65512e6bd71433c635eae6c602bb2348729fc76cbafbe35da7"
+    "model_py_sha256": "e14fcedaf81a7346049c012bb1375e14e19f480471f0951b203153e33306a8eb"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_single_continuous_rotary_shaft_7f1a81d47b874802aee6750da7f81e82",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

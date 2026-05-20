@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_grill_with_hinged_lid_66d406efe36f4460a73c0904edd65fff",
   "created_at": "2026-03-28T13:45:33Z",
   "updated_at": "2026-04-01T16:22:52Z",
@@ -22,12 +22,13 @@
     "prompt_preview": "A barrel-style outdoor grill with a cart frame and side shelf. The lower half of the cooking chamber is fixed to the cart, the upper half forms the lid on a..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "0f4473ba580ab99cffa37d4c80de51b531b644e8d63ab523c269681f8a607cea",
@@ -39,5 +40,12 @@
   "author": "RuiningLi",
   "rated_by": "RuiningLi",
   "secondary_rating": 3,
-  "secondary_rated_by": "shawlyu"
+  "secondary_rated_by": "shawlyu",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_grill_with_hinged_lid_66d406efe36f4460a73c0904edd65fff",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_sewing_box_with_simple_hinged_lid_c78dbcaf6262428795b618a48bf8b0e3",
   "created_at": "2026-03-30T16:16:09Z",
   "updated_at": "2026-03-31T21:49:05Z",
@@ -22,12 +22,13 @@
     "prompt_preview": "Generate a compact apartment/desktop version of Sewing box with simple hinged lid. Keep footprint and envelope efficient while preserving full functional art..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "63d325cbfc1590becf96c154bd4adbb7e4b95bef13eb6bb7f5839ff2193eb6ac",
@@ -39,5 +40,12 @@
   "rated_by": "shawlyu",
   "author": "shawlyu",
   "secondary_rating": 5,
-  "secondary_rated_by": "RuiningLi"
+  "secondary_rated_by": "RuiningLi",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_sewing_box_with_simple_hinged_lid_c78dbcaf6262428795b618a48bf8b0e3",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

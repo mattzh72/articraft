@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_radial_arm_with_sliding_carriage_ceed7daa91ab450199a65a5bd3d95533",
   "created_at": "2026-03-31T17:20:51Z",
   "updated_at": "2026-04-06T01:40:44Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A turret-and-carriage radial arm. A grounded column supports a rotating beam, and the beam supports a compact carriage running along its length. The beam is..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "bd7796f62b0e9d6f2d70adab7371319184fcbe6233067e8fd1b9f4f4e4031c72",
-    "model_py_sha256": "afcb88525356dfca2a5c2bb806d082875bf5c75af10daecaedf64a955c2a7769"
+    "model_py_sha256": "430b21a7cb9cc6f99a098991974c9c5edc7e3d7c7bdcd96671870d0320be8f24"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_radial_arm_with_sliding_carriage_ceed7daa91ab450199a65a5bd3d95533",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

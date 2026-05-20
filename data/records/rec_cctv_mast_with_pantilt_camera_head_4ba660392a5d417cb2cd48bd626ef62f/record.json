@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_cctv_mast_with_pantilt_camera_head_4ba660392a5d417cb2cd48bd626ef62f",
   "created_at": "2026-04-01T12:06:34Z",
   "updated_at": "2026-04-04T10:42:49Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A fence-clamp camera bracket with a C-clamp housing gripping a rail on a prismatic position adjustment, a short side arm from the housing, and a dome camera..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "fc4fd2ab507fdf3cd6f3b682f30eaae1e17443faf1cf13ecfa63e7464c187354",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_cctv_mast_with_pantilt_camera_head_4ba660392a5d417cb2cd48bd626ef62f",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_rotary_table_with_tilting_trunnion_055b1b29d3c2440499fafaddd2a8e392",
   "created_at": "2026-03-31T17:20:51Z",
   "updated_at": "2026-03-31T18:32:51Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A platter-and-trunnion table. A grounded lower rotary platter carries side supports, and the side supports hold a smaller work table on a transverse shaft. T..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "67978ebedb69cda7234571d639a15a5119bac240b22f3bdef8c4fbc85ba0230b",
-    "model_py_sha256": "af07241e300420c38759ac77b354f6f8529108f80c907f4b13c610ba4f819c15"
+    "model_py_sha256": "f2cbbd87aeab6f44383e37289f32c366afc6d48aa8b3867609c87d862dc3f40f"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_rotary_table_with_tilting_trunnion_055b1b29d3c2440499fafaddd2a8e392",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

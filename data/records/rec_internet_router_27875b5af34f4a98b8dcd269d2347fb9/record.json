@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_internet_router_27875b5af34f4a98b8dcd269d2347fb9",
   "created_at": "2026-04-04T14:32:08Z",
   "updated_at": "2026-04-05T13:20:12Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "An office router with a front USB cover and three rear antennas. The flat rectangular housing has a small hinged port door on the front and three articulated..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "e4294eb26e50df3c7a64ba7b0d59dc1477865462105a4183dbb365c8179af612",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_internet_router_27875b5af34f4a98b8dcd269d2347fb9",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

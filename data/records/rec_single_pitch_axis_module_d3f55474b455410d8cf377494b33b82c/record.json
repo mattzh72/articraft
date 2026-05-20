@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_single_pitch_axis_module_d3f55474b455410d8cf377494b33b82c",
   "created_at": "2026-04-02T16:32:45Z",
   "updated_at": "2026-04-06T01:32:35Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "An under-slung pitch fixture. A top support bracket carries a compact moving head below it so the fixed support reads above the tilting member. One revolute..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "2f7b9099065e579bf2110eebf07ea122671857d3baa389182585611a3bfde755",
-    "model_py_sha256": "0f1a9fde1c278a69bdf7496256b3e1bb243d3038a781e7be869d971e0b0ab953"
+    "model_py_sha256": "0a401e9ef3be06e4cd59fb221a690287720eed51a343c9d1353e78f73e4d5028"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_single_pitch_axis_module_d3f55474b455410d8cf377494b33b82c",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_faucet_with_side_handle_068322598e4b4f218e8764a9d30c12e2",
   "created_at": "2026-04-12T15:23:33Z",
   "updated_at": "2026-04-12T15:54:04Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A wall-mounted pot-filler faucet with a short base arm, a second swing arm, and a single side handle at the wall valve body. The inner arm rotates on a horiz..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "6e9680c42a71f948f8e364442028da2adc77a04d75e8b51bd5840777e3eaea5d",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_faucet_with_side_handle_068322598e4b4f218e8764a9d30c12e2",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

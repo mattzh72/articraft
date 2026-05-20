@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_service_access_panel_2e3cb1b2ddac4597bf6633630cb6b7d6",
   "created_at": "2026-04-27T14:14:31Z",
   "updated_at": "2026-04-27T23:58:32Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "Build a precision professional Service access panel tuned for calibration and repeatable alignment. Use a framed opening with a service panel, hinge side, an..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "f6601c69ff62c6f88a7edd7cb91f7089e5daca5e1d4a5e6b591bf9307f8548d3",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_service_access_panel_2e3cb1b2ddac4597bf6633630cb6b7d6",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

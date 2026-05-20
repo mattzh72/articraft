@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_opposed_twinslide_gripper_7476e636a6534b20bff83e02e535cf0f",
   "created_at": "2026-04-26T14:51:19Z",
   "updated_at": "2026-04-27T10:49:42Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A realistic opposed twin-slide gripper with a rigid central body, two symmetrical sliding jaws, visible guide rails, and a compact industrial end-effector ap..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "64e1ee8a5807ce9d7d0ad6643655c739fee33228d86c5c35f5243f318b436867",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_opposed_twinslide_gripper_7476e636a6534b20bff83e02e535cf0f",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

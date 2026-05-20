@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_faucet_with_side_handle_5fe0a77662f54ac3abed2b5519cb1dec",
   "created_at": "2026-03-29T14:49:34Z",
   "updated_at": "2026-03-29T17:20:03Z",
@@ -22,12 +22,13 @@
     "prompt_preview": "A deck-mount bathtub faucet with a wide oval base plate, a tall central spout body, and two symmetrical side paddle handles each on a separate revolute joint..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "31beed8cf4cc5b2230bae7085de3be5d23431862b3537cfdbddb49e010e84106",
@@ -39,5 +40,12 @@
   "author": "Zhaomou Song",
   "rated_by": "Zhaomou Song",
   "secondary_rating": null,
-  "secondary_rated_by": null
+  "secondary_rated_by": null,
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_faucet_with_side_handle_5fe0a77662f54ac3abed2b5519cb1dec",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

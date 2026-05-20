@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_hand_truck_dolly_aaff2c0c375d4ca7a7832f0f6385e047",
   "created_at": "2026-04-04T14:26:47Z",
   "updated_at": "2026-04-05T13:30:04Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A drum mover hand truck with a clamp arm near the upper frame. The tall chassis has two main wheels at the rear and a hinged clamp arm that swings over the l..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "08669de58491c2c5d9a17bca82a222e0072dbb192d10d90e4415780a41d399ab",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_hand_truck_dolly_aaff2c0c375d4ca7a7832f0f6385e047",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

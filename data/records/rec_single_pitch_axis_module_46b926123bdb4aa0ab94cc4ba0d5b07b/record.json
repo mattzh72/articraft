@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_single_pitch_axis_module_46b926123bdb4aa0ab94cc4ba0d5b07b",
   "created_at": "2026-04-02T16:32:45Z",
   "updated_at": "2026-04-06T01:33:18Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A fork-supported pitch cradle. A grounded fork frame supports a compact faceplate between its arms with a clear cross-shaft at the root. One revolute joint t..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "c6d90b36c23e10dcb6263d64b3e2aa58524ca85e37e590f660c674d6cd9fe8ee",
-    "model_py_sha256": "3775747bb1d51836f3bad91229f9360c35004d056153fbb9fabc2b04f6839766"
+    "model_py_sha256": "b0bd26ecb7e5f08cd79754dcb00746f0a6c988639b818a04ce8f6381f4d4f3bd"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_single_pitch_axis_module_46b926123bdb4aa0ab94cc4ba0d5b07b",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

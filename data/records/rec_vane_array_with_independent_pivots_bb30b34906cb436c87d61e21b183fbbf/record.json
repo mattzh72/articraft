@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_vane_array_with_independent_pivots_bb30b34906cb436c87d61e21b183fbbf",
   "created_at": "2026-04-26T13:52:16Z",
   "updated_at": "2026-04-28T07:53:58Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A panel with multiple flap elements, each mounted on its own independent hinge axis, arranged in a uniform mechanical array."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "ac45ab1bd452ef5f7a274c8d15cfe4a59b394e2fe86ba6595c7eeee335b22aae",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_vane_array_with_independent_pivots_bb30b34906cb436c87d61e21b183fbbf",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_vacuum_cleaner_with_articulated_wand_15524f12214d43c9b71727b3bd9b4e65",
   "created_at": "2026-03-30T17:00:21Z",
   "updated_at": "2026-04-01T21:01:09Z",
@@ -22,12 +22,13 @@
     "prompt_preview": "Model Vacuum cleaner with articulated wand as an industrial safety-first variant for heavy duty cycles. Start from a vacuum body with articulated wand segmen..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "a2ebb23696a77381cd4530588f62593cacecad86c95966bffb50e310df7cb4c5",
@@ -39,5 +40,12 @@
   "rated_by": "shawlyu",
   "author": "shawlyu",
   "secondary_rating": 5,
-  "secondary_rated_by": "RuiningLi"
+  "secondary_rated_by": "RuiningLi",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_vacuum_cleaner_with_articulated_wand_15524f12214d43c9b71727b3bd9b4e65",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

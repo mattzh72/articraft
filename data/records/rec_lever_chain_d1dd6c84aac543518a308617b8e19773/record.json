@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_lever_chain_d1dd6c84aac543518a308617b8e19773",
   "created_at": "2026-03-31T17:20:51Z",
   "updated_at": "2026-04-07T10:08:06Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "An offset-rocker lever chain. A grounded base foot supports stepped links whose widths and offsets vary from root to tip so the chain does not read as a repe..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "34b912c83f997cacca90c5f7602a4dc546e2f26283d8f839ed8d167917e2fa66",
-    "model_py_sha256": "0794223421842d44f036b1b9542794265386fc3f39e81104424cbe449d7df7bf"
+    "model_py_sha256": "f37b2c228ed925d87c1eb05e91b21d7aa4a7e07f4c0cc87f6e4e42c7b7072459"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_lever_chain_d1dd6c84aac543518a308617b8e19773",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

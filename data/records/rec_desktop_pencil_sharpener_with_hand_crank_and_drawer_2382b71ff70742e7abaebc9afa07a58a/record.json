@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_desktop_pencil_sharpener_with_hand_crank_and_drawer_2382b71ff70742e7abaebc9afa07a58a",
   "created_at": "2026-04-11T18:43:53Z",
   "updated_at": "2026-04-11T20:36:27Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A compact office pencil sharpener with a rounded shell, a rear hand crank, a lower front tray, and a sliding sharpening-mode selector beside the entry hole...."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "8e668f5af37cf8a6f60aa1dadb9fc4e7eb966be6b5074403df045d516331c33a",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_desktop_pencil_sharpener_with_hand_crank_and_drawer_2382b71ff70742e7abaebc9afa07a58a",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

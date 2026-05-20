@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_single_prismatic_slider_97e295ec188b490ea2fcd306d8042740",
   "created_at": "2026-03-31T17:20:51Z",
   "updated_at": "2026-04-06T01:39:49Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "An under-slung slide carriage. A top support beam carries one hanging carriage, creating a different silhouette while preserving the same single-axis motion...."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "8bb0f31ebfb4782c43e9b396c2296e8c7c68d32431f0308d906df4df09497f72",
-    "model_py_sha256": "7838698c03ab4f5d933de49c7e3040b26c138cf7e3bf70611dd9fc4e09cced6e"
+    "model_py_sha256": "c410fc131ec006b8fb4c2dbe240744f1e8e55e2eefc553f4bbf220e991ffe4d2"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_single_prismatic_slider_97e295ec188b490ea2fcd306d8042740",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

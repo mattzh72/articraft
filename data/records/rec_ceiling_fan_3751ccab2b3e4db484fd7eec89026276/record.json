@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_ceiling_fan_3751ccab2b3e4db484fd7eec89026276",
   "created_at": "2026-04-27T13:57:57Z",
   "updated_at": "2026-04-28T00:30:49Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A retractable-blade ceiling fan with a round motor housing on a short downrod, four folding aluminium blades each stored against the housing body and extendi..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "007c9a2eab8abdc8b3f74bad9767ae7d30cdaf835bc6987bdeebcd9724a8f422",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_ceiling_fan_3751ccab2b3e4db484fd7eec89026276",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

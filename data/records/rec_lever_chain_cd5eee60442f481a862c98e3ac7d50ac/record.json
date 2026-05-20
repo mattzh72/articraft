@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_lever_chain_cd5eee60442f481a862c98e3ac7d50ac",
   "created_at": "2026-04-27T12:35:32Z",
   "updated_at": "2026-04-28T07:50:38Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A multi-link lever mechanism with several hinged arms, straight flat-bar geometry, and clearly defined rotary pivots."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "54367017046d9402ea0aa58fc81d7c2af5c743fc61ad0e798a4c72eb651b57f5",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_lever_chain_cd5eee60442f481a862c98e3ac7d50ac",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

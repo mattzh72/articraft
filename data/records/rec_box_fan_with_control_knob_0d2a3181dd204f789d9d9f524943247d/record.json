@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_box_fan_with_control_knob_0d2a3181dd204f789d9d9f524943247d",
   "created_at": "2026-04-27T03:42:24Z",
   "updated_at": "2026-04-27T05:47:14Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A compact portable box fan with a square housing and a fold-flat carry handle bridging the top edge. The blade assembly spins continuously on the motor shaft..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "133f253e7d7d94c275414612e650c51e29ce4f874878c4d4a5b6b197d4c34ce0",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_box_fan_with_control_knob_0d2a3181dd204f789d9d9f524943247d",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

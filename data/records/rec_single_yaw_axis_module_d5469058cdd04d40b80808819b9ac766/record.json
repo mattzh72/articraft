@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_single_yaw_axis_module_d5469058cdd04d40b80808819b9ac766",
   "created_at": "2026-04-02T16:32:45Z",
   "updated_at": "2026-04-06T01:34:27Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A compact indexing platter module. A low rectangular base supports a round upper platter with a small square work pad on top. One revolute joint turns the pl..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "efd2a5ae224c83304e974138ad8e97c6c83d17577798139e23b96df1c8227e07",
-    "model_py_sha256": "7eca717522d8b49665b58affe757f5fcca8ff470f438684f25f2fd04a44d6125"
+    "model_py_sha256": "dc3f04ce07ba67f29a9881edf25c0584e639a5b415ee1660f8de1e92a9766391"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_single_yaw_axis_module_d5469058cdd04d40b80808819b9ac766",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

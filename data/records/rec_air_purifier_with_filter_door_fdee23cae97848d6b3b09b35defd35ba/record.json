@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_air_purifier_with_filter_door_fdee23cae97848d6b3b09b35defd35ba",
   "created_at": "2026-04-12T15:14:40Z",
   "updated_at": "2026-04-12T15:53:40Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A cylindrical air purifier with a hinged rear access door and a top ring control. The rear access door rotates on a vertical hinge, the internal filter cylin..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "a71d818c76b4b0e61874c3d9fa5bf8061a999b18349c7feeb8d0f571ca521e1f",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_air_purifier_with_filter_door_fdee23cae97848d6b3b09b35defd35ba",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

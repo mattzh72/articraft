@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "record_id": "rec_astronomical_telescope_on_tripod_f0fc23e7049a473c801d94faffe3904c",
+  "revision_id": "rev_000001",
+  "created_at": "2026-04-27T13:48:06Z",
+  "prompt_kind": "single_prompt",
+  "prompt_sha256": "e6cd08a19113772b43d6dc07d200661f6f542cba4d179f9885a6faa72890ead5",
+  "source": {
+    "run_id": "run_20260427_123143_525672_20260427-avg-rating-gt-4p2-gpt54-prompts-gpt55-h",
+    "prompt_batch_id": null,
+    "batch_spec_id": "20260427_avg_rating_gt_4p2_gpt54_prompts_gpt55_high_budget3_2000",
+    "row_id": "g55b_1369_astronomical_telescope_on_tripod_18e67ad9",
+    "prompt_index": 1369
+  },
+  "generation": {
+    "provider": "openai",
+    "model_id": "gpt-5.5-2026-04-23",
+    "thinking_level": "high",
+    "openai_transport": "http",
+    "openai_reasoning_summary": "auto",
+    "max_turns": 100,
+    "max_cost_usd": 3.0
+  },
+  "artifacts": {
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
+    "prompt_series_json": null,
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
+  },
+  "hashes": {
+    "prompt_sha256": "e6cd08a19113772b43d6dc07d200661f6f542cba4d179f9885a6faa72890ead5",
+    "model_py_sha256": "de4d4478f24dba47b4dff1a39623ee606345ae68ce09821e8ff1f0358e51a421"
+  },
+  "run_summary": {
+    "turn_count": 22,
+    "tool_call_count": 25,
+    "compile_attempt_count": 4,
+    "final_status": "success"
+  },
+  "parent": null,
+  "seed": null,
+  "inherited_inputs": []
+}

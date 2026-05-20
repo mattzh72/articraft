@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_revoluteprismaticrevolute_chain_b294a3b2047d4a08801469c3b156c103",
   "created_at": "2026-03-31T17:20:51Z",
   "updated_at": "2026-03-31T18:39:58Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A hinge-slide-hinge chain. A grounded base support carries a sliding middle member, and the far end of that member carries a small rotating fork or tab. The..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "c73cafab7ce2f3213a68caab5de7b4a5cf5935ea7fc0f1b8f7f0e0e2957549ad",
-    "model_py_sha256": "d91dc295c32158c23ef2696dabf7f873df3460324a166029a6d715cf8b24bb14"
+    "model_py_sha256": "98eb062bbcb8aa4dade538b74d590a3504af605a9d6ddf160c5d3d2ee72c1977"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_revoluteprismaticrevolute_chain_b294a3b2047d4a08801469c3b156c103",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

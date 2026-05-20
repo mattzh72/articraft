@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_mailbox_with_front_access_door_fbc0f58e768944e6b8f51b104d523fd8",
   "created_at": "2026-04-27T13:34:54Z",
   "updated_at": "2026-04-28T07:09:30Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A curbside mailbox with a rounded top and a front access door. The main box body is fixed to a post, the curved front door closes the mail opening, and a sig..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "c27c6a4fc13523b3147d8cfec4753982d5174023a95b86e4cbe6b5a860a59cbc",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_mailbox_with_front_access_door_fbc0f58e768944e6b8f51b104d523fd8",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

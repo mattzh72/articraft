@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_serial_elbow_arm_ad1184dcaf024c55bf7ceb4b5de968b1",
   "created_at": "2026-03-30T17:57:46Z",
   "updated_at": "2026-04-01T11:08:41Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A bench-mounted elbow arm. A short base column carries a deep-section upper arm and a slimmer forearm ending in a rectangular tool face. The upper arm rotate..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "8d950902281a0ff5b727c033b5085ab8178a5d69c80666544791e95c1bae3c09",
-    "model_py_sha256": "1af128cd9aae2130c476927ffd2a799408055a22cfd476bf9a4cd8d3e9960cc0"
+    "model_py_sha256": "8319bc9937ec93debb6b1cdc370382aa5cd53a55b0c401af3c5b37b7360b9374"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_serial_elbow_arm_ad1184dcaf024c55bf7ceb4b5de968b1",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_portal_gantry_with_vertical_slide_728eb9cf48894e5c9495cc37e32fcc9c",
   "created_at": "2026-03-30T17:57:46Z",
   "updated_at": "2026-04-01T11:04:06Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A low-profile portal module. A broad fixed base supports two side plates and a beam, with a short bridge carriage and a compact vertical stage hanging from i..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "6e304d482bb24a8960c2fc26b3859ad7d8fc3245e06cf5b33fdb374d8eceed62",
-    "model_py_sha256": "849f568d136b5f311bba8c2941b345ca327e47c4641ca4af74c8a6fe6a6855dc"
+    "model_py_sha256": "1c25e86a7fa9ca6a60da4b80bdf18257843f7753b3592512f17366643d6ef9f2"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_portal_gantry_with_vertical_slide_728eb9cf48894e5c9495cc37e32fcc9c",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

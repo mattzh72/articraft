@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "record_id": "rec_car_sunroof_cassette_fc021847f9424e0399f302f2013e1fe0",
+  "revision_id": "rev_000001",
+  "created_at": "2026-04-18T14:00:47Z",
+  "prompt_kind": "single_prompt",
+  "prompt_sha256": "e84370b77cfe8fda59ddd7cb0501fe93179dfcf20d1490aef387a6fdb2e46f7b",
+  "source": {
+    "run_id": "run_20260418_140047_589151_20260418-gpt54-dataset-sample50-gemini31pro-high",
+    "prompt_batch_id": null,
+    "batch_spec_id": "20260418_gpt54_dataset_sample50_gemini31pro_high",
+    "row_id": "gemini31pro_sample50_012_row_0076",
+    "prompt_index": 12
+  },
+  "generation": {
+    "provider": "gemini",
+    "model_id": "gemini-3.1-pro-preview",
+    "thinking_level": "high",
+    "openai_transport": null,
+    "openai_reasoning_summary": null,
+    "max_turns": 300,
+    "max_cost_usd": null
+  },
+  "artifacts": {
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
+    "prompt_series_json": null,
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
+  },
+  "hashes": {
+    "prompt_sha256": "e84370b77cfe8fda59ddd7cb0501fe93179dfcf20d1490aef387a6fdb2e46f7b",
+    "model_py_sha256": "6d57de5053db229b1742713363ee5ca2589c5eabd382bd4624ddba635fdeb643"
+  },
+  "run_summary": {
+    "turn_count": 185,
+    "tool_call_count": 185,
+    "compile_attempt_count": 18,
+    "final_status": "success"
+  },
+  "parent": null,
+  "seed": null,
+  "inherited_inputs": []
+}

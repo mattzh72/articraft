@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_lighthouse_with_rotating_beacon_assembly_8dc6e6366bb147b199060145c4a54350",
   "created_at": "2026-04-27T03:42:24Z",
   "updated_at": "2026-04-27T06:52:35Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "An offshore lighthouse with a compact lantern room and a beacon head mounted on a short gallery-top turntable. The beacon housing is carried above the roof l..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "d443320c854eb48f3ae70499e13a32619f46417eb25a23bda460249e6fef9ec2",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_lighthouse_with_rotating_beacon_assembly_8dc6e6366bb147b199060145c4a54350",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

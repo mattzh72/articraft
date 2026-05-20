@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_box_fan_with_control_knob_0551a9a739964326990cf317cba57e4a",
   "created_at": "2026-04-12T14:49:21Z",
   "updated_at": "2026-04-22T08:10:00Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A utility box fan with a square housing, a side carry handle, a wall-hook bracket, and a front speed knob. The side handle rotates on two short pivots at the..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "215f4e64bd92358488ede783d275e7e32177e312e9a327b9e82ed2e9e8123617",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_box_fan_with_control_knob_0551a9a739964326990cf317cba57e4a",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

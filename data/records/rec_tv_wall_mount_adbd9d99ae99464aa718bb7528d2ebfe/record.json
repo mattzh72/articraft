@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_tv_wall_mount_adbd9d99ae99464aa718bb7528d2ebfe",
   "created_at": "2026-04-27T01:57:44Z",
   "updated_at": "2026-04-27T10:22:22Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A low-profile wall-mounted display arm without the screen. A broad wall plate supports articulated links and a compact monitor frame, keeping the head suppor..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "ca12cdf2e31e796248868fb4ccef3bfac762815e1087988a6ffcfdcae2afd48d",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_tv_wall_mount_adbd9d99ae99464aa718bb7528d2ebfe",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

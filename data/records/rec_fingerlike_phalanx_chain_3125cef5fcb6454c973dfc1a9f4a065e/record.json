@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_fingerlike_phalanx_chain_3125cef5fcb6454c973dfc1a9f4a065e",
   "created_at": "2026-04-03T21:46:47Z",
   "updated_at": "2026-04-06T01:20:59Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A side-cheek articulated finger chain. A root block carries three rigid finger links of decreasing length, with every knuckle supported by paired cheeks and..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "e433e541868789f4851a259cfa1c863277f056acd0e7dcb30f581c52ba6a0a0c",
-    "model_py_sha256": "08bd3d0f45f26b0e853cf8014f845e42b60cfc379bcb2da5de841045a721093a"
+    "model_py_sha256": "a5abbf34b998c3a2f69693f890e9ca2a658c5e24ab6098777c2609689311e00d"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_fingerlike_phalanx_chain_3125cef5fcb6454c973dfc1a9f4a065e",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

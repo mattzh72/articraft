@@ -1,0 +1,43 @@
+{
+  "schema_version": 1,
+  "record_id": "rec_radio_telescope_on_azimuthelevation_mount_0001",
+  "revision_id": "rev_000001",
+  "created_at": "2026-03-17T02:40:23Z",
+  "prompt_kind": "single_prompt",
+  "prompt_sha256": "549a35ae1f46d4ad5d86e247c265f539e47cbb03fe8c0664f0a4179146c58449",
+  "source": {
+    "run_id": "run_import_radio_telescope_on_azimuthelevation_mount_20260317-023258-radio-telescope-on-azimuthelevation-mount-0001",
+    "prompt_batch_id": "realism_articulation_v1",
+    "prompt_index": 1
+  },
+  "generation": {
+    "provider": "openai",
+    "model_id": "gpt-5.4",
+    "thinking_level": "high",
+    "openai_transport": "http",
+    "openai_reasoning_summary": null,
+    "max_turns": 30
+  },
+  "artifacts": {
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
+    "prompt_series_json": null,
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
+  },
+  "hashes": {
+    "prompt_sha256": "549a35ae1f46d4ad5d86e247c265f539e47cbb03fe8c0664f0a4179146c58449",
+    "model_py_sha256": "2418e4a527196f47afff1702fbf0a1ceae7c3c3c82c0330c6de1011d72ce46f6"
+  },
+  "run_summary": {
+    "turn_count": 8,
+    "tool_call_count": null,
+    "compile_attempt_count": null,
+    "final_status": "success"
+  },
+  "parent": null,
+  "seed": null,
+  "inherited_inputs": []
+}

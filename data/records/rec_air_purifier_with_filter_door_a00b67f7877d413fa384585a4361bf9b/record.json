@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_air_purifier_with_filter_door_a00b67f7877d413fa384585a4361bf9b",
   "created_at": "2026-04-27T02:47:02Z",
   "updated_at": "2026-04-27T08:19:46Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A small bedside personal air purifier with a round cylindrical tower housing and a twist-off top cap for filter access. The top cap rotates as a revolute joi..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "272bcb4b278a00ee3bfc6f624b7fea1206c7632bab6d081252c08cec20222d58",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_air_purifier_with_filter_door_a00b67f7877d413fa384585a4361bf9b",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_serial_elbow_arm_91495d296db24c1ab14fa1e5c5fd158e",
   "created_at": "2026-04-27T14:16:05Z",
   "updated_at": "2026-04-27T23:55:08Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A bench manipulator arm with a stout base yoke, a tapered upper link, a compact elbow cartridge, and a short tool carrier at the nose. The elbow package shou..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "95f7b0090e40a2e62c5d8182c6115d3d6efb42e6eb9579211b5010adc5804b68",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_serial_elbow_arm_91495d296db24c1ab14fa1e5c5fd158e",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

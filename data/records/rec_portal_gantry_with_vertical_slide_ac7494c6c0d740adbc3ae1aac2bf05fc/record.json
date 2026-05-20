@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_portal_gantry_with_vertical_slide_ac7494c6c0d740adbc3ae1aac2bf05fc",
   "created_at": "2026-03-31T17:20:51Z",
   "updated_at": "2026-03-31T18:40:10Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A compact service portal with lift stage. A grounded frame supports a broad horizontal carriage and a smaller vertical stage nested into its face. The horizo..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "592525b8e7dd90f3f031149a9b49c708291c12d2d191bc3341143419c12bbc0d",
-    "model_py_sha256": "d33087f1c025e79f2b87ac4a734cea8dfa1bfb0bf3e0b0368276dba901ef848c"
+    "model_py_sha256": "fd4a913b0ccde117c4259c537b678dd0fde9d3402cbfc16c0920de89484a3ba4"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_portal_gantry_with_vertical_slide_ac7494c6c0d740adbc3ae1aac2bf05fc",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

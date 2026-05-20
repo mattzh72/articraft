@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_single_roll_axis_module_5b482bb8c60142c6b66061f7260452da",
   "created_at": "2026-04-02T16:32:45Z",
   "updated_at": "2026-04-06T01:34:04Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A bridge-capped roll module. A rigid lower saddle carries a short bridge over a compact spindle cartridge and a small round output face. One revolute joint s..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "11476bff55283ba48f70b5efe14b6058f46e4ec783c1da8f011bd5b176050fda",
-    "model_py_sha256": "9d01767784d1a6839e2b898bf79d65e96ea3ea7c684ca180e6c2a638af740abc"
+    "model_py_sha256": "da45f761f774ebb927a9cd8874dce6a3fcd598f116acb66f944b42b9f454ca74"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_single_roll_axis_module_5b482bb8c60142c6b66061f7260452da",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

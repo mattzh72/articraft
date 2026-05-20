@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_shoulderelbowwrist_arm_34e67535571b4dc9a300ee71cb9f766a",
   "created_at": "2026-03-31T17:20:51Z",
   "updated_at": "2026-03-31T18:49:02Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "An under-slung three-joint robot arm. A top support carries a two-link arm chain and a compact wrist face below it, producing a different silhouette from the..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "a4928cce515da1e2f775d96b3988684d68988847f83bebfe7455ba8b7e8d60a2",
-    "model_py_sha256": "aa02679bf5a719e6778aa7e2190fff694bc3072452986ae79fb53196d4e686c8"
+    "model_py_sha256": "01e7d3fe415e8f597604603290db53a4689d15732ce2e457ad4af345c4fb44be"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_shoulderelbowwrist_arm_34e67535571b4dc9a300ee71cb9f766a",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

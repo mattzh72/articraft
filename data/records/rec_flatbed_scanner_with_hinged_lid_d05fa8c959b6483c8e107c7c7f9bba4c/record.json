@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_flatbed_scanner_with_hinged_lid_d05fa8c959b6483c8e107c7c7f9bba4c",
   "created_at": "2026-04-27T13:47:29Z",
   "updated_at": "2026-04-28T00:44:02Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A negative film scanner with a narrow rectangular body, a lid on a full-width rear revolute piano hinge with a lift-assist pin at each hinge end, and a film..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "b2af7f0c8ebd9e2e8855dd0ad918941558aae7afee8aa5c4e59517ff22394395",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_flatbed_scanner_with_hinged_lid_d05fa8c959b6483c8e107c7c7f9bba4c",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

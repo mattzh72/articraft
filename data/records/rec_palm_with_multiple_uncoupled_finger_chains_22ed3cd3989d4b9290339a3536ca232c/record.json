@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_palm_with_multiple_uncoupled_finger_chains_22ed3cd3989d4b9290339a3536ca232c",
   "created_at": "2026-04-27T03:08:36Z",
   "updated_at": "2026-04-27T08:11:06Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A mechanical palm plate with four uncoupled finger mechanisms for an anthropomorphic gripper. The palm is a broad base with finger root knuckles spaced along..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "84ae3a16bf9904107544078260540ef4661941c4f2ea0d7dc9b1f2d75e967450",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_palm_with_multiple_uncoupled_finger_chains_22ed3cd3989d4b9290339a3536ca232c",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

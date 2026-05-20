@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_revoluteprismaticrevolute_chain_ff301223b5c543ffa706c262b1ed685c",
   "created_at": "2026-04-27T13:42:59Z",
   "updated_at": "2026-04-28T05:24:55Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A revolute-prismatic-revolute chain. A base hinge carries a sliding middle link, and the end of that sliding link holds a small tool fork on a pin joint. The..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "cf571553e59bde4ac2261264f651f3a8d6ad60d9072f933ecc58bbb7ad06701e",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_revoluteprismaticrevolute_chain_ff301223b5c543ffa706c262b1ed685c",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

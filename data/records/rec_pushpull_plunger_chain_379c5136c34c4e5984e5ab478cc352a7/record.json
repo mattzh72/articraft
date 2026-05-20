@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_pushpull_plunger_chain_379c5136c34c4e5984e5ab478cc352a7",
   "created_at": "2026-03-29T15:31:29Z",
   "updated_at": "2026-04-01T11:29:49Z",
@@ -22,16 +22,17 @@
     "prompt_preview": "A linear ejector module with a stout base frame, nested rectangular sleeves, and a slim final plunger nose emerging from the front guide body. The sequence o..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "2f80116e8934d9dbd38a10c6e1cc177904584a053edc3c1cb35b9e26b283bcd5",
-    "model_py_sha256": "f965f9f0c0a90e3e09b0c997fbe802aacc19745a1718f870583c9f35bfa7854b"
+    "model_py_sha256": "d58a47f60777bf1fb593c01e6e1a5c43737f4bc874f3810652abc9846adc3aea"
   },
   "collections": [
     "dataset"
@@ -39,5 +40,12 @@
   "author": "mattzh72",
   "rated_by": "mattzh72",
   "secondary_rating": 4,
-  "secondary_rated_by": "Zhaomou Song"
+  "secondary_rated_by": "Zhaomou Song",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_pushpull_plunger_chain_379c5136c34c4e5984e5ab478cc352a7",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_serial_elbow_arm_1e925f1382324435bf3f4d92f8b41cd0",
   "created_at": "2026-04-27T02:28:09Z",
   "updated_at": "2026-04-27T09:54:36Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A compact service arm with one elbow. A fixed root bracket carries a stout proximal link and a shorter distal link with an end flange, keeping the two moving..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "2279b94f246855aff3cd90ef2de6667cf3577a0497de241231fd2715b4692e5f",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_serial_elbow_arm_1e925f1382324435bf3f4d92f8b41cd0",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

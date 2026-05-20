@@ -111,11 +111,6 @@ class SearchIndex:
             latest_mtime_ns,
             self._path_mtime_ns(self.repo.layout.categories_root),
         )
-        latest_mtime_ns = self._max_mtime_ns(
-            latest_mtime_ns,
-            self._path_mtime_ns(self.repo.layout.local_workbench_path()),
-        )
-
         for category_path in self.repo.layout.categories_root.glob("*/category.json"):
             latest_mtime_ns = self._max_mtime_ns(
                 latest_mtime_ns,
@@ -142,12 +137,6 @@ class SearchIndex:
                     latest_mtime_ns,
                     self._path_mtime_ns(
                         self.repo.layout.record_dataset_entry_path(record_dir.name)
-                    ),
-                )
-                latest_mtime_ns = self._max_mtime_ns(
-                    latest_mtime_ns,
-                    self._path_mtime_ns(
-                        self.repo.layout.legacy_record_dataset_entry_path(record_dir.name)
                     ),
                 )
                 latest_mtime_ns = self._max_mtime_ns(
@@ -209,14 +198,6 @@ class SearchIndex:
                 self.repo.layout.record_dataset_entry_path(record_dir.name),
                 default={},
             )
-            if not isinstance(dataset_entry, dict) or not dataset_entry:
-                dataset_entry = (
-                    self.repo.read_json(
-                        self.repo.layout.legacy_record_dataset_entry_path(record_dir.name),
-                        default={},
-                    )
-                    or {}
-                )
             prompt_text = ""
             prompt_path = active_prompt_path(self.repo, record_dir.name, record=record)
             if prompt_path.exists():

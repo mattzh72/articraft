@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_articulated_task_lamp_efb71056299f446f9b9abc277720f89d",
   "created_at": "2026-04-12T14:21:14Z",
   "updated_at": "2026-04-22T08:16:04Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A cantilever task lamp with a heavy clamp base, a long primary arm, a short secondary arm, and an oval head. The primary arm rotates on a hinge at the clamp..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "c738d037392b88f844b89fd14cbf17ce8476d2b68a000790738d95e83258675c",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_articulated_task_lamp_efb71056299f446f9b9abc277720f89d",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

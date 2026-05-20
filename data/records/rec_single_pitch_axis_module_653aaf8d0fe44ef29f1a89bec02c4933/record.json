@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_single_pitch_axis_module_653aaf8d0fe44ef29f1a89bec02c4933",
   "created_at": "2026-03-30T17:57:46Z",
   "updated_at": "2026-04-01T11:12:03Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A low-profile a pitch-axis trunnion module with a broad mounting plate. The fixed portion is a squat housing with gusseted supports, and the moving portion i..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "f004c18aa19d678f605f0f290e9f71f0fb8019327285ab3a94c9006a0eff68e3",
-    "model_py_sha256": "2522386bcced8bdbdda551d363b296fd195280d302517227b82bc96b517ce5c3"
+    "model_py_sha256": "a518a36640e1de2f3c21be63fda8fd5f5f7bc73561106d8b620565b2c33a6f21"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_single_pitch_axis_module_653aaf8d0fe44ef29f1a89bec02c4933",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

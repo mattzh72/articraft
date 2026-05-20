@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_dualcolumn_lift_carriage_46f41dc8e3f24f5abb3f8d82737e1298",
   "created_at": "2026-03-31T17:20:51Z",
   "updated_at": "2026-04-06T01:40:45Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A twin-post platen lift. A heavy lower base supports two posts and a compact moving platen that wraps both posts as one rigid body. The platen moves by one v..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "9c2f7096e9a7726075d99c312f19778bb074ae43dff6b31783d9b7aae7dc8225",
-    "model_py_sha256": "530fa0047cf21fa98bf17739d2576427f456e94183198d695814430e14efc1f3"
+    "model_py_sha256": "327fa2941ffdb8c4c55c888025e64a146f212d9f107de7c3de459e94b534f9fa"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_dualcolumn_lift_carriage_46f41dc8e3f24f5abb3f8d82737e1298",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

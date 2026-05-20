@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_single_roll_axis_module_64cfc8104ca14333afaf48d7f4fc65ff",
   "created_at": "2026-03-30T17:57:46Z",
   "updated_at": "2026-04-07T10:14:18Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A wall-backed a roll-axis spindle module. A stiff backplate carries side ribs and a compact rotary package at the front so the fixed support and the moving s..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "d1654ff3b7b32c4a21b71d3b3e2924d2b0878ef6294c0315130ad99ae984fdc2",
-    "model_py_sha256": "3c66f1f4d2417703c0e13403b9e53e071bf73653950a20dbdac5f91e5390cea5"
+    "model_py_sha256": "bfb13da8e726808679794769b8f3766a889fbe569deebf703d4934414cb4e05e"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_single_roll_axis_module_64cfc8104ca14333afaf48d7f4fc65ff",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_barrier_gate_8b32eb34687e46e1b79f96c9bd4e13cc",
   "created_at": "2026-04-27T12:42:00Z",
   "updated_at": "2026-04-28T07:45:48Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A pedestrian barrier gate with a boxy base cabinet and a flat bar arm that swings 90 degrees upward on a revolute hinge."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "2b8bb063206cb680ae48573e9d0dfca9041efce57bb8951e34ecda90f520da13",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_barrier_gate_8b32eb34687e46e1b79f96c9bd4e13cc",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

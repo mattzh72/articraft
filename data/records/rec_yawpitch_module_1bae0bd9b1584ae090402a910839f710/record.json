@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_yawpitch_module_1bae0bd9b1584ae090402a910839f710",
   "created_at": "2026-03-29T15:31:29Z",
   "updated_at": "2026-04-01T11:32:37Z",
@@ -22,16 +22,17 @@
     "prompt_preview": "A marine sensor pan-tilt head with a low yaw turntable, tall side fork, and rectangular sensor frame suspended between the fork arms. The upper frame should..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "79d1b5e4b408195bea4664b0677965ac875485a67a7582c1cd06bccd39c32f8b",
-    "model_py_sha256": "bd85fb2ad615638da3b79f3f3ee33f4bb4568f3906d98fd0feda4cdb9ea46b25"
+    "model_py_sha256": "05d4c16b4a00170b94685f6e64688f01490232f9131659542d8b1073d8fb02cd"
   },
   "collections": [
     "dataset"
@@ -39,5 +40,12 @@
   "author": "mattzh72",
   "rated_by": "mattzh72",
   "secondary_rating": 5,
-  "secondary_rated_by": "Zhaomou Song"
+  "secondary_rated_by": "Zhaomou Song",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_yawpitch_module_1bae0bd9b1584ae090402a910839f710",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

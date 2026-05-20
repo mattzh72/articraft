@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_mastmounted_fork_carriage_7cc2679e40644cd58590f11814e4b7a1",
   "created_at": "2026-03-29T04:00:44Z",
   "updated_at": "2026-04-01T10:02:14Z",
@@ -22,16 +22,17 @@
     "prompt_preview": "A narrow fork carriage module with two upright C-channels, a top crosshead, a load backrest, and short pallet forks projecting from a compact carriage. The c..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "ebd62a286fc6f50bc75cca470a1e3551f40cbd3783271f96c7c3e88189974bc0",
-    "model_py_sha256": "bfa51a83b8a117fb98a725ed42816943cf3a96f87d0bb908e7eab2cfa63ea740"
+    "model_py_sha256": "186e3563c2be2f457c767dea9e46b2dca527257c7d1bd2a7fd7636c54ba85ce4"
   },
   "collections": [
     "dataset"
@@ -39,5 +40,12 @@
   "author": "mattzh72",
   "rated_by": "mattzh72",
   "secondary_rating": 5,
-  "secondary_rated_by": "Zhaomou Song"
+  "secondary_rated_by": "Zhaomou Song",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_mastmounted_fork_carriage_7cc2679e40644cd58590f11814e4b7a1",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_office_chair_a2e7ca3434f54f6f823c2f29792ea26a",
   "created_at": "2026-04-27T02:51:33Z",
   "updated_at": "2026-04-27T08:27:50Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A compact operator chair with a simple seat, a backrest hinge, and a small under-seat lever. The seat is mounted on a central support column above a caster b..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "aae4dadaabf0fa6b646e11dbf73d51cf07a0af8bf1cdd67b933ab150029d8d0a",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_office_chair_a2e7ca3434f54f6f823c2f29792ea26a",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

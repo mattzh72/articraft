@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_paper_shredder_with_pullout_bin_c4722d99d3e84a1987638949620c1b13",
   "created_at": "2026-04-11T18:03:18Z",
   "updated_at": "2026-04-22T14:25:20Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A taller office shredder on four small casters with a heavy motor head, a deep pullout waste bin, and a front control bank with a reverse button, a start but..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "55f08370525439310e68671ea440ca010c8baf7062e5b049df5907cfcec8f031",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_paper_shredder_with_pullout_bin_c4722d99d3e84a1987638949620c1b13",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

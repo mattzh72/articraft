@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_pushpull_plunger_chain_7b0be6803ef440a99ee2a1a5d31af2bc",
   "created_at": "2026-03-31T17:20:51Z",
   "updated_at": "2026-03-31T18:44:15Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A bridge-backed pushrod chain. A rear support carries a sliding rod and a small front lever supported on a transverse pin. The rod slides on a prismatic join..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "4424a5f5090a3bf20b97493fd5e1171339225c27d199bd91e224b03806830302",
-    "model_py_sha256": "5ddbe8c98a8aba1f1857016e30834695bc1127e8ea4212307a8c0b863c2684f9"
+    "model_py_sha256": "29a0bebb49be7562bb57554588a969c7fffa9eaa34463a732174e62aadaf96eb"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_pushpull_plunger_chain_7b0be6803ef440a99ee2a1a5d31af2bc",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

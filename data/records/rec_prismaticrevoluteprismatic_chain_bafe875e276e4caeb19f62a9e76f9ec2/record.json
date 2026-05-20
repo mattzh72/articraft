@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_prismaticrevoluteprismatic_chain_bafe875e276e4caeb19f62a9e76f9ec2",
   "created_at": "2026-03-30T17:57:46Z",
   "updated_at": "2026-04-01T11:16:10Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A lift-slide arm with a telescoping tip. A grounded guide stage supports a carried elbow plate, and the elbow plate supports a short extending probe at the t..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "b0bf9c3167bc80dae31045dd1ddaef4811852d4732652b66583a800852e91013",
-    "model_py_sha256": "6bdfb2851c38d688a78d672137712223493a55d1ea937a4e8ceee07366b6e49f"
+    "model_py_sha256": "db31441c2dab0928ace7207da23c4f7ffe1f8626528b7440aea900deb2937173"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_prismaticrevoluteprismatic_chain_bafe875e276e4caeb19f62a9e76f9ec2",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

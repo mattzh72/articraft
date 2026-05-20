@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_simple_aframe_step_ladder_3f33897f6a114470b574ec3e445dd8ee",
   "created_at": "2026-03-30T16:18:04Z",
   "updated_at": "2026-03-31T22:12:34Z",
@@ -22,12 +22,13 @@
     "prompt_preview": "Model Simple aframe step ladder as an industrial safety-first variant for heavy duty cycles. Start from an A-frame ladder with paired legs, treads, and sprea..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "ed6fcf26505eca37864bfe1910b86795adc5ff816df4d0543ed7633ba43ec271",
@@ -39,5 +40,12 @@
   "rated_by": "shawlyu",
   "author": "shawlyu",
   "secondary_rating": 3,
-  "secondary_rated_by": "RuiningLi"
+  "secondary_rated_by": "RuiningLi",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_simple_aframe_step_ladder_3f33897f6a114470b574ec3e445dd8ee",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

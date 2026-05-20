@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_food_processor_with_feed_pusher_8a0cfad6890d4bcca33d7eb2e5078eeb",
   "created_at": "2026-04-11T16:13:01Z",
   "updated_at": "2026-04-22T14:29:17Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A squat prep food processor with a low motor base, a wide shallow bowl, a hinged locking lid, and a broad oval feed tube with a matching pusher. The lid rota..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "3b656a33c4da6744be1ca4bee5058849e026ea9827dc3f92781c655bda0fd512",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_food_processor_with_feed_pusher_8a0cfad6890d4bcca33d7eb2e5078eeb",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

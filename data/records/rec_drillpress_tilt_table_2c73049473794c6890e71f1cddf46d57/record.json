@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_drillpress_tilt_table_2c73049473794c6890e71f1cddf46d57",
   "created_at": "2026-04-03T22:18:56Z",
   "updated_at": "2026-04-04T15:05:49Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A radial arm drill press with a round column, a radial arm that sweeps on the column, and a drill head that slides along the arm. The radial arm rotates cont..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "02a3653dec24dfe916461e1bec100a4755f72b8846959327dc25ec972a6c70d2",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_drillpress_tilt_table_2c73049473794c6890e71f1cddf46d57",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

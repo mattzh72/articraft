@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_windshield_sun_visor_609d290e87af473292af8ef39ea243f6",
   "created_at": "2026-03-30T17:13:19Z",
   "updated_at": "2026-04-01T21:45:06Z",
@@ -22,12 +22,13 @@
     "prompt_preview": "Create a cost-optimized mass-manufacturable Windshield sun visor. Base architecture: a visor panel on a roof hinge arm plus secondary swing pivot. Reduce par..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "5dd3eb62e26fc0da0b406d14933f705c583ffe742c3dc3e394e1144ab0be0860",
@@ -39,5 +40,12 @@
   "rated_by": "shawlyu",
   "author": "shawlyu",
   "secondary_rating": 4,
-  "secondary_rated_by": "RuiningLi"
+  "secondary_rated_by": "RuiningLi",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_windshield_sun_visor_609d290e87af473292af8ef39ea243f6",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

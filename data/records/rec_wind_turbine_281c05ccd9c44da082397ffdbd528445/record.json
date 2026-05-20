@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_wind_turbine_281c05ccd9c44da082397ffdbd528445",
   "created_at": "2026-04-27T14:08:49Z",
   "updated_at": "2026-04-28T00:15:48Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A horizontal-axis wind turbine. A tower supports a nacelle and a front hub with multiple blades. Joints: the rotor spins continuously about the main shaft ax..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "775fbc19cb602660bb34043ad5b4012813f865596c8a1040130a37e0a2eb6cb0",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_wind_turbine_281c05ccd9c44da082397ffdbd528445",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

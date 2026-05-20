@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_single_roll_axis_module_ba381aa2b19345bba3ab639dac3a1744",
   "created_at": "2026-03-29T15:31:29Z",
   "updated_at": "2026-04-01T11:25:03Z",
@@ -22,16 +22,17 @@
     "prompt_preview": "A tube-rotator module with front and rear bearing hoops, a central cylindrical carrier, and a small bracket fixed to the rotating carrier. The supports shoul..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "297e5be13fd859f5f636ef021d0f6ca9fe1d0b44f91890757cdfdf2801837f7e",
-    "model_py_sha256": "129c4f170f0a831aa2000b631bf7cf32fcbdbba4462e74179123c8ef87cda3e2"
+    "model_py_sha256": "3d1c68d424fd164ce49f256a2f223dc49dcf94b14262e1baa73ccfe4b0b43841"
   },
   "collections": [
     "dataset"
@@ -39,5 +40,12 @@
   "author": "mattzh72",
   "rated_by": "mattzh72",
   "secondary_rating": 5,
-  "secondary_rated_by": "Zhaomou Song"
+  "secondary_rated_by": "Zhaomou Song",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_single_roll_axis_module_ba381aa2b19345bba3ab639dac3a1744",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

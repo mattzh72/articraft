@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_fingerlike_phalanx_chain_f5d533af56334573aa177a4a009b21ea",
   "created_at": "2026-03-30T17:57:46Z",
   "updated_at": "2026-04-01T11:11:48Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A compact articulated finger module. A palm-side root block supports three progressively smaller phalanx segments with boxed knuckles and a simple distal tip..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "d0821346780293010b3d166c610aed0f86c38fbf3beb4360d1fb6dcf05100d55",
-    "model_py_sha256": "9016afc69c791d109281e42e644fbaf4e5072b266a16f9f9b338d774f4eebb58"
+    "model_py_sha256": "b8b6fbc685990977a2ce650ce7f18cc901ba9680fe4503fae35ea6c6336b8c48"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_fingerlike_phalanx_chain_f5d533af56334573aa177a4a009b21ea",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

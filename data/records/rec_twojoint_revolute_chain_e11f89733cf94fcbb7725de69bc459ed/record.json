@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_twojoint_revolute_chain_e11f89733cf94fcbb7725de69bc459ed",
   "created_at": "2026-03-29T04:00:44Z",
   "updated_at": "2026-04-01T10:04:24Z",
@@ -22,16 +22,17 @@
     "prompt_preview": "A folding service arm with a grounded base bracket, a long first link, a shorter second link, and a small end pad. The proportions should make it feel like a..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "5485fe478bb9c7e27497970b73e2ec93a8e25a378f5e047b71fc44aad137e822",
-    "model_py_sha256": "935d19d4b31caa9c3d939c4601a6ef203fb0e1db28b2235e8d8590253b4bbf5d"
+    "model_py_sha256": "b7c8b92e7b5bde0b903fc908128189ef3d1eb1ad0d731a181c94ef76e87fd16a"
   },
   "collections": [
     "dataset"
@@ -39,5 +40,12 @@
   "author": "mattzh72",
   "rated_by": "mattzh72",
   "secondary_rating": 3,
-  "secondary_rated_by": "Zhaomou Song"
+  "secondary_rated_by": "Zhaomou Song",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_twojoint_revolute_chain_e11f89733cf94fcbb7725de69bc459ed",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

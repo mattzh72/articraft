@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_platform_cart_4faa078661764cbd9f36705c320d3d02",
   "created_at": "2026-04-04T14:54:23Z",
   "updated_at": "2026-04-05T12:21:07Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A sheet-goods platform cart with a hinged stop panel at one corner. The broad flat deck rides on four swivel casters, and a short stop panel folds up from on..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "05e324f8abda7bb9ac2c3260af9111d0373d50cf7f163d61fa96dd2d741375f5",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_platform_cart_4faa078661764cbd9f36705c320d3d02",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

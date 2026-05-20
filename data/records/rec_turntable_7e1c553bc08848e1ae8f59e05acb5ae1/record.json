@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_turntable_7e1c553bc08848e1ae8f59e05acb5ae1",
   "created_at": "2026-04-29T04:21:53Z",
   "updated_at": "2026-04-29T04:38:48Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "Create a realistic manual pottery wheel. Geometry/details required: heavy circular base, raised rotating wheel head, central hub, splash pan rim, and foot pe..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
     "cost_json": null,
-    "inputs_dir": "inputs"
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "8154248254edfa6e02be1f65461d0201cc68a88948d57ac2148b3e08399085d0",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_turntable_7e1c553bc08848e1ae8f59e05acb5ae1",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

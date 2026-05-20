@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_orthogonal_xy_stage_cdb8b54ff007499d888eb64ba386c8e6",
   "created_at": "2026-03-30T17:57:46Z",
   "updated_at": "2026-04-01T11:01:26Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A service fixture built as an XY stage. A fixed base rail set supports a long moving carriage, and that carriage carries a compact orthogonal slide with a to..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "8ad5a503d71b1482443fa2c1f9afc419269833297f79531dd80d52890bfc8972",
-    "model_py_sha256": "0d8fcc069c294c3f62adfcc405fa92b02648348247974cd770abdb292baf6e1f"
+    "model_py_sha256": "7d40875d6d9b5110956b09112e0541ab8e00f2ae74a396ad18e7b465837ea1bb"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_orthogonal_xy_stage_cdb8b54ff007499d888eb64ba386c8e6",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

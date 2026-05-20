@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_fidget_toy_e340353a20354df482df5e52be68a479",
   "created_at": "2026-04-27T02:51:41Z",
   "updated_at": "2026-04-27T09:34:59Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A fidget cube with four side-face toggle levers each on a revolute hinge pivot at the lever base edge, a click-ball roller set in a socket on a revolute join..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "feb9b26bc253082289b84e8717607b28b0c9abf2f6d234a0984f03585fe4a4cf",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_fidget_toy_e340353a20354df482df5e52be68a479",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

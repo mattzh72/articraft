@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_candy_vending_machine_49731ad3a4574c75a0fafebb71eb99a4",
   "created_at": "2026-04-27T01:57:43Z",
   "updated_at": "2026-04-27T10:25:44Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A boxy candy vending cabinet with a rectangular body, a clear front panel, a dispensing shelf, and a service door at one side. The side service door rotates..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "e46e26dac3a1d408dd4ca1c134f9ef4daafc11cd4a10069b84eb89dd89cea56d",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_candy_vending_machine_49731ad3a4574c75a0fafebb71eb99a4",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

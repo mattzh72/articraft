@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "record_id": "rec_top_load_washing_machine_with_hinged_lid_fa66640b464745c89d444e3e969fe8cc",
+  "revision_id": "rev_000001",
+  "created_at": "2026-04-11T18:03:18Z",
+  "prompt_kind": "single_prompt",
+  "prompt_sha256": "348094122761f47a2e61d89a4565a5c33d82424dac5dfab6895bd4f0fb551d27",
+  "source": {
+    "run_id": "run_20260411_180318_024642_20260411-home-appliance-categories-plus15-gpt54-",
+    "prompt_batch_id": null,
+    "batch_spec_id": "20260411_home_appliance_categories_plus15_gpt54_high",
+    "row_id": "top_load_washer_plus15_06",
+    "prompt_index": 96
+  },
+  "generation": {
+    "provider": "openai",
+    "model_id": "gpt-5.4",
+    "thinking_level": "high",
+    "openai_transport": "http",
+    "openai_reasoning_summary": "auto",
+    "max_turns": 185,
+    "max_cost_usd": null
+  },
+  "artifacts": {
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
+    "prompt_series_json": null,
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
+  },
+  "hashes": {
+    "prompt_sha256": "348094122761f47a2e61d89a4565a5c33d82424dac5dfab6895bd4f0fb551d27",
+    "model_py_sha256": "239d91850f3a619b2b712ee8cdb68ef97dae223ec4b73023d8ca72c2b09c677b"
+  },
+  "run_summary": {
+    "turn_count": 17,
+    "tool_call_count": 21,
+    "compile_attempt_count": 4,
+    "final_status": "success"
+  },
+  "parent": null,
+  "seed": null,
+  "inherited_inputs": []
+}

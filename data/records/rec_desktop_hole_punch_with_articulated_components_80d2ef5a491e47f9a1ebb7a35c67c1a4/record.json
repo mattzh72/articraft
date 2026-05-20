@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_desktop_hole_punch_with_articulated_components_80d2ef5a491e47f9a1ebb7a35c67c1a4",
   "created_at": "2026-04-11T14:56:29Z",
   "updated_at": "2026-04-11T15:29:31Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A heavy-duty paper punch with a deep base tray, a wide U-shaped handle, and a paper guide bar running across the front edge of the base. A hinged waste-bin d..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "24107ca68ea91003cb1495fee92c6a2e4a989d423687d9ca0884569e2808ec3d",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_desktop_hole_punch_with_articulated_components_80d2ef5a491e47f9a1ebb7a35c67c1a4",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

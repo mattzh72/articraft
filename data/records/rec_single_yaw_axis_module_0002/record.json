@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_single_yaw_axis_module_0002",
   "created_at": "2026-03-12T18:37:22Z",
   "updated_at": "2026-04-01T10:34:02Z",
@@ -20,16 +20,17 @@
     "prompt_preview": "A compact rotary indexing base providing one yaw axis, with a cylindrical turntable, bolted support frame, and mechanical end-stop details."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "a519876652d39d3b7d7bd0376ea254d08b9864892596debf4fb62995de82b8eb",
-    "model_py_sha256": "3181fd377ee6597508c5f33ad8e9503cb164301b3f851f884bee6bcd0ba098c2"
+    "model_py_sha256": "8af05ef0f8d2ab102e1039e559e9d3e6073686a483279aeec38771fe0d16c78c"
   },
   "collections": [
     "dataset"
@@ -37,5 +38,12 @@
   "author": "mattzh72",
   "rated_by": "mattzh72",
   "secondary_rating": 5,
-  "secondary_rated_by": "Zhaomou Song"
+  "secondary_rated_by": "Zhaomou Song",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_single_yaw_axis_module_0002",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_monitor_mount_a092de45b022493bb296ac7b3127dbee",
   "created_at": "2026-03-30T17:57:46Z",
   "updated_at": "2026-04-01T11:14:33Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A pole-mounted monitor support with articulated head. A fixed mast clamp carries a first arm, a second arm, and a compact monitor plate, with the head hardwa..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "b9d6142205419288893af5892e94946f753f3c6c1a87b0d626b9046fb6f3df82",
-    "model_py_sha256": "9d7d7b917242cf9077ff16e48dee63d0496043c653494b70f272b067d72ce483"
+    "model_py_sha256": "cab8f5e18c9b9d7da4301d9f6e66ec728695aa9914ae131b12aaffab051d41ea"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_monitor_mount_a092de45b022493bb296ac7b3127dbee",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

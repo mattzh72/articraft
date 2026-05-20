@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_swivel_bar_stool_f0553aa344774b98874451359e25ce86",
   "created_at": "2026-04-12T15:31:06Z",
   "updated_at": "2026-04-12T15:45:35Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A weatherproof swivel bar stool with a weighted pedestal, a perforated metal seat, and a fold-down backrest pad. The seat rotates continuously about the vert..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "a2ed6f3ce906326c2ce1df133a959ed51f054ae73539cae7ecf9144f5d6be15e",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_swivel_bar_stool_f0553aa344774b98874451359e25ce86",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

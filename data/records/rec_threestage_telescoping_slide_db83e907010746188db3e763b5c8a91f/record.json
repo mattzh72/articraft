@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_threestage_telescoping_slide_db83e907010746188db3e763b5c8a91f",
   "created_at": "2026-03-29T15:31:29Z",
   "updated_at": "2026-04-01T11:24:44Z",
@@ -22,16 +22,17 @@
     "prompt_preview": "A precision linear extension with a grounded outer beam, two internal moving rail stages, and a compact terminal carriage shoe. The fixed beam and moving sta..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "9605893be1910f75b58b61678e312b6d1e28a642e7c948e52c6d5a8791ef079c",
-    "model_py_sha256": "59bcb2814c269f9af3931d3f7c05e832c9adca432a8cd618bafe80be8dbdd8cd"
+    "model_py_sha256": "88c2619a55def83f8a0e17ec432e56dc27354747c35ced359510b18f05aa3ed2"
   },
   "collections": [
     "dataset"
@@ -39,5 +40,12 @@
   "author": "mattzh72",
   "rated_by": "mattzh72",
   "secondary_rating": 5,
-  "secondary_rated_by": "Zhaomou Song"
+  "secondary_rated_by": "Zhaomou Song",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_threestage_telescoping_slide_db83e907010746188db3e763b5c8a91f",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

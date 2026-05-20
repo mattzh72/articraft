@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_knee_scooter_e38e5096d60548febed9aa9d3bdad61a",
   "created_at": "2026-04-27T13:48:29Z",
   "updated_at": "2026-04-28T00:35:17Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A compact rehab knee scooter with twin front casters instead of a bicycle-style fork. The center frame carries the rear wheel pair rigidly and two swiveling..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "e97fda1dc4c0eaabadfd85862401f0ca4793e094dfa824d6b98b9a4d2c722958",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_knee_scooter_e38e5096d60548febed9aa9d3bdad61a",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

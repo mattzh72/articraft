@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_benchtop_monocular_laboratory_microscope_aa1a25f02f994ee7a19879e7739ef5d0",
   "created_at": "2026-04-27T02:33:45Z",
   "updated_at": "2026-04-27T09:48:53Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A laboratory monocular microscope with a rectangular base housing, a rising arm, an inclined tube, and a square mechanical stage above the illuminator compar..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "dd0c90f1938b3eb274c618b604cfe3ea634826a7682012028da4858561aaeedd",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_benchtop_monocular_laboratory_microscope_aa1a25f02f994ee7a19879e7739ef5d0",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

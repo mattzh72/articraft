@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_linear_carriage_with_independent_rotary_endeffector_0e44f7b24a23462b8722cbf90ec8c6c7",
   "created_at": "2026-04-03T21:46:47Z",
   "updated_at": "2026-04-06T01:21:44Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A machine-slide rotary head. A fixed linear guide supports a compact carriage block, and the carriage block carries a cylindrical rotary head with a plain fa..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "fe61e1d11c6bb6fb416c37ca4facf42b76a888c14e67e6858ac9f07bfad66a76",
-    "model_py_sha256": "cae18eecf2724f7809d70d5659f26885fc34126b619a9a7f0ac6f9fb4402fcde"
+    "model_py_sha256": "993246036a8dcb74f4f5de4f0dfe4164fca36d97c21be8327d4491d72a95e9aa"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_linear_carriage_with_independent_rotary_endeffector_0e44f7b24a23462b8722cbf90ec8c6c7",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

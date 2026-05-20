@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_orthogonal_yz_stage_1bb77a6751e546069c215ba1421ba4dc",
   "created_at": "2026-03-29T04:00:44Z",
   "updated_at": "2026-04-01T10:01:23Z",
@@ -22,16 +22,17 @@
     "prompt_preview": "A wall-backed positioning stage with a tall fixed plate, a crosswise saddle moving left to right, and a hanging vertical carriage under that saddle. The carr..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "3733229accc19582413eb8159dd576a36a4a4c47ecfcc32747af43633e8acd8f",
-    "model_py_sha256": "242cb465734c12b7bf97db72a07a3fac28a4f085c34b4f02c39ea98cb46b8806"
+    "model_py_sha256": "c3ff5cda2ce204f92b86864aa5762bc007f2e334fde0ed8fa8694ca3ce92b071"
   },
   "collections": [
     "dataset"
@@ -39,5 +40,12 @@
   "author": "mattzh72",
   "rated_by": "mattzh72",
   "secondary_rating": 5,
-  "secondary_rated_by": "Zhaomou Song"
+  "secondary_rated_by": "Zhaomou Song",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_orthogonal_yz_stage_1bb77a6751e546069c215ba1421ba4dc",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

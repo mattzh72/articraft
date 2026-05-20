@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_gear_assemblies_3e71ff4132914fcd825fb4620833eb23",
   "created_at": "2026-03-31T17:20:51Z",
   "updated_at": "2026-03-31T18:33:06Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A vertical-input transfer gear assembly. A fixed base supports a vertical input shaft that passes through a right-angle stage into a horizontal reduction sta..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "72c0e9389da3a245ccdd6ba59289583edc059dd3f32c8373b143a4e9004b1d50",
-    "model_py_sha256": "d3df16f2b18da8ba947e859fe4c62f6325dc39abd9875aba711ac3e16f9f0858"
+    "model_py_sha256": "f83889f183661107c94d9f1cf75ab4a9d2a26e30738d2bfe462a365b28445cc7"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_gear_assemblies_3e71ff4132914fcd825fb4620833eb23",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_opposed_twinslide_gripper_e06666a345bf478aabefe5952643b598",
   "created_at": "2026-03-29T15:31:29Z",
   "updated_at": "2026-04-01T11:23:56Z",
@@ -22,16 +22,17 @@
     "prompt_preview": "A wafer-handling gripper with a central body, twin linear guideways, mirrored jaw carriages, and long thin fork tips facing a common pickup zone. The body sh..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "4e2f9c6842f22874ec7aecc96e9cb1a3b54c9a73010393a397995d5003cc6ec0",
-    "model_py_sha256": "dfa748e7f2240944fbfee3032dc14813d490a4dc0edc7184e3ab0096a1a13074"
+    "model_py_sha256": "300f4becb47df898f7c124492d8b77544a6e03d6e6ebad4930d0db1003875a59"
   },
   "collections": [
     "dataset"
@@ -39,5 +40,12 @@
   "author": "mattzh72",
   "rated_by": "mattzh72",
   "secondary_rating": 5,
-  "secondary_rated_by": "Zhaomou Song"
+  "secondary_rated_by": "Zhaomou Song",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_opposed_twinslide_gripper_e06666a345bf478aabefe5952643b598",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

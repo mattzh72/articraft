@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_espresso_machine_with_articulated_components_c668a8f28dd34c34816201d48a0ed08b",
   "created_at": "2026-04-11T14:56:29Z",
   "updated_at": "2026-04-11T15:31:24Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "An espresso machine with an integrated grinder, a single group head, a side steam wand, and a hinged bean hopper lid above the grinder section. A short brew..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "8ae201c837d80c5745c279975982eb354eab137306e4c0b1973e49cad5f41412",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_espresso_machine_with_articulated_components_c668a8f28dd34c34816201d48a0ed08b",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_robotic_leg_81e97bb1fa034a9bbc665ac0dbd0e598",
   "created_at": "2026-03-30T16:08:09Z",
   "updated_at": "2026-03-31T21:12:40Z",
@@ -22,12 +22,13 @@
     "prompt_preview": "Create a cost-optimized mass-manufacturable Robotic leg. Base architecture: a hip-knee-ankle chain with load-bearing limb shells and actuator bays. Reduce pa..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "7d02468bfc4815b9a90e0dffb33ad77e4ea381cc4f3bb4bc6c9e66d84378c205",
@@ -39,5 +40,12 @@
   "rated_by": "shawlyu",
   "author": "shawlyu",
   "secondary_rating": 5,
-  "secondary_rated_by": "RuiningLi"
+  "secondary_rated_by": "RuiningLi",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_robotic_leg_81e97bb1fa034a9bbc665ac0dbd0e598",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

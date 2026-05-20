@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_linear_carriage_with_independent_rotary_endeffector_455544c51a674a5a9c482e5c3ea1402c",
   "created_at": "2026-04-27T13:30:40Z",
   "updated_at": "2026-04-28T07:13:01Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A split-body slide with a carried rotary nose. A grounded guide body carries one moving carriage, and the carriage supports a short rotary cartridge ending i..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "fa99f9cadaa79777b2d9477bbc4a518cc6b5a2b45022739d5cccadbe0af3ac0b",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_linear_carriage_with_independent_rotary_endeffector_455544c51a674a5a9c482e5c3ea1402c",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

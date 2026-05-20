@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_single_yaw_axis_module_fdd06a55ecc04ff2abac2b3e06059109",
   "created_at": "2026-04-27T02:34:17Z",
   "updated_at": "2026-04-27T09:54:25Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A under-slung yaw carriage. A grounded frame supports a compact rotary hub with a short carried top plate and clear support mass below the hub. One revolute..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "a9b10e293e6791d3eb631be2a32e671e22bcde6b4fb2b42d6e02af466f435adb",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_single_yaw_axis_module_fdd06a55ecc04ff2abac2b3e06059109",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

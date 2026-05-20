@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_extension_ladder_378952b821f64aea920db2a12367134c",
   "created_at": "2026-04-27T03:21:38Z",
   "updated_at": "2026-04-27T07:27:41Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A combination A-frame-plus-extension ladder with a front A-frame section and a rear fly that slides prismatically in the front section guides. The front sect..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "cf26d943fe0b52b716b8c5793b0a151fef6111a18eb8624f29050143c7e9d64a",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_extension_ladder_378952b821f64aea920db2a12367134c",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

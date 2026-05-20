@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "record_id": "rec_windshield_wiper_assembly_05b0c619978943d28738892cce105436",
+  "revision_id": "rev_000001",
+  "created_at": "2026-04-27T13:45:23Z",
+  "prompt_kind": "single_prompt",
+  "prompt_sha256": "7d4d5a52f30e993856e389c4a707c22b20498a69f4b0b279494364fd1d4e4696",
+  "source": {
+    "run_id": "run_20260427_123143_525672_20260427-avg-rating-gt-4p2-gpt54-prompts-gpt55-h",
+    "prompt_batch_id": null,
+    "batch_spec_id": "20260427_avg_rating_gt_4p2_gpt54_prompts_gpt55_high_budget3_2000",
+    "row_id": "g55b_1312_windshield_wiper_assembly_8c8fe716",
+    "prompt_index": 1312
+  },
+  "generation": {
+    "provider": "openai",
+    "model_id": "gpt-5.5-2026-04-23",
+    "thinking_level": "high",
+    "openai_transport": "http",
+    "openai_reasoning_summary": "auto",
+    "max_turns": 100,
+    "max_cost_usd": 3.0
+  },
+  "artifacts": {
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
+    "prompt_series_json": null,
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
+  },
+  "hashes": {
+    "prompt_sha256": "7d4d5a52f30e993856e389c4a707c22b20498a69f4b0b279494364fd1d4e4696",
+    "model_py_sha256": "a3e58dbc8194d64c74b5ced7d1ee7e94a18034847326120eb1f58999972ad48c"
+  },
+  "run_summary": {
+    "turn_count": 44,
+    "tool_call_count": 46,
+    "compile_attempt_count": 15,
+    "final_status": "success"
+  },
+  "parent": null,
+  "seed": null,
+  "inherited_inputs": []
+}

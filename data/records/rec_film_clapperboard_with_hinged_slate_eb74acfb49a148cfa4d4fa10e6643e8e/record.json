@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_film_clapperboard_with_hinged_slate_eb74acfb49a148cfa4d4fa10e6643e8e",
   "created_at": "2026-04-11T23:05:11Z",
   "updated_at": "2026-04-22T14:19:56Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A smart clapperboard with a broad whiteboard face, a striped clapstick, a digital timecode module, and a rear battery-door panel in the electronics housing...."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "16acc762f90543a6db528fa12b56c3b06cb0d1d7732cdb22946e5fbca026853a",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_film_clapperboard_with_hinged_slate_eb74acfb49a148cfa4d4fa10e6643e8e",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

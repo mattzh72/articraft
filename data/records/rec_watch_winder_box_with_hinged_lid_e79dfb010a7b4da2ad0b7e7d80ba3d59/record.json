@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_watch_winder_box_with_hinged_lid_e79dfb010a7b4da2ad0b7e7d80ba3d59",
   "created_at": "2026-03-30T17:05:14Z",
   "updated_at": "2026-04-01T21:39:22Z",
@@ -22,12 +22,13 @@
     "prompt_preview": "Build a precision professional Watch winder box with hinged lid tuned for calibration and repeatable alignment. Use a presentation box with hinged lid and in..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "ec2f9c9879182b5c2fbf80ed4dfa5eaf3cc29f68a879f5e3b50972f362d5792d",
@@ -39,5 +40,12 @@
   "rated_by": "shawlyu",
   "author": "shawlyu",
   "secondary_rating": 4,
-  "secondary_rated_by": "RuiningLi"
+  "secondary_rated_by": "RuiningLi",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_watch_winder_box_with_hinged_lid_e79dfb010a7b4da2ad0b7e7d80ba3d59",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_radial_arm_with_sliding_carriage_f5cea231b11c431b82c88a1881bbc3e2",
   "created_at": "2026-03-29T15:31:29Z",
   "updated_at": "2026-04-01T11:27:52Z",
@@ -22,16 +22,17 @@
     "prompt_preview": "An inspection boom with a tall post, a tapered radial arm, and a hanging carriage block near the arm underside. The post and the arm should be the dominant s..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "accd2e465c8768b154c615d90e3f95f0860c23b1c59a5d6025af89810294bbb5",
-    "model_py_sha256": "24135fba0178f462d91a0047071856d7a1bac3471001dcdffc58083667deff2c"
+    "model_py_sha256": "196547fe44c85996655ace407b58d8c975b6e48c0909fcf00b87558e19f9acd4"
   },
   "collections": [
     "dataset"
@@ -39,5 +40,12 @@
   "author": "mattzh72",
   "rated_by": "mattzh72",
   "secondary_rating": 4,
-  "secondary_rated_by": "Zhaomou Song"
+  "secondary_rated_by": "Zhaomou Song",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_radial_arm_with_sliding_carriage_f5cea231b11c431b82c88a1881bbc3e2",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

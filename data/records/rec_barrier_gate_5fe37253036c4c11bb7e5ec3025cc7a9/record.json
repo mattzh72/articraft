@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_barrier_gate_5fe37253036c4c11bb7e5ec3025cc7a9",
   "created_at": "2026-04-04T16:48:41Z",
   "updated_at": "2026-04-04T17:11:51Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A vehicle barrier arm with a fold-flat emergency breakout section. A round post carries the main boom on a revolute joint at the post head about a horizontal..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "c05c5f9d71dd36004b2e5047589bc5f1fd695d3ef49dd77c68d0de31515b738e",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_barrier_gate_5fe37253036c4c11bb7e5ec3025cc7a9",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

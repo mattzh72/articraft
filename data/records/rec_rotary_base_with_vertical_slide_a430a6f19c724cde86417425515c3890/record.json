@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_rotary_base_with_vertical_slide_a430a6f19c724cde86417425515c3890",
   "created_at": "2026-04-27T01:44:15Z",
   "updated_at": "2026-04-27T10:32:06Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A compact service pan-and-lift unit. A broad grounded body supports a lower rotary stage and a smaller vertical carriage above it. The lower stage rotates on..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "3410b7f7e6c25b4954f234504a29276bd30935fdcdeda2d8f19c5fcb41799ee1",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_rotary_base_with_vertical_slide_a430a6f19c724cde86417425515c3890",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

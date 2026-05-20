@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_bench_vise_with_prismatic_jaw_2bcaa10bbdea4a06944bf50f86510a9d",
   "created_at": "2026-04-03T22:31:36Z",
   "updated_at": "2026-04-04T10:24:55Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A carver's bench screw vise with a round wooden bench screw post and a moving jaw plate. The moving jaw slides prismatically toward the bench on guide rods...."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "06997b24ad28084ac1b35999ebe3e736f93bd9932e7b8ee8ba1235f4ffbb9a3b",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_bench_vise_with_prismatic_jaw_2bcaa10bbdea4a06944bf50f86510a9d",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

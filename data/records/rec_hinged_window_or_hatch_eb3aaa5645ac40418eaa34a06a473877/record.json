@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_hinged_window_or_hatch_eb3aaa5645ac40418eaa34a06a473877",
   "created_at": "2026-04-27T03:46:00Z",
   "updated_at": "2026-04-27T06:52:04Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A top-hinged awning window in a rectangular frame. A glazed sash sits inside the outer frame and is supported from the top edge by two compact hinges. The sa..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "ab3da4be25a00b83d7324042f27c52af5e289aefd477664e777d74e552893cf5",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_hinged_window_or_hatch_eb3aaa5645ac40418eaa34a06a473877",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

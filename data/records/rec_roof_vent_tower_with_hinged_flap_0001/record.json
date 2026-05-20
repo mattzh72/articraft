@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_roof_vent_tower_with_hinged_flap_0001",
   "created_at": "2026-03-16T01:21:46Z",
   "updated_at": "2026-03-20T22:37:45Z",
@@ -20,16 +20,17 @@
     "prompt_preview": "A realistic, highly detailed roof vent tower with a weatherproof body, architectural integration, and a hinged flap or outlet feature. The flap articulates n..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "537d194cf63f8ba3ef76ec2c04f380229b1fb00fdf4fc84768251d9bace572c1",
-    "model_py_sha256": "e3aa299bf072ca31ba48eb0d2b4de306d8ba3aae28c994b10e35961124baf120"
+    "model_py_sha256": "138d3a0e25b84d14f241889982bd982a30a51bc6b4e66e8287af3892a5177f06"
   },
   "collections": [
     "dataset"
@@ -37,5 +38,12 @@
   "author": "mattzh72",
   "rated_by": "mattzh72",
   "secondary_rating": null,
-  "secondary_rated_by": null
+  "secondary_rated_by": null,
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_roof_vent_tower_with_hinged_flap_0001",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

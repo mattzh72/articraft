@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_wall_thermostat_with_articulated_controls_8c6811ecfcad47cb9858102271b204bd",
   "created_at": "2026-04-12T15:36:37Z",
   "updated_at": "2026-04-12T15:44:21Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A thermostat with a rectangular body, a left-side slider for system mode, and a right-side rotary temperature dial. The left-side slider translates prismatic..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "f278cceabd84e7f70559014c51b81dfaa479ab575e87f63835f55a3d02991cbd",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_wall_thermostat_with_articulated_controls_8c6811ecfcad47cb9858102271b204bd",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

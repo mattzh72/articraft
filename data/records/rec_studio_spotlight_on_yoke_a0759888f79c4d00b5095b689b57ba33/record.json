@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_studio_spotlight_on_yoke_a0759888f79c4d00b5095b689b57ba33",
   "created_at": "2026-04-12T15:28:18Z",
   "updated_at": "2026-04-22T08:02:30Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A theatre spotlight on a yoke stand with a rectangular rolling base, a short post, a can body, and a front hinged lens guard. The yoke pans on a vertical joi..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "fea5a081923f20dbc90689abf39f0c41efa7257c3f4da70b86d78247ff56fa2d",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_studio_spotlight_on_yoke_a0759888f79c4d00b5095b689b57ba33",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

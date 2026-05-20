@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_telescoping_mast_with_pan_head_a298d025d0d5404285b334d8ed08fbc5",
   "created_at": "2026-03-31T17:20:51Z",
   "updated_at": "2026-04-06T01:39:08Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A side-wall mast with rotating top stage. A grounded side support carries nested upright members and a compact top rotary cartridge. The upright members use..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "08098a0c2f9f1e043ca7f341cdaac93899d8ca8ff343235b32b7610bc3896c17",
-    "model_py_sha256": "274790499e22ab13bf07bbc569d95b6b8c4f685e5d252461644ce9f60fe46e70"
+    "model_py_sha256": "6500f0d965c23856ea451d5b9822784b94f55bb202146240df979c681b1729c8"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_telescoping_mast_with_pan_head_a298d025d0d5404285b334d8ed08fbc5",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

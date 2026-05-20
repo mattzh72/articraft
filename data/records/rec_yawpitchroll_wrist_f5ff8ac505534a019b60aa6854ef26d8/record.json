@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_yawpitchroll_wrist_f5ff8ac505534a019b60aa6854ef26d8",
   "created_at": "2026-04-01T18:09:34Z",
   "updated_at": "2026-04-06T01:34:33Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A saddle-body multi-axis wrist. A grounded housing supports a yaw stage, a pitch support, and a compact roll cartridge, tapering in size toward the output. T..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "3fe4568dd172be37dbfdcdcc47fab4b747b68db605a689e5034d378037f8106e",
-    "model_py_sha256": "6df99e6e06d2289a7e0df844a7d9853ae84ac877997e5c45f339121adac481cb"
+    "model_py_sha256": "cd789c2d00ddf9477a5c58758bf02beb4fd0333c219953fd0db688a51840dfc9"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_yawpitchroll_wrist_f5ff8ac505534a019b60aa6854ef26d8",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

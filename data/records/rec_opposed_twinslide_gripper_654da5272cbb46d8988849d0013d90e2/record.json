@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_opposed_twinslide_gripper_654da5272cbb46d8988849d0013d90e2",
   "created_at": "2026-03-30T17:57:46Z",
   "updated_at": "2026-04-01T11:06:39Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A heavy block gripper with mirrored slides. A grounded housing carries two wide jaw carriages and short stepped fingers, with the carriage bodies clearly lar..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "ba04ecc290607e536510d46ccb123ba6cbf767bf4cad068bfa9b53f00008e54d",
-    "model_py_sha256": "dc7e1cbb3744173bed18143175b10d14bc5d77b82f5d41c6265061087a78a8a5"
+    "model_py_sha256": "ccd9bd7310cf65d850ed8a13992aa186ce7525cf98fa62750205a568b6bd0bb6"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_opposed_twinslide_gripper_654da5272cbb46d8988849d0013d90e2",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

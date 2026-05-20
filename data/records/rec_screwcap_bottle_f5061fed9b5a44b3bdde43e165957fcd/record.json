@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_screwcap_bottle_f5061fed9b5a44b3bdde43e165957fcd",
   "created_at": "2026-04-27T13:23:05Z",
   "updated_at": "2026-04-28T07:17:23Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "Create a cost-optimized mass-manufacturable Screwcap bottle. Base architecture: a bottle body, threaded neck, and mating cap interface. Reduce part count, si..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "921adaf75c77d52a6bd75b3968b97a8d2e342241d80bd78b7ed834880be9d838",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_screwcap_bottle_f5061fed9b5a44b3bdde43e165957fcd",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

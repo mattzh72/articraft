@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_prismaticrevoluteprismatic_chain_ee5e9e4e36774fe8b827b653dc24ba5b",
   "created_at": "2026-03-31T17:20:51Z",
   "updated_at": "2026-03-31T18:40:47Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A bridge-backed transfer arm with sliding nose. A rear support carries a moving carriage, the carriage carries a hinged frame, and the frame carries a short..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "003b1898dc7c2d0cca9ffaa25049300096df3979b85cbbdbbe046901e40507af",
-    "model_py_sha256": "8c182620a1e0c69652d1d8b4ca250b4288112a614ee3c92a78986c440330d02a"
+    "model_py_sha256": "3b39da6b1d8c0511c6e72e1f065b168eef7766e15af1719cf7e05c1d217f5591"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_prismaticrevoluteprismatic_chain_ee5e9e4e36774fe8b827b653dc24ba5b",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

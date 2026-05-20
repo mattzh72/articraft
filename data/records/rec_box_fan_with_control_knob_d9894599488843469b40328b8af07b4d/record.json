@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_box_fan_with_control_knob_d9894599488843469b40328b8af07b4d",
   "created_at": "2026-04-03T22:10:55Z",
   "updated_at": "2026-04-04T10:34:32Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A barn ventilation fan with a large square housing and four hinged outer shutter flap panels. Each shutter panel pivots on a revolute hinge at the panel's ou..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "930cf747d643775303d930affeb4bb0bf63013ac56b6e5cc372f7df0da5fe32d",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_box_fan_with_control_knob_d9894599488843469b40328b8af07b4d",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

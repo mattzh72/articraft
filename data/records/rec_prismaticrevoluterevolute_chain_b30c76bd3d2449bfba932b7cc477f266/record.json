@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_prismaticrevoluterevolute_chain_b30c76bd3d2449bfba932b7cc477f266",
   "created_at": "2026-03-30T17:57:46Z",
   "updated_at": "2026-04-01T11:13:13Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A service axis with a slide-mounted arm. A grounded guideway carries a carriage, the carriage carries a proximal link, and the proximal link carries a shorte..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "f366ba13d2b0c27747f3dba3bea0ce1cdfa60c8e0c4f9b170a8b94d0123f4e95",
-    "model_py_sha256": "dc6cef2c6c4bd39339fd5b8055b73d2ad3290efdccd7458146300a3934843b86"
+    "model_py_sha256": "894f365e7f103aa1e89b86d9d7b25893d45a1005d87b42e53c43c3d39b668910"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_prismaticrevoluterevolute_chain_b30c76bd3d2449bfba932b7cc477f266",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

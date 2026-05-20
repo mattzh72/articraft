@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_bread_maker_with_hinged_lid_5d4a0f38dcab4aa68860865a88cbc9b2",
   "created_at": "2026-04-11T16:13:01Z",
   "updated_at": "2026-04-22T14:28:49Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A countertop bread maker with a rectangular body, a rear-hinged top lid with a small viewing window, a deep loaf chamber below, and a front control strip wit..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "09097f6c975f1d319270b7f82ab1a05f48d52a64b34d7c6dd9f39d488046679f",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_bread_maker_with_hinged_lid_5d4a0f38dcab4aa68860865a88cbc9b2",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

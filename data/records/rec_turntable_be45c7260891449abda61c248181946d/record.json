@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_turntable_be45c7260891449abda61c248181946d",
   "created_at": "2026-04-27T12:39:01Z",
   "updated_at": "2026-04-28T07:45:43Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A realistic, highly detailed Turntable in a rugged utility variant, with a base plinth, rotating platter on a central spindle, and a pivoting tonearm assembl..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "9fce85b45f2fcef311f79da3047f1210e1ce54c38eea580c96f764d54289b11a",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_turntable_be45c7260891449abda61c248181946d",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

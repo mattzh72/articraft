@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_gear_assemblies_a406cc67ef3b44b699cbf36f70db259c",
   "created_at": "2026-03-29T15:31:29Z",
   "updated_at": "2026-04-01T11:31:41Z",
@@ -22,16 +22,17 @@
     "prompt_preview": "A worm-driven indexing unit with a horizontal worm shaft, a vertical wheel spindle, and a small secondary spur gear mounted above the wheel hub. The frame sh..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "bfdb00c812eb3fd3e494b318d9e9364d7e8ccfd295653a20d6581b1acbf01e11",
-    "model_py_sha256": "e09c724b468ab359f5e8c17d329634cc87f1cc558f90f29004eb6c6811e2b47b"
+    "model_py_sha256": "489f904711d001639b2507971c9ea8f9eda5f232af891bfdf3dd5555a0ca5737"
   },
   "collections": [
     "dataset"
@@ -39,5 +40,12 @@
   "author": "mattzh72",
   "rated_by": "mattzh72",
   "secondary_rating": 4,
-  "secondary_rated_by": "Zhaomou Song"
+  "secondary_rated_by": "Zhaomou Song",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_gear_assemblies_a406cc67ef3b44b699cbf36f70db259c",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

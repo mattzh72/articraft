@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_single_revolute_hinge_9522438cf27547778862abbe92bd1805",
   "created_at": "2026-04-03T21:46:47Z",
   "updated_at": "2026-04-06T01:26:22Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A barrel-and-leaf hinge. A grounded leaf and a moving leaf are joined by alternating hinge knuckles around a central pin. One revolute joint rotates the movi..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "65e194cd67c09c77304848184aaa80ad4aa3a828319b4a54800fa6f0a30d4433",
-    "model_py_sha256": "959b2258c69c49a229bc751664be3e0bd0dc5c77169ebc95650068d125781cea"
+    "model_py_sha256": "686172d3b080a3f555a5b6467a10c99002899989c0ad924114e264bc5eb4578f"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_single_revolute_hinge_9522438cf27547778862abbe92bd1805",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

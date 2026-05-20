@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_yawpitchroll_wrist_fc5bac4dd28d42f2b6a05552311bd218",
   "created_at": "2026-04-02T16:32:45Z",
   "updated_at": "2026-04-06T01:31:01Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A bridge-backed three-axis wrist. A rear support carries a lower yaw stage, a smaller pitch frame, and a short roll spindle at the tip. The yaw, pitch, and r..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "c6b582e831c56eb75c148cb2a92a4f487bf84d164e1025126b7fb445e97c9c46",
-    "model_py_sha256": "cee87c2bf756bf3c95d3a9541facafd579687f4a1afc5314f7ee43c827ad1680"
+    "model_py_sha256": "1641fe6b9663a2463d14b7771cb04a2e839b0a70159657eaeed2ea71fedabd83"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_yawpitchroll_wrist_fc5bac4dd28d42f2b6a05552311bd218",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

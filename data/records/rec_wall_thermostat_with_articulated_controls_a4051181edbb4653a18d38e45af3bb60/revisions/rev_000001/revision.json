@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "record_id": "rec_wall_thermostat_with_articulated_controls_a4051181edbb4653a18d38e45af3bb60",
+  "revision_id": "rev_000001",
+  "created_at": "2026-03-30T17:03:05Z",
+  "prompt_kind": "single_prompt",
+  "prompt_sha256": "fb97018db7419a90e33d9aafa36b1b33781f474b615814cc1d0a86831ebe4aa7",
+  "source": {
+    "run_id": "run_20260330_160753_925388_20260325-backfill-part3-gpt54-high",
+    "prompt_batch_id": null,
+    "batch_spec_id": "20260325_backfill_part3_gpt54_high",
+    "row_id": "wall_thermostat_with_articulated_controls_backfill_5",
+    "prompt_index": 277
+  },
+  "generation": {
+    "provider": "openai",
+    "model_id": "gpt-5.4",
+    "thinking_level": "high",
+    "openai_transport": "http",
+    "openai_reasoning_summary": "auto",
+    "max_turns": 50,
+    "max_cost_usd": null
+  },
+  "artifacts": {
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
+    "prompt_series_json": null,
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
+  },
+  "hashes": {
+    "prompt_sha256": "a14e46c5ebce04a0cd0732801437014b55d1785bf8b8228e579aaf867072025e",
+    "model_py_sha256": "c2d7c971d505affd76906770be890a2fb617d7da67fa66f27f160c4c5b568970"
+  },
+  "run_summary": {
+    "turn_count": 8,
+    "tool_call_count": 8,
+    "compile_attempt_count": 4,
+    "final_status": "success"
+  },
+  "parent": null,
+  "seed": null,
+  "inherited_inputs": []
+}

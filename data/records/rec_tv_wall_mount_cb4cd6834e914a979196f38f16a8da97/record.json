@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_tv_wall_mount_cb4cd6834e914a979196f38f16a8da97",
   "created_at": "2026-03-30T17:57:46Z",
   "updated_at": "2026-04-01T11:14:07Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "An articulated TV wall mount shown without a screen. A grounded wall plate supports a folding two-link arm ending in a compact head frame with separate swive..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "ab12f70dd50c4a83d3db95d6a7df120ea3e7d8a40a349d923f2deb0a7684aee7",
-    "model_py_sha256": "94fe566322d8f38a63f8816e37ef5a05e68b928af2991916d52f1d2156e8eca1"
+    "model_py_sha256": "7524acc4f788c89b58ae1b9308b4ff5393d7fa6beec7d9af3e60e05bf8ed628e"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_tv_wall_mount_cb4cd6834e914a979196f38f16a8da97",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

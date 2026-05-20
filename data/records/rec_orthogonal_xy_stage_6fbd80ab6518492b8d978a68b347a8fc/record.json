@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_orthogonal_xy_stage_6fbd80ab6518492b8d978a68b347a8fc",
   "created_at": "2026-04-03T21:46:47Z",
   "updated_at": "2026-04-06T01:25:19Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A machine-table XY stage. A fixed base rail set carries a long X carriage, and the X carriage carries a shorter Y slide with a plain tooling face. The two su..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "0df132bd2cfe90c11e2f3af7c64fdc730729fc0778dda26b399703731e2a473a",
-    "model_py_sha256": "85fd6babceb6fb9de2a93a5b032df1f9bdec2a25a7bfa8931040a9e6d7777ad8"
+    "model_py_sha256": "8d20053e8c95b01ed4d7f0260c50c3039423d44d4a4498591c93cf3fe9ef1f55"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_orthogonal_xy_stage_6fbd80ab6518492b8d978a68b347a8fc",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

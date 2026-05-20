@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_orthogonal_xy_stage_4563fa66225f4462a3aa11947606efa4",
   "created_at": "2026-04-03T21:46:47Z",
   "updated_at": "2026-04-06T01:25:20Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A stacked XY positioning stage. A grounded X base carries a crosswise Y carriage with a compact top table. The X and Y stages are orthogonal prismatic joints..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "bbd745b333992ee683a09200953381bbd272245ae554abcf7af81b142c7fae89",
-    "model_py_sha256": "185218924abf07f4a6f5c01427a31a80b90b95fa2c4a9ab7beb677b2eb89f47b"
+    "model_py_sha256": "aef0fb7f7bd2b353b6eb7e4577dab5bdd1b49c0f8de4f5fd16816f6287c17d5d"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_orthogonal_xy_stage_4563fa66225f4462a3aa11947606efa4",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

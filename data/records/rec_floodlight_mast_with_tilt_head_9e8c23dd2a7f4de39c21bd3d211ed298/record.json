@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_floodlight_mast_with_tilt_head_9e8c23dd2a7f4de39c21bd3d211ed298",
   "created_at": "2026-04-27T13:32:18Z",
   "updated_at": "2026-04-28T07:10:06Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A tripod-mounted studio floodlight with three telescoping leg tubes each extending on a prismatic joint from a central hub, a vertical upright on a revolute..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "aab5c52ca140a4e2ef9e261ad2f18066f74b2af7d040ac90a8827bd8071d8e9b",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_floodlight_mast_with_tilt_head_9e8c23dd2a7f4de39c21bd3d211ed298",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

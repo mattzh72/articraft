@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_motherboard_692124df0eff4281b4bd3deb018b6c75",
   "created_at": "2026-03-28T18:38:36Z",
   "updated_at": "2026-04-01T13:54:39Z",
@@ -22,12 +22,13 @@
     "prompt_preview": "A server motherboard with a large CPU socket, multiple DIMM banks, and a hinged socket load plate. The board is a rigid populated plate, and the socket assem..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "40faa940d0a9a72f16dbdef857e6456465ac6a819536c7d1068ececef7b633a3",
@@ -39,5 +40,12 @@
   "author": "RuiningLi",
   "rated_by": "RuiningLi",
   "secondary_rating": 5,
-  "secondary_rated_by": "shawlyu"
+  "secondary_rated_by": "shawlyu",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_motherboard_692124df0eff4281b4bd3deb018b6c75",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

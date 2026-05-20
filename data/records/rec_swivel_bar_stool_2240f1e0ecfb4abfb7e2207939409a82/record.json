@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_swivel_bar_stool_2240f1e0ecfb4abfb7e2207939409a82",
   "created_at": "2026-04-05T22:56:42Z",
   "updated_at": "2026-04-06T14:03:18Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A swivel bar stool. A pedestal base rises to a seat post and seat pan, with an optional foot ring fixed to the post. Joints: the seat rotates continuously ab..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "90c891fb7f8a4c222769b5134c57181bcc3f0996dab7aeda1b0a7c012b0c3d16",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_swivel_bar_stool_2240f1e0ecfb4abfb7e2207939409a82",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

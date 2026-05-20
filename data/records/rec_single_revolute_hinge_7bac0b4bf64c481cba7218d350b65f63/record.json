@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_single_revolute_hinge_7bac0b4bf64c481cba7218d350b65f63",
   "created_at": "2026-03-31T17:20:51Z",
   "updated_at": "2026-03-31T18:44:03Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A clevis-style panel hinge. A two-cheek grounded side captures a single moving leaf tab on a through-pin, making the support cheeks and moving tab easy to di..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "f2cd2a31247caf67e5f6bb77c4085dc41ab4e7a2ace9f6255422920ca31919b0",
-    "model_py_sha256": "ffbb1a34554bf14ce8e7d3a847464dd96313fd4302731ddf21f97f0c89b547ce"
+    "model_py_sha256": "a410fff8777ba5b838a3ec37ef0c97a9b995cf991d0057205e87dbfe4c68ee48"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_single_revolute_hinge_7bac0b4bf64c481cba7218d350b65f63",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_hingeddoor_cabinet_82896d48bced49f5be946cc9e1366c43",
   "created_at": "2026-04-04T14:26:47Z",
   "updated_at": "2026-04-05T13:29:38Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A pantry cabinet with two tall framed doors and adjustable interior shelves. Each door is mounted to the cabinet sides on concealed hinges, and one meeting s..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "45bad61990babd8922b330f916ca4fbac949b4d63ed059d987a5e0162981ceec",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_hingeddoor_cabinet_82896d48bced49f5be946cc9e1366c43",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

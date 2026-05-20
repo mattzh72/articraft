@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_single_pitch_axis_module_d3237869233844b7b177ff73136f07e2",
   "created_at": "2026-03-30T17:57:46Z",
   "updated_at": "2026-04-01T10:54:36Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A wall-backed a pitch-axis trunnion module. A stiff backplate carries side ribs and a compact rotary package at the front so the fixed support and the moving..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "aebe0d27183ef7619ced80cecb38462e1cf38c3c13db5d8d8eadc2790294b841",
-    "model_py_sha256": "7fe9bcc8e7de352345066ad2864eba781fc4c016b97609015f1e7480cd1e74df"
+    "model_py_sha256": "63719df21d8a04713aa4ac59b701a9e883f0131c2936a25c50b39c7948433b58"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_single_pitch_axis_module_d3237869233844b7b177ff73136f07e2",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

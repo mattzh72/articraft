@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_prismaticrevolute_chain_0004",
   "created_at": "2026-03-25T23:15:42Z",
   "updated_at": "2026-04-01T10:18:08Z",
@@ -22,16 +22,17 @@
     "prompt_preview": "A prismatic-revolute chain. A base rail carries a sliding carriage, and the carriage supports a hinged arm on a side clevis. The first joint is prismatic alo..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "290a943db63b24141610f85be6df52aba9df23adb7dfad5491ec43b65f8a3384",
-    "model_py_sha256": "ba5e6f5a1ef84ed60537a39c062ddbfe55013e9144dbb0cc2e94a3a9fdac1204"
+    "model_py_sha256": "f0f549ba6357c93de71fcd18a936da9209226f22d980f26aa331a350e8605cc1"
   },
   "collections": [
     "dataset"
@@ -39,5 +40,12 @@
   "author": "mattzh72",
   "rated_by": "shawlyu",
   "secondary_rating": 5,
-  "secondary_rated_by": "Zhaomou Song"
+  "secondary_rated_by": "Zhaomou Song",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_prismaticrevolute_chain_0004",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

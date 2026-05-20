@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_bell_tower_with_swinging_bell_fb472780904e418995343e34a5c124bb",
   "created_at": "2026-04-01T11:52:53Z",
   "updated_at": "2026-04-03T16:59:46Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A Japanese temple bell pavilion with a square open timber structure on four corner posts, a large cast-iron bonsh\u014d bell hanging from a cross-beam yoke on a r..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "0086725c02b396c8caaba03096a355f9771b2fc65b9946f2cca02b10b7ce6833",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_bell_tower_with_swinging_bell_fb472780904e418995343e34a5c124bb",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

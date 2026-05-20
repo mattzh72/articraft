@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_globe_31962387b4024251a1fca6f51ba28089",
   "created_at": "2026-04-27T03:27:32Z",
   "updated_at": "2026-04-27T07:29:35Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A floor-standing globe with a large sphere carried in a partial meridian above a pedestal turntable. The sphere is mounted on polar pivots inside the meridia..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "82f746cf560c55b7f8f3ea1ab75270beec17fa94d21044b0d7b65a1d64aca631",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_globe_31962387b4024251a1fca6f51ba28089",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

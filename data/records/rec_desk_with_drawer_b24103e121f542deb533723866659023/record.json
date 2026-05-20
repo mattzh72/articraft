@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_desk_with_drawer_b24103e121f542deb533723866659023",
   "created_at": "2026-04-27T01:44:36Z",
   "updated_at": "2026-04-27T10:32:14Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "An executive double-pedestal desk with a broad top and two three-drawer side pedestals. Each of the six drawers slides prismatically on individual guide rail..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "0312960231a7cc534fdba73300ee567cc44c27350a0a1ac24344ca5d41bb065b",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_desk_with_drawer_b24103e121f542deb533723866659023",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

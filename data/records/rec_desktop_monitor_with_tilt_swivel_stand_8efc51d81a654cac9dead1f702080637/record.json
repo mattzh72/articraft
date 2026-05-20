@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_desktop_monitor_with_tilt_swivel_stand_8efc51d81a654cac9dead1f702080637",
   "created_at": "2026-04-11T22:02:14Z",
   "updated_at": "2026-04-11T22:19:08Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A premium desktop monitor with a thin display shell, a heavy stand column, a broad base plate, and a rear cable-cover door on the stand spine. The screen hou..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "3f2f229186dfdaa1d07a938de5e07e2b19550979097f9b2fedfe1b45fdd8c4a9",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_desktop_monitor_with_tilt_swivel_stand_8efc51d81a654cac9dead1f702080637",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

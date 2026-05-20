@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_cctv_mast_with_pantilt_camera_head_64ff8efa582b4f3caa18e4b4c29580ac",
   "created_at": "2026-03-29T14:32:03Z",
   "updated_at": "2026-03-29T16:56:07Z",
@@ -22,12 +22,13 @@
     "prompt_preview": "A swan-neck wall-mount CCTV arm with a rectangular steel wall plate, a curved gooseneck arm extending from the plate boss, and a dome camera head on a pan-ti..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "ae7fa7c1be98d26c44e06ac9b0f10e413d9f3c9199198f3fb07661e39f1df81c",
@@ -39,5 +40,12 @@
   "author": "Zhaomou Song",
   "rated_by": "Zhaomou Song",
   "secondary_rating": null,
-  "secondary_rated_by": null
+  "secondary_rated_by": null,
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_cctv_mast_with_pantilt_camera_head_64ff8efa582b4f3caa18e4b4c29580ac",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

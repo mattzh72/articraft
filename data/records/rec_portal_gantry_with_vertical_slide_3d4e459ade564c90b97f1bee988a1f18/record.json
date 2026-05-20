@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_portal_gantry_with_vertical_slide_3d4e459ade564c90b97f1bee988a1f18",
   "created_at": "2026-03-29T15:31:29Z",
   "updated_at": "2026-04-01T11:23:38Z",
@@ -22,16 +22,17 @@
     "prompt_preview": "A wide inspection portal with box-section legs, a rigid crossbeam, a central shuttle under the beam, and a narrow vertical tool carriage below the shuttle. T..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "1d16d72261ffdce1a3cfe7011cc345f049ba43d036bc7317ed10d9b080b95ff5",
-    "model_py_sha256": "cf5ed4ba31947a7c0d9a2dda6dde98b20a1a507f82e28501d8eba702d1addcc1"
+    "model_py_sha256": "0234a8042dd285374ab8e2e91e2e6ca04e45eb93bc00a450fca2a81697ab385c"
   },
   "collections": [
     "dataset"
@@ -39,5 +40,12 @@
   "author": "mattzh72",
   "rated_by": "mattzh72",
   "secondary_rating": 5,
-  "secondary_rated_by": "Zhaomou Song"
+  "secondary_rated_by": "Zhaomou Song",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_portal_gantry_with_vertical_slide_3d4e459ade564c90b97f1bee988a1f18",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

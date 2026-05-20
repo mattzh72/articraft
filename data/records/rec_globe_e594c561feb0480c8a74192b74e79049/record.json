@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_globe_e594c561feb0480c8a74192b74e79049",
   "created_at": "2026-04-27T03:03:43Z",
   "updated_at": "2026-04-27T08:06:48Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "An executive floor globe with a large sphere above a tripod stand and a circular map shelf. The sphere sits in a partial meridian on polar pivots, and the su..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "d421a7f74d90f41bd0c89f22c1dd8c4acf693f244bdf15e075a920f199438104",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_globe_e594c561feb0480c8a74192b74e79049",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

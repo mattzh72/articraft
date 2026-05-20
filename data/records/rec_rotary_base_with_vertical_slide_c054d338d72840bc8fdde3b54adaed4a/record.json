@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_rotary_base_with_vertical_slide_c054d338d72840bc8fdde3b54adaed4a",
   "created_at": "2026-03-29T15:31:29Z",
   "updated_at": "2026-04-01T11:25:13Z",
@@ -22,16 +22,17 @@
     "prompt_preview": "A pedestal indexer with a round turntable base, a rigid upper mast mounted on the turntable, and a twin-rail vertical carriage on the mast. The base and mast..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "d7e40efdd4959db5e6706dfa2319daeef1b8b7067f5bcee28ff10e6f15fa564e",
-    "model_py_sha256": "3ed759d180eaaa7ab9910a072941e913f96942aed43b21708e3706416a49bbd9"
+    "model_py_sha256": "b1fd6a0c2135d1bb22ca3d4dec01c295010cc8d850f126e196e07ea6250a3245"
   },
   "collections": [
     "dataset"
@@ -39,5 +40,12 @@
   "author": "mattzh72",
   "rated_by": "mattzh72",
   "secondary_rating": 5,
-  "secondary_rated_by": "Zhaomou Song"
+  "secondary_rated_by": "Zhaomou Song",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_rotary_base_with_vertical_slide_c054d338d72840bc8fdde3b54adaed4a",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

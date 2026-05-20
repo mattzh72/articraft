@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_laptop_clamshell_c14856c024cb49e18c816f19aa8a648e",
   "created_at": "2026-04-04T14:35:04Z",
   "updated_at": "2026-04-05T13:11:44Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A compact student laptop with two side latches and a thick display bezel. The lower shell carries the keyboard, the lid is hinged along the rear edge, and th..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "d8b676b5a3a112ebb90ff319f24c57b9f44a54466cebc4351e684aca4969a7a9",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_laptop_clamshell_c14856c024cb49e18c816f19aa8a648e",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

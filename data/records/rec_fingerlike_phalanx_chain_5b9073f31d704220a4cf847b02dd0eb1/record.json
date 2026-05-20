@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_fingerlike_phalanx_chain_5b9073f31d704220a4cf847b02dd0eb1",
   "created_at": "2026-03-29T15:31:29Z",
   "updated_at": "2026-04-01T11:26:24Z",
@@ -22,16 +22,17 @@
     "prompt_preview": "An industrial finger module with a thick root knuckle, a tapered middle link, a short distal link, and a broad pad tip. The links should feel rigid and mecha..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "b01404bd6a8e527db95cc63139aedcd4cd5ab9aeafe3d1c6e41b3a09ff27f0f4",
-    "model_py_sha256": "198381929cb9307cca86467ac3256681f4b690e40a83124a8b4beb031dd6b5a8"
+    "model_py_sha256": "552efb2ec85ef935143821d6ca283fd051e5312547ab934c90a79834fab0347e"
   },
   "collections": [
     "dataset"
@@ -39,5 +40,12 @@
   "author": "mattzh72",
   "rated_by": "mattzh72",
   "secondary_rating": 5,
-  "secondary_rated_by": "Zhaomou Song"
+  "secondary_rated_by": "Zhaomou Song",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_fingerlike_phalanx_chain_5b9073f31d704220a4cf847b02dd0eb1",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

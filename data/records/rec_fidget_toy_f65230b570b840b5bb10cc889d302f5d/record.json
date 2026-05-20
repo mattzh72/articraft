@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_fidget_toy_f65230b570b840b5bb10cc889d302f5d",
   "created_at": "2026-04-27T13:12:47Z",
   "updated_at": "2026-04-28T07:26:55Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A spinning-top fidget desk toy with a wide flat disc body, a rounded underside tapering to a blunt tip, and a short ribbed finger-grip stem at the top. The d..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "829add1938a683324bdc73716e9b769f9b52cdc9fd8f1a7b7661637bf3f7f05b",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_fidget_toy_f65230b570b840b5bb10cc889d302f5d",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

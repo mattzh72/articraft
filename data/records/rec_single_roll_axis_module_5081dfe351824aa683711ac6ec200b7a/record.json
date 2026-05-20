@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_single_roll_axis_module_5081dfe351824aa683711ac6ec200b7a",
   "created_at": "2026-03-31T17:20:51Z",
   "updated_at": "2026-03-31T18:41:20Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A bridge-supported roll-axis spindle module. A rigid lower saddle carries a short bridge or cap support, with the moving head clearly captured between the fi..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "dd44cf43948e4f4a0d22518801853567f5a9aa86de21e6a4cbf869ba53565212",
-    "model_py_sha256": "de963b583f9665c60966ad6ec0558983dd0ef4550bc94b615b8cf5b58c0524fe"
+    "model_py_sha256": "d8ef3196828855d5788f350c927511bb1451ad577433cc2a4d0b9a37fdcde650"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_single_roll_axis_module_5081dfe351824aa683711ac6ec200b7a",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

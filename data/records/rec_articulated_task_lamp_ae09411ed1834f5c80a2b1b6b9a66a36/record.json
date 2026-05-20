@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_articulated_task_lamp_ae09411ed1834f5c80a2b1b6b9a66a36",
   "created_at": "2026-04-01T11:52:53Z",
   "updated_at": "2026-04-03T16:55:17Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A classic architect's desk lamp with a weighted round base, a vertical post, a two-link arm with a revolute shoulder joint at the post top and a revolute elb..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "5d1c92a1ded59d892cf95b4058cc9c61591f8d47973ca596cfb0409df759b881",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_articulated_task_lamp_ae09411ed1834f5c80a2b1b6b9a66a36",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

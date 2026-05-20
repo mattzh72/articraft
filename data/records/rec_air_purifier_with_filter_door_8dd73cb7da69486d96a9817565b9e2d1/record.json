@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_air_purifier_with_filter_door_8dd73cb7da69486d96a9817565b9e2d1",
   "created_at": "2026-04-27T13:38:06Z",
   "updated_at": "2026-04-28T05:40:58Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A flat wall-panel air purifier with a front access door and a rectangular filter cartridge behind it. The front access door rotates on a vertical hinge at th..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "66415846c0b4fb9bbd9c35a4f63d7a9164a5797690ef25ae8ada09af47d1179a",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_air_purifier_with_filter_door_8dd73cb7da69486d96a9817565b9e2d1",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

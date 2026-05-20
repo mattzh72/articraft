@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_car_sunroof_cassette_0ee8cfc1ab884693a6f0c90c8ac038f5",
   "created_at": "2026-04-27T03:26:26Z",
   "updated_at": "2026-04-27T07:13:20Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A spoiler sunroof cassette with a rectangular aluminium frame, a glass panel that lifts at the rear edge on a horizontal revolute hinge at the front frame ra..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "5a7f933f8797544a5b9deacc9909c2cad1a423a093353e9645d03c604a38210a",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_car_sunroof_cassette_0ee8cfc1ab884693a6f0c90c8ac038f5",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

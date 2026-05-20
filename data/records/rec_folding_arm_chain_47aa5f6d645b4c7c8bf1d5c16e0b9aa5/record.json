@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_folding_arm_chain_47aa5f6d645b4c7c8bf1d5c16e0b9aa5",
   "created_at": "2026-03-31T17:20:51Z",
   "updated_at": "2026-03-31T18:35:47Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "An offset-rocker folding arm chain. A grounded base foot supports stepped links whose widths and offsets vary from root to tip so the chain does not read as..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "063ef387912ad6a4431cb7318303604d12ba32f68079a7f6835a6f93d98d7a95",
-    "model_py_sha256": "70a5e589541fe93f3c63280bf9edf7dd5edab46ec61cd122995b684511cf9d19"
+    "model_py_sha256": "63bf2f7fdc35386012ef298d06409e562c152d5183c2ae80b50ed705acaee32b"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_folding_arm_chain_47aa5f6d645b4c7c8bf1d5c16e0b9aa5",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

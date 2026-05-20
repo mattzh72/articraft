@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_twojoint_prismatic_chain_53ca07eacca14c0a9ee70f72c8ffa0a1",
   "created_at": "2026-04-01T18:09:34Z",
   "updated_at": "2026-04-06T01:36:47Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A compact service two-stage axis. A broad grounded body supports one main carriage and one smaller terminal carriage. The two stages are serial prismatic joi..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "fa3d8de56e7acb1987375ce364e45e3e19dfe6c039891dd6216933c8cd5c153c",
-    "model_py_sha256": "6ba5fc171c55b886cbe5370ad4e5b8e5c4308dbf07c8382e71f61f0fb02b3765"
+    "model_py_sha256": "256a342fe9a26e4e6a02d9c2902aa8160e0ba63ae7ba21ed9158a25b087e25e8"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_twojoint_prismatic_chain_53ca07eacca14c0a9ee70f72c8ffa0a1",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

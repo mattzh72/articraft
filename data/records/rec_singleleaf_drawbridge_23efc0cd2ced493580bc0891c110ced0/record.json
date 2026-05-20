@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_singleleaf_drawbridge_23efc0cd2ced493580bc0891c110ced0",
   "created_at": "2026-04-05T22:33:08Z",
   "updated_at": "2026-04-06T14:01:21Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A single-leaf drawbridge. A fixed shore frame carries one bridge leaf on heavy side bearings. Joints: the bridge leaf is a single revolute panel about a hori..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "0e5950ef1976e60032a4345dc3b0456a6de2bc3ecccc2fb9705b2b8ec3b20249",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_singleleaf_drawbridge_23efc0cd2ced493580bc0891c110ced0",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

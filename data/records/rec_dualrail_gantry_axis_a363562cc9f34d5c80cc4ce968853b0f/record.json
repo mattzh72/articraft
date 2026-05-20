@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_dualrail_gantry_axis_a363562cc9f34d5c80cc4ce968853b0f",
   "created_at": "2026-04-03T21:46:47Z",
   "updated_at": "2026-04-06T01:26:01Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A wide-base dual-rail gantry. A long two-rail base supports a traveling bridge carriage, and the bridge carries a compact tool slide near its midpoint. The b..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "f18cdd75b02e41134c739ce0e8d6720a6c483db455f675377da04522fe33d25b",
-    "model_py_sha256": "215752b90a403d6b00aa11aa355832acde3fb7da12834fb291e08817f3dd51ed"
+    "model_py_sha256": "860cb2f8cf7fb7d68e8a07deb52e348908db3ba59198c69947970253ef9874be"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_dualrail_gantry_axis_a363562cc9f34d5c80cc4ce968853b0f",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_floor_standing_drafting_table_076d09e8ec4a4b839858371159b9983f",
   "created_at": "2026-04-26T10:10:24Z",
   "updated_at": "2026-04-27T10:43:49Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A floor-standing drafting table with a trestle base, an upper tilt frame, and a large rectangular drawing surface. The drawing surface rotates on horizontal..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "daf4b4653c142e3fc96116248757adc6292f6ea7b1cc55867edc6bc88fe35e18",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_floor_standing_drafting_table_076d09e8ec4a4b839858371159b9983f",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

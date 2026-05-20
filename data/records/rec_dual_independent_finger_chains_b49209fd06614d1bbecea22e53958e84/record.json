@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_dual_independent_finger_chains_b49209fd06614d1bbecea22e53958e84",
   "created_at": "2026-04-27T03:27:32Z",
   "updated_at": "2026-04-27T07:13:14Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A bridge-palm twin finger assembly. A grounded palm bridge supports two narrow articulated fingers with visible side cheeks at every knuckle and slight lengt..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "01bb06edffe0e40563562c3c548dfeabacd046fb53c7cf289cdd58264ca0ebc8",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_dual_independent_finger_chains_b49209fd06614d1bbecea22e53958e84",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

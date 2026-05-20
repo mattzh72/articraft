@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_hinged_window_or_hatch_bb5a2b5ae6f249dd822ccc54bb051eca",
   "created_at": "2026-03-28T18:38:36Z",
   "updated_at": "2026-04-01T13:58:30Z",
@@ -22,12 +22,13 @@
     "prompt_preview": "A service hatch in a vehicle or equipment body with a gullwing lid. The fixed opening has a rigid perimeter frame, and the lid is attached along one roof-sid..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "62f9b2ea463539aa86b162f7e867f216c2be9b79074a59bbd0110a219c8fda0c",
@@ -39,5 +40,12 @@
   "author": "RuiningLi",
   "rated_by": "RuiningLi",
   "secondary_rating": 5,
-  "secondary_rated_by": "shawlyu"
+  "secondary_rated_by": "shawlyu",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_hinged_window_or_hatch_bb5a2b5ae6f249dd822ccc54bb051eca",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

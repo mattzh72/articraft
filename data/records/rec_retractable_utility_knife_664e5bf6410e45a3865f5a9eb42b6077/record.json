@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_retractable_utility_knife_664e5bf6410e45a3865f5a9eb42b6077",
   "created_at": "2026-03-28T18:38:36Z",
   "updated_at": "2026-04-01T13:54:16Z",
@@ -22,12 +22,13 @@
     "prompt_preview": "A retractable utility knife with a main blade slider on top and a hinged spare-blade compartment door in the handle side. The handle shell contains the blade..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "48bf65317ca416d042f2a6e672daf0eb09f5a0729570d9fbdf3251fa48b2f0c4",
@@ -39,5 +40,12 @@
   "author": "RuiningLi",
   "rated_by": "RuiningLi",
   "secondary_rating": 5,
-  "secondary_rated_by": "shawlyu"
+  "secondary_rated_by": "shawlyu",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_retractable_utility_knife_664e5bf6410e45a3865f5a9eb42b6077",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

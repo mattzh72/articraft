@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_fourjoint_revolute_chain_218da7c698c448378714e594c6949dbb",
   "created_at": "2026-04-27T13:31:39Z",
   "updated_at": "2026-04-28T07:11:58Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A long serial linkage with five slim box links, a fixed root foot, and a small square pad at the far end. The links should alternate slightly in length so th..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "90a2549d3eea9bd337b45abbac0f2e6da23f60ac2485407e5d203c23fe24add0",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_fourjoint_revolute_chain_218da7c698c448378714e594c6949dbb",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

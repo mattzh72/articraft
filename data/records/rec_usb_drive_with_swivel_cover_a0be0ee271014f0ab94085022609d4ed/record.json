@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_usb_drive_with_swivel_cover_a0be0ee271014f0ab94085022609d4ed",
   "created_at": "2026-04-05T23:31:18Z",
   "updated_at": "2026-04-06T13:41:30Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A USB drive with a swivel cover. A compact body carries the connector, and a U-shaped cover wraps around the body on a side pin. Joints: the cover rotates co..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "f5b0b6da0316482b0a95a8667e2e94fb2540951846316f0c4d6f0004b5e6da6b",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_usb_drive_with_swivel_cover_a0be0ee271014f0ab94085022609d4ed",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

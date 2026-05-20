@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_zippo_lighter_a7dd897b81784ba1922679502f97bdfd",
   "created_at": "2026-04-27T03:59:24Z",
   "updated_at": "2026-04-27T05:18:59Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A slim lighter with a tall narrow case, a side-hinged lid, and a compact chimney insert, plus a lift-out insert fit inside the lower shell. the narrow case p..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "a98360e408b3e4805d6cc9c60804e73d77f326814a7ffce5c69c350bff407c24",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_zippo_lighter_a7dd897b81784ba1922679502f97bdfd",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

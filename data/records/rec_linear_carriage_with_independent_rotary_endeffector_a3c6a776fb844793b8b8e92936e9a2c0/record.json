@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_linear_carriage_with_independent_rotary_endeffector_a3c6a776fb844793b8b8e92936e9a2c0",
   "created_at": "2026-03-31T17:20:51Z",
   "updated_at": "2026-03-31T18:41:01Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "An under-slung slide-and-rotary module. A top support carries a hanging carriage, and the hanging carriage supports a small spindle or faceplate on a local b..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "de1b74060c59c87e6bc49b9f06fb55aeeb75bbfa18234426a3865072b7e7436d",
-    "model_py_sha256": "d9714ab338166a11b0caeb203dbf0aa7001345bef09a2e8c2b6db31408726e1b"
+    "model_py_sha256": "87fd21a56ef8950eda9c5f17b567d93a1fe937f4c9969d61793d17bbdfb31e67"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_linear_carriage_with_independent_rotary_endeffector_a3c6a776fb844793b8b8e92936e9a2c0",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

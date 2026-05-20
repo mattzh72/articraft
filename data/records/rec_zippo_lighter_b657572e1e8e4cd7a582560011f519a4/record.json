@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_zippo_lighter_b657572e1e8e4cd7a582560011f519a4",
   "created_at": "2026-04-27T02:08:31Z",
   "updated_at": "2026-04-27T10:12:01Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A classic flip-top lighter with a rectangular outer case, an exposed perforated chimney insert, and a striker wheel beside the wick. The lid rotates upward o..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "ad042cab07bf34888e452788aebc030e29fe5633e3493a6c90e6fd6a5703d606",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_zippo_lighter_b657572e1e8e4cd7a582560011f519a4",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

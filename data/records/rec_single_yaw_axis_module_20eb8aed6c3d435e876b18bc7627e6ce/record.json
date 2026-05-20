@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_single_yaw_axis_module_20eb8aed6c3d435e876b18bc7627e6ce",
   "created_at": "2026-04-03T21:46:47Z",
   "updated_at": "2026-04-06T01:26:26Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A mast-top pan module. A short pedestal rises from a heavy foot and supports a compact rotary head with a square sensor plate at the top. One revolute joint..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "837ff9b472ffc6372c2c51cd936cb2286534f7c779b41d54b1f4089b5d3578d3",
-    "model_py_sha256": "cbc64cf21255e0e005cf26404d41209b58f9aa583eb7517928704e6106e0d8c9"
+    "model_py_sha256": "2bd60228f7aeb01a19bfe38ca7ebd746656df9dbcad77d7eb8915f6b5b0adee3"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_single_yaw_axis_module_20eb8aed6c3d435e876b18bc7627e6ce",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

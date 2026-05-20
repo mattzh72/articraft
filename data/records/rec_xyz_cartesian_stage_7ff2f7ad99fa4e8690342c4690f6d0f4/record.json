@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_xyz_cartesian_stage_7ff2f7ad99fa4e8690342c4690f6d0f4",
   "created_at": "2026-03-29T04:00:44Z",
   "updated_at": "2026-04-01T10:05:18Z",
@@ -22,16 +22,17 @@
     "prompt_preview": "A laboratory automation stage with a base rail pair, a traveling bridge saddle, and a descending Z ram carrying a compact mounting flange. The frame should f..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "b21d727c99e75411970627b18499566695623ee19744d9af7a664caee9ab54aa",
-    "model_py_sha256": "61d084c692ee39ef7725e340b4a6584341caa6ab8fdaa6e0b96d01db269c2584"
+    "model_py_sha256": "4be939be94c81718c527d851d7ed2709dfe4b679ab2ddd8b7e099ea787b25e26"
   },
   "collections": [
     "dataset"
@@ -39,5 +40,12 @@
   "author": "mattzh72",
   "rated_by": "mattzh72",
   "secondary_rating": 4,
-  "secondary_rated_by": "Zhaomou Song"
+  "secondary_rated_by": "Zhaomou Song",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_xyz_cartesian_stage_7ff2f7ad99fa4e8690342c4690f6d0f4",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

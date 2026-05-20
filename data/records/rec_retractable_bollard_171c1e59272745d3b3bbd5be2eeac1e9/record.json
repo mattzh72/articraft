@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_retractable_bollard_171c1e59272745d3b3bbd5be2eeac1e9",
   "created_at": "2026-04-11T02:10:02Z",
   "updated_at": "2026-04-11T04:53:19Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A compact retractable bollard with a short round post, a ground sleeve with drain slots, and a lock housing built into the top face. The post slides prismati..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "f422a2f3898b79bc7aba6a43f80154dfe8818cac84156514a12d0a90b4d930b4",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_retractable_bollard_171c1e59272745d3b3bbd5be2eeac1e9",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

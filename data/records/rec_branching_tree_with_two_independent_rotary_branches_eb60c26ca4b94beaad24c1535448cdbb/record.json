@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_branching_tree_with_two_independent_rotary_branches_eb60c26ca4b94beaad24c1535448cdbb",
   "created_at": "2026-04-27T13:03:15Z",
   "updated_at": "2026-04-28T07:37:32Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A wall-backed two-branch rotary bracket. A backplate and short standoff spine support two compact branch arms on separate knuckles, with enough offset betwee..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "493a953f92bfed7f36974f3d68c358303e93b206b426a9610a5783e2e3aff8d5",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_branching_tree_with_two_independent_rotary_branches_eb60c26ca4b94beaad24c1535448cdbb",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

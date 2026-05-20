@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_cctv_mast_with_pantilt_camera_head_e57e41780fa24427841c699cba49c568",
   "created_at": "2026-03-29T14:32:03Z",
   "updated_at": "2026-03-29T16:56:11Z",
@@ -22,12 +22,13 @@
     "prompt_preview": "A telescoping CCTV column with a square steel base tube and an inner round post that extends on a prismatic joint, a side-arm bracket at the inner post top,..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "659c37653350a21d8ad490770050c6567304a677ce999f3add800b07c7446320",
@@ -39,5 +40,12 @@
   "author": "Zhaomou Song",
   "rated_by": "Zhaomou Song",
   "secondary_rating": null,
-  "secondary_rated_by": null
+  "secondary_rated_by": null,
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_cctv_mast_with_pantilt_camera_head_e57e41780fa24427841c699cba49c568",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_mastmounted_fork_carriage_640cc497b82c493fb32f0367be3c74bf",
   "created_at": "2026-03-29T04:00:44Z",
   "updated_at": "2026-04-01T10:05:52Z",
@@ -22,16 +22,17 @@
     "prompt_preview": "A die-handling lift mast with box-section uprights, a broad faceplate carriage, and two stub load arms under a tall back frame. The moving carriage should lo..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "89924a8f4f39ad7a840ab9309a4d76bb1e18c87a1d907348ae75dd1deb34f58d",
-    "model_py_sha256": "8165e1c6072db5e54dafe7de5491df00b24eabba6638decfe34f8dc12bb895ca"
+    "model_py_sha256": "8e7af47513b54c8c73bef57fa517c1ca65b40a61313bb7cd64dadc680269c6fe"
   },
   "collections": [
     "dataset"
@@ -39,5 +40,12 @@
   "author": "mattzh72",
   "rated_by": "mattzh72",
   "secondary_rating": 5,
-  "secondary_rated_by": "Zhaomou Song"
+  "secondary_rated_by": "Zhaomou Song",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_mastmounted_fork_carriage_640cc497b82c493fb32f0367be3c74bf",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

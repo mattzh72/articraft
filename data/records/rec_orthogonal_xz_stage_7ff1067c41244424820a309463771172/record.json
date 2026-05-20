@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_orthogonal_xz_stage_7ff1067c41244424820a309463771172",
   "created_at": "2026-03-31T17:20:51Z",
   "updated_at": "2026-04-06T01:38:28Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "An under-plate XZ transfer axis. A top output pad is carried by a vertical slide mounted on a moving horizontal carriage below it. The lower stage is a horiz..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "90424bb1f0010c3473e0097ea605429a8faa6e3d9cffbce5f3549bfc6c0845c3",
-    "model_py_sha256": "d4ce3b4970e845e242ffa33d4de60d8003fee390ebdd54ffaf1b24a35d6d872f"
+    "model_py_sha256": "75fd6dc3458dc9a1c3a32c955d338f735f2e96d1e44c629a9fc93f9bc0c9a25e"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_orthogonal_xz_stage_7ff1067c41244424820a309463771172",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_single_revolute_hinge_c13589eb53fa474995aa8c2ac6caaac6",
   "created_at": "2026-04-03T21:46:47Z",
   "updated_at": "2026-04-06T01:25:46Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A clevis-backed hinge unit. A fixed cheeked support and a moving plate are connected by a centered hinge barrel with visible side cheeks at the root. The mov..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "35fa176a62b718a9142bd2fb28f3cc854910ae0a72196c96c51949a91a8793ad",
-    "model_py_sha256": "0b357eef08b4243390d2388f221e32814c153a14dc85b04446de28f0f103b193"
+    "model_py_sha256": "cda513d195fe604bfb14d69789064ee8b22fa6421025e379de244d096f1ba464"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_single_revolute_hinge_c13589eb53fa474995aa8c2ac6caaac6",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

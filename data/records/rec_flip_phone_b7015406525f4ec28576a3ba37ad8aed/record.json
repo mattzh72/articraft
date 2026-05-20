@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_flip_phone_b7015406525f4ec28576a3ba37ad8aed",
   "created_at": "2026-04-01T12:28:24Z",
   "updated_at": "2026-04-04T15:44:32Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A rugged outdoor flip phone with a thick rubber-armored lower body and a matching upper body joined by a reinforced double-barrel revolute hinge, and a side-..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "82b83428ec2fb044bdf27cf86936502fff3aecc682b715e383c082c9c6f9e6f4",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_flip_phone_b7015406525f4ec28576a3ba37ad8aed",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

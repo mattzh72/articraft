@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_desktop_stapler_with_hinged_top_arm_556e7d611ea94887bfe6ec2f84d592d5",
   "created_at": "2026-04-11T20:29:04Z",
   "updated_at": "2026-04-22T14:20:08Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A compact half-strip stapler with a weighted base, a narrow staple magazine hinged from the rear of the base, a curved top arm mounted to the rear of the mag..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "d7b6a097623e44d9d49a66e26e55ea0056b3b33dc38c3d32e25e6a3bd69c8570",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_desktop_stapler_with_hinged_top_arm_556e7d611ea94887bfe6ec2f84d592d5",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_windshield_sun_visor_ac722b51e5644c5fb2c082487fc6bcac",
   "created_at": "2026-04-06T17:49:14Z",
   "updated_at": "2026-04-07T01:12:05Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A car windshield sun visor. A padded visor panel hangs from a roof bracket with a main pivot arm and a secondary side-swing joint. Joints: the visor flips do..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "14da94ec2bc8fdf130f6d304c07ca6b16ea2a3ed311f0fbc4b95a4f989edd1de",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_windshield_sun_visor_ac722b51e5644c5fb2c082487fc6bcac",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

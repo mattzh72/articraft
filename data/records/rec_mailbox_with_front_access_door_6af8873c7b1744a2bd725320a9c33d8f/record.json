@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_mailbox_with_front_access_door_6af8873c7b1744a2bd725320a9c33d8f",
   "created_at": "2026-04-27T01:41:49Z",
   "updated_at": "2026-04-27T10:31:16Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A pedestal mailbox with a deep parcel compartment and a two-part front face. The upper section has a narrow deposit flap, and the lower section has a larger..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "95880e8c797ebf86836e60446226f17d9e228d813441690dae50d037beab9521",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_mailbox_with_front_access_door_6af8873c7b1744a2bd725320a9c33d8f",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

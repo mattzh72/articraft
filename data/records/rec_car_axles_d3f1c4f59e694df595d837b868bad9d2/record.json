@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_car_axles_d3f1c4f59e694df595d837b868bad9d2",
   "created_at": "2026-04-03T22:02:53Z",
   "updated_at": "2026-04-04T10:38:14Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A rear de Dion tube axle with a curved transverse tube and two independent CV-jointed half-shafts running inside the tube. The tube is fixed to the chassis l..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "7d8a6b0b58d32a8a2880ceedfa5f17b622f1c4f4a8caf61491b9434bdeb13701",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_car_axles_d3f1c4f59e694df595d837b868bad9d2",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_toaster_oven_564c1829e38c4322bdbe4e0308603491",
   "created_at": "2026-04-05T23:06:13Z",
   "updated_at": "2026-04-06T14:00:42Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A countertop toaster oven. A rectangular oven body carries a front door, side walls, and a control panel with shaft-mounted knobs. Joints: the door is revolu..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "eded22c23a9fc08188a7f1b4a8387594a8122683ad19e150a069c9aa03524004",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_toaster_oven_564c1829e38c4322bdbe4e0308603491",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

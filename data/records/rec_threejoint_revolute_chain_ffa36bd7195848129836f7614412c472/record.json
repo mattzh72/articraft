@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_threejoint_revolute_chain_ffa36bd7195848129836f7614412c472",
   "created_at": "2026-04-03T21:46:47Z",
   "updated_at": "2026-04-07T10:13:19Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A boxed three-link hinge chain. A fixed root clevis supports four rigid members in series ending in a simple output pad. Three serial revolute joints connect..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "604bd96e3bccb51d194a298706a85357ab9bdfb827fb336e769ba7dbf9f4fdda",
-    "model_py_sha256": "3f02911c8e48681942b82957feea124b62aae68e0fa286c753ae4caf6da6d59a"
+    "model_py_sha256": "7a3922ea515530106e304cdf5ad5e07f1512edb563f01c63939f7d2beebe2478"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_threejoint_revolute_chain_ffa36bd7195848129836f7614412c472",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

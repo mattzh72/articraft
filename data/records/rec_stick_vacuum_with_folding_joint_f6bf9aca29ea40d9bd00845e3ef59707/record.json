@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_stick_vacuum_with_folding_joint_f6bf9aca29ea40d9bd00845e3ef59707",
   "created_at": "2026-04-05T22:49:40Z",
   "updated_at": "2026-04-06T14:06:58Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A stick vacuum with a folding wand. A motor body connects to a straight wand and a floor head, with the fold joint placed between the body and the wand. Join..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "d2dd4aa5a139811d74534e089ff3f0f58e9ad942d2f83304bb501b5f5dc9bdbb",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_stick_vacuum_with_folding_joint_f6bf9aca29ea40d9bd00845e3ef59707",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

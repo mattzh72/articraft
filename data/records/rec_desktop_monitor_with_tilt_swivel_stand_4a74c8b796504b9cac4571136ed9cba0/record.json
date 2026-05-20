@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_desktop_monitor_with_tilt_swivel_stand_4a74c8b796504b9cac4571136ed9cba0",
   "created_at": "2026-04-26T13:57:48Z",
   "updated_at": "2026-04-28T07:53:04Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A 24-inch office desktop monitor with a rectangular display shell, a slim central neck, and a flat pedestal base with a small control bank under the lower be..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "cc152a1d76bb7308d9dbf10d0ed529a3a26d77e644c145443d4008f5cb2f6967",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_desktop_monitor_with_tilt_swivel_stand_4a74c8b796504b9cac4571136ed9cba0",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

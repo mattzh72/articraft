@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_jet_engine_81965eb9bf5f468b9afa79de7f78871d",
   "created_at": "2026-04-27T13:57:36Z",
   "updated_at": "2026-04-28T00:28:29Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A business-jet turbofan with a compact nacelle and rear clamshell thrust-reverser buckets. The main fan and core are aligned on the centerline, and two rever..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "37c23817ae9b5480a281dbdb04858f0df051295c790a261ed4a2a3cf9b9c7308",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_jet_engine_81965eb9bf5f468b9afa79de7f78871d",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

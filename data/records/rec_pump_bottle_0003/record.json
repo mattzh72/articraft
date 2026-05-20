@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_pump_bottle_0003",
   "created_at": "2026-03-26T13:59:57Z",
   "updated_at": "2026-04-01T16:29:51Z",
@@ -22,16 +22,17 @@
     "prompt_preview": "A lotion pump bottle with a square-shouldered container and a broad pump head. The bottle body is fixed, while the pump assembly at the neck includes a teles..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "160651b53b8796d1cf4aa20bfda9194ad4a20555f3d68bfabf2f2b3d8a4ab9d8",
-    "model_py_sha256": "81638f6ba55889bbbd4b90a0e97c3b58bce376981d4264c18cb9dfd17c71c00d"
+    "model_py_sha256": "db34c4079f8decc8149312df9acf19cc9f95c4f6bc76a1f4679c2cced2b20a12"
   },
   "collections": [
     "dataset"
@@ -39,5 +40,12 @@
   "author": "RuiningLi",
   "rated_by": "RuiningLi",
   "secondary_rating": 4,
-  "secondary_rated_by": "shawlyu"
+  "secondary_rated_by": "shawlyu",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_pump_bottle_0003",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

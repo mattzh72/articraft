@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_prismaticrevoluteprismatic_chain_1ede5eee9a0c457b93ee72f1e1348ff6",
   "created_at": "2026-03-29T15:31:29Z",
   "updated_at": "2026-04-01T10:45:51Z",
@@ -22,16 +22,17 @@
     "prompt_preview": "A compact service axis with a horizontal base slide, a carried hinge frame, and a small rectangular ram that extends from the hinged frame nose. The three mo..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "e31d384027e202612682125f66ac157830440ff604d29185eb899fd4fcb068be",
-    "model_py_sha256": "d08e035362f4e01e0a79b4bb2bd18d26eb047991e6f463a1a2f72b5ac18ab6b6"
+    "model_py_sha256": "db6540d8cebc0fe584233695effb122f4ed2d719c2c076ef1beee9762bf1166b"
   },
   "collections": [
     "dataset"
@@ -39,5 +40,12 @@
   "author": "mattzh72",
   "rated_by": "mattzh72",
   "secondary_rating": 3,
-  "secondary_rated_by": "Zhaomou Song"
+  "secondary_rated_by": "Zhaomou Song",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_prismaticrevoluteprismatic_chain_1ede5eee9a0c457b93ee72f1e1348ff6",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

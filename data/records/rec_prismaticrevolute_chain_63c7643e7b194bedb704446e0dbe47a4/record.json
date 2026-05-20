@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_prismaticrevolute_chain_63c7643e7b194bedb704446e0dbe47a4",
   "created_at": "2026-03-31T17:20:51Z",
   "updated_at": "2026-04-06T01:37:33Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A bridge-backed slide with rotary tip. A rear support carries a linear carriage whose front face supports a small hinged paddle. The linear stage is prismati..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "2a3f5b1a0026f9f35f488d9a0db29f99a40a4ba145e00ce7bb9d4940b2574fba",
-    "model_py_sha256": "61e7d699709908520e352211922925ee6cca809402bd36cf9c05044653d24627"
+    "model_py_sha256": "5a0c127caad2d1635105686b3e3f46acaa1bf025d6f63c34cc3e997b587b1e9e"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_prismaticrevolute_chain_63c7643e7b194bedb704446e0dbe47a4",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

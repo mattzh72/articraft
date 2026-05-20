@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_xyz_cartesian_stage_2f597340e2e548c69e6d6c7bad4be38f",
   "created_at": "2026-04-03T21:46:47Z",
   "updated_at": "2026-04-06T01:22:54Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A machine-table XYZ slide stack. A grounded lower X guide carries a broad carriage, the carriage carries a Y slide, and the Y slide carries a vertical Z stag..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "b7694f2c14f91a30f00ea8016c59d63355de2d975e2f3e0fe975e477f1f0bf34",
-    "model_py_sha256": "479cc551ef4728870d3916ee586beacf7c22204ab039a176ff872e523d54ebb8"
+    "model_py_sha256": "7893665cefb6382b48ac55e686a0576277fc4988fbff316f9861ac22f405afba"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_xyz_cartesian_stage_2f597340e2e548c69e6d6c7bad4be38f",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

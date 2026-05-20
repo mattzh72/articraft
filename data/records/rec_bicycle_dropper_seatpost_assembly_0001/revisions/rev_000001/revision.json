@@ -1,0 +1,43 @@
+{
+  "schema_version": 1,
+  "record_id": "rec_bicycle_dropper_seatpost_assembly_0001",
+  "revision_id": "rev_000001",
+  "created_at": "2026-03-17T12:30:38Z",
+  "prompt_kind": "single_prompt",
+  "prompt_sha256": "62ad727bae9f8b2a5e7cf63d9b175aaf9d546da36320bbf3f7700a336fdc0458",
+  "source": {
+    "run_id": "run_import_bicycle_dropper_seatpost_assembly_20260317-122404-realism-articulation-v1",
+    "prompt_batch_id": "realism_articulation_v1",
+    "prompt_index": 1
+  },
+  "generation": {
+    "provider": "openai",
+    "model_id": "gpt-5.4",
+    "thinking_level": "high",
+    "openai_transport": "http",
+    "openai_reasoning_summary": null,
+    "max_turns": 30
+  },
+  "artifacts": {
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
+    "prompt_series_json": null,
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
+  },
+  "hashes": {
+    "prompt_sha256": "62ad727bae9f8b2a5e7cf63d9b175aaf9d546da36320bbf3f7700a336fdc0458",
+    "model_py_sha256": "2977edbcb05cee050df330bc376f73d0ff5b9a3dd963da1086f17407275a1eeb"
+  },
+  "run_summary": {
+    "turn_count": 5,
+    "tool_call_count": null,
+    "compile_attempt_count": null,
+    "final_status": "success"
+  },
+  "parent": null,
+  "seed": null,
+  "inherited_inputs": []
+}

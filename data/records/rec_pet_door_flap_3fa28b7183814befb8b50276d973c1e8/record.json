@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_pet_door_flap_3fa28b7183814befb8b50276d973c1e8",
   "created_at": "2026-04-27T13:48:06Z",
   "updated_at": "2026-04-28T00:48:06Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A simple pet door flap in a rectangular wall frame. The rigid perimeter frame is fixed to the opening, and the flexible-looking flap is modeled as a rigid pa..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "1ed7f069d9de31070348b0429a164485c140e8888116b9c62b1a706b5085e572",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_pet_door_flap_3fa28b7183814befb8b50276d973c1e8",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_tv_wall_mount_28809122577a4ffaa7ae0baa15563620",
   "created_at": "2026-03-30T17:57:46Z",
   "updated_at": "2026-04-01T10:59:39Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A long-reach TV wall arm without the display. A wall plate carries a first link, a second link, and a rectangular VESA-style head with a short tilt yoke. Two..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "1376fa95666942317905c39af2849d23ebd6e52b2562f39c788644e9c51c12a1",
-    "model_py_sha256": "91d292774acf97a1d6f08ba7109210b579e208bb7d090884626b2fd1f5f09abe"
+    "model_py_sha256": "1862e826c45edb03ded1e3887cb5f1c1cdf7d1010ebf46776bbf47827580e3b6"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_tv_wall_mount_28809122577a4ffaa7ae0baa15563620",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

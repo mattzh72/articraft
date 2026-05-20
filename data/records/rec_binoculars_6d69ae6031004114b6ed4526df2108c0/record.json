@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_binoculars_6d69ae6031004114b6ed4526df2108c0",
   "created_at": "2026-04-03T22:08:02Z",
   "updated_at": "2026-04-04T10:29:30Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A monocular spotter with a single cylindrical objective housing, a prism body, and a rotating eyepiece with a twist-out eyecup. The eyepiece focus ring rotat..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "d6a7afed097c2b4046f9b4bec3267e9279710de4170d7834a2fefdaa3c254d24",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_binoculars_6d69ae6031004114b6ed4526df2108c0",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

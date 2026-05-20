@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_folding_kick_scooter_2dfdbf7ae3f541c1b8497da5c0a6faca",
   "created_at": "2026-04-27T13:14:17Z",
   "updated_at": "2026-04-28T07:20:36Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A realistic, highly detailed folding kick scooter with a clean deck, steering column, handlebar, wheel assemblies, and a believable folding mechanism integra..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "a02e75c527b144560dbca8c2fabc90f1714a075e0f100a0f5afa7042619edf56",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_folding_kick_scooter_2dfdbf7ae3f541c1b8497da5c0a6faca",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_threestage_telescoping_slide_0001",
   "created_at": "2026-03-12T18:37:15Z",
   "updated_at": "2026-04-01T10:33:25Z",
@@ -20,16 +20,17 @@
     "prompt_preview": "A long-reach linear slide composed of three telescoping sections, straight guide geometry, and industrial CAD-style detailing."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "1ea011b2d5b7be273eb33436f5c30455880dfa7d1740d09ddf71e780289b1a89",
-    "model_py_sha256": "024f6aa69732ab2df89605be1ef688abed9f12c6d278ec67ae34671122a199e4"
+    "model_py_sha256": "f746f5b9d82227b1f131264778a3e97a6fa29845002e22a1f9db152ff75998d9"
   },
   "collections": [
     "dataset"
@@ -37,5 +38,12 @@
   "author": "mattzh72",
   "rated_by": "mattzh72",
   "secondary_rating": 4,
-  "secondary_rated_by": "Zhaomou Song"
+  "secondary_rated_by": "Zhaomou Song",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_threestage_telescoping_slide_0001",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

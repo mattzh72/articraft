@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_car_sunroof_cassette_0001",
   "created_at": "2026-03-16T14:57:20Z",
   "updated_at": "2026-03-20T22:37:45Z",
@@ -20,16 +20,17 @@
     "prompt_preview": "A realistic, highly detailed car sunroof cassette with a framed roof opening, a sliding glass panel, visible side rails, and a believable automotive-roof-mod..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "f1817cd964ffb49477fec4b6f86acfeca1edf88d613f440d92c3f812d9d91bd0",
-    "model_py_sha256": "40d2741f1fe13e828df99856b795e5e05a29d022452faf007e761be0c8fbe30b"
+    "model_py_sha256": "75bb55f4fae826b9eb6af3ce0e27347b15d12f31464bbe8ae0efe45b04389df7"
   },
   "collections": [
     "dataset"
@@ -37,5 +38,12 @@
   "author": "mattzh72",
   "rated_by": "mattzh72",
   "secondary_rating": null,
-  "secondary_rated_by": null
+  "secondary_rated_by": null,
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_car_sunroof_cassette_0001",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

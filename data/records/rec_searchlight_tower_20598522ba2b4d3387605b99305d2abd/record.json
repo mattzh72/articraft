@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_searchlight_tower_20598522ba2b4d3387605b99305d2abd",
   "created_at": "2026-04-05T22:18:28Z",
   "updated_at": "2026-04-06T14:16:00Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A searchlight tower with a pan-tilt lamp head. A mast support carries a yoke, and the lamp body sits between the yoke arms. Joints: the head pans on a vertic..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "09d64acd124483f996be10b599899afe30dad7c15138dbb02c5693b3c021f57a",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_searchlight_tower_20598522ba2b4d3387605b99305d2abd",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

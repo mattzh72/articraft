@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_revoluterevoluteprismatic_chain_86513fa31e604178acc51f99b87df7fe",
   "created_at": "2026-03-31T17:20:51Z",
   "updated_at": "2026-03-31T18:48:23Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A compact service elbow arm with extending face. A grounded base carries an upper link, a shorter distal link, and a tip slider that stays clearly smaller th..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "c82b7f5c07f5e320d815fbe78fad18314d626ed1ee1223ffb8c99584be28ccb8",
-    "model_py_sha256": "929d032627c606ca80e95748bc7db6020abf3b992a0400de0bf114ddf78911ab"
+    "model_py_sha256": "bfc79b3cc4901423235814c82daddb3b85e04810b9c3259e7b274038eda57f8f"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_revoluterevoluteprismatic_chain_86513fa31e604178acc51f99b87df7fe",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

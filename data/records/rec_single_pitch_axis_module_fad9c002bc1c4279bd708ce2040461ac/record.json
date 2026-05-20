@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_single_pitch_axis_module_fad9c002bc1c4279bd708ce2040461ac",
   "created_at": "2026-03-31T17:20:51Z",
   "updated_at": "2026-04-06T01:38:49Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "An under-slung pitch-axis trunnion module. A top support bracket carries the moving member below it, creating a different silhouette while keeping the same s..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "34b225ed69032943332694c43e1151a4bd4c428217e3c9f1a0327ba21217495e",
-    "model_py_sha256": "843335191de65b6a2077cfa6d10198816704b84e96ad870d0a21a52130c85278"
+    "model_py_sha256": "7555ae984ff80ea213baae50fc672530f0074103dbe8a4a043510f00c184760d"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_single_pitch_axis_module_fad9c002bc1c4279bd708ce2040461ac",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

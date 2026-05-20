@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_shoulderelbowwrist_arm_5a626a8b2b99499c9348e117433866d9",
   "created_at": "2026-04-27T13:24:04Z",
   "updated_at": "2026-04-28T07:19:43Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A bench robot arm with a rotating shoulder pedestal, an upper arm link, a forearm link, and a compact wrist roll cartridge carrying a tool flange. The pedest..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "b73ec12d3c690a8f5bde551989c8a074f2afd7bfae7df11267ddd79f0857f215",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_shoulderelbowwrist_arm_5a626a8b2b99499c9348e117433866d9",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

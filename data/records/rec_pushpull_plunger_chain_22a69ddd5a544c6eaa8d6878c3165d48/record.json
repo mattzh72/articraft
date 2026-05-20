@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_pushpull_plunger_chain_22a69ddd5a544c6eaa8d6878c3165d48",
   "created_at": "2026-03-30T17:57:46Z",
   "updated_at": "2026-04-01T11:16:29Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A wall-backed pushrod mechanism with a hinged output. A rigid backplate carries a guide tube and a small front clevis holding a rectangular lever. The pushro..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "75921540803e81196ec3efec7f7b55fb9d6dd5c86002c41c9f1af588069934b0",
-    "model_py_sha256": "cac01a1805f4d7f239d1cc6a8b11b7091af350e28df17745497a4ee847d36dd9"
+    "model_py_sha256": "3a7da292175ac0698c6c0104a0d1e21b757e41e43d30e7374401dfc05ce5ab5a"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_pushpull_plunger_chain_22a69ddd5a544c6eaa8d6878c3165d48",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

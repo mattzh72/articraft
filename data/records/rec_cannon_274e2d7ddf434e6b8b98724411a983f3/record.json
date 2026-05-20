@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_cannon_274e2d7ddf434e6b8b98724411a983f3",
   "created_at": "2026-04-27T13:56:59Z",
   "updated_at": "2026-04-28T00:29:36Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A realistic, highly detailed field cannon with a thick barrel, visible trunnions, a sturdy two-wheel carriage, and a rear trail support with convincing histo..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "2ed93360c97cf76497b1e3c5ece809822dfef160a63beef5dc852b4ee84ecf82",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_cannon_274e2d7ddf434e6b8b98724411a983f3",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

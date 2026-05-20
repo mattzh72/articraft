@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_single_roll_axis_module_0c83ff4a1dd94270aac8062eff493e1d",
   "created_at": "2026-03-31T17:20:51Z",
   "updated_at": "2026-04-06T01:39:52Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A split-cheek roll-axis spindle module. A grounded base plate carries two side supports and a compact moving head with a plain output face. One revolute join..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "e56e01237e937f046150d99f6909de5ffa2d840800923a53e1d545a8caeb7e3b",
-    "model_py_sha256": "1d5f128348c3b1f3af44de32cbd2600a3fe830e64f44a65d56189d0047cb9fa6"
+    "model_py_sha256": "bd078c837e83af0652c71aa3088b204dcb73ba77990eed86f8b75028df700aee"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_single_roll_axis_module_0c83ff4a1dd94270aac8062eff493e1d",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

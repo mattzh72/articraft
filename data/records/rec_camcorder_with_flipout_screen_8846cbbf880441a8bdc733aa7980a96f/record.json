@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_camcorder_with_flipout_screen_8846cbbf880441a8bdc733aa7980a96f",
   "created_at": "2026-04-27T14:09:52Z",
   "updated_at": "2026-04-28T00:09:14Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A home-video camcorder with a compact body, a hand strap, a flip-out side screen, and a front zoom lens, plus a top mode dial behind the handle. the screen h..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "3c423544d9aade4062f6e44582253ed828c9d6f16d7bbeb53644e82118aa1a0d",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_camcorder_with_flipout_screen_8846cbbf880441a8bdc733aa7980a96f",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

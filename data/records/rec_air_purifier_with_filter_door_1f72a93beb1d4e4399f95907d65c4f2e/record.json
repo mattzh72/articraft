@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_air_purifier_with_filter_door_1f72a93beb1d4e4399f95907d65c4f2e",
   "created_at": "2026-04-12T15:13:57Z",
   "updated_at": "2026-04-12T15:57:55Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A compact purifier with a hinged lower front panel and a small top rocker switch. The lower front panel rotates outward on a side hinge, the internal filter..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "5cf5b6e7715dd51573307f9224212760481690c9fffd2700122f1c7c9e54fbe6",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_air_purifier_with_filter_door_1f72a93beb1d4e4399f95907d65c4f2e",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

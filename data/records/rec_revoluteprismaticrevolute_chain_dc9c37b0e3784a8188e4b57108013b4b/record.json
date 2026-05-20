@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_revoluteprismaticrevolute_chain_dc9c37b0e3784a8188e4b57108013b4b",
   "created_at": "2026-04-27T01:41:49Z",
   "updated_at": "2026-04-27T10:41:12Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A low-profile rotary-slide-rotary assembly. A grounded base supports one hinged body, the hinged body supports a small linear stage, and the linear stage sup..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "9e37e69853e1457508c9e8abad19e21801af297fae7f66f73ea01ffe9fc49ff2",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_revoluteprismaticrevolute_chain_dc9c37b0e3784a8188e4b57108013b4b",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

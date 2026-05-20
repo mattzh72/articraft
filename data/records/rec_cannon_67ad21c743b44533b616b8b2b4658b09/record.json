@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_cannon_67ad21c743b44533b616b8b2b4658b09",
   "created_at": "2026-04-27T14:17:42Z",
   "updated_at": "2026-04-27T23:08:04Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A medieval iron cannon with a thick barrel on a sloped timber carriage, the barrel tilting on trunnion revolute joints and the carriage resting on two large..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "a5d8e1b4e180dd1bf378010a4793ac692e8df5efd7be375e101d421dd3cc23f9",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_cannon_67ad21c743b44533b616b8b2b4658b09",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

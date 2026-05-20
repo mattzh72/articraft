@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_flap_array_with_independent_hinges_0001",
   "created_at": "2026-03-12T18:17:05Z",
   "updated_at": "2026-04-01T10:29:18Z",
@@ -20,16 +20,17 @@
     "prompt_preview": "A panel with multiple flap elements, each mounted on its own independent hinge axis, arranged in a uniform mechanical array."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "5b8bca27fe2ce7a5f883eacebda6b6e28e4f819d5aa0ecf7ba7e816c776b6865",
-    "model_py_sha256": "c12c2aaffaa7880a6fd4396cde1fe3fac6c0516822ca11faaeca896de5128bd5"
+    "model_py_sha256": "4a706d7d5c339f4f2538e99ec8333bd999509367ad2554a39ca8f1fbb2497697"
   },
   "collections": [
     "dataset"
@@ -37,5 +38,12 @@
   "author": "mattzh72",
   "rated_by": "mattzh72",
   "secondary_rating": 5,
-  "secondary_rated_by": "Zhaomou Song"
+  "secondary_rated_by": "Zhaomou Song",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_flap_array_with_independent_hinges_0001",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

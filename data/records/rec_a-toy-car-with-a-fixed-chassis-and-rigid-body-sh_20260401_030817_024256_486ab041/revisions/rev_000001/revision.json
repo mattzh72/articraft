@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "record_id": "rec_a-toy-car-with-a-fixed-chassis-and-rigid-body-sh_20260401_030817_024256_486ab041",
+  "revision_id": "rev_000001",
+  "created_at": "2026-04-01T03:08:17Z",
+  "prompt_kind": "single_prompt",
+  "prompt_sha256": "cabe9ffa605e3a2df15642d3a4ce8885be8576e70173642fd71acfb1d6e4940c",
+  "source": {
+    "run_id": "run_20260401_030817_024256_486ab041",
+    "prompt_batch_id": null,
+    "batch_spec_id": null,
+    "row_id": null,
+    "prompt_index": null
+  },
+  "generation": {
+    "provider": "openai",
+    "model_id": "gpt-5.4",
+    "thinking_level": "high",
+    "openai_transport": "http",
+    "openai_reasoning_summary": "auto",
+    "max_turns": 50,
+    "max_cost_usd": null
+  },
+  "artifacts": {
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
+    "prompt_series_json": null,
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
+  },
+  "hashes": {
+    "prompt_sha256": "cabe9ffa605e3a2df15642d3a4ce8885be8576e70173642fd71acfb1d6e4940c",
+    "model_py_sha256": "bb1932e6e4de144cf0a47a15f05274b95a8feb21f26ba33873e95849c91af0d7"
+  },
+  "run_summary": {
+    "turn_count": 9,
+    "tool_call_count": 9,
+    "compile_attempt_count": 4,
+    "final_status": "success"
+  },
+  "parent": null,
+  "seed": null,
+  "inherited_inputs": []
+}

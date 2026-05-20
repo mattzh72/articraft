@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_ring_light_on_stand_3d9b38d7670c4291a3fbca14d927ecdf",
   "created_at": "2026-04-04T14:59:47Z",
   "updated_at": "2026-04-05T11:49:12Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A salon ring light with a side-mounted accessory arm. The ring head is held in a tilt yoke above a telescoping stand, and a short accessory arm folds from on..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "ee43da94bb3320d8df1eb5087b060f381a13b2b7d376d796a6d3f4fe94def86f",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_ring_light_on_stand_3d9b38d7670c4291a3fbca14d927ecdf",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

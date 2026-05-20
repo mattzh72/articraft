@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_prismaticrevoluteprismatic_chain_6f6049879b6447c6b5c12bf946c1fbe3",
   "created_at": "2026-03-31T17:20:51Z",
   "updated_at": "2026-03-31T18:39:37Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "An under-slung slide-link-slide unit. A top support carries a hanging carriage, the carriage carries a hinged elbow frame, and the elbow frame carries a comp..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "461e2b1a1b50fc4eb224f0b10628075fc07f057f69a6ab1960af094aadc9aa92",
-    "model_py_sha256": "c096124a8e8d2b7326fb6a094e7e095112e84c945be5b9c3c87e5728dce24eb7"
+    "model_py_sha256": "c717768b44a46058035519672bebe015bd01e54a0bc87dec8a0850e470bf6564"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_prismaticrevoluteprismatic_chain_6f6049879b6447c6b5c12bf946c1fbe3",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

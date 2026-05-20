@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_waffle_maker_f272bc22a2964302a94b686d3f5ae59b",
   "created_at": "2026-04-11T23:19:05Z",
   "updated_at": "2026-04-22T14:09:06Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A four-section waffle maker with a square lower body, a thick top shell, and a centered front handle, plus a thermostat dial on the side wall. the shell prop..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "e8b021db07bdc170f93b6bafabdc692ed0523bfae4c292cc28a1a75569644ba3",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_waffle_maker_f272bc22a2964302a94b686d3f5ae59b",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

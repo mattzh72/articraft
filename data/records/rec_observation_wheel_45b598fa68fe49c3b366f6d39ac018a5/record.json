@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_observation_wheel_45b598fa68fe49c3b366f6d39ac018a5",
   "created_at": "2026-04-27T01:41:49Z",
   "updated_at": "2026-04-27T10:26:14Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A small amusement-park observation wheel with open gondola seats hanging below straight radial arms. The seat hangers remain clearly separate from the rim an..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "0c5345670733e988c6411148b622bc3d2291dd070166845e740c0cf40db5607e",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_observation_wheel_45b598fa68fe49c3b366f6d39ac018a5",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

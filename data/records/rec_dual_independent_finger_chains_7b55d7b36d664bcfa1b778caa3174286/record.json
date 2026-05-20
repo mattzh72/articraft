@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_dual_independent_finger_chains_7b55d7b36d664bcfa1b778caa3174286",
   "created_at": "2026-03-29T15:31:29Z",
   "updated_at": "2026-04-01T11:27:16Z",
@@ -22,16 +22,17 @@
     "prompt_preview": "A two-finger manipulator core with a split palm block and two unequal finger chains mounted side by side on separate pedestals, one ending in a rounded pad a..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "4618650f0025d550115141f176b40a1e99165dce2409314ea5b849862e1fd10e",
-    "model_py_sha256": "b0e512bb48a6262a22ed5cb87e5a43b6dc5f86bc095f0704db0f5ea82fc99ffe"
+    "model_py_sha256": "ef6fced4eb905cb9ff71d7d6cb461e5af915d63db9a4a65978ce56cf5aed0e44"
   },
   "collections": [
     "dataset"
@@ -39,5 +40,12 @@
   "author": "mattzh72",
   "rated_by": "mattzh72",
   "secondary_rating": 5,
-  "secondary_rated_by": "Zhaomou Song"
+  "secondary_rated_by": "Zhaomou Song",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_dual_independent_finger_chains_7b55d7b36d664bcfa1b778caa3174286",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

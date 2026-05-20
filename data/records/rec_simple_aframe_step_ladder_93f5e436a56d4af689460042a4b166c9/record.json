@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_simple_aframe_step_ladder_93f5e436a56d4af689460042a4b166c9",
   "created_at": "2026-04-27T13:48:01Z",
   "updated_at": "2026-04-28T00:33:51Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "Generate a compact apartment/desktop version of Simple aframe step ladder. Keep footprint and envelope efficient while preserving full functional articulatio..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "8a869ebafb0fc779637c1cdc67f74f2c264ab8e329bd9ec2b3b6023a46392fdd",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_simple_aframe_step_ladder_93f5e436a56d4af689460042a4b166c9",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

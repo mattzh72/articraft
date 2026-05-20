@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_dualrail_gantry_axis_2fb12bc0df2e48368f1180edd8097484",
   "created_at": "2026-04-27T13:18:22Z",
   "updated_at": "2026-04-28T07:23:02Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A tabletop gantry axis with two long side rails, a stiff bridge beam spanning them, and a hanging tool sled under the beam. The bridge and the sled should be..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "bafa159684f697368f37bf8cc0f30f5fc5bad055a5d3dbb3cf875d315bb763f3",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_dualrail_gantry_axis_2fb12bc0df2e48368f1180edd8097484",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

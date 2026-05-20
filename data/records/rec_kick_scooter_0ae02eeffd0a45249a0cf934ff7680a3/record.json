@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_kick_scooter_0ae02eeffd0a45249a0cf934ff7680a3",
   "created_at": "2026-04-27T01:59:13Z",
   "updated_at": "2026-04-27T09:58:44Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "An off-road kick scooter with large pneumatic wheels and a front fork. The long deck is fixed between a steerable front fork and a rear wheel swing bracket,..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "4a702c7d24f2631d5fa84dd7cc6be766a1aa0680338d9cefbe3819f1aa1d122f",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_kick_scooter_0ae02eeffd0a45249a0cf934ff7680a3",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

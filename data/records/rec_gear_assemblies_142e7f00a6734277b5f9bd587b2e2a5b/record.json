@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_gear_assemblies_142e7f00a6734277b5f9bd587b2e2a5b",
   "created_at": "2026-04-26T08:06:44Z",
   "updated_at": "2026-04-27T10:45:28Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A stacked reduction gear bench assembly. A grounded side frame supports four parallel shafts carrying large and small spur gears in a stepped reduction layou..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "da1ab19e56b896dcfa8d247b7f0a035bbc8d687b582f75dd3adf42c5e2eeb97f",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_gear_assemblies_142e7f00a6734277b5f9bd587b2e2a5b",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

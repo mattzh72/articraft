@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_clock_tower_with_rotating_hour_and_minute_hands_a1cbb159a53b40bd9fe0ab30f5135cca",
   "created_at": "2026-04-27T02:53:42Z",
   "updated_at": "2026-04-27T08:20:40Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A timber-frame village clock tower with a rectangular wooden shaft, a pyramidal shingled roof, and a single clock face. The minute hand rotates continuously..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "8f7d83dff76d55203105c20b1b7eab826488bdd2de3e85f6bd2463016ea46357",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_clock_tower_with_rotating_hour_and_minute_hands_a1cbb159a53b40bd9fe0ab30f5135cca",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

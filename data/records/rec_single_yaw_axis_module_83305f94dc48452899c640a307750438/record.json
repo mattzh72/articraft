@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_single_yaw_axis_module_83305f94dc48452899c640a307750438",
   "created_at": "2026-04-03T21:46:47Z",
   "updated_at": "2026-04-06T01:26:30Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A low-wafer yaw module. A broad circular base supports a thin rotating upper deck with a short center bearing body kept visible below the deck. One revolute..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "85bf311b272336b413b54a7fc40c8deaebe40b49125450144ab63d7ada201cea",
-    "model_py_sha256": "2ebf8e16e4e9a5d3f407d6faa50ce2d82d9dbc34cdc81fc1e58640737d43d491"
+    "model_py_sha256": "e0dc9283669422baf9f7aed369394de2b9a27e361cf523173a67fdbbd05bb7c9"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_single_yaw_axis_module_83305f94dc48452899c640a307750438",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

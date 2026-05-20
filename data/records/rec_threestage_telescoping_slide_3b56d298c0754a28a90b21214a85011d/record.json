@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_threestage_telescoping_slide_3b56d298c0754a28a90b21214a85011d",
   "created_at": "2026-03-30T17:57:46Z",
   "updated_at": "2026-04-01T11:06:43Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A low-profile three-stage slide module. A broad outer stage supports a shorter middle stage and a compact inner stage, keeping each nested level easy to read..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "d42b6939d85e9a7ba474c775ac992f1fe9005224ec019d9fabca9a6e4ce9f69a",
-    "model_py_sha256": "ec347cd15c049c8ec8926e55d18a65de916cabe870a023bd86cbc4dcf7880583"
+    "model_py_sha256": "3d3d0b1c07e35ede89d26f9566dd97f4d20d4c40605d0f16eca17b41c51823e8"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_threestage_telescoping_slide_3b56d298c0754a28a90b21214a85011d",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

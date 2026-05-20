@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_monitor_mount_1fb9227ab08f4ad1ad2ff6912150eb55",
   "created_at": "2026-03-28T03:32:30Z",
   "updated_at": "2026-04-01T10:11:13Z",
@@ -22,16 +22,17 @@
     "prompt_preview": "A desk-mounted monitor arm shown without a screen. A clamp base carries a lower arm, an upper arm, and a compact VESA head with a tilt bracket. The shoulder,..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "e4ad59ffea0bc1fc4e50b9b78490817aaf79fdf66ffa649abd61fbc2729cccfe",
-    "model_py_sha256": "0579d9e7e0aef4dc0be38661d7d55b4cf23cc8179644a1c32cbf80cff9c1f76c"
+    "model_py_sha256": "25aea63b70c60f67d9d02d3e876826e8f60ea04d17db16c20a2716f0051d399c"
   },
   "collections": [
     "dataset"
@@ -39,5 +40,12 @@
   "author": "mattzh72",
   "rated_by": "mattzh72",
   "secondary_rating": 5,
-  "secondary_rated_by": "Zhaomou Song"
+  "secondary_rated_by": "Zhaomou Song",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_monitor_mount_1fb9227ab08f4ad1ad2ff6912150eb55",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

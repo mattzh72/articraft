@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_folding_arm_chain_a771ae57eff5461581c1dd42a0a376c2",
   "created_at": "2026-04-01T18:09:34Z",
   "updated_at": "2026-04-06T01:36:40Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A slim service folding arm chain. A narrow grounded spine supports a sequence of simple rigid links with compact joint cheeks and a small end pad at the end...."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "50d179e5cc6d75f439438f115a49153daf5fc4e59800aa14331359e843c719f6",
-    "model_py_sha256": "19e6458363f284c257f90ae01f21e6873ea3b24da7e4701e9a36c732b29f9753"
+    "model_py_sha256": "ecc5fc4a429d8f520480ee1953af2f4524a5b944ca6fd663b0e54e65709f5263"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_folding_arm_chain_a771ae57eff5461581c1dd42a0a376c2",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

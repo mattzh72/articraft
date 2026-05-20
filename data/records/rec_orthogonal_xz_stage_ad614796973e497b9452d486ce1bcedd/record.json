@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_orthogonal_xz_stage_ad614796973e497b9452d486ce1bcedd",
   "created_at": "2026-03-29T15:31:29Z",
   "updated_at": "2026-04-01T11:20:20Z",
@@ -22,16 +22,17 @@
     "prompt_preview": "An optics lift stage with a lateral rail, a traveling upright box mast, and a compact top bracket that rides on the mast. The base should feel short and broa..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "44db351578fd0d6fc2a2d7cd8998ed8a979e73df25334c50e81e4ee5dea52e9d",
-    "model_py_sha256": "5dcf05625a5ca10e9e4dddc2e5cea9601caaad1eb95690bdccd2979a74edb774"
+    "model_py_sha256": "eb31fdbb9b7a1397a4de7e27d66b1988e5479ffa503ae808f5f6a4c556b25e81"
   },
   "collections": [
     "dataset"
@@ -39,5 +40,12 @@
   "author": "mattzh72",
   "rated_by": "mattzh72",
   "secondary_rating": 5,
-  "secondary_rated_by": "Zhaomou Song"
+  "secondary_rated_by": "Zhaomou Song",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_orthogonal_xz_stage_ad614796973e497b9452d486ce1bcedd",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

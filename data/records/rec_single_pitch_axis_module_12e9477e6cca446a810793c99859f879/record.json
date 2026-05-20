@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_single_pitch_axis_module_12e9477e6cca446a810793c99859f879",
   "created_at": "2026-04-29T04:11:04Z",
   "updated_at": "2026-04-29T04:38:46Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "Create a realistic training pitch joint assembly. Geometry/details required: color-coded fixed bracket, moving link, axle cylinder, washers, stop blocks, and..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
     "cost_json": null,
-    "inputs_dir": "inputs"
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "13070b5e0ff30159b9a43b4b6326740bd8a806f9531a10f9731235f994e01d7f",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_single_pitch_axis_module_12e9477e6cca446a810793c99859f879",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

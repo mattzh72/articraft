@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_swivel_bar_stool_251f1753ba504f839521a35992dc37e3",
   "created_at": "2026-04-12T15:30:47Z",
   "updated_at": "2026-04-22T08:02:43Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A swivel bar stool with a central post, a ring footrest, and a low bucket seat plus a small height lever tucked under the seat. The seat rotates continuously..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "35919a35c413cbca04d806910fbba45c80c5021d15c315c4763e868de015189f",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_swivel_bar_stool_251f1753ba504f839521a35992dc37e3",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

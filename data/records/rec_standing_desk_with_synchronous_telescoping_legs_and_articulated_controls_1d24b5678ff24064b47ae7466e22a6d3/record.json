@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_standing_desk_with_synchronous_telescoping_legs_and_articulated_controls_1d24b5678ff24064b47ae7466e22a6d3",
   "created_at": "2026-04-04T15:01:25Z",
   "updated_at": "2026-04-05T11:46:53Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A minimalist standing desk with two round telescoping legs and a sliding height-lock switch. The rectangular top sits on a simple frame over two cylindrical..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "cce1afd14d5f39cf48e2abf17d194323a016f87c7eb1fb6361207b24fbf81993",
-    "model_py_sha256": "d4a9b00f9ec67c4ff23d789666578d983d0341a37956aaa9c31024614c84e5f5"
+    "model_py_sha256": "7c22e2efc015393e909e5642c6fed68b83cc91e5f4fcc5eda8468b71bd37e762"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_standing_desk_with_synchronous_telescoping_legs_and_articulated_controls_1d24b5678ff24064b47ae7466e22a6d3",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

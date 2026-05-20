@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_portal_gantry_with_vertical_slide_b5a8867621664c5d83bbe027066b2c92",
   "created_at": "2026-03-30T17:57:46Z",
   "updated_at": "2026-04-01T10:46:15Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A wide inspection portal. Box-section side frames support a rigid crossbeam, with a small shuttle under the beam and a narrow tool carriage below the shuttle..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "1a30d2d7961d262b4d5469edca3e8bd37848327fa43e401e91f5f618c62aa6e8",
-    "model_py_sha256": "d60b1be7fb309adffdf06100092beb5a314aabd7d262feb89f9ca915d34898ca"
+    "model_py_sha256": "989ecd7517b3334b6df603df468311673825f5fde11c49e4fe24d193509b7239"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_portal_gantry_with_vertical_slide_b5a8867621664c5d83bbe027066b2c92",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

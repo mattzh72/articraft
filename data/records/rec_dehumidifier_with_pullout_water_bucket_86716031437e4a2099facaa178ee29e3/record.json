@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_dehumidifier_with_pullout_water_bucket_86716031437e4a2099facaa178ee29e3",
   "created_at": "2026-04-11T18:03:18Z",
   "updated_at": "2026-04-11T18:52:11Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A console-style dehumidifier with a broad upper intake grille, a lower pullout bucket with a molded grip, and a right-top control pod carrying a timer dial,..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "5f60baadae712d4432bf3d935af21d1b79cf83cd8d738c7160962e7f88ec31b1",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_dehumidifier_with_pullout_water_bucket_86716031437e4a2099facaa178ee29e3",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

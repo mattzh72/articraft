@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_dualcolumn_lift_carriage_5c84c21d06714e92b6c9f49ea19de1bf",
   "created_at": "2026-03-29T04:00:44Z",
   "updated_at": "2026-04-01T10:02:23Z",
@@ -22,16 +22,17 @@
     "prompt_preview": "A heavy lift carriage module with two rectangular guide columns, a welded base frame, an upper tie beam, and a broad carriage plate that wraps the columns wi..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "f88da60ab29c38b0d47b3e9b2efaf2e72ba938a23047ac4948e129ebea160e84",
-    "model_py_sha256": "992fcd55ddff052493e96507085c573168c1922925138ffbdab15648199c756c"
+    "model_py_sha256": "16fa4a7a0aac903728e0bba544db397c355a8c2b9b715e1f2137fbcb0c40e877"
   },
   "collections": [
     "dataset"
@@ -39,5 +40,12 @@
   "author": "mattzh72",
   "rated_by": "mattzh72",
   "secondary_rating": 5,
-  "secondary_rated_by": "Zhaomou Song"
+  "secondary_rated_by": "Zhaomou Song",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_dualcolumn_lift_carriage_5c84c21d06714e92b6c9f49ea19de1bf",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

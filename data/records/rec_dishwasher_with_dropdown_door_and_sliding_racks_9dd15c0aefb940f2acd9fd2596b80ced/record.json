@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_dishwasher_with_dropdown_door_and_sliding_racks_9dd15c0aefb940f2acd9fd2596b80ced",
   "created_at": "2026-04-11T18:03:18Z",
   "updated_at": "2026-04-11T18:48:09Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A stainless underbar glasswasher with a heavy dropdown front door, a lower glass rack, a shallower upper rack, and a short front control pod carrying two roc..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "0c781cf68006ca3e18ceb4595bbe566dd6fe063e5a49fd1dc31a33b6db534343",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_dishwasher_with_dropdown_door_and_sliding_racks_9dd15c0aefb940f2acd9fd2596b80ced",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

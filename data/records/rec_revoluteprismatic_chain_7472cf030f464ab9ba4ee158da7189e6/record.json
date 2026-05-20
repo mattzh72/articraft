@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_revoluteprismatic_chain_7472cf030f464ab9ba4ee158da7189e6",
   "created_at": "2026-03-30T17:57:46Z",
   "updated_at": "2026-04-01T11:04:13Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A compact hinged arm with telescoping tip. A fixed root clevis carries a rigid arm, and the arm contains or supports a short rectangular slider near its end...."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "ae470b5b550c7b78c7b1145e598fea3673d79df4313bc2d7b5652a581a86c2ef",
-    "model_py_sha256": "871ecc7498bbb985740e57d0716e1af32c93b28cd78908cfbb154bebf99c6830"
+    "model_py_sha256": "feb2b262892b7b4e3d2bbdbfeebc7bd867942abc652c3e54a1d81bb44d34be14"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_revoluteprismatic_chain_7472cf030f464ab9ba4ee158da7189e6",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_telescoping_mast_with_pan_head_eceecca3342c445fb95b6519a5f2ab3f",
   "created_at": "2026-03-29T04:00:44Z",
   "updated_at": "2026-04-01T10:01:16Z",
@@ -22,16 +22,17 @@
     "prompt_preview": "A rooftop inspection mast with a cylindrical base can, telescoping upright tubes, and a compact pan collar carrying a small top bracket. The upper head shoul..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "fb0ebd9bc159c289135bfa19e82e14054e454ecaa988b4b1fb7eba7ad74b46a3",
-    "model_py_sha256": "d100c68ed067ae2c31090a206f920695129d64f07b0c5fb8ad5dbd6bd6832e96"
+    "model_py_sha256": "77d99c4e8f9bc89e878826bd5819d9573efea35ca548a0fe9248d87577faf33a"
   },
   "collections": [
     "dataset"
@@ -39,5 +40,12 @@
   "author": "mattzh72",
   "rated_by": "mattzh72",
   "secondary_rating": 5,
-  "secondary_rated_by": "Zhaomou Song"
+  "secondary_rated_by": "Zhaomou Song",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_telescoping_mast_with_pan_head_eceecca3342c445fb95b6519a5f2ab3f",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

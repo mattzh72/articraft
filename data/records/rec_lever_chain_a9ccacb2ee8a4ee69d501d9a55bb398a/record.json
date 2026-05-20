@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_lever_chain_a9ccacb2ee8a4ee69d501d9a55bb398a",
   "created_at": "2026-03-29T04:00:44Z",
   "updated_at": "2026-04-01T10:02:54Z",
@@ -22,16 +22,17 @@
     "prompt_preview": "A three-lever linkage with a grounded base lug, a curved input lever, a short coupler lever, and a long output lever ending in a tab. The bars should feel li..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "8a961b9a737d4cb92e380f7860f88c881a5b56d473cbe5b7174a2550213a11f9",
-    "model_py_sha256": "d2b01f0e2751bfc294485b935133f6bce000c98e5785914129d13752a4da1856"
+    "model_py_sha256": "6d719681ac63d955a2e5400acbe3634abfd4d4b35f470fb5aa2cd4c6f9b3977b"
   },
   "collections": [
     "dataset"
@@ -39,5 +40,12 @@
   "author": "mattzh72",
   "rated_by": "mattzh72",
   "secondary_rating": 5,
-  "secondary_rated_by": "Zhaomou Song"
+  "secondary_rated_by": "Zhaomou Song",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_lever_chain_a9ccacb2ee8a4ee69d501d9a55bb398a",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

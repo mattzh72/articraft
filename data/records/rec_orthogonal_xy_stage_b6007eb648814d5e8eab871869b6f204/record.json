@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_orthogonal_xy_stage_b6007eb648814d5e8eab871869b6f204",
   "created_at": "2026-03-31T17:20:51Z",
   "updated_at": "2026-04-06T01:40:58Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A compact service XY axis. A fixed lower guide supports a long carriage, and the carriage supports a shorter cross-slide with a square output face. The lower..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "2209db03c644ae440857e6d70d79a3962d4307f7ff7b8f75f7dd9de19130064b",
-    "model_py_sha256": "210b2e967479812642cf7af603a29c7c1f2afefd80479af5ff6b1f041755df87"
+    "model_py_sha256": "1353039728e8cf53a39beb7ca271468db89694d612534318bbc823b990fc02c8"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_orthogonal_xy_stage_b6007eb648814d5e8eab871869b6f204",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

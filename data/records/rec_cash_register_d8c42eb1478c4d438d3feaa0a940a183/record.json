@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_cash_register_d8c42eb1478c4d438d3feaa0a940a183",
   "created_at": "2026-04-11T23:21:08Z",
   "updated_at": "2026-04-22T14:05:10Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A boutique cash register with a compact drawer base, a rounded keypad pod, and a flip-up customer display tucked at the rear edge, plus a numeric pad beside..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "8d109cfad7b2dd6502b62f990a101c50ef041df1b2a36bf711e989f4ced77891",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_cash_register_d8c42eb1478c4d438d3feaa0a940a183",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

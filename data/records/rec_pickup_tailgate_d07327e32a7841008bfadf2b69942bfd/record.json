@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_pickup_tailgate_d07327e32a7841008bfadf2b69942bfd",
   "created_at": "2026-04-27T01:57:45Z",
   "updated_at": "2026-04-27T10:25:03Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A commercial pickup tailgate with a side-mounted utility hatch. The main gate is hinged at the lower bed edge, and a small access door is cut into one side o..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "ba1a697ef70095dbd5aa8ec0167245b2d4330010813401d77118894fc2b0e89d",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_pickup_tailgate_d07327e32a7841008bfadf2b69942bfd",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

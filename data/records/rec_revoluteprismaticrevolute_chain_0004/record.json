@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_revoluteprismaticrevolute_chain_0004",
   "created_at": "2026-03-25T23:15:42Z",
   "updated_at": "2026-04-01T10:21:18Z",
@@ -22,16 +22,17 @@
     "prompt_preview": "A revolute-prismatic-revolute chain. A base hinge carries a sliding middle link, and the end of that sliding link holds a small tool fork on a pin joint. The..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "cf571553e59bde4ac2261264f651f3a8d6ad60d9072f933ecc58bbb7ad06701e",
-    "model_py_sha256": "c6e1e1122dccd0432c790541b8499f2ec9451ad21491af999b332bc3e0e48c30"
+    "model_py_sha256": "838eba2000954011dcb360d831748f606e7c7a75c6ee0c6c4cb29b11ecb45832"
   },
   "collections": [
     "dataset"
@@ -39,5 +40,12 @@
   "author": "mattzh72",
   "rated_by": "shawlyu",
   "secondary_rating": 4,
-  "secondary_rated_by": "Zhaomou Song"
+  "secondary_rated_by": "Zhaomou Song",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_revoluteprismaticrevolute_chain_0004",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

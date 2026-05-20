@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_casino_machine_e60bb68099834916986dbbf2af56a85d",
   "created_at": "2026-04-02T22:48:25Z",
   "updated_at": "2026-04-06T01:27:39Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A slant-top casino machine with an angled screen panel, a button deck, and a lockable belly door beneath the play area. The belly door rotates on a vertical..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "9be72a04f280c4337e933435bc40c613fc06fe496005e69ca141e426950f9ff4",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_casino_machine_e60bb68099834916986dbbf2af56a85d",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

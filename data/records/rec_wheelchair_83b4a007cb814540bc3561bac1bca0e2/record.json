@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_wheelchair_83b4a007cb814540bc3561bac1bca0e2",
   "created_at": "2026-04-27T13:43:00Z",
   "updated_at": "2026-04-28T00:37:03Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "Build a precision professional Wheelchair tuned for calibration and repeatable alignment. Use a chair frame with large drive wheels, front casters, and footr..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "29bfde6b7a3164cb874669b0aa200f0567bcaf7d968a6c33a47d5a3df03bb295",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_wheelchair_83b4a007cb814540bc3561bac1bca0e2",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

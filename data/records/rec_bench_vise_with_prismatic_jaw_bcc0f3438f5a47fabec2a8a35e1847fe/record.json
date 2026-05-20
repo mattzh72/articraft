@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_bench_vise_with_prismatic_jaw_bcc0f3438f5a47fabec2a8a35e1847fe",
   "created_at": "2026-04-12T15:04:42Z",
   "updated_at": "2026-04-22T08:05:28Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A swivel-base bench vise with a sliding jaw, a T-handle screw, and two locking tabs on the swivel ring treated as one matched pair. The sliding jaw moves pri..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "ed33304cdf4558fa07c75b95e463b85cd374538793b5ff4b4d024a01cd3dd6a1",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_bench_vise_with_prismatic_jaw_bcc0f3438f5a47fabec2a8a35e1847fe",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

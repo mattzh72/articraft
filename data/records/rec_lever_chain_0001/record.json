@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_lever_chain_0001",
   "created_at": "2026-03-12T18:18:45Z",
   "updated_at": "2026-04-01T10:31:15Z",
@@ -20,16 +20,17 @@
     "prompt_preview": "A multi-link lever mechanism with several hinged arms, straight flat-bar geometry, and clearly defined rotary pivots."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "a3b4e968ef31799dd9790a9fd2b59be4b919965d979304cdb7174693814a4e4d",
-    "model_py_sha256": "e1e41367fb3f9633206d5d700b39c1eabc9db864fd836c6660439505ff63f02a"
+    "model_py_sha256": "ba6cbe775380da3e318fc162ef7d7fdf924c42213f6e2f297a25a365f531d602"
   },
   "collections": [
     "dataset"
@@ -37,5 +38,12 @@
   "author": "mattzh72",
   "rated_by": "mattzh72",
   "secondary_rating": 5,
-  "secondary_rated_by": "Zhaomou Song"
+  "secondary_rated_by": "Zhaomou Song",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_lever_chain_0001",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

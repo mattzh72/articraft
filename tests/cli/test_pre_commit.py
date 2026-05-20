@@ -87,7 +87,8 @@ def test_detect_forbidden_paths_allows_dataset_record_files(
         '{\n  "collections": ["dataset"]\n}\n',
         encoding="utf-8",
     )
-    (record_dir / "dataset_entry.json").write_text("{}\n", encoding="utf-8")
+    (record_dir / "collections").mkdir()
+    (record_dir / "collections" / "dataset.json").write_text("{}\n", encoding="utf-8")
     (record_dir / "model.py").write_text("# dataset record\n", encoding="utf-8")
 
     exit_code = pre_commit.detect_forbidden_paths(["data/records/rec_dataset/model.py"])

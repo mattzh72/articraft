@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_prismaticrevoluteprismatic_chain_0001",
   "created_at": "2026-03-17T02:41:03Z",
   "updated_at": "2026-04-01T10:33:46Z",
@@ -20,16 +20,17 @@
     "prompt_preview": "A cartesian-fed linkage with a base slider, center revolute joint, and distal prismatic tool slide, designed as a clean industrial CAD mechanism."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "ea7d08f35c7171d4df01d6971660853a1dff902af1ea0c878563aba5307d2bd6",
-    "model_py_sha256": "0ed613dd33fda724580f36b604ff2166896f0cfac580f9e4329f71aa1a81a318"
+    "model_py_sha256": "ff5bb361cf64626b0e940a262a79de51391dab7c3d0662dfa62185c029aa9366"
   },
   "collections": [
     "dataset"
@@ -37,5 +38,12 @@
   "author": "mattzh72",
   "rated_by": "mattzh72",
   "secondary_rating": 5,
-  "secondary_rated_by": "Zhaomou Song"
+  "secondary_rated_by": "Zhaomou Song",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_prismaticrevoluteprismatic_chain_0001",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_knee_scooter_87b707153b524c6c89f4391f9ce1e854",
   "created_at": "2026-04-27T13:04:25Z",
   "updated_at": "2026-04-28T07:34:30Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A foldable knee scooter with four small wheels, a knee pad deck, and a handlebar stem on a folding clamp. The front wheels are carried by a steering fork and..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "91cb41258c4f2696f88724e3002aa2881a308cc66689fed5339e42da5f4db6e5",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_knee_scooter_87b707153b524c6c89f4391f9ce1e854",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

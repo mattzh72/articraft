@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_overshot_waterwheel_9075668972b04e0fbca3a31b780fdc51",
   "created_at": "2026-04-04T14:47:33Z",
   "updated_at": "2026-04-05T12:50:34Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A compact overshot wheel for a demonstration mill with a hinged guard panel. The small wheel sits on a horizontal axle in a simple support frame, and a safet..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "f6352bbf4ea21bb357a37976e77897e477d0b27282b8f6b5460762ad6d14b7b6",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_overshot_waterwheel_9075668972b04e0fbca3a31b780fdc51",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_sluice_gate_with_vertical_lift_panel_2828e1d65eb54b3bba3c91e03dbe0818",
   "created_at": "2026-04-27T03:09:08Z",
   "updated_at": "2026-04-27T08:10:22Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A small irrigation sluice gate with a pair of side rails, a flat lift panel, and a crank wheel mounted on a top bracket. The lift panel slides prismatically..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "963eb17f38617f0072340e32082ecfa2b7ae100cc316d283d98b75898b15b3f6",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_sluice_gate_with_vertical_lift_panel_2828e1d65eb54b3bba3c91e03dbe0818",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

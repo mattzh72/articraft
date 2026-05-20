@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_prismaticrevolute_chain_fe84c756491342468ba0a2e9310fc6bb",
   "created_at": "2026-04-27T12:54:11Z",
   "updated_at": "2026-04-28T07:40:48Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A linear base slide carrying a hinge bracket and a short output arm ending in a square pad. The base should read as a guided carriage with the arm clearly ro..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "bbab70eb8049e1b451202ca139cc5e7b9876da7adff5012e7f9a86a58e44399e",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_prismaticrevolute_chain_fe84c756491342468ba0a2e9310fc6bb",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

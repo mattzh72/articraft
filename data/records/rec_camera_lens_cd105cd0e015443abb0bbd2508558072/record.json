@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_camera_lens_cd105cd0e015443abb0bbd2508558072",
   "created_at": "2026-04-26T06:23:26Z",
   "updated_at": "2026-04-27T10:45:48Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A compact pancake lens with a shallow barrel, a narrow focus ring, and a small manual aperture ring. The focus ring rotates continuously on its coaxial band,..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "099412a93bb72528b3abb67447e1385642978557e464f19add92ccb6931e44d2",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_camera_lens_cd105cd0e015443abb0bbd2508558072",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

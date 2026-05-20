@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_desk_with_drawer_0001",
   "created_at": "2026-03-16T22:33:32Z",
   "updated_at": "2026-03-20T22:37:45Z",
@@ -20,16 +20,17 @@
     "prompt_preview": "A realistic, highly detailed desk with an integrated drawer, featuring a sturdy tabletop, grounded leg or panel supports, a single front-facing sliding drawe..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "d8ec8d2c550cf2076f69cce4e739c4824048a93afdb89431babdfa54b605e2b6",
-    "model_py_sha256": "3662dcc24920a6ddb129563c3831599f31fa32d386c8238c1303a61aa1401f45"
+    "model_py_sha256": "fd641834899779489ec0fee2bbc1e3489aeb2407fa942bcc71770f2d45ca8b5a"
   },
   "collections": [
     "dataset"
@@ -37,5 +38,12 @@
   "author": "mattzh72",
   "rated_by": "mattzh72",
   "secondary_rating": null,
-  "secondary_rated_by": null
+  "secondary_rated_by": null,
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_desk_with_drawer_0001",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

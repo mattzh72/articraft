@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_twojoint_revolute_chain_f2f35be972464362ad2b8a4b50ac73e6",
   "created_at": "2026-03-28T03:32:30Z",
   "updated_at": "2026-04-01T10:11:47Z",
@@ -22,16 +22,17 @@
     "prompt_preview": "A two-link hinged arm. A base bracket supports a primary link, and the primary link supports a secondary link with a small end pad. The two joints are revolu..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "19f4e0ece502ddfd8b5e7d8b6ef9588ffcb025eeb74db6fce06ddc29ff8546de",
-    "model_py_sha256": "3b62f17e92c700974e9d67fb2c6b1b185c80f8ae670a1c825cc4df153959bda8"
+    "model_py_sha256": "cf294cada8c28569d0653f86a4fec3e6ed69bf1b53fbab2e7de99d23d4f5e813"
   },
   "collections": [
     "dataset"
@@ -39,5 +40,12 @@
   "author": "mattzh72",
   "rated_by": "mattzh72",
   "secondary_rating": 5,
-  "secondary_rated_by": "Zhaomou Song"
+  "secondary_rated_by": "Zhaomou Song",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_twojoint_revolute_chain_f2f35be972464362ad2b8a4b50ac73e6",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

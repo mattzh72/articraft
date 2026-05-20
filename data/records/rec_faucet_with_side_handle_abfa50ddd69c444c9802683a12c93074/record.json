@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_faucet_with_side_handle_abfa50ddd69c444c9802683a12c93074",
   "created_at": "2026-04-27T02:18:05Z",
   "updated_at": "2026-04-27T09:59:43Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A pedestal basin faucet with a tall chrome column body fixed to the basin and a side lever handle. The lever handle rotates on a revolute joint about a horiz..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "3e1fc6e0f839e20eaa9d52ac4b2c52aafc476fd6aafd8d4166f137511aee7d46",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_faucet_with_side_handle_abfa50ddd69c444c9802683a12c93074",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

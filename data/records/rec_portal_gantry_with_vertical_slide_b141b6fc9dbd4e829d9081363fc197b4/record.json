@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_portal_gantry_with_vertical_slide_b141b6fc9dbd4e829d9081363fc197b4",
   "created_at": "2026-04-03T21:46:47Z",
   "updated_at": "2026-04-06T01:21:21Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A machine-bed portal gantry. Two side uprights tied by a traveling beam support a central carriage, and the carriage supports a vertical head with a plain fa..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "f31a071d08fc12768b663f8364a8bb551c0efee2e9518bdfab2807f457ad0362",
-    "model_py_sha256": "57d70d80efec898c3ec2eedcf7c93fd9caee3f18ca66349ca6de7f57d5440f0a"
+    "model_py_sha256": "949b3f7368ef5f65a1b56417a6f6231aa27ae5b9652b9670e08beb935095a2a5"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_portal_gantry_with_vertical_slide_b141b6fc9dbd4e829d9081363fc197b4",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

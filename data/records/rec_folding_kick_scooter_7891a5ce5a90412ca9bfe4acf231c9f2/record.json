@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_folding_kick_scooter_7891a5ce5a90412ca9bfe4acf231c9f2",
   "created_at": "2026-04-27T02:33:46Z",
   "updated_at": "2026-04-27T09:39:09Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A pro stunt adult scooter with a folding handlebar stem and a solid deck. The handlebar stem folds on a revolute hinge at the clamp at the deck headtube. The..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "986c24c6b78a533bddc0958ab70c130bd4501e56d1df737d34678556a4fa4bcc",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_folding_kick_scooter_7891a5ce5a90412ca9bfe4acf231c9f2",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

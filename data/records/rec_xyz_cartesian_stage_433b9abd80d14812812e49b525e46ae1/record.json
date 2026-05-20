@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_xyz_cartesian_stage_433b9abd80d14812812e49b525e46ae1",
   "created_at": "2026-04-27T03:36:43Z",
   "updated_at": "2026-04-27T07:12:43Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A compact three-axis positioning stack. A fixed lower frame supports a long first carriage, a shorter cross-slide on that carriage, and a small vertical ram..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "639a762dcffec9df4ca7bb6976fa25aff86cc69d66dd5062157e23983a5a3ccf",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_xyz_cartesian_stage_433b9abd80d14812812e49b525e46ae1",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

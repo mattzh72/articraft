@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_paper_cutter_guillotine_799ff8ac64f6479faca89db192d393c4",
   "created_at": "2026-03-29T15:04:33Z",
   "updated_at": "2026-04-01T13:09:06Z",
@@ -22,12 +22,13 @@
     "prompt_preview": "A photo trimming guillotine with a compact bed and a sliding paper stop. The blade arm is hinged at one rear corner, and a small stop block rides along a gui..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "9c6f0e876dc4c0a9628462234bf8466cfe7baff9b83f41e90db2e8604af7938d",
@@ -39,5 +40,12 @@
   "author": "RuiningLi",
   "rated_by": "RuiningLi",
   "secondary_rating": 4,
-  "secondary_rated_by": "shawlyu"
+  "secondary_rated_by": "shawlyu",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_paper_cutter_guillotine_799ff8ac64f6479faca89db192d393c4",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

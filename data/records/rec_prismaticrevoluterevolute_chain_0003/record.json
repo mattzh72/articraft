@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_prismaticrevoluterevolute_chain_0003",
   "created_at": "2026-03-25T18:37:12Z",
   "updated_at": "2026-04-01T10:28:05Z",
@@ -22,16 +22,17 @@
     "prompt_preview": "Design a realistic, highly detailed prismatic-revolute-revolute chain as a standalone mechanical study assembly for the sdk_hybrid pipeline, with a linear ba..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "09f7c324f58776e831b92c523dcc5f497c2c45709a8297f865699e360704a488",
-    "model_py_sha256": "5a156c57984446fbf28946071572e56cb477a155e78b92b5c8b942083a242526"
+    "model_py_sha256": "0d41e5e644532bb0c5518f47540b6b949932f1565828089276674f9b8b542ad5"
   },
   "collections": [
     "dataset"
@@ -39,5 +40,12 @@
   "author": "mattzh72",
   "rated_by": "mattzh72",
   "secondary_rating": 4,
-  "secondary_rated_by": "Zhaomou Song"
+  "secondary_rated_by": "Zhaomou Song",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_prismaticrevoluterevolute_chain_0003",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

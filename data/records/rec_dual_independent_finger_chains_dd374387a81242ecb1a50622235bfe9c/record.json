@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_dual_independent_finger_chains_dd374387a81242ecb1a50622235bfe9c",
   "created_at": "2026-03-30T17:57:46Z",
   "updated_at": "2026-04-06T01:42:22Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "An open-frame dual finger rig. A grounded palm block carries two articulated fingers whose link lengths differ slightly so the silhouette does not become per..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "f69194146a91ce97e696e9dafa1c66ec61b00a7b226cf166aa8aa9aa9c5f6851",
-    "model_py_sha256": "e8ffbf8e1512128e59300997dc7ebeab83c442a9ecdd1390f0f56af3356d9d5c"
+    "model_py_sha256": "8f7d89bc07be8f3df2beb3ff024e84e62159b7105f25d6afe5e7d75407f07fd7"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_dual_independent_finger_chains_dd374387a81242ecb1a50622235bfe9c",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

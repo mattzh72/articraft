@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_desktop_hole_punch_with_articulated_components_27969964fe4e4b2eabe4049a6e38387d",
   "created_at": "2026-04-09T16:54:33Z",
   "updated_at": "2026-04-22T14:25:56Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A low-profile hole punch with a flat top handle, a shallow base, and a chip drawer released by a side button. The drawer sits under the punch head housing. T..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "249094e07d74cf7d92af1fce2f92e79161711f108509b330b9bd07e0f7dd996b",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_desktop_hole_punch_with_articulated_components_27969964fe4e4b2eabe4049a6e38387d",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_prismaticrevoluterevolute_chain_4c109d551070458ea8a56589a2d1fb3e",
   "created_at": "2026-03-31T17:20:51Z",
   "updated_at": "2026-03-31T18:39:53Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A slide-shoulder-elbow chain. A grounded base slide carries a moving carriage, the carriage carries a shoulder link, and the shoulder link carries a forelink..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "07b75fb1ac63bf064f20364ca9c671a71a27f850b265b82355fe0360db898301",
-    "model_py_sha256": "3f6c4f61ede15d38206eb3e5c287b82269e866616568422138f152c4dd81bd37"
+    "model_py_sha256": "c723e8b01555de89d56616af581e4aac4f008c7ea515d42996beb24c67bdc5e5"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_prismaticrevoluterevolute_chain_4c109d551070458ea8a56589a2d1fb3e",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_single_revolute_hinge_78481fb1f36b41069da3194fe92aceb0",
   "created_at": "2026-03-30T17:57:46Z",
   "updated_at": "2026-04-01T10:54:29Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A narrow access-panel hinge. A slim back leaf supports a shorter front leaf through spaced knuckles and a single pin, with the support line clear along the f..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "385789a62d83df538b3ac785362ae29b05b6b46f3c8615a71078af34e1f25832",
-    "model_py_sha256": "5c450ba582436e4903672095b97ea39fa3e884974dabb460c0b6ab46cebee61c"
+    "model_py_sha256": "42da186f29bf11c3c59aad4e9373fbbcd4e991922481ee831537476420906294"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_single_revolute_hinge_78481fb1f36b41069da3194fe92aceb0",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

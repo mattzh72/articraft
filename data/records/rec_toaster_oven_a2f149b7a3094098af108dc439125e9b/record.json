@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_toaster_oven_a2f149b7a3094098af108dc439125e9b",
   "created_at": "2026-04-27T02:29:25Z",
   "updated_at": "2026-04-27T09:40:01Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A wide toaster oven with a drop-down door, one center dial, two side buttons, and a pull-out crumb tray. The door rotates downward on a lower hinge, the cent..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "e0c4492404eefabbe242a0d274eacf3739ed10833957e5f938766d4a137d12e3",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_toaster_oven_a2f149b7a3094098af108dc439125e9b",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

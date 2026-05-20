@@ -1,0 +1,43 @@
+{
+  "schema_version": 1,
+  "record_id": "rec_a-realistic-highly-detailed-tower-crane-with-a-t_20260319_032439_282817_5916181a",
+  "revision_id": "rev_000001",
+  "created_at": "2026-03-19T03:24:39Z",
+  "prompt_kind": "single_prompt",
+  "prompt_sha256": "613366ce269a375403a51ec50395af88ae58ab090bf05cf0e12d6d8835f6665f",
+  "source": {
+    "run_id": "run_20260319_032439_282817_5916181a",
+    "prompt_batch_id": null,
+    "prompt_index": null
+  },
+  "generation": {
+    "provider": "openai",
+    "model_id": "gpt-5.4",
+    "thinking_level": "high",
+    "openai_transport": "http",
+    "openai_reasoning_summary": "auto",
+    "max_turns": 30
+  },
+  "artifacts": {
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
+    "prompt_series_json": null,
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
+  },
+  "hashes": {
+    "prompt_sha256": "613366ce269a375403a51ec50395af88ae58ab090bf05cf0e12d6d8835f6665f",
+    "model_py_sha256": "ca63d2d171bb7d07ef7513c6c3693a74fc297ce8e7b93fddacb4dabf79e615d5"
+  },
+  "run_summary": {
+    "turn_count": 10,
+    "tool_call_count": 9,
+    "compile_attempt_count": 5,
+    "final_status": "success"
+  },
+  "parent": null,
+  "seed": null,
+  "inherited_inputs": []
+}

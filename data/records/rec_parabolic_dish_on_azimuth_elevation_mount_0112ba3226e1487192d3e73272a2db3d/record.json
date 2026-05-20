@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_parabolic_dish_on_azimuth_elevation_mount_0112ba3226e1487192d3e73272a2db3d",
   "created_at": "2026-03-28T13:55:33Z",
   "updated_at": "2026-04-01T16:23:37Z",
@@ -22,12 +22,13 @@
     "prompt_preview": "A satellite communication dish on a pedestal azimuth-elevation mount. A parabolic reflector sits on a rear support frame with a feed arm reaching to the dish..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "85dcd04fa4a5aa128efceeaab7d7154ab864a2bfdf61d261df820dce3063bc2c",
@@ -39,5 +40,12 @@
   "author": "RuiningLi",
   "rated_by": "RuiningLi",
   "secondary_rating": 5,
-  "secondary_rated_by": "shawlyu"
+  "secondary_rated_by": "shawlyu",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_parabolic_dish_on_azimuth_elevation_mount_0112ba3226e1487192d3e73272a2db3d",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

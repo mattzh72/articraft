@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_food_processor_with_feed_pusher_ebd19b549d1c4aa2ac560e6b00de3fb6",
   "created_at": "2026-04-11T16:13:01Z",
   "updated_at": "2026-04-22T14:29:45Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A premium food processor with a rounded base, a large clear bowl with a side handle, a lid carrying a secondary small ingredient tube, and a broad control pa..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "9e7db07a19a2f7d7c24abbc03830686983e980fe9de9466dc2e626319561043b",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_food_processor_with_feed_pusher_ebd19b549d1c4aa2ac560e6b00de3fb6",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

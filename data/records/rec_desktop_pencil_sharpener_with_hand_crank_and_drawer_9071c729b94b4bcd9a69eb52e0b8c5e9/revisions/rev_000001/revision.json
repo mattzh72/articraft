@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "record_id": "rec_desktop_pencil_sharpener_with_hand_crank_and_drawer_9071c729b94b4bcd9a69eb52e0b8c5e9",
+  "revision_id": "rev_000001",
+  "created_at": "2026-04-11T19:13:01Z",
+  "prompt_kind": "single_prompt",
+  "prompt_sha256": "e3a05ccf7c5fb05330b3426adfcecac5dc68d524407bf78cbf65271d2ceb5e0a",
+  "source": {
+    "run_id": "run_20260411_191300_593521_20260411-desktop-pencil-sharpener-plus5-gpt54-hi",
+    "prompt_batch_id": null,
+    "batch_spec_id": "20260411_desktop_pencil_sharpener_plus5_gpt54_high",
+    "row_id": "sharpener_008",
+    "prompt_index": 3
+  },
+  "generation": {
+    "provider": "openai",
+    "model_id": "gpt-5.4",
+    "thinking_level": "high",
+    "openai_transport": "http",
+    "openai_reasoning_summary": "auto",
+    "max_turns": 165,
+    "max_cost_usd": null
+  },
+  "artifacts": {
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
+    "prompt_series_json": null,
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
+  },
+  "hashes": {
+    "prompt_sha256": "e3a05ccf7c5fb05330b3426adfcecac5dc68d524407bf78cbf65271d2ceb5e0a",
+    "model_py_sha256": "3dfa0ff13139cd26be97fc752b3a85c57198d10382f212d1b4651d3c5e739b8f"
+  },
+  "run_summary": {
+    "turn_count": 15,
+    "tool_call_count": 18,
+    "compile_attempt_count": 4,
+    "final_status": "success"
+  },
+  "parent": null,
+  "seed": null,
+  "inherited_inputs": []
+}

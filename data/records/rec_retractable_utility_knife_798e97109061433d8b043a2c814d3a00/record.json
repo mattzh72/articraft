@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_retractable_utility_knife_798e97109061433d8b043a2c814d3a00",
   "created_at": "2026-04-04T14:58:19Z",
   "updated_at": "2026-04-05T12:02:01Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A snap-lock utility knife with a sliding blade carriage and a thumb slider on top. The rigid handle body surrounds a central blade carrier, and the slider si..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "ae4b397f6b6b14e7e4f0932cbec9fab4d352a447489300269a9946c9c7c6c784",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_retractable_utility_knife_798e97109061433d8b043a2c814d3a00",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

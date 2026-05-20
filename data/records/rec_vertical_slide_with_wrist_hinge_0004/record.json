@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_vertical_slide_with_wrist_hinge_0004",
   "created_at": "2026-03-25T23:15:42Z",
   "updated_at": "2026-04-01T10:21:51Z",
@@ -22,16 +22,17 @@
     "prompt_preview": "A vertical slide with wrist hinge. A fixed column carries a lifting carriage, and the front of the carriage supports a short wrist plate on a side-supported..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "3ea7107275ecca32f242a7a7fd4271d3a7395a9ac120c08213952cfdff00d3f5",
-    "model_py_sha256": "25000078a19ecefd6215800459fdf6e4052f373818c222e6826ae711242a314e"
+    "model_py_sha256": "14717c40d41df1fdff479d8c8750501df012c293c4643fad55fbeae1f55c3534"
   },
   "collections": [
     "dataset"
@@ -39,5 +40,12 @@
   "author": "mattzh72",
   "rated_by": "RuiningLi",
   "secondary_rating": 5,
-  "secondary_rated_by": "Zhaomou Song"
+  "secondary_rated_by": "Zhaomou Song",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_vertical_slide_with_wrist_hinge_0004",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_drawer_cabinet_with_sliding_drawers_1997a0c3e5264693a49458eecb80d779",
   "created_at": "2026-04-12T14:43:25Z",
   "updated_at": "2026-04-22T08:11:47Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A filing cabinet with two deep file drawers and a small top accessory drawer plus a hinged lock cover strip at the top center. The three drawers slide prisma..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "d747f75aeee81d2acec97ae2f970b2900e467d9a6cd327af59b038471ffb5e5a",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_drawer_cabinet_with_sliding_drawers_1997a0c3e5264693a49458eecb80d779",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

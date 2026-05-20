@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "record_id": "rec_air_fryer_with_pullout_basket_0698981e06784c5fa82c21f62e9d4b23",
+  "revision_id": "rev_000001",
+  "created_at": "2026-04-11T18:03:18Z",
+  "prompt_kind": "single_prompt",
+  "prompt_sha256": "1636fa8769b9b02ec063656657f53a557f6c5283460434f128d35d03534b4ffd",
+  "source": {
+    "run_id": "run_20260411_180318_024642_20260411-home-appliance-categories-plus15-gpt54-",
+    "prompt_batch_id": null,
+    "batch_spec_id": "20260411_home_appliance_categories_plus15_gpt54_high",
+    "row_id": "air_fryer_plus15_06",
+    "prompt_index": 21
+  },
+  "generation": {
+    "provider": "openai",
+    "model_id": "gpt-5.4",
+    "thinking_level": "high",
+    "openai_transport": "http",
+    "openai_reasoning_summary": "auto",
+    "max_turns": 170,
+    "max_cost_usd": null
+  },
+  "artifacts": {
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
+    "prompt_series_json": null,
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
+  },
+  "hashes": {
+    "prompt_sha256": "1636fa8769b9b02ec063656657f53a557f6c5283460434f128d35d03534b4ffd",
+    "model_py_sha256": "13f27ed5b329932e7c1e155d98357c36f370a3468d9968400514beb3918c40a2"
+  },
+  "run_summary": {
+    "turn_count": 11,
+    "tool_call_count": 15,
+    "compile_attempt_count": 3,
+    "final_status": "success"
+  },
+  "parent": null,
+  "seed": null,
+  "inherited_inputs": []
+}

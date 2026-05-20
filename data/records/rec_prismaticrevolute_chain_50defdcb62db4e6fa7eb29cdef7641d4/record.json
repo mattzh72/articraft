@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_prismaticrevolute_chain_50defdcb62db4e6fa7eb29cdef7641d4",
   "created_at": "2026-03-29T15:31:29Z",
   "updated_at": "2026-04-01T11:29:08Z",
@@ -22,16 +22,17 @@
     "prompt_preview": "A compact transfer axis with a grounded rail body, a moving carriage head, and a hinged support tab carried on the front face of the carriage. The carriage s..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "b2ac2ded360c3d126e2c603d4848c6230f4b634df816b64fcb7d6f6c20878690",
-    "model_py_sha256": "e21f4dad92a4a2fd24e48a72a997d90e1cfe058af20552f3cf68a40480d7d0fa"
+    "model_py_sha256": "c10091c0199a9b36389b739708fe9f95d6b0d8064503fbf84dd36e81ffcaa796"
   },
   "collections": [
     "dataset"
@@ -39,5 +40,12 @@
   "author": "mattzh72",
   "rated_by": "mattzh72",
   "secondary_rating": 5,
-  "secondary_rated_by": "Zhaomou Song"
+  "secondary_rated_by": "Zhaomou Song",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_prismaticrevolute_chain_50defdcb62db4e6fa7eb29cdef7641d4",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

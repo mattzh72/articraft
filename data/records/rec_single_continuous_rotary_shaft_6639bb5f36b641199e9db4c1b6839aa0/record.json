@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_single_continuous_rotary_shaft_6639bb5f36b641199e9db4c1b6839aa0",
   "created_at": "2026-04-03T21:46:47Z",
   "updated_at": "2026-04-06T01:21:25Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A through-shaft rotary module. A fixed frame carries a straight shaft through a pair of side bearings with a compact output collar near one end. The shaft sp..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "dbb0e13ee75718e336b20fbf4f2985234028be05e516c305eab09039dffe4623",
-    "model_py_sha256": "bd0f56f4e5d05c4e477c0ad6a2c7aca12579cabfae9cd6811d3f69e71a7e961e"
+    "model_py_sha256": "0561abb8dc737081bf168bc5f19892a654525e8e61733e4e009a95418a8d4460"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_single_continuous_rotary_shaft_6639bb5f36b641199e9db4c1b6839aa0",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

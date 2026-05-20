@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_top_load_washing_machine_with_hinged_lid_dbfe810624b04f7da7e91aa355dda4da",
   "created_at": "2026-04-27T14:01:22Z",
   "updated_at": "2026-04-28T00:17:22Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A large-capacity top-load washer with a broad lid, a rear selector dial, five mode buttons, and a fold-flat detergent cap beside a softener cup lid on the ag..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "87ed0617d1002f2cef5bbc434573683343cc4b6b5d44a79b3e82ae10aa1c2981",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_top_load_washing_machine_with_hinged_lid_dbfe810624b04f7da7e91aa355dda4da",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

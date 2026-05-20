@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_air_pump_with_t_handle_cadd0900c3a843d6b6ba74808655c7b6",
   "created_at": "2026-04-04T15:03:04Z",
   "updated_at": "2026-04-05T11:35:54Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A garage floor pump with a tall barrel, a T-handle, and a side hose clip. The rigid base carries the cylinder upright, and a small hook-like clip is mounted..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "7b43b9fe21f4d3398a00fc9a70a447160c95b786df7c399416c2690721bdabea",
-    "model_py_sha256": "f59ab383dd3a54e908a8c6a6e7ea73ddcbb9d6ac56f6a4a9e13739de912cc479"
+    "model_py_sha256": "24d4452b0552aa358a6a87dac8a2039a63efca7cb41118d756ab33b2d3579d5a"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_air_pump_with_t_handle_cadd0900c3a843d6b6ba74808655c7b6",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

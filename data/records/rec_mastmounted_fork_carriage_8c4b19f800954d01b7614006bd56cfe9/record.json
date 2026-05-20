@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_mastmounted_fork_carriage_8c4b19f800954d01b7614006bd56cfe9",
   "created_at": "2026-04-03T21:46:47Z",
   "updated_at": "2026-04-06T01:21:43Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A narrow mast with fork backrest. Two upright guides and a top tie member support a compact carriage frame carrying a backrest panel and rigid forks. The car..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "43490be597bb371d2e54420c000f02d501a682d885d38f83c1b8d876c1ea4d2f",
-    "model_py_sha256": "313ec37bab5cd9ab860da026d775625eb6d2f4bcfe4dc66f37f7a86b9a6c736d"
+    "model_py_sha256": "5cfe716ecaafb3e5fd549283ec10a18283646c4116beb40c6a21ab539eb8c136"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_mastmounted_fork_carriage_8c4b19f800954d01b7614006bd56cfe9",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

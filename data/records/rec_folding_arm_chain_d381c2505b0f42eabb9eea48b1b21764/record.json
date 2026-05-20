@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_folding_arm_chain_d381c2505b0f42eabb9eea48b1b21764",
   "created_at": "2026-03-29T15:31:29Z",
   "updated_at": "2026-04-01T11:28:52Z",
@@ -22,16 +22,17 @@
     "prompt_preview": "A hatch-support arm with a base lug, a short first link, a long center link, a narrow terminal link, and a small mounting pad at the tip. The side plates and..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "b1703c57af1a74a40755d449e188e6e2a2cfec88f4f7f9d92512a97fc9de549c",
-    "model_py_sha256": "be65abba3c80b7ce621ee4fd761f4d6e0489b6cb9fbf2e5cd954505a9449e5ca"
+    "model_py_sha256": "b2f488fd15f542c50d71789f4f26656087b99b1491be19fd9893359bcc26a2b9"
   },
   "collections": [
     "dataset"
@@ -39,5 +40,12 @@
   "author": "mattzh72",
   "rated_by": "mattzh72",
   "secondary_rating": 5,
-  "secondary_rated_by": "Zhaomou Song"
+  "secondary_rated_by": "Zhaomou Song",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_folding_arm_chain_d381c2505b0f42eabb9eea48b1b21764",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

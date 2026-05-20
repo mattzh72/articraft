@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_windshield_wiper_assembly_8a16143d852c4ba98ca24f4028629496",
   "created_at": "2026-03-30T17:16:42Z",
   "updated_at": "2026-04-01T22:00:12Z",
@@ -22,12 +22,13 @@
     "prompt_preview": "Design a retrofit/legacy-inspired Windshield wiper assembly that blends old-school construction cues with modern reliability. Keep the core as a motor-crank..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "7d4d5a52f30e993856e389c4a707c22b20498a69f4b0b279494364fd1d4e4696",
@@ -39,5 +40,12 @@
   "rated_by": "shawlyu",
   "author": "shawlyu",
   "secondary_rating": 4,
-  "secondary_rated_by": "RuiningLi"
+  "secondary_rated_by": "RuiningLi",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_windshield_wiper_assembly_8a16143d852c4ba98ca24f4028629496",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_single_pitch_axis_module_0002",
   "created_at": "2026-03-12T18:34:16Z",
   "updated_at": "2026-04-01T10:33:14Z",
@@ -20,16 +20,17 @@
     "prompt_preview": "A tilting cradle with one pitch joint, bearing blocks on both sides, and a rigid equipment plate suspended between the supports."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "b70018c99c5cdfeb7397837d6874d5c7ed76d02812486335ff01711d6eb22b41",
-    "model_py_sha256": "f0a40151175a8b13a2518d9474d6fe8c7549c7c7820a7911d1b44801713d356c"
+    "model_py_sha256": "3e7d713d005e450522e322c12159abcaf208dc7ddf0e8cdc9d1022eac04c2064"
   },
   "collections": [
     "dataset"
@@ -37,5 +38,12 @@
   "author": "mattzh72",
   "rated_by": "mattzh72",
   "secondary_rating": 5,
-  "secondary_rated_by": "Zhaomou Song"
+  "secondary_rated_by": "Zhaomou Song",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_single_pitch_axis_module_0002",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_twostage_telescoping_slide_907b6601325b4837adcc095597a31f38",
   "created_at": "2026-04-27T01:41:49Z",
   "updated_at": "2026-04-27T10:40:49Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A service fixture built as a telescoping slide. A grounded outer sleeve supports a rectangular inner stage, making the capture and overlap obvious through th..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "5dc4e6841395d5d09b30e56e56b2bab8803d0c34690c4b0edad123fdc3e26026",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_twostage_telescoping_slide_907b6601325b4837adcc095597a31f38",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

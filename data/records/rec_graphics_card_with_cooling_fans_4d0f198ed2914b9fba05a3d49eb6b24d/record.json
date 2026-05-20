@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_graphics_card_with_cooling_fans_4d0f198ed2914b9fba05a3d49eb6b24d",
   "created_at": "2026-04-04T14:26:47Z",
   "updated_at": "2026-04-05T13:29:54Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A workstation graphics card with a long shroud and a pair of centrifugal blowers near one end. The PCB and heatsink form a rectangular body, and the two blow..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "7ccef2102e162c30ac26e00455b9b978094e405a96a4803defd6e89473dc63d0",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_graphics_card_with_cooling_fans_4d0f198ed2914b9fba05a3d49eb6b24d",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

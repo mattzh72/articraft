@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_dishwasher_with_dropdown_door_and_sliding_racks_c4ce03bec1e94451bead1d379b5aa66a",
   "created_at": "2026-04-11T16:13:01Z",
   "updated_at": "2026-04-22T14:30:36Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A panel-ready dishwasher with a plain outer front, a dropdown door, a tall interior wash chamber, a shallow third cutlery tray above two deeper racks, and a..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "d284ff6bfb4cbc80994902bacac567735c6784ea06d7c0396ce2f08dab7075b0",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_dishwasher_with_dropdown_door_and_sliding_racks_c4ce03bec1e94451bead1d379b5aa66a",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

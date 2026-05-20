@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_revoluteprismatic_chain_cbbd3bfe1b1e4be3b99dc0bebc5aaee9",
   "created_at": "2026-03-29T04:00:44Z",
   "updated_at": "2026-04-01T10:02:11Z",
@@ -22,16 +22,17 @@
     "prompt_preview": "A wall-hinged support arm with a short root bracket, a long main link, and a rectangular tip carriage that extends from the link. The motion stack should rea..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "aa23f79df846a4b12df786bba51952cc6695f01bb7d2c0b3d6ea619ed767b0f6",
-    "model_py_sha256": "b435881b92d79e742eef75a469514890ab3d9716cf25bba5fd2e018efd61262d"
+    "model_py_sha256": "d39f1f78b8f1bf6dfc7bb36b4d7e28b0ce2421ec6da7d049237a1274d8991919"
   },
   "collections": [
     "dataset"
@@ -39,5 +40,12 @@
   "author": "mattzh72",
   "rated_by": "mattzh72",
   "secondary_rating": 5,
-  "secondary_rated_by": "Zhaomou Song"
+  "secondary_rated_by": "Zhaomou Song",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_revoluteprismatic_chain_cbbd3bfe1b1e4be3b99dc0bebc5aaee9",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

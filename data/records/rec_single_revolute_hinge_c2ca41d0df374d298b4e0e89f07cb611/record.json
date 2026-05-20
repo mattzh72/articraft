@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_single_revolute_hinge_c2ca41d0df374d298b4e0e89f07cb611",
   "created_at": "2026-03-30T17:57:46Z",
   "updated_at": "2026-04-06T01:42:30Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A broad equipment-door hinge. A fixed leaf plate, a moving leaf plate, and a stout knuckle barrel form the assembly, with enough leaf thickness and edge offs..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "6a9612473612596fbdb39257f94ac254edd1aad38d96b72125c5470d2f3686fe",
-    "model_py_sha256": "028aea7521064cff1b8c47a5977a8073a48caf78dbfcf2a949bc6215b6139f0c"
+    "model_py_sha256": "64f66e9356194272630ce49a80a52c3dfcc95f440a72d1336085e296291810fb"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_single_revolute_hinge_c2ca41d0df374d298b4e0e89f07cb611",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

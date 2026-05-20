@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_telescoping_boom_6b251066b6094a22a096c2cffdfaa34a",
   "created_at": "2026-03-30T17:57:46Z",
   "updated_at": "2026-04-01T11:05:14Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A telescoping boom. Nested rectangular tube sections extend from a grounded root mount, with each inner section visibly captured by the one outside it. Each..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "8455cb417328794853e76c2516c7c94b4832438558635b68a2a9fa9563a55b4c",
-    "model_py_sha256": "0372206b66f7f8c2f05adee81f9d82321a2170e7f58d409210a3831e2a62a487"
+    "model_py_sha256": "a93d60cd440e816f605df4a39f13057aeb97a4568af6c9678b30c1b0511ef48a"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_telescoping_boom_6b251066b6094a22a096c2cffdfaa34a",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

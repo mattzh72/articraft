@@ -1,0 +1,43 @@
+{
+  "schema_version": 1,
+  "record_id": "rec_roof_vent_tower_with_hinged_flap_0001",
+  "revision_id": "rev_000001",
+  "created_at": "2026-03-16T01:21:46Z",
+  "prompt_kind": "single_prompt",
+  "prompt_sha256": "537d194cf63f8ba3ef76ec2c04f380229b1fb00fdf4fc84768251d9bace572c1",
+  "source": {
+    "run_id": "run_import_roof_vent_tower_with_hinged_flap_20260316-011021-realism-articulation-v1",
+    "prompt_batch_id": "realism_articulation_v1",
+    "prompt_index": 1
+  },
+  "generation": {
+    "provider": "openai",
+    "model_id": "gpt-5.4",
+    "thinking_level": "high",
+    "openai_transport": "http",
+    "openai_reasoning_summary": null,
+    "max_turns": 30
+  },
+  "artifacts": {
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
+    "prompt_series_json": null,
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
+  },
+  "hashes": {
+    "prompt_sha256": "537d194cf63f8ba3ef76ec2c04f380229b1fb00fdf4fc84768251d9bace572c1",
+    "model_py_sha256": "138d3a0e25b84d14f241889982bd982a30a51bc6b4e66e8287af3892a5177f06"
+  },
+  "run_summary": {
+    "turn_count": 15,
+    "tool_call_count": null,
+    "compile_attempt_count": null,
+    "final_status": "success"
+  },
+  "parent": null,
+  "seed": null,
+  "inherited_inputs": []
+}

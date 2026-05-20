@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_stand_mixer_c932b06ae9eb4b7997319da233457720",
   "created_at": "2026-04-27T13:38:14Z",
   "updated_at": "2026-04-28T05:38:24Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A bright kitchen stand mixer with a glossy shell, a medium mixing bowl on a front slide carriage, and a rounded head carrying a whisk. The bowl should move p..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "6ca2702b556a2e8b7e90d59aed9bf80b522dd83d85aa8d05de5e3eef2a32358b",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_stand_mixer_c932b06ae9eb4b7997319da233457720",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

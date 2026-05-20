@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_faucet_with_side_handle_ba69f082971d4b90a65519a3016a3db1",
   "created_at": "2026-04-12T15:24:59Z",
   "updated_at": "2026-04-12T15:50:09Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A filtered drinking-water faucet with a slim arched spout, a side lever, and a quarter-turn filter-selector knob on the base collar. The side lever rotates o..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "60fc61129a6c142deacb87e23fcbe8ede36bd62cb3d23679560fb803da18e44c",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_faucet_with_side_handle_ba69f082971d4b90a65519a3016a3db1",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

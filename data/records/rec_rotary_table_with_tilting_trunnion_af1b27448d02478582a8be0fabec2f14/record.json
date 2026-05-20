@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_rotary_table_with_tilting_trunnion_af1b27448d02478582a8be0fabec2f14",
   "created_at": "2026-04-27T03:09:06Z",
   "updated_at": "2026-04-27T08:17:54Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A rotary table with tilting trunnion. A base turntable supports a U-shaped trunnion cradle that holds a square work table between its arms. The base rotates..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "c7bde52045fee8514dcfcfe4fc002b7270c5d1c0827ca58b6495ce2ba9549b72",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_rotary_table_with_tilting_trunnion_af1b27448d02478582a8be0fabec2f14",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_astronomical_telescope_on_tripod_150cfd6fb7564bf18fbb26530c5c7b32",
   "created_at": "2026-04-01T11:52:53Z",
   "updated_at": "2026-04-03T16:58:19Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A compact Schmidt-Cassegrain on a single-arm fork equatorial mount. A stubby tube pivots on declination on a horizontal revolute joint at the single fork arm..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "f8f1919c27a2b032dc7eeec309c2ce0130435389bb7a6669c78589d52dbdde65",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_astronomical_telescope_on_tripod_150cfd6fb7564bf18fbb26530c5c7b32",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

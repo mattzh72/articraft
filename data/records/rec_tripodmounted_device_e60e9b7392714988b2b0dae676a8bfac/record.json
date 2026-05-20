@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_tripodmounted_device_e60e9b7392714988b2b0dae676a8bfac",
   "created_at": "2026-04-27T02:06:08Z",
   "updated_at": "2026-04-27T10:00:36Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A compact optical device on a tripod with folding legs, a sliding center mast, and a protective front cover on the device face. The legs rotate on crown hing..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "d3a95b035af01ca4e491eb942453528160c1706c8423a01e97488f573a6bdb11",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_tripodmounted_device_e60e9b7392714988b2b0dae676a8bfac",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

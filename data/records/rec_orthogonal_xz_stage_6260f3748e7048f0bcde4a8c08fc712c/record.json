@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_orthogonal_xz_stage_6260f3748e7048f0bcde4a8c08fc712c",
   "created_at": "2026-04-03T21:46:47Z",
   "updated_at": "2026-04-06T01:25:11Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A stacked XZ positioning stage. A grounded horizontal slide carries a vertical slide and a small top plate at the top of the upright stage. The lower axis is..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "8a9769ec208dc861a09ce7757d275f4c7846e58953edbdca97d1d812c18aacea",
-    "model_py_sha256": "424b5ffd7bb8563b582d29972197a85ace77e40ada98e1c91ba8bd2c8964e1a4"
+    "model_py_sha256": "1e8a4a151497325ec8a1cb238222054c8e78e60f8a9bb7d212e168f29f9e4bde"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_orthogonal_xz_stage_6260f3748e7048f0bcde4a8c08fc712c",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

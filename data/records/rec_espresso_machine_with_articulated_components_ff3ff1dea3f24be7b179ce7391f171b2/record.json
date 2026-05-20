@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_espresso_machine_with_articulated_components_ff3ff1dea3f24be7b179ce7391f171b2",
   "created_at": "2026-04-09T16:54:33Z",
   "updated_at": "2026-04-22T08:41:26Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A lever-style espresso machine with a tall body, a front group head, a side steam wand, and a long brew lever above the head. A drip tray spans the lower fro..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "3606a8ad9ad938a218cb747d4038b048cfb76b4b1305a1c482ce84f3dd873018",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_espresso_machine_with_articulated_components_ff3ff1dea3f24be7b179ce7391f171b2",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

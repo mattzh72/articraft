@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_pitchroll_module_e9ab102d2ef24396afbd3a9d237b5ecf",
   "created_at": "2026-04-27T13:48:21Z",
   "updated_at": "2026-04-28T00:37:52Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A fork-and-spindle sensor bracket with a base frame, a horizontal pitch yoke, and a cylindrical roll cartridge mounted at the nose of the yoke. The two axis..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "93fb64d86665e437eef32d9313517b16c4e95392458142bf7af1b2903048e951",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_pitchroll_module_e9ab102d2ef24396afbd3a9d237b5ecf",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

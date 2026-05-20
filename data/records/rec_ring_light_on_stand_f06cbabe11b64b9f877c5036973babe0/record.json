@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_ring_light_on_stand_f06cbabe11b64b9f877c5036973babe0",
   "created_at": "2026-04-04T14:59:53Z",
   "updated_at": "2026-04-05T11:58:38Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A portable ring light with a telescoping stand and a folding carry handle on the head. The circular head is mounted in a tilt bracket at the top of the stand..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "113f9500087b28c3400d9442a1882c5d85ec16b70194761d544a6ff7df7aa955",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_ring_light_on_stand_f06cbabe11b64b9f877c5036973babe0",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

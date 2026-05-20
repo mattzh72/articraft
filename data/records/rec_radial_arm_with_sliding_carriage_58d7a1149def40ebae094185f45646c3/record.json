@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_radial_arm_with_sliding_carriage_58d7a1149def40ebae094185f45646c3",
   "created_at": "2026-03-31T17:20:51Z",
   "updated_at": "2026-03-31T18:35:49Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A bridge-backed radial slide arm. A rear support carries a rotary shoulder and a straight arm with a short truck near the tip. The shoulder is a revolute joi..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "4e89aba5ad1ea907052e3b057b77202b558b992e0ac0c82c826f20fa898834c2",
-    "model_py_sha256": "436001afaada7949d5f7db87d993692c473d9cbbe7b727cde813d61ed5da2455"
+    "model_py_sha256": "4d7550feb2a782523e71e62499dc6d4f00f4ca7ce5a62b3aeacdc19f41d9e8eb"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_radial_arm_with_sliding_carriage_58d7a1149def40ebae094185f45646c3",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

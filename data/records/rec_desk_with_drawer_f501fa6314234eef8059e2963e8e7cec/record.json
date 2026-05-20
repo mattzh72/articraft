@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_desk_with_drawer_f501fa6314234eef8059e2963e8e7cec",
   "created_at": "2026-04-27T03:22:30Z",
   "updated_at": "2026-04-27T07:35:48Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A drafting table with a wide tilting top and a single storage drawer under the frame. The tabletop tilts on a revolute hinge at the rear top edge. The drawer..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "2fa9fe4480dd3a1afb380591f58f5bc94bc3fe5387ea4ef627562ea6b3693ba3",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_desk_with_drawer_f501fa6314234eef8059e2963e8e7cec",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

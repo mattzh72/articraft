@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_centrifugal_juicer_with_articulated_components_fbef28ceb1c84d76b428ca4534301ddd",
   "created_at": "2026-04-09T16:54:33Z",
   "updated_at": "2026-04-11T15:41:20Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A compact countertop juicer with a rounded base, a hinged top lid, and a vertical feed pusher above the juicing basket. A short anti-drip spout projects from..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "6f2250cef6bc295a48b2f473b5cd7045ad5fbd4d4aa24479e6c3cdca96d4e58a",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_centrifugal_juicer_with_articulated_components_fbef28ceb1c84d76b428ca4534301ddd",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

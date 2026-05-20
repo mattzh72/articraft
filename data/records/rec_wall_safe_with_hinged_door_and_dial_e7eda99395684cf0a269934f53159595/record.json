@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_wall_safe_with_hinged_door_and_dial_e7eda99395684cf0a269934f53159595",
   "created_at": "2026-04-27T14:06:31Z",
   "updated_at": "2026-04-28T00:11:22Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A tall document wall safe with a narrow rectangular opening, a left-hinged door, a round dial above a short lever handle, and a small key-override cover near..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "de738be999ee49024131d6f9b734b150b771ffe1d2c276ad2b264d95485016fc",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_wall_safe_with_hinged_door_and_dial_e7eda99395684cf0a269934f53159595",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "record_id": "rec_create-a-backyard-gas-grill-with-a-wheeled-lower_20260326_152851_647344_8b5b7238",
+  "revision_id": "rev_000001",
+  "created_at": "2026-03-26T15:28:51Z",
+  "prompt_kind": "single_prompt",
+  "prompt_sha256": "601d825823784c573416c6c93c5be69c872fac9b3b5e727c16e6999d8d6bc278",
+  "source": {
+    "run_id": "run_20260326_152851_647344_8b5b7238",
+    "prompt_batch_id": null,
+    "batch_spec_id": null,
+    "row_id": null,
+    "prompt_index": null
+  },
+  "generation": {
+    "provider": "openai",
+    "model_id": "gpt-5.4",
+    "thinking_level": "high",
+    "openai_transport": "http",
+    "openai_reasoning_summary": "auto",
+    "max_turns": 50
+  },
+  "artifacts": {
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
+    "prompt_series_json": null,
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
+  },
+  "hashes": {
+    "prompt_sha256": "601d825823784c573416c6c93c5be69c872fac9b3b5e727c16e6999d8d6bc278",
+    "model_py_sha256": "4200533893cb42c288bd7192262ad0cff1ac33434b8706e8fb4ae21f66ed8dca"
+  },
+  "run_summary": {
+    "turn_count": 10,
+    "tool_call_count": 9,
+    "compile_attempt_count": 4,
+    "final_status": "success"
+  },
+  "parent": null,
+  "seed": null,
+  "inherited_inputs": []
+}

@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_tilt_mechanism_0001",
   "created_at": "2026-03-12T18:36:20Z",
   "updated_at": "2026-04-01T10:29:37Z",
@@ -20,16 +20,17 @@
     "prompt_preview": "A motorized tilt cradle with one clean revolute axis, compact support tower, and a balanced equipment plate."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "92109bd6176af9a9ba1728149ebab7817b144fc9d4b8b13c9745e031ed8dd390",
-    "model_py_sha256": "c23473425e0a697012d1518a27a7db6a63d0eb75ce005e290cd3536aa406957f"
+    "model_py_sha256": "e103a379f76562694078a7126de3adf3ffec8a5d8038767c2e26d8cc84daa76a"
   },
   "collections": [
     "dataset"
@@ -37,5 +38,12 @@
   "author": "mattzh72",
   "rated_by": "mattzh72",
   "secondary_rating": 4,
-  "secondary_rated_by": "Zhaomou Song"
+  "secondary_rated_by": "Zhaomou Song",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_tilt_mechanism_0001",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

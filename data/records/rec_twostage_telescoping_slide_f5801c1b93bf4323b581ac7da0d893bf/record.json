@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_twostage_telescoping_slide_f5801c1b93bf4323b581ac7da0d893bf",
   "created_at": "2026-03-29T15:31:29Z",
   "updated_at": "2026-04-01T11:20:22Z",
@@ -22,16 +22,17 @@
     "prompt_preview": "A compact extension slide with a fixed outer rail, a moving intermediate rail, and a flat terminal carriage. The slide should feel like a rigid linear module..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "e99330bf129745c08bff2837cacaea255e4d0477276acc2230912ac90cc0c0d3",
-    "model_py_sha256": "b4c624892ad3d3934fbc7e740ecbdefbd6d2eeb655995c09ff20d9511bd210cf"
+    "model_py_sha256": "43398c47cbdbf821955edec54143e977336ab72827fb3a9e2612dffb5fee5561"
   },
   "collections": [
     "dataset"
@@ -39,5 +40,12 @@
   "author": "mattzh72",
   "rated_by": "mattzh72",
   "secondary_rating": 5,
-  "secondary_rated_by": "Zhaomou Song"
+  "secondary_rated_by": "Zhaomou Song",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_twostage_telescoping_slide_f5801c1b93bf4323b581ac7da0d893bf",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

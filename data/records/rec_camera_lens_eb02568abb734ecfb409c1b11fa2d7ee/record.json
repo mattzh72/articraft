@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_camera_lens_eb02568abb734ecfb409c1b11fa2d7ee",
   "created_at": "2026-04-03T21:50:31Z",
   "updated_at": "2026-04-04T10:37:13Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "An anamorphic taking lens with a cylindrical outer barrel and a rotating cylindrical anamorphic front element. The anamorphic front element rotates on a revo..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "544b2694e5f85311057ddbeb7c94baace4db74a8ed6db7910b31c34a20d672f4",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_camera_lens_eb02568abb734ecfb409c1b11fa2d7ee",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

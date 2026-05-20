@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_air_pump_with_t_handle_1be784c400d840ec80556f3dd8e04650",
   "created_at": "2026-04-11T23:24:13Z",
   "updated_at": "2026-04-22T08:42:38Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A garage floor pump with a tall barrel, a T-handle, a hose clip on the side, and a wide foot base, plus a folding handle grip around the top bar. the piston..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "7a5d50f43eea8ad382623ca99b8c57806d1faaeeca52502d2ada32987e40da30",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_air_pump_with_t_handle_1be784c400d840ec80556f3dd8e04650",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

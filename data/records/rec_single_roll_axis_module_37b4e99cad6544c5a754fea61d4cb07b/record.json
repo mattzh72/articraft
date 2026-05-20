@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_single_roll_axis_module_37b4e99cad6544c5a754fea61d4cb07b",
   "created_at": "2026-03-30T17:57:46Z",
   "updated_at": "2026-04-07T10:05:18Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A pedestal-mounted a roll-axis spindle module. A short column rises from a heavy foot and supports a clevis or bearing housing that carries the moving head a..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "6ffd0f8d025e5211cb0e2a3eed768957f79b5142f0814cad3095335b6a26381f",
-    "model_py_sha256": "aae2ca50903db28a65d7e805e449ff373dc0d8976c224101bbc6c4a2323dd40a"
+    "model_py_sha256": "36ef26454730891d502b8d2611d49f9e04ecb1d9b844e629785c706689760e3b"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_single_roll_axis_module_37b4e99cad6544c5a754fea61d4cb07b",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

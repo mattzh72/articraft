@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_grill_with_hinged_lid_5c57110e862b47d18792278bd6e87ccc",
   "created_at": "2026-03-29T14:48:35Z",
   "updated_at": "2026-04-01T12:55:11Z",
@@ -22,12 +22,13 @@
     "prompt_preview": "A wagon-style charcoal grill with a long barrel chamber and a front vent slider. The lower half of the barrel is fixed to a simple wheeled frame, the upper h..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "24493a0d2c900b57fa1ecfe5cd85c53e07a3842d688be6c00799fc2f2121b349",
@@ -39,5 +40,12 @@
   "author": "RuiningLi",
   "rated_by": "RuiningLi",
   "secondary_rating": 3,
-  "secondary_rated_by": "shawlyu"
+  "secondary_rated_by": "shawlyu",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_grill_with_hinged_lid_5c57110e862b47d18792278bd6e87ccc",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

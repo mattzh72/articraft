@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_portable_speaker_with_articulated_controls_359f5dfe0be242c6955aba0f816a00ef",
   "created_at": "2026-04-11T23:40:46Z",
   "updated_at": "2026-04-12T12:30:46Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A jobsite-style portable speaker with a broad body, fold-flat side handles, and a large selector wheel near the upper front edge, plus a power rocker and two..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "7bc3b3db517428533697619bd89f2a6c2f02f48e6692db69be1b8c7f5ee4f83c",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_portable_speaker_with_articulated_controls_359f5dfe0be242c6955aba0f816a00ef",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

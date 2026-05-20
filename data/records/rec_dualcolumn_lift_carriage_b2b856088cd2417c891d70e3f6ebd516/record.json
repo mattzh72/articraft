@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_dualcolumn_lift_carriage_b2b856088cd2417c891d70e3f6ebd516",
   "created_at": "2026-03-30T17:57:46Z",
   "updated_at": "2026-04-01T11:08:44Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A compact twin-post lift module. A heavy foot supports two round posts and an upper tie bar, and a wide moving plate wraps both posts as a single carriage. O..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "011fa425423e336e7c1ef29d5d7fc8d0bb6dd3af792a3a10117bc3315c091a10",
-    "model_py_sha256": "89d9380e93d53c45c703f0a5c809d28874dd94c314c99165df052d9750fb4796"
+    "model_py_sha256": "75fd75b177c0bf5de9ea3e09b717ce56899253cbfd0fde4a7813737048d8cea4"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_dualcolumn_lift_carriage_b2b856088cd2417c891d70e3f6ebd516",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

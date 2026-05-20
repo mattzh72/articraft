@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_bench_vise_with_prismatic_jaw_912185dc568046bfb418413bd21d78c1",
   "created_at": "2026-04-27T01:59:13Z",
   "updated_at": "2026-04-27T10:23:57Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A clamp-on welding vise with a parallel C-clamp base that grips a workbench, a fixed rear jaw, and a prismatic sliding front jaw. The C-clamp base tightens o..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "d3c294f49b39e2faf470e2ebaa26412144b29072e0ecca81855c3e57f44e826f",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_bench_vise_with_prismatic_jaw_912185dc568046bfb418413bd21d78c1",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

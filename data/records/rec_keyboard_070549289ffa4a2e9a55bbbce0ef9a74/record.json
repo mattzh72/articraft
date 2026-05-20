@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_keyboard_070549289ffa4a2e9a55bbbce0ef9a74",
   "created_at": "2026-04-27T13:13:08Z",
   "updated_at": "2026-04-28T07:25:58Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A full-size office keyboard with a main typing block, a numeric keypad, and flip-out rear feet under the back edge. The broad housing carries stepped key row..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "0269d12f1202e0d410c89d7c2e89b11d5dff8e4eb3e80306799183dbfe03a1ad",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_keyboard_070549289ffa4a2e9a55bbbce0ef9a74",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

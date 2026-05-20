@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_easel_8a9262456ff444818902f16b823c5b05",
   "created_at": "2026-04-01T12:20:51Z",
   "updated_at": "2026-04-03T20:52:10Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A wall-mounted fold-flat display easel with a rectangular wall plate, two folding arm legs each on a revolute hinge at the plate face, a fold-flat ledge shel..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "c0703d07e7d6f9536fca7503b21c12f67d152025e5ccdaa2a9e8da7ad8aa9f78",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_easel_8a9262456ff444818902f16b823c5b05",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

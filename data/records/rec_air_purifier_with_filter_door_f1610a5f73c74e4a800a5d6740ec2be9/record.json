@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_air_purifier_with_filter_door_f1610a5f73c74e4a800a5d6740ec2be9",
   "created_at": "2026-04-01T11:52:53Z",
   "updated_at": "2026-04-03T16:57:12Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A bathroom wall-mount air purifier with a slim rectangular housing on a wall bracket, a hinged front cover that swings open on two revolute knuckle hinges at..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "e24194d7f16b1ad47ad1d924386e5cf2e7b876f28a1a78ad2537a9737effdfdf",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_air_purifier_with_filter_door_f1610a5f73c74e4a800a5d6740ec2be9",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

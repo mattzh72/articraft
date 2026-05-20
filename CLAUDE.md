@@ -89,7 +89,7 @@ npm --prefix viewer/web run typecheck
 - `sdk/` - Generated object SDK. `sdk/v0/` is the public import surface; `sdk/_core/` owns shared geometry/export logic; `sdk/_docs/` and `sdk/_examples/` are loaded into agent authoring context.
 - `storage/` - Canonical on-disk data layer. It owns layout, record/category/dataset/run stores, batch specs, materialization metadata, data validation, manifests, record author sync, and the SQLite-backed search index.
 - `viewer/` - Local inspection tool. `viewer/api/` is FastAPI, and `viewer/web/` is a React + TypeScript + Tailwind + Three.js SPA using shadcn/ui components.
-- `cli/` - Top-level `articraft` command and compatibility subcommands.
+- `cli/` - Top-level `articraft` command.
 - `tests/` - pytest tests mirroring package structure.
 
 ### Data Flow
@@ -97,7 +97,7 @@ npm --prefix viewer/web run typecheck
 1. Prompt/reference image enters `articraft generate`, `dataset run`, or a batch row.
 2. The generation harness builds provider-specific requests, runs a multi-turn tool loop, and writes generated `model.py`.
 3. `agent/compiler.py` executes `model.py` and exports URDF/mesh artifacts.
-4. Canonical record data is persisted under `data/records/<record_id>/` with `record.json`, `model.py`, provenance/cost/traces/inputs, and optional `dataset_entry.json`.
+4. Canonical record data is persisted under `data/records/<record_id>/` with `record.json`, revision artifacts under `revisions/<revision_id>/`, and optional collection sidecars under `collections/`.
 5. Regenerable materialization outputs are stored under `data/cache/record_materialization/<record_id>/`.
 6. `viewer/api` serves records and cached artifacts; `viewer/web` renders and manages them.
 
@@ -107,7 +107,6 @@ npm --prefix viewer/web run typecheck
 - `data/categories/` - Category metadata.
 - `data/supercategories.json` - Supercategory grouping metadata.
 - `data/batch_specs/` - Tracked dataset batch CSV specs.
-- `data/local/workbench.json` - Local workbench collection.
 - `data/cache/manifests/` - Derived manifests.
 - `data/cache/record_materialization/<record_id>/` - Derived URDF, compile reports, and viewer assets.
 - `data/cache/runs/<run_id>/` - Batch run results, allocations, staging, failures, and resume state.

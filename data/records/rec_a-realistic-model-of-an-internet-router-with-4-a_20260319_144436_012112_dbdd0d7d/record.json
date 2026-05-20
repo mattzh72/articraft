@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_a-realistic-model-of-an-internet-router-with-4-a_20260319_144436_012112_dbdd0d7d",
   "created_at": "2026-03-19T14:44:36Z",
   "updated_at": "2026-03-20T22:37:45Z",
@@ -20,16 +20,17 @@
     "prompt_preview": "A realistic model of an internet router with 4 antenna"
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "3934d12030c538acc8c467944adfffe3e815b244070127d2d98b27f3011591b7",
-    "model_py_sha256": "323eaeb233f93a9018a3818b87b4855a60c33cc7e5bc111c6f138f20d3dbd109"
+    "model_py_sha256": "ae24de7c2b689d6cb9f6b382d1a1faf9dfe3fb6e8661be920f61446e6834d3c6"
   },
   "collections": [
     "dataset"
@@ -37,5 +38,12 @@
   "author": "mattzh72",
   "rated_by": "mattzh72",
   "secondary_rating": null,
-  "secondary_rated_by": null
+  "secondary_rated_by": null,
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_a-realistic-model-of-an-internet-router-with-4-a_20260319_144436_012112_dbdd0d7d",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

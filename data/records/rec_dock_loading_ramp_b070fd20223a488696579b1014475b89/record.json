@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_dock_loading_ramp_b070fd20223a488696579b1014475b89",
   "created_at": "2026-04-27T13:14:43Z",
   "updated_at": "2026-04-28T07:23:30Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A yard ramp with a long steel deck, a hinged top lip plate on a front revolute joint, and two rear wheels on revolute axles for repositioning."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "6a9e5dfbe9031627692c38fe3565cf8063f358bba88f82164bbdd81274df0aca",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_dock_loading_ramp_b070fd20223a488696579b1014475b89",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

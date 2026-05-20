@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_joystick_mechanism_e1340223e0e74a7f8ad40f637f756279",
   "created_at": "2026-04-02T16:32:45Z",
   "updated_at": "2026-04-06T01:30:51Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "An under-slung joystick assembly. A top support bracket carries an outer yoke and an inner yoke below it, with the stick projecting downward from the innermo..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "834b8ee93facde67240ed339df5750c44d67af586d0c1ede1db8da1afc2503ba",
-    "model_py_sha256": "945056debd4ec661a0154c509cf8a2713cbe817ab698141c425c83499c3b7c43"
+    "model_py_sha256": "7ce3a0a3e875600248489cb65ed7d9eecf46ea3f5e4f425315325016cbc5f264"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_joystick_mechanism_e1340223e0e74a7f8ad40f637f756279",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

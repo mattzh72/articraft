@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_twojoint_prismatic_chain_3cf3051874c943ed959fb1707fa4e26b",
   "created_at": "2026-04-03T21:46:47Z",
   "updated_at": "2026-04-06T01:25:21Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A nested runner two-stage slide chain. A grounded guide section carries a middle runner, and the middle runner carries an inner runner. The moving members ar..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "215327cb670cd237a02bc940872fbeff4ea4929365f9216e4d35927722a8a6f6",
-    "model_py_sha256": "fdfad80e1f89da26f7d9ad56b831e91e4a9574c0ba8c3ca2835568d3491b2448"
+    "model_py_sha256": "0effce98f94d07893aba75979aab9841367d1c88f1771007ab5d205ef60f47a0"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_twojoint_prismatic_chain_3cf3051874c943ed959fb1707fa4e26b",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

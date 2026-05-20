@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_orthogonal_yz_stage_a1861b6e7ff743d2a75e3df6bd6c6a97",
   "created_at": "2026-03-31T17:20:51Z",
   "updated_at": "2026-04-06T01:38:34Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A compact service YZ stage. A fixed back support carries a short lateral slide and a visibly smaller hanging Z carriage. The lateral and vertical stages are..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "07bdec8960d05a0bcf03f9cc85f0d448cc317e06c8d8d365d7779a81ecb43bc8",
-    "model_py_sha256": "1d79132e1811bb8dcc84ab111578860476b01376fbb78faff8e0be651ea29a44"
+    "model_py_sha256": "7438a60cadf33a56da4a757a629003eee1de88cbe6dc6c5dfe0a8de67380a531"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_orthogonal_yz_stage_a1861b6e7ff743d2a75e3df6bd6c6a97",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_electrical_cabinet_door_a3b33ea282c04ddbab9076b28002a011",
   "created_at": "2026-04-03T22:21:47Z",
   "updated_at": "2026-04-04T15:13:13Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A double-door switchgear panel with a wide tall rectangular carcass and two hinged leaf doors meeting at a center gasket. Each door hinges on revolute joints..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "0c431a7ac05e0e2bebceb479d6ae3443a1dac477618aa937aa9c52928e9cd7df",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_electrical_cabinet_door_a3b33ea282c04ddbab9076b28002a011",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

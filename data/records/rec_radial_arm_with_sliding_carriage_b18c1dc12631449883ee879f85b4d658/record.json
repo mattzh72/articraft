@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_radial_arm_with_sliding_carriage_b18c1dc12631449883ee879f85b4d658",
   "created_at": "2026-04-03T21:46:47Z",
   "updated_at": "2026-04-06T01:22:20Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A swing-beam carriage module. A fixed column carries a rigid beam that can sweep around the column, and a compact carriage rides along the beam. The beam is..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "b4d5363c885aa6c199f6eaecc6790dad9df49da52ec13e9e2b887aaa90970a2d",
-    "model_py_sha256": "0a054044d4b1b69c174c181b64deed608216be8861f9a0ad5ed5a561ca9a7c56"
+    "model_py_sha256": "39bea84a9da75b920a3c542096a1454d5437341919a63ac366e725eaecd1f1ab"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_radial_arm_with_sliding_carriage_b18c1dc12631449883ee879f85b4d658",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_rice_cooker_8d3713a8083a4ad8aab1395a4ea44055",
   "created_at": "2026-04-27T13:03:41Z",
   "updated_at": "2026-04-28T07:34:48Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A simple household rice cooker with a cylindrical body, a hinged upper lid, a front release button, and a compact control cluster with two raised mode button..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "29e864a106610e41c713a683d6b196129e3710ef3c727691e683d9a67a31df86",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_rice_cooker_8d3713a8083a4ad8aab1395a4ea44055",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

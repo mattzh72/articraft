@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_rotary_base_with_vertical_slide_3586bcddcf494848af2a3935d3b7dfaf",
   "created_at": "2026-03-28T03:32:30Z",
   "updated_at": "2026-04-01T10:10:42Z",
@@ -22,16 +22,17 @@
     "prompt_preview": "A rotary pedestal with a lifting head. A circular base turntable carries a vertical guide column, and a carriage on that column holds a small tooling plate...."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "76d521ac6bd9378611258e60afc61321f5a76f468f9c51ef80265ba179678e3f",
-    "model_py_sha256": "8f3847924560c372c916b5888163c40b828e40915728ae16fe208a7a5e86540b"
+    "model_py_sha256": "af232498367e44a7c83299528257c768b801b0c00296eb46d180619c99973567"
   },
   "collections": [
     "dataset"
@@ -39,5 +40,12 @@
   "author": "mattzh72",
   "rated_by": "mattzh72",
   "secondary_rating": 5,
-  "secondary_rated_by": "Zhaomou Song"
+  "secondary_rated_by": "Zhaomou Song",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_rotary_base_with_vertical_slide_3586bcddcf494848af2a3935d3b7dfaf",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

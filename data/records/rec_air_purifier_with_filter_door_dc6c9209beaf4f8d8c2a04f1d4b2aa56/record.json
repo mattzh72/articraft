@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_air_purifier_with_filter_door_dc6c9209beaf4f8d8c2a04f1d4b2aa56",
   "created_at": "2026-04-12T15:16:51Z",
   "updated_at": "2026-04-12T15:56:46Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A slim tower purifier with a hinged rear filter door, a top rotary ring, and a small side timer slider. The rear filter door rotates on a vertical hinge, the..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "48e712b036048ae5f19daea7c1c89ca11ff3832d291a33d337100056f6ca7207",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_air_purifier_with_filter_door_dc6c9209beaf4f8d8c2a04f1d4b2aa56",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

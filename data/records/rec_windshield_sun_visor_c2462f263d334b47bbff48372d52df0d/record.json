@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_windshield_sun_visor_c2462f263d334b47bbff48372d52df0d",
   "created_at": "2026-04-27T02:10:47Z",
   "updated_at": "2026-04-27T10:01:12Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "Design a retrofit/legacy-inspired Windshield sun visor that blends old-school construction cues with modern reliability. Keep the core as a visor panel on a..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "3a9fd0711eb862fb52119e3418ab9f5ef2d36716e02fb2fbe9b50cae860bfbb0",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_windshield_sun_visor_c2462f263d334b47bbff48372d52df0d",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

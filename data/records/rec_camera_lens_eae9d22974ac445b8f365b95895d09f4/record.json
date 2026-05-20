@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_camera_lens_eae9d22974ac445b8f365b95895d09f4",
   "created_at": "2026-04-03T21:50:01Z",
   "updated_at": "2026-04-04T10:36:28Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A tilt-shift architectural prime lens with a cylindrical outer housing. The inner optical block tilts on a revolute joint and shifts on a prismatic joint per..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "68053ccd808a0694c17df5548a21baa0c1e13f1e9dac2ac68dbcc50fa213d293",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_camera_lens_eae9d22974ac445b8f365b95895d09f4",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

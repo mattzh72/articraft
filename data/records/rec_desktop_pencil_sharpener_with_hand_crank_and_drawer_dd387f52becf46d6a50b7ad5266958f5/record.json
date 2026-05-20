@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_desktop_pencil_sharpener_with_hand_crank_and_drawer_dd387f52becf46d6a50b7ad5266958f5",
   "created_at": "2026-04-27T13:28:57Z",
   "updated_at": "2026-04-28T07:11:55Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A vintage-style desktop pencil sharpener with a tall metal housing, a rear hand crank, a front shavings drawer, and a small sliding selector next to the penc..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "df57223bd4645d56e37cc4fb68ea412acebceeadfa878749958e25757c183939",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_desktop_pencil_sharpener_with_hand_crank_and_drawer_dd387f52becf46d6a50b7ad5266958f5",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

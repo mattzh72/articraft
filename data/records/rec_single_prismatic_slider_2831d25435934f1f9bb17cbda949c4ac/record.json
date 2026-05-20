@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_single_prismatic_slider_2831d25435934f1f9bb17cbda949c4ac",
   "created_at": "2026-04-27T03:08:44Z",
   "updated_at": "2026-04-27T08:17:39Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A base-plate slide table. A broad grounded plate supports a long low guide and one compact carriage with a top tooling surface. The carriage is one prismatic..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "a39ecf8a281502646ee44882a461d9b6c70c2413db3da10ac589e2c8083613a5",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_single_prismatic_slider_2831d25435934f1f9bb17cbda949c4ac",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

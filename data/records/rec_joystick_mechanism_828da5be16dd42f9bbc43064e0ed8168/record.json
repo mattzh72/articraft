@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_joystick_mechanism_828da5be16dd42f9bbc43064e0ed8168",
   "created_at": "2026-03-29T04:00:44Z",
   "updated_at": "2026-04-01T10:09:30Z",
@@ -22,16 +22,17 @@
     "prompt_preview": "A tall pedestal joystick with a rectangular base housing, an open cardan yoke, an inner frame, and a long tapered control lever. The support structure should..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "057a681cf9cc334361ac3868de720e0a63ff9d386d5b74b073f9631fa570d89d",
-    "model_py_sha256": "bdffdb206d40cc2bb4278e52a77cf2f6c1b51ba4d930f52117332cbd08729f52"
+    "model_py_sha256": "32634ef07d07a83ce7597c283da9e6bfb55e899e1db864d3f6a64577f291a66b"
   },
   "collections": [
     "dataset"
@@ -39,5 +40,12 @@
   "author": "mattzh72",
   "rated_by": "mattzh72",
   "secondary_rating": 5,
-  "secondary_rated_by": "Zhaomou Song"
+  "secondary_rated_by": "Zhaomou Song",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_joystick_mechanism_828da5be16dd42f9bbc43064e0ed8168",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

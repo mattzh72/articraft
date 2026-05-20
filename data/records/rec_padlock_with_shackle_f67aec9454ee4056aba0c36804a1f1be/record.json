@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_padlock_with_shackle_f67aec9454ee4056aba0c36804a1f1be",
   "created_at": "2026-04-04T14:48:18Z",
   "updated_at": "2026-04-05T12:49:07Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A rectangular padlock with a sliding dust door over the keyway. The body is flat and broad, with a standard shackle emerging from the top and a narrow dust d..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "050412a0092b89012c51dc0cb1a7a031de70299d6604e00f5e96bc5b89d705ba",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_padlock_with_shackle_f67aec9454ee4056aba0c36804a1f1be",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

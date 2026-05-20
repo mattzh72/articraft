@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_single_revolute_hinge_cbf8cbf3b1e44b29889ed891dda57239",
   "created_at": "2026-03-31T17:20:51Z",
   "updated_at": "2026-04-06T01:37:39Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A long access-door hinge. Two elongated leaves meet at a repeated knuckle barrel with a visible end pin head and plain leaf geometry. One revolute joint conn..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "b46806749ea5c6b734b73738e6589848b43a13a0a3d1879be40484d22f195ea9",
-    "model_py_sha256": "9c1200de5f3a0d6dd381601d7305e3bc20ea91335279948e97e65b64d49a9634"
+    "model_py_sha256": "eb738c0cad26214320350e99b778ebbf041374b259ddead048b7bcf64ad7bcd3"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_single_revolute_hinge_cbf8cbf3b1e44b29889ed891dda57239",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

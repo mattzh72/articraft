@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_studio_spotlight_on_yoke_0001",
   "created_at": "2026-03-16T01:23:44Z",
   "updated_at": "2026-03-20T22:37:45Z",
@@ -20,16 +20,17 @@
     "prompt_preview": "A realistic, highly detailed studio spotlight mounted on a yoke with a substantial lamp housing, mounting bracket, and support stand or base. The yoke and ai..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "11c50c3852d5153dcbf64e11646acae8d0d6d5396590c4e1fc7d66265a5300e3",
-    "model_py_sha256": "bd256e7cde642728f08a47b359bcb7cf55ae70083ce7950c0d55d34dff8510d3"
+    "model_py_sha256": "56a88e10d93591b71ffafb359e9b331d7e4116fd640335b12dd6ebcb61492c48"
   },
   "collections": [
     "dataset"
@@ -37,5 +38,12 @@
   "author": "mattzh72",
   "rated_by": "mattzh72",
   "secondary_rating": null,
-  "secondary_rated_by": null
+  "secondary_rated_by": null,
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_studio_spotlight_on_yoke_0001",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

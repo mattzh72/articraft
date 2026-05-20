@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_branching_tree_with_three_independent_rotary_branches_54f3f9b9686e443e9d7f91f87d923b6e",
   "created_at": "2026-03-31T17:20:51Z",
   "updated_at": "2026-04-06T01:39:58Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A tower-mounted three-branch rotary stand. A heavy base and short tower carry three radial arms on separate collars, with each arm kept as a single rigid mem..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "74a4ea09cc532cf4d82c3cf1fcf72f167e90ce135c1b223a536187fbcbe8a091",
-    "model_py_sha256": "59d6ed180669ab6c577c8f78bf0e75c3ec7972948a87b84aeb2083f3732854e8"
+    "model_py_sha256": "3678326df5ffe4574c8841ecfac16997a059256017d1b80c34d60159f8bdac5f"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_branching_tree_with_three_independent_rotary_branches_54f3f9b9686e443e9d7f91f87d923b6e",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

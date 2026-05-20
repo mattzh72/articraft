@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_yawpitch_module_9164cbed6d074fb19bcbe3933e8a9104",
   "created_at": "2026-03-30T17:57:46Z",
   "updated_at": "2026-04-01T10:59:27Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A yaw-pitch module. A grounded turntable base carries a U-shaped fork, and the fork supports a pitch cradle between its arms with a small top plate at the ce..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "e11fe2c4176a1ae94da4f925980b80e461283aef9078372bddac3c0bde2a7312",
-    "model_py_sha256": "aa81d9fc073e8a9847de65ff4c72f96ab6ae40b292f05ba1b7f03a9a95f9bf08"
+    "model_py_sha256": "6c489081bf42b8256c9e4d9f2e76d529b3b00cd954ffb27001303e3d41e44452"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_yawpitch_module_9164cbed6d074fb19bcbe3933e8a9104",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

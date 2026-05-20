@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_threestage_telescoping_slide_d7b74989cb23424cb9d3dda1ed71c82d",
   "created_at": "2026-04-27T12:54:11Z",
   "updated_at": "2026-04-28T07:37:02Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A three-stage telescoping drawer-style slide. Three nested channel sections extend from a fixed outer frame and end in a moving tray plate. The inner and mid..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "8f925acffc1cf1276c32574d8d2fc7b5db738a56f1ce3cd6f0879e831c236e83",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_threestage_telescoping_slide_d7b74989cb23424cb9d3dda1ed71c82d",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

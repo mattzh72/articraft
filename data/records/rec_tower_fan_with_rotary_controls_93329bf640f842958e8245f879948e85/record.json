@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_tower_fan_with_rotary_controls_93329bf640f842958e8245f879948e85",
   "created_at": "2026-04-11T02:10:02Z",
   "updated_at": "2026-04-11T04:53:08Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A slim residential tower fan with a tall rectangular housing, a circular pedestal base, and two rotary control dials on the top cap. The internal blower whee..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "ca08b4cf6865a03896bf2ad1f968a545d7809bac32e50be3691bee082c56b018",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_tower_fan_with_rotary_controls_93329bf640f842958e8245f879948e85",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

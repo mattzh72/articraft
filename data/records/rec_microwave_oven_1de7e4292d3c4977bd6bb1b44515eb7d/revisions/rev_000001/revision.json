@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "record_id": "rec_microwave_oven_1de7e4292d3c4977bd6bb1b44515eb7d",
+  "revision_id": "rev_000001",
+  "created_at": "2026-03-29T14:57:41Z",
+  "prompt_kind": "single_prompt",
+  "prompt_sha256": "a279515034d8a595a7de3aaec337f895cfd272b666a8806538607730a30df3ae",
+  "source": {
+    "run_id": "run_20260329_144826_276992_20260329-base-sdk-categories-part2-prompts-round",
+    "prompt_batch_id": null,
+    "batch_spec_id": "20260329_base_sdk_categories_part2_prompts_round4",
+    "row_id": "microwave_oven_08",
+    "prompt_index": 130
+  },
+  "generation": {
+    "provider": "openai",
+    "model_id": "gpt-5.4",
+    "thinking_level": "high",
+    "openai_transport": "http",
+    "openai_reasoning_summary": "auto",
+    "max_turns": 40
+  },
+  "artifacts": {
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
+    "prompt_series_json": null,
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
+  },
+  "hashes": {
+    "prompt_sha256": "a279515034d8a595a7de3aaec337f895cfd272b666a8806538607730a30df3ae",
+    "model_py_sha256": "7c3320e3e38ed17c2c235cf3735d386a77095cea135df41a41cc080dd0fc0423"
+  },
+  "run_summary": {
+    "turn_count": 14,
+    "tool_call_count": 16,
+    "compile_attempt_count": 7,
+    "final_status": "success"
+  },
+  "parent": null,
+  "seed": null,
+  "inherited_inputs": []
+}

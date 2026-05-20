@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_twojoint_prismatic_chain_0004",
   "created_at": "2026-03-25T23:15:42Z",
   "updated_at": "2026-04-01T10:22:02Z",
@@ -22,16 +22,17 @@
     "prompt_preview": "A two-joint prismatic chain. A fixed outer frame carries a first sliding stage, and that stage carries a second slider aligned with the first. Both joints ar..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "b2b9fc25198a80d8c9f91ff52d0e600acacc8d3153c38dd570bfef736c523e92",
-    "model_py_sha256": "326472475a491355459509c3e2c23c4967e4edf61df4bddcd9b306996578cf90"
+    "model_py_sha256": "8fce8626b389f14caacb093c32e6164f24c1e28c444ff9f70969cbdcb936fa17"
   },
   "collections": [
     "dataset"
@@ -39,5 +40,12 @@
   "author": "mattzh72",
   "rated_by": "RuiningLi",
   "secondary_rating": 4,
-  "secondary_rated_by": "Zhaomou Song"
+  "secondary_rated_by": "Zhaomou Song",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_twojoint_prismatic_chain_0004",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

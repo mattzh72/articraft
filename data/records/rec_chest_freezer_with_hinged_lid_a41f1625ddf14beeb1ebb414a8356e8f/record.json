@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_chest_freezer_with_hinged_lid_a41f1625ddf14beeb1ebb414a8356e8f",
   "created_at": "2026-04-27T13:43:14Z",
   "updated_at": "2026-04-28T05:25:22Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A glass-top display chest freezer with a wide merchandising body and a sliding glass lid panel on prismatic guide rails at the top rim."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "bd56b28278822f097b58271b7bd3b14942d1d65a492c3f2c95e24f85bfc49c19",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_chest_freezer_with_hinged_lid_a41f1625ddf14beeb1ebb414a8356e8f",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_swivel_bar_stool_442279b68e4442e69e1797e5c9c36dec",
   "created_at": "2026-04-12T15:30:14Z",
   "updated_at": "2026-04-12T15:49:40Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A swivel bar stool with a trumpet base, a central post, a round seat, and a folding backrest bracket at the rear. The seat rotates continuously about the ver..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "33515ce1b82183fb564e353b88e6f2491f5e2a55dbd352ed7c438be4d41669ee",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_swivel_bar_stool_442279b68e4442e69e1797e5c9c36dec",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

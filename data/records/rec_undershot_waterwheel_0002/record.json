@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_undershot_waterwheel_0002",
   "created_at": "2026-03-28T03:45:42Z",
   "updated_at": "2026-04-01T22:50:34Z",
@@ -22,12 +22,13 @@
     "prompt_preview": "A realistic, highly detailed Undershot Waterwheel in a rugged utility variant, with a wheel rim and paddles, side support frame, and axle bearings positioned..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "42cd8103b4a5803fc14167352f4f8dc7d4d402683c7e1ad47546681e918e5499",
@@ -39,5 +40,12 @@
   "author": "shawlyu",
   "rated_by": "shawlyu",
   "secondary_rating": 4,
-  "secondary_rated_by": "RuiningLi"
+  "secondary_rated_by": "RuiningLi",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_undershot_waterwheel_0002",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

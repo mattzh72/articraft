@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_espresso_machine_with_articulated_components_60daab3bf17f41a18a16cae68f69a524",
   "created_at": "2026-04-09T16:54:33Z",
   "updated_at": "2026-04-11T15:45:38Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A retro chrome espresso machine with a rounded body, a front group head, a side steam wand, and a hinged fill cap on the top deck. A small valve lever sits n..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "b417e9f5b860630e8be9ea6fdf214d4bcb19b8e0e2ef4135aa976bf1b40ed991",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_espresso_machine_with_articulated_components_60daab3bf17f41a18a16cae68f69a524",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

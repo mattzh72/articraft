@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_rotary_table_with_tilting_trunnion_77a05102bef5400d93992078bac0449a",
   "created_at": "2026-03-30T17:57:46Z",
   "updated_at": "2026-04-01T11:02:39Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A rotary table with tilting trunnion. A grounded base turntable supports two side cheeks, and a square or circular work table sits between the cheeks on a tr..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "e3b7d3b80cc8056dadfd853b9c1f746268159350d062d8c8422bda707090e433",
-    "model_py_sha256": "51e3503f823d69e834b8c18f6552a4d081cc17e5b03f114051144458b66d4b9f"
+    "model_py_sha256": "eea60c91d06a270175ccfc3ebb4fcef7c141738482c532ae921ff6556e629e44"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_rotary_table_with_tilting_trunnion_77a05102bef5400d93992078bac0449a",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_drawer_cabinet_with_sliding_drawers_b4e6b148179b4c7b9d7214a5ef519abe",
   "created_at": "2026-04-27T12:39:12Z",
   "updated_at": "2026-04-28T07:49:11Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A tall steel filing cabinet with a rectangular body and four full-width drawers, each sliding on prismatic guide rails with a recessed pull handle on the front."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "fb7da88085f0a871e1f3e1654a88fa163f43e19ba9b56fd476214fc27ad19ec3",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_drawer_cabinet_with_sliding_drawers_b4e6b148179b4c7b9d7214a5ef519abe",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

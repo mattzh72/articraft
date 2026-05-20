@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_vane_array_with_independent_pivots_9ed0dd06fc684bfd9eb7bb62725085f7",
   "created_at": "2026-03-31T17:20:51Z",
   "updated_at": "2026-04-06T01:40:38Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A framed louver bank with independent vanes. A grounded rectangular frame supports a row of rigid slats with visible end pivots and credible slat thickness...."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "696ebeb92a85a63dad697f62a24b5ed470e2701ad45fc88e83bce43c3840dd0a",
-    "model_py_sha256": "eed5df6521372be3133a1a8d49e04b9d6c4e02247070db689b374ce1266301a3"
+    "model_py_sha256": "a4286bb00afa8df4aaed79b332e6c08410f9d56202014fff1e2e53de49cc3228"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_vane_array_with_independent_pivots_9ed0dd06fc684bfd9eb7bb62725085f7",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

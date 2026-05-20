@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_clock_tower_with_rotating_hour_and_minute_hands_fc8a861141e34280bc943d2b7adc8ce9",
   "created_at": "2026-04-27T03:42:24Z",
   "updated_at": "2026-04-27T06:51:53Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A medieval astronomical clock tower with a wide square stone shaft, a large ornate clock face panel on the front shaft face with a fixed zodiac ring and an i..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "fb53c63a33be6d37aa43a87abf197449153e36d2de3057cd0b143b2db911152f",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_clock_tower_with_rotating_hour_and_minute_hands_fc8a861141e34280bc943d2b7adc8ce9",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

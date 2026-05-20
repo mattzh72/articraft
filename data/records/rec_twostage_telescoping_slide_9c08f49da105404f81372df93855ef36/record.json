@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_twostage_telescoping_slide_9c08f49da105404f81372df93855ef36",
   "created_at": "2026-03-30T17:57:46Z",
   "updated_at": "2026-04-01T10:59:55Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A wall-backed telescoping slide module. A rigid back support carries an outer guide channel and one nested moving section that projects from it. The moving s..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "24c544ade6ece71cd31c82b3a39535919ac7cbcd9b26b8359dbf46187c9a4f23",
-    "model_py_sha256": "a9711fb1b7e497de865d28cc8e0e6c4470e81fb844998eaa1f379fb41b0341ef"
+    "model_py_sha256": "9cae624eaf4c8f01e4bbb1fd16cd46ca08adce138e10f42b39957182bb198796"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_twostage_telescoping_slide_9c08f49da105404f81372df93855ef36",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

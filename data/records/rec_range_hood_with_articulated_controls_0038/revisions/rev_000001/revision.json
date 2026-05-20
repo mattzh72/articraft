@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "record_id": "rec_range_hood_with_articulated_controls_0038",
+  "revision_id": "rev_000001",
+  "created_at": "2026-03-26T20:32:00Z",
+  "prompt_kind": "single_prompt",
+  "prompt_sha256": "69d51a2d428d577b47c97eb770b9c870981c9b5f5f0d9412cc4bd90dba274166",
+  "source": {
+    "run_id": "run_20260326_203200_644548_20260326-range-hood-with-articulated-controls-50",
+    "prompt_batch_id": null,
+    "batch_spec_id": "20260326_range_hood_with_articulated_controls_50_prompts",
+    "row_id": "range_hood_with_articulated_controls_b2_35",
+    "prompt_index": 35
+  },
+  "generation": {
+    "provider": "openai",
+    "model_id": "gpt-5.4",
+    "thinking_level": "high",
+    "openai_transport": "http",
+    "openai_reasoning_summary": "auto",
+    "max_turns": 50
+  },
+  "artifacts": {
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
+    "prompt_series_json": null,
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
+  },
+  "hashes": {
+    "prompt_sha256": "69d51a2d428d577b47c97eb770b9c870981c9b5f5f0d9412cc4bd90dba274166",
+    "model_py_sha256": "c11bf3d9675ed28bc37fc41fc687eba0ac9290012ae5545bcc65b73dd1935eed"
+  },
+  "run_summary": {
+    "turn_count": 13,
+    "tool_call_count": 13,
+    "compile_attempt_count": 5,
+    "final_status": "success"
+  },
+  "parent": null,
+  "seed": null,
+  "inherited_inputs": []
+}

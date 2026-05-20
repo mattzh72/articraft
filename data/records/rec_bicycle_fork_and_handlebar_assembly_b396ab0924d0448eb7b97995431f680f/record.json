@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_bicycle_fork_and_handlebar_assembly_b396ab0924d0448eb7b97995431f680f",
   "created_at": "2026-04-27T13:37:09Z",
   "updated_at": "2026-04-28T05:40:19Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A gravel bike carbon fork with a tapered bladed-section crown, two straight carbon blades, and a tapered threadless steerer clamped in a four-bolt ahead stem..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "328ad467a13ef323415cee60ae865ef30fb5a17f0b79c77881e82ec40331e188",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_bicycle_fork_and_handlebar_assembly_b396ab0924d0448eb7b97995431f680f",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

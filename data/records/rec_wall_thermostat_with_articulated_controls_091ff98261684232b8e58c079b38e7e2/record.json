@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_wall_thermostat_with_articulated_controls_091ff98261684232b8e58c079b38e7e2",
   "created_at": "2026-04-12T15:34:59Z",
   "updated_at": "2026-04-12T15:47:47Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A thermostat with a square face, a rotary dial at the right side, and a front service cover that flips up. The right-side dial rotates continuously on its sh..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "80ca5db711f0af3bbf8c2befeaf23f7e1219302eb084ddb153e07a4e258cab65",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_wall_thermostat_with_articulated_controls_091ff98261684232b8e58c079b38e7e2",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

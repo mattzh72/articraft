@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_desktop_stapler_with_hinged_top_arm_f172af3bb5ee49878d4be5687983ea85",
   "created_at": "2026-04-11T20:20:10Z",
   "updated_at": "2026-04-22T14:20:20Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A die-cast desktop stapler with a flat rectangular base, a broad low-profile top arm, a side-guided staple tray, and a reversible anvil under the front tip...."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "28d0c105774e632c2948a8e5ad302ff879abd33c31ad14c0d3acb0e446ddf38e",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_desktop_stapler_with_hinged_top_arm_f172af3bb5ee49878d4be5687983ea85",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

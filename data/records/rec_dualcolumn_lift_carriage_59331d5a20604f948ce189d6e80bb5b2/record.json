@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_dualcolumn_lift_carriage_59331d5a20604f948ce189d6e80bb5b2",
   "created_at": "2026-03-30T17:57:46Z",
   "updated_at": "2026-04-01T11:10:29Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "An open industrial lift carriage. Twin uprights, a top tie, and a front tooling plate define the shape, with the moving plate visibly guided at four points...."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "a5afd73e1306d82a1ee937633bb4a7f82d3dd726bab0e92daa8d9f6ec8f6098e",
-    "model_py_sha256": "83949d2a8a743922608dfa67a4b668c13282810ed7f50c2a4ff053a9d6913bd6"
+    "model_py_sha256": "027c5cbae2868b6aa42f6f08d1b035d2909d90c0182840e6beb4d29a182c47ff"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_dualcolumn_lift_carriage_59331d5a20604f948ce189d6e80bb5b2",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

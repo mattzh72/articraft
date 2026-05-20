@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_playground_swing_f704d5bb62ba4eee9d1caf67795dcb31",
   "created_at": "2026-04-27T12:47:38Z",
   "updated_at": "2026-04-28T07:43:10Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A single-seat playground swing on an A-frame support. Two side frames and a top crossbeam support a flat seat suspended by two rigid hanger links or simplifi..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "0e07e3afc98dae4a9da3519db9264ca0042319b7b565d595c53f9c40ea7af76f",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_playground_swing_f704d5bb62ba4eee9d1caf67795dcb31",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

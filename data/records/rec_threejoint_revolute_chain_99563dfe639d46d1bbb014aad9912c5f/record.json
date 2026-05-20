@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_threejoint_revolute_chain_99563dfe639d46d1bbb014aad9912c5f",
   "created_at": "2026-03-30T17:57:46Z",
   "updated_at": "2026-04-07T10:06:16Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A compact three-joint revolute chain. A grounded root bracket carries 4 rigid links in series, using hinge blocks between each link and ending in a compact e..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "d21c8756e6005fabc2ec59bb833125daa07b509ff636fbf9cecc71bf5ad6a4b4",
-    "model_py_sha256": "191b71afbdeced72edb7c71647f6ac8b42d5bb515dd3743d59abefd2f34bf238"
+    "model_py_sha256": "785a29684a980c0ebe4ee8241f213fe2af933ede0ed1a6eb359a50de2993e6c9"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_threejoint_revolute_chain_99563dfe639d46d1bbb014aad9912c5f",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_zippo_lighter_d64d86e51cd8423bbb51641063fcf8e9",
   "created_at": "2026-04-27T13:12:40Z",
   "updated_at": "2026-04-28T07:23:38Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A brushed-metal pocket lighter with a boxy lower shell, a fitted upper lid, and a visible inner chimney insert. The upper lid opens on a narrow side revolute..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "efd908d9b0d34c27f320b31787ff7fff980bdc7dabfcededdde7c6991993cec3",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_zippo_lighter_d64d86e51cd8423bbb51641063fcf8e9",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_twojoint_prismatic_chain_fbbc58f5f62449c3bb94eb205f9cdeb1",
   "created_at": "2026-03-30T17:57:46Z",
   "updated_at": "2026-04-01T11:10:23Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A compact nested two-stage slide. A fixed outer guide supports a moving middle carriage, and the middle carriage supports a smaller inner carriage. The mecha..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "bdceb8267da20637c8636729e21480ab46b00e4bed1e9996ba2bd1c22ed0bb58",
-    "model_py_sha256": "4ad90044e267bcfbce70dab62be89f7ecc796cd9f2c25bac76185100d80ee5d3"
+    "model_py_sha256": "a78277765ea4f145e298e355be988ad42f8542678a8882b2a75e36ccb2fa533e"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_twojoint_prismatic_chain_fbbc58f5f62449c3bb94eb205f9cdeb1",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

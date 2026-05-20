@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_dehumidifier_with_pullout_water_bucket_2b8a007601554e3eb8f9ce83de11d495",
   "created_at": "2026-04-11T18:03:18Z",
   "updated_at": "2026-04-22T14:24:39Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A slim dehumidifier with a tall body, a lower water tank, a top exhaust shutter, and a narrow front control band with three buttons around a selector dial. T..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "c826023476af0ee26cc2ac37fb391ebb168a97decb422175f0b764c101100c42",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_dehumidifier_with_pullout_water_bucket_2b8a007601554e3eb8f9ce83de11d495",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

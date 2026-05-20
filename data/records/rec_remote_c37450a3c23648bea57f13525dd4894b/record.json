@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_remote_c37450a3c23648bea57f13525dd4894b",
   "created_at": "2026-04-03T21:31:29Z",
   "updated_at": "2026-04-04T15:55:39Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A compact gaming gamepad with a wide rectangular grip body, two thumbstick wells on the front face, and a D-pad face plate. Each thumbstick shaft rotates con..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "d0533ca856e41939ed2a67c66bec001db9ea24bcb0a1bbaf33d6997c774b6b8e",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_remote_c37450a3c23648bea57f13525dd4894b",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

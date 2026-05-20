@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_top_load_washing_machine_with_hinged_lid_d1f25e3f1beb4684935f20e2fe18f3cc",
   "created_at": "2026-04-27T02:34:05Z",
   "updated_at": "2026-04-27T09:40:46Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A portable top-load washer with a compact cabinet on four small caster wheels, a hinged top lid, and a rear control pod with a timer dial and two mode button..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "cd57c10ec2c0627057727b52d599a29c30bd3d6989f0eb9db19b721e3f8e3dc2",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_top_load_washing_machine_with_hinged_lid_d1f25e3f1beb4684935f20e2fe18f3cc",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

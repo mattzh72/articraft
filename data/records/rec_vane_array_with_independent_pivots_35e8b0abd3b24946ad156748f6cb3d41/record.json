@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_vane_array_with_independent_pivots_35e8b0abd3b24946ad156748f6cb3d41",
   "created_at": "2026-03-31T17:20:51Z",
   "updated_at": "2026-03-31T18:47:21Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A side-wall louver module. A grounded side frame supports several parallel vanes with short pivot bosses at their ends. The vanes are separate revolute joint..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "00adddfc6662e9f85368027d8422d1e3ba277f43923e7f23cd3ce7d9e2e66d9e",
-    "model_py_sha256": "53c9dd9080f7879a088414c4d3ea55f01dc1dd901067b1aa087062876dedc9df"
+    "model_py_sha256": "715ef38b62dfbb8e08a5badd9a74991e86b28494434daad4f2bc39f1c42a05e8"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_vane_array_with_independent_pivots_35e8b0abd3b24946ad156748f6cb3d41",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

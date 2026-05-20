@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_orthogonal_xy_stage_1ce9bf09047c4b52abcc89651efc89b6",
   "created_at": "2026-03-31T17:20:51Z",
   "updated_at": "2026-04-06T01:41:17Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A split-level XY stage. A grounded lower slide carries a long first carriage, and that carriage supports a shorter crosswise second slide with a plain top pl..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "c42616d2253c326efd87520996a05b0c94aba106a36c10c7c241cc7799cbb3ca",
-    "model_py_sha256": "3864dcca28f7c9f0d329be0fcf53964be93db2fd27af025a8e7930877dc5d47e"
+    "model_py_sha256": "43a162572abe355c775a61bfbc224f1fd47b2c7c0e83058f178ca7a302d0240b"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_orthogonal_xy_stage_1ce9bf09047c4b52abcc89651efc89b6",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

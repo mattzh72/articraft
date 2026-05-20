@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_serial_elbow_arm_0de9cf16e96d4ffe9dbd796147c4d3c7",
   "created_at": "2026-03-31T17:20:51Z",
   "updated_at": "2026-04-06T01:40:08Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A compact service elbow arm. A grounded root bracket carries a deep upper arm, a shallower forearm, and a small terminal face. The arm is a two-joint revolut..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "d67937563bfdbd339960152db90fb8e1a0b2696719a2c1243ddac31b01579c39",
-    "model_py_sha256": "782eba83a688c75199a97a15151b8db6de9699a84ca23855ed27eec351c91468"
+    "model_py_sha256": "bdb77e301f9bb3cc347509faf36dd78a1997061d4e385ff735dd54a974c4d8dd"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_serial_elbow_arm_0de9cf16e96d4ffe9dbd796147c4d3c7",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

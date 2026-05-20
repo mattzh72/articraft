@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_drillpress_tilt_table_2fe92880a3e443b29d4b695f1838cce2",
   "created_at": "2026-04-27T13:48:11Z",
   "updated_at": "2026-04-28T00:34:32Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A magnetic-base drill stand with a rectangular electromagnetic base plate, a telescoping vertical column extending on a prismatic joint from the base, and a..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "ee77cfe07928519f9dcbce2a442d23ae83abb34abacdd6e6a4c3815fc6386d1e",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_drillpress_tilt_table_2fe92880a3e443b29d4b695f1838cce2",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

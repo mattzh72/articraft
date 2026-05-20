@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_swivel_bar_stool_a2db6288e46b453b854aa961e862269d",
   "created_at": "2026-04-12T15:31:54Z",
   "updated_at": "2026-04-12T15:44:44Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A gas-lift swivel stool with a heavy round base, a circular foot ring, and a rounded seat with a side lever plus a small hinged seat cover flap. The seat rot..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "d464cbbf4a1ec684a9dc74b8b3782ada8fb21ccc8c093e2ce64520e59a6cf804",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_swivel_bar_stool_a2db6288e46b453b854aa961e862269d",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

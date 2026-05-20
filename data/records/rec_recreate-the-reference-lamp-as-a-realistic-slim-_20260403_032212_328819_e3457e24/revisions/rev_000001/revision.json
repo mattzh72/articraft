@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "record_id": "rec_recreate-the-reference-lamp-as-a-realistic-slim-_20260403_032212_328819_e3457e24",
+  "revision_id": "rev_000001",
+  "created_at": "2026-04-03T03:22:12Z",
+  "prompt_kind": "single_prompt",
+  "prompt_sha256": "900a29bb51b2c34f68aa0ac6624f7ba6bd6cd362c4a5b1c794e62d9523dbe55e",
+  "source": {
+    "run_id": "run_20260403_032212_328819_e3457e24",
+    "prompt_batch_id": null,
+    "batch_spec_id": null,
+    "row_id": null,
+    "prompt_index": null
+  },
+  "generation": {
+    "provider": "openai",
+    "model_id": "gpt-5.4",
+    "thinking_level": "high",
+    "openai_transport": "http",
+    "openai_reasoning_summary": "auto",
+    "max_turns": 50,
+    "max_cost_usd": null
+  },
+  "artifacts": {
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
+    "prompt_series_json": null,
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
+  },
+  "hashes": {
+    "prompt_sha256": "900a29bb51b2c34f68aa0ac6624f7ba6bd6cd362c4a5b1c794e62d9523dbe55e",
+    "model_py_sha256": "03b7947c88dd268ca959958e92451eade70e259f18c531a6b373e0e378f9c50d"
+  },
+  "run_summary": {
+    "turn_count": 9,
+    "tool_call_count": 7,
+    "compile_attempt_count": 2,
+    "final_status": "success"
+  },
+  "parent": null,
+  "seed": null,
+  "inherited_inputs": []
+}

@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_xyz_cartesian_stage_e478cb7338a94553a4312a29639cf82f",
   "created_at": "2026-03-30T17:57:46Z",
   "updated_at": "2026-04-06T01:42:27Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A low-profile XYZ slide stack. A broad lower guide supports a long carriage, the carriage supports a shorter orthogonal slide, and the upper slide supports a..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "58dc382fed63b148ba44c806f04ace19ae1607fcf7739e880ca293dcc7e1adc6",
-    "model_py_sha256": "116c2b927de19cac57ea22ed6b0f6e684933f75638740a8c70005da196a3bb18"
+    "model_py_sha256": "2ab502b5d69448a9cea1d986504dc29617936935407129226e9bf39d6717ac22"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_xyz_cartesian_stage_e478cb7338a94553a4312a29639cf82f",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

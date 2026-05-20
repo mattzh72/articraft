@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_radial_arm_with_sliding_carriage_5216ef235e324eab9706b73cf08beabc",
   "created_at": "2026-03-29T15:31:29Z",
   "updated_at": "2026-04-01T11:27:49Z",
@@ -22,16 +22,17 @@
     "prompt_preview": "A radial drill-style arm module with a stout vertical column, a horizontal beam swinging around the column, and a carriage saddle traveling along the beam. T..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "90c4d9b3208294b148d1854d07c33839033d4735664f935d17df9332872666ad",
-    "model_py_sha256": "5d082f79044ddbb1b77b1f3b8ab1a7ffe5662f548f479ca310cf577ff8cdda05"
+    "model_py_sha256": "4ab311e91e0aad23d7a38b4dff47a26358f4c407f94bf9659fdaf102e5535cb2"
   },
   "collections": [
     "dataset"
@@ -39,5 +40,12 @@
   "author": "mattzh72",
   "rated_by": "mattzh72",
   "secondary_rating": 5,
-  "secondary_rated_by": "Zhaomou Song"
+  "secondary_rated_by": "Zhaomou Song",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_radial_arm_with_sliding_carriage_5216ef235e324eab9706b73cf08beabc",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

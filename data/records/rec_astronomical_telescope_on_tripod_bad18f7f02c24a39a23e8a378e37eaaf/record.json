@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_astronomical_telescope_on_tripod_bad18f7f02c24a39a23e8a378e37eaaf",
   "created_at": "2026-04-27T12:36:28Z",
   "updated_at": "2026-04-28T07:44:43Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A Newtonian reflector on a metal equatorial mount with a polar axis and a declination revolute axis, on a three-leg tripod."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "e33b36bd8d6e8176ab07e8276d591fa5d30e69bbadf33a76cb8c0aefd0656d43",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_astronomical_telescope_on_tripod_bad18f7f02c24a39a23e8a378e37eaaf",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

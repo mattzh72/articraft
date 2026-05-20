@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_retractable_bollard_e1da0b009aba433daa16a14ba3bbdf58",
   "created_at": "2026-04-27T02:51:11Z",
   "updated_at": "2026-04-27T08:29:17Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A heavy-duty anti-vehicle bollard with a thick cylindrical ram, a reinforced ground socket, and a broad crown plate carrying a keyway. The ram slides prismat..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "74bcf89dbfe7478cc2305f2ad0ded29fa311f26bc5fe6c8fae121a0a330dc8a2",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_retractable_bollard_e1da0b009aba433daa16a14ba3bbdf58",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

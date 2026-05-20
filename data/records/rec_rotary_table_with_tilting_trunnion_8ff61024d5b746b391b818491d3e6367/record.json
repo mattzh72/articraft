@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_rotary_table_with_tilting_trunnion_8ff61024d5b746b391b818491d3e6367",
   "created_at": "2026-03-31T17:20:51Z",
   "updated_at": "2026-03-31T18:32:43Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A compact service trunnion table. A broad grounded body supports a lower rotary base and a smaller upper work face held in side cheeks. The lower base rotate..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "06ab7a5c471b7e82c49da582fed2a4363d1af44aa3acc4f60129c18ebcdb3c96",
-    "model_py_sha256": "9388a9f137936f2d9b341abd49483b14aab98c1a140f5b72c4c144d1ad2d5453"
+    "model_py_sha256": "70eb9f6a93ff88467023703a472bfbe2d4067bef4c88187ff1d56c4d7792b38a"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_rotary_table_with_tilting_trunnion_8ff61024d5b746b391b818491d3e6367",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_paper_shredder_with_pullout_bin_b1003708e6f44fbfbf2efda6b51a9a2d",
   "created_at": "2026-04-11T16:13:01Z",
   "updated_at": "2026-04-22T14:28:27Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A home-office paper shredder with a dark cutter head, a pullout waste bin below, and a top control strip with an auto-off-reverse slider plus two round butto..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "fe27a4b2bba43fa91f18c0aa6856f405e963d30f801db60e2e66782dd34c01a5",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_paper_shredder_with_pullout_bin_b1003708e6f44fbfbf2efda6b51a9a2d",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

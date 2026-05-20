@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_faucet_with_side_handle_d1a4904f48354b82a96ed0387d224615",
   "created_at": "2026-04-12T15:25:26Z",
   "updated_at": "2026-04-12T15:51:03Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A bidet faucet with a low body, a side handle, and a swiveling outlet nozzle at the tip. The side handle rotates on its short pivot, and the outlet nozzle ro..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "d3f2d36b5183361dc193fa965b9c5c1634544233031c2eb1a671ac070198a8a9",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_faucet_with_side_handle_d1a4904f48354b82a96ed0387d224615",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

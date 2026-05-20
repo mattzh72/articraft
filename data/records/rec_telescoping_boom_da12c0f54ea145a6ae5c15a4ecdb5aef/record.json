@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_telescoping_boom_da12c0f54ea145a6ae5c15a4ecdb5aef",
   "created_at": "2026-03-31T17:20:51Z",
   "updated_at": "2026-04-06T01:38:31Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A bridge-backed telescoping reach arm. A rear support carries several nested straight sections stepping down in size toward a plain tip face. The nested sect..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "42256236e4de4cd836e4bb46e3fbb51eec471c179f4d544274136f97024d6ca9",
-    "model_py_sha256": "5648d4595393c4850323ad61c4d61df7f02f6e3c7ec998f0e6428526f827b8c3"
+    "model_py_sha256": "3db27b60d0f4b688917af898814ac4df5a1d53ab599770742c87e9d555617eb2"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_telescoping_boom_da12c0f54ea145a6ae5c15a4ecdb5aef",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

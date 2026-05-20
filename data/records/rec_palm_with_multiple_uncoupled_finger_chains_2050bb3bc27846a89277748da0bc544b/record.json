@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_palm_with_multiple_uncoupled_finger_chains_2050bb3bc27846a89277748da0bc544b",
   "created_at": "2026-04-04T14:49:00Z",
   "updated_at": "2026-04-05T12:43:08Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A modular palm with four finger chains, a side thumb chain, and a flip-open service panel. The palm housing is rigid and flat, with the service panel mounted..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "e1b22bec0260afa54defe4e11deab53a570fb3b03fa92fdb4a2405262fe300f1",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_palm_with_multiple_uncoupled_finger_chains_2050bb3bc27846a89277748da0bc544b",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

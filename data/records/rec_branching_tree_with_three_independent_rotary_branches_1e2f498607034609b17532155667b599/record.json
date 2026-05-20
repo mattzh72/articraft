@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_branching_tree_with_three_independent_rotary_branches_1e2f498607034609b17532155667b599",
   "created_at": "2026-03-29T15:31:29Z",
   "updated_at": "2026-04-01T11:30:41Z",
@@ -22,16 +22,17 @@
     "prompt_preview": "A three-branch inspection fixture head with a tall rectangular spine, a low side arm, a forward arm, and a high arm ending in three different mounting pads...."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "4aadafd454a1d53a8424fef33e6911e71c50e68c61d00ef0304ab9b9e1942446",
-    "model_py_sha256": "e11ff4aeb947162c1b7fc590d95b785552a8979d4dc0718f2a388c46c8cb5b21"
+    "model_py_sha256": "b951ee36869510aa44f037ee9384b6ea7298612543389779893bc72f492b79b2"
   },
   "collections": [
     "dataset"
@@ -39,5 +40,12 @@
   "author": "mattzh72",
   "rated_by": "mattzh72",
   "secondary_rating": 2,
-  "secondary_rated_by": "Zhaomou Song"
+  "secondary_rated_by": "Zhaomou Song",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_branching_tree_with_three_independent_rotary_branches_1e2f498607034609b17532155667b599",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

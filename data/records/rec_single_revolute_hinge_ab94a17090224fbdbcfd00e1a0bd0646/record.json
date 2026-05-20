@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_single_revolute_hinge_ab94a17090224fbdbcfd00e1a0bd0646",
   "created_at": "2026-04-03T21:46:47Z",
   "updated_at": "2026-04-06T01:24:37Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A block-and-leaf hinge. A grounded block support carries one hinge half, and a rectangular leaf forms the moving half around a central pin barrel. One revolu..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "6ccc85cc5fed71c35afe101b8228873dc3f2826b746d27adc4e7518191ceb6fc",
-    "model_py_sha256": "8c2fad7851cb04dee52e276b14d4d16ab2252d333fdf22b9473bedd7b662cd6c"
+    "model_py_sha256": "95c2a9c1e041192ed0bbd267319dd51f678423b63678b8cd033c8ef5b9be80d8"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_single_revolute_hinge_ab94a17090224fbdbcfd00e1a0bd0646",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

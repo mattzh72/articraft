@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_prismaticrevolute_chain_e1184c4562674984b5935a7b20c76777",
   "created_at": "2026-03-28T03:32:30Z",
   "updated_at": "2026-04-01T10:12:04Z",
@@ -22,16 +22,17 @@
     "prompt_preview": "A two-joint actuator chain. A fixed base guide carries a sliding carriage, and the carriage supports a hinged output link at its front. The first joint is pr..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "854db1d2fb69fe73c48b14030b68f5a196bdde76496ca3e6bd041f47bb82c952",
-    "model_py_sha256": "981d7270696fc8c82c6c5b7a71f5821cd3ca788b48bc666ed6ab838d5f8c56e8"
+    "model_py_sha256": "5ca68a5f66e4ba7c932746f99616b599732d8e9a38563594d32472c799c2b9c0"
   },
   "collections": [
     "dataset"
@@ -39,5 +40,12 @@
   "author": "mattzh72",
   "rated_by": "mattzh72",
   "secondary_rating": 4,
-  "secondary_rated_by": "Zhaomou Song"
+  "secondary_rated_by": "Zhaomou Song",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_prismaticrevolute_chain_e1184c4562674984b5935a7b20c76777",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

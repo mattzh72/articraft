@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_multisegment_foldout_arm_1820bb84a237429987e465cfb8023e3b",
   "created_at": "2026-04-27T12:31:45Z",
   "updated_at": "2026-04-28T07:52:25Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A multi-segment fold-out boom with repeated revolute joints, slim rectangular links, and simple bracket details suitable for CAD modeling."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "8d9c13b4a37b0ea06a6d649511e31bd54705d45fd51bbaa0e46537bea1e762cc",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_multisegment_foldout_arm_1820bb84a237429987e465cfb8023e3b",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_rice_cooker_b660b44517a6427baaecece9eb8e956d",
   "created_at": "2026-04-27T02:13:18Z",
   "updated_at": "2026-04-27T10:11:27Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A travel-size rice cooker with a squat housing, a hinged top lid, and a small button cluster near the front base, plus a single cook-warm selector dial on th..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "a9f2919d14977c61f66ab2c2dcdad1feeff3ecb699ef3ddf0a56df604a13bab3",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_rice_cooker_b660b44517a6427baaecece9eb8e956d",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

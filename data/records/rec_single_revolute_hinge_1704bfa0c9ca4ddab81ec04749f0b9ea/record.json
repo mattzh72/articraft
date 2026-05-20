@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_single_revolute_hinge_1704bfa0c9ca4ddab81ec04749f0b9ea",
   "created_at": "2026-03-31T17:20:51Z",
   "updated_at": "2026-04-06T01:39:25Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A boxed cover hinge. A fixed bracket leaf carries short knuckle segments and a moving cover leaf with a simple edge flange. The cover leaf rotates as one rev..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "12669ad2968ee2749712e54abb06d557a97c3b706d6f4d5ce6ed34a9179657f9",
-    "model_py_sha256": "73c95e052d1d9e17baeca26e2550b1bacc33ee341011a20146b0e55f2c1daf85"
+    "model_py_sha256": "45688533d1476fe2c9300bd9ea052a10ce5e444501cedb8a1144e0d5a994e900"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_single_revolute_hinge_1704bfa0c9ca4ddab81ec04749f0b9ea",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

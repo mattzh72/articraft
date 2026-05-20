@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_threestage_telescoping_slide_47e2913d32f94465a4dd0e9e74d054a8",
   "created_at": "2026-03-28T03:32:30Z",
   "updated_at": "2026-04-01T10:11:21Z",
@@ -22,16 +22,17 @@
     "prompt_preview": "A three-stage telescoping drawer-style slide. Three nested channel sections extend from a fixed outer frame and end in a moving tray plate. The inner and mid..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "8f925acffc1cf1276c32574d8d2fc7b5db738a56f1ce3cd6f0879e831c236e83",
-    "model_py_sha256": "dbcb0178b838b3583e8c5e2bceeaf422d3b84fac9908f7628e01bfcc32280f31"
+    "model_py_sha256": "56f263c224bb731da16d523f022e5c41d6d5554dc2eb8a7ed3a4c3d8c392cdf9"
   },
   "collections": [
     "dataset"
@@ -39,5 +40,12 @@
   "author": "mattzh72",
   "rated_by": "mattzh72",
   "secondary_rating": 5,
-  "secondary_rated_by": "Zhaomou Song"
+  "secondary_rated_by": "Zhaomou Song",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_threestage_telescoping_slide_47e2913d32f94465a4dd0e9e74d054a8",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

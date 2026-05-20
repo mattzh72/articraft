@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_cantilever_articulated_arm_03eac2c3c56c4eb8b696f08713ff0f23",
   "created_at": "2026-04-01T18:09:34Z",
   "updated_at": "2026-04-06T01:35:42Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A compact bench cantilever arm. A short column base carries two rigid links and a compact wrist face, with the whole arm clearly overhanging one side of the..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "cb0f7fe99613472a309cf02af8c9f1c2aa6cecc05264616e4dd321458db1a160",
-    "model_py_sha256": "b52194153d408ee06125dcdd7e10aded3c3877125c0bcd19b25232b137719d5d"
+    "model_py_sha256": "8a7afda4698db7307b7e76b025248b3b7107efc3193e1d7bd0c0a278e2b267fb"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_cantilever_articulated_arm_03eac2c3c56c4eb8b696f08713ff0f23",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

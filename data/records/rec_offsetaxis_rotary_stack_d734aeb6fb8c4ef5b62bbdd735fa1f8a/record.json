@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_offsetaxis_rotary_stack_d734aeb6fb8c4ef5b62bbdd735fa1f8a",
   "created_at": "2026-04-01T18:09:34Z",
   "updated_at": "2026-04-06T01:36:41Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "An under-slung offset rotary assembly. A top bridge support carries a lower rotary stage and a smaller upper stage that hangs from the bridge on a separate a..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "625a51daebe9a12dfc920dd67c425249e271ab0ee82e98808c4c2af066272c5c",
-    "model_py_sha256": "1888fae6b6a24c5999c33bed619b78e6052ba58272066f0f3cd56ed91c2a1af1"
+    "model_py_sha256": "c0e56c6cf0c74f8c34584dce568fd73d2937618fa8c31760ff05f7b419ca5073"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_offsetaxis_rotary_stack_d734aeb6fb8c4ef5b62bbdd735fa1f8a",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_lighthouse_with_rotating_beacon_assembly_c54cb4bf2ea2484a94732fb214afa5c1",
   "created_at": "2026-04-27T01:41:49Z",
   "updated_at": "2026-04-27T10:36:48Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A seaside lighthouse lantern with a rotating lens carriage and a narrow door into the glass room. The lens carriage rides on a central shaft within the lante..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "793027e33db4278dd997fb53c15381df2e2ea48b3103c58d636ad6fe1d8a5dbc",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_lighthouse_with_rotating_beacon_assembly_c54cb4bf2ea2484a94732fb214afa5c1",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

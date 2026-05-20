@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_food_processor_with_feed_pusher_65944fdc0cc2467f97f9c194eecfd8d5",
   "created_at": "2026-04-27T13:37:12Z",
   "updated_at": "2026-04-28T05:40:55Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A mini food processor with a small bowl, a narrow feed tube, a short pusher, and a simple front interface made of a selector knob and two rocker switches. Th..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "e4885cc4e963083054851b47e4c6d765463391bbdb3dbd42d18a73e77a1cb7eb",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_food_processor_with_feed_pusher_65944fdc0cc2467f97f9c194eecfd8d5",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

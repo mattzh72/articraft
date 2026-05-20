@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_ceiling_light_fixture_d79b399f424a4994b5698054870c8876",
   "created_at": "2026-04-03T21:54:48Z",
   "updated_at": "2026-04-04T10:53:21Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A recessed wall-wash ceiling light with a rectangular housing flush in a ceiling panel and an adjustable louver baffle. The louver baffle slides on a prismat..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "756cabb80af0859f8cf3a92689075bcc02553630bb998e3e9210c9419616e96d",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_ceiling_light_fixture_d79b399f424a4994b5698054870c8876",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

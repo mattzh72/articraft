@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_multisegment_foldout_arm_e3473cf01e124edaa9bb654d3f01e589",
   "created_at": "2026-03-28T03:32:30Z",
   "updated_at": "2026-04-01T10:12:35Z",
@@ -22,16 +22,17 @@
     "prompt_preview": "A compact fold-out support arm with four short segments. A fixed base plate carries four boxed links in series and a small platform bracket at the end. The f..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "f180718eaad3328d2951dc495bc016d43ecb0e932be5299d40e657da5d8205f4",
-    "model_py_sha256": "b669dfe98146cd547efc96ceb8b34dc4d92f712f2a09dc1ec7a809245d54cbed"
+    "model_py_sha256": "9503645a7f3d0d9da64206a566272c4e9f294df75621c1a4b2d0240856c8346f"
   },
   "collections": [
     "dataset"
@@ -39,5 +40,12 @@
   "author": "mattzh72",
   "rated_by": "mattzh72",
   "secondary_rating": 5,
-  "secondary_rated_by": "Zhaomou Song"
+  "secondary_rated_by": "Zhaomou Song",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_multisegment_foldout_arm_e3473cf01e124edaa9bb654d3f01e589",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_telescoping_mast_with_pan_head_f0587cbbda1c4a0896b46b4360a4cfa7",
   "created_at": "2026-03-29T15:31:29Z",
   "updated_at": "2026-04-01T11:26:55Z",
@@ -22,16 +22,17 @@
     "prompt_preview": "A survey mast with a heavy foot base, nested square vertical sections, and a flat pan head plate at the top. The mast should read as deployable field hardwar..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "04118a6374b43dc5395ec5873d4a6c18be52c703f3d8a0a699a08ec300abd742",
-    "model_py_sha256": "355ff35668023841588b6c4cdb7709d2d211e342b8d5afc7f5a59cad9912a22a"
+    "model_py_sha256": "493a4bfcf5b61d16fe3d4445754a47e8aa900a3f846b09e74b9c5cdeb0bde889"
   },
   "collections": [
     "dataset"
@@ -39,5 +40,12 @@
   "author": "mattzh72",
   "rated_by": "mattzh72",
   "secondary_rating": 5,
-  "secondary_rated_by": "Zhaomou Song"
+  "secondary_rated_by": "Zhaomou Song",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_telescoping_mast_with_pan_head_f0587cbbda1c4a0896b46b4360a4cfa7",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

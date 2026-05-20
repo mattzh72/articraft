@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_box_fan_with_control_knob_c54729282fbe410ab5869ff357c1ff4b",
   "created_at": "2026-04-12T14:46:57Z",
   "updated_at": "2026-04-22T08:11:44Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A box fan on a tubular floor stand with a square housing, side tilt pivots, and one knurled control knob near the lower right corner. The housing tilts on ho..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "bdecef3dd9ded2d48e4c8a8796031de8f16c609849f40c63a1c5832860132647",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_box_fan_with_control_knob_c54729282fbe410ab5869ff357c1ff4b",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

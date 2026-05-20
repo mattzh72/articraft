@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_lever_chain_9f7568d7455d465ab3fe4e5cc91df6e8",
   "created_at": "2026-03-29T15:31:29Z",
   "updated_at": "2026-04-01T11:25:31Z",
@@ -22,16 +22,17 @@
     "prompt_preview": "A bench linkage study with a short grounded crank, a center transfer lever, and a longer output lever mounted on successive hinge bosses. The overall geometr..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "8346ad94feb816cbd78e907ba604cbb24251597266ff1efe11355fc0edd5f99e",
-    "model_py_sha256": "f3be1232e0033d0d626a279cd5850b4e0992ddc7d44af7bcfcf75aed04bc0e4b"
+    "model_py_sha256": "c453f0d30f1dd56bc7eb1bd1dbf3e268b6d259d9aae545145adca31f4a09db95"
   },
   "collections": [
     "dataset"
@@ -39,5 +40,12 @@
   "author": "mattzh72",
   "rated_by": "mattzh72",
   "secondary_rating": 2,
-  "secondary_rated_by": "Zhaomou Song"
+  "secondary_rated_by": "Zhaomou Song",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_lever_chain_9f7568d7455d465ab3fe4e5cc91df6e8",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

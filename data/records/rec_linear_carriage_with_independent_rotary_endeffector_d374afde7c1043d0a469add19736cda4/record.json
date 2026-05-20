@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_linear_carriage_with_independent_rotary_endeffector_d374afde7c1043d0a469add19736cda4",
   "created_at": "2026-04-27T13:52:43Z",
   "updated_at": "2026-04-28T00:36:28Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A compact service shuttle with spindle tip. A grounded body supports a short carriage, and the carriage carries a visibly smaller spindle cartridge at one en..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "10447dbb596c886cf2d7e144bb39a383fa494689adf16fd82965394af5281725",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_linear_carriage_with_independent_rotary_endeffector_d374afde7c1043d0a469add19736cda4",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

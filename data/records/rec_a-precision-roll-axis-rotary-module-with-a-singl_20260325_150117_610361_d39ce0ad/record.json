@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_a-precision-roll-axis-rotary-module-with-a-singl_20260325_150117_610361_d39ce0ad",
   "created_at": "2026-03-25T15:01:17Z",
   "updated_at": "2026-04-01T10:29:01Z",
@@ -22,16 +22,17 @@
     "prompt_preview": "A precision roll-axis rotary module with a single coaxial joint, a central cylindrical shaft carried by paired bearing cartridges, a rigid rectangular suppor..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "3a46a469eab7fc4597a3dfb638dcb7feb12d4838093b04138d1fab8d6c32ba22",
-    "model_py_sha256": "5deea20f47dd50df33bf36aaeda8ddb70cdb36234d2555b97f53593d7126d5ca"
+    "model_py_sha256": "01f7f7f0b8689a48dcff462d03142135e3aef90602ddbffe9915be4a0f82b143"
   },
   "collections": [
     "dataset"
@@ -39,5 +40,12 @@
   "author": "mattzh72",
   "rated_by": "mattzh72",
   "secondary_rating": 5,
-  "secondary_rated_by": "Zhaomou Song"
+  "secondary_rated_by": "Zhaomou Song",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_a-precision-roll-axis-rotary-module-with-a-singl_20260325_150117_610361_d39ce0ad",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

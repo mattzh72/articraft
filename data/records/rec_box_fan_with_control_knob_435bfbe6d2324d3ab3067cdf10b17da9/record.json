@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_box_fan_with_control_knob_435bfbe6d2324d3ab3067cdf10b17da9",
   "created_at": "2026-04-01T12:00:29Z",
   "updated_at": "2026-04-03T18:01:33Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A bathroom ceiling exhaust fan with a square housing recessed in a ceiling plate, a front grille panel that swings down on a revolute hinge at the panel fron..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "90af2a2a9479d4d919776ff9987c49484f98eb7b0e943ae0d39210f7764fe9f1",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_box_fan_with_control_knob_435bfbe6d2324d3ab3067cdf10b17da9",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

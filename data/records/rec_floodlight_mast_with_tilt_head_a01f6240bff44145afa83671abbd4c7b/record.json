@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_floodlight_mast_with_tilt_head_a01f6240bff44145afa83671abbd4c7b",
   "created_at": "2026-03-29T15:25:30Z",
   "updated_at": "2026-03-29T17:23:36Z",
@@ -22,12 +22,13 @@
     "prompt_preview": "A theatrical fresnel flood on a spigot-mount stand: an adjustable column extending on a prismatic joint from a square base, a spigot at the column top, and a..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "117b415385fdcca708bf7d816e17a83b7c1e2d29d17f68499452e4f2298e9afa",
@@ -39,5 +40,12 @@
   "author": "Zhaomou Song",
   "rated_by": "Zhaomou Song",
   "secondary_rating": null,
-  "secondary_rated_by": null
+  "secondary_rated_by": null,
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_floodlight_mast_with_tilt_head_a01f6240bff44145afa83671abbd4c7b",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

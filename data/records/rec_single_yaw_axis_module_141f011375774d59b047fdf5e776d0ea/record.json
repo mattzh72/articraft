@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_single_yaw_axis_module_141f011375774d59b047fdf5e776d0ea",
   "created_at": "2026-03-30T17:57:46Z",
   "updated_at": "2026-04-01T11:10:21Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A low-profile a vertical-axis rotary module with a broad mounting plate. The fixed portion is a squat housing with gusseted supports, and the moving portion..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "e26058db74d0aec534382d6146e971a2257b333bc7ec62b3b45873c78a345a2d",
-    "model_py_sha256": "86e3825f94bae66b537ecbf8705034c3484c36aad6f771978e3e7294b578ca36"
+    "model_py_sha256": "9956b047906758ab66a6a28c97a564ed44c275a2ddf7f61975b577cb6a39e98e"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_single_yaw_axis_module_141f011375774d59b047fdf5e776d0ea",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

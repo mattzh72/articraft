@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_single_pitch_axis_module_c3154f2c2e5b45ba844e9c9990a22e02",
   "created_at": "2026-04-02T16:32:45Z",
   "updated_at": "2026-04-06T01:33:15Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A sector-arm pitch module. A grounded body supports a compact tilting plate between two short side arms that read as the main support structure. One revolute..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "c9d87a7c2bdfb2a0e03dc924e639fa496a740b83441eff9abef924513e987771",
-    "model_py_sha256": "d5935a6e5e5b085c4f0fad67e8e015003510f5cc680a6657b63576953d66a83f"
+    "model_py_sha256": "7c39216c8c8bfe1504ca6917728ef2a6b033ff371c9e1ad6bc6cfbca5d57985c"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_single_pitch_axis_module_c3154f2c2e5b45ba844e9c9990a22e02",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

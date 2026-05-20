@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_portable_speaker_with_articulated_controls_def9005b5f4f403780736918ccd885bb",
   "created_at": "2026-04-04T15:00:26Z",
   "updated_at": "2026-04-05T11:48:54Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A battery-powered outdoor speaker with a folding top bar and three rotary controls. The rigid body has a broad top bar on two side pivots and a small control..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "05ca306724093e281ec797d864dbb29f2340917583f2115a975315f3ef0d52a5",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_portable_speaker_with_articulated_controls_def9005b5f4f403780736918ccd885bb",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

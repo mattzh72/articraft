@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_prismaticrevolute_chain_238319676baf41cf9e78573413de5107",
   "created_at": "2026-03-31T17:20:51Z",
   "updated_at": "2026-04-06T01:41:07Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A compact service slide-hinge module. A broad grounded body supports one short carriage and one small hinged tab. The short carriage is a prismatic joint and..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "bab4ba357420d2ce94a597ca6398b37dafcf6625fe6f106d62ed6a76dccebbec",
-    "model_py_sha256": "690ee3f3ad774ccbfb5e3beae4dce62755f005980e4c3945c6b7d0255c767483"
+    "model_py_sha256": "9eaaa3b4fb609cbe266adf40400282891a4ad0c6890537a15af4cc98cf1f1f1b"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_prismaticrevolute_chain_238319676baf41cf9e78573413de5107",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

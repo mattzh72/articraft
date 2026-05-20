@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_yawpitchroll_wrist_75ac5a661a0c4cb9a721cc614997b03b",
   "created_at": "2026-03-29T04:00:44Z",
   "updated_at": "2026-04-01T10:10:13Z",
@@ -22,16 +22,17 @@
     "prompt_preview": "A nested wrist head with an outer yaw ring, an inner pitch cradle, and a central roll cartridge projecting forward. The structure should feel like a dense ro..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "ce8508d8223af24dfafc178daea0b4d35d3ba8a15a24d9fb671ca7b55ffee93e",
-    "model_py_sha256": "86e436f686c794c194bc6c2a1b7751fba29ca8923108114fb2191f352bd0412c"
+    "model_py_sha256": "536dbc87a37c0a0251669e918812b9b4f31fc23e1c1e724027653db19431105e"
   },
   "collections": [
     "dataset"
@@ -39,5 +40,12 @@
   "author": "mattzh72",
   "rated_by": "mattzh72",
   "secondary_rating": 3,
-  "secondary_rated_by": "Zhaomou Song"
+  "secondary_rated_by": "Zhaomou Song",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_yawpitchroll_wrist_75ac5a661a0c4cb9a721cc614997b03b",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_camera_flash_9a52a89523df46cc963a82883aab2948",
   "created_at": "2026-04-11T23:23:46Z",
   "updated_at": "2026-04-22T08:44:07Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A compact on-camera flash with a narrow body, a rectangular bounce head, and a low shoe mount, plus a battery-door seam on one side of the body. the proporti..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "2ecd5dfc301ada6c90e522e393edc2b5465ea21055c234785408d143977597cf",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_camera_flash_9a52a89523df46cc963a82883aab2948",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

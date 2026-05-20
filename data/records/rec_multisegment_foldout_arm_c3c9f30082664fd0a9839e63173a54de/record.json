@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_multisegment_foldout_arm_c3c9f30082664fd0a9839e63173a54de",
   "created_at": "2026-03-29T04:00:44Z",
   "updated_at": "2026-04-01T10:09:17Z",
@@ -22,16 +22,17 @@
     "prompt_preview": "A compact fold-out boom with a fixed base plate, four short boxed links, and a forked terminal pad. The links should zigzag when stowed and form a long reach..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "540035d62804add8885a2db825f3f12a7b83b50314485cb000d81f67ef670da3",
-    "model_py_sha256": "2167e1906efef052c1ade290eb5de192e02ee8ac368e5df341d1dc50981b01f8"
+    "model_py_sha256": "64827b6c53bbae2056bfd9e8aa24fbad444dfea60053ef696ab7db788d4b6b03"
   },
   "collections": [
     "dataset"
@@ -39,5 +40,12 @@
   "author": "mattzh72",
   "rated_by": "mattzh72",
   "secondary_rating": 5,
-  "secondary_rated_by": "Zhaomou Song"
+  "secondary_rated_by": "Zhaomou Song",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_multisegment_foldout_arm_c3c9f30082664fd0a9839e63173a54de",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

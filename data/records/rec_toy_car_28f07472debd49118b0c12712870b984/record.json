@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_toy_car_28f07472debd49118b0c12712870b984",
   "created_at": "2026-04-27T03:19:24Z",
   "updated_at": "2026-04-27T07:33:32Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A toy off-road buggy with a faceted body shell, a roof bar, open wheel arches, and four chunky wheels. The four wheels rotate continuously on their axles, an..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "9cbb58738757124ad7d8fd69c4298f43cf902337386e0e3aaedaa366634d7092",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_toy_car_28f07472debd49118b0c12712870b984",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

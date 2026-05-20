@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_dualcolumn_lift_carriage_aef5d86d728841ac8ba0fb6123fdb6bc",
   "created_at": "2026-03-29T15:31:29Z",
   "updated_at": "2026-04-01T11:24:05Z",
@@ -22,16 +22,17 @@
     "prompt_preview": "A compact stacker mast module with two tall side channels, a lower crossmember, an upper crosshead, and a rectangular carriage frame centered between the col..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "c454044abe368925380a6e45a7d98108e375020309d5179a681113acd6479503",
-    "model_py_sha256": "3e5ecf573ac1e20771fe8c344f22b25d2b35e3c370db2b2ff0f76c04f517ae0d"
+    "model_py_sha256": "9ee09f6ed914647455daf0491f65b2f1707382be4d11446b9048c53685525910"
   },
   "collections": [
     "dataset"
@@ -39,5 +40,12 @@
   "author": "mattzh72",
   "rated_by": "mattzh72",
   "secondary_rating": 4,
-  "secondary_rated_by": "Zhaomou Song"
+  "secondary_rated_by": "Zhaomou Song",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_dualcolumn_lift_carriage_aef5d86d728841ac8ba0fb6123fdb6bc",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_ceiling_light_fixture_f56ff502f4ce4e45a88be721ee2c2470",
   "created_at": "2026-04-27T03:55:19Z",
   "updated_at": "2026-04-27T05:33:26Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A linear LED panel light on adjustable wire-suspension hangers at each end. Each wire hanger attaches to the panel end on a revolute loop bracket. Each hange..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "393ba35ee0b8a3ffc3d3e01139e725aaed44f4a46490db2a2c7f96b6ccccada3",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_ceiling_light_fixture_f56ff502f4ce4e45a88be721ee2c2470",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

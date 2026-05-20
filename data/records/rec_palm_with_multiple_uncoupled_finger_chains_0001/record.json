@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_palm_with_multiple_uncoupled_finger_chains_0001",
   "created_at": "2026-03-12T18:24:17Z",
   "updated_at": "2026-04-01T10:32:15Z",
@@ -20,16 +20,17 @@
     "prompt_preview": "A robotic palm block carrying several uncoupled finger chains, each articulated by its own revolute joints and arranged in a practical mechanical layout."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "22e14150d6d86cc7a230b716946dc7003f440e639619de7d88603752fefd2260",
-    "model_py_sha256": "10f2785a80a154f3f9258364e282e8242d5a35f55acc165cf748804a5941db9d"
+    "model_py_sha256": "88ac83de7b7630dd7b1e53d4114032ae14d502479932a01fca1246e64dcc1928"
   },
   "collections": [
     "dataset"
@@ -37,5 +38,12 @@
   "author": "mattzh72",
   "rated_by": "mattzh72",
   "secondary_rating": 4,
-  "secondary_rated_by": "Zhaomou Song"
+  "secondary_rated_by": "Zhaomou Song",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_palm_with_multiple_uncoupled_finger_chains_0001",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_single_continuous_rotary_shaft_a0b0653eefca425fb6bd095c9759c104",
   "created_at": "2026-04-02T16:32:45Z",
   "updated_at": "2026-04-06T01:32:40Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A side-wall spindle assembly. A rigid side plate carries paired bearing supports and a short forward-projecting shaft with an output plate near the tip. The..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "697821eacc6f85eee777ce8537ddd3ef9646947c295b15ecf72276a2711886f5",
-    "model_py_sha256": "9da58c80dd1755302ff3d1f230b85a8eaa561232b397a60be76a84a43c2fa42a"
+    "model_py_sha256": "00b921403304421587f974a213e8e138cea50db53dbbbfed8bea99a4765faa1f"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_single_continuous_rotary_shaft_a0b0653eefca425fb6bd095c9759c104",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_box_fan_with_control_knob_3ae0c7023fd34edcac3aab6f8788c2bd",
   "created_at": "2026-04-03T22:12:38Z",
   "updated_at": "2026-04-04T17:34:20Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A bathroom extraction ceiling fan with a small square ceiling housing and a hinged cover panel. The cover panel opens on a revolute hinge at the panel's side..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "62b14a3d460ba46e893c3e3f9d1a87638b66e4f7ab9853546f60ac48f6df436c",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_box_fan_with_control_knob_3ae0c7023fd34edcac3aab6f8788c2bd",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

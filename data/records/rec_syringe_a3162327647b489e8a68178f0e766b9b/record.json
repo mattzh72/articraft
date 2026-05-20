@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_syringe_a3162327647b489e8a68178f0e766b9b",
   "created_at": "2026-03-30T16:39:42Z",
   "updated_at": "2026-04-28T08:14:13Z",
@@ -22,12 +22,13 @@
     "prompt_preview": "Create a cost-optimized mass-manufacturable Syringe. Base architecture: a graduated barrel with linear plunger rod and nozzle tip. Reduce part count, simplif..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "1812815307527bb32ea326258d63a7fb34ca14e5be4e8caef2893843afd15233",
@@ -39,5 +40,12 @@
   "rated_by": "mattzh72",
   "author": "shawlyu",
   "secondary_rating": 4,
-  "secondary_rated_by": "RuiningLi"
+  "secondary_rated_by": "RuiningLi",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_syringe_a3162327647b489e8a68178f0e766b9b",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

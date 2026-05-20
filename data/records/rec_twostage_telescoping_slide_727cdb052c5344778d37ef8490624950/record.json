@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_twostage_telescoping_slide_727cdb052c5344778d37ef8490624950",
   "created_at": "2026-04-03T21:46:47Z",
   "updated_at": "2026-04-06T01:21:09Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A two-stage telescoping slide. A grounded outer sleeve carries an intermediate member and an extending output member with a small end plate. The two stages s..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "5db5e1d60dcef5f6f8663ee2d0070a16b1bbd1bcd7ffff9513b88e0e0f31df1e",
-    "model_py_sha256": "00a94838fe576fa62f068dea3d21bd40b0966f869bd884219d8c06866b1ac368"
+    "model_py_sha256": "bb668e86e9bb195c5e8221fa95aa1383d37be415d0e54464944d5b555b92c1a4"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_twostage_telescoping_slide_727cdb052c5344778d37ef8490624950",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

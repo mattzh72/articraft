@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_standing_desk_with_synchronous_telescoping_legs_and_articulated_controls_e1cf1e2abd7e438081985c8fe0908396",
   "created_at": "2026-04-27T13:44:12Z",
   "updated_at": "2026-04-28T00:48:28Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A two-leg office standing desk with a rectangular top, twin lifting columns, a crossbeam frame, and a handset under the front edge, plus a paddle-style contr..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "1fea492355fe7e7a55e83d1cab08eaae84713181ff5f441d33a2b83bdb54e6c3",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_standing_desk_with_synchronous_telescoping_legs_and_articulated_controls_e1cf1e2abd7e438081985c8fe0908396",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

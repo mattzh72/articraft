@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_single_revolute_hinge_1b8e9d1c324241c0a0ee52e3a3ff3778",
   "created_at": "2026-04-02T16:32:45Z",
   "updated_at": "2026-04-06T01:33:22Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A fork-root hinge with center tab. A grounded fork captures a flat center tab between its cheeks using a through-pin and compact barrel segments. The center..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "127b818a388030e0917a9d3c5081a1efa60c4a82af928a231e3184d4e6a26629",
-    "model_py_sha256": "45de695cdb9bd84789642be42f3f7bd1d1abf719425cc8527c3147337260eddf"
+    "model_py_sha256": "cb5980598c2d3e84075470f3be3124148f027069d15181c76a7a1d7f0c66a9bf"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_single_revolute_hinge_1b8e9d1c324241c0a0ee52e3a3ff3778",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_retractable_bollard_b1a4a6b9e2d14c128f598ba1f4a60d89",
   "created_at": "2026-04-27T12:39:43Z",
   "updated_at": "2026-04-28T07:47:05Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A retractable security bollard with a cylindrical post rising from a ground sleeve and a flange collar at the sleeve opening, plus a keyed top cap. the post..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "484f10070005aa611c7fde70bf086bfad6136ea5c4b03df58755a4e37ca7b748",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_retractable_bollard_b1a4a6b9e2d14c128f598ba1f4a60d89",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

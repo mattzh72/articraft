@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_rotary_table_with_tilting_trunnion_d145e9618fa14232bdb3c914d1b37692",
   "created_at": "2026-03-31T17:20:51Z",
   "updated_at": "2026-03-31T18:40:03Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A side-wall rotary-tilt fixture. A grounded side support carries a lower rotary stage and a trunnion-mounted table just forward of it. The lower stage is a v..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "f30f055a611d1234164b2f6eacedcc73a855ab13c565d86f8c5e5349d79eb2ba",
-    "model_py_sha256": "6f18700ab76f1cd4593bbdb9d00da01e88d51ea2f70a8ada6fb4af28c1aca898"
+    "model_py_sha256": "795aeb10c2c9d2255cfb3603236ebfbd705f872e4b23d91ee048681acd968adf"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_rotary_table_with_tilting_trunnion_d145e9618fa14232bdb3c914d1b37692",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_single_roll_axis_module_d9ad1f4493724415ab91a6c8abbe52a3",
   "created_at": "2026-04-02T16:32:45Z",
   "updated_at": "2026-04-06T01:33:23Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A saddle-body roll module. A broad grounded housing supports a compact spindle cartridge and a small output face, with the grounded body larger than the movi..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "f3c096c3b08efb264737072ff49d66b4102fd9c4aac951bc506d89eb620ca88a",
-    "model_py_sha256": "a722d3f9b320db0eca72f669bda4fd2505aa373abbfeeeabec64d2d06c467e76"
+    "model_py_sha256": "417ec5f7c45c3a1fd1627d69c1e5e15c1b5967173480276790498b56619bbca7"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_single_roll_axis_module_d9ad1f4493724415ab91a6c8abbe52a3",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

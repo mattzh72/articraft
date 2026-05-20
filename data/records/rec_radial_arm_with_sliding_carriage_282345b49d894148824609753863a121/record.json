@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_radial_arm_with_sliding_carriage_282345b49d894148824609753863a121",
   "created_at": "2026-03-29T15:31:29Z",
   "updated_at": "2026-04-01T11:24:22Z",
@@ -22,16 +22,17 @@
     "prompt_preview": "A swing-arm transfer axis with a fixed central mast, a broad radial beam, and a short rectangular truck riding on the top of that beam. The mast should read..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "e6ad6c01243d20fe9e02e52efbd42c010e3eb87f5fccb6fd4872584a62336cd9",
-    "model_py_sha256": "80ef0d8a8ea1e79161bc59b44a1d630ef70dc279783fde760efee5510a8f80f4"
+    "model_py_sha256": "98600d832cd1c97c775ef6c2c5de4be647a70dbd3e71aac2d7cc6eaa0749bb17"
   },
   "collections": [
     "dataset"
@@ -39,5 +40,12 @@
   "author": "mattzh72",
   "rated_by": "mattzh72",
   "secondary_rating": 5,
-  "secondary_rated_by": "Zhaomou Song"
+  "secondary_rated_by": "Zhaomou Song",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_radial_arm_with_sliding_carriage_282345b49d894148824609753863a121",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

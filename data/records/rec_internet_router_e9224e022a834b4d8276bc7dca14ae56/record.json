@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_internet_router_e9224e022a834b4d8276bc7dca14ae56",
   "created_at": "2026-04-27T13:28:02Z",
   "updated_at": "2026-04-28T07:16:13Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A gaming router with a low angular body and six rear antennas. The housing is a broad wedge with three antenna pods along each rear corner group and a rocker..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "9722fbbaafde9fbdb09b633931566b10c3b9524308834ad2f6f6545c577a2c31",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_internet_router_e9224e022a834b4d8276bc7dca14ae56",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

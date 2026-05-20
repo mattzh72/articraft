@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_pan_mechanism_0002",
   "created_at": "2026-03-12T18:23:24Z",
   "updated_at": "2026-04-01T10:29:29Z",
@@ -20,16 +20,17 @@
     "prompt_preview": "A horizontal scanning platform with one vertical-axis pan joint, bearing race detail, and an industrial mounting frame."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "edcb211f5415bbb029663e97f00dbd1ae506b741832d915715e502603de2d435",
-    "model_py_sha256": "7696f592c11689269dc9c00ed9bd699cdfc0effae1eddc0a86c524ab5837011c"
+    "model_py_sha256": "a20c6fa08ae0f8edb91323f4cc5201fc3431a24ee404f8ce81c703bdde066c0e"
   },
   "collections": [
     "dataset"
@@ -37,5 +38,12 @@
   "author": "mattzh72",
   "rated_by": "mattzh72",
   "secondary_rating": 4,
-  "secondary_rated_by": "Zhaomou Song"
+  "secondary_rated_by": "Zhaomou Song",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_pan_mechanism_0002",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

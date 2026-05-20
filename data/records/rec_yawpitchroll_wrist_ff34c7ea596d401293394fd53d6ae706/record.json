@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_yawpitchroll_wrist_ff34c7ea596d401293394fd53d6ae706",
   "created_at": "2026-03-29T04:00:44Z",
   "updated_at": "2026-04-01T10:03:09Z",
@@ -22,16 +22,17 @@
     "prompt_preview": "A compact tool wrist with a yaw collar at the root, a pitch yoke in the middle, and a short roll spindle carrying a flange at the nose. The three axis suppor..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "eedcbd681187fa113c63c6ae81d2d243bf41a7ca017dc899be38be6f80168632",
-    "model_py_sha256": "6e0d39298cb548644a56cd2b2fe3e53a1f7964376dd102f860e01ab7fb766023"
+    "model_py_sha256": "31e7986c10b26af9992b889c65615c83e3c1d63fe239dbd77dcdc03f0a509330"
   },
   "collections": [
     "dataset"
@@ -39,5 +40,12 @@
   "author": "mattzh72",
   "rated_by": "mattzh72",
   "secondary_rating": 4,
-  "secondary_rated_by": "Zhaomou Song"
+  "secondary_rated_by": "Zhaomou Song",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_yawpitchroll_wrist_ff34c7ea596d401293394fd53d6ae706",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

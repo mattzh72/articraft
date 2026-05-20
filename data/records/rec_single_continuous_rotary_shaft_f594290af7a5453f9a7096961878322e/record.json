@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_single_continuous_rotary_shaft_f594290af7a5453f9a7096961878322e",
   "created_at": "2026-03-30T17:57:46Z",
   "updated_at": "2026-04-01T11:05:24Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "An open rotary shaft module. Two bearing pedestals support one straight shaft carrying a center hub and an end flange, with the supports tied together by a s..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "99e7473cccd277cb87a69338d61bd3a7ed2b43516361c1d75c02a00b212af4cd",
-    "model_py_sha256": "10a9b93aa595716636011e51c4dac301312c00f2fca25787cb8a24dade6fd1c2"
+    "model_py_sha256": "2e5582fb2084c4803abcc3a093acbbd094b213c14de455fcc32a14880bbd4ac6"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_single_continuous_rotary_shaft_f594290af7a5453f9a7096961878322e",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

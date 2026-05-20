@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_single_pitch_axis_module_7af19c031b674667a5bf6176bbffca4b",
   "created_at": "2026-03-30T17:57:46Z",
   "updated_at": "2026-04-06T01:42:07Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A pedestal-mounted a pitch-axis trunnion module. A short column rises from a heavy foot and supports a clevis or bearing housing that carries the moving head..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "bc946db8a13b542e9adaecfa7fbdd2c2e955ba94cf9646b4cfdf28254b6c3d8b",
-    "model_py_sha256": "2afd2bb587bbb6032f52ba3dce0659fe83c5248cb19c8250bb84ec8ec7eea900"
+    "model_py_sha256": "458ff9d4fa0e71a54e39664b71dbd6aa2d5f28f702a0574a0452bf86c1216ea8"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_single_pitch_axis_module_7af19c031b674667a5bf6176bbffca4b",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "record_id": "rec_digital_multimeter_with_tilt_stand_and_rotary_selector_06ccd205d9f64f478d3a69aa428e6bc3",
+  "revision_id": "rev_000001",
+  "created_at": "2026-04-11T23:10:23Z",
+  "prompt_kind": "single_prompt",
+  "prompt_sha256": "f5092a97de486fe9679cbcd94d9ad2fa855259085c413f33aa526ef86ea9c283",
+  "source": {
+    "run_id": "run_20260411_230510_372665_20260411-fill-to20-plus-diverse-exact500-gpt54-h",
+    "prompt_batch_id": null,
+    "batch_spec_id": "20260411_fill_to20_plus_diverse_exact500_gpt54_high",
+    "row_id": "digital_multimeter_with_tilt_stand_and_rotary_selector_014",
+    "prompt_index": 116
+  },
+  "generation": {
+    "provider": "openai",
+    "model_id": "gpt-5.4",
+    "thinking_level": "high",
+    "openai_transport": "http",
+    "openai_reasoning_summary": "auto",
+    "max_turns": 165,
+    "max_cost_usd": null
+  },
+  "artifacts": {
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
+    "prompt_series_json": null,
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
+  },
+  "hashes": {
+    "prompt_sha256": "f5092a97de486fe9679cbcd94d9ad2fa855259085c413f33aa526ef86ea9c283",
+    "model_py_sha256": "1b301d8477dcc3120a16c3e8a863de2948a27219fdf11bea82e0a1f43ed4b1ca"
+  },
+  "run_summary": {
+    "turn_count": 20,
+    "tool_call_count": 23,
+    "compile_attempt_count": 6,
+    "final_status": "success"
+  },
+  "parent": null,
+  "seed": null,
+  "inherited_inputs": []
+}

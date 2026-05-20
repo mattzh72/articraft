@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_simple_drying_rack_290859d82e654179abc095609e256941",
   "created_at": "2026-04-27T03:59:24Z",
   "updated_at": "2026-04-27T05:32:50Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "Produce an outdoor weatherproof Simple drying rack. Use sealed interfaces, drip-aware overhangs, corrosion-resistant hardware, and protected joints, anchored..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "9e06d3d5ce98f04fedd0897b76ee3c42fc37b82c011d0f3bbbab200112046db1",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_simple_drying_rack_290859d82e654179abc095609e256941",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

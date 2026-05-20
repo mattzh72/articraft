@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "record_id": "rec_orchestra_style_music_stand_a128b5458d0145a0b4618f4af2ad5682",
+  "revision_id": "rev_000001",
+  "created_at": "2026-04-27T13:55:55Z",
+  "prompt_kind": "single_prompt",
+  "prompt_sha256": "1a69c928e95308b99a2035edbc4e49afc2b40d3c205ba6c30624ea0fe64a4bec",
+  "source": {
+    "run_id": "run_20260427_123143_525672_20260427-avg-rating-gt-4p2-gpt54-prompts-gpt55-h",
+    "prompt_batch_id": null,
+    "batch_spec_id": "20260427_avg_rating_gt_4p2_gpt54_prompts_gpt55_high_budget3_2000",
+    "row_id": "g55b_1487_orchestra_style_music_stand_cf7ad234",
+    "prompt_index": 1487
+  },
+  "generation": {
+    "provider": "openai",
+    "model_id": "gpt-5.5-2026-04-23",
+    "thinking_level": "high",
+    "openai_transport": "http",
+    "openai_reasoning_summary": "auto",
+    "max_turns": 100,
+    "max_cost_usd": 3.0
+  },
+  "artifacts": {
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
+    "prompt_series_json": null,
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
+  },
+  "hashes": {
+    "prompt_sha256": "1a69c928e95308b99a2035edbc4e49afc2b40d3c205ba6c30624ea0fe64a4bec",
+    "model_py_sha256": "e990e322073cdca16fd9717174331a2529fa20a8d881a1a8e25ef0af3f488dc6"
+  },
+  "run_summary": {
+    "turn_count": 20,
+    "tool_call_count": 24,
+    "compile_attempt_count": 4,
+    "final_status": "success"
+  },
+  "parent": null,
+  "seed": null,
+  "inherited_inputs": []
+}

@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_toaster_oven_9d5aa988f0ee4f08bd73ffeffacf43df",
   "created_at": "2026-04-12T15:40:41Z",
   "updated_at": "2026-04-22T03:38:34Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A countertop toaster oven with a front glass door, a side control stack of three knobs, and a pull-out air-fry basket inside the cavity. The door rotates dow..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "a072b658a8e2ca7d3289123bf7d8aa3fc592b6b871961340efa57afce56ca7c4",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_toaster_oven_9d5aa988f0ee4f08bd73ffeffacf43df",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

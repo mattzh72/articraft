@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_dishwasher_with_dropdown_door_and_sliding_racks_3c41510d8dd64ca584bd02353d57ce35",
   "created_at": "2026-04-11T16:13:01Z",
   "updated_at": "2026-04-22T14:29:55Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A compact countertop dishwasher with a wide front drop door, a single deep dish rack on telescoping side runners, a smaller upper cup shelf, and a right-side..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "1b522adfde5052618c9bebbd6e152e6ac23558ae36bee8a5598878f2540f9626",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_dishwasher_with_dropdown_door_and_sliding_racks_3c41510d8dd64ca584bd02353d57ce35",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

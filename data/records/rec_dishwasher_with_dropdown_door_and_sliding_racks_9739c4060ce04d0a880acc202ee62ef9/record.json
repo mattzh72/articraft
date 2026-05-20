@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_dishwasher_with_dropdown_door_and_sliding_racks_9739c4060ce04d0a880acc202ee62ef9",
   "created_at": "2026-04-11T18:03:18Z",
   "updated_at": "2026-04-22T14:24:56Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A slimline apartment dishwasher with a narrow front door, two shallow sliding racks, and a compact top-edge control bank with a selector dial flanked by four..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "601f528e0fa44c5b8631626817169ca3326a16c2b98e979352aeae431a75a1cf",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_dishwasher_with_dropdown_door_and_sliding_racks_9739c4060ce04d0a880acc202ee62ef9",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

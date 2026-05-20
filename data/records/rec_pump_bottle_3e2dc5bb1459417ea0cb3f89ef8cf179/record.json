@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_pump_bottle_3e2dc5bb1459417ea0cb3f89ef8cf179",
   "created_at": "2026-04-04T14:55:55Z",
   "updated_at": "2026-04-05T12:12:56Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A kitchen pump bottle with a tall body and a broad press plate. The fixed bottle supports a vertical pump stem and a flat actuator plate with a side nozzle...."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "a90176deee2379df15abc46e34dbd6b90e5ba82bd7f495a4ef67242e481e55e4",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_pump_bottle_3e2dc5bb1459417ea0cb3f89ef8cf179",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

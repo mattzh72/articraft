@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_vane_array_with_independent_pivots_09dd52a5d20f4cc3bb961a714e624a00",
   "created_at": "2026-03-29T15:31:29Z",
   "updated_at": "2026-04-01T11:23:54Z",
@@ -22,16 +22,17 @@
     "prompt_preview": "A louver-style vane array with a rigid outer frame, several parallel slats, and an individual pivot shaft for every slat. The frame, slats, and shaft support..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "9fd7ff4b3516d81757774b77866bc0fe9db96de04aa623512b2c66f8271060ef",
-    "model_py_sha256": "0c01d74adbe6a754a9363dada605d0c08a9b8417a2eae57798eb89f4560ab8e4"
+    "model_py_sha256": "2108f6fa05f671f38576588853c553f75458b482f941c990fa801f39f2ebef62"
   },
   "collections": [
     "dataset"
@@ -39,5 +40,12 @@
   "author": "mattzh72",
   "rated_by": "mattzh72",
   "secondary_rating": 5,
-  "secondary_rated_by": "Zhaomou Song"
+  "secondary_rated_by": "Zhaomou Song",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_vane_array_with_independent_pivots_09dd52a5d20f4cc3bb961a714e624a00",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

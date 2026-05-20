@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_instrument_case_with_hinged_lid_300bd01696ac440bae66703c119f0f44",
   "created_at": "2026-04-27T13:47:42Z",
   "updated_at": "2026-04-28T00:47:59Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A trumpet case with a compact rectangular clamshell body. The deeper lower shell carries the instrument cavity, the shallow lid is hinged along the long back..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "cdf189ff6f293fe03895748ed1a78610c984e639e18a6ce0ac11bf9d5de9090f",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_instrument_case_with_hinged_lid_300bd01696ac440bae66703c119f0f44",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

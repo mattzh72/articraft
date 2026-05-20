@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_orthogonal_xy_stage_072bcc023f00491ebc4100338b353b6c",
   "created_at": "2026-03-30T17:57:46Z",
   "updated_at": "2026-04-01T11:10:37Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "An orthogonal XY stage. A grounded base carries a lower X slide with a rectangular carriage, and that carriage supports a crosswise Y slide with a top table...."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "c2b5aaf00429711534fca925b8e415850952a3b034a62967ebda36a4f7d602f2",
-    "model_py_sha256": "7fb91a60862373c2b34ce21a8fef968ae691638de8dd6c7ae9791b01c7a3fd4f"
+    "model_py_sha256": "b44d96ea52dc0be021dead949aae8550279976d24f32515215af380795146054"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_orthogonal_xy_stage_072bcc023f00491ebc4100338b353b6c",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

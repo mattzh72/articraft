@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_overear_headphones_with_folding_earcups_0001",
   "created_at": "2026-03-16T15:00:34Z",
   "updated_at": "2026-03-20T22:37:44Z",
@@ -20,16 +20,17 @@
     "prompt_preview": "A realistic, highly detailed pair of over-ear headphones with a padded headband, large cushioned earcups, visible hinge hardware, and a believable premium au..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "b59bbc91c2a5d3d882cce7ea4e2bcc57b9b8333770bafa229ddd1cab7767e75c",
-    "model_py_sha256": "7a8878596fbc28ba49c758244f668f4455722c401ec3dbb3de0e70dc9937af93"
+    "model_py_sha256": "06a4eed2d42309a51038fdaa409936151afdfd9efd1a678cbc2073a2c8ed42fa"
   },
   "collections": [
     "dataset"
@@ -37,5 +38,12 @@
   "author": "mattzh72",
   "rated_by": "mattzh72",
   "secondary_rating": null,
-  "secondary_rated_by": null
+  "secondary_rated_by": null,
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_overear_headphones_with_folding_earcups_0001",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

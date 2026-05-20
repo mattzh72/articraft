@@ -9,14 +9,12 @@ import zstandard as zstd
 from storage.repo import StorageRepo
 from storage.revisions import active_traces_dir, validate_revision_id
 
-LEGACY_CONVERSATION_FILENAME = "conversation.jsonl"
 TRAJECTORY_FILENAME = "trajectory.jsonl"
 COMPRESSED_TRAJECTORY_FILENAME = "trajectory.jsonl.zst"
 SYSTEM_PROMPT_FILENAMES = {
     "designer_system_prompt.txt",
     "designer_system_prompt_openai.txt",
     "designer_system_prompt_gemini.txt",
-    "system_prompt.txt",
 }
 _ZSTD_LEVEL = 19
 
@@ -77,7 +75,7 @@ def ensure_shared_system_prompt_file(
     )
 
 
-def legacy_system_prompt_paths(trace_dir: Path) -> list[Path]:
+def trace_system_prompt_paths(trace_dir: Path) -> list[Path]:
     return sorted(
         path
         for path in trace_dir.iterdir()
@@ -91,10 +89,9 @@ def compress_trajectory_file(source: Path, destination: Path | None = None) -> P
 
 
 def find_plain_trajectory_path(trace_dir: Path) -> Path | None:
-    for name in (TRAJECTORY_FILENAME, LEGACY_CONVERSATION_FILENAME):
-        candidate = trace_dir / name
-        if candidate.exists() and candidate.is_file():
-            return candidate
+    candidate = trace_dir / TRAJECTORY_FILENAME
+    if candidate.exists() and candidate.is_file():
+        return candidate
     return None
 
 
@@ -122,11 +119,10 @@ def canonicalize_record_trace_dir(
     plain_path = find_plain_trajectory_path(trace_dir)
     if plain_path is not None and not compressed_path.exists():
         compress_trajectory_file(plain_path, compressed_path)
-    for name in (TRAJECTORY_FILENAME, LEGACY_CONVERSATION_FILENAME):
-        candidate = trace_dir / name
-        if candidate.exists():
-            candidate.unlink()
-    for prompt_path in legacy_system_prompt_paths(trace_dir):
+    plain_trajectory = trace_dir / TRAJECTORY_FILENAME
+    if plain_trajectory.exists():
+        plain_trajectory.unlink()
+    for prompt_path in trace_system_prompt_paths(trace_dir):
         prompt_path.unlink()
     return compressed_path if compressed_path.exists() else None
 

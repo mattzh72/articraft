@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_laptop_stand_with_articulated_height_adjustment_047ccd338c854122a95316342a004563",
   "created_at": "2026-04-27T01:41:49Z",
   "updated_at": "2026-04-27T10:35:21Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A laptop stand with a wide base slab, two vertical rear guide rods, and one rigid tray carried by a single carriage spanning both rods. The tray remains a si..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "f3be49aa07ef4d5f90276777eb36b120b854f4a5c86e80227d5f41bea0c00672",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_laptop_stand_with_articulated_height_adjustment_047ccd338c854122a95316342a004563",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

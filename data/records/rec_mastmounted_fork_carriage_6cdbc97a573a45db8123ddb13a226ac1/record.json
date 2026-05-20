@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_mastmounted_fork_carriage_6cdbc97a573a45db8123ddb13a226ac1",
   "created_at": "2026-04-03T21:46:47Z",
   "updated_at": "2026-04-06T01:25:29Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A forklift-style mast carriage. Two grounded uprights and a top crosshead support a moving fork carriage with a load backrest and paired forks. One vertical..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "c4036b0e7a00de1ebf2c3cf3fccf076b4341c7e2853164cb7c2c839a8f5159f9",
-    "model_py_sha256": "7716b5687f1d3692b3428b185fbdef3014b44b4f7367eb0347ed769bd2ed849a"
+    "model_py_sha256": "a4d56b672e71b9e8f83428351bb0442ff7e6dcc94e03ecd490b47f558c7c20d0"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_mastmounted_fork_carriage_6cdbc97a573a45db8123ddb13a226ac1",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

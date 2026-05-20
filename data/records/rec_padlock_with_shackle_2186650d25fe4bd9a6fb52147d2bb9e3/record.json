@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_padlock_with_shackle_2186650d25fe4bd9a6fb52147d2bb9e3",
   "created_at": "2026-04-04T14:48:24Z",
   "updated_at": "2026-04-05T12:49:44Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A marine padlock with a thick coated shackle and a front key cylinder. The body is sealed and blocky, with the shackle entering through the top and a small d..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "50f943af0a7e0302d51a44db2eca831c416717f86f79ff002ef16c4b13864e83",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_padlock_with_shackle_2186650d25fe4bd9a6fb52147d2bb9e3",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

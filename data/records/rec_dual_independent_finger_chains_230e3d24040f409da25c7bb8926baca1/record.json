@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_dual_independent_finger_chains_230e3d24040f409da25c7bb8926baca1",
   "created_at": "2026-03-29T04:00:44Z",
   "updated_at": "2026-04-01T10:03:39Z",
@@ -22,16 +22,17 @@
     "prompt_preview": "A compact robot pinch hand with a central palm saddle, two slender finger chains, and offset root knuckles that give each finger its own support block. One f..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "8479fabc4d483613639437bc847492a2138b2aacb0a02d2c094f5afb201042e1",
-    "model_py_sha256": "1ed302f25576e9e10a8d6ad5c16cbea92b4fddaf462cee3aa49d4176d013c0a0"
+    "model_py_sha256": "6ba781a683112c4ab2064a92e06e9e5742aa0c3a0d9c4238427146e8e5867b34"
   },
   "collections": [
     "dataset"
@@ -39,5 +40,12 @@
   "author": "mattzh72",
   "rated_by": "mattzh72",
   "secondary_rating": 4,
-  "secondary_rated_by": "Zhaomou Song"
+  "secondary_rated_by": "Zhaomou Song",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_dual_independent_finger_chains_230e3d24040f409da25c7bb8926baca1",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_threestage_telescoping_slide_1af0859e69584d2c9c16d1e57d0492cc",
   "created_at": "2026-03-31T17:20:51Z",
   "updated_at": "2026-04-06T01:40:23Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A compact service three-stage slide. A broad grounded body supports two nested moving stages with plain rectangular front faces. The moving stages are serial..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "bdb86d539868bcfabc858ff7c03001c315f97cc72bb3ee867c27df78fa87b6c3",
-    "model_py_sha256": "95fe7c346681cd6822367cb890a302de69dcb15b64a86517efe1fae116c21787"
+    "model_py_sha256": "b212fdebf877696113b4ccf29d3fd2e8446b31d8eddf51dc01905588c0af9beb"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_threestage_telescoping_slide_1af0859e69584d2c9c16d1e57d0492cc",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

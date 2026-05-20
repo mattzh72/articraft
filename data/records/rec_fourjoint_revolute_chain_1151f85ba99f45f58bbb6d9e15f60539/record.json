@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_fourjoint_revolute_chain_1151f85ba99f45f58bbb6d9e15f60539",
   "created_at": "2026-03-31T17:20:51Z",
   "updated_at": "2026-03-31T18:46:58Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A slim service four-joint revolute chain. A narrow grounded spine supports a sequence of simple rigid links with compact joint cheeks and a compact end tab a..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "a5b649eb9f8a1bb836ed180854863cf86a629cc742d2e873d5fe03570c68db1f",
-    "model_py_sha256": "5e58a3f284ca1783718fe70e204b6648eb168c0555f1783d4455a82fa692e4b5"
+    "model_py_sha256": "381c3ca990c8f5350a4747fd79e553d84c7da9e743a5d5071af8abe0afd2374f"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_fourjoint_revolute_chain_1151f85ba99f45f58bbb6d9e15f60539",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

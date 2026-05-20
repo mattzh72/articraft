@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_floor_lamp_1f4f1db42fe3456c8e3b1dfb58880f09",
   "created_at": "2026-04-03T22:00:34Z",
   "updated_at": "2026-04-04T15:47:37Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A bedside arc reading lamp with a weighted square base, a long boom arm, and a small adjustable shade at the end. The boom arm pivots on a revolute hinge at..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "93c26895160684ef006669f1d39c2dfb52242e23fa9cf1faabbeda25d8e56918",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_floor_lamp_1f4f1db42fe3456c8e3b1dfb58880f09",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

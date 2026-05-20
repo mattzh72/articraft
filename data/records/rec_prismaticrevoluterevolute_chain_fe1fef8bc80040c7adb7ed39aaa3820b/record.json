@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_prismaticrevoluterevolute_chain_fe1fef8bc80040c7adb7ed39aaa3820b",
   "created_at": "2026-03-29T15:31:29Z",
   "updated_at": "2026-04-01T11:25:38Z",
@@ -22,16 +22,17 @@
     "prompt_preview": "A bench module with a base rail, a sliding carriage, a shoulder block on the carriage, and a two-link arm ending in a pad. The carriage should be long enough..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "0fee19dc94c739617bb823544944340c410876398cc440b4b4d40356ee05fe9e",
-    "model_py_sha256": "9cff7f552ed4986c0d78918f83f319fe2c4ed261b44dbcc04d06e73156837238"
+    "model_py_sha256": "619f7f3fc944994cc019ac7b228d6f5e93e80822c8831df5bde8b1454569c81a"
   },
   "collections": [
     "dataset"
@@ -39,5 +40,12 @@
   "author": "mattzh72",
   "rated_by": "mattzh72",
   "secondary_rating": 3,
-  "secondary_rated_by": "Zhaomou Song"
+  "secondary_rated_by": "Zhaomou Song",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_prismaticrevoluterevolute_chain_fe1fef8bc80040c7adb7ed39aaa3820b",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

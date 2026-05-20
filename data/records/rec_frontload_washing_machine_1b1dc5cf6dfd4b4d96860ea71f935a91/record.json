@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_frontload_washing_machine_1b1dc5cf6dfd4b4d96860ea71f935a91",
   "created_at": "2026-05-04T07:38:39Z",
   "updated_at": "2026-05-12T21:20:22Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A highly detailed front-load washing machine built as a realistic serviceable appliance, not a plain box. The object has a square enamel cabinet shell with s..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "9724237676ee85e6bf1616a1cb106592de6988117ea5a6a50bf08c068172e57c",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_frontload_washing_machine_1b1dc5cf6dfd4b4d96860ea71f935a91",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

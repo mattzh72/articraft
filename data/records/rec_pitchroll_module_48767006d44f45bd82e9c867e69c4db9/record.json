@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_pitchroll_module_48767006d44f45bd82e9c867e69c4db9",
   "created_at": "2026-03-29T04:00:44Z",
   "updated_at": "2026-04-01T10:09:02Z",
@@ -22,16 +22,17 @@
     "prompt_preview": "A compact gimbal cube with a square outer frame, an inner barrel-shaped cradle, and a flat flange at the center. The assembly should read as a dense precisio..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "0976ac01b4c552caf73e5c6afb7ba925e06be2cb08b7b7eb33a879ff1181767d",
-    "model_py_sha256": "d686eb43bde13867689942f98da2f3d49af793311f1becaf4d0dad2dcf58ff37"
+    "model_py_sha256": "d0ada95432567ca7afbdbf31466cb00f5bca5e02e4a9eabc009e533a82659dcf"
   },
   "collections": [
     "dataset"
@@ -39,5 +40,12 @@
   "author": "mattzh72",
   "rated_by": "mattzh72",
   "secondary_rating": 5,
-  "secondary_rated_by": "Zhaomou Song"
+  "secondary_rated_by": "Zhaomou Song",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_pitchroll_module_48767006d44f45bd82e9c867e69c4db9",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

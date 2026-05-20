@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_internet_router_9874e69d94a94e238c4cf7bd528d6262",
   "created_at": "2026-04-04T14:31:52Z",
   "updated_at": "2026-04-05T13:18:43Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A home mesh router with a top vent panel and a folding setup flap. The compact tower body has a small rear access flap near the base and a round setup dial o..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "f6f86902d439b06fe65984f802e4868c25970900ad42f5cf1766997ad2f8cff6",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_internet_router_9874e69d94a94e238c4cf7bd528d6262",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

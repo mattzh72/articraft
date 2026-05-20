@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_drawer_cabinet_with_sliding_drawers_d9b3813d1e7a4204929050f394a22cce",
   "created_at": "2026-04-03T21:43:05Z",
   "updated_at": "2026-04-04T15:04:29Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A retail jewelry showcase with a wide glass-top rectangular cabinet body, three velvet-lined drawers in the front face, and two hinged glass side doors. Each..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "a31d5034c300e789b882385cd6fd6bfdfb2e4d9a608b6fb974b86f99388843d5",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_drawer_cabinet_with_sliding_drawers_d9b3813d1e7a4204929050f394a22cce",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

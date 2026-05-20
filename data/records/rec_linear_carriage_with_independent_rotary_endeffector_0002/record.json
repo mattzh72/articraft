@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_linear_carriage_with_independent_rotary_endeffector_0002",
   "created_at": "2026-03-12T18:18:30Z",
   "updated_at": "2026-04-01T10:35:23Z",
@@ -20,16 +20,17 @@
     "prompt_preview": "A linear carriage moving along one rail while carrying an independent rotary end-effector, built from a prismatic base and a separate revolute spindle."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "ac68a78e8f3aff2cc60191b6c8fe56838652d229943f001c57296caca6c41d35",
-    "model_py_sha256": "d5ba223c86d87bfbb2116152d03c60426dbed29162a8ff6242056ad551e04a50"
+    "model_py_sha256": "89f3efe2d312bb97630f527569ab6cc90af5b335c6ed08a8b151259c2a034941"
   },
   "collections": [
     "dataset"
@@ -37,5 +38,12 @@
   "author": "mattzh72",
   "rated_by": "mattzh72",
   "secondary_rating": 5,
-  "secondary_rated_by": "Zhaomou Song"
+  "secondary_rated_by": "Zhaomou Song",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_linear_carriage_with_independent_rotary_endeffector_0002",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

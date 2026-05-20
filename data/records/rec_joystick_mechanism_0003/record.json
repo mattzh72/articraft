@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_joystick_mechanism_0003",
   "created_at": "2026-03-25T23:15:42Z",
   "updated_at": "2026-04-01T10:21:25Z",
@@ -22,16 +22,17 @@
     "prompt_preview": "A low-profile joystick mechanism for an equipment console. A circular base cup carries a cardan gimbal and a short upright lever capped by a small clamp bloc..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "1cfc6e51809a5394cd339161afd3242bd1c77c9a74038b8750dacb4363580be6",
-    "model_py_sha256": "caa36934d685896f763a7fa0e66d849c146107e87436aa6765ab04c09af7e643"
+    "model_py_sha256": "1497ea5da48019f3dc297e9b3833f88e85d1f2a3fad30ea12b555e6390e2e35f"
   },
   "collections": [
     "dataset"
@@ -39,5 +40,12 @@
   "author": "mattzh72",
   "rated_by": "shawlyu",
   "secondary_rating": 4,
-  "secondary_rated_by": "Zhaomou Song"
+  "secondary_rated_by": "Zhaomou Song",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_joystick_mechanism_0003",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

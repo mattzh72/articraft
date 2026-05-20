@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "record_id": "rec_syringe_03d21b4542bd4229bcec896ff8c0964f",
+  "revision_id": "rev_000001",
+  "created_at": "2026-03-30T16:39:35Z",
+  "prompt_kind": "single_prompt",
+  "prompt_sha256": "ad532ef789223fff3e0c81e355a8a733d0017e61284a85d841fbd88751a0229a",
+  "source": {
+    "run_id": "run_20260330_160753_925388_20260325-backfill-part3-gpt54-high",
+    "prompt_batch_id": null,
+    "batch_spec_id": "20260325_backfill_part3_gpt54_high",
+    "row_id": "syringe_backfill_5",
+    "prompt_index": 173
+  },
+  "generation": {
+    "provider": "openai",
+    "model_id": "gpt-5.4",
+    "thinking_level": "high",
+    "openai_transport": "http",
+    "openai_reasoning_summary": "auto",
+    "max_turns": 50,
+    "max_cost_usd": null
+  },
+  "artifacts": {
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
+    "prompt_series_json": null,
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
+  },
+  "hashes": {
+    "prompt_sha256": "ad532ef789223fff3e0c81e355a8a733d0017e61284a85d841fbd88751a0229a",
+    "model_py_sha256": "ac1935faac632673eef1d673bc98d0f4540f9b4fded0fdfd9ca7469d9404563f"
+  },
+  "run_summary": {
+    "turn_count": 14,
+    "tool_call_count": 14,
+    "compile_attempt_count": 7,
+    "final_status": "success"
+  },
+  "parent": null,
+  "seed": null,
+  "inherited_inputs": []
+}

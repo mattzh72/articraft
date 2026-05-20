@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_dualrail_gantry_axis_ec4b1f04291e47d3b87be4243003d800",
   "created_at": "2026-03-31T17:20:51Z",
   "updated_at": "2026-04-06T01:41:22Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "An under-beam gantry shuttle. A grounded rail pair supports a bridge whose smaller carriage hangs beneath the beam instead of riding on top. The bridge and h..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "ea1b8b74ace46873697da317ecc76ea7fdaa3df98d14cf835740a6317b7bb0fe",
-    "model_py_sha256": "a0a18801e5d0e02d2d4bb91cffa0da1c7b6e660e48b43d98d2bfab46f779a985"
+    "model_py_sha256": "997f7464327f7bc6e13023c8f6cc646015335141599686caab8cc45e04f50968"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_dualrail_gantry_axis_ec4b1f04291e47d3b87be4243003d800",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

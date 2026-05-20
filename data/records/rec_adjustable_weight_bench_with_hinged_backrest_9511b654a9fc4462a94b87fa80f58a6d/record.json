@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_adjustable_weight_bench_with_hinged_backrest_9511b654a9fc4462a94b87fa80f58a6d",
   "created_at": "2026-04-11T23:14:52Z",
   "updated_at": "2026-04-22T14:08:58Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A flat-incline utility bench with a rectangular base, a hinged backrest, a smaller seat pad, and a rear ladder support, plus a folding mid-frame brace below..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "048f84684d1707b178a023c2507ae92f1842d557e7aa469e22bbded3edaeb0cc",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_adjustable_weight_bench_with_hinged_backrest_9511b654a9fc4462a94b87fa80f58a6d",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_multisegment_foldout_arm_8e9dfff547364dd5bb7108871d7823ae",
   "created_at": "2026-03-29T15:31:29Z",
   "updated_at": "2026-04-01T11:28:39Z",
@@ -22,16 +22,17 @@
     "prompt_preview": "A service hatch deployable arm with a grounded base shoe, four folding link stages, and a narrow support pad at the far end. The chain should appear capable..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "e615b23c6642ba6a0302290561279e6d433e0f86c8142af0751b4e1efacb05ee",
-    "model_py_sha256": "093efb08ad430354da82450d9fce8ddc663cd530e4477360242c68d4db2c6186"
+    "model_py_sha256": "db6e746b3085147626123f58b33fbf2f4f85bd33b90ed3baa0337c9e65fcd630"
   },
   "collections": [
     "dataset"
@@ -39,5 +40,12 @@
   "author": "mattzh72",
   "rated_by": "mattzh72",
   "secondary_rating": 2,
-  "secondary_rated_by": "Zhaomou Song"
+  "secondary_rated_by": "Zhaomou Song",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_multisegment_foldout_arm_8e9dfff547364dd5bb7108871d7823ae",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

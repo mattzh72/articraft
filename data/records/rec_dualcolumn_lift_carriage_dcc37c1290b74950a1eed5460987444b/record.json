@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_dualcolumn_lift_carriage_dcc37c1290b74950a1eed5460987444b",
   "created_at": "2026-04-03T21:46:47Z",
   "updated_at": "2026-04-06T01:25:23Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A twin-mast pallet-lift carriage. A grounded mast frame uses two uprights and a crosshead to carry a boxy carriage with visible guide shoes at each side. The..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "419eb6a1aaf68673836f337514c25148f7ce3f5b381f58df8f706b05bc967666",
-    "model_py_sha256": "72535e1674271da7341aea0cf37ec7535b52b599fd27d44519cc53d209e4a040"
+    "model_py_sha256": "a25b379d28aa2aa40ba3af505a9d7f57a7242976a9e4a1d2cf4aca55a12ae3d6"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_dualcolumn_lift_carriage_dcc37c1290b74950a1eed5460987444b",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

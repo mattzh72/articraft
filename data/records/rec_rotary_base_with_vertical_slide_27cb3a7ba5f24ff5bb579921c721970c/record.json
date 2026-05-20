@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_rotary_base_with_vertical_slide_27cb3a7ba5f24ff5bb579921c721970c",
   "created_at": "2026-03-31T17:20:51Z",
   "updated_at": "2026-04-06T01:37:30Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A turntable-and-lift module. A grounded lower rotary stage supports a vertical guide with a compact moving carriage. The lower stage is a revolute joint abou..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "eda807f5e2778f6f2578e254ba3003a33a0ee735e3057120d598c7be3e880ac5",
-    "model_py_sha256": "19d01ab0a87d0d2375badabee3af0ba12b1bca34089dfb3e96fefafb86fb7a6b"
+    "model_py_sha256": "9ca57f97261b1be8f9e8ea654ec1a17e16cf689b32c84d4689a68316e96182eb"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_rotary_base_with_vertical_slide_27cb3a7ba5f24ff5bb579921c721970c",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

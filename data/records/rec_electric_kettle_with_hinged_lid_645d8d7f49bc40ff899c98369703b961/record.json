@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_electric_kettle_with_hinged_lid_645d8d7f49bc40ff899c98369703b961",
   "created_at": "2026-04-11T16:13:01Z",
   "updated_at": "2026-04-22T14:26:40Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A cordless electric kettle with a rounded jug body, a separate circular heating base, a rear-hinged lid, a top-of-handle lid-release button, and a small powe..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "f42958f9a80d4d8e7c7463ce20c37dfa25f566fff43ef4566c7aa10b54e96643",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_electric_kettle_with_hinged_lid_645d8d7f49bc40ff899c98369703b961",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

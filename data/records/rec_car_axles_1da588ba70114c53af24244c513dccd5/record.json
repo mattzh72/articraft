@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_car_axles_1da588ba70114c53af24244c513dccd5",
   "created_at": "2026-04-03T22:02:27Z",
   "updated_at": "2026-04-04T10:39:09Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A go-kart rear live axle spanning the kart rear with two wheel hubs and a sprocket mid-span. The entire axle tube rotates continuously in pillow-block bearin..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "0b8621674cb6e8743da833e2fc40efe4a6dcb722526d0ee936b2b0e953c61417",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_car_axles_1da588ba70114c53af24244c513dccd5",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

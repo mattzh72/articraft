@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_refrigerator_with_hinged_doors_dd50f0c04e8546d5849ed16fb930faee",
   "created_at": "2026-04-27T12:45:11Z",
   "updated_at": "2026-04-28T07:43:21Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A French-door refrigerator with bottom freezer in a stainless-steel residential variant. The cabinet is a tall rectangular box with a brushed stainless outer..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "f03666645ff2c45f68dd8aadbd60cbb67f02934f2b79da56bcac0f165b5c63bc",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_refrigerator_with_hinged_doors_dd50f0c04e8546d5849ed16fb930faee",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

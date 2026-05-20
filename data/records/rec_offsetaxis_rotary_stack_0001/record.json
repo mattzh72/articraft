@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_offsetaxis_rotary_stack_0001",
   "created_at": "2026-03-12T18:25:43Z",
   "updated_at": "2026-04-01T10:32:02Z",
@@ -20,16 +20,17 @@
     "prompt_preview": "A multi-stage rotary assembly with staggered offset axes, machined connector links, and compact actuator housings."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "ae88b3f329eb931698a50280dd600a87953504a9439c99b647aa37328424e1a8",
-    "model_py_sha256": "bc237f36134fe80ce10ad50b60a6c7bb4c9638d816c876c0040602f694ef534b"
+    "model_py_sha256": "9bdfaf766be0ac0a6963ade997c27ab32f1567ae8939cf7ee6e7f7cc1771584b"
   },
   "collections": [
     "dataset"
@@ -37,5 +38,12 @@
   "author": "mattzh72",
   "rated_by": "mattzh72",
   "secondary_rating": 5,
-  "secondary_rated_by": "Zhaomou Song"
+  "secondary_rated_by": "Zhaomou Song",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_offsetaxis_rotary_stack_0001",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

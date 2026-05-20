@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_revoluteprismaticrevolute_chain_cf0894962718468bbe37df14312c76d7",
   "created_at": "2026-03-29T15:31:29Z",
   "updated_at": "2026-04-01T11:30:36Z",
@@ -22,16 +22,17 @@
     "prompt_preview": "A side-hinged inspection boom with a compact root pivot, a sliding center extension, and a small tilting head plate at the end. The mechanism should feel lik..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "705410559d15d8f4c0fbacc8b92a822c64f88b2576c2991bf548f625663c7e8d",
-    "model_py_sha256": "7a9caf3d934adbc1acabdd119daad211af289a5de4aadae9815d1972002c5385"
+    "model_py_sha256": "12c90ee8f1bb25e229af2e57772d23d697e0919b2a52701ddc9d46259a4ad521"
   },
   "collections": [
     "dataset"
@@ -39,5 +40,12 @@
   "author": "mattzh72",
   "rated_by": "mattzh72",
   "secondary_rating": 5,
-  "secondary_rated_by": "Zhaomou Song"
+  "secondary_rated_by": "Zhaomou Song",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_revoluteprismaticrevolute_chain_cf0894962718468bbe37df14312c76d7",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

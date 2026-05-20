@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_refrigerator_with_hinged_doors_3a99fa41d0324636a05d95598e4cb978",
   "created_at": "2026-04-27T14:07:19Z",
   "updated_at": "2026-04-28T00:15:37Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A French-door refrigerator with two upper doors and a lower freezer door modeled as side hinged for this category. The wide cabinet has two narrow upper comp..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "0a055e1a5bf36a633f603d8d03a61b96e35b79552a38bbf49c777d353589381b",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_refrigerator_with_hinged_doors_3a99fa41d0324636a05d95598e4cb978",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

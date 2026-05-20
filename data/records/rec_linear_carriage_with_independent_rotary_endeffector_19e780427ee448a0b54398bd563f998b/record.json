@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_linear_carriage_with_independent_rotary_endeffector_19e780427ee448a0b54398bd563f998b",
   "created_at": "2026-03-29T15:31:29Z",
   "updated_at": "2026-04-01T11:29:04Z",
@@ -22,16 +22,17 @@
     "prompt_preview": "A hanging beam slide with a narrow carriage straddling the beam and a horizontal roller head projecting from the carriage face. The carriage should feel like..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "9b07a2f81747bb30bbb289767a34a88e616308304d298a3be76d9606176431e2",
-    "model_py_sha256": "cd11020f71444ad033b135d6e9d8de573a51a761b25caef7b6bbcec38b14df6c"
+    "model_py_sha256": "fdaa211bbab950d7aceb66ef196e415233dc4a3a66fb9803ba0b64f51c81ccad"
   },
   "collections": [
     "dataset"
@@ -39,5 +40,12 @@
   "author": "mattzh72",
   "rated_by": "mattzh72",
   "secondary_rating": 4,
-  "secondary_rated_by": "Zhaomou Song"
+  "secondary_rated_by": "Zhaomou Song",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_linear_carriage_with_independent_rotary_endeffector_19e780427ee448a0b54398bd563f998b",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

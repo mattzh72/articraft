@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_tripodmounted_device_814686e75acc4ef48672665dee50f817",
   "created_at": "2026-04-12T15:38:17Z",
   "updated_at": "2026-04-22T08:01:54Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A field binocular viewer on a tripod with a central pan head and a short tilt bracket. The three tripod legs rotate on their crown hinges, the pan head rotat..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "020d06d4c3917f9240a5c539278bd874e9659b8330c64024ec5ef5ce3a72f793",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_tripodmounted_device_814686e75acc4ef48672665dee50f817",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

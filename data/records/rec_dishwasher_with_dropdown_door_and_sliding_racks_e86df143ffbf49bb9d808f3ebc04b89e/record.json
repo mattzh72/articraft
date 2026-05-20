@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_dishwasher_with_dropdown_door_and_sliding_racks_e86df143ffbf49bb9d808f3ebc04b89e",
   "created_at": "2026-04-11T18:03:18Z",
   "updated_at": "2026-04-22T14:22:11Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A black-glass-front dishwasher with a wide dropdown door, two wire racks, a removable silverware caddy riding on the lower rack, and a front fascia with a la..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "df355a82178316136cb46478c989742bf5f98f6140c5d8095d8f0559f9476b0a",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_dishwasher_with_dropdown_door_and_sliding_racks_e86df143ffbf49bb9d808f3ebc04b89e",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

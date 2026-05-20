@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_folding_kick_scooter_27f37080bbde4483bf5898929fccaf42",
   "created_at": "2026-04-27T13:36:02Z",
   "updated_at": "2026-04-28T05:25:08Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A three-wheel folding scooter with two front wheels on a wide fork, a telescoping handlebar column on a prismatic joint, and a deck that folds at the front a..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "6e9da2aab14947eaaf02c09ab611012e5bc4188a86cc487b9d4dbbdabe0e920d",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_folding_kick_scooter_27f37080bbde4483bf5898929fccaf42",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

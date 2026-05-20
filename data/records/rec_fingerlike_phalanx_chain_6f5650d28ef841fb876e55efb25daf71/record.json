@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_fingerlike_phalanx_chain_6f5650d28ef841fb876e55efb25daf71",
   "created_at": "2026-04-26T07:52:34Z",
   "updated_at": "2026-04-27T10:46:03Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A segmented finger-like phalanx chain. A grounded root knuckle carries proximal, middle, and distal phalanx links with a blunt fingertip pad and visible side..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "7fc807f5a010bc83b690f1f055275ccf2c88b627f4b94b9a096452cbb0056a1e",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_fingerlike_phalanx_chain_6f5650d28ef841fb876e55efb25daf71",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

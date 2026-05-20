@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_twojoint_prismatic_chain_d51bd0d741624a3f91e9677e54362eda",
   "created_at": "2026-04-03T21:46:47Z",
   "updated_at": "2026-04-06T01:25:51Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A two-carriage linear module. A fixed outer guide carries a large moving stage, and that stage carries a smaller tip stage. The large stage and tip stage are..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "8ee690ae1eff6338474f2c5c39b891a1d4914653539d1b7bdff808c1fd57d8cb",
-    "model_py_sha256": "171ee7ddf27284efb7a19760e8cf4fb89cfe1293abc9fd9bfd9dcac6c605773b"
+    "model_py_sha256": "c010a995005cecaa5342ac46d98c4b2e222c17e06dd922cfa32cb8c5a94247b6"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_twojoint_prismatic_chain_d51bd0d741624a3f91e9677e54362eda",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

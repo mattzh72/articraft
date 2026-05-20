@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_folding_kick_scooter_6da15f5825f545dd9036034cb0a8ec61",
   "created_at": "2026-04-01T12:30:38Z",
   "updated_at": "2026-04-01T14:06:07Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A stairclimber scooter with a flat deck, front and rear primary wheels on revolute axles, and two auxiliary stair-assist wheels at the deck rear corners each..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "8ee98249555aee2125d5b7df0d8a5b061e03d097d68056a92028dd886775ed19",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_folding_kick_scooter_6da15f5825f545dd9036034cb0a8ec61",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

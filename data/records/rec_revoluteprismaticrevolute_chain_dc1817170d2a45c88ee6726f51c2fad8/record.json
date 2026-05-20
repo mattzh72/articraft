@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_revoluteprismaticrevolute_chain_dc1817170d2a45c88ee6726f51c2fad8",
   "created_at": "2026-03-29T15:31:29Z",
   "updated_at": "2026-04-01T11:29:54Z",
@@ -22,16 +22,17 @@
     "prompt_preview": "A yawing base arm with a straight main beam, a telescoping forearm stage inside that beam, and a small rotary spindle head at the tip. The three motion layer..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "0e564a5d64b6c7c62a332b8c09f0dd267fed84c72d6445ea5feea1fae8502f1b",
-    "model_py_sha256": "73eefe56740ee07fce951d293d6b93a6729b55abefb7d7ac4b98f7551a3b8d08"
+    "model_py_sha256": "817db228e07f9a70c1b42f8d5e0378d274ef619b5844591bfb0eb78ded34ebfc"
   },
   "collections": [
     "dataset"
@@ -39,5 +40,12 @@
   "author": "mattzh72",
   "rated_by": "mattzh72",
   "secondary_rating": 4,
-  "secondary_rated_by": "Zhaomou Song"
+  "secondary_rated_by": "Zhaomou Song",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_revoluteprismaticrevolute_chain_dc1817170d2a45c88ee6726f51c2fad8",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_adjustable_weight_bench_with_hinged_backrest_cbfe926a72034a909ad86cb91c7a6a46",
   "created_at": "2026-04-11T18:43:53Z",
   "updated_at": "2026-04-11T20:40:14Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A folding adjustable weight bench with a low tubular frame, a split seat and backrest, a rear support link, and front transport wheels tucked under the front..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "92ba11d860826db5a4b0139f807fc042052a4397a96c3ffb7a8bc5d908bff859",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_adjustable_weight_bench_with_hinged_backrest_cbfe926a72034a909ad86cb91c7a6a46",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

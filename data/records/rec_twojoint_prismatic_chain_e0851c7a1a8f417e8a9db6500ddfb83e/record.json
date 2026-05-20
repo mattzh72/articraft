@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_twojoint_prismatic_chain_e0851c7a1a8f417e8a9db6500ddfb83e",
   "created_at": "2026-03-31T17:20:51Z",
   "updated_at": "2026-04-06T01:41:00Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A two-stage linear stack. A grounded outer guide carries a middle carriage, and the middle carriage carries a smaller inner carriage. The two moving members..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "2d62a54d3b2cb141c3bfd68436ef1f3266c6cb26b2673b8869c85435a565f677",
-    "model_py_sha256": "5f379f9c08da335d2085c475fe8bca5b496c433bd2e09fcb610dee7e3160d2a8"
+    "model_py_sha256": "a4a6e8e50ebfd9bbd536a5ba469e908b25bb6387ffbb7c0d66a72ca13dc1b4f6"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_twojoint_prismatic_chain_e0851c7a1a8f417e8a9db6500ddfb83e",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

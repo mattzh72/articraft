@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_pitchroll_module_0aa3d5b988d0431c8fab4a7d2b66eb7b",
   "created_at": "2026-04-02T16:32:45Z",
   "updated_at": "2026-04-06T01:32:04Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "An under-slung pitch-roll fixture. A top support holds a roll frame below it, and that frame holds a pitch cradle and plain tool face. The roll frame and pit..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "4d3796a7f4c21fb26c2cb49a067f7b9966b6cdd5d5eb1dd3b849792768697c3d",
-    "model_py_sha256": "23265b9bc21d96f80de97d8a3bada800eb26bd06ce029bf23cd236141a57adfe"
+    "model_py_sha256": "d022c43ee5000dd30b8e581baa5225d54f0a64cf84421104e7a5a1f159db4bf4"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_pitchroll_module_0aa3d5b988d0431c8fab4a7d2b66eb7b",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_floor_lamp_9967cabcdc8a48bb892502544adec6ae",
   "created_at": "2026-04-27T13:08:54Z",
   "updated_at": "2026-04-28T07:28:02Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A multi-arm floor lamp with a round weighted base, a central column, and three articulated arms each on a revolute joint carrying a small cylinder shade."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "c968a71217884dbda09129184e1a00e0a95778e0d97498fc4955518401d1ca4e",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_floor_lamp_9967cabcdc8a48bb892502544adec6ae",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_digital_multimeter_with_tilt_stand_and_rotary_selector_06ccd205d9f64f478d3a69aa428e6bc3",
   "created_at": "2026-04-11T23:10:23Z",
   "updated_at": "2026-04-22T14:14:49Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "An automotive digital multimeter with rounded corner bumpers, a central range dial, a broad rear support stand, and a slightly wider lower grip section, plus..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "f5092a97de486fe9679cbcd94d9ad2fa855259085c413f33aa526ef86ea9c283",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_digital_multimeter_with_tilt_stand_and_rotary_selector_06ccd205d9f64f478d3a69aa428e6bc3",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_dj_equipment_998d7b19baf04cefb242788e55a67edf",
   "created_at": "2026-04-27T13:24:16Z",
   "updated_at": "2026-04-28T07:19:14Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A four-channel club DJ mixer with a wide flat rectangular housing, four linear channel faders each on prismatic slots, a crossfader on a prismatic center cha..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "0a0481f846da74352b601b6c6484c23e1e3b1f425b28effbd5b0459a0d7ec31b",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_dj_equipment_998d7b19baf04cefb242788e55a67edf",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

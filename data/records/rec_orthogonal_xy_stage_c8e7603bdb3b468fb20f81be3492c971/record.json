@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_orthogonal_xy_stage_c8e7603bdb3b468fb20f81be3492c971",
   "created_at": "2026-03-31T17:20:51Z",
   "updated_at": "2026-04-06T01:40:01Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A bridge-backed XY translation table. A fixed base carries a broad lower carriage and a narrower upper saddle mounted crosswise above it. The lower carriage..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "ca69bcabc70cbbd3fa5fdd51ee3af1ff133c517d2934701e4e837598b730a06c",
-    "model_py_sha256": "a71f3b430305df67b94c55eb4d4024c7e5ba910580a8546a7c3f02c1117ae146"
+    "model_py_sha256": "d8e015edc1dc9ea5d4b400982c7296ce76116b8125e2b26c3037304886421538"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_orthogonal_xy_stage_c8e7603bdb3b468fb20f81be3492c971",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_garden_gate_725667c6472744398482e7141c2cd86c",
   "created_at": "2026-04-27T02:05:27Z",
   "updated_at": "2026-04-27T10:19:52Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A low picket garden gate with a lower surface bolt for holding it open. The rectangular leaf hangs on side hinges between two posts and carries a ring latch..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "4d4b8e2b4d58ab9b53eaf4b71b19828d2bfab0869997c78c88832649094fc344",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_garden_gate_725667c6472744398482e7141c2cd86c",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

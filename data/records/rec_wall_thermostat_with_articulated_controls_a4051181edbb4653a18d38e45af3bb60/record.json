@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_wall_thermostat_with_articulated_controls_a4051181edbb4653a18d38e45af3bb60",
   "created_at": "2026-03-30T17:03:05Z",
   "updated_at": "2026-04-01T21:02:04Z",
@@ -22,12 +22,13 @@
     "prompt_preview": "Produce an outdoor weatherproof Wall thermostat with articulated controls. Use sealed interfaces, drip-aware overhangs, corrosion-resistant hardware, and protected..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "a14e46c5ebce04a0cd0732801437014b55d1785bf8b8228e579aaf867072025e",
@@ -39,5 +40,12 @@
   "rated_by": "shawlyu",
   "author": "shawlyu",
   "secondary_rating": 4,
-  "secondary_rated_by": "RuiningLi"
+  "secondary_rated_by": "RuiningLi",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_wall_thermostat_with_articulated_controls_a4051181edbb4653a18d38e45af3bb60",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

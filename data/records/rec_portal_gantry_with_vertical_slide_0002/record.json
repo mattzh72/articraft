@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_portal_gantry_with_vertical_slide_0002",
   "created_at": "2026-03-25T18:37:12Z",
   "updated_at": "2026-04-01T10:28:11Z",
@@ -22,16 +22,17 @@
     "prompt_preview": "Design a realistic, highly detailed portal gantry with vertical slide as a standalone mechanical study assembly for the sdk_hybrid pipeline, with a portal fr..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "9e92591260561b258938174ccd80a609f84f22442afd5de1ae0b936710b9130c",
-    "model_py_sha256": "d6403d861a386e03d8871c52d5ecfb562e221b88249477c9f43a8c700e256dee"
+    "model_py_sha256": "42945475637ff76b89599d1203f13ec50ee046ed988afe04a2e6b28f587be28c"
   },
   "collections": [
     "dataset"
@@ -39,5 +40,12 @@
   "author": "mattzh72",
   "rated_by": "mattzh72",
   "secondary_rating": 5,
-  "secondary_rated_by": "Zhaomou Song"
+  "secondary_rated_by": "Zhaomou Song",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_portal_gantry_with_vertical_slide_0002",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

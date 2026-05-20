@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_single_continuous_rotary_shaft_3c5a2a17185f4076bbc842aa4185de0b",
   "created_at": "2026-03-29T04:00:44Z",
   "updated_at": "2026-04-01T10:02:34Z",
@@ -22,16 +22,17 @@
     "prompt_preview": "A horizontal spin fixture with twin pillow blocks, a straight shaft, and a large circular flange mounted near one end of the shaft. The support frame should..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "f8bb818367fcf4bd2bfd94be7cdd39bb5d21af9bb5ae3aaebd0e2d0c09c5969d",
-    "model_py_sha256": "e58fb947478ce4aebb6f3205a5502b47fc0200124627632e2aa1f6e88cb2b278"
+    "model_py_sha256": "335ce3c16977198ee9a4e3bcbb81464c552bc7f6c2e167817479ce2d18511430"
   },
   "collections": [
     "dataset"
@@ -39,5 +40,12 @@
   "author": "mattzh72",
   "rated_by": "mattzh72",
   "secondary_rating": 5,
-  "secondary_rated_by": "Zhaomou Song"
+  "secondary_rated_by": "Zhaomou Song",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_single_continuous_rotary_shaft_3c5a2a17185f4076bbc842aa4185de0b",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

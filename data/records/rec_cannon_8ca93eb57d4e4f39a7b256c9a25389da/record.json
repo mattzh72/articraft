@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_cannon_8ca93eb57d4e4f39a7b256c9a25389da",
   "created_at": "2026-04-27T13:45:29Z",
   "updated_at": "2026-04-28T00:47:42Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A Napoleonic 12-pounder field cannon with a long smooth-bore bronze barrel on trunnion revolute joints at the cheeks of a two-wheel wooden trail carriage, tw..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "cfd929d0c50f43f6c8d950adc7abe9e2baeef16e28fd1cfc92ea6cec4237c049",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_cannon_8ca93eb57d4e4f39a7b256c9a25389da",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

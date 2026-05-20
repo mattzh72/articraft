@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "record_id": "rec_bicycle_crankset_and_pedal_assembly_2e56ec4afa0145b0a746b81cc7ab8597",
+  "revision_id": "rev_000001",
+  "created_at": "2026-04-27T02:33:46Z",
+  "prompt_kind": "single_prompt",
+  "prompt_sha256": "6a0407a43e5a856d79746884a224efd149241d34806f3a0d5acd32279805dd41",
+  "source": {
+    "run_id": "run_20260427_013816_361309_20260426-gpt55-gpt54-promising-exact-2k",
+    "prompt_batch_id": null,
+    "batch_spec_id": "20260426_gpt55_gpt54_promising_exact_2k",
+    "row_id": "g55c_0811_bicycle_crankset_and_pedal_assembly_733b309d",
+    "prompt_index": 811
+  },
+  "generation": {
+    "provider": "openai",
+    "model_id": "gpt-5.5-2026-04-23",
+    "thinking_level": "high",
+    "openai_transport": "http",
+    "openai_reasoning_summary": "auto",
+    "max_turns": 100,
+    "max_cost_usd": null
+  },
+  "artifacts": {
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
+    "prompt_series_json": null,
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
+  },
+  "hashes": {
+    "prompt_sha256": "6a0407a43e5a856d79746884a224efd149241d34806f3a0d5acd32279805dd41",
+    "model_py_sha256": "e2d7ab860448bc6a5bbe68f61b1cd45f7c9d614629dbcb3d82165984fbe2075b"
+  },
+  "run_summary": {
+    "turn_count": 16,
+    "tool_call_count": 18,
+    "compile_attempt_count": 3,
+    "final_status": "success"
+  },
+  "parent": null,
+  "seed": null,
+  "inherited_inputs": []
+}

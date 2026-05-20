@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_grill_with_hinged_lid_d5d827303ff846f486df64bd703f783c",
   "created_at": "2026-04-04T14:26:47Z",
   "updated_at": "2026-04-05T13:17:40Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A built-in gas grill head with a broad hood and a small warming-rack hinge inside. The fixed firebox is recessed into a rectangular housing, the outer hood o..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "5bd810bb38ed047ccb626a37797a718c29a0b833c1f5d8cd6ccec827cb790a9e",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_grill_with_hinged_lid_d5d827303ff846f486df64bd703f783c",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

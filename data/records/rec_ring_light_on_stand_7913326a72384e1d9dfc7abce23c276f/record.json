@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_ring_light_on_stand_7913326a72384e1d9dfc7abce23c276f",
   "created_at": "2026-04-27T02:01:55Z",
   "updated_at": "2026-04-27T10:23:42Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A ring light on a camera stand with a rotating brightness knob and telescoping mast. The circular head sits at the top of the stand in a fixed bracket, and a..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "f74a61241b45254defe9b3081f9b39b3a436c996cd1aa6de23925cb7aebcb023",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_ring_light_on_stand_7913326a72384e1d9dfc7abce23c276f",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

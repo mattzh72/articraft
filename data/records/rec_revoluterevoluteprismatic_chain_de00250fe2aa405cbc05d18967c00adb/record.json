@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_revoluterevoluteprismatic_chain_de00250fe2aa405cbc05d18967c00adb",
   "created_at": "2026-04-01T18:09:34Z",
   "updated_at": "2026-04-06T01:35:41Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A fork-backed arm with telescoping nose. A rear support captures the first arm link, followed by a second link and a short output extension. The two arm link..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "51ff514cb1b2b74f9d1ade377766bffdc216bfbf644cc8b4208aa4e11b048ee2",
-    "model_py_sha256": "6eb87b43176dce81a78eeab0ccf3178475fa1a77f8974caea4b1c10abe29ef12"
+    "model_py_sha256": "6eaedb01ce28ee374402dd0c6da78f29a5cd60311361c6f05208cfa6b59d7953"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_revoluterevoluteprismatic_chain_de00250fe2aa405cbc05d18967c00adb",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

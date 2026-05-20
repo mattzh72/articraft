@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_yawpitch_module_708bcad69cf14ed8acdd5dcb8a2a149f",
   "created_at": "2026-04-03T21:46:47Z",
   "updated_at": "2026-04-06T01:26:16Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A pedestal yaw-pitch inspection head. A fixed pedestal supports a compact yaw stage, and the yaw stage carries a side-supported pitch frame with a plain outp..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "84922bf45ad73d9295812e666ddd5e52855aead5faf2e24cb6917c6747726068",
-    "model_py_sha256": "885dae0cca23c04af570bdc776d6483b126473a2803a43a941bfb8ca501acc4a"
+    "model_py_sha256": "c47d00925026b4cd18bdce73186cc386d6e2de021c8aee13ca44bdbc4dd3c40f"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_yawpitch_module_708bcad69cf14ed8acdd5dcb8a2a149f",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

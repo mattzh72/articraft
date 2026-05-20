@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_bench_vise_with_prismatic_jaw_cb3f36676c2f46c2bc5201c67f13b00b",
   "created_at": "2026-04-12T15:03:23Z",
   "updated_at": "2026-04-22T08:06:43Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A machinist bench vise with a main sliding jaw, a swivel base, and a small side lock knob for the jaw guide. The sliding jaw moves prismatically on the guide..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "d4ce863415f8a5d267b8eaf010efba0c065910955e6b2604511834d8027f3a01",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_bench_vise_with_prismatic_jaw_cb3f36676c2f46c2bc5201c67f13b00b",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

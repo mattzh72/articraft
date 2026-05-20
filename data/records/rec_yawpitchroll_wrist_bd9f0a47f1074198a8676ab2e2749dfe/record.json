@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_yawpitchroll_wrist_bd9f0a47f1074198a8676ab2e2749dfe",
   "created_at": "2026-04-02T16:32:45Z",
   "updated_at": "2026-04-06T01:32:07Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A fork-backed yaw-pitch-roll head. A rear support carries a yaw stage and a pitch frame, while the pitch frame carries a short roll spindle at the center. Th..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "e889817c35315706b8a3a472bd09da4e5cb6816e4f1433de91c2526c6223a759",
-    "model_py_sha256": "e52da16c8d830a935c31e36bbfcf37d7713f93922e2171681e4a3f9096d8d7c3"
+    "model_py_sha256": "7b2f4718d4236f9412dbcfb2ebf4718c5b98415f31e206ee3628e12e500b873f"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_yawpitchroll_wrist_bd9f0a47f1074198a8676ab2e2749dfe",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_lever_chain_f528b58504234a098da0cf287bf88c20",
   "created_at": "2026-03-28T03:32:30Z",
   "updated_at": "2026-04-01T10:12:01Z",
@@ -22,16 +22,17 @@
     "prompt_preview": "A three-link lever chain for a compact mechanical linkage. A base lug supports three rigid lever bars in series and a small tab at the free end. All three jo..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "842a820b2657ff97a23126c584cb8eab6a5150c8371ac39c6b5d527c75d13b6f",
-    "model_py_sha256": "6b9b23056a807da3c9ca40b14b09815d5e7d232fda18cc1a84360d2d1f588b7f"
+    "model_py_sha256": "54dd545f71a2b4a1e5adbf67ad6f2a2fe09da681585af079b0da91684b1a1be7"
   },
   "collections": [
     "dataset"
@@ -39,5 +40,12 @@
   "author": "mattzh72",
   "rated_by": "mattzh72",
   "secondary_rating": 5,
-  "secondary_rated_by": "Zhaomou Song"
+  "secondary_rated_by": "Zhaomou Song",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_lever_chain_f528b58504234a098da0cf287bf88c20",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

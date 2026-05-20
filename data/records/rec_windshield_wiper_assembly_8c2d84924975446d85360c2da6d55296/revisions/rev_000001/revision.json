@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "record_id": "rec_windshield_wiper_assembly_8c2d84924975446d85360c2da6d55296",
+  "revision_id": "rev_000001",
+  "created_at": "2026-04-06T18:00:13Z",
+  "prompt_kind": "single_prompt",
+  "prompt_sha256": "e7684ba7a1c89246f7141101faaf784767de0646974bee96ec41d2a59b3ebb68",
+  "source": {
+    "run_id": "run_20260405_220509_930419_20260406-backfill-part3-gpt54-high-15",
+    "prompt_batch_id": null,
+    "batch_spec_id": "20260406_backfill_part3_gpt54_high_15",
+    "row_id": "windshield_wiper_assembly_backfill_11",
+    "prompt_index": 611
+  },
+  "generation": {
+    "provider": "openai",
+    "model_id": "gpt-5.4",
+    "thinking_level": "high",
+    "openai_transport": "http",
+    "openai_reasoning_summary": "auto",
+    "max_turns": 50,
+    "max_cost_usd": null
+  },
+  "artifacts": {
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
+    "prompt_series_json": null,
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
+  },
+  "hashes": {
+    "prompt_sha256": "e7684ba7a1c89246f7141101faaf784767de0646974bee96ec41d2a59b3ebb68",
+    "model_py_sha256": "e635610d18800324b7be21f2025107d166749053c5ed8326933bf597d67cc9ef"
+  },
+  "run_summary": {
+    "turn_count": 11,
+    "tool_call_count": 10,
+    "compile_attempt_count": 3,
+    "final_status": "success"
+  },
+  "parent": null,
+  "seed": null,
+  "inherited_inputs": []
+}

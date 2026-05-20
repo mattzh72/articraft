@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_vertical_slide_with_wrist_hinge_867a081f6cd4454097922088157cdbf3",
   "created_at": "2026-03-31T17:20:51Z",
   "updated_at": "2026-04-06T01:40:04Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "An under-slung lift-and-wrist assembly. A top support carries a hanging vertical carriage and a small hinged bracket below the carriage. The hanging carriage..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "19537850caf09de969ed3f61d1c32d7ba17b01a17ee88ee9bea21844289f8ca8",
-    "model_py_sha256": "dc3165f39fc63aff8b889029414afe2341ee3feb759ea2ecc547136a27b56eaa"
+    "model_py_sha256": "bdffd5e21fa1a9fb4e66a3ed03ba0cfcc200614c5492b767abd1dd02e300f2e8"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_vertical_slide_with_wrist_hinge_867a081f6cd4454097922088157cdbf3",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

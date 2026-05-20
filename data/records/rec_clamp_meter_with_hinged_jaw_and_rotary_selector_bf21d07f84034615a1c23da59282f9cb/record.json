@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_clamp_meter_with_hinged_jaw_and_rotary_selector_bf21d07f84034615a1c23da59282f9cb",
   "created_at": "2026-04-11T18:43:53Z",
   "updated_at": "2026-04-11T20:34:00Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A slim clamp meter with a narrow hinged jaw, a short trigger under the head, a central function dial, and a side flashlight button above two front buttons. T..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "365acf7490c717d415de27e8ed5cdc810b31fa4d29b8656ce117c2d35037a023",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_clamp_meter_with_hinged_jaw_and_rotary_selector_bf21d07f84034615a1c23da59282f9cb",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

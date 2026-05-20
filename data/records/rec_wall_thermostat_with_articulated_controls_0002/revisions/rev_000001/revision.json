@@ -1,0 +1,43 @@
+{
+  "schema_version": 1,
+  "record_id": "rec_wall_thermostat_with_articulated_controls_0002",
+  "revision_id": "rev_000001",
+  "created_at": "2026-03-16T15:26:47Z",
+  "prompt_kind": "single_prompt",
+  "prompt_sha256": "51ef119a1ec1dd35854f88c9ce3c3f35a68d81b6d0b67e73bfe0a0cac13171d5",
+  "source": {
+    "run_id": "run_import_wall_thermostat_with_articulated_controls_20260316-151808-realism-articulation-v1",
+    "prompt_batch_id": "realism_articulation_v1",
+    "prompt_index": 1
+  },
+  "generation": {
+    "provider": "openai",
+    "model_id": "gpt-5.4",
+    "thinking_level": "high",
+    "openai_transport": "http",
+    "openai_reasoning_summary": null,
+    "max_turns": 30
+  },
+  "artifacts": {
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
+    "prompt_series_json": null,
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
+  },
+  "hashes": {
+    "prompt_sha256": "51ef119a1ec1dd35854f88c9ce3c3f35a68d81b6d0b67e73bfe0a0cac13171d5",
+    "model_py_sha256": "ddaf4af8558b9e5f03b7c0815aee8bbd3d6d4cceb76349afbec6c22df103cd86"
+  },
+  "run_summary": {
+    "turn_count": 12,
+    "tool_call_count": null,
+    "compile_attempt_count": null,
+    "final_status": "success"
+  },
+  "parent": null,
+  "seed": null,
+  "inherited_inputs": []
+}

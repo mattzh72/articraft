@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_floor_standing_drafting_table_ac0a0fe34ca54bd99df8994f285b37fb",
   "created_at": "2026-04-27T03:38:21Z",
   "updated_at": "2026-04-27T06:50:48Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A drafting workstation with a rectangular floor frame, a vertical support rail, and a large board with a lower storage ledge, plus a clamp knob at the tilt h..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "3c0ba17334d97e52f6c667c3bf92d42be762cfcc84dab2ed8dff337c7dce26ee",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_floor_standing_drafting_table_ac0a0fe34ca54bd99df8994f285b37fb",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

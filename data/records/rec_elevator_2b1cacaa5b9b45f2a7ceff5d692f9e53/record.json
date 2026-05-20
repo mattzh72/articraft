@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_elevator_2b1cacaa5b9b45f2a7ceff5d692f9e53",
   "created_at": "2026-04-27T01:41:49Z",
   "updated_at": "2026-04-27T10:32:18Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A piston-type residential elevator with a rectangular car inside an open shaft frame. The car rises prismatically along the shaft post guide rails. An outer..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "0eab30115e2bf386a6513e37acb3b53ba0f4c4babf4f23bb7209fd4ad947b417",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_elevator_2b1cacaa5b9b45f2a7ceff5d692f9e53",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

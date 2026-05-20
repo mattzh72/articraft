@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_single_pitch_axis_module_70eeaddc5081489094332c70173c8f35",
   "created_at": "2026-03-30T17:57:46Z",
   "updated_at": "2026-04-01T11:02:21Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A compact bench a pitch-axis trunnion module. A grounded base plate carries a boxed support, a supported shaft or trunnion set, and a small tooling face with..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "150921770bcf4eb6635fe41d6ceb73d49cc332f5f4d3e314be0c261af05e4ef3",
-    "model_py_sha256": "ef7d944704c37ee74f9fea9fd2410d69f635796a05cd4ea2b64d2e2d03f9d2bc"
+    "model_py_sha256": "e3d2a30b90eeb0d94abff9f15d83a6ee1cbdf61885df15763e0688722a0c6d9f"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_single_pitch_axis_module_70eeaddc5081489094332c70173c8f35",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

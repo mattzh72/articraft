@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_fidget_toy_29b3fba4b13d42a39fc50eeb21b5f09e",
   "created_at": "2026-04-27T02:33:39Z",
   "updated_at": "2026-04-27T09:48:40Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "An infinity cube made of eight small cubes connected by hinges on their edges. Adjacent cube pairs fold on revolute hinges along shared edges. The cube chain..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "4247953813a94affce60a67db4c887911c04dbbde9e5d67241eac2ada5761479",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_fidget_toy_29b3fba4b13d42a39fc50eeb21b5f09e",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

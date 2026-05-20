@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_hinged_window_or_hatch_b12b48779d5d42ceb241450769b1127e",
   "created_at": "2026-04-27T02:13:19Z",
   "updated_at": "2026-04-27T09:58:32Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A greenhouse vent window with a top-hinged sash and short side scissor stays. The glazed sash fits inside a light rectangular frame, and each side stay links..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "2f3d49dbdc487817cedd8367e08b0e4a7796ceee98aa4ef5532cec70b2e2f97a",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_hinged_window_or_hatch_b12b48779d5d42ceb241450769b1127e",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_drone_e2dd0135ff3a4252aa1f9409146e1331",
   "created_at": "2026-04-03T21:58:16Z",
   "updated_at": "2026-04-04T15:08:45Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A tilt-rotor bicopter with a long rectangular carbon-fiber body and two wingtip nacelles that tilt on revolute hinges along a spanwise axis. Each nacelle til..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "7cddea39b34af7ad3adc54603b68003114a1eac4b218e4d06a05d9c7a4c86da6",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_drone_e2dd0135ff3a4252aa1f9409146e1331",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

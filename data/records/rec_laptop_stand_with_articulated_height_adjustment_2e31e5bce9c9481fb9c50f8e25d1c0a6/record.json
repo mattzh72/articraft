@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_laptop_stand_with_articulated_height_adjustment_2e31e5bce9c9481fb9c50f8e25d1c0a6",
   "created_at": "2026-04-09T16:54:33Z",
   "updated_at": "2026-04-22T03:39:15Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A laptop stand with a low base frame, a single rigid top tray, and two telescoping side columns rising from the left and right rear corners. The two columns..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "661c62e741ac68e27e4b810e8eb9b217d0a467238ca3d9ab3f3d69bb4542a71c",
-    "model_py_sha256": "a03aaf57b09101a4c94df01ba8ef4f8d845fd31417983f4a7f81d652e297600a"
+    "model_py_sha256": "484510910bfd489caddc3a33a1214352bebdd3db665567b66c1d3916ad184f9e"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_laptop_stand_with_articulated_height_adjustment_2e31e5bce9c9481fb9c50f8e25d1c0a6",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_casino_machine_a9ee75d5e410427e9124a78d054c07cf",
   "created_at": "2026-04-27T13:47:25Z",
   "updated_at": "2026-04-28T00:38:04Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A dual-screen slot cabinet with a tall lower display, a secondary top display, and a shallow button deck above a bill-acceptor door. The bill-acceptor door b..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "addde068422fed10434a092a7c81fb8801f449e24e74b0814a1d41d7819e75ff",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_casino_machine_a9ee75d5e410427e9124a78d054c07cf",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

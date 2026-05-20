@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_bread_maker_with_hinged_lid_baf7860b9f9341038baba7e8a7e88687",
   "created_at": "2026-04-11T18:03:18Z",
   "updated_at": "2026-04-11T18:57:50Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A stainless bread maker with a glass lid, a small ingredient trap door in the lid, and a front control bank carrying two dials plus a start button. The lid r..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "beea66a94c7ad236f71e6499eecdfc5a0c683e392310b6baad1a9a62c4479c8d",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_bread_maker_with_hinged_lid_baf7860b9f9341038baba7e8a7e88687",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

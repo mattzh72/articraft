@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_prismaticrevoluteprismatic_chain_b620dc0168144c71b00d98e8216fb958",
   "created_at": "2026-03-30T17:57:46Z",
   "updated_at": "2026-04-01T11:11:15Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "An inspection rig for a prismatic-revolute-prismatic chain. A fixed base, a moving carriage, a pivot frame, and a small telescoping nose are arranged so each..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "f280f53ba4a5085bd641e9f074a1a809485e481e2e63372381ec21d5a536fd3e",
-    "model_py_sha256": "ef7944ac6d4051d3f14f6255c6df93911564b69c931b788f1981781208b20a64"
+    "model_py_sha256": "8c6fd7ae23eca38f00397dc4742efc1b35ee683eb3d0dd0aee5bcc83ad8e3274"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_prismaticrevoluteprismatic_chain_b620dc0168144c71b00d98e8216fb958",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

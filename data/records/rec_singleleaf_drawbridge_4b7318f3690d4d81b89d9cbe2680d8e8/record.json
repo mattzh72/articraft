@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_singleleaf_drawbridge_4b7318f3690d4d81b89d9cbe2680d8e8",
   "created_at": "2026-03-30T16:24:49Z",
   "updated_at": "2026-03-31T22:00:33Z",
@@ -22,12 +22,13 @@
     "prompt_preview": "Build a precision professional Singleleaf drawbridge tuned for calibration and repeatable alignment. Use a fixed support frame and one rotating bridge leaf o..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "59e64e7b04455cb8108dc7c378d5ab7d0c85ffea2f1f010bab96af332250a11b",
@@ -39,5 +40,12 @@
   "rated_by": "shawlyu",
   "author": "shawlyu",
   "secondary_rating": 4,
-  "secondary_rated_by": "RuiningLi"
+  "secondary_rated_by": "RuiningLi",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_singleleaf_drawbridge_4b7318f3690d4d81b89d9cbe2680d8e8",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

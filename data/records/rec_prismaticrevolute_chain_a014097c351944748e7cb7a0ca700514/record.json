@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_prismaticrevolute_chain_a014097c351944748e7cb7a0ca700514",
   "created_at": "2026-03-30T17:57:46Z",
   "updated_at": "2026-04-01T11:13:56Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A wall-backed slide-and-swing fixture. A fixed backplate carries a straight guide and a carriage-mounted arm with a simple square end pad. The guide stage is..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "839589b529043030fdba884f045e6825de277ed56df6a3dff1a5513983b2613f",
-    "model_py_sha256": "c909b7452c81822d108e2ad41d9285fdc3037bd76022ddce62601b1e50a55e5f"
+    "model_py_sha256": "b736eeb0798c8149d34cdf2c479d0be8d8b0f108c3c0971f65d53c1d92cbb356"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_prismaticrevolute_chain_a014097c351944748e7cb7a0ca700514",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

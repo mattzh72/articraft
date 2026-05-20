@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_fingerlike_phalanx_chain_3ffb94dca6a649d78d863966c3d9afee",
   "created_at": "2026-03-29T04:00:44Z",
   "updated_at": "2026-04-01T10:07:03Z",
@@ -22,16 +22,17 @@
     "prompt_preview": "A compact grasping finger with a blocky root section, a curved mid link, and a squared fingertip on a short distal segment. The knuckles should be obvious pi..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "1e87c10f3dce7faf272510abfd3cb46631c8773de489b72bc684a56e5e84a2e0",
-    "model_py_sha256": "2b73206ddfb9f01e8357f1746b89672485857296d550257054035f9898509f1d"
+    "model_py_sha256": "a8988e8dbff12eec443341052f9c28b4b8a288047a8d07ef989694ec4dda1287"
   },
   "collections": [
     "dataset"
@@ -39,5 +40,12 @@
   "author": "mattzh72",
   "rated_by": "mattzh72",
   "secondary_rating": 3,
-  "secondary_rated_by": "Zhaomou Song"
+  "secondary_rated_by": "Zhaomou Song",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_fingerlike_phalanx_chain_3ffb94dca6a649d78d863966c3d9afee",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

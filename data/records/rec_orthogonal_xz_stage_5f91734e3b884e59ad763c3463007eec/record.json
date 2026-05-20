@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_orthogonal_xz_stage_5f91734e3b884e59ad763c3463007eec",
   "created_at": "2026-03-30T17:57:46Z",
   "updated_at": "2026-04-01T11:13:08Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "An orthogonal XZ stage. A grounded base carries a horizontal slide and carriage, and the carriage supports a vertical Z slide with a small top pad. The lower..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "41abd62b3651ff7dfabca42b60700e1acbcc2f23ee2ffdba34bcd168562bac19",
-    "model_py_sha256": "80dd158edc0fc002eb3579b51b0d29b5bd976245864416d4381c922247b90198"
+    "model_py_sha256": "8b0200d89eb3e3ac01bdc2f62c910064102cd403c126b1f50140e9e2bcf81a6f"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_orthogonal_xz_stage_5f91734e3b884e59ad763c3463007eec",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

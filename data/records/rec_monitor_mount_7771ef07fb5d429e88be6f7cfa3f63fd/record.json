@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_monitor_mount_7771ef07fb5d429e88be6f7cfa3f63fd",
   "created_at": "2026-03-29T04:00:44Z",
   "updated_at": "2026-04-01T10:05:48Z",
@@ -22,16 +22,17 @@
     "prompt_preview": "A desk-post monitor arm shown without a screen, with a clamp post, a collar joint, a long primary link, a short secondary link, and a rectangular VESA head f..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "7c7bac8b5dfd16ac2154692482e07ccb25890b20b8987263f1af2ccbddcf3044",
-    "model_py_sha256": "5221ede4f0ffa83c9b4d1bfda518469b865ef0e429d2424a5383be8c3b67d3f0"
+    "model_py_sha256": "54d05d95149a924573c14ae9959e19ecc884720524d5486e340fe4a485bcfc24"
   },
   "collections": [
     "dataset"
@@ -39,5 +40,12 @@
   "author": "mattzh72",
   "rated_by": "mattzh72",
   "secondary_rating": 3,
-  "secondary_rated_by": "Zhaomou Song"
+  "secondary_rated_by": "Zhaomou Song",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_monitor_mount_7771ef07fb5d429e88be6f7cfa3f63fd",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

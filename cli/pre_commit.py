@@ -69,11 +69,7 @@ def staged_deleted_paths(paths: list[str]) -> set[str]:
 def is_workbench_only_record(record_id: str) -> bool:
     record_dir = Path("data") / "records" / record_id
     record_path = record_dir / "record.json"
-    dataset_entry_paths = (
-        record_dir / "dataset_entry.json",
-        record_dir / "collections" / "dataset.json",
-    )
-    if not record_path.exists() or any(path.exists() for path in dataset_entry_paths):
+    if not record_path.exists() or (record_dir / "collections" / "dataset.json").exists():
         return False
     try:
         record = json.loads(record_path.read_text(encoding="utf-8"))

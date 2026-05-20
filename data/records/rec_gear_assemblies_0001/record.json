@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_gear_assemblies_0001",
   "created_at": "2026-03-16T01:50:43Z",
   "updated_at": "2026-04-01T10:29:55Z",
@@ -20,16 +20,17 @@
     "prompt_preview": "A realistic, highly detailed gear assembly with multiple intermeshing gears, sturdy supports, and a clear industrial mechanical character. The gear rotation..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "37165a66aed700d44221118104ac0c59d3a99d4f2dd8bfbc2ac26c0fa38d3084",
-    "model_py_sha256": "ff0f62ee06ee1fffa15875ebc7fb2031a6566e23cd56229ecf75538a41851b31"
+    "model_py_sha256": "9ca49af4bf4acc8241be3b0c9d9f3645e6570f27684a6962071d97e7138bee2f"
   },
   "collections": [
     "dataset"
@@ -37,5 +38,12 @@
   "author": "mattzh72",
   "rated_by": "mattzh72",
   "secondary_rating": 5,
-  "secondary_rated_by": "Zhaomou Song"
+  "secondary_rated_by": "Zhaomou Song",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_gear_assemblies_0001",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

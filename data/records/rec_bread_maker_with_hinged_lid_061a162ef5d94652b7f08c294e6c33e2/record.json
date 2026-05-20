@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_bread_maker_with_hinged_lid_061a162ef5d94652b7f08c294e6c33e2",
   "created_at": "2026-04-11T18:03:18Z",
   "updated_at": "2026-04-22T14:24:11Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A compact bread maker with a boxy body, a rear-hinged lid, and a right-side control panel carrying a timer knob beside two square buttons. The lid rotates up..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "ba24e0bc78c2cded988b259df9a3b6cc81dbbe6c2ef678c4dc8663d767914639",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_bread_maker_with_hinged_lid_061a162ef5d94652b7f08c294e6c33e2",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

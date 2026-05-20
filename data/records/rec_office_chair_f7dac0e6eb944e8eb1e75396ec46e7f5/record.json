@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_office_chair_f7dac0e6eb944e8eb1e75396ec46e7f5",
   "created_at": "2026-04-27T13:44:09Z",
   "updated_at": "2026-04-28T00:47:27Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "An office chair with a five-star base, reclining back, and an adjustable headrest mounted above the back frame. The seat is carried by the central pedestal,..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "a8434ddc216b79dc44b46b0dd6d3f8534ca929aefe7ac38e35120df0bfee0092",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_office_chair_f7dac0e6eb944e8eb1e75396ec46e7f5",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

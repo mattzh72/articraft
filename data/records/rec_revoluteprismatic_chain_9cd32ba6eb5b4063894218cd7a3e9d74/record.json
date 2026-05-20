@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_revoluteprismatic_chain_9cd32ba6eb5b4063894218cd7a3e9d74",
   "created_at": "2026-03-31T17:20:51Z",
   "updated_at": "2026-03-31T18:48:50Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "An under-slung hinge-slide unit. A top support carries a hanging arm and a compact slider at the arm tip. The hanging arm is a revolute joint and the tip sli..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "75d1c6c9f09fc3c42f4cfa01d7a2b9d2e62ffade5417bddabf8abc9a39bca41a",
-    "model_py_sha256": "fdaf350b5ce517df3f0495fff47021f0efd548767456a9588f34ca6a91a0393a"
+    "model_py_sha256": "571ce582a2ecfd67044855795dba84172c4a671ffba35887031fad16d1bfe770"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_revoluteprismatic_chain_9cd32ba6eb5b4063894218cd7a3e9d74",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_car_sunroof_cassette_ebc946ba9d2f43aab90720d1dff73c97",
   "created_at": "2026-04-01T12:05:06Z",
   "updated_at": "2026-04-04T10:40:55Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A sliding panoramic moonroof cassette with a large glass panel that slides rearward on two prismatic guide channel rails in an aluminium frame, and a separat..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "3b559fede26386c601f2ad1c6ae546d2bd0d8539a9cc69660050777feebba43e",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_car_sunroof_cassette_ebc946ba9d2f43aab90720d1dff73c97",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

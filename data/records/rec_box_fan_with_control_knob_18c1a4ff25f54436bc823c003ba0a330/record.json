@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_box_fan_with_control_knob_18c1a4ff25f54436bc823c003ba0a330",
   "created_at": "2026-04-12T14:48:16Z",
   "updated_at": "2026-04-22T08:08:16Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A floor box fan with a square housing on a cradle stand, a rear carry handle, and a side speed knob near the lower corner. The housing tilts on horizontal pi..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "33e5f5470b0dd1918b2512ff059c62bb19471c4c2a9638be3a4ea3aa3bd84986",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_box_fan_with_control_knob_18c1a4ff25f54436bc823c003ba0a330",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_telescoping_boom_d34230d02f1f47f5a7efba139c9512f3",
   "created_at": "2026-03-30T17:57:46Z",
   "updated_at": "2026-04-01T11:13:59Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A wall-backed telescoping reach module. A rigid rear mount carries an outer sleeve and successive inner telescoping sections, with clear overlap remaining be..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "1422bac126a8667895dae08dab9180bf749371c34cf1f9d35aa6668c77f9f823",
-    "model_py_sha256": "b3628d8f7392ca232edad14051be5365f9d2283a83bde0e43f6fc2f42c932433"
+    "model_py_sha256": "50825c5fa900493b716c4dbde2d6b8586291a07e854e5f3f484938862c7efb09"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_telescoping_boom_d34230d02f1f47f5a7efba139c9512f3",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

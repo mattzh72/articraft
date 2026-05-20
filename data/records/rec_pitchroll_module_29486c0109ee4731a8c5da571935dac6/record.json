@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_pitchroll_module_29486c0109ee4731a8c5da571935dac6",
   "created_at": "2026-04-03T21:46:47Z",
   "updated_at": "2026-04-06T01:22:35Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A compact wrist pitch-roll head. A grounded pitch yoke carries a short roll cartridge ending in a simple output flange. The module uses one pitch revolute jo..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "81c78238d2a5a282ac02bff53f2239a371bca597eaf1912d6eb96e472cc7e708",
-    "model_py_sha256": "4dc81b45bd9ce6259937dbef9f94573787f6a78fb65c16b2422ab1c8f7138d36"
+    "model_py_sha256": "19d41dc33b30548995670d1ea04a5cefe028bbde313ab1a29136e56ca6cb508e"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_pitchroll_module_29486c0109ee4731a8c5da571935dac6",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

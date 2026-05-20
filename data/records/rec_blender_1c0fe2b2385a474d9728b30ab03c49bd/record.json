@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_blender_1c0fe2b2385a474d9728b30ab03c49bd",
   "created_at": "2026-04-12T14:38:23Z",
   "updated_at": "2026-04-22T08:12:54Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A jug blender with a broad base, a hinged lid over the pitcher, and a front slider for speed selection. The lid rotates on a rear hinge at the top of the pit..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "4d2d1ac74d0027005e90486d68c4af8423833e89dbe523d701495edc714b1103",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_blender_1c0fe2b2385a474d9728b30ab03c49bd",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

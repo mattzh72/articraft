@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_knee_scooter_3e4a6ff0b2a94fa8865177c7e1982a3c",
   "created_at": "2026-04-04T14:34:18Z",
   "updated_at": "2026-04-05T13:10:56Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A knee scooter with a split rear axle and a tilting knee support. The rigid frame carries two front steering wheels, two rear support wheels, and a knee plat..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "ef9fcad5acffd9e968e1f751c7f314e69f459691193abf480c970bf39698b554",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_knee_scooter_3e4a6ff0b2a94fa8865177c7e1982a3c",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

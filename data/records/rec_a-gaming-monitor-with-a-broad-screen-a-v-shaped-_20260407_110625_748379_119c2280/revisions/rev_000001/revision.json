@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "record_id": "rec_a-gaming-monitor-with-a-broad-screen-a-v-shaped-_20260407_110625_748379_119c2280",
+  "revision_id": "rev_000001",
+  "created_at": "2026-04-07T11:06:25Z",
+  "prompt_kind": "single_prompt",
+  "prompt_sha256": "5e13657250bb6834a4149824bb8d16b97032ccab94227653a713df7b0c7f653f",
+  "source": {
+    "run_id": "run_20260407_110625_748379_119c2280",
+    "prompt_batch_id": null,
+    "batch_spec_id": null,
+    "row_id": null,
+    "prompt_index": null
+  },
+  "generation": {
+    "provider": "openai",
+    "model_id": "gpt-5.4",
+    "thinking_level": "high",
+    "openai_transport": "http",
+    "openai_reasoning_summary": "auto",
+    "max_turns": 60,
+    "max_cost_usd": null
+  },
+  "artifacts": {
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
+    "prompt_series_json": null,
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
+  },
+  "hashes": {
+    "prompt_sha256": "5e13657250bb6834a4149824bb8d16b97032ccab94227653a713df7b0c7f653f",
+    "model_py_sha256": "b1010fe5d6748c5e1c835d0121fb9d461c29dd7784f95876b3d3a4c69c66df43"
+  },
+  "run_summary": {
+    "turn_count": 20,
+    "tool_call_count": 19,
+    "compile_attempt_count": 6,
+    "final_status": "success"
+  },
+  "parent": null,
+  "seed": null,
+  "inherited_inputs": []
+}

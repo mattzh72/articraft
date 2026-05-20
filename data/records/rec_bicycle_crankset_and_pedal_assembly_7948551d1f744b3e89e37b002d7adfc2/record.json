@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_bicycle_crankset_and_pedal_assembly_7948551d1f744b3e89e37b002d7adfc2",
   "created_at": "2026-03-29T15:00:22Z",
   "updated_at": "2026-03-29T16:45:41Z",
@@ -22,12 +22,13 @@
     "prompt_preview": "A power-meter crankset with a two-piece hollow crank arm set on a threaded bottom-bracket shell, a sealed revolute spindle axle through the shell, a single o..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "e9a503614e66da0bd78006f6635fd03a504f20c9f88088e3ae6aa49bc9093d52",
@@ -39,5 +40,12 @@
   "author": "Zhaomou Song",
   "rated_by": "Zhaomou Song",
   "secondary_rating": null,
-  "secondary_rated_by": null
+  "secondary_rated_by": null,
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_bicycle_crankset_and_pedal_assembly_7948551d1f744b3e89e37b002d7adfc2",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

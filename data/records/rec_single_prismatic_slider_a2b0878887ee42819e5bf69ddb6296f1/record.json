@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_single_prismatic_slider_a2b0878887ee42819e5bf69ddb6296f1",
   "created_at": "2026-04-02T16:32:45Z",
   "updated_at": "2026-04-06T01:32:59Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A vertical mast slide. A grounded upright guide carries one moving platen with a plain rectangular output face. The platen is one prismatic joint along the v..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "1f02213d921b53280e421ce567d0cca6875aca4fb0de7afb0b48823ea2572763",
-    "model_py_sha256": "dedab5b0075d230d50ab87772d332a5edd80329832c2360e619212ae3c33e6d2"
+    "model_py_sha256": "129ab95c7951c9a29a57dd88a6244186376e98a61a70431121bcca6f3b7ecad1"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_single_prismatic_slider_a2b0878887ee42819e5bf69ddb6296f1",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

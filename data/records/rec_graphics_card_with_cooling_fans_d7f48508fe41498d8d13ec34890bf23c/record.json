@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_graphics_card_with_cooling_fans_d7f48508fe41498d8d13ec34890bf23c",
   "created_at": "2026-03-28T18:38:36Z",
   "updated_at": "2026-04-01T13:53:50Z",
@@ -22,12 +22,13 @@
     "prompt_preview": "A compact short graphics card with two offset axial fans in a stubby shroud and a fold-out support brace at the bracket end. The card body is a short PCB and..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "bae392e5380dca58e2f6b9e0c8db170619fe718e8366ea4b4fab05e0c7c6fae7",
@@ -39,5 +40,12 @@
   "author": "RuiningLi",
   "rated_by": "RuiningLi",
   "secondary_rating": 5,
-  "secondary_rated_by": "shawlyu"
+  "secondary_rated_by": "shawlyu",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_graphics_card_with_cooling_fans_d7f48508fe41498d8d13ec34890bf23c",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

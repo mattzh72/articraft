@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_tv_wall_mount_0003",
   "created_at": "2026-03-25T23:15:42Z",
   "updated_at": "2026-04-01T10:20:16Z",
@@ -22,16 +22,17 @@
     "prompt_preview": "A TV wall mount shown without any display attached. A wall plate carries a folding two-link arm and a tilt head with a rectangular mounting frame. The should..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "47ac88717d84fa194bf0f299b450ae1c10aff5d468de592611b119a4fc63d234",
-    "model_py_sha256": "80c9cbf5634b8b9d11172d2c8c75b509437d62d91056da66ad3a573f717f3e5d"
+    "model_py_sha256": "88e6664b07ecde55f6158c6349b0e102bc8d677ba763dc722b20282061dc9f64"
   },
   "collections": [
     "dataset"
@@ -39,5 +40,12 @@
   "author": "mattzh72",
   "rated_by": "shawlyu",
   "secondary_rating": 3,
-  "secondary_rated_by": "Zhaomou Song"
+  "secondary_rated_by": "Zhaomou Song",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_tv_wall_mount_0003",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

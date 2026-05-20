@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_vertical_slide_with_wrist_hinge_d6302eb6116b4eb1a4f4dcd2edbe6994",
   "created_at": "2026-04-01T18:09:34Z",
   "updated_at": "2026-04-06T01:36:52Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A fork-backed slide-and-wrist unit. A rear support frame carries a vertical slide carriage with a short hinged face at the output. The slide carriage is pris..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "7a69fdf23a337c2df34e6532ef12cca282baac9fcdc0736a9ddfeaec94b91227",
-    "model_py_sha256": "5356a566adef445e8e41b48533dbb907551f7956c54098f539ee4134a610b39b"
+    "model_py_sha256": "8f234a969d442c89be1303aad094f97a4d6349223834af795cb6589b6806cf91"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_vertical_slide_with_wrist_hinge_d6302eb6116b4eb1a4f4dcd2edbe6994",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

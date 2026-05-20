@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_gear_assemblies_0ab342c2068446c49edc6b63a1fec3e1",
   "created_at": "2026-04-27T13:56:09Z",
   "updated_at": "2026-04-28T00:13:55Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A right-angle transfer gearbox with a vertical input shaft carrying a bevel gear, a horizontal layshaft, and a second horizontal output shaft carrying a spur..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "609e4f48b68e6888d4acb3321cbdd7ba1d9ac3dc2e2bbeb17aed562a145d253f",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_gear_assemblies_0ab342c2068446c49edc6b63a1fec3e1",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_prismaticrevoluterevolute_chain_c0b9bec3775f47899b9f3fd66bf384e6",
   "created_at": "2026-03-30T17:57:46Z",
   "updated_at": "2026-04-01T11:13:01Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A wall-backed transfer axis with articulated tip. A grounded slide carries a compact shoulder bracket and a two-link arm that projects from the moving carria..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "0916900e853ed477fe56e965c68d259e95bfd3e8a995b412fda1101a7eccabd2",
-    "model_py_sha256": "b9d4d1df892a7fcd7e9cedf944d2f64d99b379f32245bf1771168547d6d6198e"
+    "model_py_sha256": "d99ebb2c5557ab89200e530b0df299148dea81374a9fc26b7543b3db29fe0094"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_prismaticrevoluterevolute_chain_c0b9bec3775f47899b9f3fd66bf384e6",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

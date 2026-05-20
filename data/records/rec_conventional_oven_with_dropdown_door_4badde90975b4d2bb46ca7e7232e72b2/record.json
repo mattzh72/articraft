@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_conventional_oven_with_dropdown_door_4badde90975b4d2bb46ca7e7232e72b2",
   "created_at": "2026-04-27T12:44:27Z",
   "updated_at": "2026-04-28T07:44:12Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A freestanding gas range with four surface burner grates and an oven door with a window panel that hinges down from the bottom edge on a full-width revolute..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "75141bf3e022c6ed3caff4b8d29ef1918745cfcb74c2b6ded50d0df12df5ed7a",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_conventional_oven_with_dropdown_door_4badde90975b4d2bb46ca7e7232e72b2",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

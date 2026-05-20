@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_fidget_toy_0002",
   "created_at": "2026-03-16T18:29:17Z",
   "updated_at": "2026-04-01T10:31:49Z",
@@ -20,16 +20,17 @@
     "prompt_preview": "A realistic, highly detailed fidget spinner with a compact central bearing hub, multiple balanced lobes, and a believable consumer desk-toy appearance. The s..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "3fa00f2e9482ab315f793bb1fe218b9e3dddd4f6b852092c178c38eba405540d",
-    "model_py_sha256": "d2ed86b5b7a284e4d6f9a1c37b43a58e5a00655b35a718389ec43fb96e53bbe6"
+    "model_py_sha256": "76a84b4d44864fb46808b961e2cede6fe128fe3dabe3c69835ca4148aa930d1d"
   },
   "collections": [
     "dataset"
@@ -37,5 +38,12 @@
   "author": "mattzh72",
   "rated_by": "mattzh72",
   "secondary_rating": 5,
-  "secondary_rated_by": "Zhaomou Song"
+  "secondary_rated_by": "Zhaomou Song",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_fidget_toy_0002",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_bench_vise_with_prismatic_jaw_49f762d28ae74362a7ac9220b3ee9d2b",
   "created_at": "2026-04-12T15:02:56Z",
   "updated_at": "2026-04-22T08:04:20Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A pipe-capable bench vise with standard flat jaws above and a secondary hinged pipe jaw below the main body. The main front jaw slides prismatically on the g..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "57f831371c1a8a0cffa9d930f2d46bd24bc0f1a69c48615239a620186f134851",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_bench_vise_with_prismatic_jaw_49f762d28ae74362a7ac9220b3ee9d2b",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

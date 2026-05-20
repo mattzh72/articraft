@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_gear_assemblies_39a64e9b070544558e4ce2d515fcd687",
   "created_at": "2026-03-29T04:00:44Z",
   "updated_at": "2026-04-01T10:10:04Z",
@@ -22,16 +22,17 @@
     "prompt_preview": "An exposed spur reduction assembly with a handwheel input, three parallel shafts, and a plate frame that keeps every gear visible from the side. The gear dia..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "7b9a4f836b8ac153be570e2863ebb36dd4f086c0661c00be717a313f3a2d89f6",
-    "model_py_sha256": "9905565badd305508d83861c68eda959bf4573ca1ccbdc12083a21326cf8ee5f"
+    "model_py_sha256": "762206b1a71a34cbe65a801f9dbe4ad89c72d2aa998ed032576fd00e911e3be3"
   },
   "collections": [
     "dataset"
@@ -39,5 +40,12 @@
   "author": "mattzh72",
   "rated_by": "mattzh72",
   "secondary_rating": 4,
-  "secondary_rated_by": "Zhaomou Song"
+  "secondary_rated_by": "Zhaomou Song",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_gear_assemblies_39a64e9b070544558e4ce2d515fcd687",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

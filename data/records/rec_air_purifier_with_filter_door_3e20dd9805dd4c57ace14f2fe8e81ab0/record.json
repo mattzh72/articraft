@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_air_purifier_with_filter_door_3e20dd9805dd4c57ace14f2fe8e81ab0",
   "created_at": "2026-04-27T14:00:40Z",
   "updated_at": "2026-04-28T00:24:30Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A tower purifier with a back access door, a pull-tab filter cartridge, and a top button bank. The back access door rotates on a side hinge, the filter cartri..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "cfc03d2605e202a017592f7d40c88d7d69dd9d612c8d78c2822e025ba85bd781",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_air_purifier_with_filter_door_3e20dd9805dd4c57ace14f2fe8e81ab0",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

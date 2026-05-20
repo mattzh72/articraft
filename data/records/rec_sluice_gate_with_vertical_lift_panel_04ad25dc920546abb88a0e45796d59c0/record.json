@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_sluice_gate_with_vertical_lift_panel_04ad25dc920546abb88a0e45796d59c0",
   "created_at": "2026-04-11T02:10:02Z",
   "updated_at": "2026-04-11T04:53:20Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A canal-control sluice assembly with a rectangular frame, a vertically guided panel over the channel mouth, and a rising stem passing through a drive head. T..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "4707170d743bcd9cfdae409d2aef805bc61b4976d351ee953bdaa2ee402e0238",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_sluice_gate_with_vertical_lift_panel_04ad25dc920546abb88a0e45796d59c0",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_single_continuous_rotary_shaft_8daa503d99c14135b349d26154ee1963",
   "created_at": "2026-03-29T15:31:29Z",
   "updated_at": "2026-04-01T11:23:28Z",
@@ -22,16 +22,17 @@
     "prompt_preview": "A vertical labeling platen with a cylindrical base housing, a central spindle, and a broad round top plate for holding work. The top plate should dominate th..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "14f4144909e087ac00e92613cad24f7615eafd190317fac8289afc2fa62c56db",
-    "model_py_sha256": "1c2c224b3aca1297201c5ca8738ea91d9b8ef586e0c915149e1de45d4feadfd8"
+    "model_py_sha256": "b7129bec3e89398469292f4a7a9811e72f44dc1958afc7cc1f5e935736d11ae6"
   },
   "collections": [
     "dataset"
@@ -39,5 +40,12 @@
   "author": "mattzh72",
   "rated_by": "mattzh72",
   "secondary_rating": 5,
-  "secondary_rated_by": "Zhaomou Song"
+  "secondary_rated_by": "Zhaomou Song",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_single_continuous_rotary_shaft_8daa503d99c14135b349d26154ee1963",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

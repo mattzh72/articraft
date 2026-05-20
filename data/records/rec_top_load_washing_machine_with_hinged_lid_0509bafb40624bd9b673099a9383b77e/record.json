@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_top_load_washing_machine_with_hinged_lid_0509bafb40624bd9b673099a9383b77e",
   "created_at": "2026-04-27T13:16:53Z",
   "updated_at": "2026-04-28T07:20:14Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A slim top-load washer with a compact lid, a rear control pod carrying a selector knob and three buttons, and a small softener cup lid on the center agitator..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "443e8a9d4860fe67bafff6018a362a86f31962dcc6c98a8a65ae2b0fabf62b2a",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_top_load_washing_machine_with_hinged_lid_0509bafb40624bd9b673099a9383b77e",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

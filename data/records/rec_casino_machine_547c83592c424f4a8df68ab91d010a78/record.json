@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_casino_machine_547c83592c424f4a8df68ab91d010a78",
   "created_at": "2026-04-27T12:35:00Z",
   "updated_at": "2026-04-28T07:50:28Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A casino slot machine with a tall cabinet, a front reel window, a coin tray, and a large pull handle mounted on one side."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "2ceb2671bd39df61d92883b8937538aa3ed4d7928b161b55fdea076821cee80d",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_casino_machine_547c83592c424f4a8df68ab91d010a78",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

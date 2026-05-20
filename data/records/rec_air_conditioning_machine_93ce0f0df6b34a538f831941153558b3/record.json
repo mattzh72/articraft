@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_air_conditioning_machine_93ce0f0df6b34a538f831941153558b3",
   "created_at": "2026-04-12T14:13:27Z",
   "updated_at": "2026-04-22T08:33:29Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A wall-mounted mini-split air conditioning machine with a long indoor shell, a lower outlet flap, and a right-end control cluster with a rotary dial and two..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "facc2af1f26c4de6d8f9e6ae71b795c3868ee0dc0d38b3aa41b7d7bfb1ab3c04",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_air_conditioning_machine_93ce0f0df6b34a538f831941153558b3",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

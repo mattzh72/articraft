@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_radial_arm_with_sliding_carriage_0c6af1bed5c6415588ba58c7887e51c3",
   "created_at": "2026-03-31T17:20:51Z",
   "updated_at": "2026-04-06T01:40:26Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A compact service radial arm. A broad grounded base supports one sweeping arm and one small sliding head on the arm. The sweeping arm is a revolute joint and..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "cc63474e2e50661252569e33efc48d5a1187b8726a64156f933b75e571a38231",
-    "model_py_sha256": "da7c33e5a09f8f478db25e870a0c0bd722dde31d8ad8650c5ae4dfbe3e1a1707"
+    "model_py_sha256": "e5007c301092f9bacaa044b4dc46677ff2df3f2f7c4482cfea3aee9257fbf110"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_radial_arm_with_sliding_carriage_0c6af1bed5c6415588ba58c7887e51c3",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

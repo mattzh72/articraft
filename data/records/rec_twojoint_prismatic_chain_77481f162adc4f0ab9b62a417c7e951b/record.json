@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_twojoint_prismatic_chain_77481f162adc4f0ab9b62a417c7e951b",
   "created_at": "2026-03-29T04:00:44Z",
   "updated_at": "2026-04-28T08:14:21Z",
@@ -22,16 +22,17 @@
     "prompt_preview": "A nested sample tray carrier with an outer drawer body, a middle tray, and a smaller inner tray at the front. The trays should visibly nest so the two extens..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "74211ef23fa20fbc54ce998f8edf4a9963eaa5f830275913e1ba167c1371062e",
-    "model_py_sha256": "6d6edeac77cbdd23d1cc89309e5e6d1d56dac2545f0b61432b34ec956887aaba"
+    "model_py_sha256": "931ab4fc795400f59cd1b8df460119d4876e32cd5502f1a627ca02c670407357"
   },
   "collections": [
     "dataset"
@@ -39,5 +40,12 @@
   "author": "mattzh72",
   "rated_by": "mattzh72",
   "secondary_rating": 4,
-  "secondary_rated_by": "mattzh72"
+  "secondary_rated_by": "mattzh72",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_twojoint_prismatic_chain_77481f162adc4f0ab9b62a417c7e951b",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

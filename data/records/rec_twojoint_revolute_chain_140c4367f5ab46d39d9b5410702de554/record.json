@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_twojoint_revolute_chain_140c4367f5ab46d39d9b5410702de554",
   "created_at": "2026-04-27T13:23:47Z",
   "updated_at": "2026-04-28T07:18:47Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A side-plate two-joint revolute chain. A fixed cheek supports a sequence of flat-sided links with compact pin bosses, ending in a compact end tab. The links..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "42f4d32fca2d4b8bba1a20a1b98687ebc565c5a852a5adff305dff23488c17f4",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_twojoint_revolute_chain_140c4367f5ab46d39d9b5410702de554",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

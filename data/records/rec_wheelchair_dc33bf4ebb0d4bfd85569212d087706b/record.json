@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_wheelchair_dc33bf4ebb0d4bfd85569212d087706b",
   "created_at": "2026-04-27T13:54:43Z",
   "updated_at": "2026-04-28T00:11:54Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A realistic, highly detailed wheelchair with a tubular frame, large rear wheels with hand rims, small front casters, seating surfaces, and practical push han..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "4b6ce416692af8bae8ddca159c8ef5103975612239fc41c3a8ab08915d87d566",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_wheelchair_dc33bf4ebb0d4bfd85569212d087706b",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

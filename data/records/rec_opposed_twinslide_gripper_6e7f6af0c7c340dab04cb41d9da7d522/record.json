@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_opposed_twinslide_gripper_6e7f6af0c7c340dab04cb41d9da7d522",
   "created_at": "2026-04-03T21:46:47Z",
   "updated_at": "2026-04-06T01:21:34Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A carriage-block opposed gripper. A grounded center body supports two mirrored jaw carriages with compact fingers facing a common pickup zone. The left and r..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "e92d955f4923156f9846cad8d7738edb72a321794da3575bc8418a39a1d0c8d0",
-    "model_py_sha256": "ce5352bd278b078c39ae19b67ea45019b8db380f5cc802a446b55cf3a165b849"
+    "model_py_sha256": "e79fe5d74afa702ecd73cdcde01afa2a18863e8c6dc8932a79fc43bf6c13aad9"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_opposed_twinslide_gripper_6e7f6af0c7c340dab04cb41d9da7d522",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

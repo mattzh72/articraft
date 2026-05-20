@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_twojoint_revolute_chain_5d920c1975df451ebbdc585a6804c06a",
   "created_at": "2026-03-30T17:57:46Z",
   "updated_at": "2026-04-01T11:17:37Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A low-profile two-joint revolute chain. A broad mounting plate anchors a flatter set of links with offset knuckles and a compact distal a compact end tab. Al..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "beafd095358933e7512d910fd28c91bf89e6a37f594c58e068d1252a65061502",
-    "model_py_sha256": "471ecab82d7aa94eb0fefea46350a1313c77241f4e35be0175d8d6099f27c66c"
+    "model_py_sha256": "50222af856ad04b808555632be0716bfaa2f48bd24b23237faaf982565a09ed9"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_twojoint_revolute_chain_5d920c1975df451ebbdc585a6804c06a",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

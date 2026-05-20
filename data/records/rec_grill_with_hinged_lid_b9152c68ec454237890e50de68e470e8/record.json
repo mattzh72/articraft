@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_grill_with_hinged_lid_b9152c68ec454237890e50de68e470e8",
   "created_at": "2026-04-04T14:26:47Z",
   "updated_at": "2026-04-05T13:26:50Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A kettle charcoal grill on a tripod stand with a domed top lid. The round bowl sits over three legs, and the domed lid is attached at the rear with a top ven..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "7e7f7db893fb2084088593f8b868756db19c5ab72f691bee46713a731d89f146",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_grill_with_hinged_lid_b9152c68ec454237890e50de68e470e8",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

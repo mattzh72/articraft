@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_mastmounted_fork_carriage_21f235b90de94821a9912deab8186aa3",
   "created_at": "2026-03-30T17:57:46Z",
   "updated_at": "2026-04-01T11:06:46Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A compact forklift-style mast module. Two upright channels and a top crosshead support a moving fork carriage, with the forks rigid to the front of the carri..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "e5730ed6c3ee3d25468a655a4984f8ab5c850c7fd7dfcde3ca6584ec33902450",
-    "model_py_sha256": "12c0f7b2bacfcba9b8e958fd4b6cc23de7e6bc7050c6e152a877d3b54fc040e2"
+    "model_py_sha256": "0558650b69cb3dbec0be1a159d937dd362bfb05dc1a4333bf3f6244d27ebe2cc"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_mastmounted_fork_carriage_21f235b90de94821a9912deab8186aa3",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

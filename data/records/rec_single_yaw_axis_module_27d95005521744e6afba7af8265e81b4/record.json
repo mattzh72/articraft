@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_single_yaw_axis_module_27d95005521744e6afba7af8265e81b4",
   "created_at": "2026-03-29T04:00:44Z",
   "updated_at": "2026-04-01T09:58:21Z",
@@ -22,16 +22,17 @@
     "prompt_preview": "A compact pan base with a hex pedestal, a low slewing-ring style turntable, and a square top deck for mounting payloads. The lower support should be clearly..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "a35ec1f8610ff3bcf34dd146edd51cfe4b0e355aafdf35c4b6115cdfab294a93",
-    "model_py_sha256": "7d351228bf884ad8cfa1d57762af6fc298edc5ff05b6afa731be7d365d65af4f"
+    "model_py_sha256": "a81c1c5e2a9fee5caac41c7475c7c298a5d82681dc05b92fc4383c5e5402037a"
   },
   "collections": [
     "dataset"
@@ -39,5 +40,12 @@
   "author": "mattzh72",
   "rated_by": "mattzh72",
   "secondary_rating": 5,
-  "secondary_rated_by": "Zhaomou Song"
+  "secondary_rated_by": "Zhaomou Song",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_single_yaw_axis_module_27d95005521744e6afba7af8265e81b4",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

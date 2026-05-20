@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_desktop_hole_punch_with_articulated_components_db4144a3011b4498bcde1a043c9904a0",
   "created_at": "2026-04-12T14:58:37Z",
   "updated_at": "2026-04-22T08:07:23Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A compact desk hole punch with a rounded handle, a shallow base, and a hinged waste-bin door under the punch head. The handle rotates on a rear transverse hi..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "9b4040668dd3775ba143c249ec0a41dbaa2f67efe851f0f9e3fb91b164b02341",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_desktop_hole_punch_with_articulated_components_db4144a3011b4498bcde1a043c9904a0",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

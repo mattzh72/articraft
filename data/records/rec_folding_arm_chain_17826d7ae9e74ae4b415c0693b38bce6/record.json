@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_folding_arm_chain_17826d7ae9e74ae4b415c0693b38bce6",
   "created_at": "2026-03-31T17:20:51Z",
   "updated_at": "2026-04-06T01:37:46Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "An under-slung folding arm chain. A top support bracket carries the first link below it, and the remaining links hang in sequence to a small end pad. The art..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "4796f92ebfc602d8b0dfbb0d2bb28b12cdfeaeb29c2153953891d1e929d4670b",
-    "model_py_sha256": "b8f9adc866d32b2230fb0bca61a17c7a63e739acaf22190b849fb1f5020c563c"
+    "model_py_sha256": "885e185c188d1d3a45e44e1e8ed50ea0af409cc2cdced038b82e17dc60d74cf0"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_folding_arm_chain_17826d7ae9e74ae4b415c0693b38bce6",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

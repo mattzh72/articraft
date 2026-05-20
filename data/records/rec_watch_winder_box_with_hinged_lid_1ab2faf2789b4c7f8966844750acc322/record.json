@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_watch_winder_box_with_hinged_lid_1ab2faf2789b4c7f8966844750acc322",
   "created_at": "2026-04-06T15:51:30Z",
   "updated_at": "2026-04-11T04:54:35Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A watch winder presentation box. A box body supports a top lid and one internal cradle mounted on a small spindle. Joints: the lid is revolute about a horizo..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "81df394aa9ae37279fe938048048aee92805f907390465db55d1a633d613eb66",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_watch_winder_box_with_hinged_lid_1ab2faf2789b4c7f8966844750acc322",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_single_revolute_hinge_5b9ca559780e4b46a6b68ba1c680c8a7",
   "created_at": "2026-04-29T02:33:55Z",
   "updated_at": "2026-04-29T04:39:55Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "Create a realistic flush door hinge corner. Geometry/details required: a door-edge block and frame-edge block with recessed leaf plates, screw heads, a conti..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
     "cost_json": null,
-    "inputs_dir": "inputs"
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "519bfda8f5bd9ccc8cf5535e603dfcf676100451d87a867ab897d6acf553d9b9",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_single_revolute_hinge_5b9ca559780e4b46a6b68ba1c680c8a7",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

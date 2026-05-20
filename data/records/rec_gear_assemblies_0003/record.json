@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_gear_assemblies_0003",
   "created_at": "2026-03-25T23:15:42Z",
   "updated_at": "2026-04-01T10:16:32Z",
@@ -22,16 +22,17 @@
     "prompt_preview": "An open gear train bench assembly. A steel side frame holds three parallel shafts with a large spur gear, an idler, and a smaller output gear, plus a handwhe..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "b963ac0a7825a60644e5d29f6240c8db214fc56095813b68c4af4f26ba75a4bd",
-    "model_py_sha256": "b78785cae3eb40055d387431774a6bc18cfd95e1da8880671eae0f0e89acaa14"
+    "model_py_sha256": "0358f0f20848aaa68d0207722352eae1f84ef7e4af034d6a9c2546a247445104"
   },
   "collections": [
     "dataset"
@@ -39,5 +40,12 @@
   "author": "mattzh72",
   "rated_by": "shawlyu",
   "secondary_rating": 4,
-  "secondary_rated_by": "Zhaomou Song"
+  "secondary_rated_by": "Zhaomou Song",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_gear_assemblies_0003",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

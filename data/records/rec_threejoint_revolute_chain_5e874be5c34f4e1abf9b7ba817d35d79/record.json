@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_threejoint_revolute_chain_5e874be5c34f4e1abf9b7ba817d35d79",
   "created_at": "2026-03-28T03:32:30Z",
   "updated_at": "2026-04-01T10:11:38Z",
@@ -22,16 +22,17 @@
     "prompt_preview": "A three-joint serial hinge chain. A base link supports two intermediate links and a short end link through offset hinge blocks. All three joints are revolute..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "e97bfae9da710e215854004d3cde4bc59ad8a262b2c075f02215f88f222faa82",
-    "model_py_sha256": "c6a8dae227393cd4ab6133ab81a6138cd76453ea870b538ea84d09eddd670304"
+    "model_py_sha256": "18cbaf434dc6f8a7b61856795067a3d7b2db6390d73a321c25c782071aab6c9f"
   },
   "collections": [
     "dataset"
@@ -39,5 +40,12 @@
   "author": "mattzh72",
   "rated_by": "mattzh72",
   "secondary_rating": 4,
-  "secondary_rated_by": "Zhaomou Song"
+  "secondary_rated_by": "Zhaomou Song",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_threejoint_revolute_chain_5e874be5c34f4e1abf9b7ba817d35d79",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

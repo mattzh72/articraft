@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_single_prismatic_slider_e5ad60cfc86041b0be7b1083bb8bbfc0",
   "created_at": "2026-04-02T16:32:45Z",
   "updated_at": "2026-04-06T01:34:04Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A channel-body runner. A fixed C-shaped guide body supports one nested carriage with visible overlap left inside the channel. The nested carriage is one pris..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "fe932a2e69867a63bb803a5609838f20400c185c7e4412f0db4a77ea1c5cf45b",
-    "model_py_sha256": "142e952e23b0d157cbcf77dfd61cc47621fd8e41221f8e98a714ada0a9b417fe"
+    "model_py_sha256": "62f2b132023ce4979d347e135704fe107a0f263e318ef97db834d18f00bc92b2"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_single_prismatic_slider_e5ad60cfc86041b0be7b1083bb8bbfc0",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

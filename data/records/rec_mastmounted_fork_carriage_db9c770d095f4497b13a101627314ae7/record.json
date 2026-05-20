@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_mastmounted_fork_carriage_db9c770d095f4497b13a101627314ae7",
   "created_at": "2026-04-03T21:46:47Z",
   "updated_at": "2026-04-06T01:25:18Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A round-post fork carriage lift. A grounded base carries two guide posts and a fork carriage plate with a simple backrest frame and two rigid forks. The carr..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "ef6c8dcde3c973716441eb6c22513894d10bdd9d505f44529178e56d5637b638",
-    "model_py_sha256": "9838a414677f12c20c2ab84ae3572a6036c8d1408e3ac3d78d3be6c1d87c396a"
+    "model_py_sha256": "d5141dbe2e01ae10ed8437d0fd2cfb57235bf8daf46022690b9d1bfa7298c4c4"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_mastmounted_fork_carriage_db9c770d095f4497b13a101627314ae7",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

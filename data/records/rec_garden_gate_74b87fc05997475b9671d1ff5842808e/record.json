@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_garden_gate_74b87fc05997475b9671d1ff5842808e",
   "created_at": "2026-04-27T02:24:22Z",
   "updated_at": "2026-04-27T09:41:20Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A privacy garden gate with a solid lower panel and an open lattice upper panel. The framed leaf hangs from one side post on two hinges and closes against the..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "93f0e99078b0de4f300b08d9b150a308cf29f1562ca677b0a40160ecb6888f48",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_garden_gate_74b87fc05997475b9671d1ff5842808e",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

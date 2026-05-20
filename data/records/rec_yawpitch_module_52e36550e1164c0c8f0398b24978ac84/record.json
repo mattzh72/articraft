@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_yawpitch_module_52e36550e1164c0c8f0398b24978ac84",
   "created_at": "2026-04-02T16:32:45Z",
   "updated_at": "2026-04-06T01:31:39Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A side-cheek pan-tilt head. A grounded side support carries a yaw cartridge and a smaller pitch frame captured between side cheeks. The lower joint is a vert..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "c9406dcb5541714ff8088c43c9782ced41c5b4076e720e2032df2544b20a9951",
-    "model_py_sha256": "c2ec56a67020ad2a833261c71e68e232701ee153d62e8785cb9996895edc292d"
+    "model_py_sha256": "81030c6ecadb201028878917cc0af119e7022931177b49efc05191a2f2c300f3"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_yawpitch_module_52e36550e1164c0c8f0398b24978ac84",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

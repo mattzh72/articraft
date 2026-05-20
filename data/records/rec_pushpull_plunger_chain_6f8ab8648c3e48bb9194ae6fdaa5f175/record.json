@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_pushpull_plunger_chain_6f8ab8648c3e48bb9194ae6fdaa5f175",
   "created_at": "2026-03-30T17:57:46Z",
   "updated_at": "2026-04-01T11:18:32Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A push-pull plunger chain. A grounded housing guides a straight plunger, and the plunger tip drives a short front lever captured on a transverse pin. The plu..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "afe265e13e8d10abe4f44953b7bf4d7ced41e6f5e3a52d507b354d6d4638d7f7",
-    "model_py_sha256": "23db532c9c0ef617765f3dee648472f303f66264bc2ffa2a75465b321d6b6c33"
+    "model_py_sha256": "ea72b12a2690127c8d126165c4dce14a2976f319b18a061b6930fea2e435b97f"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_pushpull_plunger_chain_6f8ab8648c3e48bb9194ae6fdaa5f175",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

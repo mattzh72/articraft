@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_coaxial_rotary_stack_f2c7076711ef4b7ba3d64cbff0f13527",
   "created_at": "2026-03-29T15:31:29Z",
   "updated_at": "2026-04-01T11:20:18Z",
@@ -22,16 +22,17 @@
     "prompt_preview": "A drum-style rotary indexing head with a wide circular base, a raised middle collar, and a narrow top tooling nose all centered on one vertical core. The thr..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "31b97ee88f825ba40f95983bf6faaa4b252eb8f8ca104e7024ca100e8f1d4484",
-    "model_py_sha256": "760efd774e2653738d9073e6cb8556e1e53403d27d62bba5cce823ef598a0fab"
+    "model_py_sha256": "614b6f501555159e1de7099719f84c4506c4c9af1a0cfece699960c63d5e9d81"
   },
   "collections": [
     "dataset"
@@ -39,5 +40,12 @@
   "author": "mattzh72",
   "rated_by": "mattzh72",
   "secondary_rating": 5,
-  "secondary_rated_by": "Zhaomou Song"
+  "secondary_rated_by": "Zhaomou Song",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_coaxial_rotary_stack_f2c7076711ef4b7ba3d64cbff0f13527",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_desktop_monitor_with_tilt_swivel_stand_7cde2fc51c3f4be08511957ce197b1cc",
   "created_at": "2026-04-11T23:29:09Z",
   "updated_at": "2026-04-22T08:40:14Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A business monitor with a boxy display shell, a telescoping stand neck, a rounded pedestal base, and a four-way control joystick under the lower bezel. The s..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "9cf690211953a56b4e4e61e095d4a7ebb12fabe2044f36083192775d1cfb4f34",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_desktop_monitor_with_tilt_swivel_stand_7cde2fc51c3f4be08511957ce197b1cc",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

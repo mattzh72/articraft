@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_kick_scooter_f223b09a31f943f59908930da616c2ae",
   "created_at": "2026-04-11T23:52:50Z",
   "updated_at": "2026-04-12T10:20:12Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A stunt kick scooter with a short rigid deck, a one-piece handlebar, a slim fork, and a rear brake flap over the wheel. The rigid stem stays unfused from the..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "4a3460e6f8c1bc4ea7fcf5e4dc012f38a91bc84a32be0d3800edc3b68b82503d",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_kick_scooter_f223b09a31f943f59908930da616c2ae",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

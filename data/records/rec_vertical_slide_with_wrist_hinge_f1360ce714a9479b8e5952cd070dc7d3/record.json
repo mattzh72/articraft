@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_vertical_slide_with_wrist_hinge_f1360ce714a9479b8e5952cd070dc7d3",
   "created_at": "2026-04-03T21:46:47Z",
   "updated_at": "2026-04-06T01:25:22Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A vertical carriage with tilting nose. A grounded upright guide carries a moving block, and the block carries a compact hinged nose link. The block is a vert..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "6393de94a04c2726f3e1044ef22c59d271f974ebad4a1267d1f85d8fb0b28e75",
-    "model_py_sha256": "92f3e0ef566d68ce14bc30cd2b436491585b91d13b03e5afa9134ef5b21fe3e8"
+    "model_py_sha256": "a22dd4b8f09c82e5790cc11604d917f12ee86285bf363393c36697f82558a4fa"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_vertical_slide_with_wrist_hinge_f1360ce714a9479b8e5952cd070dc7d3",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

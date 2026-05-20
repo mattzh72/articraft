@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_serial_elbow_arm_1612d391262940aeb5c0f8dda9b34671",
   "created_at": "2026-03-30T17:57:46Z",
   "updated_at": "2026-04-06T01:42:05Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "An open-frame elbow arm fixture. A grounded stand supports two articulated links with exposed pin bosses and a simple end-effector plate. The shoulder joint..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "e7f179e1fb3701ec2c25c8d490d12e881b782b067f7cdc687ad9431977af36f6",
-    "model_py_sha256": "f4a9eb2e6576b9cfdd8fd126a7d864c28c233b6b9ae640b3c9f1c8401c441817"
+    "model_py_sha256": "de5fa69fc973eb3432a7cb961d6dede6af8d1288ec6a7a3305526a9c540693e9"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_serial_elbow_arm_1612d391262940aeb5c0f8dda9b34671",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

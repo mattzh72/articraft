@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_threejoint_revolute_chain_9e1c41a978904423a87cb16fcbe6e678",
   "created_at": "2026-04-27T03:55:36Z",
   "updated_at": "2026-04-27T05:19:20Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A ladder-frame three-joint revolute chain. A grounded root bracket carries four rigid links in series with long side plates and a compact end tab at the tip...."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "d08e03f26766e5f8e1d9172fe6beff366e23b57c56b8bad49010639971aaf1f6",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_threejoint_revolute_chain_9e1c41a978904423a87cb16fcbe6e678",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

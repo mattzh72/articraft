@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_tv_wall_mount_d1893427b72642b0b996a40456d11fc7",
   "created_at": "2026-03-31T17:20:51Z",
   "updated_at": "2026-03-31T18:48:43Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "An under-shelf TV wall arm without the display. A top support carries two links below it and ends in a compact monitor head that can fold close to the suppor..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "05e48f6d6ebf771af155f3131523c9506a73b5cf33a5747e607b0facd48cc8ba",
-    "model_py_sha256": "5ce1631f06a4e9c5d916409a7d678c4a103dc57a2843a665edff063549bfe911"
+    "model_py_sha256": "4a43d719158a9e1d2cc9d1366e5cd7c6ad2cc963ec2aec843f736ed666e34ca7"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_tv_wall_mount_d1893427b72642b0b996a40456d11fc7",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

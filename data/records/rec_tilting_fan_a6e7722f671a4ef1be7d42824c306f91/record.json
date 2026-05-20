@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_tilting_fan_a6e7722f671a4ef1be7d42824c306f91",
   "created_at": "2026-04-05T23:04:42Z",
   "updated_at": "2026-04-06T13:57:00Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A desk fan with a tilting head. A base supports a guarded fan head between two side brackets. Joints: the fan rotor spins continuously about its axle, and th..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "3559a7463d78c1efa41db18352a0f73b9c4b390277c1bbb85d529259b8c6fea3",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_tilting_fan_a6e7722f671a4ef1be7d42824c306f91",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

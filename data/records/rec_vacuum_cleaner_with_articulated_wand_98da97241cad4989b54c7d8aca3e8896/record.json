@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_vacuum_cleaner_with_articulated_wand_98da97241cad4989b54c7d8aca3e8896",
   "created_at": "2026-04-27T14:16:39Z",
   "updated_at": "2026-04-27T23:56:37Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "Create a cost-optimized mass-manufacturable Vacuum cleaner with articulated wand. Base architecture: a vacuum body with articulated wand segments and floor n..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "cac68443c48065e9fd91ed78b73892427876c09e7d3100f4526b8ca6658a75f7",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_vacuum_cleaner_with_articulated_wand_98da97241cad4989b54c7d8aca3e8896",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

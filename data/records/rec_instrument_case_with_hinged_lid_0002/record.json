@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_instrument_case_with_hinged_lid_0002",
   "created_at": "2026-03-26T13:39:50Z",
   "updated_at": "2026-04-01T16:26:59Z",
@@ -22,16 +22,17 @@
     "prompt_preview": "A hard-shell violin case with a clamshell body. A shallow lower shell holds the instrument cavity, and a matching upper shell forms the lid with a carry hand..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "60596010689af577d8057494cc7f4bf6b2ba963f9e48f446650cc85891e51c48",
-    "model_py_sha256": "77279cca726d560b22a786d2d4891002b72c554179d56c9bbda679478a6d5961"
+    "model_py_sha256": "a75fc8751382f515ec10a2545cf1fc6b9a532f6a55ad994f65cbd4263a8a7e4a"
   },
   "collections": [
     "dataset"
@@ -39,5 +40,12 @@
   "author": "RuiningLi",
   "rated_by": "RuiningLi",
   "secondary_rating": 5,
-  "secondary_rated_by": "shawlyu"
+  "secondary_rated_by": "shawlyu",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_instrument_case_with_hinged_lid_0002",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

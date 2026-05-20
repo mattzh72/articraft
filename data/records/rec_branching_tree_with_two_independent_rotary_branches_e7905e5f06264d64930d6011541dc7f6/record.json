@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_branching_tree_with_two_independent_rotary_branches_e7905e5f06264d64930d6011541dc7f6",
   "created_at": "2026-03-29T15:31:29Z",
   "updated_at": "2026-04-01T11:30:53Z",
@@ -22,16 +22,17 @@
     "prompt_preview": "A two-branch fixture tree built around a tall rectangular spine with one upper fork arm and one lower plate arm mounted on opposite sides of the spine. The u..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "1c7a809a1017aed54ed68f09d19ccd4f66fb74d2cce5158411f0506eb9474831",
-    "model_py_sha256": "c2056b620617b4bba056c863ad1db16de09197d08e5661095b25fd18f3bb3b84"
+    "model_py_sha256": "b92870796a442a63b0677cae707e3065acca673b1d3c5ccf0a96bcfe032d5da3"
   },
   "collections": [
     "dataset"
@@ -39,5 +40,12 @@
   "author": "mattzh72",
   "rated_by": "mattzh72",
   "secondary_rating": 2,
-  "secondary_rated_by": "Zhaomou Song"
+  "secondary_rated_by": "Zhaomou Song",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_branching_tree_with_two_independent_rotary_branches_e7905e5f06264d64930d6011541dc7f6",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

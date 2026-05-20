@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_revoluterevoluteprismatic_chain_326385eb8c3744f3933d627734814709",
   "created_at": "2026-03-29T15:31:29Z",
   "updated_at": "2026-04-01T11:30:49Z",
@@ -22,16 +22,17 @@
     "prompt_preview": "A bench manipulator with a grounded shoulder block, an upper link, a forearm link, and a telescoping probe housed in the forearm nose. The sliding probe shou..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "6d3a7d9d55c811cd70b0cb7252092d6fff6d93bd801ea74ea0d43db3bfeeb5da",
-    "model_py_sha256": "cf453a4f922842315996874fe135959e515320acfb9f0ebee5b60e57adb7d7a9"
+    "model_py_sha256": "73154b99b1f0a073e995192ead6c638db28c29dd0a1c653ed5b15c6a5d502bbf"
   },
   "collections": [
     "dataset"
@@ -39,5 +40,12 @@
   "author": "mattzh72",
   "rated_by": "mattzh72",
   "secondary_rating": 3,
-  "secondary_rated_by": "Zhaomou Song"
+  "secondary_rated_by": "Zhaomou Song",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_revoluterevoluteprismatic_chain_326385eb8c3744f3933d627734814709",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

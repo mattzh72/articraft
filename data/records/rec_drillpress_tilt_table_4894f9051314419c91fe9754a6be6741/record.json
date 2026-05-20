@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_drillpress_tilt_table_4894f9051314419c91fe9754a6be6741",
   "created_at": "2026-04-12T15:09:15Z",
   "updated_at": "2026-04-22T08:04:24Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A heavy floor drill press with a tall column, a tilting work table, and both a quill feed handle and a table raise crank. The work table slides prismatically..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "045e5b7461828a3a9d84808ac3407293d96040f867e7400081b83732a0b720d5",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_drillpress_tilt_table_4894f9051314419c91fe9754a6be6741",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

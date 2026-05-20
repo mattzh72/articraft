@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_yawpitchroll_wrist_7d344d18afcd41edbe6780c8527abf7a",
   "created_at": "2026-03-30T17:57:46Z",
   "updated_at": "2026-04-01T11:12:57Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "An open-frame yaw-pitch-roll wrist assembly. A fixed root plate, one vertical rotary stage, one horizontal cradle, and one axial roll spindle define the mech..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "5e9b2871b06e61628279058ddbb65ebdbd3d13e3bdefc64d386879b6eed3d8c0",
-    "model_py_sha256": "9819a595258cf1f49d5229d51ba8ea39fc9bdbc1ff1f65fef2707b0dcb6f6b53"
+    "model_py_sha256": "a089f39d00ba3008d7dd69a19ae7e50f5d2f5b8f110cba94504e8d4dae4d2bce"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_yawpitchroll_wrist_7d344d18afcd41edbe6780c8527abf7a",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

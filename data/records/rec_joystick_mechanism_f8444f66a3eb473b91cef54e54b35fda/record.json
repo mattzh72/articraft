@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_joystick_mechanism_f8444f66a3eb473b91cef54e54b35fda",
   "created_at": "2026-04-26T05:09:39Z",
   "updated_at": "2026-04-27T10:45:52Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A boxed gimbal joystick. A square base housing supports an outer pitch yoke, an inner roll cradle, and a short central lever capped by a simple block. The me..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "e413daadf3027b4e8aaca5e559cbbeb8b23cc792f416ebba0a5078776f890957",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_joystick_mechanism_f8444f66a3eb473b91cef54e54b35fda",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

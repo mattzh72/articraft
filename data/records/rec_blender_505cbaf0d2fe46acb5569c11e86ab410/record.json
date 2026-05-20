@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_blender_505cbaf0d2fe46acb5569c11e86ab410",
   "created_at": "2026-04-27T14:09:37Z",
   "updated_at": "2026-04-28T00:04:27Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A countertop soup blender with a wide round base, a wide-mouth glass jar on a bayonet twist-lock at the base coupling, a four-blade assembly on a revolute jo..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "a93af1050e37e0451e648ba9bbb86e3a47d5bb166cddb5b14a81b52bbf3bbd60",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_blender_505cbaf0d2fe46acb5569c11e86ab410",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

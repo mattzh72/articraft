@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_telescoping_mast_with_pan_head_a5c63fffd91a4f98b5d2c500da751e51",
   "created_at": "2026-03-31T17:20:51Z",
   "updated_at": "2026-04-06T01:40:59Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A telescoping mast with a compact pan head. A grounded lower mast supports nested upright sections, and the top section carries a small rotary head with a pl..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "1e740554248fdb85a065f54d511aca9183b5c83f35948e48b1fc36b84b17359e",
-    "model_py_sha256": "16d68d515bb2958df5e1cff090bcb8b566c7d294995057571c719b704ab014eb"
+    "model_py_sha256": "0524f77bbd4a26d69141c944d94127ded6311a0626c8ec66940408764a5ab2e3"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_telescoping_mast_with_pan_head_a5c63fffd91a4f98b5d2c500da751e51",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

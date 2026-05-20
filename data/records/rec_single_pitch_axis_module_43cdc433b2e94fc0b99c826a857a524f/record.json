@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_single_pitch_axis_module_43cdc433b2e94fc0b99c826a857a524f",
   "created_at": "2026-03-31T17:20:51Z",
   "updated_at": "2026-04-06T01:39:30Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A tower-mounted pitch-axis trunnion module. A short pedestal rises from a heavy foot and ends in a compact axis package whose moving member is visually small..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "a6a18c9641625aa401d75d2d303abbe6761e171d37823e3691678444f4178a42",
-    "model_py_sha256": "60565094d120be66db1ed5f38f2337bbdf8a7ed59045da88f62f836d862a8de8"
+    "model_py_sha256": "ac056a5e442655f1e54a9486a2c12220c3cce7a32b0fc9a096ce93643064ccba"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_single_pitch_axis_module_43cdc433b2e94fc0b99c826a857a524f",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

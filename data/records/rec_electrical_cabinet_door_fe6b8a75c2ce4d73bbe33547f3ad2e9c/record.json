@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_electrical_cabinet_door_fe6b8a75c2ce4d73bbe33547f3ad2e9c",
   "created_at": "2026-04-03T22:21:51Z",
   "updated_at": "2026-04-04T15:12:51Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A server rack front-door enclosure with a rectangular rack frame and a hinged mesh bezel door. The door hinges on two revolute knuckles at the door's vertica..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "72b77c2403d20c0cfa0c1377ef98fde84f5f19cc9909f18c7a9fcd0176712b40",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_electrical_cabinet_door_fe6b8a75c2ce4d73bbe33547f3ad2e9c",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

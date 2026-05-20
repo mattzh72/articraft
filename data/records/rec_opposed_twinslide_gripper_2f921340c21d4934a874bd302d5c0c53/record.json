@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_opposed_twinslide_gripper_2f921340c21d4934a874bd302d5c0c53",
   "created_at": "2026-03-31T17:20:51Z",
   "updated_at": "2026-04-06T01:40:39Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A side-rail twin-slide gripper. A fixed central housing supports two jaw blocks on side rails, and each jaw block carries a simple stepped finger. Each jaw b..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "1b19e4c7fba725f164de90e573341ee968ab15ac7543c040d0588cf3afb23a6d",
-    "model_py_sha256": "0ee8fc8d256076342b035969bcb8ffb525e6120e656386258f694b7d82c46c74"
+    "model_py_sha256": "40d55109bed29f5a17338d696abb4692f7d6679a86c912531e5c494bb912897b"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_opposed_twinslide_gripper_2f921340c21d4934a874bd302d5c0c53",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

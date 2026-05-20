@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_kick_scooter_32c036bc738346b7a022af1c019bb00e",
   "created_at": "2026-04-27T12:52:32Z",
   "updated_at": "2026-04-28T07:40:03Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A folding kick scooter with a narrow deck and upright handlebar stem. Two small wheels support the deck front and rear, and the stem rises from a front fork..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "a277b2d33c31a22ae66b67568e0a1bbbd460e89957858f3621c0c9147490b900",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_kick_scooter_32c036bc738346b7a022af1c019bb00e",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

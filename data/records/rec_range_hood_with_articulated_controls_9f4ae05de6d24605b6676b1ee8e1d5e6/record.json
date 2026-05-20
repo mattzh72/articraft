@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_range_hood_with_articulated_controls_9f4ae05de6d24605b6676b1ee8e1d5e6",
   "created_at": "2026-04-04T14:56:10Z",
   "updated_at": "2026-04-05T12:17:39Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A telescopic range hood with a pull-out intake tray and a rotary fan dial. The outer housing is fixed in the cabinet, and the intake tray slides out from the..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "b63d628bfb14c5a992327596999f37c36603d4653e7ad8514bffcdb1a843549f",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_range_hood_with_articulated_controls_9f4ae05de6d24605b6676b1ee8e1d5e6",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

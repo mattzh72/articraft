@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_stove_top_ceb31effb1884bfbb8e27f0583d09f56",
   "created_at": "2026-04-27T13:58:21Z",
   "updated_at": "2026-04-28T00:29:22Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A shallow gas hob with five burners set into a countertop over a clean two-door cabinet bay. One large central rotary knob is flanked by two smaller knobs on..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "c218461d54ab0de6fb5cdb07fbaaebec8d93491200b85149b6641ea6e53fa5b5",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_stove_top_ceb31effb1884bfbb8e27f0583d09f56",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

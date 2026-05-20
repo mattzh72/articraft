@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_bread_maker_with_hinged_lid_e97195d70c3748548038e31b1e0920c6",
   "created_at": "2026-04-11T18:03:18Z",
   "updated_at": "2026-04-22T14:25:39Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A rectangular bread maker with a viewing-window lid, a deep loaf chamber, and a front control strip carrying a timer dial plus three program buttons. The lid..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "3cd8b6880c1391c8cd3b2c972db4541d45238dc3d54ab2b124ed66a26d9af599",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_bread_maker_with_hinged_lid_e97195d70c3748548038e31b1e0920c6",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

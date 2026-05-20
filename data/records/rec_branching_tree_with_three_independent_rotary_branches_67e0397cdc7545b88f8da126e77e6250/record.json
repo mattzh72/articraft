@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_branching_tree_with_three_independent_rotary_branches_67e0397cdc7545b88f8da126e77e6250",
   "created_at": "2026-03-29T15:31:29Z",
   "updated_at": "2026-04-01T11:26:20Z",
@@ -22,16 +22,17 @@
     "prompt_preview": "A metrology fixture tree with a rigid center column, one short branch near the base, one straight branch at mid-height, and one angled branch near the top. E..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "24861b4780645eccad7283a43a75ce9d0f4d30d124e615dd03cce4e6a4ad0d23",
-    "model_py_sha256": "99fc6496453ae3a5fea7c7f44f72d998615e75368c4da1505f4f2c214e6dd50c"
+    "model_py_sha256": "0113b935028c77465a70f6d01e1620a621b6275a497454028c4cdca564bdf5b6"
   },
   "collections": [
     "dataset"
@@ -39,5 +40,12 @@
   "author": "mattzh72",
   "rated_by": "mattzh72",
   "secondary_rating": 5,
-  "secondary_rated_by": "Zhaomou Song"
+  "secondary_rated_by": "Zhaomou Song",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_branching_tree_with_three_independent_rotary_branches_67e0397cdc7545b88f8da126e77e6250",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

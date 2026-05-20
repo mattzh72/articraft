@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_telescoping_mast_with_pan_head_ce1e32c0feba47089c7d15b40e0cd46e",
   "created_at": "2026-03-30T17:57:46Z",
   "updated_at": "2026-04-01T11:07:23Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A low-profile base mast with rotating top head. A squat grounded base supports a telescoping vertical stack and a compact top turntable that stays clearly sm..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "9a8bc60790416d3a648736b2d21edbbf88bae9ba865ff29acc1d6098a1c59f09",
-    "model_py_sha256": "e24d7544b1c560c887e1519248591f28b3701a7d6336b43b22f67c1a802d5849"
+    "model_py_sha256": "a07ed820b5267b36c1ba217d46e9698f7d2dcc8eadda4ed9f575d63ee2e6b57c"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_telescoping_mast_with_pan_head_ce1e32c0feba47089c7d15b40e0cd46e",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "record_id": "rec_astronomical_telescope_on_tripod_bc3c442b44234543b088209fd4e0a218",
+  "revision_id": "rev_000001",
+  "created_at": "2026-04-26T13:52:16Z",
+  "prompt_kind": "single_prompt",
+  "prompt_sha256": "e6cd08a19113772b43d6dc07d200661f6f542cba4d179f9885a6faa72890ead5",
+  "source": {
+    "run_id": "run_20260426_133558_742008_20260426-avg-rating-gt-4p2-gpt54-prompts-gemini3",
+    "prompt_batch_id": null,
+    "batch_spec_id": "20260426_avg_rating_gt_4p2_gpt54_prompts_gemini31pro_high_2000",
+    "row_id": "astronomical_telescope_on_tripod_001",
+    "prompt_index": 39
+  },
+  "generation": {
+    "provider": "gemini",
+    "model_id": "gemini-3.1-pro-preview",
+    "thinking_level": "high",
+    "openai_transport": null,
+    "openai_reasoning_summary": null,
+    "max_turns": 100,
+    "max_cost_usd": 3.0
+  },
+  "artifacts": {
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
+    "prompt_series_json": null,
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
+  },
+  "hashes": {
+    "prompt_sha256": "e6cd08a19113772b43d6dc07d200661f6f542cba4d179f9885a6faa72890ead5",
+    "model_py_sha256": "4ae00c5ad63e33308c68fd52f233562de6f544acb698c27ab5764f7bc77ef2cc"
+  },
+  "run_summary": {
+    "turn_count": 8,
+    "tool_call_count": 7,
+    "compile_attempt_count": 2,
+    "final_status": "success"
+  },
+  "parent": null,
+  "seed": null,
+  "inherited_inputs": []
+}

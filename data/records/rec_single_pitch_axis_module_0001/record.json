@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_single_pitch_axis_module_0001",
   "created_at": "2026-03-12T18:31:36Z",
   "updated_at": "2026-04-01T10:33:13Z",
@@ -20,16 +20,17 @@
     "prompt_preview": "A pitch-axis actuator module with side support cheeks, a horizontal hinge shaft, and a rectangular payload bracket, modeled like a CAD subassembly."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "8a6a2f36ba3a8455ee2f0094ae1ac5ffe7b59a7b2baabbef2238df171d36b595",
-    "model_py_sha256": "1cb96526e2d2e0e23c45083b5d602dd5534707723b044d4c20e657b55adf01c5"
+    "model_py_sha256": "a878c7b0ab8c3be9825ce86a3043287a9a537b7be1c57ca2b505d5a440a69e2b"
   },
   "collections": [
     "dataset"
@@ -37,5 +38,12 @@
   "author": "mattzh72",
   "rated_by": "mattzh72",
   "secondary_rating": 4,
-  "secondary_rated_by": "Zhaomou Song"
+  "secondary_rated_by": "Zhaomou Song",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_single_pitch_axis_module_0001",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

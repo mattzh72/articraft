@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_multisegment_foldout_arm_fa7616b5d2ca4ab399459d06e90184f3",
   "created_at": "2026-04-03T21:46:47Z",
   "updated_at": "2026-04-06T01:23:13Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A stacking support fold-out arm. A grounded side plate carries four short links that can nest close together and end in a plain platform face. The links are..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "881f385062373f390606d6d066cc48b0596189efce09087899e48907e5d199a6",
-    "model_py_sha256": "6768c3c2aa1557c61075c8e9cbbf259131db16e03e83f4fcd38e9495841634ed"
+    "model_py_sha256": "5152a25c442e16d2a6689060136cb7dedb649692168f28555cb25a1c94a6459f"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_multisegment_foldout_arm_fa7616b5d2ca4ab399459d06e90184f3",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_roof_vent_tower_with_hinged_flap_47e9a8236bf1404d86d2b6cbe7a4db88",
   "created_at": "2026-03-30T16:08:09Z",
   "updated_at": "2026-03-31T21:57:07Z",
@@ -22,12 +22,13 @@
     "prompt_preview": "Model Roof vent tower with hinged flap as an industrial safety-first variant for heavy duty cycles. Start from a vent tower with framed openings and a weathe..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "424417dd94bf92f942c9c6e03c3e0210d99a3ee85e5ac7605880e7e8704003ad",
@@ -39,5 +40,12 @@
   "rated_by": "shawlyu",
   "author": "shawlyu",
   "secondary_rating": 5,
-  "secondary_rated_by": "RuiningLi"
+  "secondary_rated_by": "RuiningLi",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_roof_vent_tower_with_hinged_flap_47e9a8236bf1404d86d2b6cbe7a4db88",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

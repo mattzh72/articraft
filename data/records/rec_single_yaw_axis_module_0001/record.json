@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_single_yaw_axis_module_0001",
   "created_at": "2026-03-12T18:34:37Z",
   "updated_at": "2026-04-01T10:35:39Z",
@@ -20,16 +20,17 @@
     "prompt_preview": "A pedestal-mounted yaw module with a vertical rotation axis, circular bearing housing, square motor base, and rigid top plate."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "879d695dd92f542785eaba8ba9aead38d17a8c5686e9f2fd9d9020eda0c9339f",
-    "model_py_sha256": "cdc7a76e842ec5076f86fa0836d48510ec90eba2fc52c8f8b8263dec34edacf5"
+    "model_py_sha256": "ed51bc2141085720a4928a63079993300fdc188bec92dfc158646b204cf94d7b"
   },
   "collections": [
     "dataset"
@@ -37,5 +38,12 @@
   "author": "mattzh72",
   "rated_by": "mattzh72",
   "secondary_rating": 5,
-  "secondary_rated_by": "Zhaomou Song"
+  "secondary_rated_by": "Zhaomou Song",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_single_yaw_axis_module_0001",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

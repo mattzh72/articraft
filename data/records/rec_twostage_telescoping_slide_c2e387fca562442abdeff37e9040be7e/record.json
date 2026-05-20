@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_twostage_telescoping_slide_c2e387fca562442abdeff37e9040be7e",
   "created_at": "2026-04-27T01:41:49Z",
   "updated_at": "2026-04-27T10:41:11Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "An under-slung telescoping runner. A top support carries an outer sleeve and one nested runner hanging beneath it. The nested runner is a prismatic joint alo..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "bcc5a85d0437bd8482b3d3128bf2bcf5f1e0636f9c29948b9d9dffc9fec35bcb",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_twostage_telescoping_slide_c2e387fca562442abdeff37e9040be7e",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

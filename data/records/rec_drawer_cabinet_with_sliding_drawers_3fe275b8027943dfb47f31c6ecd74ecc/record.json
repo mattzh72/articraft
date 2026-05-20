@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_drawer_cabinet_with_sliding_drawers_3fe275b8027943dfb47f31c6ecd74ecc",
   "created_at": "2026-04-12T14:43:12Z",
   "updated_at": "2026-04-22T08:12:32Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A tool drawer chest with a wide body, four shallow upper drawers, two deep lower drawers, and rear caster wheels. The drawers slide prismatically on straight..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "65aecd03ced9c6c943f0329b8b3e832109010efc7f69851b510120fd212375d9",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_drawer_cabinet_with_sliding_drawers_3fe275b8027943dfb47f31c6ecd74ecc",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

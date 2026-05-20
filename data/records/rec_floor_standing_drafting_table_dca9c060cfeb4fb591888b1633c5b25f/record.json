@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_floor_standing_drafting_table_dca9c060cfeb4fb591888b1633c5b25f",
   "created_at": "2026-04-27T12:57:04Z",
   "updated_at": "2026-04-28T07:37:26Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A teaching-room drafting table with a wide floor base, a center column, and a tilting board with a bottom tool tray, plus a clamp knob at the tilt head. the..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "6cb26f450fde8c03c9854973f13868572bf95f1c4a32ae901b12ddfb113a7a3d",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_floor_standing_drafting_table_dca9c060cfeb4fb591888b1633c5b25f",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

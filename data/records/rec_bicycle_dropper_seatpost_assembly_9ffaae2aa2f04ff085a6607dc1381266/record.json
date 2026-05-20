@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_bicycle_dropper_seatpost_assembly_9ffaae2aa2f04ff085a6607dc1381266",
   "created_at": "2026-03-29T15:01:21Z",
   "updated_at": "2026-03-29T16:47:07Z",
@@ -22,12 +22,13 @@
     "prompt_preview": "A two-bolt collar dropper seatpost with saddle and a straight outer tube clamped by a standard seat tube binder ring, an inner telescoping post on a prismati..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "fcf5599735cde942ac1ade73c1cf753045b22d6a74d9d4e96a72085d0578d568",
@@ -39,5 +40,12 @@
   "author": "Zhaomou Song",
   "rated_by": "Zhaomou Song",
   "secondary_rating": null,
-  "secondary_rated_by": null
+  "secondary_rated_by": null,
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_bicycle_dropper_seatpost_assembly_9ffaae2aa2f04ff085a6607dc1381266",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

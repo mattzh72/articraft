@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_knee_scooter_6f45dc56b9d647af86277ba5120a60e5",
   "created_at": "2026-04-04T14:33:47Z",
   "updated_at": "2026-04-05T13:09:12Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A foldable knee scooter with a telescoping handlebar mast. The narrow frame rides on four wheels, and the front upright has an inner telescoping stage above..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "54237786d277f834858497ac028fe851d7774b050f8d4438e5d97efb3a5e2ec8",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_knee_scooter_6f45dc56b9d647af86277ba5120a60e5",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

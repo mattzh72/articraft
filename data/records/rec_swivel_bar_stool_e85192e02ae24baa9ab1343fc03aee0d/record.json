@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_swivel_bar_stool_e85192e02ae24baa9ab1343fc03aee0d",
   "created_at": "2026-04-27T01:41:49Z",
   "updated_at": "2026-04-27T10:35:02Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A swivel stool with a trumpet base, a circular seat, a short backrest, and a damped height-adjustment lever under one side. The seat rotates continuously abo..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "ebfd0588ca981d65e90285ec09e3d2e4043be0e72f324cf5f56d3caf4cf3281f",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_swivel_bar_stool_e85192e02ae24baa9ab1343fc03aee0d",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

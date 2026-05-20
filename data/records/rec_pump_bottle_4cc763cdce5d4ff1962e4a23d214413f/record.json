@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_pump_bottle_4cc763cdce5d4ff1962e4a23d214413f",
   "created_at": "2026-04-04T14:55:20Z",
   "updated_at": "2026-04-05T12:25:07Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A hand-sanitizer pump bottle with a tall rectangular body and a lockable nozzle. The fixed bottle body supports a pump assembly at the neck, with a narrow no..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "eeb4b7dc74dc941a1e673404563446d600bfd984df610caf062758b942f7120d",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_pump_bottle_4cc763cdce5d4ff1962e4a23d214413f",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

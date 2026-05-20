@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_elevator_968a2292671e4a6998be10aaeb533581",
   "created_at": "2026-04-27T03:08:46Z",
   "updated_at": "2026-04-27T08:11:24Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A hydraulic vehicle lift with a wide rectangular platform on a single central hydraulic post. The platform rises prismatically along the vertical post. Fixed..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "6df465ae8ee0c09444ecbc7954a649ddb487c898a0f30c5e6e486e4eff651e6e",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_elevator_968a2292671e4a6998be10aaeb533581",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

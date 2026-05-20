@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_bicycle_dropper_seatpost_assembly_3f70c0015b8b47b2a17a0710777ba16a",
   "created_at": "2026-04-27T02:08:31Z",
   "updated_at": "2026-04-27T10:20:25Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A remote-actuated electronic dropper seatpost with a round outer tube clamped in the frame and a round inner tube that telescopes down. The inner tube slides..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "900ee3fd39725f356d7dc9d43488813b11615bd2518d435c5226b5316a6864ff",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_bicycle_dropper_seatpost_assembly_3f70c0015b8b47b2a17a0710777ba16a",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

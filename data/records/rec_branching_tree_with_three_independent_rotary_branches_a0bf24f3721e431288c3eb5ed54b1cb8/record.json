@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_branching_tree_with_three_independent_rotary_branches_a0bf24f3721e431288c3eb5ed54b1cb8",
   "created_at": "2026-03-31T17:20:51Z",
   "updated_at": "2026-03-31T18:39:48Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A bridge-backed three-branch tooling tree. A rear frame and forward spine support three offset arms, giving each branch clear clearance from its neighbors an..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "abfb05f0568cb1db764430823ecccb4b6de932f3a933d36ae3ddbb7013f5bc72",
-    "model_py_sha256": "469346645ce707e86928580558e1ce628bb55f0e3cfa178cdeae33f844477636"
+    "model_py_sha256": "4f3f064b8579cdb7a552aa6c263d3aae0e4ba9eab5b17317b13c8a2e0ed9aff6"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_branching_tree_with_three_independent_rotary_branches_a0bf24f3721e431288c3eb5ed54b1cb8",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

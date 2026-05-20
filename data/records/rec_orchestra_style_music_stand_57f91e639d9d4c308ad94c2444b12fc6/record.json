@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_orchestra_style_music_stand_57f91e639d9d4c308ad94c2444b12fc6",
   "created_at": "2026-04-02T22:48:25Z",
   "updated_at": "2026-04-06T01:27:45Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "An orchestra music stand with a wire-frame desk, a tubular height mast, and a fold-out lower support shelf. The wire-frame desk rotates on a horizontal hinge..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "0175b27053d36d615f94611295243d4b753b0307a1544ea0fdf331fc80d406d5",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_orchestra_style_music_stand_57f91e639d9d4c308ad94c2444b12fc6",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

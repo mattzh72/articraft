@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_single_yaw_axis_module_66b69b94234944d8aefb37cecb1f6d7b",
   "created_at": "2026-04-27T03:47:28Z",
   "updated_at": "2026-04-27T06:50:34Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A split-cheek yaw stage. A grounded base plate carries two short side cheeks and a compact rectangular top plate on a central hub. One revolute joint turns t..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "2bfe4d763f37d9034620c7b320405d4c31f5e27c21fe4a4e643eeec532431f99",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_single_yaw_axis_module_66b69b94234944d8aefb37cecb1f6d7b",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

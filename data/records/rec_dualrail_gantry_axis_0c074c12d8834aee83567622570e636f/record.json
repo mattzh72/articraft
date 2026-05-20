@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_dualrail_gantry_axis_0c074c12d8834aee83567622570e636f",
   "created_at": "2026-03-30T17:57:46Z",
   "updated_at": "2026-04-01T11:10:16Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A low-profile dual-rail gantry assembly. A broad base plate carries two guideways, a shallow moving beam, and a compact cross-slide carriage. One prismatic j..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "70d31eb2748cd59106e3ca46317e69ec0192fdd3e8d8b6e47a167e2f97304618",
-    "model_py_sha256": "3e0ec9ce575b69ee0b70328f947d58377c93ada96d5926f893e4102d9fdd5b8e"
+    "model_py_sha256": "0b0e604c1add16e29297ce413e620c58973d5fdd23d394bbed4e9cde7840bc2b"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_dualrail_gantry_axis_0c074c12d8834aee83567622570e636f",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

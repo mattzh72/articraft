@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_single_revolute_hinge_c9f90486a062435999b1d0fabc6bde6c",
   "created_at": "2026-04-02T16:32:45Z",
   "updated_at": "2026-04-06T01:32:01Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A weld-on gate hinge. A grounded mounting plate supports a heavy barrel and a rectangular swinging leaf with a plain outer flange. The swinging leaf is one r..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "9bb6ccb921db1b61295acf14afe3df7a01bc276576a268597b8806b262242f84",
-    "model_py_sha256": "35e6e30e609fa0ace29a03a84907315ae397ced804fe7662c51850f912c58d2b"
+    "model_py_sha256": "1bf2eeed0d4aee7a5c08c3c6245d0cc7a91f7af46a8a3ecce815d09435901947"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_single_revolute_hinge_c9f90486a062435999b1d0fabc6bde6c",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

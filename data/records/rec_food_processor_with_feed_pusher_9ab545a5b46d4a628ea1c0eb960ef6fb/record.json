@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_food_processor_with_feed_pusher_9ab545a5b46d4a628ea1c0eb960ef6fb",
   "created_at": "2026-04-27T03:12:46Z",
   "updated_at": "2026-04-27T07:36:28Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A low-profile food processor with a wide clear bowl, a rear-hinged lid, a tall feed chute with a matching pusher, and a front control band carrying a selecto..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "67a95b15d935dead07d1a89528a3f0542c125370e64686237bc23737f285c453",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_food_processor_with_feed_pusher_9ab545a5b46d4a628ea1c0eb960ef6fb",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_pitchroll_module_55f8166b8cea4069a75e71d1bb71a112",
   "created_at": "2026-03-30T17:57:46Z",
   "updated_at": "2026-04-01T11:13:52Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A fork-and-spindle pitch-roll unit. A grounded frame supports a roll cartridge, and the cartridge carries a short pitch yoke with a rectangular output face...."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "fc80fe6defb2d2737b460e659eb55f20c1f499e4641cb1960a7b418e60d4f58f",
-    "model_py_sha256": "89a1daed35b2b56da1ed0dba82ae2b3365d1cc97009412a65edd665c835219a3"
+    "model_py_sha256": "ac0f3f9ff411144da1a79526c47fd624da579323e5ae4126d017b3ab1a64c7b3"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_pitchroll_module_55f8166b8cea4069a75e71d1bb71a112",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

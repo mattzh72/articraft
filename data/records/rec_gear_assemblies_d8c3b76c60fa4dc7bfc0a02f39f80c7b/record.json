@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_gear_assemblies_d8c3b76c60fa4dc7bfc0a02f39f80c7b",
   "created_at": "2026-03-30T17:57:46Z",
   "updated_at": "2026-04-01T11:18:18Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A bevel-to-spur transfer assembly. A grounded base holds a vertical input shaft that turns through a bevel pair into a horizontal shaft which then carries a..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "57b2331cf0052c66f5da484bd0eb7c2f1ef6686e1504db8ec604cead3f3272a9",
-    "model_py_sha256": "70e948efec1d575ab00355c75a7c4a3372c328b17cd58285412dde08c02fea9c"
+    "model_py_sha256": "492b48bd4037924ce61e98e718cbb2c367f9649624d361d7adc23af30e1a3ed0"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_gear_assemblies_d8c3b76c60fa4dc7bfc0a02f39f80c7b",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

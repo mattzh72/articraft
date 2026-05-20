@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_shoulderelbowwrist_arm_60023ad4a8604e80a21e0e7e8c3341e1",
   "created_at": "2026-03-29T15:31:29Z",
   "updated_at": "2026-04-01T11:30:04Z",
@@ -22,16 +22,17 @@
     "prompt_preview": "A machine-tending arm with a stout rotary base, a broad upper arm, a slimmer forearm, and a compact cylindrical wrist nose carrying a square plate. The arm s..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "f2d02343a03bafc01bd388f0b1615d157db818056ce015373125646abcfb8adb",
-    "model_py_sha256": "ea5407fb74008104518610c08178b4f1dfc1d151a55a92b465612c28cd2c903c"
+    "model_py_sha256": "d4e7df2dac8a76819f3c2f84694ab0cea04d555cc8010e42ca633b8b164194f1"
   },
   "collections": [
     "dataset"
@@ -39,5 +40,12 @@
   "author": "mattzh72",
   "rated_by": "mattzh72",
   "secondary_rating": 4,
-  "secondary_rated_by": "Zhaomou Song"
+  "secondary_rated_by": "Zhaomou Song",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_shoulderelbowwrist_arm_60023ad4a8604e80a21e0e7e8c3341e1",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_xyz_cartesian_stage_2d8b56feca2740fa827bc6a67fd862a8",
   "created_at": "2026-04-01T18:09:34Z",
   "updated_at": "2026-04-06T01:35:54Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A compact service XYZ stage. A broad grounded base supports a long lower carriage, a shorter cross-slide, and a slim vertical ram. The lower, middle, and upp..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "d133af9d0869ccf2217557b1f4e90d9d6feea09cac9b2d2840daaeef94696d86",
-    "model_py_sha256": "479da2429de41ed3b00fc36f95e6d89136686816987cac3f6eba3c4f4af45abf"
+    "model_py_sha256": "546d77366945ff6b7f0663118af223e6a560c56c071925650624ba117d68a079"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_xyz_cartesian_stage_2d8b56feca2740fa827bc6a67fd862a8",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

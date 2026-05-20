@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_remote_5694be04c13d4423a632309a1da04af1",
   "created_at": "2026-04-12T15:13:16Z",
   "updated_at": "2026-04-22T08:05:19Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A garage-door remote with a small elongated body, four front buttons, and a sliding safety cover over the button face. The safety cover slides prismatically..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "aa26752a0cf1f9cbaabce7ecc606dbae97b59cf5ba62f94c5e67918df71242fa",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_remote_5694be04c13d4423a632309a1da04af1",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

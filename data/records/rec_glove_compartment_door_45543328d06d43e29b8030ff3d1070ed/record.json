@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_glove_compartment_door_45543328d06d43e29b8030ff3d1070ed",
   "created_at": "2026-04-27T01:41:49Z",
   "updated_at": "2026-04-27T10:36:47Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A utility vehicle glove compartment with a left-hinged narrow door and a keyed cam latch. The fixed dash bin sits behind a rectangular opening, and the door..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "2b30e9f8890c9d12de4bd17ab6ab5d7feb8c62993fce64d0770ea246cf94eb45",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_glove_compartment_door_45543328d06d43e29b8030ff3d1070ed",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

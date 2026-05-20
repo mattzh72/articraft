@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_articulated_task_lamp_42ef6ec3e5b34bda8f834ac25c34dfd6",
   "created_at": "2026-04-03T21:36:34Z",
   "updated_at": "2026-04-04T10:19:14Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A multi-arm tree floor lamp with a round base, a tall post, and five independent arm branches ending in cone shades. Each arm branch revolves on a revolute j..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "bc78e1ef37fd19a655949553f593257e01cef2ae21e685dfdb1083210f6efdf0",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_articulated_task_lamp_42ef6ec3e5b34bda8f834ac25c34dfd6",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

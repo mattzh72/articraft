@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_turnstile_gates_035abd599f5c4979a5695cc7afca544f",
   "created_at": "2026-04-05T23:24:16Z",
   "updated_at": "2026-04-06T13:55:41Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A three-arm turnstile gate. A central column supports a rotor hub with three radial arms inside a fixed frame. Joints: the arm hub rotates continuously about..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "4c39d4298f4b9fa83b661faa5b2d1c1a3345e0de59a9f267953f29e00a063b28",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_turnstile_gates_035abd599f5c4979a5695cc7afca544f",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

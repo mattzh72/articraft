@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_vane_array_with_independent_pivots_6bb2d09c5cb0477286290307d2cdd559",
   "created_at": "2026-03-31T17:20:51Z",
   "updated_at": "2026-03-31T18:44:07Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A bridge-backed vane array. A rear frame supports several parallel blades, each on its own pair of end pivots. The blades are independent revolute joints on..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "4ec7e0ff3c03400d8e0d956f1e940947701c909d18b1c2655e93a4e04ed2166f",
-    "model_py_sha256": "f0d136e98463f71c1f349f7f59324c5a2b102c3b0f8209b6cabf68d9cb334f44"
+    "model_py_sha256": "f80a5a507604f4217176a12e33d338ae8ab7de8cf95d27b3459686690ca2c066"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_vane_array_with_independent_pivots_6bb2d09c5cb0477286290307d2cdd559",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

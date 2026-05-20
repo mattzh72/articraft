@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_single_continuous_rotary_shaft_7c66d30523e042eb886460bab71697e9",
   "created_at": "2026-04-02T16:32:45Z",
   "updated_at": "2026-04-06T01:34:07Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "An overhung spindle stage. A grounded bearing body supports a straight shaft that projects well past the front support to a compact faceplate, while still ke..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "0b6f979481533f8ec69460ee2afd4ccad70a315e7512dc85e133d8b98b4f62f8",
-    "model_py_sha256": "5fc60a49b264317907296bb90808771f9eb68bff09c5266b5936734c99b21699"
+    "model_py_sha256": "e6d1c9a7df4fa67f698eae3e0c3d3caca18cb19165b1e38b845c74e4c32fa000"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_single_continuous_rotary_shaft_7c66d30523e042eb886460bab71697e9",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

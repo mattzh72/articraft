@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_display_freezer_with_sliding_glass_lids_447aef33d0e94477870b027d75357c47",
   "created_at": "2026-04-27T03:09:09Z",
   "updated_at": "2026-04-27T08:06:14Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A supermarket island display freezer with two framed sliding glass lids over a long insulated tub, plus a side lock flap over the key cylinder. the lid panel..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "bf3ef7085b200e53a58646f8a1b86d1a5a7f20ead58039ebcf0f839c5d7a35d3",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_display_freezer_with_sliding_glass_lids_447aef33d0e94477870b027d75357c47",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

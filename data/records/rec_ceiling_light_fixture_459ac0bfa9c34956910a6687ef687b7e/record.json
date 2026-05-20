@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_ceiling_light_fixture_459ac0bfa9c34956910a6687ef687b7e",
   "created_at": "2026-04-12T14:30:50Z",
   "updated_at": "2026-04-22T08:15:51Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A ceiling spotlight fixture with a round canopy and two cylindrical heads on opposite side yokes. Each head tilts on a horizontal hinge between its yoke arms..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "4b36f0d627785f5889ddb483c1cce3a0f21a296c67668a32ec34eb07900c77f9",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_ceiling_light_fixture_459ac0bfa9c34956910a6687ef687b7e",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

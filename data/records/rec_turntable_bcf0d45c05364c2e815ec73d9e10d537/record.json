@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_turntable_bcf0d45c05364c2e815ec73d9e10d537",
   "created_at": "2026-04-29T08:08:50Z",
   "updated_at": "2026-04-29T08:31:16Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "Create a realistic cake decorating turntable. Geometry/details required: wide pedestal base, rotating cake disk, textured grip edge, center bearing collar, a..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
     "cost_json": null,
-    "inputs_dir": "inputs"
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "5a719cc3da68c06bf5a692a13316a831b3e2f106d2dafeab9d11ef83d82dd0dc",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_turntable_bcf0d45c05364c2e815ec73d9e10d537",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

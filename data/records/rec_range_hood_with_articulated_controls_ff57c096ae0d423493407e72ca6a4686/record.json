@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_range_hood_with_articulated_controls_ff57c096ae0d423493407e72ca6a4686",
   "created_at": "2026-04-04T14:56:27Z",
   "updated_at": "2026-04-05T12:11:14Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A built-in hood insert with a pair of hinged filter cartridges and a round timer knob. The rectangular insert body is fixed inside a cabinet, with two narrow..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "5bfc7d8294607d4dea2dc6511db6ffefd41bec3aed2fc10668bf2afea6d309f8",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_range_hood_with_articulated_controls_ff57c096ae0d423493407e72ca6a4686",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

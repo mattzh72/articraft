@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_dock_loading_ramp_97c3cb7546d746878920294353c82118",
   "created_at": "2026-03-29T14:40:39Z",
   "updated_at": "2026-03-29T17:07:53Z",
@@ -22,12 +22,13 @@
     "prompt_preview": "A modular yard ramp with an inclined ribbed-steel deck, two folding support leg pairs each on revolute hinge pins at the deck underside, and two rear-guard r..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "8cd6d0280f356b4350ccf0f6bd1eef920cd0cc52fba5e6d4762ab8ebcfff2ae9",
@@ -39,5 +40,12 @@
   "author": "Zhaomou Song",
   "rated_by": "Zhaomou Song",
   "secondary_rating": null,
-  "secondary_rated_by": null
+  "secondary_rated_by": null,
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_dock_loading_ramp_97c3cb7546d746878920294353c82118",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

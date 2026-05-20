@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_tackle_box_with_simple_hinged_lid_d8eb9d8cafd942d289c3034b8d677882",
   "created_at": "2026-04-27T02:06:08Z",
   "updated_at": "2026-04-27T10:22:59Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A tackle box with a plain hinged lid. A rectangular box body supports one lid panel along the rear edge, with internal tray details kept fixed inside the bod..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "e2102dec4c461f1d3ce5998f8360b6796b2308a12b9c57e9376e10ebaf43e852",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_tackle_box_with_simple_hinged_lid_d8eb9d8cafd942d289c3034b8d677882",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

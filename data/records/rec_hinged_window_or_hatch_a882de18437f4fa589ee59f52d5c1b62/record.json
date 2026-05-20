@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_hinged_window_or_hatch_a882de18437f4fa589ee59f52d5c1b62",
   "created_at": "2026-04-27T13:14:46Z",
   "updated_at": "2026-04-28T07:19:18Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A roof skylight hatch with a raised curb frame and a clear lid. The fixed curb supports the lid along one long edge and two short prop arms connect the lid t..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "45044829eeccca2f712f43c3dda5deac5e281ecb725892e8a7ce6c6d82b5eafb",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_hinged_window_or_hatch_a882de18437f4fa589ee59f52d5c1b62",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

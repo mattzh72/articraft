@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_watch_winder_box_with_hinged_lid_ae7375cc30ae42dbb245af6ead7c225a",
   "created_at": "2026-03-30T17:04:08Z",
   "updated_at": "2026-04-01T21:56:21Z",
@@ -22,12 +22,13 @@
     "prompt_preview": "Model Watch winder box with hinged lid as an industrial safety-first variant for heavy duty cycles. Start from a presentation box with hinged lid and interna..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "8145de7d13f69ffabcbf50b8e8c4aa1be0f0c77b7dd4b1ec9f05c83779f8c640",
@@ -39,5 +40,12 @@
   "rated_by": "shawlyu",
   "author": "shawlyu",
   "secondary_rating": 4,
-  "secondary_rated_by": "RuiningLi"
+  "secondary_rated_by": "RuiningLi",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_watch_winder_box_with_hinged_lid_ae7375cc30ae42dbb245af6ead7c225a",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

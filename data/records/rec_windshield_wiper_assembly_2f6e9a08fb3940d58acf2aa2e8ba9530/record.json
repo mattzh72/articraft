@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_windshield_wiper_assembly_2f6e9a08fb3940d58acf2aa2e8ba9530",
   "created_at": "2026-04-27T13:56:57Z",
   "updated_at": "2026-04-28T00:31:55Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A windshield wiper assembly with a motor-drive crank, a cross-car linkage, two spindle pivots, and two wiper arms carrying blade frames. The motor crank and..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "a0293427270e8fc6d6109424545502d613a81d16c3e33b1c6fe076c2c4da627c",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_windshield_wiper_assembly_2f6e9a08fb3940d58acf2aa2e8ba9530",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

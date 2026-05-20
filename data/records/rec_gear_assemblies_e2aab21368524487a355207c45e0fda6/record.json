@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_gear_assemblies_e2aab21368524487a355207c45e0fda6",
   "created_at": "2026-03-31T17:20:51Z",
   "updated_at": "2026-04-06T01:38:08Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A compound spur train on a side frame. A rigid side plate supports several shafts with stacked gears and enough spacing that the shaft supports remain clear...."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "3b3a9b1665dee276aaad85d91892291f4fa4550d7b38016b39937a6e97d5263f",
-    "model_py_sha256": "104a69c6becebccc03b49b90d0f6a869bbfa7c7832e7e2b986fee81ffcb6ef07"
+    "model_py_sha256": "b835a6aab461f62c2af4192a1649681aec10e5bd7f61956f840cfda1078240e3"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_gear_assemblies_e2aab21368524487a355207c45e0fda6",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

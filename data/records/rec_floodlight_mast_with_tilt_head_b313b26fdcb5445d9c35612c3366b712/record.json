@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_floodlight_mast_with_tilt_head_b313b26fdcb5445d9c35612c3366b712",
   "created_at": "2026-04-07T14:48:37Z",
   "updated_at": "2026-04-07T16:58:45Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A wheeled studio floodlight with a fixed column on a four-wheel dolly and a pan-and-tilt lamp head. A pan bracket at the column top rotates continuously on a..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "8e7fbc163f77178762d4512d868c3e96f231ae1fcb6b03851566108005b4b7df",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_floodlight_mast_with_tilt_head_b313b26fdcb5445d9c35612c3366b712",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_linear_carriage_with_independent_rotary_endeffector_aab9cb590cc04110bb2dc495ae3dcd74",
   "created_at": "2026-04-03T21:46:47Z",
   "updated_at": "2026-04-06T01:20:56Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A crossbeam carriage with roll head. A grounded beam rail carries a short carriage, and the carriage carries a small roll spindle in a side-supported bearing..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "7492f161edfbdd7ac5ecf37cb7715fd712a15fdf87252881813f555fddea0334",
-    "model_py_sha256": "3ba3c02966b4cbfe6c135708528d2984a6819e70d323c4634afd594357329a58"
+    "model_py_sha256": "16f4056c7de274e4610ba2518d65cf0b0cb1b04345c12a49dd30ffe881496be1"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_linear_carriage_with_independent_rotary_endeffector_aab9cb590cc04110bb2dc495ae3dcd74",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

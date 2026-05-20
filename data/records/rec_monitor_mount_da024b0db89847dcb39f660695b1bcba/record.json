@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_monitor_mount_da024b0db89847dcb39f660695b1bcba",
   "created_at": "2026-04-03T21:46:47Z",
   "updated_at": "2026-04-06T01:21:19Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A backplate monitor arm without the screen. A grounded backplate supports a two-link arm and a compact mounting head with a vertical swivel interface and a h..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "112ca4b89285cf17846fe72e50b6fdd4c24a98307c0900753112dc4eacd12598",
-    "model_py_sha256": "94141d671a143f142554fa0a5298b32ed9c84282e76a2274802c97d4673280b9"
+    "model_py_sha256": "5b3be6518b8c89a3cbde1190d5d8f8cb73691d6bc70413d8375d94b17ef2fa17"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_monitor_mount_da024b0db89847dcb39f660695b1bcba",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

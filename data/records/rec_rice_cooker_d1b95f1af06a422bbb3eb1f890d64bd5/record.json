@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_rice_cooker_d1b95f1af06a422bbb3eb1f890d64bd5",
   "created_at": "2026-04-11T23:05:11Z",
   "updated_at": "2026-04-22T14:17:50Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A modern rice cooker with an oval housing, a top-opening lid, and a broad front panel for cooking controls, plus a front latch button and two separate menu b..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "44c75078ede574f14e75be0c049c4efc4cfdb0d6aca60ab9f1b781937d07beb8",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_rice_cooker_d1b95f1af06a422bbb3eb1f890d64bd5",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

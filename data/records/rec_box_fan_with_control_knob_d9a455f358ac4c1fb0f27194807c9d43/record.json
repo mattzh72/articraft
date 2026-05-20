@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_box_fan_with_control_knob_d9a455f358ac4c1fb0f27194807c9d43",
   "created_at": "2026-04-12T14:49:50Z",
   "updated_at": "2026-04-22T08:09:05Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A box fan with a square body, a floor cradle, and a side tilt-lock knob matched with a front speed knob. The housing tilts on horizontal pivots in the cradle..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "2d06d96bef48df88cf89a06834a6f10e945f2cece08c21dcf17dc0b24a69ee7d",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_box_fan_with_control_knob_d9a455f358ac4c1fb0f27194807c9d43",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

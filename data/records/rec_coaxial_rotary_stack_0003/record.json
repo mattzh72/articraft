@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_coaxial_rotary_stack_0003",
   "created_at": "2026-03-25T18:37:12Z",
   "updated_at": "2026-04-01T10:23:51Z",
@@ -22,16 +22,17 @@
     "prompt_preview": "Design a realistic, highly detailed coaxial rotary stack as a standalone mechanical study assembly for the sdk_hybrid pipeline, with stacked concentric rotar..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "c3126e7deb1c056112f8eb21ddbab84d00ad07fa613c97b2398cc4785889f064",
-    "model_py_sha256": "d917f243b174d5b0ebea8103347713cc08f2ced78597ad8e87d6a98527b5c4e8"
+    "model_py_sha256": "194ff00f0530382769f04590b78e4650dbc3eed1faa7b91493617012a6e512e5"
   },
   "collections": [
     "dataset"
@@ -39,5 +40,12 @@
   "author": "mattzh72",
   "rated_by": "mattzh72",
   "secondary_rating": 4,
-  "secondary_rated_by": "Zhaomou Song"
+  "secondary_rated_by": "Zhaomou Song",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_coaxial_rotary_stack_0003",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

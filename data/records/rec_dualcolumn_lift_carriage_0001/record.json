@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_dualcolumn_lift_carriage_0001",
   "created_at": "2026-03-16T13:57:14Z",
   "updated_at": "2026-04-01T10:35:54Z",
@@ -20,16 +20,17 @@
     "prompt_preview": "A realistic dual-column lift carriage with two parallel guide columns, a rigid crosshead carriage, visible linear bearing blocks, and a clean machine-lift ap..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "e7a65ae9b210758c7880bbfdf51e363a764c513bf9df3bb6e0b7c32d103783a2",
-    "model_py_sha256": "0497fd257537fba6cbce0d5329c814afab72f6297f61722dc2ac885f6765b746"
+    "model_py_sha256": "6e52037d12899648585b0772ae43935e4a109f48ef7744328b424c56002fc70f"
   },
   "collections": [
     "dataset"
@@ -37,5 +38,12 @@
   "author": "mattzh72",
   "rated_by": "mattzh72",
   "secondary_rating": 5,
-  "secondary_rated_by": "Zhaomou Song"
+  "secondary_rated_by": "Zhaomou Song",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_dualcolumn_lift_carriage_0001",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

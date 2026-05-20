@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_stand_mixer_62e3e84ee4f9468fb670786ebfdcc26c",
   "created_at": "2026-04-12T14:28:54Z",
   "updated_at": "2026-04-22T08:10:36Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A tilt-head stand mixer with a low base, a rear hinge, and a side dial plus two separate push buttons below it. The head rotates upward on the rear hinge, th..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "eca41fb3990cf2fc40094d4f633885109443818513762d1730c37aac09280904",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_stand_mixer_62e3e84ee4f9468fb670786ebfdcc26c",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

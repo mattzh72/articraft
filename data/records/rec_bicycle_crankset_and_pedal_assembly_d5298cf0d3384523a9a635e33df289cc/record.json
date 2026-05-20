@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_bicycle_crankset_and_pedal_assembly_d5298cf0d3384523a9a635e33df289cc",
   "created_at": "2026-04-27T03:45:18Z",
   "updated_at": "2026-04-27T06:14:26Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A triple-chainring road crankset with two matching hollow crank arms on a two-piece spindle on a revolute axle through the bottom-bracket shell, three chainr..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "ea7ab06e4a326a16af7d5b6f518849c54b5089f214bd38e1bef27dde9d514d5d",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_bicycle_crankset_and_pedal_assembly_d5298cf0d3384523a9a635e33df289cc",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_drillpress_tilt_table_40a108016ceb464e8e29018ec58b98a0",
   "created_at": "2026-04-27T01:57:44Z",
   "updated_at": "2026-04-27T10:22:34Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A CNC-table drill press with a round column, a motorized XY table, and a quill head. The X-axis table slides prismatically on X guide rails. The Y-axis table..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "bef40f2d121d57c4b69c040be66ef2cf8c024cbe978fe22ce5c2bb75bcea0850",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_drillpress_tilt_table_40a108016ceb464e8e29018ec58b98a0",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

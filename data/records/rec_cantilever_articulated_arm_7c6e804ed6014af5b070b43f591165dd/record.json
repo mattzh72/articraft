@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_cantilever_articulated_arm_7c6e804ed6014af5b070b43f591165dd",
   "created_at": "2026-04-03T21:46:47Z",
   "updated_at": "2026-04-06T01:22:01Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A tower-mounted cantilever tooling arm. A short tower supports a long first link, a shorter second link, and a narrow wrist cartridge ending in a plain facep..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "678e6decd626cf829373fa4c798d675e12f39df9a52b59b57a12ec857f8659e2",
-    "model_py_sha256": "c6d57e6c3074a65487693d343cdd1f27c82b4411df1572fbc0857558b8808d46"
+    "model_py_sha256": "05407f2824f4df4afcace13ac56e010df8261f478b1ca405529dae5c464279ce"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_cantilever_articulated_arm_7c6e804ed6014af5b070b43f591165dd",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

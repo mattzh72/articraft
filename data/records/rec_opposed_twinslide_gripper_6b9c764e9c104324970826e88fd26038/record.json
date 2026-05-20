@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_opposed_twinslide_gripper_6b9c764e9c104324970826e88fd26038",
   "created_at": "2026-03-29T15:31:29Z",
   "updated_at": "2026-04-01T11:28:43Z",
@@ -22,16 +22,17 @@
     "prompt_preview": "A heavy block gripper with a rectangular center housing, wide slide rails, and two stepped jaw fingers that approach each other symmetrically. The jaw carria..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "f1403b47394c7984813d3628a03745243ef74df84f9b4b182e8f7100a4b8d8f3",
-    "model_py_sha256": "fbbeb026e561a389dc30deef008a1c3c1b7c2ccf837552268bca09fbbf17302e"
+    "model_py_sha256": "528d73a37c8d242c4bb1f56befb8ea940fd10fe70d628086d63bfcfd5bc2b99b"
   },
   "collections": [
     "dataset"
@@ -39,5 +40,12 @@
   "author": "mattzh72",
   "rated_by": "mattzh72",
   "secondary_rating": 4,
-  "secondary_rated_by": "Zhaomou Song"
+  "secondary_rated_by": "Zhaomou Song",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_opposed_twinslide_gripper_6b9c764e9c104324970826e88fd26038",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

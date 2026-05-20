@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_dualrail_gantry_axis_59e4d016712d43329292bbb018ff76d4",
   "created_at": "2026-04-03T21:46:47Z",
   "updated_at": "2026-04-06T01:21:15Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A machine-bed bridge axis. A grounded machine bed with two side rails supports a moving bridge, and the bridge carries a short carriage with a rectangular ou..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "d8ccb6e53593027007faf661733c9635d3018692bf530bbdd24dd3ee133c1756",
-    "model_py_sha256": "077e02fa4cda1feff4450e5cb25962f5f6c90a9d2a67928006d77a2ff4746d93"
+    "model_py_sha256": "eb4561b78ae2109cfcd22d62355e0a331fbce81531075285b24140230961af1a"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_dualrail_gantry_axis_59e4d016712d43329292bbb018ff76d4",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

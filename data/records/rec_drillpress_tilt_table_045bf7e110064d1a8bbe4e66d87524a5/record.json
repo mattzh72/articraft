@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_drillpress_tilt_table_045bf7e110064d1a8bbe4e66d87524a5",
   "created_at": "2026-04-12T15:07:19Z",
   "updated_at": "2026-04-22T08:03:10Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A compact bench drill press with a column, a tilting table, and a front rack pinion with a fold-out crank handle. The table slides prismatically on the colum..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "245a2bc7f5ef2d873dd2db6d4909a13e08ad1fbb1e155be34ad0ecddea214a5c",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_drillpress_tilt_table_045bf7e110064d1a8bbe4e66d87524a5",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

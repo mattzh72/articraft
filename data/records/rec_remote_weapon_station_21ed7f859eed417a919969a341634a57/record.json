@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_remote_weapon_station_21ed7f859eed417a919969a341634a57",
   "created_at": "2026-04-04T14:57:47Z",
   "updated_at": "2026-04-05T12:10:07Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A stabilized weapon station with a rounded sensor pod and a folding guard arm. The broad turret body sits on a yaw base, and a slim guard arm folds alongside..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "e70635d250cb243e1748352a23e885b9d9e78992c95539338142266e8a34d775",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_remote_weapon_station_21ed7f859eed417a919969a341634a57",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

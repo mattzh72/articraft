@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_astronomical_telescope_on_tripod_64b2db432e664969a6bf498ba256fb07",
   "created_at": "2026-04-27T12:50:39Z",
   "updated_at": "2026-04-28T07:41:17Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "An astrograph imaging refractor on a belt-driven equatorial wedge mount. The tube clips onto a dovetail saddle plate locked by a knob on a revolute joint; th..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "6a574a943310f38614a869eaef05dfd4520425effe443c782a8287cb77e5374b",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_astronomical_telescope_on_tripod_64b2db432e664969a6bf498ba256fb07",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

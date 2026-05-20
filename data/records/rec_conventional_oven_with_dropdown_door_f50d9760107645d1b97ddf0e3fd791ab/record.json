@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_conventional_oven_with_dropdown_door_f50d9760107645d1b97ddf0e3fd791ab",
   "created_at": "2026-04-01T12:12:07Z",
   "updated_at": "2026-04-04T14:05:30Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A double oven with two vertically stacked cavities in a tall rectangular housing, each cavity behind its own glass-panel door dropping on a separate bottom r..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "7087345bebbdd7495bbe0f2a69e48efd64f99eda816ea100f73a861915376555",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_conventional_oven_with_dropdown_door_f50d9760107645d1b97ddf0e3fd791ab",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

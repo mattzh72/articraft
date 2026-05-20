@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_a-realistic-highly-detailed-tower-crane-with-a-t_20260320_183151_099382_ba428c4b",
   "created_at": "2026-03-20T18:31:51Z",
   "updated_at": "2026-03-20T23:58:50Z",
@@ -22,16 +22,17 @@
     "prompt_preview": "A realistic, highly detailed tower crane with a tall lattice mast, a horizontal jib, a counter-jib with ballast, a suspended hook block, and a believable con..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "f4fecf9acbbec84d1ba4a0d745465b0fd17568107b2dd69bf5576fe0f043bd69",
-    "model_py_sha256": "5e5f1938f7b71a519a91c1c3c9352308081906c84f03ce42c4e6093857b700f8"
+    "model_py_sha256": "fe42b2f7e9d8fe026397f92017b850169957839485e912d37880345ae9b69ce7"
   },
   "collections": [
     "dataset"
@@ -39,5 +40,12 @@
   "author": "mattzh72",
   "rated_by": "mattzh72",
   "secondary_rating": null,
-  "secondary_rated_by": null
+  "secondary_rated_by": null,
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_a-realistic-highly-detailed-tower-crane-with-a-t_20260320_183151_099382_ba428c4b",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

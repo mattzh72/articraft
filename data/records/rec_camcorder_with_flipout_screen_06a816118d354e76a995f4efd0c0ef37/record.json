@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_camcorder_with_flipout_screen_06a816118d354e76a995f4efd0c0ef37",
   "created_at": "2026-04-27T02:47:02Z",
   "updated_at": "2026-04-27T08:28:07Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A documentary-style camcorder with a top handle, a wide front lens hood, and a side viewing screen carried on a narrow hinge arm. The viewing screen rotates..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "27bdbee71183e14b38458564a1a41bbb3d0444ed08ac8d40f6e9edf51564e2ab",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_camcorder_with_flipout_screen_06a816118d354e76a995f4efd0c0ef37",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_desktop_stapler_with_hinged_top_arm_c4a1b6bd4a9c43e38b3912e2a8d9308b",
   "created_at": "2026-04-11T18:43:53Z",
   "updated_at": "2026-04-22T14:20:32Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A premium desktop stapler with a die-cast base, a broad upper arm, a rear magazine follower, and a rotating front anvil for open and closed clinch. The upper..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "d3bb918a301fd55b03c0f72a84ca8b8a0ae6edacf8cf3ad40e2ca83e58809f7e",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_desktop_stapler_with_hinged_top_arm_c4a1b6bd4a9c43e38b3912e2a8d9308b",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

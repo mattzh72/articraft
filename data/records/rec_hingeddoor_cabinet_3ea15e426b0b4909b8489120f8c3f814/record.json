@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_hingeddoor_cabinet_3ea15e426b0b4909b8489120f8c3f814",
   "created_at": "2026-03-28T13:45:33Z",
   "updated_at": "2026-04-01T16:23:05Z",
@@ -22,12 +22,13 @@
     "prompt_preview": "A tall utility cabinet with a single full-height door. The carcass is a rectangular enclosure on short feet, and the door panel is attached to one side wall..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "77a9fa113137a2f585d04344c5d6f94cbd9abb23e7d87c6948b9bb4e94bb8d61",
@@ -39,5 +40,12 @@
   "author": "RuiningLi",
   "rated_by": "RuiningLi",
   "secondary_rating": 5,
-  "secondary_rated_by": "shawlyu"
+  "secondary_rated_by": "shawlyu",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_hingeddoor_cabinet_3ea15e426b0b4909b8489120f8c3f814",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

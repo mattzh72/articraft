@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_miter_saw_arm_assembly_db42b937094f47e982bfb1fef1f9f8ec",
   "created_at": "2026-04-27T02:17:48Z",
   "updated_at": "2026-04-27T09:55:16Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A sliding compound miter saw assembly with twin horizontal rails. The base carries a turntable and fence, while the saw head rides on a carriage that slides..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "eaabae2800324fbefe08deb2587d5b3dd353eddc8632c7c0cc1da0d85429f51c",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_miter_saw_arm_assembly_db42b937094f47e982bfb1fef1f9f8ec",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

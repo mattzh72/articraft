@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_joystick_mechanism_10f5797cf1a540deb551cf6f26ec9832",
   "created_at": "2026-03-29T04:00:44Z",
   "updated_at": "2026-04-01T10:10:17Z",
@@ -22,16 +22,17 @@
     "prompt_preview": "A sealed manipulator joystick core with a square mounting tray, a broad outer yoke, a narrow inner cradle, and a thick center stick rising from the cradle. T..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "a3c8201cdd3233abf34b4b6781407b775c6876e78f9a011c2e92ffcadc406a0a",
-    "model_py_sha256": "074cbe2a3b74cb076790880023fc367710b31e2d44f925334384fe5afcbe4a58"
+    "model_py_sha256": "fd077a4aba2fa02fcd18aee38d03ddfc16d31008b2543f6a022c3ebd19184923"
   },
   "collections": [
     "dataset"
@@ -39,5 +40,12 @@
   "author": "mattzh72",
   "rated_by": "mattzh72",
   "secondary_rating": 4,
-  "secondary_rated_by": "Zhaomou Song"
+  "secondary_rated_by": "Zhaomou Song",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_joystick_mechanism_10f5797cf1a540deb551cf6f26ec9832",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_zippo_lighter_8a9cb1824f6541f8a5d9e0af05e341fa",
   "created_at": "2026-04-27T02:45:14Z",
   "updated_at": "2026-04-27T09:33:33Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A pipe-style lighter with a rectangular case, a side-hinged lid, and a chimney insert with a side cutout near the flame opening, plus a lift-out insert fit i..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "0ea96d129cf273e5e9eb9442f5a28f73511b2d4c5dd852c9ee698617fb8b7926",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_zippo_lighter_8a9cb1824f6541f8a5d9e0af05e341fa",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

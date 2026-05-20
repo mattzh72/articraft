@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_single_prismatic_slider_6bcac43f64c34331ba8d24b42a60293d",
   "created_at": "2026-03-29T04:00:44Z",
   "updated_at": "2026-04-01T09:58:07Z",
@@ -22,16 +22,17 @@
     "prompt_preview": "A compact linear adjustment module with a thick base plate, a short guide rail, and a sliding clamp block carrying a small top pad. The motion should feel li..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "154dcd2c6e9609b30bc17edb3ff553a8e076cbb15ac9e35185794febb52a460e",
-    "model_py_sha256": "71fd41ecd4b76b874a0ed4a3cad3620bb7e85ab31516cff9be027d75e4f87c2b"
+    "model_py_sha256": "3282618bf0595c5f780f384d91f6199d3256db835b10be57e4f3101cfc5edd92"
   },
   "collections": [
     "dataset"
@@ -39,5 +40,12 @@
   "author": "mattzh72",
   "rated_by": "mattzh72",
   "secondary_rating": 5,
-  "secondary_rated_by": "Zhaomou Song"
+  "secondary_rated_by": "Zhaomou Song",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_single_prismatic_slider_6bcac43f64c34331ba8d24b42a60293d",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

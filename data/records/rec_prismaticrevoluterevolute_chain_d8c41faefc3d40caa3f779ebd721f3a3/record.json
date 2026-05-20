@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_prismaticrevoluterevolute_chain_d8c41faefc3d40caa3f779ebd721f3a3",
   "created_at": "2026-03-29T04:00:44Z",
   "updated_at": "2026-04-01T10:05:42Z",
@@ -22,16 +22,17 @@
     "prompt_preview": "An overhead rail shuttle carrying a double-hinged inspection arm beneath it, with a short first link and a longer second link ending in a rectangular plate...."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "148bd2f651ee87616d6db7a3b44ac4433b1af54474779f1b200515da72c3e6f1",
-    "model_py_sha256": "8e798c8220e9d28107b7591dea370c2e3e8ec89af9c870051afacfb39d9db347"
+    "model_py_sha256": "df47194d7c58ff064a14726ba9e4a8ae82c633acf12d30aa189316cce4e30d38"
   },
   "collections": [
     "dataset"
@@ -39,5 +40,12 @@
   "author": "mattzh72",
   "rated_by": "mattzh72",
   "secondary_rating": 5,
-  "secondary_rated_by": "Zhaomou Song"
+  "secondary_rated_by": "Zhaomou Song",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_prismaticrevoluterevolute_chain_d8c41faefc3d40caa3f779ebd721f3a3",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

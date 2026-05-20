@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_desktop_hole_punch_with_articulated_components_0b9f0ccfdd2e4a7781168c3a0890e596",
   "created_at": "2026-04-12T15:00:38Z",
   "updated_at": "2026-04-22T08:06:00Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A desk punch with a tall handle, a shallow chip drawer, and a side release rocker next to the drawer seam. The handle rotates on a rear transverse hinge, the..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "ab60912a77e07029d9c9ac892f67f56178103570babe1687eeb2ccb72d3457a4",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_desktop_hole_punch_with_articulated_components_0b9f0ccfdd2e4a7781168c3a0890e596",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

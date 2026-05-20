@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_cannon_d48631f9d20c4ad89cb20eb1b958c201",
   "created_at": "2026-04-27T13:34:15Z",
   "updated_at": "2026-04-28T05:39:13Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A Civil War 3-inch ordnance rifle with a wrought-iron barrel on trunnion revolute joints in a two-wheel oak trail carriage, iron-spoked wheels on revolute ax..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "00ea601a47aae400e0231c0c09e1fb188b9e8c11a1c79fa651d9107bc6061f57",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_cannon_d48631f9d20c4ad89cb20eb1b958c201",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

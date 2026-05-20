@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_branching_tree_with_two_independent_rotary_branches_0b2bb69a478c46ea9ef4516c12cfebe9",
   "created_at": "2026-03-31T17:20:51Z",
   "updated_at": "2026-03-31T18:38:55Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A rack-style two-branch rotary tree. A grounded upright spine carries two branch modules on separate side saddles, with each branch ending in a different sim..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "bdefc9560a10667d2257c5d203e381e5b7c010174e234fcde0e607dfd3c3ad2a",
-    "model_py_sha256": "a32d13dd598badf1dd871529cb6dac87c5a8bb82142613226360fc06291b0be6"
+    "model_py_sha256": "6dcd4d98ad5832a26cd38a86725dadc491650f335471c62a0b7629f24b06ceaa"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_branching_tree_with_two_independent_rotary_branches_0b2bb69a478c46ea9ef4516c12cfebe9",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

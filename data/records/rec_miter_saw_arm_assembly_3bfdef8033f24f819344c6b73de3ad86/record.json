@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_miter_saw_arm_assembly_3bfdef8033f24f819344c6b73de3ad86",
   "created_at": "2026-03-29T14:58:34Z",
   "updated_at": "2026-04-01T13:43:24Z",
@@ -22,12 +22,13 @@
     "prompt_preview": "A compact miter saw with a turntable base and a front carry handle on the saw arm. The saw head is mounted on a rear pivot above the base, with a circular bl..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "c1b982bee46efcdf77126578f2ccf3338f47b6cef46482fd5b1531c4b8eb30a8",
@@ -39,5 +40,12 @@
   "author": "RuiningLi",
   "rated_by": "RuiningLi",
   "secondary_rating": 4,
-  "secondary_rated_by": "shawlyu"
+  "secondary_rated_by": "shawlyu",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_miter_saw_arm_assembly_3bfdef8033f24f819344c6b73de3ad86",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

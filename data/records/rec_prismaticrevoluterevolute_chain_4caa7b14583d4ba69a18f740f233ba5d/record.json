@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_prismaticrevoluterevolute_chain_4caa7b14583d4ba69a18f740f233ba5d",
   "created_at": "2026-04-01T18:09:34Z",
   "updated_at": "2026-04-06T01:34:31Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A fork-backed slide with articulated tip. A rear support frame carries a prismatic carriage and a two-link arm mounted on the carriage. The carriage is a pri..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "ff08f4b057a7949c4ce47b157d23963679db773f7e5b858945b94a3acb0f701a",
-    "model_py_sha256": "77ae8aa0441c33087ca88989156c6410f7993bcd59173cf10fa35b35fa24fc3d"
+    "model_py_sha256": "3674789f2528754893f01acf04a24c1aae60289b5947f8755b1725570b2f89e7"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_prismaticrevoluterevolute_chain_4caa7b14583d4ba69a18f740f233ba5d",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

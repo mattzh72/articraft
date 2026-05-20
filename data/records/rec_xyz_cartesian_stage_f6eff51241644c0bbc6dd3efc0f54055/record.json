@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_xyz_cartesian_stage_f6eff51241644c0bbc6dd3efc0f54055",
   "created_at": "2026-03-29T15:31:29Z",
   "updated_at": "2026-04-01T11:23:35Z",
@@ -22,16 +22,17 @@
     "prompt_preview": "A benchtop positioning stage with a long X base, a crosswise Y carriage on top of it, and a vertical Z slide ending in a square tool plate. The three guide d..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "622dae6f516221e772630e56b3bd2937f2182bf7b7cd55359d7325326e3e3db3",
-    "model_py_sha256": "bfece75ab82d6230dec08abc11b3e754f44ca4d9b0b4a67df1b153ac3edd3819"
+    "model_py_sha256": "caf4779e6fc54fadb962134159ddec2fd171dcc6a3b8c633d702c7a9d03b465e"
   },
   "collections": [
     "dataset"
@@ -39,5 +40,12 @@
   "author": "mattzh72",
   "rated_by": "mattzh72",
   "secondary_rating": 5,
-  "secondary_rated_by": "Zhaomou Song"
+  "secondary_rated_by": "Zhaomou Song",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_xyz_cartesian_stage_f6eff51241644c0bbc6dd3efc0f54055",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_mailbox_with_front_access_door_35ff35f4de5943feb548df2b184bc1c7",
   "created_at": "2026-04-04T14:40:04Z",
   "updated_at": "2026-04-05T13:05:18Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A designer wall mailbox with a curved front door and a small latch button. The body is a fixed shallow box, and the curved front panel is hinged at one side..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "0a18dc968c8c91d44a957a8ea814415474e2baba31fe8be3b30ef9d408198bc3",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_mailbox_with_front_access_door_35ff35f4de5943feb548df2b184bc1c7",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

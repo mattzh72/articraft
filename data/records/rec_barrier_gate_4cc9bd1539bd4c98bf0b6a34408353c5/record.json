@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_barrier_gate_4cc9bd1539bd4c98bf0b6a34408353c5",
   "created_at": "2026-04-04T16:48:41Z",
   "updated_at": "2026-04-04T17:12:35Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A fold-flat removable street bollard. A round steel post is pinned at a base flange set in a road-level receiver socket; the post pivots flat on a revolute j..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "fab52208938410d29ca7330f354fd1095636ef2bbd40ed7d1e2280773f272b6e",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_barrier_gate_4cc9bd1539bd4c98bf0b6a34408353c5",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

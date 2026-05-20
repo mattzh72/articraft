@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_zippo_lighter_50c5721826fc4cb1ad9997fe448eb275",
   "created_at": "2026-04-27T03:41:09Z",
   "updated_at": "2026-04-27T05:31:45Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A rounded-corner vintage lighter with a rectangular shell, a fitted lid, and a tall perforated chimney insert, plus a small cam lever inside the lid edge. th..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "2240c514f15dfca093c7d38b3e2fbf71df0de1adba19991d76a5ff656b49a9e5",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_zippo_lighter_50c5721826fc4cb1ad9997fe448eb275",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

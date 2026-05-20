@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_easel_a1852139ab0343eab07139fd91336916",
   "created_at": "2026-04-27T13:49:24Z",
   "updated_at": "2026-04-28T00:43:52Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "An outdoor poster easel with two narrow aluminium front legs and a rear brace leg joined at a crown revolute hinge, a bottom lip tray adjusting on a prismati..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "9557c76414464ac668105ed27b3144e2eaa9134fa04628f3a391285b8c7cb23e",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_easel_a1852139ab0343eab07139fd91336916",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "record_id": "rec_paper_shredder_with_pullout_bin_b1003708e6f44fbfbf2efda6b51a9a2d",
+  "revision_id": "rev_000001",
+  "created_at": "2026-04-11T16:13:01Z",
+  "prompt_kind": "single_prompt",
+  "prompt_sha256": "fe27a4b2bba43fa91f18c0aa6856f405e963d30f801db60e2e66782dd34c01a5",
+  "source": {
+    "run_id": "run_20260411_161301_441737_20260411-home-appliance-categories-5each-gpt54-h",
+    "prompt_batch_id": null,
+    "batch_spec_id": "20260411_home_appliance_categories_5each_gpt54_high",
+    "row_id": "paper_shredder_001",
+    "prompt_index": 41
+  },
+  "generation": {
+    "provider": "openai",
+    "model_id": "gpt-5.4",
+    "thinking_level": "high",
+    "openai_transport": "http",
+    "openai_reasoning_summary": "auto",
+    "max_turns": 165,
+    "max_cost_usd": null
+  },
+  "artifacts": {
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
+    "prompt_series_json": null,
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
+  },
+  "hashes": {
+    "prompt_sha256": "fe27a4b2bba43fa91f18c0aa6856f405e963d30f801db60e2e66782dd34c01a5",
+    "model_py_sha256": "eb6043442706a7e1436594494b0bcf74c6386cfe939483ac39bbd898aa54d62d"
+  },
+  "run_summary": {
+    "turn_count": 25,
+    "tool_call_count": 28,
+    "compile_attempt_count": 7,
+    "final_status": "success"
+  },
+  "parent": null,
+  "seed": null,
+  "inherited_inputs": []
+}

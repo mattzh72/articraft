@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_opposed_twinslide_gripper_3ec224db27ba4315b33cbc85bf962ff4",
   "created_at": "2026-03-28T03:32:30Z",
   "updated_at": "2026-04-01T10:11:15Z",
@@ -22,16 +22,17 @@
     "prompt_preview": "A parallel-jaw gripper head. A central body carries left and right jaw carriages on mirrored guideways, and each carriage ends in a tall gripping finger. The..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "f8b848c8c1bc2e67aa8523105e657c4b4eeeecaba28494e71d7250d4ccc53601",
-    "model_py_sha256": "ce2f5db79094c15aa33b87b81df998c47afe7a761a7bb9e353d9f64fe61602bf"
+    "model_py_sha256": "eef028dc965347d9119831d7eabfc6bb18382d30742c23510add7767a574a830"
   },
   "collections": [
     "dataset"
@@ -39,5 +40,12 @@
   "author": "mattzh72",
   "rated_by": "mattzh72",
   "secondary_rating": 5,
-  "secondary_rated_by": "Zhaomou Song"
+  "secondary_rated_by": "Zhaomou Song",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_opposed_twinslide_gripper_3ec224db27ba4315b33cbc85bf962ff4",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

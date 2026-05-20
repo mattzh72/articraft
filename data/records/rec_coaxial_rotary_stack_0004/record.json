@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_coaxial_rotary_stack_0004",
   "created_at": "2026-03-25T23:15:42Z",
   "updated_at": "2026-04-01T10:22:13Z",
@@ -22,16 +22,17 @@
     "prompt_preview": "A coaxial rotary stack. Nested circular stages sit on a common vertical shaft with a base turntable, a middle ring, and a top flange. The base, middle, and t..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "594f30d075f7c0b10c50d621b3f9b4f29a9cff951f9d385dc158ebf38758c206",
-    "model_py_sha256": "1df9d91587fd83384ec12ee58ccc2c962fbb5a9fa5b2167a140637d5aa83d1af"
+    "model_py_sha256": "4e517a1a2fb10023d324986b7967a45904a594bb1d026630a67afb2cd2f36259"
   },
   "collections": [
     "dataset"
@@ -39,5 +40,12 @@
   "author": "mattzh72",
   "rated_by": "RuiningLi",
   "secondary_rating": 5,
-  "secondary_rated_by": "Zhaomou Song"
+  "secondary_rated_by": "Zhaomou Song",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_coaxial_rotary_stack_0004",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

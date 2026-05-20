@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_simple_drying_rack_feabe77f0f0f4581a76eb4f762c879ea",
   "created_at": "2026-03-30T16:20:11Z",
   "updated_at": "2026-03-31T22:06:43Z",
@@ -22,12 +22,13 @@
     "prompt_preview": "Create a premium consumer-grade Simple drying rack with elegant proportions and tight surfacing, but keep the mechanics honest: a foldable rack with wing fra..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "cbcb5ec6c0a9d019aa0bbc531b14b5a1db021782c1ae613168858470bc72e528",
@@ -39,5 +40,12 @@
   "rated_by": "shawlyu",
   "author": "shawlyu",
   "secondary_rating": 3,
-  "secondary_rated_by": "RuiningLi"
+  "secondary_rated_by": "RuiningLi",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_simple_drying_rack_feabe77f0f0f4581a76eb4f762c879ea",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

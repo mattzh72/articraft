@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "record_id": "rec_car_axles_0002",
+  "revision_id": "rev_000001",
+  "created_at": "2026-03-26T10:21:21Z",
+  "prompt_kind": "single_prompt",
+  "prompt_sha256": "aa1d5a216c83b7fef0e1773e7c06a4abd033d7cbef23af966b0073c7eeaf20c8",
+  "source": {
+    "run_id": "run_20260326_102121_239999_new-prompts-part1-20260325",
+    "prompt_batch_id": null,
+    "batch_spec_id": "new_prompts_part1_20260325",
+    "row_id": "car_axles_new_1",
+    "prompt_index": 43
+  },
+  "generation": {
+    "provider": "openai",
+    "model_id": "gpt-5.4",
+    "thinking_level": "high",
+    "openai_transport": "http",
+    "openai_reasoning_summary": "auto",
+    "max_turns": 20
+  },
+  "artifacts": {
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
+    "prompt_series_json": null,
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
+  },
+  "hashes": {
+    "prompt_sha256": "aa1d5a216c83b7fef0e1773e7c06a4abd033d7cbef23af966b0073c7eeaf20c8",
+    "model_py_sha256": "1b08ce14e6ded52e3f5a982e66de52742993c0c0b47a90ba0323c5075aaa1b9d"
+  },
+  "run_summary": {
+    "turn_count": 11,
+    "tool_call_count": 10,
+    "compile_attempt_count": 5,
+    "final_status": "success"
+  },
+  "parent": null,
+  "seed": null,
+  "inherited_inputs": []
+}

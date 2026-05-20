@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_robotic_leg_4f66d800f12c4535aacbb6cce6168291",
   "created_at": "2026-03-30T16:08:09Z",
   "updated_at": "2026-03-31T21:17:39Z",
@@ -22,12 +22,13 @@
     "prompt_preview": "Produce an outdoor weatherproof Robotic leg. Use sealed interfaces, drip-aware overhangs, corrosion-resistant hardware, and protected joints, anchored on a h..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "efd4e99544a37faaccd5c4d94f1514e7f1f7b18b82f6a7efe1ebd7d3c34605ec",
@@ -39,5 +40,12 @@
   "rated_by": "shawlyu",
   "author": "shawlyu",
   "secondary_rating": 5,
-  "secondary_rated_by": "RuiningLi"
+  "secondary_rated_by": "RuiningLi",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_robotic_leg_4f66d800f12c4535aacbb6cce6168291",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

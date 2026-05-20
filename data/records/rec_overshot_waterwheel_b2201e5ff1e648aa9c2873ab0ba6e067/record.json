@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_overshot_waterwheel_b2201e5ff1e648aa9c2873ab0ba6e067",
   "created_at": "2026-04-04T14:47:11Z",
   "updated_at": "2026-04-05T12:51:11Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A cast-iron overshot wheel with a masonry flume and a drop-in gate panel. The wheel sits between two heavy stone piers, and the flume above the rim has a sli..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "ae47463f7831a2fd17e773ca6ef69053dd6209c70b73fb38325619240dc6c148",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_overshot_waterwheel_b2201e5ff1e648aa9c2873ab0ba6e067",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

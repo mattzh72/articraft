@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "record_id": "rec_dishwasher_with_dropdown_door_and_sliding_racks_9dd15c0aefb940f2acd9fd2596b80ced",
+  "revision_id": "rev_000001",
+  "created_at": "2026-04-11T18:03:18Z",
+  "prompt_kind": "single_prompt",
+  "prompt_sha256": "0c781cf68006ca3e18ceb4595bbe566dd6fe063e5a49fd1dc31a33b6db534343",
+  "source": {
+    "run_id": "run_20260411_180318_024642_20260411-home-appliance-categories-plus15-gpt54-",
+    "prompt_batch_id": null,
+    "batch_spec_id": "20260411_home_appliance_categories_plus15_gpt54_high",
+    "row_id": "dishwasher_plus15_03",
+    "prompt_index": 3
+  },
+  "generation": {
+    "provider": "openai",
+    "model_id": "gpt-5.4",
+    "thinking_level": "high",
+    "openai_transport": "http",
+    "openai_reasoning_summary": "auto",
+    "max_turns": 190,
+    "max_cost_usd": null
+  },
+  "artifacts": {
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
+    "prompt_series_json": null,
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
+  },
+  "hashes": {
+    "prompt_sha256": "0c781cf68006ca3e18ceb4595bbe566dd6fe063e5a49fd1dc31a33b6db534343",
+    "model_py_sha256": "0f89ee4ccb6dfe400effb227d5daf7783cdc42970f359eb766393f31568c2942"
+  },
+  "run_summary": {
+    "turn_count": 25,
+    "tool_call_count": 29,
+    "compile_attempt_count": 7,
+    "final_status": "success"
+  },
+  "parent": null,
+  "seed": null,
+  "inherited_inputs": []
+}

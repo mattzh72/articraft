@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "record_id": "rec_frontload_washing_machine_aabf7410ad5b46139a0aed4e6aa1af6f",
+  "revision_id": "rev_000001",
+  "created_at": "2026-05-04T07:38:39Z",
+  "prompt_kind": "single_prompt",
+  "prompt_sha256": "9724237676ee85e6bf1616a1cb106592de6988117ea5a6a50bf08c068172e57c",
+  "source": {
+    "run_id": "run_20260504_073837_917539_20260504-frontload-washer-frontier-thinking-abla",
+    "prompt_batch_id": null,
+    "batch_spec_id": "20260504_frontload_washer_frontier_thinking_ablation",
+    "row_id": "washer_gemini_high",
+    "prompt_index": 4
+  },
+  "generation": {
+    "provider": "gemini",
+    "model_id": "gemini-3.1-pro-preview",
+    "thinking_level": "high",
+    "openai_transport": null,
+    "openai_reasoning_summary": null,
+    "max_turns": 300,
+    "max_cost_usd": null
+  },
+  "artifacts": {
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
+    "prompt_series_json": null,
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
+  },
+  "hashes": {
+    "prompt_sha256": "9724237676ee85e6bf1616a1cb106592de6988117ea5a6a50bf08c068172e57c",
+    "model_py_sha256": "dc3928c71e3d96d663d267614d8e94a7b6982f04abeca335dd1f7d8d163f70c5"
+  },
+  "run_summary": {
+    "turn_count": 11,
+    "tool_call_count": 33,
+    "compile_attempt_count": 7,
+    "final_status": "success"
+  },
+  "parent": null,
+  "seed": null,
+  "inherited_inputs": []
+}

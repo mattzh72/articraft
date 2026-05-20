@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_overbed_table_6b167fd3fa9c4b2ca71226878bd68ec1",
   "created_at": "2026-04-27T03:59:23Z",
   "updated_at": "2026-04-27T05:31:30Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A bariatric overbed table with a wide H-base on casters, twin lift posts, a broad meal tray, and a release paddle below the work surface, plus a low foot-ope..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "9f924005b5b2cf6d3f5b730578f45bae870ba3bc14ffc64ada834d4e5d796f78",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_overbed_table_6b167fd3fa9c4b2ca71226878bd68ec1",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

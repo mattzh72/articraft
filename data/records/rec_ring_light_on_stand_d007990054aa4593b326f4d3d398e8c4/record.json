@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_ring_light_on_stand_d007990054aa4593b326f4d3d398e8c4",
   "created_at": "2026-04-04T14:59:34Z",
   "updated_at": "2026-04-05T11:58:23Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A compact ring light with a fold-flat tabletop stand. The circular light head sits on a short tilt bracket, and the small three-leg stand folds outward from..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "b6f0f9cc0860cacc33439eedf27896a875e0b1aebbf34ea9467da87b2c71256e",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_ring_light_on_stand_d007990054aa4593b326f4d3d398e8c4",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

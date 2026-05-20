@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_threejoint_revolute_chain_0001",
   "created_at": "2026-03-12T16:05:16Z",
   "updated_at": "2026-04-01T10:31:37Z",
@@ -20,16 +20,17 @@
     "prompt_preview": "A three-link articulated task arm with shoulder, elbow, and wrist revolute joints ending in a fixed rectangular pad."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "a34ebc528746b6650c435573b866a529a3e6525880b1b1c0229209245ebad71c",
-    "model_py_sha256": "f82d3ea1f6a9c27974ec6a94913e9972d4077fed13de7a260cf20e6c00027892"
+    "model_py_sha256": "20f7b920135bbdc8e9797d2d70b88ffcebe005d664d0b0a6b6e4f0c914ef19bd"
   },
   "collections": [
     "dataset"
@@ -37,5 +38,12 @@
   "author": "mattzh72",
   "rated_by": "mattzh72",
   "secondary_rating": 5,
-  "secondary_rated_by": "Zhaomou Song"
+  "secondary_rated_by": "Zhaomou Song",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_threejoint_revolute_chain_0001",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

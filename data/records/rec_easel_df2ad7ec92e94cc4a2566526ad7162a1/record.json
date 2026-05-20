@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_easel_df2ad7ec92e94cc4a2566526ad7162a1",
   "created_at": "2026-04-27T03:06:13Z",
   "updated_at": "2026-04-27T07:58:51Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A French sketch-box easel with two front legs and a single rear leg forming an A-frame, plus a storage box panel below the canvas rest. The rear leg extends..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "d33786ab396627fcf68334218a8624e2b61e448e35ced516cd74fc2af4ea720b",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_easel_df2ad7ec92e94cc4a2566526ad7162a1",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

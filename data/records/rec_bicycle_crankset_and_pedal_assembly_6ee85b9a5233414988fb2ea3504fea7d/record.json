@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_bicycle_crankset_and_pedal_assembly_6ee85b9a5233414988fb2ea3504fea7d",
   "created_at": "2026-04-03T22:05:24Z",
   "updated_at": "2026-04-04T10:26:33Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "An e-bike torque-sensing crankset with a wide cylindrical bottom-bracket shell, two crank arms on the spindle ends, and a large chainring. The spindle and bo..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "5cc74a41822a7feaaf7c90bf6cbc7d8e25bf03d04f91148ce69aaaa3d50de093",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_bicycle_crankset_and_pedal_assembly_6ee85b9a5233414988fb2ea3504fea7d",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

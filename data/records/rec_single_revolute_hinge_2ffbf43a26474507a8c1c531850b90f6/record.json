@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_single_revolute_hinge_2ffbf43a26474507a8c1c531850b90f6",
   "created_at": "2026-04-02T16:32:45Z",
   "updated_at": "2026-04-06T01:33:19Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A trunnion-tab hinge assembly. A grounded support cheek carries a short trunnion and a flat moving tab with a plain rectangular end. The tab rotates as one r..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "47c57520a964b86587d2c6a32a2f2a1fdc70ea72da1b6278cb652e7d1d3a95cf",
-    "model_py_sha256": "2c5347f76b617305e8427761421636c4c3a938c69a962f2f7a5ba89db84f13c3"
+    "model_py_sha256": "30c47a24bbe5205251ed78294f0d69233736023f2d58ed86c70612bbd08165f9"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_single_revolute_hinge_2ffbf43a26474507a8c1c531850b90f6",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_tilting_fan_5418b2532c1e4686a0d2507fb726840e",
   "created_at": "2026-04-27T13:16:11Z",
   "updated_at": "2026-04-28T07:21:08Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A realistic, highly detailed tilting fan with a stable base, protective grille, motor housing, and visible controls. The tilt adjustment and spinning fan ass..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "1d3433de311f21221683ce67e4fbdf4e67e12bc7c8e567c404ca0d45fd022476",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_tilting_fan_5418b2532c1e4686a0d2507fb726840e",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

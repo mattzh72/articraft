@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_threestage_telescoping_slide_77aef8a4cda244d29823303bb7f6ffef",
   "created_at": "2026-03-30T17:57:46Z",
   "updated_at": "2026-04-01T11:00:00Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A three-stage telescoping slide. A grounded outer slide body carries a middle section, and the middle section carries a smaller inner section, all aligned on..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "fe62c66f52df1a4824308969385162fd3db40a30e52b74bf8bd1eec7e3404c67",
-    "model_py_sha256": "d27dfb31f70c913d30cbd246d512e5e72289b1a59c4599677cd04c9c64d820d2"
+    "model_py_sha256": "77a86746be1f7557e72e5ed2d6f9891963f4514e9e57193a990cd423f7e8ad1b"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_threestage_telescoping_slide_77aef8a4cda244d29823303bb7f6ffef",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

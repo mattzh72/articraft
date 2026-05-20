@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_tripodmounted_device_f04e0fcbd7ac4d10bce0315237318b72",
   "created_at": "2026-04-12T15:38:53Z",
   "updated_at": "2026-04-22T08:01:20Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "An observation device on a tripod with telescoping legs, a center column, and a quick-release tilt plate with a locking latch. Each telescoping leg stage sli..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "a08dc8369a9683b057043bf47c15e2c22e2bb042ef937b944d0af3829538fc38",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_tripodmounted_device_f04e0fcbd7ac4d10bce0315237318b72",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

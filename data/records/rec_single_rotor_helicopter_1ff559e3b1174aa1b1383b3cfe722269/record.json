@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_single_rotor_helicopter_1ff559e3b1174aa1b1383b3cfe722269",
   "created_at": "2026-04-09T16:54:33Z",
   "updated_at": "2026-04-11T15:44:17Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A training helicopter with a narrow fuselage, simple skid gear, a three-blade main rotor on a short roof mast, and a tail boom carrying a tail rotor at the t..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "633778f9fc1b3d79241722789ff39d82d716933142c9eb70ed6eda4bd746bfef",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_single_rotor_helicopter_1ff559e3b1174aa1b1383b3cfe722269",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

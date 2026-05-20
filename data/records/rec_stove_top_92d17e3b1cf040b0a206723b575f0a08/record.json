@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_stove_top_92d17e3b1cf040b0a206723b575f0a08",
   "created_at": "2026-04-27T02:33:45Z",
   "updated_at": "2026-04-27T09:53:42Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A built-in gas stove top with four burners, a narrow front control rail, and a small hinged safety cover over the ignition switches. The safety cover rotates..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "d225138cffaa6d35ff77173feaa5e080bc5fddb609da161be2d6e8eab02649c6",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_stove_top_92d17e3b1cf040b0a206723b575f0a08",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

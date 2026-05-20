@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_yawpitch_module_4fe5feb5e51948bcb7091a837c66bfef",
   "created_at": "2026-04-02T16:32:45Z",
   "updated_at": "2026-04-06T01:31:52Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A fork-backed yaw-pitch assembly. A rear support carries a yaw stage and a pitch cradle whose support arms are visibly larger than the output face they hold...."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "a36f31988d7f09732e54fb0e7f5415e573fbd031bb708c4127c3282502cd058f",
-    "model_py_sha256": "8b4947423b040904c2bc47d41b8bd0de29df97dbb317dac33ff1559b876cb0f4"
+    "model_py_sha256": "83e6fc7c5b10b037137fed5f7370d7646c83dedf541129f86df3761799226b5f"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_yawpitch_module_4fe5feb5e51948bcb7091a837c66bfef",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

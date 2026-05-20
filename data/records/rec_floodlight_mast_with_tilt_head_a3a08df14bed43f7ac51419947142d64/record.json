@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_floodlight_mast_with_tilt_head_a3a08df14bed43f7ac51419947142d64",
   "created_at": "2026-04-01T12:28:34Z",
   "updated_at": "2026-04-03T15:32:19Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A portable work-light tower with two telescoping leg posts each extending on a prismatic joint from a wide cross-bar base, a vertical mast column on a prisma..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "49ca23e782eab44f218df681bc807896d32aec167e163c60c729c99b08d74c62",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_floodlight_mast_with_tilt_head_a3a08df14bed43f7ac51419947142d64",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

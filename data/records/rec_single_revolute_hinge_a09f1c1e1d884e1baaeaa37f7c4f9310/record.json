@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_single_revolute_hinge_a09f1c1e1d884e1baaeaa37f7c4f9310",
   "created_at": "2026-04-29T02:22:45Z",
   "updated_at": "2026-04-29T04:40:17Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "Create a realistic gate hinge bracket. Geometry/details required: a wall mounting bracket, projecting hinge ear, moving gate tab, vertical pin, washers, and..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
     "cost_json": null,
-    "inputs_dir": "inputs"
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "94f273f0350072c23923113d46a080485eba69651e2f89cc89b6d06e098cfa0c",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_single_revolute_hinge_a09f1c1e1d884e1baaeaa37f7c4f9310",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

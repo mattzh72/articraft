@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_desktop_pencil_sharpener_with_hand_crank_and_drawer_b9582bb6f95b4cc59fffe84bce732ed9",
   "created_at": "2026-04-27T03:32:58Z",
   "updated_at": "2026-04-27T07:12:31Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A cast-metal classroom pencil sharpener with a boxy body, a side hand crank, a front shavings drawer, and a size-selector dial around the pencil port, plus a..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "ea3466160befc0a6cb97e76b7a31828762e2a008e30ed64e7e126fe5480ce71c",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_desktop_pencil_sharpener_with_hand_crank_and_drawer_b9582bb6f95b4cc59fffe84bce732ed9",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

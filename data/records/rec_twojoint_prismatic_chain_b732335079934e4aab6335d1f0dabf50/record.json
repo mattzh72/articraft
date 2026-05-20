@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_twojoint_prismatic_chain_b732335079934e4aab6335d1f0dabf50",
   "created_at": "2026-03-29T15:31:29Z",
   "updated_at": "2026-04-01T11:27:45Z",
@@ -22,16 +22,17 @@
     "prompt_preview": "A nested sample tray carrier with an outer drawer body, a middle tray, and a smaller inner tray at the front. The trays should visibly nest so the two extens..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "281cc23f2096921bfcad11ec6d1e024dd099f0e8a725087e3c63bb69ee509e39",
-    "model_py_sha256": "3ea25f013baaf64e9e1025e5cb959747a0cc159ac9c6ac21b0bec17691625f12"
+    "model_py_sha256": "20f943c165737a90dca1b6d926badcd74bf45a56d71c7a45d8b67aa789b2b851"
   },
   "collections": [
     "dataset"
@@ -39,5 +40,12 @@
   "author": "mattzh72",
   "rated_by": "mattzh72",
   "secondary_rating": 5,
-  "secondary_rated_by": "Zhaomou Song"
+  "secondary_rated_by": "Zhaomou Song",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_twojoint_prismatic_chain_b732335079934e4aab6335d1f0dabf50",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

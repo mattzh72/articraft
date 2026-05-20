@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_flatbed_scanner_with_hinged_lid_2f91aafb8a68467d91f500faa0efc659",
   "created_at": "2026-04-27T14:09:10Z",
   "updated_at": "2026-04-28T00:09:21Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A photo scanning platform with a shallow rectangular body, a hinged glass-top lid on a full-width rear revolute piano hinge, and a sliding print holder tray..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "471436767db9d16a428cecb467712f9c7474a4b14f77b1a6236bd9a4ac46b31e",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_flatbed_scanner_with_hinged_lid_2f91aafb8a68467d91f500faa0efc659",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_cantilever_articulated_arm_033009cff45d49b98764c004628c5a04",
   "created_at": "2026-03-30T17:57:46Z",
   "updated_at": "2026-04-07T10:05:25Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A boxed industrial cantilever arm. A reinforced root block carries two articulated arm links and a compact end plate, using clear clevis supports at each hin..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "5a1dbf626386af54ee9af8ac63a7430d60afaa8e03c10b5b3d3335cb8527b41e",
-    "model_py_sha256": "dee8b0c474e615fff510570ba0e7a6953bf6e43e89108dcbf80d181c17ee00c6"
+    "model_py_sha256": "1fb6d50fb9e2412c4fd89031228f09a74b0162c42391bb6cf3127034607beb43"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_cantilever_articulated_arm_033009cff45d49b98764c004628c5a04",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

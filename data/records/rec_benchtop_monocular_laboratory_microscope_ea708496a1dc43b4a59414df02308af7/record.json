@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_benchtop_monocular_laboratory_microscope_ea708496a1dc43b4a59414df02308af7",
   "created_at": "2026-04-11T23:35:57Z",
   "updated_at": "2026-04-12T12:31:24Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A benchtop teaching microscope with a broad base, a monocular tube, an objective turret, and a mechanical stage with a side carriage, plus a second stage-axi..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "730b9a4e05ef83148115cd15e6f8b242c2054e358730376171b823dd39dbe4bb",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_benchtop_monocular_laboratory_microscope_ea708496a1dc43b4a59414df02308af7",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

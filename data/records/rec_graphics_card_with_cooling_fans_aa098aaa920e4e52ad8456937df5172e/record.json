@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_graphics_card_with_cooling_fans_aa098aaa920e4e52ad8456937df5172e",
   "created_at": "2026-03-29T14:48:35Z",
   "updated_at": "2026-04-01T12:51:41Z",
@@ -22,12 +22,13 @@
     "prompt_preview": "A long gaming graphics card with two large front axial fans and a smaller tail fan over a flow-through opening. The PCB and heatsink stack are wrapped by an..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "cb8bc77f6093be6ea976b1ec97c8a47b6f615427ec3991f3c0a3ce892450f997",
@@ -39,5 +40,12 @@
   "author": "RuiningLi",
   "rated_by": "RuiningLi",
   "secondary_rating": 3,
-  "secondary_rated_by": "shawlyu"
+  "secondary_rated_by": "shawlyu",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_graphics_card_with_cooling_fans_aa098aaa920e4e52ad8456937df5172e",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

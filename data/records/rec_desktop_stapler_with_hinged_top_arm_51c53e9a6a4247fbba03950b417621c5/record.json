@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_desktop_stapler_with_hinged_top_arm_51c53e9a6a4247fbba03950b417621c5",
   "created_at": "2026-04-11T18:43:53Z",
   "updated_at": "2026-04-22T14:20:36Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A full-strip desktop stapler with a steel base, a long hinged top arm, an internal staple magazine, and a rear spring follower tab. The upper arm and magazin..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "2437950743a9b0de9410b239564283ff1623d5dcee31aa3517c199d88b257f8c",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_desktop_stapler_with_hinged_top_arm_51c53e9a6a4247fbba03950b417621c5",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

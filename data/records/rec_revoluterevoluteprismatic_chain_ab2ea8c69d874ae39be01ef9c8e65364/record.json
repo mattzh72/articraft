@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_revoluterevoluteprismatic_chain_ab2ea8c69d874ae39be01ef9c8e65364",
   "created_at": "2026-03-30T17:57:46Z",
   "updated_at": "2026-04-01T11:17:14Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A low-profile elbow arm with a telescoping tool head. A grounded base supports two flat-sided links, and the outer link guides a compact linear output member..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "62b8ac9c3dfa22f76c04164a60e09b20fc609658c2821e19f997d2b3707a77a1",
-    "model_py_sha256": "92c0999e63cfdf2b8ace5d7d508990a0c431b3dccc55dccc61a2e928f0e97107"
+    "model_py_sha256": "4e3aab2242e1cfa741a37c449539f939d9acda53e58eab547cd3e2cf756d2357"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_revoluterevoluteprismatic_chain_ab2ea8c69d874ae39be01ef9c8e65364",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

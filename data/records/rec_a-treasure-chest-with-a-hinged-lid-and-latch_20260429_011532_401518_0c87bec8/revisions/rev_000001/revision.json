@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "record_id": "rec_a-treasure-chest-with-a-hinged-lid-and-latch_20260429_011532_401518_0c87bec8",
+  "revision_id": "rev_000001",
+  "created_at": "2026-04-29T01:15:32Z",
+  "prompt_kind": "single_prompt",
+  "prompt_sha256": "e296ebd16b41338cc7bcc6c133be85934fc29918832676ec4c637fac55e8e94f",
+  "source": {
+    "run_id": "run_20260429_011532_401518_0c87bec8",
+    "prompt_batch_id": null,
+    "batch_spec_id": null,
+    "row_id": null,
+    "prompt_index": null
+  },
+  "generation": {
+    "provider": "openrouter",
+    "model_id": "tencent/hy3-preview:free",
+    "thinking_level": "high",
+    "openai_transport": null,
+    "openai_reasoning_summary": null,
+    "max_turns": 100,
+    "max_cost_usd": null
+  },
+  "artifacts": {
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
+    "prompt_series_json": null,
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": null,
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
+  },
+  "hashes": {
+    "prompt_sha256": "e296ebd16b41338cc7bcc6c133be85934fc29918832676ec4c637fac55e8e94f",
+    "model_py_sha256": "9741751d158b700fd75c0992554d659650bcdf83480509f2c33b7a3e96067610"
+  },
+  "run_summary": {
+    "turn_count": 49,
+    "tool_call_count": 48,
+    "compile_attempt_count": 9,
+    "final_status": "success"
+  },
+  "parent": null,
+  "seed": null,
+  "inherited_inputs": []
+}

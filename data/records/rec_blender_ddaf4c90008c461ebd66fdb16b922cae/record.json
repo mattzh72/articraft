@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_blender_ddaf4c90008c461ebd66fdb16b922cae",
   "created_at": "2026-04-01T11:59:43Z",
   "updated_at": "2026-04-03T17:59:40Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A portable travel blender with a cylindrical body that doubles as a drinking cup, a blade assembly on a revolute axle at the cup bottom that mates to the bas..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "c2f69a5fbf8c64f2a788aa1771b6d61fc5da55c0b7af9f820482b62ad3b51d0b",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_blender_ddaf4c90008c461ebd66fdb16b922cae",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_parabolic_dish_on_azimuth_elevation_mount_3de04fa4caf24e2f9b0beccf6f3957fb",
   "created_at": "2026-03-29T15:05:47Z",
   "updated_at": "2026-04-01T13:45:06Z",
@@ -22,12 +22,13 @@
     "prompt_preview": "A field tracking dish with a deep reflector, a rear yoke, and azimuth and elevation handwheels. The dish sits in side trunnions on a yoke above a rotating ba..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "1c6ff7264e056d2084a3edc55b87d81fdc94be7ec02d65887631c5d371cdd4cb",
@@ -39,5 +40,12 @@
   "author": "RuiningLi",
   "rated_by": "RuiningLi",
   "secondary_rating": 4,
-  "secondary_rated_by": "shawlyu"
+  "secondary_rated_by": "shawlyu",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_parabolic_dish_on_azimuth_elevation_mount_3de04fa4caf24e2f9b0beccf6f3957fb",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

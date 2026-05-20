@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_lounge_chair_with_independent_backrest_and_footrest_84399fbdb4e4417a8d4a6d035f8917ab",
   "created_at": "2026-03-28T18:38:36Z",
   "updated_at": "2026-04-01T13:54:57Z",
@@ -22,12 +22,13 @@
     "prompt_preview": "A zero-gravity lounge chair with a fixed ground frame, a linked seat-back frame, and a separate footrest panel. The side rails carry the seat and back on one..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "bc0359f351f5c85ffb29f04f228a6e75ba65359b7951b23bad380271126822c3",
@@ -39,5 +40,12 @@
   "author": "RuiningLi",
   "rated_by": "RuiningLi",
   "secondary_rating": 3,
-  "secondary_rated_by": "shawlyu"
+  "secondary_rated_by": "shawlyu",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_lounge_chair_with_independent_backrest_and_footrest_84399fbdb4e4417a8d4a6d035f8917ab",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_monitor_mount_31fc18fb45f74d65977784c4d5a77dd2",
   "created_at": "2026-03-31T17:20:51Z",
   "updated_at": "2026-03-31T18:32:41Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A side-wall monitor arm shown bare. A grounded side plate supports a primary link, a secondary link, and a compact rectangular monitor head with a short tilt..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "2eca315a93d985e8521f31dc62ad24e73248fc1cd1fdad9c6de71a8a79a6a504",
-    "model_py_sha256": "8c6c5454cd22397c8faa76c25764c314212da7a36ec0f0683f04451c5a4c36e9"
+    "model_py_sha256": "e2ddae5eec058d1ad3e46d787bd87d5ce45b75ada2d2d5ca4acbf6b5fcd889f2"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_monitor_mount_31fc18fb45f74d65977784c4d5a77dd2",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

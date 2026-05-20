@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_windshield_wiper_assembly_1fcd186540f84cde8dd38c371dbf69bb",
   "created_at": "2026-04-27T13:34:10Z",
   "updated_at": "2026-04-28T05:25:54Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "Create a premium consumer-grade Windshield wiper assembly with elegant proportions and tight surfacing, but keep the mechanics honest: a motor-crank linkage..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "d11fbd98590ccbffc1871da411d8a73930016aac14ff17f4f24b394de97d0170",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_windshield_wiper_assembly_1fcd186540f84cde8dd38c371dbf69bb",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

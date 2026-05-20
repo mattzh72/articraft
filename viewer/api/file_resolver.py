@@ -10,7 +10,6 @@ from fastapi import HTTPException
 from agent.prompts import (
     DESIGNER_PROMPT_NAME,
     GEMINI_DESIGNER_PROMPT_NAME,
-    LEGACY_DESIGNER_PROMPT_NAME,
     OPENAI_DESIGNER_PROMPT_NAME,
 )
 from storage.identifiers import validate_record_id
@@ -27,7 +26,6 @@ from storage.revisions import (
 )
 from storage.trajectories import (
     COMPRESSED_TRAJECTORY_FILENAME,
-    LEGACY_CONVERSATION_FILENAME,
     SYSTEM_PROMPT_FILENAMES,
     TRAJECTORY_FILENAME,
     unroll_record_trajectory,
@@ -38,7 +36,6 @@ from viewer.api.store_types import MaterializeRecordAssetsResult
 logger = logging.getLogger(__name__)
 
 SYSTEM_PROMPT_REQUEST_NAMES = SYSTEM_PROMPT_FILENAMES | {
-    LEGACY_DESIGNER_PROMPT_NAME,
     DESIGNER_PROMPT_NAME,
     OPENAI_DESIGNER_PROMPT_NAME,
     GEMINI_DESIGNER_PROMPT_NAME,
@@ -188,7 +185,7 @@ class ViewerFileResolver:
         revision_id = active_revision_id(self.repo, record_id, record=record)
         trace_root = active_traces_dir(self.repo, record_id, record=record).resolve()
 
-        if requested_name in {LEGACY_CONVERSATION_FILENAME, TRAJECTORY_FILENAME}:
+        if requested_name == TRAJECTORY_FILENAME:
             try:
                 target = unroll_record_trajectory(self.repo, record_id, revision_id=revision_id)
             except FileNotFoundError as exc:
@@ -278,7 +275,7 @@ class ViewerFileResolver:
         revision_id = validate_revision_id(revision_id)
         requested_name = requested_path.name
         trace_root = self.repo.layout.record_revision_traces_dir(record_id, revision_id).resolve()
-        if requested_name in {LEGACY_CONVERSATION_FILENAME, TRAJECTORY_FILENAME}:
+        if requested_name == TRAJECTORY_FILENAME:
             try:
                 target = unroll_record_trajectory(
                     self.repo,
@@ -332,17 +329,7 @@ class ViewerFileResolver:
             raise HTTPException(status_code=400, detail="Invalid file path")
 
         requested_name = requested_path.name
-        preferred_name = (
-            TRAJECTORY_FILENAME
-            if requested_name == LEGACY_CONVERSATION_FILENAME
-            else requested_name
-        )
-        try:
-            _, target = self.resolve_staging_target(run_id, record_id, f"traces/{preferred_name}")
-        except HTTPException:
-            if preferred_name == requested_name:
-                raise
-            _, target = self.resolve_staging_target(run_id, record_id, f"traces/{requested_name}")
+        _, target = self.resolve_staging_target(run_id, record_id, f"traces/{requested_name}")
 
         return target, trace_media_type(target)
 

@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_vane_array_with_independent_pivots_0007",
   "created_at": "2026-03-25T18:37:12Z",
   "updated_at": "2026-04-01T10:22:38Z",
@@ -22,16 +22,17 @@
     "prompt_preview": "Design a realistic, highly detailed vane array with independent pivots as a standalone mechanical study assembly for the sdk_hybrid pipeline, with an array o..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "05bf1e64efb4818e59918338476702051700e44b72b4a005569bf37368107489",
-    "model_py_sha256": "6e3be824bdf65e9cb86e83644655404608da2e1d26f8f64425ccfa0aa5a85043"
+    "model_py_sha256": "b527734c46084c7034e5442aa96a0bc50178718fb868b8408fef132e9e03366a"
   },
   "collections": [
     "dataset"
@@ -39,5 +40,12 @@
   "author": "mattzh72",
   "rated_by": "mattzh72",
   "secondary_rating": 5,
-  "secondary_rated_by": "Zhaomou Song"
+  "secondary_rated_by": "Zhaomou Song",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_vane_array_with_independent_pivots_0007",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

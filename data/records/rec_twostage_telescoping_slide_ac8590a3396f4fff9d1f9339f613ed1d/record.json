@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_twostage_telescoping_slide_ac8590a3396f4fff9d1f9339f613ed1d",
   "created_at": "2026-04-03T21:46:47Z",
   "updated_at": "2026-04-06T01:21:30Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A box-rail two-stage telescoping runner. A fixed outer rail section carries a middle runner and a smaller inner output runner. The middle and inner runners a..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "d7c05ad97851282c6897dc8815a750a03540ee39fce7dd000e921b6fce5b0ca2",
-    "model_py_sha256": "16e4db0aea013627ba56f47cb5bed6acccba36b51b272f716d3d797a4780b9fc"
+    "model_py_sha256": "92c1ed2eb075702624254199c5a865d6a5b40032f71da247c07e1c8b5dc38df8"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_twostage_telescoping_slide_ac8590a3396f4fff9d1f9339f613ed1d",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

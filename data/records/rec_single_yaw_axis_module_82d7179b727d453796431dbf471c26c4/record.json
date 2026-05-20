@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_single_yaw_axis_module_82d7179b727d453796431dbf471c26c4",
   "created_at": "2026-03-29T15:31:29Z",
   "updated_at": "2026-04-01T11:20:28Z",
@@ -22,16 +22,17 @@
     "prompt_preview": "A pedestal-mounted rotary stage with a round lower housing, a shallow upper platform, and a short equipment bracket fixed to the rotating platform. The lower..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "209a00c7ca45bd1b45c316350c8c7b02783976e10558b2fe7c435261ad7533ec",
-    "model_py_sha256": "a1c766c2e47a0c08fa1ba1721374a78218e1f1057dd9988cf1ee7578fa489dfb"
+    "model_py_sha256": "47388720c5832673d9af3f9888a59b043cbb43fbcdb13e8d56854f7850ef8104"
   },
   "collections": [
     "dataset"
@@ -39,5 +40,12 @@
   "author": "mattzh72",
   "rated_by": "mattzh72",
   "secondary_rating": 5,
-  "secondary_rated_by": "Zhaomou Song"
+  "secondary_rated_by": "Zhaomou Song",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_single_yaw_axis_module_82d7179b727d453796431dbf471c26c4",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

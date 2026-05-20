@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_telescoping_mast_with_pan_head_972b76040bdd4cc6bda6b5ddc5d70793",
   "created_at": "2026-03-30T17:57:46Z",
   "updated_at": "2026-04-01T11:03:09Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A camera-style telescoping mast with rotary top. A fixed lower base supports nested upright tubes, and the smallest upper section carries a short rotary head..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "0ae17be4b5bcc1606b45b3d42ae537d46a48c2986ab3379e861922f09194257e",
-    "model_py_sha256": "9489e5c1cb2fee3212b94aaffc452552e30e3bd600fad02fa31ce1985b4e313f"
+    "model_py_sha256": "bc3a7d0488f51ee8fb0f29dea049a234e0f1475efc5006549df21c6615d71674"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_telescoping_mast_with_pan_head_972b76040bdd4cc6bda6b5ddc5d70793",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

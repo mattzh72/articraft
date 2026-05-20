@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_coaxial_rotary_stack_0c02fb1714af4f2ab780684edcc53993",
   "created_at": "2026-03-30T17:57:46Z",
   "updated_at": "2026-04-01T11:03:13Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A low-profile coaxial stack with three levels. A squat base housing supports a large lower ring, a narrower middle stage, and a compact top flange with clear..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "e6913ec188efc16addcf14491ffa427c79e61e02465e21b50456415905bf462c",
-    "model_py_sha256": "16a5392bba4eda0dcc8915c66b04e395dcff87cf345f47aafb480c728796dbbd"
+    "model_py_sha256": "4fe9f1142b42b9bf45fd9102ac00386be68e5d55214136c9647bdaebd513d7e8"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_coaxial_rotary_stack_0c02fb1714af4f2ab780684edcc53993",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

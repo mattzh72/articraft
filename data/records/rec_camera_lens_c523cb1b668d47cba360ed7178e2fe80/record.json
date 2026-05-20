@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_camera_lens_c523cb1b668d47cba360ed7178e2fe80",
   "created_at": "2026-04-12T14:44:37Z",
   "updated_at": "2026-04-22T08:12:15Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A retractable kit zoom lens with a short outer barrel, a rotating unlock ring, and a front barrel section that extends for use. The unlock ring rotates conti..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "36365a02727bd9c0b899cf67ecc1cf263996d21f7644a8752a23990c2c1fab48",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_camera_lens_c523cb1b668d47cba360ed7178e2fe80",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_yawpitch_module_ce3f1bf63c9a4680a34c909b0b7c0819",
   "created_at": "2026-03-31T17:20:51Z",
   "updated_at": "2026-04-06T01:38:11Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A compact service yaw-pitch head. A broad grounded body supports a compact rotary lower stage and a small trunnion cradle above it. The lower stage is a yaw..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "0b81689a89018c60109db547e497cfb25d5c72820ac096dbf9b46cf1305714d0",
-    "model_py_sha256": "3d4da36146ec3c616f4b74ca32f7d8f06287629bee7298121403f4b6619e01b8"
+    "model_py_sha256": "387433e4accd11aacc4c7ca45c153f2448565fbcd1ca0020071d11379245a3bb"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_yawpitch_module_ce3f1bf63c9a4680a34c909b0b7c0819",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

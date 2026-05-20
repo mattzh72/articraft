@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_rotary_base_with_vertical_slide_5cc4202fc7a84abf85855d227ea21a69",
   "created_at": "2026-03-29T15:31:29Z",
   "updated_at": "2026-04-01T11:26:27Z",
@@ -22,16 +22,17 @@
     "prompt_preview": "A rotary mast module with a low cylindrical base, a stiff vertical column mounted on the base, and a compact sliding carriage on the face of the column. The..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "243ee26b157f6e79d673e7cca7d993af2c056cb37d05d0d800256220e5c913d0",
-    "model_py_sha256": "4d1f3a5e744295850e893ec4f582a6e3f931525f7960874450b543b69b4e48d9"
+    "model_py_sha256": "774f708a7e97c0166dd1987706371ab7e9ee09c81fb38e605d84426269010ecd"
   },
   "collections": [
     "dataset"
@@ -39,5 +40,12 @@
   "author": "mattzh72",
   "rated_by": "mattzh72",
   "secondary_rating": 5,
-  "secondary_rated_by": "Zhaomou Song"
+  "secondary_rated_by": "Zhaomou Song",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_rotary_base_with_vertical_slide_5cc4202fc7a84abf85855d227ea21a69",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_offsetaxis_rotary_stack_ef7000182ce34d9dab823c1eef2d8eaa",
   "created_at": "2026-03-29T15:31:29Z",
   "updated_at": "2026-04-01T11:24:41Z",
@@ -22,16 +22,17 @@
     "prompt_preview": "An offset indexing head with a low rotary base, a raised side support arm, and a smaller spin head mounted off to one side on a parallel upright axis. The ma..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "08b09d0f87345e0d02e8bd61958ae99cd771c5ba458335bcef509b47335a3f78",
-    "model_py_sha256": "9b4a882984fa9969cca105e41daddcef810da70a4efdcc112f7e9f323b901c83"
+    "model_py_sha256": "7851c7200ce68d16235b022bed18dbead57c800b7bc38c4a55c83c0543fc150b"
   },
   "collections": [
     "dataset"
@@ -39,5 +40,12 @@
   "author": "mattzh72",
   "rated_by": "mattzh72",
   "secondary_rating": 5,
-  "secondary_rated_by": "Zhaomou Song"
+  "secondary_rated_by": "Zhaomou Song",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_offsetaxis_rotary_stack_ef7000182ce34d9dab823c1eef2d8eaa",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_cctv_mast_with_pantilt_camera_head_f99aa949bd6048e7b7b8c106cd62edd0",
   "created_at": "2026-04-27T12:42:41Z",
   "updated_at": "2026-04-28T07:45:11Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A steel CCTV mast with a round tubular pole on a square base plate and a camera head that pans on a vertical revolute axis and tilts on a horizontal revolute..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "465ebdfba617845f2fc54887f7149650d81ea12b65a4f19fbd833180f9bb629f",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_cctv_mast_with_pantilt_camera_head_f99aa949bd6048e7b7b8c106cd62edd0",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

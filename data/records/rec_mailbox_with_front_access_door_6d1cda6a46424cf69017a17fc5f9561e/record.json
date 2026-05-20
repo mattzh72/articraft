@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_mailbox_with_front_access_door_6d1cda6a46424cf69017a17fc5f9561e",
   "created_at": "2026-04-27T02:33:45Z",
   "updated_at": "2026-04-27T09:50:34Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A locking apartment mailbox with a narrow front access door and a cam latch. The rigid box is recessed into a frame, and the front door is mounted on one sid..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "e6fcde4119352762fef04c4781b4ce4af0484a4cab356327a7355aadfbeae636",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_mailbox_with_front_access_door_6d1cda6a46424cf69017a17fc5f9561e",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_desktop_hole_punch_with_articulated_components_8b89afd96d7d4214b4aec10871ae973d",
   "created_at": "2026-04-11T14:56:29Z",
   "updated_at": "2026-04-11T15:21:33Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A compact personal hole punch with a small rectangular base, a curved upper handle, and a fold-flat locking tab near the rear. A shallow waste tray slides ou..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "dd6a10c53fbe805dbaec5ae83f858685eae75421de73be28bfaa4cda034df148",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_desktop_hole_punch_with_articulated_components_8b89afd96d7d4214b4aec10871ae973d",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

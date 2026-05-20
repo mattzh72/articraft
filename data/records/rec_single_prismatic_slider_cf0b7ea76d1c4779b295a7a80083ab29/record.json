@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_single_prismatic_slider_cf0b7ea76d1c4779b295a7a80083ab29",
   "created_at": "2026-04-02T16:32:45Z",
   "updated_at": "2026-04-06T01:33:07Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A bridge-backed transfer slide. A grounded rear frame supports one front carriage that stays clearly longer than its exposed overhang at either end. The fron..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "9e22f21d17211ea9eb6f877ad00edeca20371b34d20b8459633adbf23a4b477e",
-    "model_py_sha256": "cd3779ea01bbbcad2b1cdbdaf5a336655ccbd710d3ac55d1e30e52daa02a5d97"
+    "model_py_sha256": "e422a6e6b8971ab73b2317097765bcbe0829855761ec73b51de31008d3ed84b0"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_single_prismatic_slider_cf0b7ea76d1c4779b295a7a80083ab29",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

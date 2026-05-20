@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_remote_d0b8c780cc9042e7b1970cf012371626",
   "created_at": "2026-04-27T12:52:00Z",
   "updated_at": "2026-04-28T07:38:05Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A media center remote with a slim rounded rectangular body and a clickable scroll wheel on the front face. The scroll wheel rotates continuously about a hori..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "4fe06f7273ef7b127d084010823ada092439c8023066bc13d69fdfcfa8061157",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_remote_d0b8c780cc9042e7b1970cf012371626",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

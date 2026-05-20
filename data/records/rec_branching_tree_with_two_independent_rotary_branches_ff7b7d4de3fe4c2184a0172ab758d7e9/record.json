@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_branching_tree_with_two_independent_rotary_branches_ff7b7d4de3fe4c2184a0172ab758d7e9",
   "created_at": "2026-03-28T03:32:30Z",
   "updated_at": "2026-04-01T10:12:25Z",
@@ -22,16 +22,17 @@
     "prompt_preview": "A two-branch positioning fixture. A rigid central spine carries an upper branch arm and a lower branch arm on separate side-supported hubs, with a small tool..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "63431b162d9e89e2440e57d5a03760a9946535f9f0a18978a39e94bf3d88f386",
-    "model_py_sha256": "105b65a9f67f1f1ff751dc7e1cdbd78e0ea2a6daefebe1d00883f8627903df5a"
+    "model_py_sha256": "a597bbc2c913d86508876ad4254f3c76c64bd57cc2a1e4afe6f8693d7f50495b"
   },
   "collections": [
     "dataset"
@@ -39,5 +40,12 @@
   "author": "mattzh72",
   "rated_by": "mattzh72",
   "secondary_rating": 5,
-  "secondary_rated_by": "Zhaomou Song"
+  "secondary_rated_by": "Zhaomou Song",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_branching_tree_with_two_independent_rotary_branches_ff7b7d4de3fe4c2184a0172ab758d7e9",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

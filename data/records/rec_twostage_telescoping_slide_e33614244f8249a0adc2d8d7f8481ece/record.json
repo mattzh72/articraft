@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_twostage_telescoping_slide_e33614244f8249a0adc2d8d7f8481ece",
   "created_at": "2026-03-30T17:57:46Z",
   "updated_at": "2026-04-01T11:10:34Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A compact telescoping drawer slide. A fixed outer channel supports one moving inner section with a simple end plate, and the inner section reads as a capture..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "280e4af5509c5c88a76e0fb3edf75dc55d8dc968157381439cabb9732c6f9f88",
-    "model_py_sha256": "134830e2d795c97d5b7fdf29c3791ec21cb973c9f7215f5dbec20c79676367d9"
+    "model_py_sha256": "3c1cc00a4d34e5283acd2c4d28b815353934495e0638ece5a825549bdf358b1e"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_twostage_telescoping_slide_e33614244f8249a0adc2d8d7f8481ece",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

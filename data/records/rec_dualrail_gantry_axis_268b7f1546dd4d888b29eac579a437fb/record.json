@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_dualrail_gantry_axis_268b7f1546dd4d888b29eac579a437fb",
   "created_at": "2026-03-31T17:20:51Z",
   "updated_at": "2026-04-06T01:40:40Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A bridge-rider dual-rail gantry. Two grounded rails support a moving bridge, and the bridge carries a compact crosswise truck on its own guide path. The brid..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "2d8ceacc6e137fc790961f4c3bb5131aed4a7f41ee6a6baf391295333c3bb369",
-    "model_py_sha256": "943d16d6a2076edc6b7b93d3905548bf558f450ecd5e65a1e5e8cd20ff1881d7"
+    "model_py_sha256": "8aa246a773628736ea86f82baf38c260aa7ef1cebc957b1b541c87549cc66a8a"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_dualrail_gantry_axis_268b7f1546dd4d888b29eac579a437fb",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_wheelbarrow_8dd8f533e9124581a1dd01f3d22b8dde",
   "created_at": "2026-04-27T03:22:32Z",
   "updated_at": "2026-04-27T07:35:15Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A wheelbarrow. A tray sits between two handles, with one front wheel in a fork and two resting legs at the rear. Joints: the front wheel rotates continuously..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "63e9883d2f1d071104c08d553afc65453ef14baf61fe7faec47fbe9dfb240ecc",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_wheelbarrow_8dd8f533e9124581a1dd01f3d22b8dde",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

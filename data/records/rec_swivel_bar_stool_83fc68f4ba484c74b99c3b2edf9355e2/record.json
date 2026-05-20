@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_swivel_bar_stool_83fc68f4ba484c74b99c3b2edf9355e2",
   "created_at": "2026-04-26T14:51:19Z",
   "updated_at": "2026-04-27T10:49:32Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A realistic, highly detailed swivel bar stool with a sturdy base, seat, footrest, and a clean hospitality-style silhouette. The swivel motion and any standar..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "e0268155a51f3e854e46fd8fcb4b71189eb25dd9a85076c0c037e15371ec9d8a",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_swivel_bar_stool_83fc68f4ba484c74b99c3b2edf9355e2",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

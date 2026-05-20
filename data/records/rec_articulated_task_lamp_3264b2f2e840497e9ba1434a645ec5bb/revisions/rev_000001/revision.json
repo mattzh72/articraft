@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "record_id": "rec_articulated_task_lamp_3264b2f2e840497e9ba1434a645ec5bb",
+  "revision_id": "rev_000001",
+  "created_at": "2026-04-26T10:01:06Z",
+  "prompt_kind": "single_prompt",
+  "prompt_sha256": "1edf08d6bd0e136ff499a3736d0947391df298660075b55c181994beee0622af",
+  "source": {
+    "run_id": "run_20260426_050938_229896_20260425-avg-rating-gt-4p2-gemini31pro-high-100",
+    "prompt_batch_id": null,
+    "batch_spec_id": "20260425_avg_rating_gt_4p2_gemini31pro_high_100",
+    "row_id": "articulated_task_lamp",
+    "prompt_index": 3
+  },
+  "generation": {
+    "provider": "gemini",
+    "model_id": "gemini-3.1-pro-preview",
+    "thinking_level": "high",
+    "openai_transport": null,
+    "openai_reasoning_summary": null,
+    "max_turns": 100,
+    "max_cost_usd": null
+  },
+  "artifacts": {
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
+    "prompt_series_json": null,
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
+  },
+  "hashes": {
+    "prompt_sha256": "1edf08d6bd0e136ff499a3736d0947391df298660075b55c181994beee0622af",
+    "model_py_sha256": "08bca872eec1b3b9634e8711f72ee51fcaa1ce18806438abf3008f730fb10e58"
+  },
+  "run_summary": {
+    "turn_count": 11,
+    "tool_call_count": 10,
+    "compile_attempt_count": 3,
+    "final_status": "success"
+  },
+  "parent": null,
+  "seed": null,
+  "inherited_inputs": []
+}

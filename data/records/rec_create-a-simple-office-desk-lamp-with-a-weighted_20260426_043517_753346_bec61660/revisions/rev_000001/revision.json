@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "record_id": "rec_create-a-simple-office-desk-lamp-with-a-weighted_20260426_043517_753346_bec61660",
+  "revision_id": "rev_000001",
+  "created_at": "2026-04-26T04:35:17Z",
+  "prompt_kind": "single_prompt",
+  "prompt_sha256": "7ec563abf9c9134601091048eece5cc525504da4ae315ccb40eeb37c844002da",
+  "source": {
+    "run_id": "run_20260426_043517_753346_bec61660",
+    "prompt_batch_id": null,
+    "batch_spec_id": null,
+    "row_id": null,
+    "prompt_index": null
+  },
+  "generation": {
+    "provider": "openai",
+    "model_id": "gpt-5.4",
+    "thinking_level": "high",
+    "openai_transport": "http",
+    "openai_reasoning_summary": "auto",
+    "max_turns": 100,
+    "max_cost_usd": null
+  },
+  "artifacts": {
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
+    "prompt_series_json": null,
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
+  },
+  "hashes": {
+    "prompt_sha256": "7ec563abf9c9134601091048eece5cc525504da4ae315ccb40eeb37c844002da",
+    "model_py_sha256": "23798a3547b30b87fcaa8f341fe6bcc1d66fd69a921b74273db47b33b0602312"
+  },
+  "run_summary": {
+    "turn_count": 21,
+    "tool_call_count": 22,
+    "compile_attempt_count": 4,
+    "final_status": "success"
+  },
+  "parent": null,
+  "seed": null,
+  "inherited_inputs": []
+}

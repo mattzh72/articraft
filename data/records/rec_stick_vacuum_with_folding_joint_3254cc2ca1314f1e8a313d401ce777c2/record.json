@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_stick_vacuum_with_folding_joint_3254cc2ca1314f1e8a313d401ce777c2",
   "created_at": "2026-04-27T13:03:45Z",
   "updated_at": "2026-04-28T07:35:06Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "Design Stick vacuum with folding joint as a field-service workhorse. Build it around a slim vacuum body with folding wand joint and floor head. Prioritize ch..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "293e5e793a90772b92009fae13f0e302ed41a35edd231a3cfa0d592fe7863537",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_stick_vacuum_with_folding_joint_3254cc2ca1314f1e8a313d401ce777c2",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

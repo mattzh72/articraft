@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_drone_33253e5ef6ba4bdb9a1ff5e6eb34923f",
   "created_at": "2026-04-27T02:49:48Z",
   "updated_at": "2026-04-27T09:31:54Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A large fixed-wing mapping survey drone with a fuselage, two fixed wings, a vertical tail fin, and a rear pusher propeller. Wing sections attach to the fusel..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "dd3db692f9d244658a0bd902d4f94b0f9ce4fd7399f720280618b391ec8c90c0",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_drone_33253e5ef6ba4bdb9a1ff5e6eb34923f",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

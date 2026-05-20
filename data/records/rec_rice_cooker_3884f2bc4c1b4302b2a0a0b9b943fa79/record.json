@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_rice_cooker_3884f2bc4c1b4302b2a0a0b9b943fa79",
   "created_at": "2026-04-27T12:50:05Z",
   "updated_at": "2026-04-28T07:41:16Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A domestic rice cooker with a rounded metal body, a rear-hinged lid with a steam vent, a front latch button, and a small control panel with separate cook and..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "c38ff18822525d3c34b3bc7ab16542456aa8b636a3fd8f7c4476c904d960a6e1",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_rice_cooker_3884f2bc4c1b4302b2a0a0b9b943fa79",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

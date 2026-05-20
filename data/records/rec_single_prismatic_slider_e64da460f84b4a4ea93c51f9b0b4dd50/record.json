@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_single_prismatic_slider_e64da460f84b4a4ea93c51f9b0b4dd50",
   "created_at": "2026-04-03T21:46:47Z",
   "updated_at": "2026-04-06T01:22:58Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A dovetail saddle slider. A grounded base block carries a dovetail-like guide with a compact moving saddle on top. The saddle translates on one prismatic joi..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "bf14d1caeb1e821e040cd422ad50504d69659150e986863f5a9e7c611d53185a",
-    "model_py_sha256": "572103741593b951b5c8ab2998dacd2877da96eef4a916efdeb24464271dd793"
+    "model_py_sha256": "2b80e5ce820f87947ac78cbe92fe88c4e3c4de7f9ca3da127e7d71f06dea418f"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_single_prismatic_slider_e64da460f84b4a4ea93c51f9b0b4dd50",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

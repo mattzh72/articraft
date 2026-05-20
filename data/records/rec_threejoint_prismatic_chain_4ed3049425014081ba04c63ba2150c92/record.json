@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_threejoint_prismatic_chain_4ed3049425014081ba04c63ba2150c92",
   "created_at": "2026-04-03T21:46:47Z",
   "updated_at": "2026-04-06T01:26:23Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A three-carriage slide chain. A grounded outer guide carries a middle stage, the middle stage carries an inner stage, and the inner stage carries a short tip..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "7867ed9efefd340d202d02aa9dd9c1d43cae745f2da9ece4cfe5baa7a472cea6",
-    "model_py_sha256": "877d4523f0c455b86b85d8cd11c9806195a6af587a14ee5db5c3eac011439366"
+    "model_py_sha256": "babe5c0c40c76a3309cf1fbabf7accc8bd6b3c0641c72958eed146c782545558"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_threejoint_prismatic_chain_4ed3049425014081ba04c63ba2150c92",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

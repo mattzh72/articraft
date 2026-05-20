@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_bicycle_fork_and_handlebar_assembly_bbd097ac22a84d32865719acb0b58415",
   "created_at": "2026-04-03T22:29:05Z",
   "updated_at": "2026-04-04T10:29:06Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A cyclocross disc fork with a round carbon steerer, two parallel round blade legs with clearance for wide tires, and a flat handlebar on a separate stem. The..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "0cfdfd229e3fad40f4ec7c6be27c9b98e92fd53d9fa248838c6752645b251286",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_bicycle_fork_and_handlebar_assembly_bbd097ac22a84d32865719acb0b58415",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

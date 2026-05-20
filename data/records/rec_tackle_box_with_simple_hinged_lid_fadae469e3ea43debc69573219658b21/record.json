@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_tackle_box_with_simple_hinged_lid_fadae469e3ea43debc69573219658b21",
   "created_at": "2026-04-27T13:44:07Z",
   "updated_at": "2026-04-28T05:24:19Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "Build a precision professional Tackle box with simple hinged lid tuned for calibration and repeatable alignment. Use a tackle box shell with simple hinged li..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "28910c69f2ce254089cd0ff0da4acfcd72ca1abba8c04df4d11d3c25a39c8d9a",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_tackle_box_with_simple_hinged_lid_fadae469e3ea43debc69573219658b21",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

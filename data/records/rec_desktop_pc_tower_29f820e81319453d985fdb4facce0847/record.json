@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_desktop_pc_tower_29f820e81319453d985fdb4facce0847",
   "created_at": "2026-04-27T02:47:02Z",
   "updated_at": "2026-04-27T08:27:56Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A mid-tower ATX case with a rectangular steel body, a tempered glass side panel on two rear revolute hinge pins, a front mesh door on a right-edge revolute h..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "147d6c27c9087021ac2bb438d2f1b5741e017224f1ff0fc8c6dd25f4250396a3",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_desktop_pc_tower_29f820e81319453d985fdb4facce0847",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

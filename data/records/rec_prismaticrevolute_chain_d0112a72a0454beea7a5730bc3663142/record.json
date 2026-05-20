@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_prismaticrevolute_chain_d0112a72a0454beea7a5730bc3663142",
   "created_at": "2026-03-29T04:00:44Z",
   "updated_at": "2026-04-01T10:03:36Z",
@@ -22,16 +22,17 @@
     "prompt_preview": "A linear base slide carrying a hinge bracket and a short output arm ending in a square pad. The base should read as a guided carriage with the arm clearly ro..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "bbab70eb8049e1b451202ca139cc5e7b9876da7adff5012e7f9a86a58e44399e",
-    "model_py_sha256": "5d215cf24bdd6e54abf175ccca80955d7a2052f2b54db8ec8d1111d42ef21115"
+    "model_py_sha256": "8c472773d0c3b12e4fe8b64e7379ad3acf1817db74e8d7e8a1e3bf04f29f5db8"
   },
   "collections": [
     "dataset"
@@ -39,5 +40,12 @@
   "author": "mattzh72",
   "rated_by": "mattzh72",
   "secondary_rating": 5,
-  "secondary_rated_by": "Zhaomou Song"
+  "secondary_rated_by": "Zhaomou Song",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_prismaticrevolute_chain_d0112a72a0454beea7a5730bc3663142",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

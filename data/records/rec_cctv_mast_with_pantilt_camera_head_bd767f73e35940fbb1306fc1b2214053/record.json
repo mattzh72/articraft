@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_cctv_mast_with_pantilt_camera_head_bd767f73e35940fbb1306fc1b2214053",
   "created_at": "2026-04-03T22:13:32Z",
   "updated_at": "2026-04-04T10:42:30Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A cluster pole CCTV mount with a round pole, a radial hub at the pole top, and four camera arms with heads. Each radial arm is fixed to the hub. Each camera..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "0b2a1650229202fca3052117f9b482dc344dfa05140465b7b82fba9af07ac30b",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_cctv_mast_with_pantilt_camera_head_bd767f73e35940fbb1306fc1b2214053",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

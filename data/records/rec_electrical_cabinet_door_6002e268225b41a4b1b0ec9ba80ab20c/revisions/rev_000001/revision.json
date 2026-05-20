@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "record_id": "rec_electrical_cabinet_door_6002e268225b41a4b1b0ec9ba80ab20c",
+  "revision_id": "rev_000001",
+  "created_at": "2026-04-27T01:41:49Z",
+  "prompt_kind": "single_prompt",
+  "prompt_sha256": "af847c78ab467fc01c9a65ff5d8258befff5b734ad467da49e6d3af3f5a0e5bf",
+  "source": {
+    "run_id": "run_20260427_013816_361309_20260426-gpt55-gpt54-promising-exact-2k",
+    "prompt_batch_id": null,
+    "batch_spec_id": "20260426_gpt55_gpt54_promising_exact_2k",
+    "row_id": "g55c_0051_electrical_cabinet_door_6026b606",
+    "prompt_index": 51
+  },
+  "generation": {
+    "provider": "openai",
+    "model_id": "gpt-5.5-2026-04-23",
+    "thinking_level": "high",
+    "openai_transport": "http",
+    "openai_reasoning_summary": "auto",
+    "max_turns": 100,
+    "max_cost_usd": null
+  },
+  "artifacts": {
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
+    "prompt_series_json": null,
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
+  },
+  "hashes": {
+    "prompt_sha256": "af847c78ab467fc01c9a65ff5d8258befff5b734ad467da49e6d3af3f5a0e5bf",
+    "model_py_sha256": "31f34126fa6b4eca4ba1fb6fd1cb88b5223b73c39c5191602fb44dc984ee4954"
+  },
+  "run_summary": {
+    "turn_count": 24,
+    "tool_call_count": 26,
+    "compile_attempt_count": 5,
+    "final_status": "success"
+  },
+  "parent": null,
+  "seed": null,
+  "inherited_inputs": []
+}

@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_threestage_telescoping_slide_580f88038f994889ac3a3dab439d8e1c",
   "created_at": "2026-03-31T17:20:51Z",
   "updated_at": "2026-04-06T01:40:27Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A side-wall three-stage extension unit. A grounded side plate supports an outer channel, a middle runner, and an inner runner. The middle and inner runners s..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "55708fbe9f145a803c78a8f4cef5c7da3998f2005806d9f78d919b1450213176",
-    "model_py_sha256": "3e98f8b2bdf55a964db43cacb5b9f79d6833e90a0963ace7b96b9d13a9bcc507"
+    "model_py_sha256": "e60172305d44121863339c3827d18a9b702b9112ea4aec97bafd028c4469c4f7"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_threestage_telescoping_slide_580f88038f994889ac3a3dab439d8e1c",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

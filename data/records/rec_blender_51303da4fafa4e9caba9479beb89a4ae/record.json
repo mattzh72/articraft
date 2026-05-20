@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_blender_51303da4fafa4e9caba9479beb89a4ae",
   "created_at": "2026-04-26T10:01:06Z",
   "updated_at": "2026-04-27T10:43:53Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A laboratory blender with a boxy housing, a removable cup, and a latch-down top clamp over the cup opening. The top clamp rotates downward on a rear hinge, t..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "6ea1ecb18abba24ef2d41048fb7deed24ce353780d860dc0243ab54056e21746",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_blender_51303da4fafa4e9caba9479beb89a4ae",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

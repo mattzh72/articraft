@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_vertical_slide_with_wrist_hinge_a572016588bf4a449fbde2ef50feb194",
   "created_at": "2026-03-31T17:20:51Z",
   "updated_at": "2026-03-31T18:33:17Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A mast-and-wrist slide. A grounded vertical guide carries a moving carriage, and the carriage carries a compact hinged output face at its front. The carriage..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "1db61e79f0fb37a0962eb06db688da2897739f844289bffa90953e863d53ad8d",
-    "model_py_sha256": "fe27ec1d4dc57ed21aad076752a07b89a1676044b3d123904f5079fb83c7c589"
+    "model_py_sha256": "7e8439fa63c4ccef04717eede88f778934ab904429d9ffb912233d38edc3acea"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_vertical_slide_with_wrist_hinge_a572016588bf4a449fbde2ef50feb194",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

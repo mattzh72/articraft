@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_stationary_exercise_bike_47944892c5e9453da39ccf8380409f7d",
   "created_at": "2026-04-27T01:59:13Z",
   "updated_at": "2026-04-27T10:18:56Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A stationary exercise bike. A floor frame supports the flywheel housing, crank set, seat post, and handlebar mast. Joints: the crank rotates continuously abo..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "ef9d8ec31ddceff75a443b4bf1a6076ac68dd06ba9bf2ec4bb647c39f58e989a",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_stationary_exercise_bike_47944892c5e9453da39ccf8380409f7d",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

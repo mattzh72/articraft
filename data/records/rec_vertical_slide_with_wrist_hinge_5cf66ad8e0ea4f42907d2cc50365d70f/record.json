@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_vertical_slide_with_wrist_hinge_5cf66ad8e0ea4f42907d2cc50365d70f",
   "created_at": "2026-03-29T04:00:44Z",
   "updated_at": "2026-04-01T10:05:39Z",
@@ -22,16 +22,17 @@
     "prompt_preview": "A mast-like lift column with a compact moving carriage and a side-supported hinged nose bracket at the carriage front. The wrist should feel like a small fin..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "20291905aa16fc8bc2681770d9ebb90bd56a881d5be6dc47b8b3ba48be2a271e",
-    "model_py_sha256": "5fa2596da363ec29ebfd9d9c0b3a3c762fa4c7ee7ded7de6ec3b1190c521add1"
+    "model_py_sha256": "6894cf46ded5f047ca1c525cd393924123027e697920cfc75b75aa28e8ab6874"
   },
   "collections": [
     "dataset"
@@ -39,5 +40,12 @@
   "author": "mattzh72",
   "rated_by": "mattzh72",
   "secondary_rating": 5,
-  "secondary_rated_by": "Zhaomou Song"
+  "secondary_rated_by": "Zhaomou Song",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_vertical_slide_with_wrist_hinge_5cf66ad8e0ea4f42907d2cc50365d70f",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

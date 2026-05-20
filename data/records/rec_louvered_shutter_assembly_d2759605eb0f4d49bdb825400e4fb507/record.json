@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_louvered_shutter_assembly_d2759605eb0f4d49bdb825400e4fb507",
   "created_at": "2026-03-28T18:38:36Z",
   "updated_at": "2026-04-01T13:54:21Z",
@@ -22,12 +22,13 @@
     "prompt_preview": "A plantation shutter assembly with one full panel and a vertical tilt rod linking the louvers. The outer frame is fixed, the shutter panel hangs from one sid..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "be734adfee98c983812b23c2238f1c8907cfad9afa4ea7b37fbd4f31c6cbdcd3",
@@ -39,5 +40,12 @@
   "author": "RuiningLi",
   "rated_by": "RuiningLi",
   "secondary_rating": 5,
-  "secondary_rated_by": "shawlyu"
+  "secondary_rated_by": "shawlyu",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_louvered_shutter_assembly_d2759605eb0f4d49bdb825400e4fb507",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

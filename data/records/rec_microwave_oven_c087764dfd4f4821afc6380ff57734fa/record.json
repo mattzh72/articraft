@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_microwave_oven_c087764dfd4f4821afc6380ff57734fa",
   "created_at": "2026-04-27T02:49:49Z",
   "updated_at": "2026-04-27T08:29:13Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A built-in microwave with a side-hinged door and a pop-out control knob beside a row of buttons. The cavity sits in a wide rectangular housing, and the contr..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "7fc285cc4b810acd3e4b33689e3298ad2fc8d4610732f034bb2ba2aacb13b899",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_microwave_oven_c087764dfd4f4821afc6380ff57734fa",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

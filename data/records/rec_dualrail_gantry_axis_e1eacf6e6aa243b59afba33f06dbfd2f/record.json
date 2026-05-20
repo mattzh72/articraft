@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_dualrail_gantry_axis_e1eacf6e6aa243b59afba33f06dbfd2f",
   "created_at": "2026-04-26T06:42:27Z",
   "updated_at": "2026-04-27T10:46:48Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A portal-lite dual-rail gantry. A grounded two-rail chassis carries a transverse beam riding on end trucks, and the beam supports a central runner. The beam..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "ccf094da5b1aa7e1c567894271a9d8621427d2cf2ca5c531a2c5b99199167eef",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_dualrail_gantry_axis_e1eacf6e6aa243b59afba33f06dbfd2f",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

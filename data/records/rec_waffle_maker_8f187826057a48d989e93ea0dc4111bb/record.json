@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_waffle_maker_8f187826057a48d989e93ea0dc4111bb",
   "created_at": "2026-04-11T08:26:34Z",
   "updated_at": "2026-04-11T09:26:23Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A round Belgian waffle maker with a circular lower housing, a domed top plate, and a compact front control cluster with three distinct program buttons and on..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "c1197617b1946ab4f7a2e3af1740e029cbfa712b8b08540958eca43324aa7046",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_waffle_maker_8f187826057a48d989e93ea0dc4111bb",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

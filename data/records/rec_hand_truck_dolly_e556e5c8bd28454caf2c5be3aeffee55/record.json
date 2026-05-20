@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_hand_truck_dolly_e556e5c8bd28454caf2c5be3aeffee55",
   "created_at": "2026-03-28T13:45:33Z",
   "updated_at": "2026-04-01T14:33:31Z",
@@ -22,12 +22,13 @@
     "prompt_preview": "A stair-climber hand truck with an upright tubular frame and a toe plate. Each lower corner carries a triangular three-wheel cluster on a hub, so the frame r..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "d9f7e7d4c21089e7f8e74aa7c74dfc0dbe16b0c574ef76faf59348f72a82adff",
@@ -39,5 +40,12 @@
   "author": "RuiningLi",
   "rated_by": "RuiningLi",
   "secondary_rating": 5,
-  "secondary_rated_by": "shawlyu"
+  "secondary_rated_by": "shawlyu",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_hand_truck_dolly_e556e5c8bd28454caf2c5be3aeffee55",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

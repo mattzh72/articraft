@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_xyz_cartesian_stage_39bc32c2d0854b1ca2e860fb3e966d8f",
   "created_at": "2026-04-27T02:50:44Z",
   "updated_at": "2026-04-27T09:33:35Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A benchtop positioning stage with a long X base, a crosswise Y carriage on top of it, and a vertical Z slide ending in a square tool plate. The three guide d..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "c34975a43a19caeeecc4487c037af4049cebfa00ce0640c0164ffc40a16b5d62",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_xyz_cartesian_stage_39bc32c2d0854b1ca2e860fb3e966d8f",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_desk_with_drawer_61a9db3f873345b195ed846809b880ef",
   "created_at": "2026-04-03T21:39:07Z",
   "updated_at": "2026-04-04T14:10:38Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A writing table with a wide shallow rectangular top and a single center apron drawer. The drawer slides prismatically on wooden guide runners in the apron fr..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "a19c1660f6dca9ea279defbe40dea6557cc26b8d7593e788fec12e2edfd51f0b",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_desk_with_drawer_61a9db3f873345b195ed846809b880ef",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

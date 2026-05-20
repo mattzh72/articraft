@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_revoluteprismatic_chain_57a6ad5291d2474385a22e0665379f40",
   "created_at": "2026-04-27T03:40:10Z",
   "updated_at": "2026-04-27T07:12:44Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A pedestal-mounted arm with a rotary root joint, a straight beam link, and a telescoping nose slide ending in a flat tool pad. The beam should feel like a ri..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "41bd84ad8226c2348e22b7bbc2d99aebc2be5bcafeeb84efea53c8d8a45bc056",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_revoluteprismatic_chain_57a6ad5291d2474385a22e0665379f40",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

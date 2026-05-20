@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_prismaticrevoluteprismatic_chain_1545f643ac3142ccb8a77fd603a696e7",
   "created_at": "2026-04-01T18:09:34Z",
   "updated_at": "2026-04-06T01:36:47Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A compact service slide-link-slide module. A broad grounded body supports one carriage, one pivot frame, and one short terminal slider with plain hard edges...."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "cac3e9a31a2d6d8d0a6472ee70f26715782af6220f936f2ab430af4e00b06cfc",
-    "model_py_sha256": "027b50db601b54546c40dddaea0bde73032607a4a0f078c7d57eef9b45197481"
+    "model_py_sha256": "173263f62051bb051e79ef9754d3e78ab1995856a306dbc8a0cded6e364c4017"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_prismaticrevoluteprismatic_chain_1545f643ac3142ccb8a77fd603a696e7",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

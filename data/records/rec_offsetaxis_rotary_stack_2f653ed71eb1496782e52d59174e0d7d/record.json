@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_offsetaxis_rotary_stack_2f653ed71eb1496782e52d59174e0d7d",
   "created_at": "2026-04-27T02:03:45Z",
   "updated_at": "2026-04-27T10:24:08Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "An open-frame offset-axis rotary assembly. A grounded base disk, a side support arm, and a small upper stage form a clear two-level rotary structure without..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "98f8ba570ff8f39fefbb84c536268967e015792159e89c69d5c0ed748c575cbb",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_offsetaxis_rotary_stack_2f653ed71eb1496782e52d59174e0d7d",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

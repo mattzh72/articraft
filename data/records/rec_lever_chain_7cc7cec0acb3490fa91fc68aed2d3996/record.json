@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_lever_chain_7cc7cec0acb3490fa91fc68aed2d3996",
   "created_at": "2026-03-31T17:20:51Z",
   "updated_at": "2026-04-07T10:06:37Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A side-plate lever chain. A fixed cheek supports a sequence of flat-sided links with compact pin bosses, ending in a small end tab. The links are joined by t..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "8a94fa87cfd249b0c0139ffc8b572be5d994b685a586f96b6a5e85ee1968c174",
-    "model_py_sha256": "e03afa2b837d611f02711d1ce747426ee164a62300b0e0ac07445c99a046a17a"
+    "model_py_sha256": "30b1d1b7f835274d8ff8b789c1e29e3853f695f23c8a0f75e5ad10e7f9d780c6"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_lever_chain_7cc7cec0acb3490fa91fc68aed2d3996",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

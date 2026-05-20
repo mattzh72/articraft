@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_ceiling_light_fixture_3fa9c6c6052a4866ba00ed00ad2e796d",
   "created_at": "2026-04-27T12:57:45Z",
   "updated_at": "2026-04-28T07:39:26Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A track lighting fixture with a ceiling rail and three individually rotating spotlight heads each on a revolute joint along the track."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "7280da38ed75dc77a25ce619d749aba8038f8e4c9743b59ed8c45aa1dfd52817",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_ceiling_light_fixture_3fa9c6c6052a4866ba00ed00ad2e796d",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

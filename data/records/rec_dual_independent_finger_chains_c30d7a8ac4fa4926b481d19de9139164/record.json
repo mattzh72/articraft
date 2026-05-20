@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_dual_independent_finger_chains_c30d7a8ac4fa4926b481d19de9139164",
   "created_at": "2026-04-01T18:09:34Z",
   "updated_at": "2026-04-06T01:34:40Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "An under-slung dual finger rig. A top support carries a common palm block and two finger chains hanging beneath it, giving the pair a different silhouette wh..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "1299c3cc3bb30151b06b0741a84b7f690f1a91ff8a872e7b8df64a74cd05fabf",
-    "model_py_sha256": "15f42b04e5aea9f40ab2f9a758d59d839b02eab53e5da99c208821bb876b413c"
+    "model_py_sha256": "a9def793c2a75b9669a8a8a1e22e0f30c97b847435be4e2b13766a50e2ca47b7"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_dual_independent_finger_chains_c30d7a8ac4fa4926b481d19de9139164",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

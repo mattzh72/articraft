@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_yawpitchroll_wrist_0002",
   "created_at": "2026-03-12T18:49:15Z",
   "updated_at": "2026-04-01T10:34:17Z",
@@ -20,16 +20,17 @@
     "prompt_preview": "A robotic wrist head using serial yaw-pitch-roll axes, with concentric housings, clean machined brackets, and a precise CAD-like layout."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "9dc73c256ae21a1cf3a828f5b82495713cecde70c4041501a5091175ab0ab52c",
-    "model_py_sha256": "cd18d490571356daceb8755270686a6976c8a99f0caf1578bb7fc971eef4dfae"
+    "model_py_sha256": "46b9b256d8ffbead25e38fc07b55f432447e6324bf123ed638fb09c698d24587"
   },
   "collections": [
     "dataset"
@@ -37,5 +38,12 @@
   "author": "mattzh72",
   "rated_by": "mattzh72",
   "secondary_rating": 3,
-  "secondary_rated_by": "Zhaomou Song"
+  "secondary_rated_by": "Zhaomou Song",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_yawpitchroll_wrist_0002",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

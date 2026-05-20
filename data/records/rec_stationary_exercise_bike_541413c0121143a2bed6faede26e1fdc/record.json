@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_stationary_exercise_bike_541413c0121143a2bed6faede26e1fdc",
   "created_at": "2026-04-27T13:50:08Z",
   "updated_at": "2026-04-28T00:33:36Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "Build a precision professional Stationary exercise bike tuned for calibration and repeatable alignment. Use a bike frame with crank set, flywheel housing, sa..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "5b3eab2449403f70fa576af196bbf690b96364025794e8df6ca88906aecf98c3",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_stationary_exercise_bike_541413c0121143a2bed6faede26e1fdc",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

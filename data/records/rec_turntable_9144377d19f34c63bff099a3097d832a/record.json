@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_turntable_9144377d19f34c63bff099a3097d832a",
   "created_at": "2026-04-27T14:02:24Z",
   "updated_at": "2026-04-28T00:28:43Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "Design a retrofit/legacy-inspired Turntable that blends old-school construction cues with modern reliability. Keep the core as a plinth with rotating platter..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "773cb88e1aadc175c39ba4874ddbbc6c0e01a4ede747f0d863fce1aa7258997b",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_turntable_9144377d19f34c63bff099a3097d832a",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

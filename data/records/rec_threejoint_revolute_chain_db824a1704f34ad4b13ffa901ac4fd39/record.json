@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_threejoint_revolute_chain_db824a1704f34ad4b13ffa901ac4fd39",
   "created_at": "2026-03-31T17:20:51Z",
   "updated_at": "2026-04-07T10:13:04Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "An offset-rocker three-joint revolute chain. A grounded base foot supports stepped links whose widths and offsets vary from root to tip so the chain does not..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "f4df5dd37c899e6e1a9a7738aecb47a57e64e5ad411ccbe6255893df35c9cabe",
-    "model_py_sha256": "3d82794d8c29fb96e43ae1fb53c4c6342e9c780dabe1e0ac856f800be1ec18e0"
+    "model_py_sha256": "f3e1be91708ae002c07323f255b1b06687773ae51f4266c86ab51f87102fef07"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_threejoint_revolute_chain_db824a1704f34ad4b13ffa901ac4fd39",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

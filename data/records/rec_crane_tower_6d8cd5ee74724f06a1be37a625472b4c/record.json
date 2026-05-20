@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_crane_tower_6d8cd5ee74724f06a1be37a625472b4c",
   "created_at": "2026-04-01T12:12:31Z",
   "updated_at": "2026-04-04T14:07:03Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A self-erecting tower crane with a square telescoping mast extending on a prismatic joint from a wheeled ground base, a horizontal jib on a slewing vertical..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "a2430488fca65e3ffb5f29c40022b1e0f077f6d8396672c537cba834edc2e8c6",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_crane_tower_6d8cd5ee74724f06a1be37a625472b4c",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

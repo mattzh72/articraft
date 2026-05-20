@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_blimp_a61671c5ca014adba8897d8c1134b8bf",
   "created_at": "2026-04-27T14:00:17Z",
   "updated_at": "2026-04-28T00:29:52Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A utility blimp with a thick envelope, a compact gondola, twin engine pods, and a boxy tail cruciform, plus a rear mooring wheel under the gondola tail. the..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "87c9d62f8e6ebdeaca81f1d246c36bc6cc9cd963b9ebad4d3e931b87855316ae",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_blimp_a61671c5ca014adba8897d8c1134b8bf",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

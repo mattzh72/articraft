@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_dualcolumn_lift_carriage_7eb7d7846f2a4555be1113f63e311126",
   "created_at": "2026-04-03T21:46:47Z",
   "updated_at": "2026-04-06T01:26:09Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A stacker-style dual-column carriage. Two grounded uprights support a moving carriage frame with a stiff front plate and clear wraparound guides on both colu..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "dde0a43efd23b2d94ff0141ebd509eb6eefb3b9f10cf5899d022a1d007e0536f",
-    "model_py_sha256": "ee98f33aba17a9f4355eecc27d2f0dd8fa2b56181daf573578720cb671848506"
+    "model_py_sha256": "03383d299152380fc7bd20202cbd417013164b9ed4dc360cea5ce43f5a8b11a1"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_dualcolumn_lift_carriage_7eb7d7846f2a4555be1113f63e311126",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

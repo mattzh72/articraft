@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_casino_machine_8f020fb2e6c545ee9b0259710ca8410b",
   "created_at": "2026-04-11T23:49:20Z",
   "updated_at": "2026-04-12T12:17:53Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A tall reel-style slot machine with a curved top box, a central reel window, and a lockable lower service door, plus a large pull handle mounted on one side...."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "58248b51cb41fcaaf6b6f2d65f7febc6bee90d56ea447a16e01abdf28fecf0b2",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_casino_machine_8f020fb2e6c545ee9b0259710ca8410b",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

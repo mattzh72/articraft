@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_joystick_mechanism_0001",
   "created_at": "2026-03-25T18:37:12Z",
   "updated_at": "2026-04-01T10:23:47Z",
@@ -22,16 +22,17 @@
     "prompt_preview": "Design a realistic, highly detailed joystick mechanism as a standalone mechanical study assembly for the sdk_hybrid pipeline, with a gimballed control-stick..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "ded93dec08493f9248fbc048e97eb813384052b8f26441fd930949d05d7659aa",
-    "model_py_sha256": "40d7cd5c1b48e2b7707d1f3ed203ddc5e9c0bdee47c4c87ca1d54e1c23235903"
+    "model_py_sha256": "be0184df815490c39054b5cc970a5ceb4eba2233d6aeadb3e31faff6b4030928"
   },
   "collections": [
     "dataset"
@@ -39,5 +40,12 @@
   "author": "mattzh72",
   "rated_by": "mattzh72",
   "secondary_rating": 4,
-  "secondary_rated_by": "Zhaomou Song"
+  "secondary_rated_by": "Zhaomou Song",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_joystick_mechanism_0001",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

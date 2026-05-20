@@ -1,0 +1,43 @@
+{
+  "schema_version": 1,
+  "record_id": "rec_shoulderelbowwrist_arm_0001",
+  "revision_id": "rev_000001",
+  "created_at": "2026-03-12T18:30:13Z",
+  "prompt_kind": "single_prompt",
+  "prompt_sha256": "30ef36009e47bb4b33713045a75b4533310bf702a067d74067f73568e45ca5bd",
+  "source": {
+    "run_id": "run_import_shoulderelbowwrist_arm_20260312-181201-20260312-seed-prompts-v1",
+    "prompt_batch_id": "20260312_seed_prompts_v1",
+    "prompt_index": 1
+  },
+  "generation": {
+    "provider": "openai",
+    "model_id": "gpt-5.4",
+    "thinking_level": "high",
+    "openai_transport": null,
+    "openai_reasoning_summary": null,
+    "max_turns": 30
+  },
+  "artifacts": {
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
+    "prompt_series_json": null,
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
+  },
+  "hashes": {
+    "prompt_sha256": "30ef36009e47bb4b33713045a75b4533310bf702a067d74067f73568e45ca5bd",
+    "model_py_sha256": "f072f98e40f1ce4612ecb15a04645e405222d523cd2bcbbe805d9ab8afa1ac9d"
+  },
+  "run_summary": {
+    "turn_count": 5,
+    "tool_call_count": null,
+    "compile_attempt_count": null,
+    "final_status": "success"
+  },
+  "parent": null,
+  "seed": null,
+  "inherited_inputs": []
+}

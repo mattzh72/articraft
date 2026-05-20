@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_bicycle_fork_and_handlebar_assembly_c715869da4904889b7576fdfb99fef14",
   "created_at": "2026-04-01T11:52:53Z",
   "updated_at": "2026-04-03T17:57:52Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A dirt-jump bike fork with a wide stiff alloy crown, two straight round-section legs, and a threadless steerer clamped in a mid-rise stem. Flat wide dirt-jum..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "6de242b711c7c33119460f4a7b7bf26f3a9f8fc0849d833f939e602dd77ab2b4",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_bicycle_fork_and_handlebar_assembly_c715869da4904889b7576fdfb99fef14",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

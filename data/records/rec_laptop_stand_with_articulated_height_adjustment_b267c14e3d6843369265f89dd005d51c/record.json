@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_laptop_stand_with_articulated_height_adjustment_b267c14e3d6843369265f89dd005d51c",
   "created_at": "2026-04-27T13:35:58Z",
   "updated_at": "2026-04-28T05:39:43Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A cantilever laptop stand with a heavy desk base, one articulated side arm rising from the rear corner, and a single rigid tray carried over the center of th..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "9247a2c5052a4df536a2224e72278f4fe5610e215450cfe1f4d5b358cd5cfab7",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_laptop_stand_with_articulated_height_adjustment_b267c14e3d6843369265f89dd005d51c",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

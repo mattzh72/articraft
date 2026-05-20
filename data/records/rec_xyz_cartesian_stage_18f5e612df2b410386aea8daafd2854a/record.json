@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_xyz_cartesian_stage_18f5e612df2b410386aea8daafd2854a",
   "created_at": "2026-03-31T17:20:51Z",
   "updated_at": "2026-04-06T01:38:00Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A rail-stack XYZ stage. A grounded X axis carries a crosswise Y carriage, and the Y carriage carries a compact Z slide with a plain top plate. The X, Y, and..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "62396a9d271cc1195ad8cd6acbe547183089513b01c4c687fc0b8c2ec4346cf0",
-    "model_py_sha256": "efb845732e2e93ff0c2c55965b95a1b15b90d0b08c706a4d51445da2332bd139"
+    "model_py_sha256": "a0c06198862195afc3c7bf3bd17b1ba189822ef485d7a9da073379615b40d8db"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_xyz_cartesian_stage_18f5e612df2b410386aea8daafd2854a",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

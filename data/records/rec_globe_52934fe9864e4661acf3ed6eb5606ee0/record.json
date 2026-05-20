@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_globe_52934fe9864e4661acf3ed6eb5606ee0",
   "created_at": "2026-04-27T12:48:18Z",
   "updated_at": "2026-04-28T07:42:14Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A desktop world globe on a tilted meridian ring and round base. The spherical globe is held between two polar pivots inside the meridian, and the meridian is..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "caf4b4e4757c05388411671f2212a021cad82c94b2f8d319fe92fd86d6d4942f",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_globe_52934fe9864e4661acf3ed6eb5606ee0",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

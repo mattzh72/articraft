@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_storm_shutter_assembly_0001",
   "created_at": "2026-03-16T01:27:54Z",
   "updated_at": "2026-03-20T23:11:33Z",
@@ -20,16 +20,17 @@
     "prompt_preview": "A realistic, highly detailed storm shutter assembly with a protective outer frame, paneling, and durable hardware suited for harsh weather. The opening or cl..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "ef5e869609e53b4f5f64560001b27e07928bb83447d52eeb346407696deddf7b",
-    "model_py_sha256": "1b20b7ccf27de12f9db07860b36527013935d4aa78a3d9f6999198a9482dc9b3"
+    "model_py_sha256": "9d9a6d46c55c81e3f475ea39de623615d981737d7ba9ec532dc2615a3e54d431"
   },
   "collections": [
     "dataset"
@@ -37,5 +38,12 @@
   "author": "mattzh72",
   "rated_by": "mattzh72",
   "secondary_rating": null,
-  "secondary_rated_by": null
+  "secondary_rated_by": null,
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_storm_shutter_assembly_0001",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

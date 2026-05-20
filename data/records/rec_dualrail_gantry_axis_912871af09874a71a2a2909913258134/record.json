@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_dualrail_gantry_axis_912871af09874a71a2a2909913258134",
   "created_at": "2026-03-31T17:20:51Z",
   "updated_at": "2026-04-06T01:40:49Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A compact service gantry. A fixed lower frame supports a moving bridge and a short cross-slide whose support hardware remains visibly larger than the tool fa..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "f1b916275a84da9c1adb72036a16aac50f194689e08eb07037a10060a964d520",
-    "model_py_sha256": "4b67800b252fcb568cb9b7055767cd8f894562b413ebcf26ac4fb57123dbee96"
+    "model_py_sha256": "8ac5d629fcef845dadd7b92f7626d31dc7692f0db2d34e12c2a25e577eda88bf"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_dualrail_gantry_axis_912871af09874a71a2a2909913258134",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

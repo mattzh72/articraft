@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_pitchroll_module_4e0ffdb8907f4652b7784dc3da6085c6",
   "created_at": "2026-04-27T02:15:07Z",
   "updated_at": "2026-04-27T10:01:44Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A tower-mounted pitch-roll unit. A short pedestal supports a compact two-axis head whose outer member is visibly larger than the inner output cradle. The out..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "e4ed49243caf344eed4a2ce87b9e2693a8e22d6d855801754f68119c3cc985bb",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_pitchroll_module_4e0ffdb8907f4652b7784dc3da6085c6",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

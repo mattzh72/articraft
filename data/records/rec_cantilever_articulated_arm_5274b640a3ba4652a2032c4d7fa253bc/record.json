@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_cantilever_articulated_arm_5274b640a3ba4652a2032c4d7fa253bc",
   "created_at": "2026-03-29T15:31:29Z",
   "updated_at": "2026-04-01T11:27:26Z",
@@ -22,16 +22,17 @@
     "prompt_preview": "A floor-pedestal service arm with a heavy root column, an offset shoulder yoke, a long upper link, a shorter forearm, and a compact circular tool flange. The..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "93e5301e61266e5af3f92e537e3a5ed183fb813a866459098b83aa2e787e0470",
-    "model_py_sha256": "523c5601e6f4a99b897850a0342e116c93cfc5c0e23ac5048610146559f77655"
+    "model_py_sha256": "c2ba1c553aea49e7508f84645c3eef1a1b877d9cf72e87c39234c82eafac5621"
   },
   "collections": [
     "dataset"
@@ -39,5 +40,12 @@
   "author": "mattzh72",
   "rated_by": "mattzh72",
   "secondary_rating": 4,
-  "secondary_rated_by": "Zhaomou Song"
+  "secondary_rated_by": "Zhaomou Song",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_cantilever_articulated_arm_5274b640a3ba4652a2032c4d7fa253bc",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

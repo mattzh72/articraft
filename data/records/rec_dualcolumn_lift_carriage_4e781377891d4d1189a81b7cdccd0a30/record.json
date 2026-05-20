@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_dualcolumn_lift_carriage_4e781377891d4d1189a81b7cdccd0a30",
   "created_at": "2026-04-01T18:09:34Z",
   "updated_at": "2026-04-06T01:36:49Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A narrow service lift on twin rails. Two fixed uprights support a compact moving saddle with a square work face and clear overlap on both guides. The saddle..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "c720a6830c3a62dcf5d2c2d08f7e388e95f93c9e917e803e2d5b473fafeea620",
-    "model_py_sha256": "62e52dbe54693a5c1e9921ad86184ce6bace20b229fe84b0a32978cecabbd6f7"
+    "model_py_sha256": "1509b5c2a7473b186b4bdf2988ca2d9da1c4f1e8a5c48fd8ecdbb0804261790c"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_dualcolumn_lift_carriage_4e781377891d4d1189a81b7cdccd0a30",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

@@ -44,7 +44,6 @@ class ViewerRunsStore(ViewerStoreComponent):
             staging_dir / "assets" / "glb",
             staging_dir / "assets" / "viewer",
             staging_dir / "traces",
-            staging_dir / "traces" / "conversation.jsonl",
             staging_dir / "traces" / "trajectory.jsonl",
             staging_dir / "traces" / "trajectory.jsonl.zst",
         )

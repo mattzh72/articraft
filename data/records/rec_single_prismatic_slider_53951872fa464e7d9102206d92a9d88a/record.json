@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_single_prismatic_slider_53951872fa464e7d9102206d92a9d88a",
   "created_at": "2026-04-03T21:46:47Z",
   "updated_at": "2026-04-06T01:26:14Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A channel-runner slide module. A fixed channel guide carries a compact runner with a plain output plate at one end. The runner moves on one prismatic joint a..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "502fc8e415081fc1972411a66e9646e6b36d6f7b94f011b0b17bcde90aafbd77",
-    "model_py_sha256": "8cce3aba3b75db4af4bc65f0c3f1063ae82565fbfd3df351a937054623962a5a"
+    "model_py_sha256": "9d9554b6fe8b8870891d1d7828a17e1005a72f3415e1c490e39af65a74b5230d"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_single_prismatic_slider_53951872fa464e7d9102206d92a9d88a",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

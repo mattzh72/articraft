@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_orthogonal_xz_stage_26a666824195437194bac434a9c483ad",
   "created_at": "2026-03-31T17:20:51Z",
   "updated_at": "2026-04-06T01:40:43Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A side-wall XZ module. A rigid grounded side support carries a lower slide and a narrow vertical stage attached to the lower carriage. The assembly uses one..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "6733b29a771372622eb7b366433551557665e87d221a98330706ea5221b02bbe",
-    "model_py_sha256": "cd0db5a0f19bd4998d951cfda56809b22f7ad5bfae5b754bfe9fbbfb1a095f43"
+    "model_py_sha256": "27fdf1a03cef52af4382be662e762a57d0e47e70dd1a6b5207b59121ed14933e"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_orthogonal_xz_stage_26a666824195437194bac434a9c483ad",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_swivel_bar_stool_f4fe2d5bfd374b929d470fab67fcc788",
   "created_at": "2026-04-26T05:09:39Z",
   "updated_at": "2026-04-27T10:21:52Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A pedestal swivel bar stool with a round base, a central post, and a circular seat. The seat rotates continuously about the vertical pedestal axis. Bar seati..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "5f9441fefc0cfbf5abd41b9f06895b33303e6e6dc1d9ad15572782f7f16ca187",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_swivel_bar_stool_f4fe2d5bfd374b929d470fab67fcc788",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_observation_wheel_b2198c1da84f44f8bcf5bf48e14e65d1",
   "created_at": "2026-04-27T13:22:25Z",
   "updated_at": "2026-04-28T07:18:16Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A modern observation wheel with a broad hub, a slender rim, and enclosed capsule cabins mounted outside the rim. The wheel is supported by inclined legs and..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "3eb812c0603da981d50dcd3eb8fd13e436b909f17e39f23fe59d1206af492c77",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_observation_wheel_b2198c1da84f44f8bcf5bf48e14e65d1",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

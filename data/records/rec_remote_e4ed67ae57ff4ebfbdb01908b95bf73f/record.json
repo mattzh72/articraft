@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_remote_e4ed67ae57ff4ebfbdb01908b95bf73f",
   "created_at": "2026-04-03T21:31:29Z",
   "updated_at": "2026-04-04T15:57:34Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A learning universal remote with a rectangular housing and a prismatic sliding panel over the code-learning buttons. The slide panel rides on two guide rails..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "c81458ab3167494a94575448d11353c18f4ce43c9ff2d0d4a469e6017025691e",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_remote_e4ed67ae57ff4ebfbdb01908b95bf73f",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

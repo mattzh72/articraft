@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_telescoping_mast_with_pan_head_770843dc45a542b7995afc09a0d7ea65",
   "created_at": "2026-04-03T21:46:47Z",
   "updated_at": "2026-04-06T01:23:06Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A survey mast with rotary top plate. A grounded outer mast carries nested lift tubes, and the top tube carries a shallow pan head with a square face. The lif..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "0254b5dec7909e1a29c386549d71177d4b359889b28975eae8d88bb8be595bb3",
-    "model_py_sha256": "54ff304b5431238d39adad665db643b625e59120ce7f9ac158e74ae271cde80b"
+    "model_py_sha256": "024273a1667f517fa2b34ac7ee33e835132b86da4a18b76aece16463c6c70005"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_telescoping_mast_with_pan_head_770843dc45a542b7995afc09a0d7ea65",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

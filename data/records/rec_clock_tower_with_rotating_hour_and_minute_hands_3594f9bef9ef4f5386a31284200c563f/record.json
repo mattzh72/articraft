@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_clock_tower_with_rotating_hour_and_minute_hands_3594f9bef9ef4f5386a31284200c563f",
   "created_at": "2026-04-27T12:34:59Z",
   "updated_at": "2026-04-28T07:49:36Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A Gothic stone clock tower with a square tapering shaft, pointed-arch belfry tier openings, and a round clock face at the tower top with hour and minute hand..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "b3f5e202f297fbaf8f50226a4b272d47df99b1f238f07ab6eed23166b71bae6b",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_clock_tower_with_rotating_hour_and_minute_hands_3594f9bef9ef4f5386a31284200c563f",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

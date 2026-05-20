@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_threejoint_revolute_chain_e72e86a681f5417492afb1ca01f6fc6e",
   "created_at": "2026-03-29T15:31:29Z",
   "updated_at": "2026-04-01T11:26:51Z",
@@ -22,16 +22,17 @@
     "prompt_preview": "A calibration arm with a low pedestal, a short first link, a longer second link, a slim terminal link, and a flat tool plate. The arm should read as a clean..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "fa345e991cd4a7f57701a59fd621fa68d18f9c5a54cbbf14a043b8f9073bbf2d",
-    "model_py_sha256": "39fc4036bc0d653c761b0988ee8101cc6f47ba64ac84fd711f465f7548eca61e"
+    "model_py_sha256": "2fb53b1acedc0325ae3354310128f1dadaffdaff8f701d4f843c5ee73b4d33e2"
   },
   "collections": [
     "dataset"
@@ -39,5 +40,12 @@
   "author": "mattzh72",
   "rated_by": "mattzh72",
   "secondary_rating": 4,
-  "secondary_rated_by": "Zhaomou Song"
+  "secondary_rated_by": "Zhaomou Song",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_threejoint_revolute_chain_e72e86a681f5417492afb1ca01f6fc6e",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

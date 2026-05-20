@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_floor_lamp_c0a165299fdd4b2ea5e286728c9989c0",
   "created_at": "2026-04-12T14:57:21Z",
   "updated_at": "2026-04-22T08:08:31Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A floor reading lamp with a flat base, a telescoping post, and a small task head on a short pivoting neck. The post slides prismatically within the lower sle..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "1bf592ffef35caf0aa1591c2f87eddc7c40f10bee2ab556adb97905e0e869484",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_floor_lamp_c0a165299fdd4b2ea5e286728c9989c0",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_hinged_window_or_hatch_6e745f1d7d1047afbf67a1e33691798f",
   "created_at": "2026-04-27T02:33:46Z",
   "updated_at": "2026-04-27T09:48:56Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A service-body access hatch with a rear-hinged door and two quarter-turn latches on the front face. The rigid perimeter frame is fixed to the body opening, a..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "7ee07c3eb99057b05debdf1a86e30daf7dd6c1a1effc316abb3a6ee64c1b4c3f",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_hinged_window_or_hatch_6e745f1d7d1047afbf67a1e33691798f",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

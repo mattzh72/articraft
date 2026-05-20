@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_keyboard_803d79ad53e44a8887185eaf353e6007",
   "created_at": "2026-04-04T14:33:06Z",
   "updated_at": "2026-04-05T13:12:34Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A media keyboard with a side trackball and a jog wheel near the function row. The housing is a shallow tray with keys in the center, a ball cup on one side,..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "6a037bbc19efeafa8457529d82c46a52b7a70fce3af090f8e0432e466e6d8644",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_keyboard_803d79ad53e44a8887185eaf353e6007",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

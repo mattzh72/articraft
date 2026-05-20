@@ -6,7 +6,6 @@ from pathlib import Path
 from agent.workspace_docs import load_sdk_docs_reference as _load_sdk_docs_reference
 from sdk._profiles import get_sdk_profile
 
-LEGACY_DESIGNER_PROMPT_NAME = "system_prompt.txt"
 DESIGNER_PROMPT_NAME = "designer_system_prompt.txt"
 OPENAI_DESIGNER_PROMPT_NAME = "designer_system_prompt_openai.txt"
 GEMINI_DESIGNER_PROMPT_NAME = "designer_system_prompt_gemini.txt"
@@ -16,8 +15,6 @@ ANTHROPIC_DESIGNER_PROMPT_NAME = "designer_system_prompt_anthropic.txt"
 PROMPTS_ROOT = Path(__file__).resolve().parent
 GENERATED_PROMPTS_DIR = PROMPTS_ROOT / "generated"
 SECTIONS_DIR = PROMPTS_ROOT / "sections"
-# Back-compat alias for older references.
-PROMPTING_ROOT = PROMPTS_ROOT
 
 
 def normalize_sdk_package(sdk_package: str) -> str:
@@ -48,7 +45,6 @@ def resolve_system_prompt_path(
 
     candidates: list[Path] = []
     default_names = {
-        LEGACY_DESIGNER_PROMPT_NAME,
         DESIGNER_PROMPT_NAME,
         OPENAI_DESIGNER_PROMPT_NAME,
         GEMINI_DESIGNER_PROMPT_NAME,
@@ -59,9 +55,6 @@ def resolve_system_prompt_path(
     if path.name in default_names and profile_prompt_name is not None:
         candidates.append(path.with_name(profile_prompt_name))
     candidates.append(path)
-
-    if path.name == LEGACY_DESIGNER_PROMPT_NAME:
-        candidates.append(path.with_name(DESIGNER_PROMPT_NAME))
 
     for candidate in candidates:
         if candidate.exists():

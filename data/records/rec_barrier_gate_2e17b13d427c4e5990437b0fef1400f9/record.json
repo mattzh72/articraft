@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_barrier_gate_2e17b13d427c4e5990437b0fef1400f9",
   "created_at": "2026-04-03T21:49:08Z",
   "updated_at": "2026-04-04T10:22:37Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A farm swing gate on a pintle-post hinge with a wide rectangular timber-frame panel. The gate panel revolves on two revolute joints vertically aligned on a r..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "851c2c9e5807f68b7ead699a7433b95b07f4afb2f88a0c4634b45ff640a414fa",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_barrier_gate_2e17b13d427c4e5990437b0fef1400f9",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_single_rotor_helicopter_ee957ca5b34846e184411426034cb3c1",
   "created_at": "2026-04-11T14:56:29Z",
   "updated_at": "2026-04-11T15:17:44Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A utility helicopter with a compact fuselage, skid landing gear, a four-blade main rotor above the cabin roof, and a tail boom ending in a tail rotor. Two en..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "07cc1fe0f2754c357cbb764ae7be3e0ef9e0c00b3b8f3ea313cc1fe3d2bbc7c0",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_single_rotor_helicopter_ee957ca5b34846e184411426034cb3c1",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

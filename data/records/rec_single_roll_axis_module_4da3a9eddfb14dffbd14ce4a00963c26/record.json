@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_single_roll_axis_module_4da3a9eddfb14dffbd14ce4a00963c26",
   "created_at": "2026-03-31T17:20:51Z",
   "updated_at": "2026-04-06T01:41:00Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A tower-mounted roll-axis spindle module. A short pedestal rises from a heavy foot and ends in a compact axis package whose moving member is visually smaller..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "7cbcbc546d8d6d7be2a27230e44c1deabdc8f6231dc6f6b67cda30ed61e63025",
-    "model_py_sha256": "d8e38c335ad029912b372c1d8c8cdcff02b7566db79af0e87fb58a3a2bd4d6d9"
+    "model_py_sha256": "1d13aeda2daee54cd09dd76bebe9bbcb04018b11a93923b42d4b63b3404c5332"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_single_roll_axis_module_4da3a9eddfb14dffbd14ce4a00963c26",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

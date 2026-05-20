@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_all_in_one_printer_with_scanner_lid_and_paper_tray_2fa487f194524ba7b35fc345b2252469",
   "created_at": "2026-04-11T16:13:01Z",
   "updated_at": "2026-04-22T14:26:47Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A home-office all-in-one printer with a flatbed scanner on top, a front paper cassette, a fold-out output tray, and a small right-front control panel with a..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "0c2c57018b9e7ad7877898d3b970c9b6d5706878d338e3f2b70a94cccf2465fa",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_all_in_one_printer_with_scanner_lid_and_paper_tray_2fa487f194524ba7b35fc345b2252469",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

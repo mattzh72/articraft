@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_windshield_sun_visor_5ea1989d554c4ea1b9f601e30d36f70c",
   "created_at": "2026-04-27T14:19:06Z",
   "updated_at": "2026-04-27T21:36:48Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A padded windshield visor with a roof hinge bracket, a side retaining clip, and a vanity-mirror cover in the panel face, plus a sliding visor extender nested..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "8bd4d24110862585ce1be99304dd114cb1c0a5a62c1f36ae379506ae8a7fecfc",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_windshield_sun_visor_5ea1989d554c4ea1b9f601e30d36f70c",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "record_id": "rec_desktop_stapler_with_hinged_top_arm_62eb22c75a1a4c51993059fdefb76fff",
+  "revision_id": "rev_000001",
+  "created_at": "2026-04-11T20:29:04Z",
+  "prompt_kind": "single_prompt",
+  "prompt_sha256": "fc1895d77f4e6e337880625159e43b92d2dc9e8aed03fa9a9e3813b25c8eed48",
+  "source": {
+    "run_id": "run_20260411_202904_532846_20260411-desktop-stapler-rear-hinged-magazine-pl",
+    "prompt_batch_id": null,
+    "batch_spec_id": "20260411_desktop_stapler_rear_hinged_magazine_plus5_gpt54_high",
+    "row_id": "stapler_015",
+    "prompt_index": 5
+  },
+  "generation": {
+    "provider": "openai",
+    "model_id": "gpt-5.4",
+    "thinking_level": "high",
+    "openai_transport": "http",
+    "openai_reasoning_summary": "auto",
+    "max_turns": 160,
+    "max_cost_usd": null
+  },
+  "artifacts": {
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
+    "prompt_series_json": null,
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
+  },
+  "hashes": {
+    "prompt_sha256": "fc1895d77f4e6e337880625159e43b92d2dc9e8aed03fa9a9e3813b25c8eed48",
+    "model_py_sha256": "93ca62ead76a961a4125b38287341634164c179717e6306fa7f967a18100e6b8"
+  },
+  "run_summary": {
+    "turn_count": 39,
+    "tool_call_count": 42,
+    "compile_attempt_count": 12,
+    "final_status": "success"
+  },
+  "parent": null,
+  "seed": null,
+  "inherited_inputs": []
+}

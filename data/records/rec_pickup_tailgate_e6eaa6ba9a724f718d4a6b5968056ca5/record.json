@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_pickup_tailgate_e6eaa6ba9a724f718d4a6b5968056ca5",
   "created_at": "2026-04-27T12:37:27Z",
   "updated_at": "2026-04-28T07:50:15Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A pickup truck tailgate without the rest of the truck body. A wide rectangular tailgate panel fits between two short bed-side stubs, with hinge hardware at t..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "e78de8475de3e4ae12c65a19b67e975a87a494be33891fff8a8db2b4ae917226",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_pickup_tailgate_e6eaa6ba9a724f718d4a6b5968056ca5",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

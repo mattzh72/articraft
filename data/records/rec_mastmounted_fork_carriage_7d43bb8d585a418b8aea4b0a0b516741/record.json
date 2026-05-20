@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_mastmounted_fork_carriage_7d43bb8d585a418b8aea4b0a0b516741",
   "created_at": "2026-04-27T01:41:49Z",
   "updated_at": "2026-04-27T10:29:23Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "Design a realistic, highly detailed mast-mounted fork carriage as a standalone mechanical study assembly for the sdk_hybrid pipeline, with a vertical mast fr..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "f4a177b7037626a95b7645602465f49a7d8c832e9545083f8ea5be2072ce60b4",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_mastmounted_fork_carriage_7d43bb8d585a418b8aea4b0a0b516741",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_sluice_gate_with_vertical_lift_panel_2170db70870d43288f0c8cde55625571",
   "created_at": "2026-04-27T13:34:02Z",
   "updated_at": "2026-04-28T05:39:50Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A masonry-mounted sluice gate with steel guide jambs, a flat vertical lift panel, and a compact gearbox perched on the lintel beam. The lift panel moves pris..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "2add8daae654300553bd9ee43095f44991cc901c80de6ad7bfae138aa0bd7ed6",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_sluice_gate_with_vertical_lift_panel_2170db70870d43288f0c8cde55625571",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

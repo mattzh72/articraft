@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_all_in_one_printer_with_scanner_lid_and_paper_tray_2b71d6d680ce4042aa6bbcc7bcc05b0e",
   "created_at": "2026-04-11T18:03:18Z",
   "updated_at": "2026-04-22T14:21:41Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A boxy monochrome all-in-one printer with a tall scanner lid, a deep front paper drawer, and a side service door beside a top-right control cluster with a ke..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "53a9e2fc16a43b13fbed60d8c27d80726ac3ada637a55a235c3c064ad91902c4",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_all_in_one_printer_with_scanner_lid_and_paper_tray_2b71d6d680ce4042aa6bbcc7bcc05b0e",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_single_yaw_axis_module_2eaf53e83882444099534509a8325d48",
   "created_at": "2026-03-31T17:20:51Z",
   "updated_at": "2026-04-06T01:41:04Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "An under-slung yaw-axis rotary module. A top support bracket carries the moving member below it, creating a different silhouette while keeping the same singl..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "8a45d36f7d5ecb91329833ac382502cac3b21c39a0812c244a841497c7bdf10e",
-    "model_py_sha256": "7b0ae2d541c953dc85dad2586b1f8b2c80ab2b488d0a51dae02a9cbe956070f0"
+    "model_py_sha256": "694df73a480063ff69aaa308a94325254d5f1df1d83afe2d8a26a42d87b7a471"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_single_yaw_axis_module_2eaf53e83882444099534509a8325d48",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

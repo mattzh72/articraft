@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_dual_independent_finger_chains_45e9873a7ef042e6b71f7c5d44b12691",
   "created_at": "2026-03-29T04:00:44Z",
   "updated_at": "2026-04-01T10:07:06Z",
@@ -22,16 +22,17 @@
     "prompt_preview": "A bench gripper hand study with a thick rear palm plate, paired finger towers, and two tapered finger chains that sit close together but do not share links o..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "6786dc75a0003726457391cf752e4cb3bb7fc203563554f49e9749bdb5048ce8",
-    "model_py_sha256": "683aeae1757fb22cfc7d9f857085e41c3c25af93881f5a526d2fedb50de34ec0"
+    "model_py_sha256": "9dd9d19febf2c3d103b4417bef32a4ced5bdf5c9a0cb1696e21e979f56f8fb12"
   },
   "collections": [
     "dataset"
@@ -39,5 +40,12 @@
   "author": "mattzh72",
   "rated_by": "mattzh72",
   "secondary_rating": 5,
-  "secondary_rated_by": "Zhaomou Song"
+  "secondary_rated_by": "Zhaomou Song",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_dual_independent_finger_chains_45e9873a7ef042e6b71f7c5d44b12691",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_threejoint_prismatic_chain_0dc90ae77a2d48a2b17da1d713d67131",
   "created_at": "2026-03-30T17:57:46Z",
   "updated_at": "2026-04-01T11:03:22Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A service fixture with three linear stages. A fixed guide body supports successive carried sliders, each with visible overlap and simple stop geometry. The a..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "af0590ed78271cd8acc69f48a68bcd66b9e949d33d13073c6c496766d2d1cf41",
-    "model_py_sha256": "11d02faaa4535ecd567e3a1eabb04d9a065e533cb6d2a17eebac76464037263c"
+    "model_py_sha256": "0898ea45012c8491b0c3c725628834656806a3a4412cdf2caeab438a7cb9a13a"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_threejoint_prismatic_chain_0dc90ae77a2d48a2b17da1d713d67131",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

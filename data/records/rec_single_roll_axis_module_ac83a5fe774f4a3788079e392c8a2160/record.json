@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_single_roll_axis_module_ac83a5fe774f4a3788079e392c8a2160",
   "created_at": "2026-04-02T16:32:45Z",
   "updated_at": "2026-04-06T01:34:24Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A tower-mounted roll stage. A short pedestal rises from a heavy foot and ends in a compact roll head whose spinning member is smaller than the support below..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "ade7e321ee35f70556e3f7119c263b48ad6347bb0e7784a9925444409266eb10",
-    "model_py_sha256": "58121bc389c8e54929e613629efdb90ae703001ad99c8fe5d73aacab054e9b68"
+    "model_py_sha256": "34c11d31972518e571a77861e172e5b71b85d90fa205756d4e855464b2d46f23"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_single_roll_axis_module_ac83a5fe774f4a3788079e392c8a2160",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

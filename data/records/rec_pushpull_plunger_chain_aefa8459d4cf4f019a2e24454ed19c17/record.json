@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_pushpull_plunger_chain_aefa8459d4cf4f019a2e24454ed19c17",
   "created_at": "2026-03-31T17:20:51Z",
   "updated_at": "2026-03-31T18:48:08Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A plunger-and-tab mechanism. A grounded housing guides a straight plunger, and the plunger nose meets a short hinged tab at the front face. The plunger is a..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "703f8fba23e9d59d681a00659f545285ca723a9d773ca9742b57c927e0487e4d",
-    "model_py_sha256": "65d5c3831dd3b62a260bf19ee3413851885ac624c3a7e467fe388955a707ecad"
+    "model_py_sha256": "d703c3485052a25d153245f49a809c9baf51da0db699ea3ae3d9e54b8aeb748b"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_pushpull_plunger_chain_aefa8459d4cf4f019a2e24454ed19c17",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

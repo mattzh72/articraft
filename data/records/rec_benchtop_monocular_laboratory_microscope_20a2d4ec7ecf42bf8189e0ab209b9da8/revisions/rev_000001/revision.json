@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "record_id": "rec_benchtop_monocular_laboratory_microscope_20a2d4ec7ecf42bf8189e0ab209b9da8",
+  "revision_id": "rev_000001",
+  "created_at": "2026-04-11T23:35:56Z",
+  "prompt_kind": "single_prompt",
+  "prompt_sha256": "ca8a712595e4824d243510c800fd9a84aec7520b9c15360909171794d3dc1541",
+  "source": {
+    "run_id": "run_20260411_230510_372665_20260411-fill-to20-plus-diverse-exact500-gpt54-h",
+    "prompt_batch_id": null,
+    "batch_spec_id": "20260411_fill_to20_plus_diverse_exact500_gpt54_high",
+    "row_id": "benchtop_monocular_laboratory_microscope_013",
+    "prompt_index": 351
+  },
+  "generation": {
+    "provider": "openai",
+    "model_id": "gpt-5.4",
+    "thinking_level": "high",
+    "openai_transport": "http",
+    "openai_reasoning_summary": "auto",
+    "max_turns": 180,
+    "max_cost_usd": null
+  },
+  "artifacts": {
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
+    "prompt_series_json": null,
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
+  },
+  "hashes": {
+    "prompt_sha256": "ca8a712595e4824d243510c800fd9a84aec7520b9c15360909171794d3dc1541",
+    "model_py_sha256": "b8799add50f269e3a31f8e557ecb4a0066fd108d3bdf3f87ccc76aa0fa3c3ca3"
+  },
+  "run_summary": {
+    "turn_count": 11,
+    "tool_call_count": 12,
+    "compile_attempt_count": 3,
+    "final_status": "success"
+  },
+  "parent": null,
+  "seed": null,
+  "inherited_inputs": []
+}

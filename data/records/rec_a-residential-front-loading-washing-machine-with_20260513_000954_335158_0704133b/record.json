@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_a-residential-front-loading-washing-machine-with_20260513_000954_335158_0704133b",
   "created_at": "2026-05-13T00:09:54Z",
   "updated_at": "2026-05-13T00:36:15Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A residential front-loading washing machine with a white cabinet, stainless inner drum on a continuous revolute axle, large transparent porthole door on a le..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
     "cost_json": null,
-    "inputs_dir": "inputs"
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": null
   },
   "hashes": {
     "prompt_sha256": "52472428595920fbd080a2bfc51ec5eba989471ac35b19beabed4d500994fe8f",
@@ -44,5 +45,12 @@
     "mode": "external_agent",
     "agent": "codex",
     "trace_available": false
+  },
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_a-residential-front-loading-washing-machine-with_20260513_000954_335158_0704133b",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
   }
 }

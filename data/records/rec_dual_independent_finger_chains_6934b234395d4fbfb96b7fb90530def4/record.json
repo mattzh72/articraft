@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_dual_independent_finger_chains_6934b234395d4fbfb96b7fb90530def4",
   "created_at": "2026-04-03T21:46:47Z",
   "updated_at": "2026-04-06T01:25:59Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A split-palm dual finger mechanism. A rectangular palm block carries left and right phalanx chains on separate root pivots, and each finger ends in a blunt t..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "643d720fa25dda4c54fab7d5bc48f3308d7250aae887999e73c3b9b692d87561",
-    "model_py_sha256": "cf02775c61facee20001df5540e60aea34bb01a861f5eeb0a3a6f4b317d2156d"
+    "model_py_sha256": "4b249a8e248a419edf742eca9ae2dcb4fc535759666345fba3b2d1507c7959ea"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_dual_independent_finger_chains_6934b234395d4fbfb96b7fb90530def4",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

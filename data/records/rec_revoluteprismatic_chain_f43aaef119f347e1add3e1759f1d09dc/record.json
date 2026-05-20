@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_revoluteprismatic_chain_f43aaef119f347e1add3e1759f1d09dc",
   "created_at": "2026-03-29T15:31:29Z",
   "updated_at": "2026-04-01T11:24:17Z",
@@ -22,16 +22,17 @@
     "prompt_preview": "A pedestal-mounted arm with a rotary root joint, a straight beam link, and a telescoping nose slide ending in a flat tool pad. The beam should feel like a ri..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "41bd84ad8226c2348e22b7bbc2d99aebc2be5bcafeeb84efea53c8d8a45bc056",
-    "model_py_sha256": "29fd10bb51db21a68bc83c70724e99b9cae185be50e79179b902bf180dc30fe6"
+    "model_py_sha256": "3da433200924f8893aeeddd2e1a82e636660214ab1c6be353e9f098d3dde1d28"
   },
   "collections": [
     "dataset"
@@ -39,5 +40,12 @@
   "author": "mattzh72",
   "rated_by": "mattzh72",
   "secondary_rating": 5,
-  "secondary_rated_by": "Zhaomou Song"
+  "secondary_rated_by": "Zhaomou Song",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_revoluteprismatic_chain_f43aaef119f347e1add3e1759f1d09dc",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

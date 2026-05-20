@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_microwave_oven_08dbf217ed624175acd4e5141cb4e8a1",
   "created_at": "2026-04-04T14:40:50Z",
   "updated_at": "2026-04-05T12:59:57Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A commercial microwave with a broad pull-open door and a keypad. The heavy box body is fixed, and the flat front door is mounted on a side hinge with a dense..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "a8e772d5e26277221ea2c9a90bef9c336fd62035e566a9f369e6e9703dee7ed0",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_microwave_oven_08dbf217ed624175acd4e5141cb4e8a1",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_serial_elbow_arm_23bea92c12664643a1e181abaa7b3e21",
   "created_at": "2026-04-01T18:09:34Z",
   "updated_at": "2026-04-06T01:35:53Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A fork-root elbow module. A fixed fork captures the upper arm root, and the upper arm carries the forearm to a plain end plate. The root fork supports the sh..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "574b29761114d19e7508c8fea5c1ad6ce7d6544ad8e2884b34d7b6070c23df5a",
-    "model_py_sha256": "ed94088922c4c1a86ed6272b4de74ba6807736c2150f8ad0650667791fab7cef"
+    "model_py_sha256": "7a01e76a541f278a1d2920f69c86b1467f24dd121694934cff71564ede2d8e3e"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_serial_elbow_arm_23bea92c12664643a1e181abaa7b3e21",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

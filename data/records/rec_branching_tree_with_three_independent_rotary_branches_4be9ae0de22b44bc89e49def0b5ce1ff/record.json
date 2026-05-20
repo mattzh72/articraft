@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_branching_tree_with_three_independent_rotary_branches_4be9ae0de22b44bc89e49def0b5ce1ff",
   "created_at": "2026-03-30T17:57:46Z",
   "updated_at": "2026-04-01T11:00:27Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A boxed industrial three-branch fixture. A stiff column and reinforced side bosses support three short rotary branches with compact end-effectors, keeping th..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "a63b3959ef63958e69b114d81fb7cb3f8976333a37669d9f559d8be7a0d820ff",
-    "model_py_sha256": "5017fa68b098590d93cf428eff48bf20ed11fdd43e4513a0cacc61442c493d55"
+    "model_py_sha256": "0d1ae6c007c4c832a4b87569e19d6a9b6f623c2b957b06bef91c640a1bd095cf"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_branching_tree_with_three_independent_rotary_branches_4be9ae0de22b44bc89e49def0b5ce1ff",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

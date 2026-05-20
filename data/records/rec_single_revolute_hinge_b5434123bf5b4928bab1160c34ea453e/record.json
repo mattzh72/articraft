@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_single_revolute_hinge_b5434123bf5b4928bab1160c34ea453e",
   "created_at": "2026-03-29T04:00:44Z",
   "updated_at": "2026-04-01T10:06:47Z",
@@ -22,16 +22,17 @@
     "prompt_preview": "A heavy strap hinge with two long leaf plates, alternating barrel knuckles, and a prominent hinge pin along one edge. The leaves should feel thick and load-b..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "597791a77723405ad96c2e212cb83aa5c9a3f8a62971101ca89436fe820e2e3a",
-    "model_py_sha256": "50f8d9bc63a28120f5f481686ce3c0609782c0716e6321fa7f513c1e97fd8603"
+    "model_py_sha256": "94891a521a1ff2974d0cc0e6c3f4f051b500abf5b9fefbf7ca77ddedc8bee532"
   },
   "collections": [
     "dataset"
@@ -39,5 +40,12 @@
   "author": "mattzh72",
   "rated_by": "mattzh72",
   "secondary_rating": 5,
-  "secondary_rated_by": "Zhaomou Song"
+  "secondary_rated_by": "Zhaomou Song",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_single_revolute_hinge_b5434123bf5b4928bab1160c34ea453e",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

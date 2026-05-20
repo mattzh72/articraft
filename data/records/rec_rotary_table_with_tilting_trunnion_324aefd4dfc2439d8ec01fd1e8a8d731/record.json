@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_rotary_table_with_tilting_trunnion_324aefd4dfc2439d8ec01fd1e8a8d731",
   "created_at": "2026-03-29T04:00:44Z",
   "updated_at": "2026-04-01T10:02:00Z",
@@ -22,16 +22,17 @@
     "prompt_preview": "A trunnion table like a small machine-tool fixture, with a low rotary base, two upright side cheeks, and a rectangular table suspended between the cheeks. Th..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "8ec5fb564962ad876562a391d3b79f774a279137f54e8b08a9a1489a1ba48761",
-    "model_py_sha256": "7c151a7bfc289657a0c78b4055214e06f13c889c4e96b4fdfdbca9421edd390a"
+    "model_py_sha256": "74f6283b3a943ad041fd1fd9bee3858fd54ce8f71972ab7de957d00b9dc64895"
   },
   "collections": [
     "dataset"
@@ -39,5 +40,12 @@
   "author": "mattzh72",
   "rated_by": "mattzh72",
   "secondary_rating": 5,
-  "secondary_rated_by": "Zhaomou Song"
+  "secondary_rated_by": "Zhaomou Song",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_rotary_table_with_tilting_trunnion_324aefd4dfc2439d8ec01fd1e8a8d731",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_cantilever_articulated_arm_af0e65465ebb4c2e90b117d2a1bcdf9c",
   "created_at": "2026-03-30T17:57:46Z",
   "updated_at": "2026-04-01T10:57:32Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A side-mounted cantilever arm. A stiff backplate or post supports two serial links and a compact wrist face, keeping the root support clearly off to one side..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "615d955bd107f95c60aaca13bf2f975ea7f13bad76b21b76bc4e4842a99287c2",
-    "model_py_sha256": "78a264690f0012783fb9bf9e6cf144eb3a75da5c64a09113e5a076cdf3ef3969"
+    "model_py_sha256": "b791056b75c5701d40d8d6a9abb98276226e4221166ea7f3b3a2e5bf3097bb6a"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_cantilever_articulated_arm_af0e65465ebb4c2e90b117d2a1bcdf9c",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

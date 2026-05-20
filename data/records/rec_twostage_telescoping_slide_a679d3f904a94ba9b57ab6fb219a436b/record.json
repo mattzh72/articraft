@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_twostage_telescoping_slide_a679d3f904a94ba9b57ab6fb219a436b",
   "created_at": "2026-03-31T17:20:51Z",
   "updated_at": "2026-04-06T01:40:46Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A box-section two-stage telescoping slide. A grounded outer section carries one nested inner runner with a plain front face and clear overlap. The inner runn..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "de3169eaf148e811339018fcaacbfa2c3539e78880bc159412139fd20d83fcf8",
-    "model_py_sha256": "d23a8705925b7206074f3a1609dc2002cee828a920149f3ee2d8a581adb665e2"
+    "model_py_sha256": "be9ac19825a9b64545cb46085f5aee3dc130639491bc1f30c2a9e689d1f29429"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_twostage_telescoping_slide_a679d3f904a94ba9b57ab6fb219a436b",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

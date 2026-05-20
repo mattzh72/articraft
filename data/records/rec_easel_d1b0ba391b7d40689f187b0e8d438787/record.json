@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_easel_d1b0ba391b7d40689f187b0e8d438787",
   "created_at": "2026-04-12T15:19:55Z",
   "updated_at": "2026-04-22T08:01:45Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A whiteboard easel with a rear support leg, a sliding marker tray, and a clamp knob at the tray bracket. The rear support leg rotates on a top hinge behind t..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "082003b48ec24e3cb81032521fac4eb19ff67184427228f73b917275c0874ce8",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_easel_d1b0ba391b7d40689f187b0e8d438787",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

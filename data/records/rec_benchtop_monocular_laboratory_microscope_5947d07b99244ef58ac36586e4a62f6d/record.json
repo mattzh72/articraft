@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_benchtop_monocular_laboratory_microscope_5947d07b99244ef58ac36586e4a62f6d",
   "created_at": "2026-04-27T12:33:59Z",
   "updated_at": "2026-04-28T07:50:37Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A benchtop monocular laboratory microscope. A heavy base supports a vertical column and fixed specimen stage, with an optical body carriage riding on the col..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "6010ff3813a57806f1211e7251e44ad694712514cc2a0e2691568ab5461b2418",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_benchtop_monocular_laboratory_microscope_5947d07b99244ef58ac36586e4a62f6d",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

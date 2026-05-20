@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_single_prismatic_slider_0662e00c0889418080c33c7e20f45eb5",
   "created_at": "2026-04-29T08:08:50Z",
   "updated_at": "2026-04-29T08:41:22Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "Create a realistic simple rail slider. Geometry/details required: fixed rectangular rail, sliding carriage block, side guide lips, end stops, and a small han..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
     "cost_json": null,
-    "inputs_dir": "inputs"
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "bf33f06642043c034b0b4cc31c3b84d5b5f6e22b5a85fed043769ee2dd01febc",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_single_prismatic_slider_0662e00c0889418080c33c7e20f45eb5",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_stand_mixer_e6fd43c49cb24f009fc9b5004f720c19",
   "created_at": "2026-04-05T05:05:29Z",
   "updated_at": "2026-04-05T07:25:12Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A robust family-size stand mixer with a large bowl carried on a shallow base slide, a rounded motor head, and a paddle attachment under the nose. The bowl sh..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "64dcda76a96e1ad71e15309f1d55da7148779a65a0ef175690d57cd3e46f42dd",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_stand_mixer_e6fd43c49cb24f009fc9b5004f720c19",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

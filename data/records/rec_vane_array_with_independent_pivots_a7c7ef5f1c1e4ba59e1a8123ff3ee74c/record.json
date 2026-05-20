@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_vane_array_with_independent_pivots_a7c7ef5f1c1e4ba59e1a8123ff3ee74c",
   "created_at": "2026-04-03T21:46:47Z",
   "updated_at": "2026-04-06T01:20:58Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A boxed frame vane array. A grounded rectangular housing supports several evenly spaced rigid vanes, each carried on its own pair of end supports. The vanes..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "8c3d2c8262577672b81e791b4367c8b5006acb1234a660ce9efb3044c66397be",
-    "model_py_sha256": "9b3f632878bfc97e6237ae95041c3880ef2c247999623e0f7e48b1865d3d4ce8"
+    "model_py_sha256": "c5d359b2bbc8ae8dabfb15d69cc5d08d71fa42646dd81a7a0dddd798aef1cda2"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_vane_array_with_independent_pivots_a7c7ef5f1c1e4ba59e1a8123ff3ee74c",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

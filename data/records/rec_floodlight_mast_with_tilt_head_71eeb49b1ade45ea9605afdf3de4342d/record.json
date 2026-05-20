@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_floodlight_mast_with_tilt_head_71eeb49b1ade45ea9605afdf3de4342d",
   "created_at": "2026-03-28T12:24:59Z",
   "updated_at": "2026-03-29T12:04:02Z",
@@ -22,12 +22,13 @@
     "prompt_preview": "A rooftop flood mast with a flat steel base frame, a hinged mast that folds to horizontal for transport on a revolute joint at the frame front sill, and a re..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "7f89dfe3cb2187e7ca49e7f1612f897fbc028cdf98593111ca862175f4693129",
@@ -39,5 +40,12 @@
   "author": "Zhaomou Song",
   "rated_by": "Zhaomou Song",
   "secondary_rating": null,
-  "secondary_rated_by": null
+  "secondary_rated_by": null,
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_floodlight_mast_with_tilt_head_71eeb49b1ade45ea9605afdf3de4342d",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

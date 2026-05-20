@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_car_sunroof_cassette_5e93bd43c901479e9b17b631c068a884",
   "created_at": "2026-03-29T14:32:03Z",
   "updated_at": "2026-03-29T16:55:34Z",
@@ -22,12 +22,13 @@
     "prompt_preview": "A pop-up ventilation sunroof cassette with a rectangular aluminium frame and a glass panel that tilts upward at the rear edge on a horizontal revolute hinge..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "84df6ebb84d487ac053423808c2138ecf7372ab60efe1358753575fdf561d731",
@@ -39,5 +40,12 @@
   "author": "Zhaomou Song",
   "rated_by": "Zhaomou Song",
   "secondary_rating": null,
-  "secondary_rated_by": null
+  "secondary_rated_by": null,
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_car_sunroof_cassette_5e93bd43c901479e9b17b631c068a884",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

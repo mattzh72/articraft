@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_wheelchair_432c1981b9fb4190bd593c17cecfe463",
   "created_at": "2026-04-27T14:15:38Z",
   "updated_at": "2026-04-27T23:07:17Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "Create a premium consumer-grade Wheelchair with elegant proportions and tight surfacing, but keep the mechanics honest: a chair frame with large drive wheels..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "6e864b83c7c10ba6a33d65d58eb555eaa53a02da9cf9ebe23bfd1327d91125a1",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_wheelchair_432c1981b9fb4190bd593c17cecfe463",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_air_conditioning_machine_fc7332c7847649aa996af1e67fe58df7",
   "created_at": "2026-04-12T14:13:27Z",
   "updated_at": "2026-04-22T08:34:03Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A mini-split indoor air conditioning machine with a slightly curved front shell, a full-width lower flap, and a small display cover that lifts from one end o..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "ab3bf5feef68a5286cb9b6f64007059f13aeb369da6d1295fdad1f4eb5de61bf",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_air_conditioning_machine_fc7332c7847649aa996af1e67fe58df7",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

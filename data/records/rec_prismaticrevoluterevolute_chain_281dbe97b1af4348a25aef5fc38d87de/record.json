@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_prismaticrevoluterevolute_chain_281dbe97b1af4348a25aef5fc38d87de",
   "created_at": "2026-03-29T04:00:44Z",
   "updated_at": "2026-04-01T10:06:56Z",
@@ -22,16 +22,17 @@
     "prompt_preview": "A vertical mast slide feeding a compact side arm with an upper link and a forearm link. The mast and the arm should be visually distinct subsystems, one rect..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "0c26de0034131f8e47e4023d3ba769eaee94cb1dda5fa5d9ef7073b78a1b903a",
-    "model_py_sha256": "7cad249c03b3a2d526b1a6c85cf209743ee22130637764d6f4551d2ed05435d2"
+    "model_py_sha256": "f5fd2f939598734aab60191ab1adcaa5a444935a9523bb8afb4272ad243c2dad"
   },
   "collections": [
     "dataset"
@@ -39,5 +40,12 @@
   "author": "mattzh72",
   "rated_by": "mattzh72",
   "secondary_rating": 4,
-  "secondary_rated_by": "Zhaomou Song"
+  "secondary_rated_by": "Zhaomou Song",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_prismaticrevoluterevolute_chain_281dbe97b1af4348a25aef5fc38d87de",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

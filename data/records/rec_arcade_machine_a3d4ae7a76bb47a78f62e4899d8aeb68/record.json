@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_arcade_machine_a3d4ae7a76bb47a78f62e4899d8aeb68",
   "created_at": "2026-04-11T23:27:13Z",
   "updated_at": "2026-04-22T08:42:44Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A sit-down driving arcade cabinet with a molded seat pod, a dashboard-style control console, and a rear service door behind the seat base. The steering conso..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "e16fbca9d42536635a8dfa3554c780551f2c387e7a1a2f5182ac372897d6e1c6",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_arcade_machine_a3d4ae7a76bb47a78f62e4899d8aeb68",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_miter_saw_arm_assembly_acfa1d0dfeb841c4bd7461f721e3f34a",
   "created_at": "2026-04-04T14:43:26Z",
   "updated_at": "2026-04-05T12:54:55Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A dual-bevel miter saw with a pivoting head on a rotating table. The base supports the turntable, and the motor head is mounted to the arm through a side til..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "d314cfe0874254725ea768db54d15630795428b716dd158b8d9041d40cf2164b",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_miter_saw_arm_assembly_acfa1d0dfeb841c4bd7461f721e3f34a",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

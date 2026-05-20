@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_linear_carriage_with_independent_rotary_endeffector_ed4ff4f629454b3a9ca48d14f7c423cc",
   "created_at": "2026-04-03T21:46:47Z",
   "updated_at": "2026-04-06T01:21:56Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A rail-and-spindle carriage. A grounded base rail carries a moving carriage, and the carriage supports a short spindle in its own bearing housing. The carria..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "277c838d167fcf84df9833a0e86e4f5d90c2d7d1650d8817f76dd20bdadffa52",
-    "model_py_sha256": "28a0185a58cb55139aea406f9fd8d8d24fa23bf4b7ded7f8bb66fe2ed34c524f"
+    "model_py_sha256": "d3f3e1456f7dce2c060f28e5eb24f2eed5480f3b48dca7c72003bcebde2cc630"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_linear_carriage_with_independent_rotary_endeffector_ed4ff4f629454b3a9ca48d14f7c423cc",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_cantilever_articulated_arm_482bb4bc30fc4ab9a905d6a030180276",
   "created_at": "2026-03-31T17:20:51Z",
   "updated_at": "2026-03-31T18:47:02Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "An under-slung cantilever arm. A top support carries the main arm links below it, creating a different silhouette while keeping the chain as three rigid stag..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "eaa8cb6944de815fe9dd7f9a1032aba419254c58786befd682140c7d22140b77",
-    "model_py_sha256": "bd84f9a9278b36b83432fac72ba00c90f05365021b808636c9dc11efce53b342"
+    "model_py_sha256": "9c3e3300f58f77a33cfd6192e00bb07dc6d0def39e6304d6e7860cc83085a6ef"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_cantilever_articulated_arm_482bb4bc30fc4ab9a905d6a030180276",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

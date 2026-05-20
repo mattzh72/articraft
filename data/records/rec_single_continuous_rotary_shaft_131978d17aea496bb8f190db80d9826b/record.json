@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_single_continuous_rotary_shaft_131978d17aea496bb8f190db80d9826b",
   "created_at": "2026-04-03T21:46:47Z",
   "updated_at": "2026-04-06T01:25:52Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A cheek-supported rotary shaft. A fixed pair of support cheeks holds a straight output shaft with a simple round end face between the supports. One continuou..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "9761f6f9fb35d33b71cbf7e66bbde7535d4af97ac8373249c3388f7d93ec7e19",
-    "model_py_sha256": "ea1f280bbf6e0aac0160d28b192bec5da0be1e7bb4e620df7ad34611fe985578"
+    "model_py_sha256": "972fa390a47c79eff5f48229ec71c1b6e1581fe93de1ebf6ce6d282851187e41"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_single_continuous_rotary_shaft_131978d17aea496bb8f190db80d9826b",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

@@ -1,0 +1,43 @@
+{
+  "schema_version": 1,
+  "record_id": "rec_vacuum_cleaner_with_articulated_wand_0001",
+  "revision_id": "rev_000001",
+  "created_at": "2026-03-16T01:19:22Z",
+  "prompt_kind": "single_prompt",
+  "prompt_sha256": "de6c68e25010a8528c8a2cf4ad01bee2b8ab396c30f13c225a3a0b3a8bc1d45c",
+  "source": {
+    "run_id": "run_import_vacuum_cleaner_with_articulated_wand_20260316-011021-realism-articulation-v1",
+    "prompt_batch_id": "realism_articulation_v1",
+    "prompt_index": 1
+  },
+  "generation": {
+    "provider": "openai",
+    "model_id": "gpt-5.4",
+    "thinking_level": "high",
+    "openai_transport": "http",
+    "openai_reasoning_summary": null,
+    "max_turns": 30
+  },
+  "artifacts": {
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
+    "prompt_series_json": null,
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
+  },
+  "hashes": {
+    "prompt_sha256": "de6c68e25010a8528c8a2cf4ad01bee2b8ab396c30f13c225a3a0b3a8bc1d45c",
+    "model_py_sha256": "6909b60abfdec472a0b55cd46a6bd5cdbe1b8c09e6d4fc104c8c9b1be5fcca10"
+  },
+  "run_summary": {
+    "turn_count": 6,
+    "tool_call_count": null,
+    "compile_attempt_count": null,
+    "final_status": "success"
+  },
+  "parent": null,
+  "seed": null,
+  "inherited_inputs": []
+}

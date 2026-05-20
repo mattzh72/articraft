@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_joystick_mechanism_fd15644e7a694278aef2e2aaea7433bd",
   "created_at": "2026-04-27T02:33:45Z",
   "updated_at": "2026-04-27T09:38:36Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A fork-root joystick gimbal. A grounded support fork carries an outer yoke, which carries an inner yoke and a rigid lever. The outer and inner yokes are conn..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "38cbe4ab212d4da4a8a9904824dd903c7be1b4d9c03dd19fdffbad565fab6650",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_joystick_mechanism_fd15644e7a694278aef2e2aaea7433bd",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

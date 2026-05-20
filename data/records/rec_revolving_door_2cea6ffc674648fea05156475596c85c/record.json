@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_revolving_door_2cea6ffc674648fea05156475596c85c",
   "created_at": "2026-04-04T16:48:41Z",
   "updated_at": "2026-04-28T08:16:24Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A hotel grand entrance revolving door within a glass vestibule. A wide four-wing drum sits centered in the vestibule enclosure; each of the two vestibule sid..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "07185b367ef00e232446acd0db7e025517a4d496e995b2d06645a22e097d0682",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_revolving_door_2cea6ffc674648fea05156475596c85c",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

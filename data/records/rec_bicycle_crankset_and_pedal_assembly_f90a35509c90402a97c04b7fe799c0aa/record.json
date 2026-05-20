@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_bicycle_crankset_and_pedal_assembly_f90a35509c90402a97c04b7fe799c0aa",
   "created_at": "2026-04-03T22:05:29Z",
   "updated_at": "2026-04-04T10:25:42Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A road triple crankset with a bottom-bracket shell, two opposing crank arms, and three concentric chainrings. The spindle and crank arms rotate continuously...."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "695bd4bc70f59efe3d901e47d2e758b28bfa4e2bbef7d479e74d40f0af62b285",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_bicycle_crankset_and_pedal_assembly_f90a35509c90402a97c04b7fe799c0aa",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

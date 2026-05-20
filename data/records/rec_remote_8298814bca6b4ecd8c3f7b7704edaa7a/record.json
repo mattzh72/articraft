@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_remote_8298814bca6b4ecd8c3f7b7704edaa7a",
   "created_at": "2026-04-27T14:22:00Z",
   "updated_at": "2026-04-27T21:41:41Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A streaming remote with a narrow body, a circular navigation pad, a side volume rocker, and a sliding battery door on the back shell. The side volume rocker..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "0938ded4bfbd9cfa6dbb4a975d7f1b65534f3932ce8edcf776a2dd6225345841",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_remote_8298814bca6b4ecd8c3f7b7704edaa7a",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

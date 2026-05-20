@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_lighthouse_with_rotating_beacon_assembly_2db6939757e442ad901b5220b87ece8c",
   "created_at": "2026-03-29T14:54:19Z",
   "updated_at": "2026-04-01T13:04:41Z",
@@ -22,12 +22,13 @@
     "prompt_preview": "A squat pier lighthouse with a broad base, a wraparound gallery, and a cylindrical lantern housing. The beacon drum is mounted on a central spindle inside th..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "7f2b76fdb694877e1003f6b6b5a9a0656f42d43ff4045487b84b14a9818eec09",
@@ -39,5 +40,12 @@
   "author": "RuiningLi",
   "rated_by": "RuiningLi",
   "secondary_rating": 5,
-  "secondary_rated_by": "shawlyu"
+  "secondary_rated_by": "shawlyu",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_lighthouse_with_rotating_beacon_assembly_2db6939757e442ad901b5220b87ece8c",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

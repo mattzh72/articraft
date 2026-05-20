@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_dehumidifier_with_pullout_water_bucket_f828724fdf204b65946f1618094b5bf4",
   "created_at": "2026-04-11T18:03:18Z",
   "updated_at": "2026-04-22T14:24:17Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A minimalist dehumidifier with a front display bezel, a pullout lower tank, and a top exhaust flap behind a central dial with three surrounding buttons. The..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "78f597dbbf67971700445557af7286f2331b7edd8cc911723991e2e57360d49a",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_dehumidifier_with_pullout_water_bucket_f828724fdf204b65946f1618094b5bf4",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

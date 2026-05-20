@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_threejoint_prismatic_chain_4829402aa0434addaa1d237596a2d5d9",
   "created_at": "2026-03-31T17:20:51Z",
   "updated_at": "2026-03-31T18:47:15Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A three-stage linear stack. A grounded outer guide carries a first moving stage, that stage carries a second, and the second carries a third tip stage. The m..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "f3079b9924af64089d9646d530397e3c53ab64082613523f4e72f93270c2a9d9",
-    "model_py_sha256": "605f0177134b0a45b77bc88ba7ea0061cf6c3dae6631aa9559dd1f5ba3dcb46e"
+    "model_py_sha256": "c080396f6c00b668f7a08547cee519b670ece07b014840f33b99b356f8bd25e6"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_threejoint_prismatic_chain_4829402aa0434addaa1d237596a2d5d9",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

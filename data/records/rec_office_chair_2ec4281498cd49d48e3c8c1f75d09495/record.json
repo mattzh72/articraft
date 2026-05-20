@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_office_chair_2ec4281498cd49d48e3c8c1f75d09495",
   "created_at": "2026-04-27T02:38:17Z",
   "updated_at": "2026-04-27T09:32:12Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A meeting-room chair with a four-star swivel base and a reclining back shell. The seat and back are a separate shell assembly above a short central pedestal,..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "de124810ac00619b14a263ad914e404ca63cc10de98ea0df764418bfe9308880",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_office_chair_2ec4281498cd49d48e3c8c1f75d09495",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_serial_elbow_arm_478aa122662d4b30b7125b7215d77d4b",
   "created_at": "2026-04-03T21:46:47Z",
   "updated_at": "2026-04-06T01:25:36Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A trunnion-root elbow arm. A grounded pedestal supports an upper link, a forearm, and a plain end plate, with the shoulder hub visibly larger than the elbow..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "e692e4c5d7138c3568a460b16231a25edb656c0d7e3f86c46e8be6a678fcf1bc",
-    "model_py_sha256": "c58e5ac59170728fa6058aa0831bec7eb341421a299504f5397f7bc12aaa9444"
+    "model_py_sha256": "3c2f5277c5359e9242c828a603bc379c0291527b8b0367173a6fe05f3a0cd054"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_serial_elbow_arm_478aa122662d4b30b7125b7215d77d4b",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

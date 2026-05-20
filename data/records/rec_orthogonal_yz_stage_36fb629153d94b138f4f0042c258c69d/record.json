@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_orthogonal_yz_stage_36fb629153d94b138f4f0042c258c69d",
   "created_at": "2026-04-27T13:32:46Z",
   "updated_at": "2026-04-28T07:10:10Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A side-mounted YZ positioning module. A rigid back tower supports a lateral beam carriage with a descending tool plate guided from the beam. The beam carriag..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "84375a70212f4f9a1eedc689980499b65fa0a91087a290b8efe3a4b5e35c57ce",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_orthogonal_yz_stage_36fb629153d94b138f4f0042c258c69d",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

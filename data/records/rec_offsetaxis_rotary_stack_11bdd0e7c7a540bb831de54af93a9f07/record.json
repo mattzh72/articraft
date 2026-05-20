@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_offsetaxis_rotary_stack_11bdd0e7c7a540bb831de54af93a9f07",
   "created_at": "2026-04-03T21:46:47Z",
   "updated_at": "2026-04-06T01:22:37Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A side-cheek offset dual turntable. A broad lower turntable supports a side cheek with a smaller upper rotary face held off-center from the base axis. The lo..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "ae6f6c54ac4d25b416a1af6199ac8b938e53bfbddde9cc736bb5fbd8c91f9bf5",
-    "model_py_sha256": "16a79fd0502d7300d9ac40ec4257629353add16e0b3a4a9b72980975bbb328f2"
+    "model_py_sha256": "69fa539dc40937153e94a49089931c2ac60613a74246c15ce4a38d2912552fa6"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_offsetaxis_rotary_stack_11bdd0e7c7a540bb831de54af93a9f07",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

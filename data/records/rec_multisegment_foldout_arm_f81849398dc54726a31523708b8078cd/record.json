@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_multisegment_foldout_arm_f81849398dc54726a31523708b8078cd",
   "created_at": "2026-03-31T17:20:51Z",
   "updated_at": "2026-03-31T18:39:35Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "An offset-rocker multi-segment fold-out arm. A grounded base foot supports stepped links whose widths and offsets vary from root to tip so the chain does not..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "b2c5b7b6d56c85043eee38120de59b65936ae8e95a9e1159acef7e0e838c7760",
-    "model_py_sha256": "c7d87469e9db86a65a09803e62670d1662a8b634d81b19f3d5bc3068fa0ec39b"
+    "model_py_sha256": "e774ec9156aaef84097f68c7d7b393844069bb11b6cab34551cf8228afdbfe7b"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_multisegment_foldout_arm_f81849398dc54726a31523708b8078cd",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

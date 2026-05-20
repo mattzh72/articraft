@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_telescoping_boom_54ef8b09d16146b48d700610cf9a5bec",
   "created_at": "2026-03-31T17:20:51Z",
   "updated_at": "2026-04-06T01:39:01Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A compact service telescoping boom. A broad grounded root body supports an outer tube and several inner tubes with clear overlap left between every stage. Th..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "a883b1f1881c65df0aae9f1bb7cfe96d198035353c5b26b353b488b7fd03e9e0",
-    "model_py_sha256": "7e0f8ab2070170facbd59d5d3e4bf4bcb98ee0a35a93715bce8cc66ab452cee8"
+    "model_py_sha256": "dbdffb5d29c7a97afbe8a78e9ba127a3265391a9eca8663863b34d084354ee8f"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_telescoping_boom_54ef8b09d16146b48d700610cf9a5bec",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

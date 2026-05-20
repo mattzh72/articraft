@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_desktop_pc_tower_29906e751a304676999739f06629fec3",
   "created_at": "2026-04-27T12:47:02Z",
   "updated_at": "2026-04-28T07:43:54Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A mid-tower ATX PC with a steel rectangular case, a side panel on a rear revolute hinge, and a front optical drive bay with a sliding tray on a prismatic joint."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "8c24d70b7d4a849e86d30ccb51f3b5238001d00cfdf5f8670df5b69cbfbd225a",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_desktop_pc_tower_29906e751a304676999739f06629fec3",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

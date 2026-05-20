@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_desktop_pencil_sharpener_with_hand_crank_and_drawer_a3ec2256cef74317b57cecf3596e35d3",
   "created_at": "2026-04-27T13:06:13Z",
   "updated_at": "2026-04-28T07:28:11Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A schoolhouse-style pencil sharpener with a tall body, a side crank, a pullout waste drawer, and a hinged dust flap covering the pencil opening. The crank ro..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "2961cefe4be358fee8a13f089e2b80e4e3263ca66f4d38c441621e68d050882f",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_desktop_pencil_sharpener_with_hand_crank_and_drawer_a3ec2256cef74317b57cecf3596e35d3",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

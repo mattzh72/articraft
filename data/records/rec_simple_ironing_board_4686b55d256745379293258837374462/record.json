@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_simple_ironing_board_4686b55d256745379293258837374462",
   "created_at": "2026-04-06T15:06:57Z",
   "updated_at": "2026-04-11T04:55:12Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "An ironing board with a folding leg trestle. A board top mounts on a base bracket, with one U-shaped leg frame under the middle and a small fixed rest at one..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "59fe8f25465955a3dcb083dc1d7c85b3ecf8f72e0e427fd1eb09345cbb89d4a1",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_simple_ironing_board_4686b55d256745379293258837374462",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_threestage_telescoping_slide_c62fc72fe83f4902977854f3d333620c",
   "created_at": "2026-04-03T21:46:47Z",
   "updated_at": "2026-04-06T01:25:17Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A machine-slide three-stage extension. A fixed outer guide carries a broad middle runner, and the middle runner carries a smaller inner runner. The extension..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "fc98515ee66e0b2f4787fc315a6d52ed98d8e36c2efa22af9b1217597c1e3d83",
-    "model_py_sha256": "905ced8cad4d0424b54c43d3f7743fb71ba1a9a9de95aca9ac66616bbf4ca79b"
+    "model_py_sha256": "917119d94dfe3eb601afaf0b8e1733c60600cdd0131b3a9c4617dadd3feb7a0f"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_threestage_telescoping_slide_c62fc72fe83f4902977854f3d333620c",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

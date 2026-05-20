@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_rotary_base_with_vertical_slide_0002",
   "created_at": "2026-03-12T18:30:13Z",
   "updated_at": "2026-04-01T10:33:02Z",
@@ -20,16 +20,17 @@
     "prompt_preview": "A rotary base with a vertical linear slide mounted above it, combining one yaw axis and one prismatic lift axis in a compact machine module."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "ed52965c0df9de43d0627f80a1d2a68c6de5ed068c4fdc3cd668cfa3e41cfb26",
-    "model_py_sha256": "66cdf083fb1fb637e82b8bf4bc585cfb4e2e5d7a4edd6153039c263c439b05bc"
+    "model_py_sha256": "757bc91e6d88ab457fdaab4691fb891e28561512013b4a2fec3f54aa99d2155c"
   },
   "collections": [
     "dataset"
@@ -37,5 +38,12 @@
   "author": "mattzh72",
   "rated_by": "mattzh72",
   "secondary_rating": 5,
-  "secondary_rated_by": "Zhaomou Song"
+  "secondary_rated_by": "Zhaomou Song",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_rotary_base_with_vertical_slide_0002",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

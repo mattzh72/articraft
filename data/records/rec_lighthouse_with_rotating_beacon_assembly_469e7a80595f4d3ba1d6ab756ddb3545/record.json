@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_lighthouse_with_rotating_beacon_assembly_469e7a80595f4d3ba1d6ab756ddb3545",
   "created_at": "2026-04-27T13:33:50Z",
   "updated_at": "2026-04-28T05:41:05Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A skeletal steel lighthouse with a latticed tower and a compact lantern room at the top. The light mechanism is centered inside the lantern cage, and an acce..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "12193f8472ad947db2fa713f5fa55260af7f06453fc36fbee06af0ab29d9cde6",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_lighthouse_with_rotating_beacon_assembly_469e7a80595f4d3ba1d6ab756ddb3545",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_single_yaw_axis_module_faa86636447042a5a21cea0229d99368",
   "created_at": "2026-04-02T16:32:45Z",
   "updated_at": "2026-04-06T01:32:29Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A side-wall yaw head. A grounded backplate carries a forward rotary cartridge and a small faceplate at its nose so the support path stays easy to read. One r..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "498125563290397a07c71bb5fcf4c134540198ea18375279863150424b771cd4",
-    "model_py_sha256": "b5684e097427077c159b3490ed167a46891e41f91416df6cbf7a8a1534d234ff"
+    "model_py_sha256": "4ecf9f9889b866533c622ee21223b30aba4bd0164bc8391538355fc9bf505d16"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_single_yaw_axis_module_faa86636447042a5a21cea0229d99368",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

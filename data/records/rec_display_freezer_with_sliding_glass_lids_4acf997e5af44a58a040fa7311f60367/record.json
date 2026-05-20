@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_display_freezer_with_sliding_glass_lids_4acf997e5af44a58a040fa7311f60367",
   "created_at": "2026-04-27T12:45:47Z",
   "updated_at": "2026-04-28T07:43:48Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A wide frozen-food merchandiser with three overlapping sliding lids. The deep rectangular cabinet has three glass lid panels across the top and removable pro..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "c93c5ccf9127278d1cda304c67677c367a8f1c6e378bd7bcbb8c9318f2320b04",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_display_freezer_with_sliding_glass_lids_4acf997e5af44a58a040fa7311f60367",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

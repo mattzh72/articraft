@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_dualrail_gantry_axis_50ba020430234686b393b37367cc7f9d",
   "created_at": "2026-03-30T17:57:46Z",
   "updated_at": "2026-04-01T11:06:13Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A bench automation gantry. A grounded rectangular base frame supports a portal-like bridge carriage with a short center shuttle nested into it. The bridge sl..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "5fd16a4dd17f4a9ae194571579c91744c06b679be7e312f078f564a591178301",
-    "model_py_sha256": "05a85a59f73bbc0708002555ccc7859f295435a3c7cf8ca83bf8221c98250d4a"
+    "model_py_sha256": "c27e69158d2ee75772e66f597a2db654a9f4537659e5a0604edfa90cb27913dd"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_dualrail_gantry_axis_50ba020430234686b393b37367cc7f9d",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_turntable_dac3506ccf3643a2ab16eba1b9e9a238",
   "created_at": "2026-04-05T23:26:06Z",
   "updated_at": "2026-04-06T13:53:47Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A record turntable. A plinth supports a central platter and a tonearm base off to one side. Joints: the platter rotates continuously about vertical, and the..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "8e668736e7c6a1ad04c8f1adc24d22366f9477b0f42874cf485fa68ef977a6e5",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_turntable_dac3506ccf3643a2ab16eba1b9e9a238",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

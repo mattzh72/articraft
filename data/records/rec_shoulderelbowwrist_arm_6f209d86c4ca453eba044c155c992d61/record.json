@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_shoulderelbowwrist_arm_6f209d86c4ca453eba044c155c992d61",
   "created_at": "2026-03-29T15:31:29Z",
   "updated_at": "2026-04-01T11:29:00Z",
@@ -22,16 +22,17 @@
     "prompt_preview": "A bench robot arm with a rotating shoulder pedestal, an upper arm link, a forearm link, and a compact wrist roll cartridge carrying a tool flange. The pedest..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "9f3a5c172a33c9463e5572b1f5d1f5e605342f6f4a183e66b4219308c07522eb",
-    "model_py_sha256": "743f4da814535869ef08afc03abc3a866cca4248244b2718c86b18740527cc95"
+    "model_py_sha256": "fa3f81d8e1f5b6801df660b58d7b1887296c14914e7d6cfba5af8aa81242aed9"
   },
   "collections": [
     "dataset"
@@ -39,5 +40,12 @@
   "author": "mattzh72",
   "rated_by": "mattzh72",
   "secondary_rating": 4,
-  "secondary_rated_by": "Zhaomou Song"
+  "secondary_rated_by": "Zhaomou Song",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_shoulderelbowwrist_arm_6f209d86c4ca453eba044c155c992d61",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

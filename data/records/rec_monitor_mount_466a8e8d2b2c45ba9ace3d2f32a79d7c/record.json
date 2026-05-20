@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_monitor_mount_466a8e8d2b2c45ba9ace3d2f32a79d7c",
   "created_at": "2026-04-27T13:27:59Z",
   "updated_at": "2026-04-28T07:12:55Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A desk-clamped monitor mount shown without a screen. A clamp base carries a lower arm, upper arm, and VESA-style head plate with clear knuckle joints and a p..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "95debac571afca9fcf1bcec74b86dc3d4ca6c4e48d8b3a3f64d12d1ee3d5df86",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_monitor_mount_466a8e8d2b2c45ba9ace3d2f32a79d7c",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

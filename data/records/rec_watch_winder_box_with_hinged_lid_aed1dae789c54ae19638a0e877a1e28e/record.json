@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_watch_winder_box_with_hinged_lid_aed1dae789c54ae19638a0e877a1e28e",
   "created_at": "2026-03-30T17:03:47Z",
   "updated_at": "2026-04-01T22:00:20Z",
@@ -22,12 +22,13 @@
     "prompt_preview": "Create a premium consumer-grade Watch winder box with hinged lid with elegant proportions and tight surfacing, but keep the mechanics honest: a presentation..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "9f801c4f801b668a21ffb2dbf5b266931ff149429ca3475ccdbd2d671c854ca2",
@@ -39,5 +40,12 @@
   "rated_by": "shawlyu",
   "author": "shawlyu",
   "secondary_rating": 4,
-  "secondary_rated_by": "RuiningLi"
+  "secondary_rated_by": "RuiningLi",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_watch_winder_box_with_hinged_lid_aed1dae789c54ae19638a0e877a1e28e",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

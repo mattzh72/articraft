@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_articulated_task_lamp_f25cf0f6b3b0431fa0df88c604812360",
   "created_at": "2026-04-27T14:03:12Z",
   "updated_at": "2026-04-28T00:24:27Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A magnifying work lamp with a wide cast-iron base, a two-segment arm with revolute shoulder and elbow joints, and a circular ring shade with a pivoting lens..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "73353690491c8345304b646597be3a9d3bb049b41a2fea567958d351e47f9e24",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_articulated_task_lamp_f25cf0f6b3b0431fa0df88c604812360",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

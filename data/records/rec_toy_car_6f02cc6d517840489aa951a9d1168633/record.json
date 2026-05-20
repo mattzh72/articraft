@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_toy_car_6f02cc6d517840489aa951a9d1168633",
   "created_at": "2026-04-27T13:05:59Z",
   "updated_at": "2026-04-28T07:26:29Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A toy delivery van with a tall boxy body, a short front nose, two side doors, and a rear hatch over the cargo opening. The four wheels rotate continuously on..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "490a407aae494c93ecf63aa8ffee50cd93a34c644496b33643520458c109b8a2",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_toy_car_6f02cc6d517840489aa951a9d1168633",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

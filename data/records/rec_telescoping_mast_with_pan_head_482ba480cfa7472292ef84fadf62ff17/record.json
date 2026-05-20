@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_telescoping_mast_with_pan_head_482ba480cfa7472292ef84fadf62ff17",
   "created_at": "2026-04-03T21:46:47Z",
   "updated_at": "2026-04-06T01:23:12Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A camera-mast style telescoping pan head. A fixed mast sleeve carries nested vertical stages, and the top stage carries a compact rotary plate. The mast stag..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "277134c1205371c939d2ff986ee01dc7b9c1ad21c6f3d7a512122393962ff664",
-    "model_py_sha256": "502dba124446813fdf90e3ac2709bcb6e552d85e82bcbd0916cf0ce0cfd43aa3"
+    "model_py_sha256": "5dbcdf8e1cebb1ee8a77652c7763786cb848893ffb39361a5c5a75e88a8052f1"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_telescoping_mast_with_pan_head_482ba480cfa7472292ef84fadf62ff17",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

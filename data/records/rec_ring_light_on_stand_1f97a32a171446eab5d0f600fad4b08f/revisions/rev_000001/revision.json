@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "record_id": "rec_ring_light_on_stand_1f97a32a171446eab5d0f600fad4b08f",
+  "revision_id": "rev_000001",
+  "created_at": "2026-03-29T15:13:45Z",
+  "prompt_kind": "single_prompt",
+  "prompt_sha256": "49729d4ebd221a27098305d073859e2113db602c935fd238bf36ed60c3dca4cc",
+  "source": {
+    "run_id": "run_20260329_144826_276992_20260329-base-sdk-categories-part2-prompts-round",
+    "prompt_batch_id": null,
+    "batch_spec_id": "20260329_base_sdk_categories_part2_prompts_round4",
+    "row_id": "ring_light_on_stand_08",
+    "prompt_index": 250
+  },
+  "generation": {
+    "provider": "openai",
+    "model_id": "gpt-5.4",
+    "thinking_level": "high",
+    "openai_transport": "http",
+    "openai_reasoning_summary": "auto",
+    "max_turns": 40
+  },
+  "artifacts": {
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
+    "prompt_series_json": null,
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
+  },
+  "hashes": {
+    "prompt_sha256": "49729d4ebd221a27098305d073859e2113db602c935fd238bf36ed60c3dca4cc",
+    "model_py_sha256": "eb0b3026a0b2e799743e1da1b7249f1a1f3e81ab56b850b84f3b010e03059ae2"
+  },
+  "run_summary": {
+    "turn_count": 27,
+    "tool_call_count": 28,
+    "compile_attempt_count": 12,
+    "final_status": "success"
+  },
+  "parent": null,
+  "seed": null,
+  "inherited_inputs": []
+}

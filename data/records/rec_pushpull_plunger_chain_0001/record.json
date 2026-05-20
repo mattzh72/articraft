@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_pushpull_plunger_chain_0001",
   "created_at": "2026-03-12T18:28:30Z",
   "updated_at": "2026-04-01T10:32:24Z",
@@ -20,16 +20,17 @@
     "prompt_preview": "A push-pull plunger chain with serial sliding plungers or rod elements moving along one axis through guide sleeves, modeled as an industrial actuation module."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "d0422555b0332ca380eb94fe71e701b91aaa4835e233ce071e2e4d778b63ba75",
-    "model_py_sha256": "69630623bf96654ac768f56d27b8e845ab0216be0b2c76c7810ddc899a45f8d6"
+    "model_py_sha256": "d598275f042ae9bf84e890639fc282ea4edd9502004426a839868e8089835b6a"
   },
   "collections": [
     "dataset"
@@ -37,5 +38,12 @@
   "author": "mattzh72",
   "rated_by": "mattzh72",
   "secondary_rating": 5,
-  "secondary_rated_by": "Zhaomou Song"
+  "secondary_rated_by": "Zhaomou Song",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_pushpull_plunger_chain_0001",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

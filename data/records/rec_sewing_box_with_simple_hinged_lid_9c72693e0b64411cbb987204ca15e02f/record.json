@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_sewing_box_with_simple_hinged_lid_9c72693e0b64411cbb987204ca15e02f",
   "created_at": "2026-04-27T13:40:16Z",
   "updated_at": "2026-04-28T05:37:48Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "Model Sewing box with simple hinged lid as an industrial safety-first variant for heavy duty cycles. Start from a storage box body with a simple rear-hinged..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "9e95f547f1152d9a55a0edbdc21f6e3eac4b583f9f343037f5de8a9998afda5c",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_sewing_box_with_simple_hinged_lid_9c72693e0b64411cbb987204ca15e02f",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

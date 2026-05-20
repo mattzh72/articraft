@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "record_id": "rec_candy_vending_machine_ae2c9d28298f44e096cc0766837167c6",
+  "revision_id": "rev_000001",
+  "created_at": "2026-04-02T22:48:25Z",
+  "prompt_kind": "single_prompt",
+  "prompt_sha256": "861845d209b30df04337abd43351a75d63ada681a5f1b846180ec8a299fcddac",
+  "source": {
+    "run_id": "run_20260402_224817_997046_20260402-sdk-misc-backfill-8cats-10each-gpt54-hi",
+    "prompt_batch_id": null,
+    "batch_spec_id": "20260402_sdk_misc_backfill_8cats_10each_gpt54_high",
+    "row_id": "20260402_sdk_misc_033",
+    "prompt_index": 33
+  },
+  "generation": {
+    "provider": "openai",
+    "model_id": "gpt-5.4",
+    "thinking_level": "high",
+    "openai_transport": "http",
+    "openai_reasoning_summary": "auto",
+    "max_turns": 50,
+    "max_cost_usd": 2.5
+  },
+  "artifacts": {
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
+    "prompt_series_json": null,
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
+  },
+  "hashes": {
+    "prompt_sha256": "861845d209b30df04337abd43351a75d63ada681a5f1b846180ec8a299fcddac",
+    "model_py_sha256": "732858e5586ad7c42cce0632145441239d025cab29ea5a1d59e09bc88c2d3262"
+  },
+  "run_summary": {
+    "turn_count": 19,
+    "tool_call_count": 17,
+    "compile_attempt_count": 5,
+    "final_status": "success"
+  },
+  "parent": null,
+  "seed": null,
+  "inherited_inputs": []
+}

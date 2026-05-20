@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_threejoint_revolute_chain_99ddb14d70bb4196a579d965bb1524ac",
   "created_at": "2026-03-29T04:00:44Z",
   "updated_at": "2026-04-01T09:58:32Z",
@@ -22,16 +22,17 @@
     "prompt_preview": "A flat folding bracket chain with a grounded foot, two long plate links, a short nose link, and a hook-like end tab. The arm should be able to pack close to..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "45acc963af2247d9d07399899644322158c61d0869d54398e2c96ef07fc728e2",
-    "model_py_sha256": "322a67cc9e292b0e52ba63021718c9500ad7db74a3c263a3568cbf1f3d914c71"
+    "model_py_sha256": "ce234f02fc107af7aa8bd855a87f2cd5a65e1436455f2342a59e4e4a7828f95f"
   },
   "collections": [
     "dataset"
@@ -39,5 +40,12 @@
   "author": "mattzh72",
   "rated_by": "mattzh72",
   "secondary_rating": 4,
-  "secondary_rated_by": "Zhaomou Song"
+  "secondary_rated_by": "Zhaomou Song",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_threejoint_revolute_chain_99ddb14d70bb4196a579d965bb1524ac",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

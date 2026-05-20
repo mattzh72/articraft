@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_swivel_bar_stool_c8c9ab730a554903adc0cb6d34051ba4",
   "created_at": "2026-04-27T13:52:28Z",
   "updated_at": "2026-04-28T00:39:11Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "Produce an outdoor weatherproof Swivel bar stool. Use sealed interfaces, drip-aware overhangs, corrosion-resistant hardware, and protected joints, anchored o..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "bb29fbd8c693feb8696d881168ae620690f5925e7b3bdef58a3fa4917260c731",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_swivel_bar_stool_c8c9ab730a554903adc0cb6d34051ba4",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

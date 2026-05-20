@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_monitor_mount_1c695ac847ca42e99097d5b2bda5ce1e",
   "created_at": "2026-03-30T17:57:46Z",
   "updated_at": "2026-04-01T11:18:57Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A service-console monitor mount without the monitor. A grounded base support carries a lower arm, an upper arm, and a rectangular mounting plate with a compa..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "e038c96207f67c902ea6c1b97af2bc59a4fee4d095a598f8483cdebf82f2097c",
-    "model_py_sha256": "85a1fd417ba93fe6a98dd0c681d11c11a9d7026da6a77898b8fe712a7be7159f"
+    "model_py_sha256": "38c9973a91f58f0ec282eed957881c6251679ebb9b89f62df6defba6b86ff998"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_monitor_mount_1c695ac847ca42e99097d5b2bda5ce1e",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

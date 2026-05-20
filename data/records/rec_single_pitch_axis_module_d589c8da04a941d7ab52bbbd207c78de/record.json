@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_single_pitch_axis_module_d589c8da04a941d7ab52bbbd207c78de",
   "created_at": "2026-04-02T16:32:45Z",
   "updated_at": "2026-04-06T01:34:03Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A split-cheek pitch trunnion head. A grounded base plate carries two short side cheeks and a compact moving face between them. One revolute joint tilts the f..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "54973a098258210d9d4d2c59e85364a353a8b5f6bab4d05d91e4f6ea821a93fb",
-    "model_py_sha256": "b83b25c864c4481dbe09f9551d22694becd5fa6079a8e2b40390e99280565377"
+    "model_py_sha256": "606d443ec9b5f9a4af82464725ea00f0d7820b8ae7f36030d8d70435b8ff07d4"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_single_pitch_axis_module_d589c8da04a941d7ab52bbbd207c78de",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

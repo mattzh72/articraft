@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_orthogonal_yz_stage_0003",
   "created_at": "2026-03-25T18:37:12Z",
   "updated_at": "2026-04-01T10:28:15Z",
@@ -22,16 +22,17 @@
     "prompt_preview": "Design a realistic, highly detailed orthogonal YZ stage as a standalone mechanical study assembly for the sdk_hybrid pipeline, with a horizontal Y slide comb..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "ca6c1a4617da7df09638c0078813c27b09f6586ac0b4f1e858c7d634fedc46f3",
-    "model_py_sha256": "691d04a2540fd0b8d35094d6ae49d88048cfd8f2f2226608fef10dd6e56887d4"
+    "model_py_sha256": "e47d57cfa9a34220ee4767d4f7b901f2f7b000c02c525cbf29f2b85d50293b65"
   },
   "collections": [
     "dataset"
@@ -39,5 +40,12 @@
   "author": "mattzh72",
   "rated_by": "mattzh72",
   "secondary_rating": 2,
-  "secondary_rated_by": "Zhaomou Song"
+  "secondary_rated_by": "Zhaomou Song",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_orthogonal_yz_stage_0003",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_fidget_toy_8818c9bebd514eba9d98d52cbbaf0a22",
   "created_at": "2026-04-10T09:55:11Z",
   "updated_at": "2026-04-10T10:10:36Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A Newton's cradle desk toy with a rectangular metal frame, two horizontal top rails, and five steel ball pendulums. Each ball hangs from a rigid V-shaped rod..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "f91ad323a17669c56e638e7085176d7903cc4bb472a7548b8b717c831ef56719",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_fidget_toy_8818c9bebd514eba9d98d52cbbaf0a22",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

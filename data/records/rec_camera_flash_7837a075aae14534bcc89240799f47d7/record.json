@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_camera_flash_7837a075aae14534bcc89240799f47d7",
   "created_at": "2026-04-27T01:41:49Z",
   "updated_at": "2026-04-27T10:41:15Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A compact speedlight flash with a stepped battery body, a shoe mount, and a rectangular lamp head on a two-axis aiming mount. The lower aiming joint rotates..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "ed19646b1f94f8a471b03e8ec5d70323b3583b0f33aa69de5556edeaeaec417d",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_camera_flash_7837a075aae14534bcc89240799f47d7",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

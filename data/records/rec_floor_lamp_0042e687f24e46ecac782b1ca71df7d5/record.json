@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_floor_lamp_0042e687f24e46ecac782b1ca71df7d5",
   "created_at": "2026-04-12T14:56:18Z",
   "updated_at": "2026-04-22T08:08:38Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A task floor lamp with a heavy rectangular base, a two-link arm, and a rectangular light head with a side button. The lower arm rotates on a hinge at the bas..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "9118768a14baca3788b3795355250fc1cf4dc2f96dc36fbbc268213eb7b01a97",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_floor_lamp_0042e687f24e46ecac782b1ca71df7d5",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

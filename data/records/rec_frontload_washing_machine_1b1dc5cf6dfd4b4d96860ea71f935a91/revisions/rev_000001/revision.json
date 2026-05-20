@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "record_id": "rec_frontload_washing_machine_1b1dc5cf6dfd4b4d96860ea71f935a91",
+  "revision_id": "rev_000001",
+  "created_at": "2026-05-04T07:38:39Z",
+  "prompt_kind": "single_prompt",
+  "prompt_sha256": "9724237676ee85e6bf1616a1cb106592de6988117ea5a6a50bf08c068172e57c",
+  "source": {
+    "run_id": "run_20260504_073837_917539_20260504-frontload-washer-frontier-thinking-abla",
+    "prompt_batch_id": null,
+    "batch_spec_id": "20260504_frontload_washer_frontier_thinking_ablation",
+    "row_id": "washer_openai_med",
+    "prompt_index": 2
+  },
+  "generation": {
+    "provider": "openai",
+    "model_id": "gpt-5.5-2026-04-23",
+    "thinking_level": "med",
+    "openai_transport": "http",
+    "openai_reasoning_summary": "auto",
+    "max_turns": 300,
+    "max_cost_usd": null
+  },
+  "artifacts": {
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
+    "prompt_series_json": null,
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
+  },
+  "hashes": {
+    "prompt_sha256": "9724237676ee85e6bf1616a1cb106592de6988117ea5a6a50bf08c068172e57c",
+    "model_py_sha256": "dd4bc9fe0ec94b7e8e2f84b916e22b480983c581a931c171096d63b0dfbdf4f4"
+  },
+  "run_summary": {
+    "turn_count": 34,
+    "tool_call_count": 37,
+    "compile_attempt_count": 10,
+    "final_status": "success"
+  },
+  "parent": null,
+  "seed": null,
+  "inherited_inputs": []
+}

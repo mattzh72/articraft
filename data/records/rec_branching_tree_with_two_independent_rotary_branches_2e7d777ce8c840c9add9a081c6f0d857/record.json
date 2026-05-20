@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_branching_tree_with_two_independent_rotary_branches_2e7d777ce8c840c9add9a081c6f0d857",
   "created_at": "2026-03-31T17:20:51Z",
   "updated_at": "2026-04-06T01:39:26Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A hub-and-spoke two-branch motion rig. A vertical mast carries two short spoke arms on discrete hub blocks, and each hub block is visibly larger than the arm..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "69574911c0d862d574f38dd076b993bb622a53744a5d8ce45efafd9590716ef8",
-    "model_py_sha256": "58b274a97d8fc83ef061f16b6ea8e54715cb44a45942a059b1270ec844ba8411"
+    "model_py_sha256": "06b60519d96419eb156ccfeb7f293c31b53ad72cd387005965fdc9a3d1751b73"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_branching_tree_with_two_independent_rotary_branches_2e7d777ce8c840c9add9a081c6f0d857",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

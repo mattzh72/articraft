@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_single_roll_axis_module_120ccc6ed50f45878180916050bb2d51",
   "created_at": "2026-04-02T16:32:45Z",
   "updated_at": "2026-04-06T01:32:41Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A split-cheek roll spindle head. A grounded base plate carries two side supports and a compact output flange on a short shaft between them. One revolute join..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "f0294ce94c341886022dc840d18b682c7a9c18edea3163a107ead5ac6c6dcf5b",
-    "model_py_sha256": "b36a7b60e92a46e7ee86df81db061e7c6705b6e97410c771346714354eca4af4"
+    "model_py_sha256": "242c24d13f3f7f30daaf20b3c84d7856c4a42cea4c7edbd6040fb313a09c56fa"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_single_roll_axis_module_120ccc6ed50f45878180916050bb2d51",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

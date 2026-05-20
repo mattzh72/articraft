@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_usb_drive_with_swivel_cover_016bd1c7e2ce4ba793420bf3a86e5279",
   "created_at": "2026-04-27T13:47:32Z",
   "updated_at": "2026-04-28T00:47:19Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "Model Usb drive with swivel cover as an industrial safety-first variant for heavy duty cycles. Start from a USB drive body with connector and side-pinned swi..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "e7cb513073bcd7f320821716982b1c807b8a7c2d6435358867b0c1d04251245e",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_usb_drive_with_swivel_cover_016bd1c7e2ce4ba793420bf3a86e5279",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

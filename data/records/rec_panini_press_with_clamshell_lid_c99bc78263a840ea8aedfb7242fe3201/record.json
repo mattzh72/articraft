@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_panini_press_with_clamshell_lid_c99bc78263a840ea8aedfb7242fe3201",
   "created_at": "2026-04-11T02:10:02Z",
   "updated_at": "2026-04-11T04:53:12Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A deli-counter grill press with a heavy lower plate, a tall rear hinge tower, and a broad insulated lid handle spanning the front. The lid rotates on a stout..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "b49659efa12785b57724d0b9ee6ee409ffa894ba2ced337f4e1730734bfcac5a",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_panini_press_with_clamshell_lid_c99bc78263a840ea8aedfb7242fe3201",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

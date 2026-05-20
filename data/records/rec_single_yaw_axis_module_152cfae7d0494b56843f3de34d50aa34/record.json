@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_single_yaw_axis_module_152cfae7d0494b56843f3de34d50aa34",
   "created_at": "2026-03-30T17:57:46Z",
   "updated_at": "2026-04-01T11:03:40Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "An open-frame a vertical-axis rotary module for a tooling fixture. Two side supports or bearing blocks hold the moving member with clear shaft support, simpl..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "e9c61752bfa858d7db4efdd464bd2daba35e3579b0d0a4bf9130de4d1fd49719",
-    "model_py_sha256": "da1ee315a8c2c2fdb1ee3b022831cd7d7ed6685b0968b0e4fd7c09d2f58f10df"
+    "model_py_sha256": "37352d5a3ffbcd758c5b64b5888a3fdd439b85d4c44c88c7ffc4f4748be53d08"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_single_yaw_axis_module_152cfae7d0494b56843f3de34d50aa34",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

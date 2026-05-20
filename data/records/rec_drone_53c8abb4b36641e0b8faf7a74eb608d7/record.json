@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_drone_53c8abb4b36641e0b8faf7a74eb608d7",
   "created_at": "2026-04-01T12:19:02Z",
   "updated_at": "2026-04-04T15:09:31Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A tricopter drone with a triangular carbon-fiber center plate, three radial arms, two front motor pods on forward arms each with a propeller on a continuous..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "806013058d6ceb2acce6c7c12c09722d4d0b45122764570b6beb6f41146a9004",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_drone_53c8abb4b36641e0b8faf7a74eb608d7",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

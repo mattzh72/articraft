@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_service_access_panel_07dac9cdacd84bf4bc4b378f1f0036d7",
   "created_at": "2026-04-27T14:03:06Z",
   "updated_at": "2026-04-28T00:24:55Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "Create a cost-optimized mass-manufacturable Service access panel. Base architecture: a framed opening with a service panel, hinge side, and latch side. Reduc..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "4058be925f311249fe449cdd52f4cd2a270c44084c96924b350dc445f7bbd35c",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_service_access_panel_07dac9cdacd84bf4bc4b378f1f0036d7",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

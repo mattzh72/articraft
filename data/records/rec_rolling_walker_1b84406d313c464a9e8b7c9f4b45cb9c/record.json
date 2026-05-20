@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_rolling_walker_1b84406d313c464a9e8b7c9f4b45cb9c",
   "created_at": "2026-04-05T22:06:23Z",
   "updated_at": "2026-04-06T14:24:47Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A four-leg rolling walker with hand grips and front casters. Two side frames are tied by crossbars, with front caster forks and a rear support pair under the..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "5a4b91a10dc57737d4dda9de066bab59c7a4f3bcf92ee691126719257d6e4313",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_rolling_walker_1b84406d313c464a9e8b7c9f4b45cb9c",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_toy_model_planes_0003",
   "created_at": "2026-03-28T03:21:17Z",
   "updated_at": "2026-04-01T22:47:04Z",
@@ -22,12 +22,13 @@
     "prompt_preview": "A realistic, highly detailed Toy Model Planes in a refined premium variant, with a compact fuselage, wing-tail assembly, and small propeller or display-stand..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "5d5457236731c7dfb8f9c065df9338b1c1e45e786b8b57e7d7620ae0c7724337",
@@ -39,5 +40,12 @@
   "author": "shawlyu",
   "rated_by": "shawlyu",
   "secondary_rating": 4,
-  "secondary_rated_by": "RuiningLi"
+  "secondary_rated_by": "RuiningLi",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_toy_model_planes_0003",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

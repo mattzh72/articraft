@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_single_revolute_hinge_8251d0e5dbe246769d375b3b7fc7f6df",
   "created_at": "2026-04-02T16:32:45Z",
   "updated_at": "2026-04-06T01:31:00Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A mortised equipment hinge. A fixed leaf and a moving leaf wrap a central pin barrel with alternating knuckles, and the fixed leaf reads as the heavier suppo..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "26a15dc89404d6b8f51b406dc2e629dc8690af34f29502f8eeed782b2f6bfa8e",
-    "model_py_sha256": "9729e542a9fd0c1d5df48852b76501c21b5dccce73f6b73edf2e32f44b6610e4"
+    "model_py_sha256": "aac164b10e9364e668e3c988f0736d642d7a946c67d3824ff23495f0ebd767ef"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_single_revolute_hinge_8251d0e5dbe246769d375b3b7fc7f6df",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

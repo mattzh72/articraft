@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_yawpitchroll_wrist_4104ce00babf497183338b6844d25c22",
   "created_at": "2026-03-29T15:31:29Z",
   "updated_at": "2026-04-01T10:46:04Z",
@@ -22,16 +22,17 @@
     "prompt_preview": "An offset robotic wrist with a small base pedestal, a side-supported pitch frame, and a cylindrical roll nose mounted inside the pitch frame. The assembly sh..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "f39df17228c6c8080443e838d3550fa0e58b0080b26cd52b90ce4aeabf0d310a",
-    "model_py_sha256": "688cebf2b15319f33cbc0ac9f485f19af8b3a981b6e9ec092e22858c8a668ee0"
+    "model_py_sha256": "748cfc7b08b2f3a4e9edff895271b3e18e46d6d5b3831a68bc07fefd96faa54f"
   },
   "collections": [
     "dataset"
@@ -39,5 +40,12 @@
   "author": "mattzh72",
   "rated_by": "mattzh72",
   "secondary_rating": 5,
-  "secondary_rated_by": "Zhaomou Song"
+  "secondary_rated_by": "Zhaomou Song",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_yawpitchroll_wrist_4104ce00babf497183338b6844d25c22",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

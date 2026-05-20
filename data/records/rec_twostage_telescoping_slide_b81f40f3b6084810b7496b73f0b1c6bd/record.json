@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_twostage_telescoping_slide_b81f40f3b6084810b7496b73f0b1c6bd",
   "created_at": "2026-03-29T04:00:44Z",
   "updated_at": "2026-04-01T10:01:52Z",
@@ -22,16 +22,17 @@
     "prompt_preview": "A low-profile drawer slide unit with a grounded channel, a nested inner slide, and a small equipment plate at the end. The silhouette should stay straight an..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "79736b7939e5f0e5938340ae57f631af940a1d715c0b4d65878bc5c00db15b92",
-    "model_py_sha256": "64749a693700c9a51dcac52f12be4e7243397aad8fdc1c188746f9f9dbdbefa4"
+    "model_py_sha256": "e8fb29c82f488e5dbd4e4c8e9ea6418b57389aebba3118a75d334c0b5903a535"
   },
   "collections": [
     "dataset"
@@ -39,5 +40,12 @@
   "author": "mattzh72",
   "rated_by": "mattzh72",
   "secondary_rating": 5,
-  "secondary_rated_by": "Zhaomou Song"
+  "secondary_rated_by": "Zhaomou Song",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_twostage_telescoping_slide_b81f40f3b6084810b7496b73f0b1c6bd",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

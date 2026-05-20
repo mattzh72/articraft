@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_food_processor_with_feed_pusher_8509a9d70cb84d819fe5e8f855a68d32",
   "created_at": "2026-04-27T13:04:20Z",
   "updated_at": "2026-04-28T07:35:02Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A taller multi-purpose food processor with a pedestal motor base, a narrow cylindrical bowl, a removable lid with a large feed chimney, and a front control s..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "572f01f49811b3b07603abb845ce6a2a190a4d88b5de974cf3ca194d73033160",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_food_processor_with_feed_pusher_8509a9d70cb84d819fe5e8f855a68d32",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

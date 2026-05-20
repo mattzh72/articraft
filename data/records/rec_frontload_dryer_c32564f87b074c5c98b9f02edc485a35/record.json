@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_frontload_dryer_c32564f87b074c5c98b9f02edc485a35",
   "created_at": "2026-04-27T13:39:02Z",
   "updated_at": "2026-04-28T05:26:04Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A condenser dryer with a wide grey body, a drum on a revolute axle, and a hinged door with a recessed handle that swings open from the right hinge edge."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "142ef79f1850d5919d08ef8b6304fad263306265fb8546a7203f48b3e36331b1",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_frontload_dryer_c32564f87b074c5c98b9f02edc485a35",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

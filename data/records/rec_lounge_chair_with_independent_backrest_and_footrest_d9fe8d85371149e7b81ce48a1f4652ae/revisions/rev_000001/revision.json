@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "record_id": "rec_lounge_chair_with_independent_backrest_and_footrest_d9fe8d85371149e7b81ce48a1f4652ae",
+  "revision_id": "rev_000001",
+  "created_at": "2026-04-04T14:37:57Z",
+  "prompt_kind": "single_prompt",
+  "prompt_sha256": "2ea5e5d8c62dce019ffbc63378d10a33ad84cad1bbca8c0506f23a4105f307bc",
+  "source": {
+    "run_id": "run_20260404_142601_868264_20260402-base-sdk-categories-part2-plus-new-cate",
+    "prompt_batch_id": null,
+    "batch_spec_id": "20260402_base_sdk_categories_part2_plus_new_categories_round5",
+    "row_id": "lounge_chair_with_independent_backrest_and_footrest_16",
+    "prompt_index": 186
+  },
+  "generation": {
+    "provider": "openai",
+    "model_id": "gpt-5.4",
+    "thinking_level": "high",
+    "openai_transport": "http",
+    "openai_reasoning_summary": "auto",
+    "max_turns": 40,
+    "max_cost_usd": 2.0
+  },
+  "artifacts": {
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
+    "prompt_series_json": null,
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
+  },
+  "hashes": {
+    "prompt_sha256": "2ea5e5d8c62dce019ffbc63378d10a33ad84cad1bbca8c0506f23a4105f307bc",
+    "model_py_sha256": "f0076bc82b0e14401d176a4f1587affe64faa54b43a7a72332ccd54d965f421f"
+  },
+  "run_summary": {
+    "turn_count": 31,
+    "tool_call_count": 29,
+    "compile_attempt_count": 8,
+    "final_status": "success"
+  },
+  "parent": null,
+  "seed": null,
+  "inherited_inputs": []
+}

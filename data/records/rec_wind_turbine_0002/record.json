@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_wind_turbine_0002",
   "created_at": "2026-03-28T04:18:32Z",
   "updated_at": "2026-04-01T23:00:09Z",
@@ -22,12 +22,13 @@
     "prompt_preview": "A realistic, highly detailed Wind Turbine in a rugged utility variant, with a tower, nacelle, rotor hub, and blade roots with realistic hub and pitch-interfa..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "7ef330027fc20b464038d828436220883430def956c1da21f56ddc832b27d25a",
@@ -39,5 +40,12 @@
   "author": "shawlyu",
   "rated_by": "shawlyu",
   "secondary_rating": 5,
-  "secondary_rated_by": "RuiningLi"
+  "secondary_rated_by": "RuiningLi",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_wind_turbine_0002",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

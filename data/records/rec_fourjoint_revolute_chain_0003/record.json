@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_fourjoint_revolute_chain_0003",
   "created_at": "2026-03-25T18:37:12Z",
   "updated_at": "2026-04-01T10:23:39Z",
@@ -22,16 +22,17 @@
     "prompt_preview": "Design a realistic, highly detailed four-joint revolute chain as a standalone mechanical study assembly for the sdk_hybrid pipeline, with four serial rotary..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "c4d4ff256f9b5543bab86126bd7f566362e5cc00e862a0e727028cf59fa6f30c",
-    "model_py_sha256": "8182c27be96c66f93b283bd354a3ed3888571997d9fc543a41b620e482a7050c"
+    "model_py_sha256": "b7158e69a38d55f42c93c6bd1cc5e60e5ce7b8e85b445180059575102ee5686e"
   },
   "collections": [
     "dataset"
@@ -39,5 +40,12 @@
   "author": "mattzh72",
   "rated_by": "mattzh72",
   "secondary_rating": 5,
-  "secondary_rated_by": "Zhaomou Song"
+  "secondary_rated_by": "Zhaomou Song",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_fourjoint_revolute_chain_0003",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

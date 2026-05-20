@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_pet_door_flap_e9ca02980d584595b089028bc2987ffd",
   "created_at": "2026-04-04T14:52:00Z",
   "updated_at": "2026-04-05T12:38:59Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A pet door built into a side-hinged panel door. The outer human-sized door is fixed here as the support frame, and the small pet flap is mounted near its low..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "ced3f5c70b407644be98f7d3e037e45bab585c9976ebd219bc8205aeca1a83e0",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_pet_door_flap_e9ca02980d584595b089028bc2987ffd",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

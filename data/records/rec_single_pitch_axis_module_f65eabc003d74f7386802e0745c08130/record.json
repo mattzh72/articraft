@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_single_pitch_axis_module_f65eabc003d74f7386802e0745c08130",
   "created_at": "2026-04-29T04:02:25Z",
   "updated_at": "2026-04-29T04:38:34Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "Create a realistic small solar panel tilt mount. Geometry/details required: base rail, triangular side supports, panel frame, horizontal axle, locking arc wi..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
     "cost_json": null,
-    "inputs_dir": "inputs"
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "561dff827ea9ac5a8809a1a184a429e3e3ae487d2293cf46a3c4e15202e6e8c9",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_single_pitch_axis_module_f65eabc003d74f7386802e0745c08130",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

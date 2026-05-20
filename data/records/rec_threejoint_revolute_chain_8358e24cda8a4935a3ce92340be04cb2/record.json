@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_threejoint_revolute_chain_8358e24cda8a4935a3ce92340be04cb2",
   "created_at": "2026-03-31T17:20:51Z",
   "updated_at": "2026-04-07T10:09:03Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A side-plate three-joint revolute chain. A fixed cheek supports a sequence of flat-sided links with compact pin bosses, ending in a compact end tab. The link..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "a613e75d769ed4b22142787c705f93eb4eaf819d8bc530e6568177e3c29035ab",
-    "model_py_sha256": "39276c9c4d5ffe3016c132186e6ca7e94c0a10f2335e2c0d55abb98711aade71"
+    "model_py_sha256": "aa382505aa1adb558be57c1f853f651937645d24f1563f9dfe5382d051d4748e"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_threejoint_revolute_chain_8358e24cda8a4935a3ce92340be04cb2",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

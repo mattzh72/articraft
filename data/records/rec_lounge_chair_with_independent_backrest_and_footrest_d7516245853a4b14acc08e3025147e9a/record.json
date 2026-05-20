@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_lounge_chair_with_independent_backrest_and_footrest_d7516245853a4b14acc08e3025147e9a",
   "created_at": "2026-04-04T14:38:02Z",
   "updated_at": "2026-04-05T13:10:11Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A travel recliner with a folding back and a short deployable foot panel. The rigid side frame supports a seat pan, a hinged backrest, and a compact foot pane..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "5651a7fb1c757b89a0ed6c2f4e345f8e87308bee07ead7cda3d6c55273a7f1af",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_lounge_chair_with_independent_backrest_and_footrest_d7516245853a4b14acc08e3025147e9a",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

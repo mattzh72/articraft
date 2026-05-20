@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_threejoint_revolute_chain_0002",
   "created_at": "2026-03-17T02:41:07Z",
   "updated_at": "2026-04-01T10:29:16Z",
@@ -20,16 +20,17 @@
     "prompt_preview": "A desk-mounted microphone boom with three serial revolute joints and a compact microphone body at the end."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "89d90a613fd1d0963b9ce5171a067bedd7c5c264740e2cb944d0bc15701b7f7e",
-    "model_py_sha256": "be262f99ebc35b7c6f467b7113016dbf131c71b9d123428565f7138b0389b6ea"
+    "model_py_sha256": "46a4008fcdd39aa7ae9c9bc925ce4363a6c64f089b7bd06229a1483f0a8777fa"
   },
   "collections": [
     "dataset"
@@ -37,5 +38,12 @@
   "author": "mattzh72",
   "rated_by": "mattzh72",
   "secondary_rating": 4,
-  "secondary_rated_by": "Zhaomou Song"
+  "secondary_rated_by": "Zhaomou Song",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_threejoint_revolute_chain_0002",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_serial_elbow_arm_83bc3023f7e04d758386c465243d9679",
   "created_at": "2026-03-31T17:20:51Z",
   "updated_at": "2026-04-06T01:40:54Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A bridge-backed elbow arm. A rear frame supports a shoulder saddle and two rigid links with simple pin bosses and a square end plate. Shoulder and elbow are..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "f684ca889923fe0b9b47cf91bf0ec298d3435122c96ee78440191ba9feae8de8",
-    "model_py_sha256": "1f8bdbd4bd7537d0dca9e9a41877b8c58a6acbbc90b9f5f40ee1c9ea1f9af202"
+    "model_py_sha256": "1dfb6ce5f3cd7c444f267742d8aeffccbdf93ffd40098538d1c44c91df56f106"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_serial_elbow_arm_83bc3023f7e04d758386c465243d9679",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

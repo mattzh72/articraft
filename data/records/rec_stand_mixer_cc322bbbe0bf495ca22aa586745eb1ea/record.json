@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_stand_mixer_cc322bbbe0bf495ca22aa586745eb1ea",
   "created_at": "2026-04-12T14:28:00Z",
   "updated_at": "2026-04-22T08:16:01Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A compact stand mixer with a low base, a rear-hinged head, and a front accessory-hub cap at the nose. The head rotates on a rear horizontal hinge, the hub ca..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "844a74a18aaa5b37ab36fe3c597fa1c0390b4bf05b16fd726d0deabad1eece93",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_stand_mixer_cc322bbbe0bf495ca22aa586745eb1ea",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

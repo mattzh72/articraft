@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_twojoint_revolute_chain_b3c1084ddeaf42d6b75f4ac373863803",
   "created_at": "2026-03-29T04:00:44Z",
   "updated_at": "2026-04-01T10:05:01Z",
@@ -22,16 +22,17 @@
     "prompt_preview": "An overhead utility arm with a wall plate, a short root link, a longer distal link, and a terminal clamp plate. The links should be boxy and mechanically gro..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "fbd42a5dac358f3cf71741d17215328078bf729505fa088930712d1acb406e76",
-    "model_py_sha256": "3cc29f16f4f8c8446f47aaf4f98d0986e875d9204906178b8cda2f2aa45f9d8e"
+    "model_py_sha256": "31ef706141381543e4a7968b78889a39c073a02c3bbe3fdad6124c3ab2b97d5f"
   },
   "collections": [
     "dataset"
@@ -39,5 +40,12 @@
   "author": "mattzh72",
   "rated_by": "mattzh72",
   "secondary_rating": 4,
-  "secondary_rated_by": "Zhaomou Song"
+  "secondary_rated_by": "Zhaomou Song",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_twojoint_revolute_chain_b3c1084ddeaf42d6b75f4ac373863803",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

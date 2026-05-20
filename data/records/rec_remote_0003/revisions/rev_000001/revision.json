@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "record_id": "rec_remote_0003",
+  "revision_id": "rev_000001",
+  "created_at": "2026-03-22T13:16:49Z",
+  "prompt_kind": "single_prompt",
+  "prompt_sha256": "1526802ee4f25237ed9349ea7c685dfa497df0a521bcf90e9e59aa94703ca1fc",
+  "source": {
+    "run_id": "run_20260322_131649_821650_gaming-controllers-20260322",
+    "prompt_batch_id": null,
+    "batch_spec_id": "gaming_controllers_20260322",
+    "row_id": "row_0003",
+    "prompt_index": 3
+  },
+  "generation": {
+    "provider": "openai",
+    "model_id": "gpt-5.4",
+    "thinking_level": "high",
+    "openai_transport": "http",
+    "openai_reasoning_summary": "auto",
+    "max_turns": 20
+  },
+  "artifacts": {
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
+    "prompt_series_json": null,
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
+  },
+  "hashes": {
+    "prompt_sha256": "1526802ee4f25237ed9349ea7c685dfa497df0a521bcf90e9e59aa94703ca1fc",
+    "model_py_sha256": "116e2c13771382018a60b775a2f131d3cc20eb9e8deb05e5c76a281a5a0716b4"
+  },
+  "run_summary": {
+    "turn_count": 8,
+    "tool_call_count": 7,
+    "compile_attempt_count": 5,
+    "final_status": "success"
+  },
+  "parent": null,
+  "seed": null,
+  "inherited_inputs": []
+}

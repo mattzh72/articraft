@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_fingerlike_phalanx_chain_1c39f088d76140ad98017f35c4eb38cd",
   "created_at": "2026-03-31T17:20:51Z",
   "updated_at": "2026-03-31T18:40:52Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A fork-root digit assembly. A fixed fork captures the proximal phalanx, followed by two smaller phalanx links and a rounded tip pad. The proximal, middle, an..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "c335b3e488e646c35b3a1d2e02c34eb4ece22c9bb309dd01f48ac4c97db9b544",
-    "model_py_sha256": "4604bb5ff1f302e95a0c5ca55c70a356889969c34717c3abfa195e731e418734"
+    "model_py_sha256": "b85da2066951e310273149619c23d209dbb199828f7fe188a0ad7e1c9c95a998"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_fingerlike_phalanx_chain_1c39f088d76140ad98017f35c4eb38cd",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

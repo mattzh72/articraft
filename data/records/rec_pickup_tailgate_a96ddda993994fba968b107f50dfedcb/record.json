@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_pickup_tailgate_a96ddda993994fba968b107f50dfedcb",
   "created_at": "2026-04-27T03:47:27Z",
   "updated_at": "2026-04-27T05:47:34Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A modern pickup tailgate with an integrated fold-out step panel. The main tailgate is attached between simplified bed-side supports on lower corner hinges, a..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "978f80c8cb7868c86cc9fefe18f950e4065d9397916b86075e6750a5ffa79ca8",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_pickup_tailgate_a96ddda993994fba968b107f50dfedcb",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

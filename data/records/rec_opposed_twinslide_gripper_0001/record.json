@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_opposed_twinslide_gripper_0001",
   "created_at": "2026-03-16T14:01:07Z",
   "updated_at": "2026-04-01T10:32:05Z",
@@ -20,16 +20,17 @@
     "prompt_preview": "A realistic opposed twin-slide gripper with a rigid central body, two symmetrical sliding jaws, visible guide rails, and a compact industrial end-effector ap..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "77b488c5192e0e2d2a8ce1338a3043075f1e14d772663b3817695fb112d4f375",
-    "model_py_sha256": "fa8f2074b568a7f802b292004393ee894028593d1175557c0bb5c577b45ed4c9"
+    "model_py_sha256": "9df20ac3d1a556bcb238e201aa7759b181207c126b8b2ac83e232b044cd767f7"
   },
   "collections": [
     "dataset"
@@ -37,5 +38,12 @@
   "author": "mattzh72",
   "rated_by": "mattzh72",
   "secondary_rating": 4,
-  "secondary_rated_by": "Zhaomou Song"
+  "secondary_rated_by": "Zhaomou Song",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_opposed_twinslide_gripper_0001",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

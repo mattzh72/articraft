@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_air_pump_with_t_handle_02f3b00959684c66b312de7bdb24a509",
   "created_at": "2026-04-27T03:08:00Z",
   "updated_at": "2026-04-27T08:16:37Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A double-barrel floor pump with one shared T-handle and twin cylinders. The broad base supports two parallel pump barrels, and the single T-handle bridges th..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "cc04f41bb1d8d8ac65feefcb4806ddab0e52b3c97cd66ae3b97dd7d7eafe3293",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_air_pump_with_t_handle_02f3b00959684c66b312de7bdb24a509",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

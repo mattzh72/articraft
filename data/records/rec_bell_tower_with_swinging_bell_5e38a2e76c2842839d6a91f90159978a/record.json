@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_bell_tower_with_swinging_bell_5e38a2e76c2842839d6a91f90159978a",
   "created_at": "2026-03-29T14:59:02Z",
   "updated_at": "2026-04-03T17:00:09Z",
@@ -22,12 +22,13 @@
     "prompt_preview": "An open steel-frame carillon bell tower with a lattice steel structure, three bells of graduated sizes each hung from a separate horizontal yoke that swings..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "e166eb3a6c00da264c89ea5589058c76a4a0b324ae80141e166ccc45f4f65290",
@@ -39,5 +40,12 @@
   "author": "Zhaomou Song",
   "rated_by": "Zhaomou Song",
   "secondary_rating": null,
-  "secondary_rated_by": null
+  "secondary_rated_by": null,
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_bell_tower_with_swinging_bell_5e38a2e76c2842839d6a91f90159978a",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

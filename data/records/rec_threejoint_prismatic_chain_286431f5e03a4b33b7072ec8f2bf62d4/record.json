@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_threejoint_prismatic_chain_286431f5e03a4b33b7072ec8f2bf62d4",
   "created_at": "2026-03-31T17:20:51Z",
   "updated_at": "2026-04-06T01:40:46Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "An under-slung three-stage slide. A top support carries three nested sliders hanging beneath it in a clear root-to-tip chain. The nested stages are three ser..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "0a3c3dcba2288d5c0e0d630130d24c2408b7c066273b686e217ceb2f8ba56e09",
-    "model_py_sha256": "06ac44ea3998c5e8d86a739969d27ab99a38c050c02e321c25231d44773014c5"
+    "model_py_sha256": "ec184d2cbe2d616bdf7be12ed6c999ad4ce7aea634c4db4b8cb7ae55379cd653"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_threejoint_prismatic_chain_286431f5e03a4b33b7072ec8f2bf62d4",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

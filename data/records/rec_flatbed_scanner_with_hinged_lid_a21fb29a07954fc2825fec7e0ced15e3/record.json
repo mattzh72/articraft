@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_flatbed_scanner_with_hinged_lid_a21fb29a07954fc2825fec7e0ced15e3",
   "created_at": "2026-04-27T13:35:56Z",
   "updated_at": "2026-04-28T07:10:09Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A large-format A3 flatbed scanner with a wide rectangular body and a hinged lid with a document feed roller housing that opens from the rear on revolute hinges."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "3a0f65fe8ee16ded14ebda5513748aaacac05ed80cb81ab38b66618ebca98fea",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_flatbed_scanner_with_hinged_lid_a21fb29a07954fc2825fec7e0ced15e3",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

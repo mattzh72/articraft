@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_single_prismatic_slider_0002",
   "created_at": "2026-03-12T16:03:52Z",
   "updated_at": "2026-04-01T10:36:12Z",
@@ -20,16 +20,17 @@
     "prompt_preview": "A single desk drawer sliding straight out of a minimal rectangular desk carcass on one prismatic axis."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "9d3d6809ba7db3dccc5461071226cd8feef4a2c0b672f32032cc4b5881ba3ffd",
-    "model_py_sha256": "229afebe3e554879bb027a94068d9becfd8a2eb19a305ed4fe8d638e2c8e5e35"
+    "model_py_sha256": "d689f4df885f28a5a651a50f49fea74fcc2a17e6e0363b588d7b9279e85756a1"
   },
   "collections": [
     "dataset"
@@ -37,5 +38,12 @@
   "author": "mattzh72",
   "rated_by": "mattzh72",
   "secondary_rating": 5,
-  "secondary_rated_by": "Zhaomou Song"
+  "secondary_rated_by": "Zhaomou Song",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_single_prismatic_slider_0002",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

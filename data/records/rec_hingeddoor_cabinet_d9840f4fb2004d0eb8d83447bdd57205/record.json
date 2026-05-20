@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_hingeddoor_cabinet_d9840f4fb2004d0eb8d83447bdd57205",
   "created_at": "2026-03-28T18:38:36Z",
   "updated_at": "2026-04-01T13:58:42Z",
@@ -22,12 +22,13 @@
     "prompt_preview": "A corner cabinet with a bifold front door. Two narrow door leaves are joined by a center hinge, and the outer leaf is mounted to the cabinet side wall with a..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "569e6229657c9c176b8117631ecba1c0c47884eb2fe33184858f9509f82d0be9",
@@ -39,5 +40,12 @@
   "author": "RuiningLi",
   "rated_by": "RuiningLi",
   "secondary_rating": 2,
-  "secondary_rated_by": "shawlyu"
+  "secondary_rated_by": "shawlyu",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_hingeddoor_cabinet_d9840f4fb2004d0eb8d83447bdd57205",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

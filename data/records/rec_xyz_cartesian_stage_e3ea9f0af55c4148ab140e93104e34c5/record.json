@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_xyz_cartesian_stage_e3ea9f0af55c4148ab140e93104e34c5",
   "created_at": "2026-03-28T03:32:30Z",
   "updated_at": "2026-04-01T10:11:01Z",
@@ -22,16 +22,17 @@
     "prompt_preview": "A three-axis Cartesian positioning stage. A base carries an X-axis bridge, the bridge carries a Y-axis carriage, and the carriage carries a Z-axis slide with..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "69931d6d581b65502ade7a7d7e88f997d5d1c5afab3c80f1f6998fe8e44aafa0",
-    "model_py_sha256": "2d00e8e8b0792e6f432ad348003305dcd46d80307b6bb45e4f95569bb96a4c0c"
+    "model_py_sha256": "add65bb17989a4624eb2f08c53e34262e4647a105143f5ddbe43cb7e52e8560a"
   },
   "collections": [
     "dataset"
@@ -39,5 +40,12 @@
   "author": "mattzh72",
   "rated_by": "mattzh72",
   "secondary_rating": 5,
-  "secondary_rated_by": "Zhaomou Song"
+  "secondary_rated_by": "Zhaomou Song",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_xyz_cartesian_stage_e3ea9f0af55c4148ab140e93104e34c5",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

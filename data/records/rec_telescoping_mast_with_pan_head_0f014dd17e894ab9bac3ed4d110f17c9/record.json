@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_telescoping_mast_with_pan_head_0f014dd17e894ab9bac3ed4d110f17c9",
   "created_at": "2026-03-28T03:32:30Z",
   "updated_at": "2026-04-01T10:10:45Z",
@@ -22,16 +22,17 @@
     "prompt_preview": "A telescoping inspection mast with a rotating top head. Nested mast tubes rise from a fixed base frame, and the top stage carries a compact pan head with a m..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "0389e16a286c791e8ac42bf9d44b4e150605ebca13f90f1bf1e6e201b9cde737",
-    "model_py_sha256": "9176a39e8ccdb1abb4465e8bef84567af25af4fcdb037c6831401e70bdf3e330"
+    "model_py_sha256": "386ab677f062859c3ba42c210e3027dee75f042dadaa00b6ec98dec75c2ffe5d"
   },
   "collections": [
     "dataset"
@@ -39,5 +40,12 @@
   "author": "mattzh72",
   "rated_by": "mattzh72",
   "secondary_rating": 5,
-  "secondary_rated_by": "Zhaomou Song"
+  "secondary_rated_by": "Zhaomou Song",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_telescoping_mast_with_pan_head_0f014dd17e894ab9bac3ed4d110f17c9",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_branching_tree_with_two_independent_rotary_branches_388259dfa1954efcb9d005d5372d331c",
   "created_at": "2026-03-30T17:57:46Z",
   "updated_at": "2026-04-01T11:03:06Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A compact two-branch inspection tree. A boxed spine supports two side-mounted rotary branches on separate brackets, with the branch lengths and mounting heig..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "831332e47c53b7ca735808049aa627812a844122e416cd68c61caed22ef19add",
-    "model_py_sha256": "04e1912b1d422bdd5e3f78aacd5db349227d7761176d63f37104610273c25b72"
+    "model_py_sha256": "9542920c488a3b2c95ee5f2c908fdc3567891a431bf7e8b11df06c773ea9602e"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_branching_tree_with_two_independent_rotary_branches_388259dfa1954efcb9d005d5372d331c",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

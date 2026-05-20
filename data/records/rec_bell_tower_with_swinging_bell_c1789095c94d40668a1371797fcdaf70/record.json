@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_bell_tower_with_swinging_bell_c1789095c94d40668a1371797fcdaf70",
   "created_at": "2026-03-28T12:10:08Z",
   "updated_at": "2026-03-29T01:22:15Z",
@@ -22,12 +22,13 @@
     "prompt_preview": "A brick campanile with a square shaft, an open belfry tier with round-arched column openings, and a cast-iron bell hanging from a wooden yoke that pivots on..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "4ca0ee6c1e48b24f58aa9e05ca7a26768a3e48f97a54f79f9cc8ccfafbe55f8e",
@@ -39,5 +40,12 @@
   "author": "Zhaomou Song",
   "rated_by": "Zhaomou Song",
   "secondary_rating": null,
-  "secondary_rated_by": null
+  "secondary_rated_by": null,
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_bell_tower_with_swinging_bell_c1789095c94d40668a1371797fcdaf70",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

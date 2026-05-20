@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_remote_e52a0057472d4fd9903c2770cf6fa847",
   "created_at": "2026-04-12T15:13:13Z",
   "updated_at": "2026-04-22T08:04:03Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A home-automation remote with a flat rectangular body, a hinged rear stand, and a front bank of buttons below a display window. The rear stand rotates outwar..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "92de93cd066c150f41bb3fa037c704bd8175f98cf12504321d8e49d2b3ffc6cc",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_remote_e52a0057472d4fd9903c2770cf6fa847",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

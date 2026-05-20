@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_radial_arm_with_sliding_carriage_0803179dade34153b3dcd2b713e33898",
   "created_at": "2026-03-28T03:32:30Z",
   "updated_at": "2026-04-01T10:10:32Z",
@@ -22,16 +22,17 @@
     "prompt_preview": "A radial positioning arm for a drill or inspection fixture. A central column supports a horizontal arm that can swing around the column, and a tool carriage..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "8b2d1514da772a19f5fa8688f52d4a6952a92f7a22578b69f54dd8e47087c8d9",
-    "model_py_sha256": "419be5afd3e748e6c756a25f6abaa61a34dc15aea712698ee455b19047f77202"
+    "model_py_sha256": "4d6c51fefd362bd51075893913502d3a7d9054704077be7c20159c9697cd716e"
   },
   "collections": [
     "dataset"
@@ -39,5 +40,12 @@
   "author": "mattzh72",
   "rated_by": "mattzh72",
   "secondary_rating": 5,
-  "secondary_rated_by": "Zhaomou Song"
+  "secondary_rated_by": "Zhaomou Song",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_radial_arm_with_sliding_carriage_0803179dade34153b3dcd2b713e33898",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

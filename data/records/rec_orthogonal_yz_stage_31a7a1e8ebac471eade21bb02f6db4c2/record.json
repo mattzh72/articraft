@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_orthogonal_yz_stage_31a7a1e8ebac471eade21bb02f6db4c2",
   "created_at": "2026-04-03T21:46:47Z",
   "updated_at": "2026-04-06T01:24:35Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A column-carried YZ slide assembly. A fixed column supports a moving carriage, and the carriage supports a short side slide with a plain end plate. The carri..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "cb5d5d6179015484af31f1fc58ad0ab1d5ae599515631b866de34cae8d99e53e",
-    "model_py_sha256": "c831150418ef6e8b7699c43ffd8a199376c6f3d76986c07f47747c4f3237ee5b"
+    "model_py_sha256": "7c49959deae2df01e0a865c50713404313a02ca2070f3d7845556ea5553e7b54"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_orthogonal_yz_stage_31a7a1e8ebac471eade21bb02f6db4c2",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

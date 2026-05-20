@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_easel_3c90c76b907c4b79a591ed38a495a709",
   "created_at": "2026-04-12T15:18:23Z",
   "updated_at": "2026-04-22T08:03:33Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A studio H-frame easel with a heavy base, a vertical mast, and a sliding canvas carriage plus a tilting support tray. The canvas carriage slides prismaticall..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "7f3a041f8f7323f5763eac8b7cb28f03d41fc462de88ba6a385197dc14b53a98",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_easel_3c90c76b907c4b79a591ed38a495a709",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

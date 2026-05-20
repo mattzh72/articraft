@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_display_freezer_with_sliding_glass_lids_1b524a9e5d934ff49e292e8dba5b660a",
   "created_at": "2026-04-04T15:02:58Z",
   "updated_at": "2026-04-05T11:49:50Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A convenience freezer with two glass top sliders and a side lock flap. The short insulated cabinet has two top lid panels moving on rails and a small lock co..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "659fc0bfddbe383d015c7586add91b70e536f29d5f23eb2cdd45cee4b8bc1e12",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_display_freezer_with_sliding_glass_lids_1b524a9e5d934ff49e292e8dba5b660a",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

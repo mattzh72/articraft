@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_joystick_mechanism_1db784792e644d5ba01d612808bbb59f",
   "created_at": "2026-04-01T18:09:34Z",
   "updated_at": "2026-04-06T01:34:32Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A production-style exposed joystick gimbal. A grounded base block supports a nested gimbal set and a straight control stick with the support structure left o..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "8bdf7ac3e18edc6ae47a0d5f70e3e2503c4147b2226c63cc65de1a9692790e02",
-    "model_py_sha256": "91fb8f1a09fb2f36fc6c207d9b61e71af4ba2ad1f1059cce1f9da4e256503111"
+    "model_py_sha256": "b2b8781cbf41da1bfd2db7931ff05449b00ac7a8f304d8f6be75453a35e26c49"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_joystick_mechanism_1db784792e644d5ba01d612808bbb59f",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

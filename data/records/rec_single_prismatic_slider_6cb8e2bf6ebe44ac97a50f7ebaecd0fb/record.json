@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_single_prismatic_slider_6cb8e2bf6ebe44ac97a50f7ebaecd0fb",
   "created_at": "2026-03-29T04:00:44Z",
   "updated_at": "2026-04-01T09:58:35Z",
@@ -22,16 +22,17 @@
     "prompt_preview": "A drawer-like instrument slide with a fixed base channel, a traveling carriage tray, and a blocky front stop or handle feature. The base and carriage should..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "46072f4db94e53eb6c37ef9b06a1282796e043ff9bb34d04c3f1c0c44c110407",
-    "model_py_sha256": "23afeea45fa3e74327d6c9d6eb0129c15bc793ce38ba9b1dae779b1a51e084a6"
+    "model_py_sha256": "7d02465f2efc558867c1ba4cf886cb0e3e309481996d7dd53b3dffee984a1279"
   },
   "collections": [
     "dataset"
@@ -39,5 +40,12 @@
   "author": "mattzh72",
   "rated_by": "mattzh72",
   "secondary_rating": 5,
-  "secondary_rated_by": "Zhaomou Song"
+  "secondary_rated_by": "Zhaomou Song",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_single_prismatic_slider_6cb8e2bf6ebe44ac97a50f7ebaecd0fb",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

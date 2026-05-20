@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_robotic_arms_44d554578bfb491394c296bbb31c2b15",
   "created_at": "2026-04-27T02:49:48Z",
   "updated_at": "2026-04-27T08:28:53Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "Create a cost-optimized mass-manufacturable Robotic arms. Base architecture: a base pedestal feeding a shoulder-elbow-wrist chain with clear joint cartridges..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "54ce9e85101d08d47e757b0afaf862e5cc3efa1455ee688c18dd8ad823793113",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_robotic_arms_44d554578bfb491394c296bbb31c2b15",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_range_hood_with_articulated_controls_043699cc00104920a12e324de17e4d5c",
   "created_at": "2026-04-12T14:13:27Z",
   "updated_at": "2026-04-22T08:35:25Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "An island box range hood with a deep rectangular canopy, a short chimney collar, and two knobs above two rocker switches. The two knobs rotate continuously o..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "518e4918c9d176d473d3a992c536e1b430cf6bdcae4ef25a72ce3fe15ab6d31e",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_range_hood_with_articulated_controls_043699cc00104920a12e324de17e4d5c",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

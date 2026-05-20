@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_orchestra_style_music_stand_3288fd9e5d25456ca0533cf0945c4f24",
   "created_at": "2026-04-27T03:40:20Z",
   "updated_at": "2026-04-27T05:54:33Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A pit-orchestra stand with a compact weighted base, a short telescoping mast, and a shallow wide desk sized for tight seating rows. The small footprint still..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "866877bdbebd655a7ccd0de10ab9a7647a5c0cc729a0673e7e6f045c5b24fd52",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_orchestra_style_music_stand_3288fd9e5d25456ca0533cf0945c4f24",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_single_roll_axis_module_ca876227efee40028fc43fcea4ac8ccb",
   "created_at": "2026-04-03T21:46:47Z",
   "updated_at": "2026-04-06T01:21:23Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A side-wall roll spindle head. A fixed support frame carries a compact spindle cartridge with a short front face and visible side bearings. One revolute join..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "76b38a9d6dd15635009825e8845a0c993ccec248abd1fef4fdeeb05249c845d3",
-    "model_py_sha256": "7fe7e7f5f5bca0ef68728ae72af50428cc0bd09b745656c081e93d00bed86286"
+    "model_py_sha256": "1fe99a9e131355fd218b8de9fc648a96a722ef709a7f642b12d05f5c9ce83492"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_single_roll_axis_module_ca876227efee40028fc43fcea4ac8ccb",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

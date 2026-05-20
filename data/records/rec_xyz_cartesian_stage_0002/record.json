@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_xyz_cartesian_stage_0002",
   "created_at": "2026-03-17T02:40:01Z",
   "updated_at": "2026-04-01T10:36:29Z",
@@ -20,16 +20,17 @@
     "prompt_preview": "An XYZ Cartesian stage with three stacked linear axes, boxy carriage blocks, cable-clearance gaps, and a square end-effector plate."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "7446e7c5ba5cb68ddeae203dcafc57ec3c3faf63ee6e76ad43abd52bc1dcffa5",
-    "model_py_sha256": "5ed9b66352cbd7f8555d994e953f836f0baabd19adef1998ecb63a17ed65b628"
+    "model_py_sha256": "8b61112020f3359602d12fa0196d361876e534504d19e430e0b267c8cb9a47be"
   },
   "collections": [
     "dataset"
@@ -37,5 +38,12 @@
   "author": "mattzh72",
   "rated_by": "mattzh72",
   "secondary_rating": 5,
-  "secondary_rated_by": "Zhaomou Song"
+  "secondary_rated_by": "Zhaomou Song",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_xyz_cartesian_stage_0002",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

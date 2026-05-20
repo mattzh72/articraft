@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_dual_independent_finger_chains_46ddfae8e756450abd01abc2a4a6a31f",
   "created_at": "2026-03-30T17:57:46Z",
   "updated_at": "2026-04-01T10:57:16Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A compact parallel finger study assembly. A central palm plate carries two articulated fingers with distinct root knuckles and tapered outer links so each ch..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "6e2f576d8841a8d75c8ce54cf5112d8d28f1c567217c83aba8e5d9006c655b35",
-    "model_py_sha256": "63839ec912ab0406b6db1c94c008ad38a5713886d11c633a79823fd288d244d5"
+    "model_py_sha256": "fc741d1311a74528ab202ab59d9bf2c73cfbc7466fa9ffeaf6ead9c267f6c48b"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_dual_independent_finger_chains_46ddfae8e756450abd01abc2a4a6a31f",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

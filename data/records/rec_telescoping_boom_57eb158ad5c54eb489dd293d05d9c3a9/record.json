@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_telescoping_boom_57eb158ad5c54eb489dd293d05d9c3a9",
   "created_at": "2026-03-31T17:20:51Z",
   "updated_at": "2026-03-31T18:48:20Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "An under-slung telescoping beam. A top support carries several nested rectangular sections below it instead of above a base. The nested sections extend throu..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "79fe6a0615f849703afd77feb206ff2c9bf16fb1e3080dd2be349ae28330de0e",
-    "model_py_sha256": "916ffb0836a6db64705db615b3b317a8444ac929e739938acb5d235af3bf0421"
+    "model_py_sha256": "6b71af981444d0d56c42dda53234c5b6c7812e37e02164cc1691b97a32748c3d"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_telescoping_boom_57eb158ad5c54eb489dd293d05d9c3a9",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

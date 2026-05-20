@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_knee_scooter_63c5d6e4b9574ea4ad38e8d3e1b071de",
   "created_at": "2026-04-04T14:34:26Z",
   "updated_at": "2026-04-05T13:03:34Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A compact rental knee scooter with a simple front fork and a rear brake bar. The center frame carries four wheels and a padded knee deck, and a small brake b..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "0b47c8bb709debea3a2888ebbfd1ad794987dc677a36440d12f738471ddc3437",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_knee_scooter_63c5d6e4b9574ea4ad38e8d3e1b071de",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

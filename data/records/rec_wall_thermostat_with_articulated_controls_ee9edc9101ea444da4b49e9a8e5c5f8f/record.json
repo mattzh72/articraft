@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_wall_thermostat_with_articulated_controls_ee9edc9101ea444da4b49e9a8e5c5f8f",
   "created_at": "2026-04-05T23:40:47Z",
   "updated_at": "2026-04-06T13:41:04Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A wall thermostat with a large dial. A wall plate carries a shallow body and a central dial ring. Joints: the dial rotates continuously about the center axis..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "97e9c937b0c99e9b45892216e02bac069d4cefa5826b2f78e2497bb2d6d61ce1",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_wall_thermostat_with_articulated_controls_ee9edc9101ea444da4b49e9a8e5c5f8f",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

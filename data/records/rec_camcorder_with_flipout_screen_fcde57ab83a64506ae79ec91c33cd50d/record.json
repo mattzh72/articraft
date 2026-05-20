@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_camcorder_with_flipout_screen_fcde57ab83a64506ae79ec91c33cd50d",
   "created_at": "2026-04-11T23:33:34Z",
   "updated_at": "2026-04-22T08:39:48Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A travel camcorder with a slim body, a prominent lens barrel, and a rectangular flip screen on the left side, plus three small front-side buttons below the s..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "a9e764aa24f37428c60dd4e1f23fff9eec03cb5f8c9668065d3ea16a92f13eb3",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_camcorder_with_flipout_screen_fcde57ab83a64506ae79ec91c33cd50d",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

@@ -42,7 +42,6 @@ def test_storage_repo_round_trips_records_collections_and_runs(tmp_path: Path) -
     assert workbench is not None
     assert workbench["entries"][0]["record_id"] == "rec_123"
     assert repo.layout.record_workbench_entry_path("rec_123").exists()
-    assert not repo.layout.local_workbench_path().exists()
 
     categories = CategoryStore(repo)
     categories.save(

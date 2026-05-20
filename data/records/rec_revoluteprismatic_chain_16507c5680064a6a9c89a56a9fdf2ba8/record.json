@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_revoluteprismatic_chain_16507c5680064a6a9c89a56a9fdf2ba8",
   "created_at": "2026-03-31T17:20:51Z",
   "updated_at": "2026-03-31T18:48:28Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A hinge-and-ram chain. A grounded base bracket supports one rigid arm, and the arm supports a compact slider near its tip. The root is a revolute joint and t..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "c46002eb9acd0b1f502f5efd0b6454bd81332dbefda996724ed21a48bccc034b",
-    "model_py_sha256": "b61a32801f2fc0abbe88fb96e02c69034b0542fd517c6254e8ca95c6bdbfacc4"
+    "model_py_sha256": "e92e98c8cc922776736a83e9c2b172549d67ae6d2c9c1560ecefdfc0fcdb8e49"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_revoluteprismatic_chain_16507c5680064a6a9c89a56a9fdf2ba8",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

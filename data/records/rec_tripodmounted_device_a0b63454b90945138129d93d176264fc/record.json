@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_tripodmounted_device_a0b63454b90945138129d93d176264fc",
   "created_at": "2026-04-27T13:12:03Z",
   "updated_at": "2026-04-28T07:24:06Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "Create a premium consumer-grade Tripodmounted device with elegant proportions and tight surfacing, but keep the mechanics honest: a three-leg tripod with hea..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "eabd254d62d2ed92e80e2378ade6e9ca7d93048e8424242ae1e41be7126d1124",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_tripodmounted_device_a0b63454b90945138129d93d176264fc",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

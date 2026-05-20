@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_joystick_mechanism_0002",
   "created_at": "2026-03-25T23:15:42Z",
   "updated_at": "2026-04-01T10:20:50Z",
@@ -22,16 +22,17 @@
     "prompt_preview": "A gimballed joystick mechanism. A square base frame carries an outer pitch yoke, an inner roll yoke, and a central control stick on the gimbal. Pitch and rol..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "88679d0250d72b51487bbebe6e0324b30da5defa8ea21c6da3129b3e15646438",
-    "model_py_sha256": "7021d3f0674fe66a888648270336dad1eb98a636a9be5037979c8c5254d1d78c"
+    "model_py_sha256": "65a15a351e61de6162c8d735935ce4f112542193634b78cbcf790a70b823a969"
   },
   "collections": [
     "dataset"
@@ -39,5 +40,12 @@
   "author": "mattzh72",
   "rated_by": "shawlyu",
   "secondary_rating": 5,
-  "secondary_rated_by": "Zhaomou Song"
+  "secondary_rated_by": "Zhaomou Song",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_joystick_mechanism_0002",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

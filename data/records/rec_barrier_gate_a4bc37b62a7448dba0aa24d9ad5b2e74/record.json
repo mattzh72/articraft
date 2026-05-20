@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_barrier_gate_a4bc37b62a7448dba0aa24d9ad5b2e74",
   "created_at": "2026-04-03T21:48:15Z",
   "updated_at": "2026-04-04T10:23:43Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A drop-arm barrier with a short round steel post, a long rectangular boom arm that rotates downward to block traffic, and a counterweight arm. The boom arm p..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "5e4837f075e6ea62330af2871aca14499db454a6863d6dff80e8b26db6a3eaf6",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_barrier_gate_a4bc37b62a7448dba0aa24d9ad5b2e74",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

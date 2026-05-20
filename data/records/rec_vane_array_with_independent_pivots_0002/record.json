@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_vane_array_with_independent_pivots_0002",
   "created_at": "2026-03-12T18:36:15Z",
   "updated_at": "2026-04-01T10:35:53Z",
@@ -20,16 +20,17 @@
     "prompt_preview": "A vane array with several slim blades, each rotating about its own pivot shaft inside a rigid support frame."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "0cffe9bfbd38c83735567f61994090cbf9e9a83970333c6b6d66e8721159be80",
-    "model_py_sha256": "7b2a10f0682e938e2e2d26b1c2e5b3c504762d5f9a5ab5249027b958d6263c0a"
+    "model_py_sha256": "bc980c2a97330065cfd54cc6b03ed841e693ba9c00af795f42e177d6f61d48ec"
   },
   "collections": [
     "dataset"
@@ -37,5 +38,12 @@
   "author": "mattzh72",
   "rated_by": "mattzh72",
   "secondary_rating": 5,
-  "secondary_rated_by": "Zhaomou Song"
+  "secondary_rated_by": "Zhaomou Song",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_vane_array_with_independent_pivots_0002",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

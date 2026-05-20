@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_retractable_utility_knife_b758028525794850a5df3f645d6c5446",
   "created_at": "2026-04-04T14:58:48Z",
   "updated_at": "2026-04-05T12:09:29Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A broad utility knife with a side-mounted blade lock lever. The straight handle surrounds the sliding blade track and carries a short lever near the center...."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "d8e0ec46668d4c6cb9d1c8c9e5d83155fd1a3f40865d6ca6f3d7f98dcada7362",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_retractable_utility_knife_b758028525794850a5df3f645d6c5446",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

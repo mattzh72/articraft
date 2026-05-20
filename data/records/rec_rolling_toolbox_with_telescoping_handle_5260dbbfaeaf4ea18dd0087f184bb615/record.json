@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_rolling_toolbox_with_telescoping_handle_5260dbbfaeaf4ea18dd0087f184bb615",
   "created_at": "2026-04-11T23:37:54Z",
   "updated_at": "2026-04-12T10:16:38Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A stackable rolling toolbox base with a large lower bin, a telescoping handle, and two side latches securing the lid, plus a front push-button latch. the lid..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "cefe2b5ea0515bf2aa814f8dd8ff40b70803cd516504dd3bdec5899338752fd0",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_rolling_toolbox_with_telescoping_handle_5260dbbfaeaf4ea18dd0087f184bb615",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

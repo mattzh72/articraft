@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_linear_carriage_with_independent_rotary_endeffector_126a818697ec4251a9191180f1581f85",
   "created_at": "2026-03-30T17:57:46Z",
   "updated_at": "2026-04-01T11:10:14Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A low-profile shuttle with a rotary spindle. A broad base supports a shallow sliding carriage, and the carriage carries a compact spindle package at one end...."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "9cdacddd9f8aa0fb500a8042c2242397c5bbaf2b84d496e877078f384e30c22d",
-    "model_py_sha256": "d93cd27b33beb10c8641aaa4bcf9c81d5fafd6dd3547bea1d3afcbf9b733e5d9"
+    "model_py_sha256": "f70dec1bebf03b0043c8988e913a45e39ce47bb1fb66878515367f414ac46411"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_linear_carriage_with_independent_rotary_endeffector_126a818697ec4251a9191180f1581f85",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

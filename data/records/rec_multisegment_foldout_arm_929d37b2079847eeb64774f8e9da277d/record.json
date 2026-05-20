@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_multisegment_foldout_arm_929d37b2079847eeb64774f8e9da277d",
   "created_at": "2026-03-31T17:20:51Z",
   "updated_at": "2026-04-06T01:37:31Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A side-plate multi-segment fold-out arm. A fixed cheek supports a sequence of flat-sided links with compact pin bosses, ending in a small platform bracket. T..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "aed71f7d08e1cd2988228abd3ed2b27f934626c898703063821751a21b60901b",
-    "model_py_sha256": "fc175b58860c93045359ea7012e56810b85892f46322719c9f8b936651396ca5"
+    "model_py_sha256": "39e275bebebee660892b59a5277fc3bb89af503b20306e9d5ddcfbe0621c42ad"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_multisegment_foldout_arm_929d37b2079847eeb64774f8e9da277d",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_single_yaw_axis_module_9e25cbe9219a46d691628a76a7fbdd41",
   "created_at": "2026-04-02T16:32:45Z",
   "updated_at": "2026-04-06T01:34:26Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A turret-style yaw head. A squat rectangular body supports a short cylindrical turret with a compact square output pad. One revolute joint turns the output p..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "a277dc571fdc732ce1847b0ec1942787871b1f5eee8729fd94c6ae3edd7ba621",
-    "model_py_sha256": "cf9ee7144f31bc4dd6efd8085c7d4a2e338749f33b4f6fdeac906781e09c6b9d"
+    "model_py_sha256": "1e4c44358c4095ca6f709924ebdf6bf911d56c274beff5c4a741407b37ab122b"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_single_yaw_axis_module_9e25cbe9219a46d691628a76a7fbdd41",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

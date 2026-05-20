@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_dualrail_gantry_axis_f2eb31d4f2a74aa2807bae811cfe21f3",
   "created_at": "2026-03-28T03:32:30Z",
   "updated_at": "2026-04-01T10:10:55Z",
@@ -22,16 +22,17 @@
     "prompt_preview": "A gantry positioning axis for a small industrial machine. Two long base rails support a bridge carriage, and a tool truck rides across the bridge beam on its..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "d1320728eb6ab6eac338cc9958472b94cd3df6608d197db60718afec8c4ee5ee",
-    "model_py_sha256": "709e1fb25a42b281da7d12679433de29e6e9ef42042f7dcc20b8bbed1a0e8b7b"
+    "model_py_sha256": "1444451a7c574d6dc9c9e7b5339859cc6684b829d0e8bb7a667ef8b79a0e28cf"
   },
   "collections": [
     "dataset"
@@ -39,5 +40,12 @@
   "author": "mattzh72",
   "rated_by": "mattzh72",
   "secondary_rating": 5,
-  "secondary_rated_by": "Zhaomou Song"
+  "secondary_rated_by": "Zhaomou Song",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_dualrail_gantry_axis_f2eb31d4f2a74aa2807bae811cfe21f3",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

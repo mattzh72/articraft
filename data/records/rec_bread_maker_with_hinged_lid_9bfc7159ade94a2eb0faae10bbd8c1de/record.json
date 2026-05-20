@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_bread_maker_with_hinged_lid_9bfc7159ade94a2eb0faae10bbd8c1de",
   "created_at": "2026-04-11T16:13:01Z",
   "updated_at": "2026-04-22T14:28:20Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A premium bread maker with a low wide base, a glass-window lid, a top control panel with a ring dial and five distinct program buttons, and a small steam ven..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "cd802db2a455bb49857ab0259f0fbd9c497539fba3a3d6c692a49f8cb64b7153",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_bread_maker_with_hinged_lid_9bfc7159ade94a2eb0faae10bbd8c1de",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

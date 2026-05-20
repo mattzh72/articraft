@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_single_yaw_axis_module_dbf2361f07e3496a961f239d7c459034",
   "created_at": "2026-03-31T17:20:51Z",
   "updated_at": "2026-04-06T01:40:10Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A split-cheek yaw-axis rotary module. A grounded base plate carries two side supports and a compact moving head with a plain output face. One revolute joint..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "af1f72e8e058d86a03c60d2014e60585b2c39632e9dd6d6068f3d2d17f6ee8e5",
-    "model_py_sha256": "f4747ebe503c3aacafdc73867758babc64cdfdf1707b6945239321f5ca19b788"
+    "model_py_sha256": "7a1d92ba3332f0bc8b16f44ca001e01747588c2cd47be6729abcb53c07bbdaf2"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_single_yaw_axis_module_dbf2361f07e3496a961f239d7c459034",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

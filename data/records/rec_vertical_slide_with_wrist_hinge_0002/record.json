@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_vertical_slide_with_wrist_hinge_0002",
   "created_at": "2026-03-12T18:38:21Z",
   "updated_at": "2026-04-01T10:31:42Z",
@@ -20,16 +20,17 @@
     "prompt_preview": "A Z-axis carriage with an attached revolute wrist joint, modeled as a neat industrial subassembly with straight rails and bearing blocks."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "a1bcf7613a2e1b2b17a5a45a27aa908db7d26852a4c16987756fbe8d7712f0ea",
-    "model_py_sha256": "9e8e1ade78032e65e7cbaa84b3a6bae6d9f2901dbb78fa4966352590fa264009"
+    "model_py_sha256": "4c73a0bb8c5242d2360e92bcf5a39cf76a2fa3ba960922694ff47a534489e7dd"
   },
   "collections": [
     "dataset"
@@ -37,5 +38,12 @@
   "author": "mattzh72",
   "rated_by": "mattzh72",
   "secondary_rating": 5,
-  "secondary_rated_by": "Zhaomou Song"
+  "secondary_rated_by": "Zhaomou Song",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_vertical_slide_with_wrist_hinge_0002",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

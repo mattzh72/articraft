@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_cannon_1af1351136cd47b599ce8c8a3f632f11",
   "created_at": "2026-04-27T03:26:26Z",
   "updated_at": "2026-04-27T07:13:07Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A light mountain artillery pack cannon with a short tapered bronze barrel on trunnion revolute joints in a lightweight split-trail carriage, two trail legs e..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "cd1478386b84ffefc3e18e4a40b1d09fda2d731ee921709a2661a789cace377b",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_cannon_1af1351136cd47b599ce8c8a3f632f11",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

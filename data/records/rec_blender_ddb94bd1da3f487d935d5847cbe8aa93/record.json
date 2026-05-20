@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_blender_ddb94bd1da3f487d935d5847cbe8aa93",
   "created_at": "2026-04-03T22:09:49Z",
   "updated_at": "2026-04-04T10:32:36Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A handheld smoothie blender wand with a round base cup and a tall cylindrical wand that attaches by a press-and-twist lock. The wand body presses and twists..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "fe9087d513ad4dcd37488f7e0b736ce065d331ddaf7950fbf0f256588aab7b19",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_blender_ddb94bd1da3f487d935d5847cbe8aa93",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_casino_machine_da56e08515584864835133be685527c6",
   "created_at": "2026-04-27T14:19:13Z",
   "updated_at": "2026-04-27T21:44:03Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A video-poker casino cabinet with a seated-height front panel, a card-button row, and a bill acceptor above the payout tray. The bill-acceptor flap rotates o..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "8baf1f1b5022670a77bc02ff10c669e363e7b247ad41d91c6959a3faaab8a313",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_casino_machine_da56e08515584864835133be685527c6",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

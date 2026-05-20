@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_faucet_with_side_handle_682a5b86c04e49df9275305256b5989f",
   "created_at": "2026-03-29T14:48:27Z",
   "updated_at": "2026-04-28T08:06:30Z",
@@ -22,12 +22,13 @@
     "prompt_preview": "A pot-filler kitchen faucet with a wall-mount elbow bracket, a two-link folding arm with each link pivoting on a horizontal revolute joint at the knuckle, an..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "c782eb62740d447f4144d00e5987a5b149c8118ffc7a27a994ec159cbcb6e17f",
@@ -39,5 +40,12 @@
   "author": "Zhaomou Song",
   "rated_by": "mattzh72",
   "secondary_rating": null,
-  "secondary_rated_by": null
+  "secondary_rated_by": null,
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_faucet_with_side_handle_682a5b86c04e49df9275305256b5989f",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

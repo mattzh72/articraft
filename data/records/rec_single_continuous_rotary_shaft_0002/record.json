@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_single_continuous_rotary_shaft_0002",
   "created_at": "2026-03-12T16:05:10Z",
   "updated_at": "2026-04-01T10:30:39Z",
@@ -20,16 +20,17 @@
     "prompt_preview": "A belt-driven workshop buffing wheel with one continuously rotating spindle and a simple motor housing."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "ed2188d4edca5f1aa9ef33b3e65b6cd8dc7efc2cee21e6afcd75955d0b543f01",
-    "model_py_sha256": "1618c7c3b88ee862d84063f627dc9613bb54ed9ce6a956d1f64e09c22c697345"
+    "model_py_sha256": "ee4d470eb1638f7a104da9e846a2fea9678a021fa8b8f3d071c43173f46521ba"
   },
   "collections": [
     "dataset"
@@ -37,5 +38,12 @@
   "author": "mattzh72",
   "rated_by": "mattzh72",
   "secondary_rating": 4,
-  "secondary_rated_by": "Zhaomou Song"
+  "secondary_rated_by": "Zhaomou Song",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_single_continuous_rotary_shaft_0002",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

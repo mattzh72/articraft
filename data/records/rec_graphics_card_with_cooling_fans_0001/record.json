@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_graphics_card_with_cooling_fans_0001",
   "created_at": "2026-03-17T02:41:55Z",
   "updated_at": "2026-03-22T17:05:34Z",
@@ -22,16 +22,17 @@
     "prompt_preview": "A realistic, highly detailed graphics card with a long shrouded body, exposed cooling fans, a metal bracket, and a believable high-performance computer-hardw..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "0f5acd393af9f4447ac306ab187c1ba8569e57572e291f6785f87cc5a15123cd",
-    "model_py_sha256": "61aa528783372aba904cfd8a497b40e04f7f432c879da22f52b5cf6b816fc56a"
+    "model_py_sha256": "b14d5b4eeb53e2ff930d26a442e2d1f4970140779d3585396435fa3ce7b363de"
   },
   "collections": [
     "dataset"
@@ -39,5 +40,12 @@
   "author": "mattzh72",
   "rated_by": "mattzh72",
   "secondary_rating": null,
-  "secondary_rated_by": null
+  "secondary_rated_by": null,
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_graphics_card_with_cooling_fans_0001",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

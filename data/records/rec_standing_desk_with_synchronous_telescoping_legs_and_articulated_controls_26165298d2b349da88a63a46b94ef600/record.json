@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_standing_desk_with_synchronous_telescoping_legs_and_articulated_controls_26165298d2b349da88a63a46b94ef600",
   "created_at": "2026-04-26T07:35:35Z",
   "updated_at": "2026-04-27T10:45:55Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A compact home-office standing desk with a narrow top, twin telescoping legs, and a small side control pod under one corner, plus a four-button keypad handse..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "c222ae8b51dcbb5c00d835b4a1dde06b59df188969f6417cadca074128259b84",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_standing_desk_with_synchronous_telescoping_legs_and_articulated_controls_26165298d2b349da88a63a46b94ef600",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

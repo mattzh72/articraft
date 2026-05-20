@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_roof_vent_tower_with_hinged_flap_3fcf8819419a495a90d100794d575fc7",
   "created_at": "2026-04-27T13:42:01Z",
   "updated_at": "2026-04-28T05:25:00Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "Produce an outdoor weatherproof Roof vent tower with hinged flap. Use sealed interfaces, drip-aware overhangs, corrosion-resistant hardware, and protected jo..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "e5b41d3881e19394e45d235da864315fcb24eda3e079e50f013f4727697d77f1",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_roof_vent_tower_with_hinged_flap_3fcf8819419a495a90d100794d575fc7",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

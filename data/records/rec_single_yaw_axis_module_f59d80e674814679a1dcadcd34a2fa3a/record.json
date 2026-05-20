@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_single_yaw_axis_module_f59d80e674814679a1dcadcd34a2fa3a",
   "created_at": "2026-04-02T16:32:45Z",
   "updated_at": "2026-04-06T01:31:03Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A fork-supported pan plate. A grounded fork frame cradles a short rotary hub and a compact plate centered between the fork arms. One revolute joint turns the..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "6a009cf60c6b048028dd654c212c9c0871e53b23064522cbdf49caf4cedf00c2",
-    "model_py_sha256": "01edd440141dada05b154b1a463cf5bfc9549d89e3efb0133e816a16cc42e4cb"
+    "model_py_sha256": "04956ea80e5a5ddef97442c2cb2acd1932a80f90726ed708dbc04724167de43d"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_single_yaw_axis_module_f59d80e674814679a1dcadcd34a2fa3a",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

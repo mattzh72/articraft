@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_prismaticrevoluteprismatic_chain_2ac890df1ff8487d9fe4e308629f4ff3",
   "created_at": "2026-03-30T17:57:46Z",
   "updated_at": "2026-04-01T11:15:53Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A compact service axis with a hinged extension nose. A fixed rail supports a moving carriage, the carriage carries a hinged frame, and the hinged frame conta..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "0ca8e9d7751c47063cf200571c19ef7286ee6e6c05570f918fc548c196319780",
-    "model_py_sha256": "9b18eafd82ed3845659cc5a7c88362fedc43b464ffa67cbd4219e84f6a3b23e8"
+    "model_py_sha256": "4c193050cfbf0130853075258e1581c94e556c8f7a0d4a3a55739c50addeef17"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_prismaticrevoluteprismatic_chain_2ac890df1ff8487d9fe4e308629f4ff3",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

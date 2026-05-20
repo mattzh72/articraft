@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_centrifugal_juicer_with_articulated_components_6f2780ee79b4419caa0f68ba128c23c3",
   "created_at": "2026-04-11T14:56:29Z",
   "updated_at": "2026-04-11T15:33:09Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A countertop centrifugal juicer with a rounded base, a clear upper chamber lid, and a tall cylindrical feed pusher moving through the top chute. A removable..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "0b7623ecf1aba4eb6f8b055560df930a80adf315c53288652b1c05cad38c02c7",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_centrifugal_juicer_with_articulated_components_6f2780ee79b4419caa0f68ba128c23c3",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

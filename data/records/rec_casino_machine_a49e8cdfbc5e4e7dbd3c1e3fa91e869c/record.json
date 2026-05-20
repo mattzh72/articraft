@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_casino_machine_a49e8cdfbc5e4e7dbd3c1e3fa91e869c",
   "created_at": "2026-04-02T22:48:25Z",
   "updated_at": "2026-04-06T01:26:43Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A high-top slot machine with a narrow lower body, a tall topper housing, a reel window, and a service door on the front lower section. The reel set rotates c..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "52da34ebe06b3b832c44e92f0667a90a6e21a58f23fab744b2741e41fe70a6a0",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_casino_machine_a49e8cdfbc5e4e7dbd3c1e3fa91e869c",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

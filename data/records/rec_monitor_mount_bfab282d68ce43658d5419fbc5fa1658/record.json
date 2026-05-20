@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_monitor_mount_bfab282d68ce43658d5419fbc5fa1658",
   "created_at": "2026-04-01T18:09:34Z",
   "updated_at": "2026-04-06T01:35:35Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A compact console monitor arm without the monitor. A grounded base bracket supports two short articulated links and a small head frame that can fold close to..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "72a14ea7f243625b9fec19e20a5423cc92bb58534d8e2343f72f954a01fd0df3",
-    "model_py_sha256": "ffcc4bdc0890aac2bd29f3ecaca13ededb858f46a5a5787552612527619d7441"
+    "model_py_sha256": "efc38695feba867568834bb22aa00dcddedc8fd3f7d3c978aba7246cd6291c93"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_monitor_mount_bfab282d68ce43658d5419fbc5fa1658",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

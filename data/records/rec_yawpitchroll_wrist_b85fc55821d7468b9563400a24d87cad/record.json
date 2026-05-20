@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_yawpitchroll_wrist_b85fc55821d7468b9563400a24d87cad",
   "created_at": "2026-04-03T21:46:47Z",
   "updated_at": "2026-04-06T01:25:08Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A tower wrist with roll cartridge. A fixed support tower carries a yaw stage, a compact pitch cradle, and a short roll cartridge nested inside the cradle. Ya..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "94fe93f2d85103d6f5715028da44e2906e9b914e6b0e950049468f3b0d4a8b65",
-    "model_py_sha256": "042aecc95bbdcdfe111895043c4d4c491cc2f9f18839646f6c22ce12eb202b18"
+    "model_py_sha256": "0d001c5e1510f937a11d648a433846c7c8b4c963f6762d485e1041110ce93739"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_yawpitchroll_wrist_b85fc55821d7468b9563400a24d87cad",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

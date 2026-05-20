@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_pantilt_mechanism_0002",
   "created_at": "2026-03-12T18:25:20Z",
   "updated_at": "2026-04-01T10:29:34Z",
@@ -20,16 +20,17 @@
     "prompt_preview": "A two-axis pan-tilt unit for an inspection sensor, with one pan stage below one tilt stage, designed as a practical CAD assembly."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "3029f9a3309de5317a73b6cd32c42747ffc87d3fc9260dfe034aa5111fcd4b87",
-    "model_py_sha256": "cf97f4c3aa1e06838952a096667848d47f7394934d6843b862ad061480f57c6f"
+    "model_py_sha256": "23bf27cf543172a983ee2b52d7d6d3553c53e6536f2e67e9bec639841679ad34"
   },
   "collections": [
     "dataset"
@@ -37,5 +38,12 @@
   "author": "mattzh72",
   "rated_by": "mattzh72",
   "secondary_rating": 5,
-  "secondary_rated_by": "Zhaomou Song"
+  "secondary_rated_by": "Zhaomou Song",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_pantilt_mechanism_0002",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

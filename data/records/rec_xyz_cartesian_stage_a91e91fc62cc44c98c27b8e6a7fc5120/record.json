@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_xyz_cartesian_stage_a91e91fc62cc44c98c27b8e6a7fc5120",
   "created_at": "2026-04-27T13:53:02Z",
   "updated_at": "2026-04-28T00:36:52Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "An under-plate XYZ transfer unit. A top output plate is carried by a vertical slide, which is carried by a crosswise slide, which is carried by a long lower..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "56e006d92bd7f058c966dc752d7c26d98d5209940ba473c9f4580e3157e5eeac",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_xyz_cartesian_stage_a91e91fc62cc44c98c27b8e6a7fc5120",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

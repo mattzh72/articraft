@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_single_prismatic_slider_315656729de34484bac4099260e9740d",
   "created_at": "2026-04-02T16:32:45Z",
   "updated_at": "2026-04-06T01:33:06Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A dovetail-style linear slide. A grounded base carries one broad saddle with visible wraparound support on the guide below it. The saddle is one prismatic jo..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "e94ee42431c90f6adbc91e2379d99b0f9a096cb77839244e78b562b412b23591",
-    "model_py_sha256": "f6256dd868bfb0ee9cd2f04b907e4285722ff9604c4f53c9c8b2615107287c67"
+    "model_py_sha256": "1d5618475bc5ac7072249c65ae0d7569fe5b24c2f17f1d85a1ed1cff88a7c245"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_single_prismatic_slider_315656729de34484bac4099260e9740d",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

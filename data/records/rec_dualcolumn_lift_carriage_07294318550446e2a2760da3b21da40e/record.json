@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_dualcolumn_lift_carriage_07294318550446e2a2760da3b21da40e",
   "created_at": "2026-03-30T17:57:46Z",
   "updated_at": "2026-04-01T11:04:22Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A box-frame twin-column lift. A fixed lower base and upper bridge hold the guide columns square, and the moving carriage includes visible overlap on both sid..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "1c38864d7487bfc7bc11ef12dda94a9ef00c0791211564374c0de1ffa90ace0a",
-    "model_py_sha256": "9caf46ba523d34d8a41876c8fa7eba7599b6bc63eae856bb981fa90eb0183c5b"
+    "model_py_sha256": "b6a8c7c1b9b789900e4c2afcc8b803b2c1f6d17df1ede939fb9c749c3581e93b"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_dualcolumn_lift_carriage_07294318550446e2a2760da3b21da40e",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

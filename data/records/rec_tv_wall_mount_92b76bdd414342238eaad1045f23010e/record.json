@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_tv_wall_mount_92b76bdd414342238eaad1045f23010e",
   "created_at": "2026-03-31T17:20:51Z",
   "updated_at": "2026-03-31T18:44:19Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A bridge-backed wall display arm shown bare. A rear wall bracket carries a primary link, a secondary link, and a compact VESA-style head with a short tilt yo..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "60616a31c948ceefde42a10027def3d4ab692dac2d003550cdf8a572353a6445",
-    "model_py_sha256": "48fba8b78551966b215b4b354f51b6ef7d1ba24d449ed86cac81ec47bad19f94"
+    "model_py_sha256": "8d3ae041f1f7ddb3d87d9c46cf53e3d7a237c590301b9f19ad0eaa6668d273ca"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_tv_wall_mount_92b76bdd414342238eaad1045f23010e",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

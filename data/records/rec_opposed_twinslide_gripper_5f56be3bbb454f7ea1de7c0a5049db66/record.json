@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_opposed_twinslide_gripper_5f56be3bbb454f7ea1de7c0a5049db66",
   "created_at": "2026-04-03T21:46:47Z",
   "updated_at": "2026-04-06T01:23:16Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A narrow-body opposed slide gripper. A grounded center body carries two short jaw carriages with simple fingers facing one another across a pickup gap. The j..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "48a65b3c8a17feab350cb8d4f539bd2eba147e04ffc801fcc5c89403cb051c73",
-    "model_py_sha256": "0439773995e0ecdf223e5a0e72e154533cf782da6e730450fc6a091667df8afe"
+    "model_py_sha256": "9dd68e73435fc8664f379bb0dedff0f883e7645149ad2227dc73910d5e2a398e"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_opposed_twinslide_gripper_5f56be3bbb454f7ea1de7c0a5049db66",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

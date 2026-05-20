@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_elevator_bd64f5d6eda042a5ad6efc9f309646f1",
   "created_at": "2026-04-27T02:04:33Z",
   "updated_at": "2026-04-27T10:21:42Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A platform wheelchair lift with a flat square platform and a single vertical column post. The platform slides prismatically along the vertical column. A fold..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "51bc794d3f6306ea26ea830b36754fce3bdc22999c9b428918fcd286c40225e3",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_elevator_bd64f5d6eda042a5ad6efc9f309646f1",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

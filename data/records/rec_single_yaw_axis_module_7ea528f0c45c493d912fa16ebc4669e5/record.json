@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_single_yaw_axis_module_7ea528f0c45c493d912fa16ebc4669e5",
   "created_at": "2026-04-29T08:08:50Z",
   "updated_at": "2026-04-29T08:31:24Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "Create a realistic sensor turret base. Geometry/details required: square electronics base, rotating cylindrical turret, small sensor face, bearing seam, and..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
     "cost_json": null,
-    "inputs_dir": "inputs"
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "9576df40dfd4e46af1dcab3862069075655cd10214a24d10830b2b87d8c010ec",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_single_yaw_axis_module_7ea528f0c45c493d912fa16ebc4669e5",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

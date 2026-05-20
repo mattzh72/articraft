@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_single_roll_axis_module_2449a75edbd34d748169874d0f7fd608",
   "created_at": "2026-03-30T17:57:46Z",
   "updated_at": "2026-04-06T01:42:29Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A low-profile a roll-axis spindle module with a broad mounting plate. The fixed portion is a squat housing with gusseted supports, and the moving portion is..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "85ada1e82978c0f02ffe624d8305cec0c009f8d23fc6e183b0f3fe0cb8d0b2be",
-    "model_py_sha256": "2789813e12ac966af015a701b4d65d13b588cb67ff8cd78e66cc19852939be6d"
+    "model_py_sha256": "9cb634aa67ff4fefb7d44c83a407403f1f23c1f6ea444e1807da795ea6f93c1c"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_single_roll_axis_module_2449a75edbd34d748169874d0f7fd608",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

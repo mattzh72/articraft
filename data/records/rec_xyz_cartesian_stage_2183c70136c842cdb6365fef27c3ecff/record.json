@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_xyz_cartesian_stage_2183c70136c842cdb6365fef27c3ecff",
   "created_at": "2026-03-31T17:20:51Z",
   "updated_at": "2026-03-31T18:39:04Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A side-wall XYZ positioning module. A grounded side frame supports a long first carriage, a smaller second carriage, and a compact vertical third stage. The..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "222fd3e005523c8ce5d0932d57a5c0e600cd35b23efdf40a3d92f7ef59191db1",
-    "model_py_sha256": "34709fa7cf0254357dc51c9ac9f9fde4d96b7b7f9c13c513e324aabcc3d6bf55"
+    "model_py_sha256": "5b8d22c7c3c2af169d1bb1d8e5884af786743562bdb4767efd6647c7d4a17f59"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_xyz_cartesian_stage_2183c70136c842cdb6365fef27c3ecff",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

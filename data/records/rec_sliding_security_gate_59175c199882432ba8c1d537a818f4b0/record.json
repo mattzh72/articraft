@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_sliding_security_gate_59175c199882432ba8c1d537a818f4b0",
   "created_at": "2026-03-30T16:29:23Z",
   "updated_at": "2026-03-31T22:06:29Z",
@@ -22,12 +22,13 @@
     "prompt_preview": "Create a cost-optimized mass-manufacturable Sliding security gate. Base architecture: a rigid gate leaf guided by track/roller hardware and latch geometry. R..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "412b807177b48f2096cc87b28e5869876a40b7045a753c8a0eb2c8a6c5abe672",
@@ -39,5 +40,12 @@
   "rated_by": "shawlyu",
   "author": "shawlyu",
   "secondary_rating": 5,
-  "secondary_rated_by": "RuiningLi"
+  "secondary_rated_by": "RuiningLi",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_sliding_security_gate_59175c199882432ba8c1d537a818f4b0",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

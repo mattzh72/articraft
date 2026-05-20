@@ -62,12 +62,7 @@ class DatasetStore:
     def load_entry(self, record_id: str) -> dict | None:
         validated_record_id = validate_record_id(record_id)
         entry = self.repo.read_json(self.repo.layout.record_dataset_entry_path(validated_record_id))
-        if isinstance(entry, dict):
-            return entry
-        legacy_entry = self.repo.read_json(
-            self.repo.layout.legacy_record_dataset_entry_path(validated_record_id)
-        )
-        return legacy_entry if isinstance(legacy_entry, dict) else None
+        return entry if isinstance(entry, dict) else None
 
     def find_record_id_by_dataset_id(self, dataset_id: str) -> str | None:
         record_id = self._dataset_id_index().get(dataset_id)
@@ -150,9 +145,6 @@ class DatasetStore:
         for record_dir in sorted(path for path in records_root.iterdir() if path.is_dir()):
             entry_path = self.repo.layout.record_dataset_entry_path(record_dir.name)
             entry = self.repo.read_json(entry_path)
-            if entry is None:
-                entry_path = self.repo.layout.legacy_record_dataset_entry_path(record_dir.name)
-                entry = self.repo.read_json(entry_path)
             if entry is None:
                 continue
 

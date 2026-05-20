@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_telescoping_mast_with_pan_head_079098de953342729ec88410951f8df0",
   "created_at": "2026-03-29T15:31:29Z",
   "updated_at": "2026-04-01T11:28:05Z",
@@ -22,16 +22,17 @@
     "prompt_preview": "A deployable equipment mast with a broad lower housing, several nested vertical tubes, and a small rotating instrument plate mounted at the top. The lower ho..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "ac47a3869417d56a713b96fc2180b0d13405295587fdbefac50e501aed3b5b0a",
-    "model_py_sha256": "b6f4eff7851cf1e00abf916242f323064d26150a5ccea4379da0a426604dcc67"
+    "model_py_sha256": "2761666e87103480614315e6e22d64f379d1d855e425bfaa041b73350060a74e"
   },
   "collections": [
     "dataset"
@@ -39,5 +40,12 @@
   "author": "mattzh72",
   "rated_by": "mattzh72",
   "secondary_rating": 4,
-  "secondary_rated_by": "Zhaomou Song"
+  "secondary_rated_by": "Zhaomou Song",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_telescoping_mast_with_pan_head_079098de953342729ec88410951f8df0",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

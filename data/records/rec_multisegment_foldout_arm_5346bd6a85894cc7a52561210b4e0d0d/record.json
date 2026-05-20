@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_multisegment_foldout_arm_5346bd6a85894cc7a52561210b4e0d0d",
   "created_at": "2026-04-01T18:09:34Z",
   "updated_at": "2026-04-06T01:36:09Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A slim service multi-segment fold-out arm. A narrow grounded spine supports a sequence of simple rigid links with compact joint cheeks and a small platform b..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "51efd0dd6e44382d3c366a8550ec4534a0ac4e5ff0237a680e92f7f6e8141628",
-    "model_py_sha256": "84080ebfb2de3fe49d38ccac70ce6387c2b95dcb307048df29e56976b160dec0"
+    "model_py_sha256": "8e7caa684a51c258ed6c60066e8f182be8f5e9b1d6ea2ddc5103790bd5ae31d1"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_multisegment_foldout_arm_5346bd6a85894cc7a52561210b4e0d0d",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

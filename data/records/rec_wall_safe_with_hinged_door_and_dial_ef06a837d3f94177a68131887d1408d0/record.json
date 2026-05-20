@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_wall_safe_with_hinged_door_and_dial_ef06a837d3f94177a68131887d1408d0",
   "created_at": "2026-04-02T22:48:25Z",
   "updated_at": "2026-04-06T01:30:48Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A wall safe with a rectangular body, a right-hinged door, a dial above a short handle, and a small service drawer under the interior shelf. The safe door rot..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "c6183a3818f1b4e4dbe0cfed90589fd24f0c7490e5ce0cc0c40a7586ab481ee9",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_wall_safe_with_hinged_door_and_dial_ef06a837d3f94177a68131887d1408d0",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

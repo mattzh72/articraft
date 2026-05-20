@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_missile_launcher_e30e0674099049b9868304e00187d1cd",
   "created_at": "2026-04-27T02:15:07Z",
   "updated_at": "2026-04-27T10:01:18Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A naval-style box missile launcher with a rotating pedestal, a tilting canister frame, and two protective blast covers over the front of the canisters. The c..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "e0c8b5b833c874194c287c7e63635928f51a3566e277dde7388ab94071b66f2e",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_missile_launcher_e30e0674099049b9868304e00187d1cd",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

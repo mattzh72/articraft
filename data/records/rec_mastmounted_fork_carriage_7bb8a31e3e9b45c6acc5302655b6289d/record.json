@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_mastmounted_fork_carriage_7bb8a31e3e9b45c6acc5302655b6289d",
   "created_at": "2026-03-31T17:20:51Z",
   "updated_at": "2026-03-31T18:41:16Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "An under-bridge lift mast. A grounded mast frame carries a moving fork carriage that hangs below an upper tie member while staying guided on both sides. The..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "2fad8f11537901f8cdf61f3abdc69a691272519dd985088c1d3d7db87d5f4afe",
-    "model_py_sha256": "1dffc8b8d59d9e55b27cbc8bef9bda0d334385eef8d78c45c80679cd7e42d14b"
+    "model_py_sha256": "4a514ed0866cd059f64c41d1b57ede6fcd85e676d3b796652a79f55051c83445"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_mastmounted_fork_carriage_7bb8a31e3e9b45c6acc5302655b6289d",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

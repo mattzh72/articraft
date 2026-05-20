@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_simple_aframe_step_ladder_4957a2540f7c46cea46b378e798d8b21",
   "created_at": "2026-04-05T22:25:42Z",
   "updated_at": "2026-04-06T14:11:34Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A folding A-frame step ladder. A front climbing frame and a rear support frame meet at a top cap, with wide treads on the front frame. Joints: the rear frame..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "4bc7dd885f6456860a6f85e5581b0f7a02ea9877c7be33c74f5d43eec75fdff9",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_simple_aframe_step_ladder_4957a2540f7c46cea46b378e798d8b21",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

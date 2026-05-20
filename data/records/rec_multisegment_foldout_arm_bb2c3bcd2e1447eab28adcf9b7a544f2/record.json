@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_multisegment_foldout_arm_bb2c3bcd2e1447eab28adcf9b7a544f2",
   "created_at": "2026-04-27T13:57:10Z",
   "updated_at": "2026-04-28T00:32:43Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A nested bracket arm with alternating long and short side-plate links, a grounded foot, and a small tray-like end bracket. The silhouette should feel denser..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "7cf72e182f82c79ce4794117dcd34d9e42d283a32fa9d56e3fd91450ca076ee9",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_multisegment_foldout_arm_bb2c3bcd2e1447eab28adcf9b7a544f2",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

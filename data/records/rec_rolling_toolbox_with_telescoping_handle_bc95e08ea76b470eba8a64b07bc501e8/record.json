@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_rolling_toolbox_with_telescoping_handle_bc95e08ea76b470eba8a64b07bc501e8",
   "created_at": "2026-04-11T02:10:02Z",
   "updated_at": "2026-04-11T04:51:40Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A travel-ready toolbox with a broad wheeled case, a nested pull handle, and a pair of top latch tabs at the front edge. The handle extends prismatically in t..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "99c034d01f52979f8a862447187d601dc1e6b447f3ca793985338f6377f6e1e9",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_rolling_toolbox_with_telescoping_handle_bc95e08ea76b470eba8a64b07bc501e8",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

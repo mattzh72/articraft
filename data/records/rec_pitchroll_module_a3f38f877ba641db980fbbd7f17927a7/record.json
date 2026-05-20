@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_pitchroll_module_a3f38f877ba641db980fbbd7f17927a7",
   "created_at": "2026-04-02T16:32:45Z",
   "updated_at": "2026-04-06T01:30:53Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A side-cheek pitch-roll cartridge. A grounded side structure supports an outer axis package and a smaller inner cradle with a flat output flange. The outer a..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "4a51491d5366e7d4e4389e5698efe5beb43cb9245cdfa544ef93a0818409b170",
-    "model_py_sha256": "d1d4abef6a2caf064bcced8567658aded299736e1ab65fcd60346c2dde2a9d12"
+    "model_py_sha256": "714555adffd44dea78363931a45515bbfb1360db0e998e94ad02b47bfdd2b30d"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_pitchroll_module_a3f38f877ba641db980fbbd7f17927a7",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

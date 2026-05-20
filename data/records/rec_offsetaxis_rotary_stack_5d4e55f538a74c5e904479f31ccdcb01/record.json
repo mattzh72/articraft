@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_offsetaxis_rotary_stack_5d4e55f538a74c5e904479f31ccdcb01",
   "created_at": "2026-03-30T17:57:46Z",
   "updated_at": "2026-04-01T11:06:00Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A pedestal-mounted offset rotary module. A grounded foot carries a lower turntable and a raised side bracket, with the bracket supporting a smaller upper fac..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "52dd221c70c3e2a24aeca92557adfca454b313f913461dd53b6593bf8f069ed4",
-    "model_py_sha256": "be78ffe46f82df185caf3a244c5ce829a29672e343aa37de734b305d4af21720"
+    "model_py_sha256": "694f35f688e0125befab7f911b4330c017ce3560c3fb6040298715ea032890d5"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_offsetaxis_rotary_stack_5d4e55f538a74c5e904479f31ccdcb01",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

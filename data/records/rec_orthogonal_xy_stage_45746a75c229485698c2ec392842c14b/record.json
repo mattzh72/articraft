@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_orthogonal_xy_stage_45746a75c229485698c2ec392842c14b",
   "created_at": "2026-04-03T21:46:47Z",
   "updated_at": "2026-04-06T01:22:40Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A bridge-plate XY positioning module. A fixed lower guideway carries a main carriage, and the carriage supports a second slide turned sideways with a small t..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "e3e1ec13016129f5f8eab093fb81b71f9ba7db8443519e0119ec93437f61333d",
-    "model_py_sha256": "258bc2b185a8b926b811041d3c79d048a6e10b199175b342034a2aeccfa77ab5"
+    "model_py_sha256": "cec3eeefc54b9bc5134bbaa793ac99062f95a61d25ad12e148879e4f3dcb4b55"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_orthogonal_xy_stage_45746a75c229485698c2ec392842c14b",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

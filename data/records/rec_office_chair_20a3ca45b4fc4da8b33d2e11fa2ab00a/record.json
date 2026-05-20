@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_office_chair_20a3ca45b4fc4da8b33d2e11fa2ab00a",
   "created_at": "2026-04-26T08:47:43Z",
   "updated_at": "2026-04-27T10:45:09Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A mesh-backed office chair with a five-wheel base and a simple tilt mechanism. The seat sits above a central pedestal, the back frame rises from the rear bra..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "5db32eb0779c1ad8eaa071fd9297113a199168dc8e523016476f2915614f9d43",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_office_chair_20a3ca45b4fc4da8b33d2e11fa2ab00a",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

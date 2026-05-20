@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_transport_wheelchair_0001",
   "created_at": "2026-03-16T01:40:00Z",
   "updated_at": "2026-03-20T23:09:15Z",
@@ -20,16 +20,17 @@
     "prompt_preview": "A realistic, highly detailed transport wheelchair with a lightweight frame, smaller wheels, seat and back support, and practical push handles. The rolling pa..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "d8fab4b50863f59ad6b30d5e271cb772edf52f47758d936ec27766a3fc884b5c",
-    "model_py_sha256": "72fa162642a076e9c0f6801964a1ee79ae3eef496a64351bad93d8a6dfaadc49"
+    "model_py_sha256": "ddc34bae16b7483c6cdcbcedffd6e4bd0dc6582318acb6aeef02332afa6fa67e"
   },
   "collections": [
     "dataset"
@@ -37,5 +38,12 @@
   "author": "mattzh72",
   "rated_by": "mattzh72",
   "secondary_rating": null,
-  "secondary_rated_by": null
+  "secondary_rated_by": null,
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_transport_wheelchair_0001",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

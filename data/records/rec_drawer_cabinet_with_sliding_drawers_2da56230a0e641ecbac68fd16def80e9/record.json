@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_drawer_cabinet_with_sliding_drawers_2da56230a0e641ecbac68fd16def80e9",
   "created_at": "2026-04-03T21:43:45Z",
   "updated_at": "2026-04-04T15:04:38Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A stainless mortuary supply cabinet with a rectangular body, four wide pull-out shelves with front lips, and a hinged top lid. Each shelf extends prismatical..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "ef9077119685782fce4ff000d230504b45c107b7cf8174483407387c1cd8c72f",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_drawer_cabinet_with_sliding_drawers_2da56230a0e641ecbac68fd16def80e9",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

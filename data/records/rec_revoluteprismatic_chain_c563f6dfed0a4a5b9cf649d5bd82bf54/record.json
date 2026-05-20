@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_revoluteprismatic_chain_c563f6dfed0a4a5b9cf649d5bd82bf54",
   "created_at": "2026-04-03T21:46:47Z",
   "updated_at": "2026-04-06T01:22:41Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A swing-arm extension chain. A grounded support carries a single arm link, and the arm link carries a compact telescoping nose slide. The arm rotates on a re..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "3fe3a6561fb2fa8bb49699b140cf7e7516c79d6f59fb4d833591919692384145",
-    "model_py_sha256": "259f1c79de251ec0322f45aadd4f84a33f3233fa3a07f15f129350bbd84ea3d7"
+    "model_py_sha256": "77564b677aa173f340989474ec3d7d44d8c9bdd091603531405cbc275f6fbc9e"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_revoluteprismatic_chain_c563f6dfed0a4a5b9cf649d5bd82bf54",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

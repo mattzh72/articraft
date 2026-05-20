@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_dualrail_gantry_axis_6936c336fe6c48f8bf92eb19b260f003",
   "created_at": "2026-03-30T17:57:46Z",
   "updated_at": "2026-04-01T11:10:11Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A dual-rail gantry axis. Two parallel grounded base rails support a bridge carriage, and a smaller truck rides across that bridge on its own guide path. The..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "53b258ec6f41a72f770f770c047cdfb5efea2f467ebbb04e59be60b405b8c672",
-    "model_py_sha256": "bab451c616a65cf6ee6f07820acc85d1670ab8c08d4b3666848fc628a7734b95"
+    "model_py_sha256": "b9ea1eebd70bf0bf137907aff7c177cca1a3e3157a0e71c84c8d528b7ef7232e"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_dualrail_gantry_axis_6936c336fe6c48f8bf92eb19b260f003",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

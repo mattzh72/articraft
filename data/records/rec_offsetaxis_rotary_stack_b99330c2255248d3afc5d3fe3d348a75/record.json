@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_offsetaxis_rotary_stack_b99330c2255248d3afc5d3fe3d348a75",
   "created_at": "2026-04-27T03:36:43Z",
   "updated_at": "2026-04-27T07:34:28Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A bridge-offset rotary fixture. A fixed base turntable supports a bridge support that reaches to a smaller rotary faceplate away from the centerline. The bas..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "934d9301963d4e3ab2c8585829c7a3f892f0f4bf6a61cf1555a1be0974133f32",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_offsetaxis_rotary_stack_b99330c2255248d3afc5d3fe3d348a75",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

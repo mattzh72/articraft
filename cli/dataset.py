@@ -43,7 +43,6 @@ from storage.dataset_workflow import (
 )
 from storage.datasets import DatasetStore
 from storage.identifiers import validate_category_slug, validate_supercategory_slug
-from storage.migrations import migrate_records_to_v3
 from storage.models import CategoryRecord, SupercategoryEntry
 from storage.queries import StorageQueries
 from storage.record_authors import sync_record_authors, sync_record_rated_by
@@ -87,7 +86,7 @@ class DeleteSupercategoryPreview:
 @dataclass(slots=True, frozen=True)
 class PruneCachePreview:
     failed_staging_dirs: list[Path]
-    legacy_files: list[Path]
+    stale_files: list[Path]
     empty_dirs: list[Path]
 
 
@@ -401,7 +400,7 @@ def _print_delete_record_preview(preview: DeleteRecordPreview) -> None:
 
 def _build_prune_cache_preview(repo: StorageRepo) -> PruneCachePreview:
     cache_root = repo.layout.cache_root.resolve()
-    legacy_files = [
+    stale_files = [
         path for path in (cache_root / "search.sqlite",) if path.exists() and path.is_file()
     ]
     protected_dirs = {
@@ -464,11 +463,11 @@ def _build_prune_cache_preview(repo: StorageRepo) -> PruneCachePreview:
     if cache_root.exists():
         visit(cache_root)
     failed_staging_dirs.sort(key=lambda path: path.as_posix())
-    legacy_files.sort(key=lambda path: path.as_posix())
+    stale_files.sort(key=lambda path: path.as_posix())
     empty_dirs.sort(key=lambda path: (len(path.relative_to(cache_root).parts), path.as_posix()))
     return PruneCachePreview(
         failed_staging_dirs=failed_staging_dirs,
-        legacy_files=legacy_files,
+        stale_files=stale_files,
         empty_dirs=empty_dirs,
     )
 
@@ -478,7 +477,7 @@ def _print_prune_cache_preview(repo: StorageRepo, preview: PruneCachePreview) ->
     print("Prune cache preview")
     print(f"cache_root={cache_root}")
     print(f"failed_staging_dirs_to_remove={len(preview.failed_staging_dirs)}")
-    print(f"legacy_files_to_remove={len(preview.legacy_files)}")
+    print(f"stale_files_to_remove={len(preview.stale_files)}")
     print(f"empty_dirs_to_remove={len(preview.empty_dirs)}")
     if preview.failed_staging_dirs:
         for path in preview.failed_staging_dirs[:10]:
@@ -488,14 +487,14 @@ def _print_prune_cache_preview(repo: StorageRepo, preview: PruneCachePreview) ->
             print(f"sample_failed_staging_dirs_remaining={remaining_failed}")
     else:
         print("sample_failed_staging_dir=(none)")
-    if preview.legacy_files:
-        for path in preview.legacy_files[:10]:
-            print(f"sample_legacy_file={path.relative_to(cache_root)}")
-        remaining_legacy = len(preview.legacy_files) - 10
-        if remaining_legacy > 0:
-            print(f"sample_legacy_files_remaining={remaining_legacy}")
+    if preview.stale_files:
+        for path in preview.stale_files[:10]:
+            print(f"sample_stale_file={path.relative_to(cache_root)}")
+        remaining_stale = len(preview.stale_files) - 10
+        if remaining_stale > 0:
+            print(f"sample_stale_files_remaining={remaining_stale}")
     else:
-        print("sample_legacy_file=(none)")
+        print("sample_stale_file=(none)")
     if preview.empty_dirs:
         for path in preview.empty_dirs[:10]:
             print(f"sample_dir={path.relative_to(cache_root)}")
@@ -512,7 +511,7 @@ def _prune_cache(repo: StorageRepo, preview: PruneCachePreview) -> int:
         if path.exists() and path.is_dir():
             shutil.rmtree(path)
             removed += 1
-    for path in preview.legacy_files:
+    for path in preview.stale_files:
         if path.exists() and path.is_file():
             path.unlink()
             removed += 1
@@ -848,15 +847,6 @@ def _build_parser() -> argparse.ArgumentParser:
     )
     subparsers.add_parser(
         "build-manifest", help="Build the derived dataset manifest under data/cache/manifests/."
-    )
-    migrate_v3 = subparsers.add_parser(
-        "migrate-records-v3",
-        help="Migrate flat v2 records to revision-based v3 records.",
-    )
-    migrate_v3.add_argument(
-        "--dry-run",
-        action="store_true",
-        help="Preview the migration without changing files.",
     )
     prune_cache = subparsers.add_parser(
         "prune-cache", help="Remove recursively empty directories under data/cache/."
@@ -1468,33 +1458,6 @@ def main(argv: list[str] | None = None) -> int:
         manifest = datasets.write_dataset_manifest()
         print(
             f"Wrote dataset manifest to {repo.layout.dataset_manifest_path()} entries={len(manifest['generated'])}"
-        )
-        return 0
-
-    if args.command == "migrate-records-v3":
-        result = migrate_records_to_v3(repo, dry_run=bool(args.dry_run))
-        if args.dry_run:
-            print(
-                f"records_to_migrate={len(result.planned_record_ids)} "
-                f"records_skipped={result.skipped_count}"
-            )
-            if result.planned_record_ids:
-                print(f"sample_record_ids={', '.join(result.planned_record_ids[:10])}")
-            else:
-                print("sample_record_ids=(none)")
-            return 0
-        manifest = datasets.write_dataset_manifest()
-        stats = SearchIndex(repo).rebuild()
-        print(
-            f"migrated_records={result.migrated_count} "
-            f"records_skipped={result.skipped_count} "
-            f"removed_paths={len(result.removed_paths)}"
-        )
-        print(
-            f"Wrote dataset manifest to {repo.layout.dataset_manifest_path()} entries={len(manifest['generated'])}"
-        )
-        print(
-            f"Rebuilt search index at {stats.path} records={stats.record_count} categories={stats.category_count}"
         )
         return 0
 

@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_toy_car_e12ed8d4c536410d966efa1cac22d780",
   "created_at": "2026-04-27T13:50:10Z",
   "updated_at": "2026-04-28T00:38:44Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A toy SUV with a boxy body, four side doors, a rear hatch, and chunky wheels under flared arches, plus a rear trunk lid instead of a hatchback. the body shel..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "60acd47f7b3b991e13109098e2f3229ac8205e26ba16f0afd238aa95f23cca94",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_toy_car_e12ed8d4c536410d966efa1cac22d780",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

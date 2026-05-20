@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_branching_tree_with_two_independent_rotary_branches_5f077451d9814afa967087cdd81d42d1",
   "created_at": "2026-03-30T17:57:46Z",
   "updated_at": "2026-04-01T11:06:56Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A two-branch rotary fixture. A central mast rises from a grounded base and carries two radial hub blocks at staggered heights, each with a short arm ending i..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "c32297fcaeab86ef8411914782207fdd1f45f70cb09501d94b0882147cbdeff5",
-    "model_py_sha256": "06b069bf2db943f2601427be37dee0aae978e7841e024d6d4a45abfcc0794d00"
+    "model_py_sha256": "65fe015cd00dad745af32174adaa0e88bae5fc3367d846972df1756ad7943487"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_branching_tree_with_two_independent_rotary_branches_5f077451d9814afa967087cdd81d42d1",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

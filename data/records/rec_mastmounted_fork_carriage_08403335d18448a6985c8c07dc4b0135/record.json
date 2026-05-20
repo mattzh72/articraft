@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_mastmounted_fork_carriage_08403335d18448a6985c8c07dc4b0135",
   "created_at": "2026-04-03T21:46:47Z",
   "updated_at": "2026-04-06T01:22:09Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A compact lift-mast fork module. Two upright columns tied by a crosshead support a moving fork carriage with clear wraparound guides at each side. One prisma..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "e19c2b8dd0924df5cd99cc7efc7e71d44d7a8194dbe086c2b1532e4954d904c0",
-    "model_py_sha256": "a110ce1106bd36577d6fb58a1f245012495bbad9863cb928f79095ba54d7a53b"
+    "model_py_sha256": "7a058c45107a7428227d222adea74e6706c2e6e0cb42b82732869e0027c31950"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_mastmounted_fork_carriage_08403335d18448a6985c8c07dc4b0135",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

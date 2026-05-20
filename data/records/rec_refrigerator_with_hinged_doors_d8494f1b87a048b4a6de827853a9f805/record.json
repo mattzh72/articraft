@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_refrigerator_with_hinged_doors_d8494f1b87a048b4a6de827853a9f805",
   "created_at": "2026-03-29T15:11:47Z",
   "updated_at": "2026-04-01T13:46:35Z",
@@ -22,12 +22,13 @@
     "prompt_preview": "A wide French-door refrigerator with paired upper doors and a pair of smaller lower pantry doors instead of a drawer. The cabinet front is divided into four..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "e6f9a8c7f756037c72b90caf7a91d79d5a0952875d3c7080e74b8f6abb2f730f",
@@ -39,5 +40,12 @@
   "author": "RuiningLi",
   "rated_by": "RuiningLi",
   "secondary_rating": 5,
-  "secondary_rated_by": "shawlyu"
+  "secondary_rated_by": "shawlyu",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_refrigerator_with_hinged_doors_d8494f1b87a048b4a6de827853a9f805",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

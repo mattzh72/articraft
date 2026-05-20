@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_dualrail_gantry_axis_4665a3abc3bd4209ac4f8f1d9ec67eaf",
   "created_at": "2026-04-03T21:46:47Z",
   "updated_at": "2026-04-06T01:25:40Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A stiff-beam gantry positioning axis. Two parallel ground rails support a deep bridge member, and a small carriage runs along the front face of the bridge. T..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "c72878cd1b03696a5797e39039cfd0f354df04585ac077ebce7d67015ae8fc8c",
-    "model_py_sha256": "dd35c49fe21aec1d8cbc1ad523753ba39a2bc00b8b928f2f552737d072fcfd28"
+    "model_py_sha256": "26a35806be21b2d94ce209b2247dfa1debc5277b04d6ab00cd1c0e6061bd4de3"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_dualrail_gantry_axis_4665a3abc3bd4209ac4f8f1d9ec67eaf",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

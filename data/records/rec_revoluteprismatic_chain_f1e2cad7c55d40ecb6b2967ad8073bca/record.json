@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_revoluteprismatic_chain_f1e2cad7c55d40ecb6b2967ad8073bca",
   "created_at": "2026-04-27T14:16:24Z",
   "updated_at": "2026-04-27T23:59:02Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A wall-backed swing-and-slide fixture. A rigid backplate supports a hinged main link with a small carried ram at the far end. The main link is a revolute joi..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "60c6ca2e46494f3ce6c7a0b0c7779429e45c965390b7d9dfbb4d538ec3efe3f5",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_revoluteprismatic_chain_f1e2cad7c55d40ecb6b2967ad8073bca",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_single_revolute_hinge_714b7dfabb484a32bdbd4d70ef4f8366",
   "created_at": "2026-04-29T02:22:45Z",
   "updated_at": "2026-04-29T04:40:13Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "Create a realistic heavy strap hinge section. Geometry/details required: long strap leaves with tapered ends, raised ribs, bolt heads, a thick cylindrical ba..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
     "cost_json": null,
-    "inputs_dir": "inputs"
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "dbaca4cbe5db56e09dcd62c18c7834220c58bce6fdd2c15af55682d2093e3b4e",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_single_revolute_hinge_714b7dfabb484a32bdbd4d70ef4f8366",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

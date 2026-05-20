@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "record_id": "rec_air_fryer_with_pullout_basket_c916f2034c4241e7a4f5e21f1b3e2550",
+  "revision_id": "rev_000001",
+  "created_at": "2026-04-11T16:17:14Z",
+  "prompt_kind": "single_prompt",
+  "prompt_sha256": "579c5855986cf72130f8ec05e74881099f61a229a85a09c4513afed5328bba7b",
+  "source": {
+    "run_id": "run_20260411_161713_819782_20260411-home-appliance-categories-5each-gemini3",
+    "prompt_batch_id": null,
+    "batch_spec_id": "20260411_home_appliance_categories_5each_gemini31pro_high",
+    "row_id": "air_fryer_001",
+    "prompt_index": 6
+  },
+  "generation": {
+    "provider": "gemini",
+    "model_id": "gemini-3.1-pro-preview",
+    "thinking_level": "high",
+    "openai_transport": null,
+    "openai_reasoning_summary": null,
+    "max_turns": 170,
+    "max_cost_usd": null
+  },
+  "artifacts": {
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
+    "prompt_series_json": null,
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
+  },
+  "hashes": {
+    "prompt_sha256": "579c5855986cf72130f8ec05e74881099f61a229a85a09c4513afed5328bba7b",
+    "model_py_sha256": "528ddc5b2ea49956f9f93a839f0df336ceb8fdf7d48fd223d28f50081a16b8c0"
+  },
+  "run_summary": {
+    "turn_count": 134,
+    "tool_call_count": 134,
+    "compile_attempt_count": 19,
+    "final_status": "success"
+  },
+  "parent": null,
+  "seed": null,
+  "inherited_inputs": []
+}

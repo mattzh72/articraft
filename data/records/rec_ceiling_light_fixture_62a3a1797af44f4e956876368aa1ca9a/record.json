@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_ceiling_light_fixture_62a3a1797af44f4e956876368aa1ca9a",
   "created_at": "2026-04-27T13:55:22Z",
   "updated_at": "2026-04-28T00:34:25Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A track lighting system with a straight rectangular ceiling rail and five spot head fixtures each sliding on a prismatic joint along the rail and rotating on..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "c768d45093bb25eb5ec397823bfcce5b43084b54e2248cbb261b460aa36280a3",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_ceiling_light_fixture_62a3a1797af44f4e956876368aa1ca9a",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_overshot_waterwheel_55732416dc324d5ca28574fa83350e82",
   "created_at": "2026-04-27T01:41:49Z",
   "updated_at": "2026-04-27T10:29:24Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A narrow overshot waterwheel with a suspended inlet box and a sliding regulator plate. The wheel is mounted on a central shaft between two side bearings, and..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "0e95715c2ff87ef250a39807d682ba0f0cb572d45a55e2937bee45127d29be2e",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_overshot_waterwheel_55732416dc324d5ca28574fa83350e82",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

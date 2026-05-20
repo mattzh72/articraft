@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_threejoint_prismatic_chain_4f9e3ce4bf8e44c79f3c313615919f29",
   "created_at": "2026-03-28T03:32:30Z",
   "updated_at": "2026-04-01T10:11:27Z",
@@ -22,16 +22,17 @@
     "prompt_preview": "A three-stage linear slide chain. A fixed base guide carries a first carriage, that carriage carries a second guide, and the second carriage carries a third..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "8636135592cc60778af228d07b2f6bb42ce6d8a1f52d86ad80387478e9f20f28",
-    "model_py_sha256": "090f69ed17b76efe83eddd6e9c4650ec5e3f308ae75cbe8735c3816549e08454"
+    "model_py_sha256": "8888d882eed9df3f8298381867a74ccc67d0c40ae44f239fb1264cb14c4802b3"
   },
   "collections": [
     "dataset"
@@ -39,5 +40,12 @@
   "author": "mattzh72",
   "rated_by": "mattzh72",
   "secondary_rating": 5,
-  "secondary_rated_by": "Zhaomou Song"
+  "secondary_rated_by": "Zhaomou Song",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_threejoint_prismatic_chain_4f9e3ce4bf8e44c79f3c313615919f29",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

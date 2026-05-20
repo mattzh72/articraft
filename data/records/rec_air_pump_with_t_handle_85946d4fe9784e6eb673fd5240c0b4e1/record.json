@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_air_pump_with_t_handle_85946d4fe9784e6eb673fd5240c0b4e1",
   "created_at": "2026-04-04T15:02:59Z",
   "updated_at": "2026-04-05T11:53:54Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A bicycle track pump with a tripod foot base and a broad T-handle. The tall cylindrical barrel stands above the three-foot base, and the handle is fixed to t..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "c90ad438bb7b6509583b8bba3e33a68ffe59e4f9c6c65c569f5bb14b64868793",
-    "model_py_sha256": "f6ad39206a75ee5983cb27720eed344c954fc7c0e7860bace4a7f3be19680049"
+    "model_py_sha256": "01c090ba8f6c56c085f0e74727ac42373fc213d7fbc4ae199934dfaae0999db8"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_air_pump_with_t_handle_85946d4fe9784e6eb673fd5240c0b4e1",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

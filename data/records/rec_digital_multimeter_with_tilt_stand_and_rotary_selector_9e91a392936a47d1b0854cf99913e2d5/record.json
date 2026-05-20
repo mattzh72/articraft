@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_digital_multimeter_with_tilt_stand_and_rotary_selector_9e91a392936a47d1b0854cf99913e2d5",
   "created_at": "2026-04-11T23:09:13Z",
   "updated_at": "2026-04-22T14:14:26Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A rugged autoranging digital multimeter with a boxy body, a large display window, a deep range dial, and a long kickstand on the back, plus five visible soft..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "32b2362277a20ba3463673b56db20035369f99d25134becd6f0aea79f03bbc7f",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_digital_multimeter_with_tilt_stand_and_rotary_selector_9e91a392936a47d1b0854cf99913e2d5",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_vane_array_with_independent_pivots_f486a2cac95d4dc2b9d66d35bbcea738",
   "created_at": "2026-03-31T17:20:51Z",
   "updated_at": "2026-04-06T01:41:57Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "An under-slung shutter blade assembly. A top support carries several hanging blades on separate pivots, giving the array a different support layout while kee..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "6b3ccefd675072098ff566f54e015c0ec0b1638b711f6f2b7c927625edb46826",
-    "model_py_sha256": "5d34bd18457d6fec2b9e09a37519ed29d68ef6bb7ce43ff4cf237a1c6a055772"
+    "model_py_sha256": "910fd7184f14dd2c82bdb14a695741774911e983c2cc6d015398688399604332"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_vane_array_with_independent_pivots_f486a2cac95d4dc2b9d66d35bbcea738",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_opposed_twinslide_gripper_b47996084ed14114b316ffd20fa1d1bd",
   "created_at": "2026-04-03T21:46:47Z",
   "updated_at": "2026-04-06T01:25:32Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A twin-rail parallel gripper head. A grounded central body carries a left slide jaw and a right slide jaw on mirrored guides, each ending in a tall rigid fin..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "7b123a656e201567fef709f63c95102a107500a12c7309fb63119541286d4f51",
-    "model_py_sha256": "6c9ddbb61094ba4053597829e0e288a395074c498f23a5a3ad5d9d0a4d896f7e"
+    "model_py_sha256": "dbbbb065632465ee9ee7fa0a6bd22282e288ddd4b787e3b42f5b9e86b02ec09f"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_opposed_twinslide_gripper_b47996084ed14114b316ffd20fa1d1bd",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

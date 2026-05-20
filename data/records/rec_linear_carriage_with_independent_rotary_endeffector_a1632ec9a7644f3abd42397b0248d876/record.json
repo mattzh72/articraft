@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_linear_carriage_with_independent_rotary_endeffector_a1632ec9a7644f3abd42397b0248d876",
   "created_at": "2026-03-31T17:20:51Z",
   "updated_at": "2026-04-06T01:39:50Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A side-wall carriage with rotary face. A grounded side plate supports a straight guide and a forward carriage with a small rotating face on its front. The ca..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "0df56f45cf904e5c8d019f8483ad1b584d8ee8cfeec3d033d135164418c84228",
-    "model_py_sha256": "4064433abb540f82e6829d4451afc6aa0928a4717bdfe63325f624d1112da79d"
+    "model_py_sha256": "dde31f661afc5361b052e4fb204c694cfd17120fa2681b19063906848c647dbf"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_linear_carriage_with_independent_rotary_endeffector_a1632ec9a7644f3abd42397b0248d876",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_air_pump_with_t_handle_b5283a768bbc49c2b7d9d06b0bd28f3c",
   "created_at": "2026-04-04T15:03:11Z",
   "updated_at": "2026-04-05T11:50:33Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A portable camping pump with a short cylinder, a T-handle, and fold-out feet. The compact barrel stands on a narrow base, and two small stabilizer feet fold..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "3c9cfd9949a16932befb8cedfa58c16af3e7bfddd088319224019e8b3747133f",
-    "model_py_sha256": "e9370fef5db6d77ce654ad3006be6426be09773e1e8b49827446cd6176c8d848"
+    "model_py_sha256": "1776bfde5af9ac53482b696544cde3ebc4b3579163d34ec8bf899beb750b4ac0"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_air_pump_with_t_handle_b5283a768bbc49c2b7d9d06b0bd28f3c",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

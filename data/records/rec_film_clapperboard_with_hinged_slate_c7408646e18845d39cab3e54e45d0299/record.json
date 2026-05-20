@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_film_clapperboard_with_hinged_slate_c7408646e18845d39cab3e54e45d0299",
   "created_at": "2026-04-11T23:05:11Z",
   "updated_at": "2026-04-22T14:19:20Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A smart production slate with a wide board, a striped clapstick, a top timecode module, and a small side sync-port cover. The port cover is a real hinged fla..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "b595b783f2c6aeaf190b530ee193305096cf18efb3f0e629af1cafe145788400",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_film_clapperboard_with_hinged_slate_c7408646e18845d39cab3e54e45d0299",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_rotary_table_with_tilting_trunnion_2022b0d6da0941b3955b50337d6213cb",
   "created_at": "2026-03-30T17:57:46Z",
   "updated_at": "2026-04-01T11:01:40Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A compact trunnion table module. A round lower stage carries a forked support with a centered table plate between its arms. The lower stage is a yaw-like rev..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "98388d6118850f1a3b6d887102af879d85b903d9ac4db11ca1ea83227e29e33c",
-    "model_py_sha256": "ffc7ba41b725165f4b924c087bd5c2620899fad80cd487332399188a712c04b3"
+    "model_py_sha256": "0e0a54187022bc3cf3331464d80868acc93c9517eadce57e7446017e3011f8d4"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_rotary_table_with_tilting_trunnion_2022b0d6da0941b3955b50337d6213cb",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

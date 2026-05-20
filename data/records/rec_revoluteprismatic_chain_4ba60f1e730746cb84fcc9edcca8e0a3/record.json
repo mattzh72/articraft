@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_revoluteprismatic_chain_4ba60f1e730746cb84fcc9edcca8e0a3",
   "created_at": "2026-03-28T03:32:30Z",
   "updated_at": "2026-04-01T10:11:56Z",
@@ -22,16 +22,17 @@
     "prompt_preview": "A swing-out slide mechanism. A base bracket carries a hinged primary arm, and the free end of that arm supports a short linear slide with a rectangular carri..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "da7cd6f8fec865eac7e34a7b3d20df7bca84839a5fdc848be99d22bd7acdbb05",
-    "model_py_sha256": "113225f0f37f6d4c1874e07489a5dcea3a62e5cee887b23bac3451c3a0f61ae9"
+    "model_py_sha256": "9919cb67f5a795627dec03bcfeba5f2a65b8497ec9803800c8b8f0e804b142f5"
   },
   "collections": [
     "dataset"
@@ -39,5 +40,12 @@
   "author": "mattzh72",
   "rated_by": "mattzh72",
   "secondary_rating": 5,
-  "secondary_rated_by": "Zhaomou Song"
+  "secondary_rated_by": "Zhaomou Song",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_revoluteprismatic_chain_4ba60f1e730746cb84fcc9edcca8e0a3",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

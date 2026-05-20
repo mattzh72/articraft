@@ -48,15 +48,45 @@ def _write_batch_spec(repo: StorageRepo) -> None:
 
 def _write_record(repo: StorageRepo, record_id: str, prompt_sha: str, dataset_id: str) -> None:
     record_dir = repo.layout.record_dir(record_id)
-    record_dir.mkdir(parents=True, exist_ok=True)
-    (record_dir / "model.py").write_text("# model\n", encoding="utf-8")
-    (record_dir / "prompt.txt").write_text("Make a hinge\n", encoding="utf-8")
-    (record_dir / "cost.json").write_text("{}\n", encoding="utf-8")
+    revision_id = "rev_000001"
+    revision_dir = repo.layout.record_revision_dir(record_id, revision_id)
+    revision_dir.mkdir(parents=True, exist_ok=True)
+    (revision_dir / "traces").mkdir(parents=True, exist_ok=True)
+    (revision_dir / "model.py").write_text("# model\n", encoding="utf-8")
+    (revision_dir / "prompt.txt").write_text("Make a hinge\n", encoding="utf-8")
+    (revision_dir / "cost.json").write_text("{}\n", encoding="utf-8")
+    artifacts = {
+        "prompt_txt": "revisions/rev_000001/prompt.txt",
+        "prompt_series_json": None,
+        "model_py": "revisions/rev_000001/model.py",
+        "provenance_json": "revisions/rev_000001/provenance.json",
+        "cost_json": "revisions/rev_000001/cost.json",
+        "inputs_dir": "revisions/rev_000001/inputs",
+        "traces_dir": "revisions/rev_000001/traces",
+    }
+    hashes = {
+        "prompt_sha256": hashlib.sha256(b"Make a hinge\n").hexdigest(),
+        "model_py_sha256": hashlib.sha256(b"# model\n").hexdigest(),
+    }
+    source = {
+        "run_id": "run_1",
+        "prompt_batch_id": None,
+        "batch_spec_id": "demo",
+        "row_id": "row_1",
+        "prompt_index": 1,
+    }
+    generation = {
+        "provider": "openai",
+        "model_id": "gpt-5.4",
+        "thinking_level": "high",
+        "max_turns": 10,
+    }
     _write_json(
         record_dir / "record.json",
         {
-            "schema_version": 2,
+            "schema_version": 3,
             "record_id": record_id,
+            "active_revision_id": revision_id,
             "created_at": "2026-03-18T00:00:00Z",
             "updated_at": "2026-03-18T00:00:00Z",
             "rating": 5,
@@ -67,43 +97,28 @@ def _write_record(repo: StorageRepo, record_id: str, prompt_sha: str, dataset_id
             "kind": "generated_model",
             "prompt_kind": "single_prompt",
             "category_slug": "hinge",
-            "source": {
-                "run_id": "run_1",
-                "prompt_batch_id": None,
-                "batch_spec_id": "demo",
-                "row_id": "row_1",
-                "prompt_index": 1,
-            },
+            "source": source,
             "sdk_package": "sdk",
             "provider": "openai",
             "model_id": "gpt-5.4",
             "display": {"title": "Hinge", "prompt_preview": "Make a hinge"},
-            "artifacts": {
-                "prompt_txt": "prompt.txt",
-                "prompt_series_json": None,
-                "model_py": "model.py",
-                "provenance_json": "provenance.json",
-                "cost_json": "cost.json",
-                "inputs_dir": "inputs",
-            },
-            "hashes": {
-                "prompt_sha256": hashlib.sha256(b"Make a hinge\n").hexdigest(),
-                "model_py_sha256": hashlib.sha256(b"# model\n").hexdigest(),
+            "artifacts": artifacts,
+            "hashes": hashes,
+            "lineage": {
+                "origin_record_id": record_id,
+                "parent_record_id": None,
+                "parent_revision_id": None,
+                "edit_mode": "root",
             },
             "collections": ["dataset"],
         },
     )
     _write_json(
-        record_dir / "provenance.json",
+        revision_dir / "provenance.json",
         {
             "schema_version": 2,
             "record_id": record_id,
-            "generation": {
-                "provider": "openai",
-                "model_id": "gpt-5.4",
-                "thinking_level": "high",
-                "max_turns": 10,
-            },
+            "generation": generation,
             "prompting": {
                 "system_prompt_file": "designer_system_prompt_openai.txt",
                 "system_prompt_sha256": prompt_sha,
@@ -114,7 +129,23 @@ def _write_record(repo: StorageRepo, record_id: str, prompt_sha: str, dataset_id
         },
     )
     _write_json(
-        record_dir / "dataset_entry.json",
+        revision_dir / "revision.json",
+        {
+            "schema_version": 1,
+            "record_id": record_id,
+            "revision_id": revision_id,
+            "created_at": "2026-03-18T00:00:00Z",
+            "prompt_kind": "single_prompt",
+            "prompt_sha256": hashes["prompt_sha256"],
+            "source": source,
+            "generation": generation,
+            "artifacts": artifacts,
+            "hashes": hashes,
+            "run_summary": {"final_status": "success"},
+        },
+    )
+    _write_json(
+        repo.layout.record_dataset_entry_path(record_id),
         {
             "schema_version": 1,
             "record_id": record_id,
@@ -159,14 +190,16 @@ def test_validate_data_format_reports_cross_record_dataset_errors(tmp_path: Path
     _write_batch_spec(repo)
     _write_record(repo, "rec_hinge_0001", prompt_sha, "ds_hinge_0001")
     _write_record(repo, "rec_hinge_0002", prompt_sha, "ds_hinge_0001")
-    (repo.layout.record_dir("rec_hinge_0002") / "model.py").unlink()
+    repo.layout.record_revision_model_path("rec_hinge_0002", "rev_000001").unlink()
 
     result = validate_data_format(repo)
 
     assert any("duplicate dataset_id=ds_hinge_0001" in error for error in result.errors)
     assert any(
-        "artifacts.model_py references missing path 'model.py'" in error for error in result.errors
+        "artifacts.model_py references missing path 'revisions/rev_000001/model.py'" in error
+        for error in result.errors
     )
+    assert any("missing revision artifact model.py" in error for error in result.errors)
 
 
 def test_validate_data_format_accepts_external_dataset_record(tmp_path: Path) -> None:
@@ -177,8 +210,9 @@ def test_validate_data_format_accepts_external_dataset_record(tmp_path: Path) ->
     _write_batch_spec(repo)
     _write_record(repo, "rec_hinge_0001", "0" * 64, "ds_hinge_0001")
     record_dir = repo.layout.record_dir("rec_hinge_0001")
+    provenance_path = repo.layout.record_revision_provenance_path("rec_hinge_0001", "rev_000001")
     record = json.loads((record_dir / "record.json").read_text(encoding="utf-8"))
-    provenance = json.loads((record_dir / "provenance.json").read_text(encoding="utf-8"))
+    provenance = json.loads(provenance_path.read_text(encoding="utf-8"))
     record["provider"] = None
     record["model_id"] = None
     record["creator"] = {
@@ -190,7 +224,7 @@ def test_validate_data_format_accepts_external_dataset_record(tmp_path: Path) ->
     provenance["generation"]["model_id"] = None
     provenance["generation"]["thinking_level"] = None
     _write_json(record_dir / "record.json", record)
-    _write_json(record_dir / "provenance.json", provenance)
+    _write_json(provenance_path, provenance)
 
     result = validate_data_format(repo)
 
@@ -212,8 +246,8 @@ def test_validate_data_format_rejects_external_trace_claims(tmp_path: Path) -> N
         "trace_available": True,
     }
     _write_json(record_dir / "record.json", record)
-    traces_dir = record_dir / "traces"
-    traces_dir.mkdir()
+    traces_dir = repo.layout.record_revision_traces_dir("rec_hinge_0001", "rev_000001")
+    traces_dir.mkdir(exist_ok=True)
     (traces_dir / "trajectory.jsonl").write_text("{}\n", encoding="utf-8")
 
     result = validate_data_format(repo)

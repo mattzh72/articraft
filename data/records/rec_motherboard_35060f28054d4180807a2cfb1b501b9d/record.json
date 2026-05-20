@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_motherboard_35060f28054d4180807a2cfb1b501b9d",
   "created_at": "2026-04-04T14:43:54Z",
   "updated_at": "2026-04-05T13:00:41Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A consumer motherboard with a hinged rear I/O shield flap and a CPU retention arm. The flat board carries the processor socket near the middle and a narrow h..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "e029894232ef6e8aa44fedd08d8d78b42418293b8bd60102a298cc6bbc9dfd36",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_motherboard_35060f28054d4180807a2cfb1b501b9d",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_rotary_table_with_tilting_trunnion_8bb516cb34994cca91eac49695aaf99f",
   "created_at": "2026-03-30T17:57:46Z",
   "updated_at": "2026-04-01T10:54:16Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A low-profile trunnion workholding stage. A broad lower platter supports short side supports and a smaller upper work table with clear end hubs. The platter..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "44beff76d75037d1d34a25d282f7333f03195ffe6ba2a0294059c30f425fc65e",
-    "model_py_sha256": "9cb4dc6d2d8b0e2f84aa78c6e6b77ea6a53a4a45f4a5df852be68a7a65eabdf3"
+    "model_py_sha256": "350bf1758534101a20a55a839c341c9aee26dd89e3caea702e9d8595486c300f"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_rotary_table_with_tilting_trunnion_8bb516cb34994cca91eac49695aaf99f",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

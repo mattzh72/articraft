@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_single_revolute_hinge_0be604c5e1064ff7bbf5bd2e81b06b8c",
   "created_at": "2026-04-03T21:46:47Z",
   "updated_at": "2026-04-06T01:25:39Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A pedestal side hinge. A grounded side block carries one hinge half, and a compact door-like plate forms the moving half around a pin barrel. One revolute jo..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "c4787ffbdef61149fc9ee27af2773278631df354d32fb6fffe8651e69ee505f4",
-    "model_py_sha256": "6e0e6bfc50a2611ecac7497f0d5e7f06d50ea424d958f619a850809b5efb0d87"
+    "model_py_sha256": "84b033c97cf52f7e5e3c70c135447b10a463d4314a7144cf73519df8712343df"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_single_revolute_hinge_0be604c5e1064ff7bbf5bd2e81b06b8c",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_single_prismatic_slider_6156068958ec4eb483366423cad89098",
   "created_at": "2026-04-03T21:46:47Z",
   "updated_at": "2026-04-06T01:25:45Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A dual-rail carriage slider. A grounded base supports two straight guide rails and a compact carriage bridging the rails. The carriage moves on one prismatic..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "cdb7760d82a9f69546b3b9b0d0e94386758a5cd6b0ef9a8c219356a18d779052",
-    "model_py_sha256": "23c9b9dd0da9f834521bd62fd3335f695b31b4c4d02fcb699ae52e80a9d9bbba"
+    "model_py_sha256": "216de27ce5ee05d7cb07cce93d0696f0940e1a0ca925061a0645a309796463a0"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_single_prismatic_slider_6156068958ec4eb483366423cad89098",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

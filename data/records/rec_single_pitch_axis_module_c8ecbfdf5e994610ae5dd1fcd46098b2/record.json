@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_single_pitch_axis_module_c8ecbfdf5e994610ae5dd1fcd46098b2",
   "created_at": "2026-03-31T17:20:51Z",
   "updated_at": "2026-03-31T18:43:48Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A bridge-supported pitch-axis trunnion module. A rigid lower saddle carries a short bridge or cap support, with the moving head clearly captured between the..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "5e755ad51b7ed438211ebab8b9f731a7a34bd761a5bc95e4f88e2cc9bae03563",
-    "model_py_sha256": "8b44075fa988cc88dfde8b489b4163ecbdba5ea7d5f33a54ce173ade1373b2a2"
+    "model_py_sha256": "fcfbf6cacbd20b89cd80e6fafec4ffce9e5fc7cdcc8fa3a61cd8701d15a49221"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_single_pitch_axis_module_c8ecbfdf5e994610ae5dd1fcd46098b2",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_floor_lamp_9463c47cb4c24c88ad697e1a2ea3ccda",
   "created_at": "2026-04-12T14:56:29Z",
   "updated_at": "2026-04-22T08:08:52Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A floor lamp with a square base, a tall post, and a swiveling spotlight head mounted on a short crossarm. The crossarm rotates on a hinge at the top of the p..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "b22933a5a36c8ff6c21390e35cbaf096ed0d8f66b6a784d6c1f6c934e110c8bb",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_floor_lamp_9463c47cb4c24c88ad697e1a2ea3ccda",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

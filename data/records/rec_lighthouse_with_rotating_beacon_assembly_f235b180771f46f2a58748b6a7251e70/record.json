@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_lighthouse_with_rotating_beacon_assembly_f235b180771f46f2a58748b6a7251e70",
   "created_at": "2026-04-27T13:23:28Z",
   "updated_at": "2026-04-28T07:19:42Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A lighthouse lantern assembly with a cylindrical glass enclosure on a tapered tower top. Inside the lantern room, a central vertical shaft carries a beacon f..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "7e84c913b18365d33668d0e94acc7cc428eede9cb1fa719aa2fc0febbc619ecc",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_lighthouse_with_rotating_beacon_assembly_f235b180771f46f2a58748b6a7251e70",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_wall_safe_with_hinged_door_and_dial_0434f92464244df2a6417675958460b2",
   "created_at": "2026-04-02T22:48:25Z",
   "updated_at": "2026-04-06T01:29:07Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A wall-mounted safe with a broad front flange, a right-hinged main door, a combination dial, and a small deposit flap above the handle. The main door rotates..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "4b65eff0005399485554f2b70990549f9596b60a895e8287d59d12df2c7188ac",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_wall_safe_with_hinged_door_and_dial_0434f92464244df2a6417675958460b2",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

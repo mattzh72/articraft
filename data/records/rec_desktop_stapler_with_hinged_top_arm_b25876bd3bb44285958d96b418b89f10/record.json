@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_desktop_stapler_with_hinged_top_arm_b25876bd3bb44285958d96b418b89f10",
   "created_at": "2026-04-11T23:51:08Z",
   "updated_at": "2026-04-12T10:16:49Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A desktop stapler with a heavy base, a rear-hinged staple magazine, a separate top arm carried on the back of the magazine, and a front loading tray section...."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "9663ba3e1825ece7c2384c20a99b1e50592b6c0809b6aad13a5d1728b59052d3",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_desktop_stapler_with_hinged_top_arm_b25876bd3bb44285958d96b418b89f10",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_air_conditioning_machine_9031545f398642d4b6099de22889681c",
   "created_at": "2026-04-12T14:13:27Z",
   "updated_at": "2026-04-22T08:34:55Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A portable room air conditioning machine with a tall wheeled body, a top outlet grille, and a front control panel with three buttons and one dial. The top ou..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "7ad00e87b853c3ce7ab6bea935147a437eb28fa8aaca02516f4fc2f265bdf281",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_air_conditioning_machine_9031545f398642d4b6099de22889681c",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

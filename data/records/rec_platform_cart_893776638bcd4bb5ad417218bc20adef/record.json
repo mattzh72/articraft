@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_platform_cart_893776638bcd4bb5ad417218bc20adef",
   "created_at": "2026-04-04T14:54:28Z",
   "updated_at": "2026-04-05T12:19:28Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A steel platform cart with a hinged side handle for towing. The flat deck rides on two fixed wheels and two swivel casters, and a short side handle folds dow..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "7923ed04cb2a368efecd8a0723127870e4da7626424977199e3c4ad74b707336",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_platform_cart_893776638bcd4bb5ad417218bc20adef",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_single_yaw_axis_module_4834aa6a8480417799d647b94a49554b",
   "created_at": "2026-04-02T16:32:45Z",
   "updated_at": "2026-04-06T01:34:17Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A flange-mount yaw stage. A broad mounting flange supports a short rotary neck and a compact top faceplate that stays smaller than the flange below it. One r..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "1e30700f05799faf92b2a1219091d31f47b9e4136126bcd376b95a6da4fae885",
-    "model_py_sha256": "5ec6315da9e15c48eaccb4a60ac2b438f643db7f984af516aa48429c49b3c68f"
+    "model_py_sha256": "4d5794fa560924b231247993cf27614066e316d2b39c0b562897f4f0ead010aa"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_single_yaw_axis_module_4834aa6a8480417799d647b94a49554b",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

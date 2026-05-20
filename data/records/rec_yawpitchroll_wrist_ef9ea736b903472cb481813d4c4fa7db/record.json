@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_yawpitchroll_wrist_ef9ea736b903472cb481813d4c4fa7db",
   "created_at": "2026-04-27T02:33:46Z",
   "updated_at": "2026-04-27T09:53:48Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A turntable-yoke-spindle wrist. A grounded lower yaw stage carries a pitch frame, and the pitch frame carries a centered roll spindle with a plain faceplate...."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "bb95f8f08267e62f942068d03689ea1a29f8eed81e618f301297a25e681fd36d",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_yawpitchroll_wrist_ef9ea736b903472cb481813d4c4fa7db",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

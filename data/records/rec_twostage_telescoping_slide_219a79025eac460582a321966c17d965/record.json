@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_twostage_telescoping_slide_219a79025eac460582a321966c17d965",
   "created_at": "2026-03-31T17:20:51Z",
   "updated_at": "2026-04-06T01:39:15Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A bridge-backed extension slide. A rear support carries an outer slide body and one carried inner stage projecting from it. The carried stage is one prismati..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "c78090d12a44e40f45fefe5c921cdfcf5eae59f2c3713be5a554187745c31f13",
-    "model_py_sha256": "07272bd8794316895ac7bf61336cb177eb95149f671e5d5ab71fc5b1a7541de3"
+    "model_py_sha256": "336326e94ef6a79c747acca0f30a67b52a5c694987dab9be75ec8d0e1b7fc85a"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_twostage_telescoping_slide_219a79025eac460582a321966c17d965",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

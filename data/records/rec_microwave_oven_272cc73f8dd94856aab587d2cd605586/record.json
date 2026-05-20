@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_microwave_oven_272cc73f8dd94856aab587d2cd605586",
   "created_at": "2026-04-04T14:40:23Z",
   "updated_at": "2026-04-05T13:00:16Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A countertop microwave with a side-hinged door and a row of membrane buttons. The rectangular oven body is fixed, the glazed front door is mounted to one sid..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "969edb45733212e879db6944e220ef9fce3d1bb493b9652bb5047e23eb83d6dc",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_microwave_oven_272cc73f8dd94856aab587d2cd605586",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

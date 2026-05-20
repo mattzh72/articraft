@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "record_id": "rec_camcorder_with_flipout_screen_0a900752d9084bdabf730d874173f585",
+  "revision_id": "rev_000001",
+  "created_at": "2026-05-04T08:14:04Z",
+  "prompt_kind": "single_prompt",
+  "prompt_sha256": "f86ea4732b74ecf29fe58e658d139838dd7ca2f247626c45f9b2348738a8adbe",
+  "source": {
+    "run_id": "run_20260504_081402_588994_20260504-camcorder-frontier-thinking-ablation",
+    "prompt_batch_id": null,
+    "batch_spec_id": "20260504_camcorder_frontier_thinking_ablation",
+    "row_id": "camcorder_gemini_high",
+    "prompt_index": 4
+  },
+  "generation": {
+    "provider": "gemini",
+    "model_id": "gemini-3.1-pro-preview",
+    "thinking_level": "high",
+    "openai_transport": null,
+    "openai_reasoning_summary": null,
+    "max_turns": 250,
+    "max_cost_usd": null
+  },
+  "artifacts": {
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
+    "prompt_series_json": null,
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
+  },
+  "hashes": {
+    "prompt_sha256": "f86ea4732b74ecf29fe58e658d139838dd7ca2f247626c45f9b2348738a8adbe",
+    "model_py_sha256": "a99c1030f1ae3edfa4ebf4ba87f6deb9a3ebd5f2fa1f232c8390d4fc087172a9"
+  },
+  "run_summary": {
+    "turn_count": 9,
+    "tool_call_count": 8,
+    "compile_attempt_count": 3,
+    "final_status": "success"
+  },
+  "parent": null,
+  "seed": null,
+  "inherited_inputs": []
+}

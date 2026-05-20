@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_threestage_telescoping_slide_83c9c34f59df4d2b89dac9acbc23a32e",
   "created_at": "2026-03-29T15:31:29Z",
   "updated_at": "2026-04-01T11:24:58Z",
@@ -22,16 +22,17 @@
     "prompt_preview": "A long-reach extension rail with a fixed outer member, a middle rail, an inner rail, and a small top carriage at the end. The rail sections should remain str..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "f681946595747bb075c40e5ba170b33554b0ecba24bb5dd613f6e8d8d6afe2c0",
-    "model_py_sha256": "5d64de5de94619c177aafb4987523dc955f2a978ae364fee79d3cfa08c3c7064"
+    "model_py_sha256": "ef06364262aa0a2d27d74df8beca4e2c8d0c0de512ecb309be1641985073254a"
   },
   "collections": [
     "dataset"
@@ -39,5 +40,12 @@
   "author": "mattzh72",
   "rated_by": "mattzh72",
   "secondary_rating": 5,
-  "secondary_rated_by": "Zhaomou Song"
+  "secondary_rated_by": "Zhaomou Song",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_threestage_telescoping_slide_83c9c34f59df4d2b89dac9acbc23a32e",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

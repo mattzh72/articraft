@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_metronome_d42b5cc0c63e44ce9c7ea9667cfee962",
   "created_at": "2026-04-27T02:34:03Z",
   "updated_at": "2026-04-27T09:49:03Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A clip-on metronome designed to attach to a music stand. A compact rectangular housing carries a spring-loaded clip arm at its rear that pivots on a revolute..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "c1bb3bc20166b907cba93428dbfc5991d376894189117c4a222df667c1e34ef4",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_metronome_d42b5cc0c63e44ce9c7ea9667cfee962",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

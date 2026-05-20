@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_coaxial_rotary_stack_4420d90128ab44ec8682c9c7bcc36379",
   "created_at": "2026-03-31T17:20:51Z",
   "updated_at": "2026-04-06T01:40:05Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A saddle-body coaxial stack. A wide grounded housing supports a large lower rotary stage and smaller upper stages that remain visibly separate rigid parts. T..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "57ff5a2b018ade5ed2316d86341afc465aa6a71650fa9e74d14828d112b401e8",
-    "model_py_sha256": "66b4d99c9abd39cdcbc295c6ca7499d1d072f09de28952f841e4d38a4fbe50fb"
+    "model_py_sha256": "cfaffdfbfe4c3099851e6d6e918db550c5b0968d9557fa5356b8dac67029f0ea"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_coaxial_rotary_stack_4420d90128ab44ec8682c9c7bcc36379",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_tv_wall_mount_a261e3a2f5f84a45be957d41753ac13e",
   "created_at": "2026-03-28T03:32:30Z",
   "updated_at": "2026-04-01T10:12:19Z",
@@ -22,16 +22,17 @@
     "prompt_preview": "A full-motion TV wall mount shown without a screen. A wall plate connects to a folding two-link arm, and the arm ends in a rectangular head frame with separa..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "c5e389538fee87b4185890dcc4a2e3018d74a44741a2ee4814c4d4f88be6b498",
-    "model_py_sha256": "b002606c146acef84fe023a05095446c59c54065137ed198c73214a827d40b34"
+    "model_py_sha256": "ea7f5a290e86c6dcb2201af0489ad55769f0e6e823f6c812a11e64176d3d7a87"
   },
   "collections": [
     "dataset"
@@ -39,5 +40,12 @@
   "author": "mattzh72",
   "rated_by": "mattzh72",
   "secondary_rating": 5,
-  "secondary_rated_by": "Zhaomou Song"
+  "secondary_rated_by": "Zhaomou Song",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_tv_wall_mount_a261e3a2f5f84a45be957d41753ac13e",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_espresso_machine_with_articulated_components_d248f0172e6c44c6a801a4a65b261d72",
   "created_at": "2026-04-09T16:54:33Z",
   "updated_at": "2026-04-22T03:39:52Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A dual-boiler home espresso machine with a front group head, a steam wand, a hot-water wand, and a fold-down cup platform for small cups. A hinged access lid..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "c0a61e2ba115a2313cd9ff52ac29db324febdd49cff4070a28f8a3c78a0ea7a8",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_espresso_machine_with_articulated_components_d248f0172e6c44c6a801a4a65b261d72",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

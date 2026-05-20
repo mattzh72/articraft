@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_crane_tower_00a7bb81b06145a8887ce637a87c8c6b",
   "created_at": "2026-04-27T13:17:09Z",
   "updated_at": "2026-04-28T07:23:26Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A tower crane with a vertical mast, a horizontal jib and counter-jib, a slewing ring at the mast top on a vertical revolute joint, and a trolley sliding on a..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "2d019657bfc12f31eee3b7fd9d3ba92ed0c8991cf13844812a5e2ab3a547e98d",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_crane_tower_00a7bb81b06145a8887ce637a87c8c6b",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

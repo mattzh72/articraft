@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "record_id": "rec_adjustable_weight_bench_with_hinged_backrest_cbfe926a72034a909ad86cb91c7a6a46",
+  "revision_id": "rev_000001",
+  "created_at": "2026-04-11T18:43:53Z",
+  "prompt_kind": "single_prompt",
+  "prompt_sha256": "92ba11d860826db5a4b0139f807fc042052a4397a96c3ffb7a8bc5d908bff859",
+  "source": {
+    "run_id": "run_20260411_184352_757500_20260411-tabletop-handheld-tools-and-weight-benc",
+    "prompt_batch_id": null,
+    "batch_spec_id": "20260411_tabletop_handheld_tools_and_weight_bench_5each_gpt54_high",
+    "row_id": "weightbench_005",
+    "prompt_index": 45
+  },
+  "generation": {
+    "provider": "openai",
+    "model_id": "gpt-5.4",
+    "thinking_level": "high",
+    "openai_transport": "http",
+    "openai_reasoning_summary": "auto",
+    "max_turns": 175,
+    "max_cost_usd": null
+  },
+  "artifacts": {
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
+    "prompt_series_json": null,
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
+  },
+  "hashes": {
+    "prompt_sha256": "92ba11d860826db5a4b0139f807fc042052a4397a96c3ffb7a8bc5d908bff859",
+    "model_py_sha256": "cd39271276f7b51f988f0e8df8e396d301e9249807510e2c499c98a41155542f"
+  },
+  "run_summary": {
+    "turn_count": 14,
+    "tool_call_count": 17,
+    "compile_attempt_count": 5,
+    "final_status": "success"
+  },
+  "parent": null,
+  "seed": null,
+  "inherited_inputs": []
+}

@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_lazy_susan_1359c20123df4ccc8d4fc977174cb1f8",
   "created_at": "2026-04-27T13:25:36Z",
   "updated_at": "2026-04-28T07:17:37Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A two-tier pantry lazy susan with stacked circular trays around a center post. The lower tray is fixed to the central spindle, the upper tray is carried high..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "4f3ff01b3901877a1f9d2a8674f2e12a0934e23c18aa8a2de54318da3dcc9155",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_lazy_susan_1359c20123df4ccc8d4fc977174cb1f8",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_cctv_mast_with_pantilt_camera_head_76e6937ca1cb4203a6e3f85ea3f617f6",
   "created_at": "2026-04-27T02:51:13Z",
   "updated_at": "2026-04-27T08:28:19Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A corner wall CCTV mount with an L-shaped bracket on a corner pillar and a camera ball head. The L-bracket is fixed to the corner wall. The camera housing ti..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "fa14bb8a2ae929eac0f5c4f6663043b4f049538f193a0e193c056f1996f1b632",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_cctv_mast_with_pantilt_camera_head_76e6937ca1cb4203a6e3f85ea3f617f6",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

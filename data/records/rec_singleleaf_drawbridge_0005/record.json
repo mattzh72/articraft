@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_singleleaf_drawbridge_0005",
   "created_at": "2026-03-28T02:14:51Z",
   "updated_at": "2026-04-01T22:37:26Z",
@@ -22,12 +22,13 @@
     "prompt_preview": "A realistic, highly detailed Singleleaf Drawbridge in a refined premium variant, with a fixed abutment frame, one heavy bridge leaf, and side hinge bearings..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "5373b3011ba5385e4837f237cc6d644834857e3395f6f451d1fa90a522e829f6",
@@ -39,5 +40,12 @@
   "author": "shawlyu",
   "rated_by": "shawlyu",
   "secondary_rating": 5,
-  "secondary_rated_by": "RuiningLi"
+  "secondary_rated_by": "RuiningLi",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_singleleaf_drawbridge_0005",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

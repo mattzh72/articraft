@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_dualrail_gantry_axis_0003",
   "created_at": "2026-03-25T23:15:42Z",
   "updated_at": "2026-04-01T10:12:46Z",
@@ -22,16 +22,17 @@
     "prompt_preview": "A dual-rail gantry axis. Two parallel base rails support a bridge carriage, and a small center truck rides along the bridge beam. The bridge moves prismatica..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "994467cef95d2d647ed81deec7f9bb03eebf40c7d95a233addf27cc599fa7ca1",
-    "model_py_sha256": "99fa727d96f727cbfd13e6e1d515183bf1c1fd0eb015efeccf8b0bb00720f32f"
+    "model_py_sha256": "47533a174c35ea12ed8cd84834ddc757fcf6a2d29ef8c69c075f579951c2392d"
   },
   "collections": [
     "dataset"
@@ -39,5 +40,12 @@
   "author": "mattzh72",
   "rated_by": "shawlyu",
   "secondary_rating": 5,
-  "secondary_rated_by": "Zhaomou Song"
+  "secondary_rated_by": "Zhaomou Song",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_dualrail_gantry_axis_0003",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

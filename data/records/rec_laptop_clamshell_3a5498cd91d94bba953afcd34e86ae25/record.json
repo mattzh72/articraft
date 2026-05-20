@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_laptop_clamshell_3a5498cd91d94bba953afcd34e86ae25",
   "created_at": "2026-04-04T14:35:09Z",
   "updated_at": "2026-04-05T13:12:25Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A travel laptop with a carrying handle folded into the spine area. The clamshell body has a keyboard base, a hinged display lid, and a slim handle that folds..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "f1b829da680e4ea5e72c32ee61a4293bcc7da0aca99521cf0276204aa832f7b4",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_laptop_clamshell_3a5498cd91d94bba953afcd34e86ae25",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

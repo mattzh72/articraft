@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_twojoint_revolute_chain_9bd9d828723e42f8ae52fd6ec9a55dc9",
   "created_at": "2026-03-31T17:20:51Z",
   "updated_at": "2026-03-31T18:48:02Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A ladder-frame two-joint revolute chain. A grounded root bracket carries three rigid links in series with long side plates and a compact end tab at the tip...."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "b1bf4c4392938aae6f91a3386ab999bf4affd69caba1574bbde4e1594ff0af82",
-    "model_py_sha256": "e520801e865a32fc97bea04fcab3af671c60d7fe7b1679283a952f65f08c4c9f"
+    "model_py_sha256": "cfdaf6f9cec8bf137904077c976266c4f3e789d5ad24850a1d622906ad44ad4b"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_twojoint_revolute_chain_9bd9d828723e42f8ae52fd6ec9a55dc9",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

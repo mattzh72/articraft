@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_adjustable_weight_bench_with_hinged_backrest_f22def465d2f452e8b63df55d0e689d8",
   "created_at": "2026-04-27T12:52:39Z",
   "updated_at": "2026-04-28T07:38:45Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "An adjustable weight bench with a steel base frame, a hinged backrest pad, a smaller seat pad, a rear angle-support ladder, and front transport wheels. The b..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "f1003f85e9016b67dbd2c920b86b58c0ae1eeaad0b4cbb632e0ee4c52a485c27",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_adjustable_weight_bench_with_hinged_backrest_f22def465d2f452e8b63df55d0e689d8",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

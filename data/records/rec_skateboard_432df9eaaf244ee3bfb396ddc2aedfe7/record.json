@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_skateboard_432df9eaaf244ee3bfb396ddc2aedfe7",
   "created_at": "2026-04-06T17:15:19Z",
   "updated_at": "2026-04-07T01:12:13Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A skateboard with standard trucks. A deck supports front and rear truck hangers, each holding one axle and two wheels. Joints: each wheel spins continuously..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "18e254bc82e45d175e582ddb24b640c1d2b9aef3519ce4659300b75ed2b499c9",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_skateboard_432df9eaaf244ee3bfb396ddc2aedfe7",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

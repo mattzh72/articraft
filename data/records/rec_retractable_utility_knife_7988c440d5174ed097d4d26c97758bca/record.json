@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_retractable_utility_knife_7988c440d5174ed097d4d26c97758bca",
   "created_at": "2026-04-04T14:58:46Z",
   "updated_at": "2026-04-05T12:12:06Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A compact safety knife with a retractable blade and a front guard flap. The handle encloses the blade carriage, and a short guard flap is hinged at the nose..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "1ca055e762d1ebf31614129b2b30fc31ef9be35758d2d511945a03e59d805248",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_retractable_utility_knife_7988c440d5174ed097d4d26c97758bca",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

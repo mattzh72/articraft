@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_clock_tower_with_rotating_hour_and_minute_hands_a9b077fc76524327818996e89f6f6400",
   "created_at": "2026-04-27T02:08:31Z",
   "updated_at": "2026-04-27T10:17:52Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A market square clock tower with a square stone shaft, a four-faced clock stage, a bell stage, and a spire. Each clock face has a minute hand and an hour han..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "af4670fc6e3b3fe7d31e68f1b3a858e202a64fb9f2df738828b7c6b3c0727766",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_clock_tower_with_rotating_hour_and_minute_hands_a9b077fc76524327818996e89f6f6400",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

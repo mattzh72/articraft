@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_vane_array_with_independent_pivots_6ae9f1e599a949269cc879fc57a9845c",
   "created_at": "2026-03-30T17:57:46Z",
   "updated_at": "2026-04-01T11:01:23Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A service vent with individually pivoted blades. A fixed frame supports a stack of rectangular blades with credible blade thickness and simple end pivots. Ea..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "e7f76a4f571c017569d8044dd97ee02e05bb9a8d76d6818b1219a8e141f21fcd",
-    "model_py_sha256": "5b7e99db0e7ad210b0d5f51964eda50194269cac02a2486a4a4da4ea8b54dd1a"
+    "model_py_sha256": "65b6c0753f482d159a23bc26f286813c2061f7f9df7291cda707d68a30be44b0"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_vane_array_with_independent_pivots_6ae9f1e599a949269cc879fc57a9845c",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_car_sunroof_cassette_980a1922ada848b7b0459431d5a96820",
   "created_at": "2026-04-03T22:40:30Z",
   "updated_at": "2026-04-04T10:40:40Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A dual-panel panoramic sunroof cassette with a wide front glass panel and a rear glass panel, both on prismatic slides. The front panel slides prismatically..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "5e9b01fd04202d8a2fc34f2d112b748cfb635be3b1fcca2ecfc6a184a96b2a5a",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_car_sunroof_cassette_980a1922ada848b7b0459431d5a96820",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

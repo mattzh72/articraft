@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_tower_fan_with_rotary_controls_b125ed0dffbe44d7930ff0ac49fc75b8",
   "created_at": "2026-04-27T12:31:45Z",
   "updated_at": "2026-04-28T07:49:58Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A modern tower fan with a tall rectangular housing, a circular pedestal base, and a top control deck carrying rotary knobs, plus a separate oscillation butto..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "2a7aec27d1c38ec3211a1dfc34325f200219216ee14d667a0066cc400d074893",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_tower_fan_with_rotary_controls_b125ed0dffbe44d7930ff0ac49fc75b8",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

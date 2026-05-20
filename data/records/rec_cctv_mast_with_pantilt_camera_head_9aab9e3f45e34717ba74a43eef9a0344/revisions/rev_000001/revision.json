@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "record_id": "rec_cctv_mast_with_pantilt_camera_head_9aab9e3f45e34717ba74a43eef9a0344",
+  "revision_id": "rev_000001",
+  "created_at": "2026-04-27T13:32:24Z",
+  "prompt_kind": "single_prompt",
+  "prompt_sha256": "99b3b5c94066224178e1f9e4461850da3214a75efad9693706209ec25de84f09",
+  "source": {
+    "run_id": "run_20260427_123143_525672_20260427-avg-rating-gt-4p2-gpt54-prompts-gpt55-h",
+    "prompt_batch_id": null,
+    "batch_spec_id": "20260427_avg_rating_gt_4p2_gpt54_prompts_gpt55_high_budget3_2000",
+    "row_id": "g55b_1072_cctv_mast_with_pantilt_camera_head_dfc88397",
+    "prompt_index": 1072
+  },
+  "generation": {
+    "provider": "openai",
+    "model_id": "gpt-5.5-2026-04-23",
+    "thinking_level": "high",
+    "openai_transport": "http",
+    "openai_reasoning_summary": "auto",
+    "max_turns": 100,
+    "max_cost_usd": 3.0
+  },
+  "artifacts": {
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
+    "prompt_series_json": null,
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
+  },
+  "hashes": {
+    "prompt_sha256": "99b3b5c94066224178e1f9e4461850da3214a75efad9693706209ec25de84f09",
+    "model_py_sha256": "a4de63a6855934eafe813e562b2ca5accf4a1fcef4272427d4fb22b734ac4387"
+  },
+  "run_summary": {
+    "turn_count": 11,
+    "tool_call_count": 13,
+    "compile_attempt_count": 3,
+    "final_status": "success"
+  },
+  "parent": null,
+  "seed": null,
+  "inherited_inputs": []
+}

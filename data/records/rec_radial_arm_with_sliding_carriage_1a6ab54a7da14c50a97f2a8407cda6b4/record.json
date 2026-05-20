@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_radial_arm_with_sliding_carriage_1a6ab54a7da14c50a97f2a8407cda6b4",
   "created_at": "2026-03-30T17:57:46Z",
   "updated_at": "2026-04-01T10:54:03Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A radial arm with sliding carriage. A grounded base column supports a horizontal arm that sweeps in plan, and a compact carriage rides along the arm to a sma..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "dab9ab9f9eab604db7cc528104b1f4c0251facbcfb2af8e51e352b9eb7398a38",
-    "model_py_sha256": "0e386604774e9c2d31bf1bc43c56bf70e9663807082e94c01fe5b2e229b4e84f"
+    "model_py_sha256": "53ba08fc4b3e65b2a4f74ee02ee160bce34c5dc8a8f48168817187b43dc94f6f"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_radial_arm_with_sliding_carriage_1a6ab54a7da14c50a97f2a8407cda6b4",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

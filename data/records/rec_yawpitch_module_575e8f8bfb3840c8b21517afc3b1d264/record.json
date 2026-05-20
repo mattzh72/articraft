@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_yawpitch_module_575e8f8bfb3840c8b21517afc3b1d264",
   "created_at": "2026-03-30T17:57:46Z",
   "updated_at": "2026-04-01T11:14:15Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A wall-backed yaw-pitch bracket. A rigid backplate carries a yaw plate at the front, and the yaw plate supports a pitch yoke that captures a small center pla..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "57b2ce557cf3668ac7ca4ca5a9fbdca830d04445561f47507c0564d27e3e217d",
-    "model_py_sha256": "0eace5603d4dac2ccf019a5abcd86b1794e0dbc135e76b703db66c9c02a8cf31"
+    "model_py_sha256": "4f5a60ff9b3aa3735797e7424f30f0588a744496e972bd623bcc31ef8ddfd611"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_yawpitch_module_575e8f8bfb3840c8b21517afc3b1d264",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

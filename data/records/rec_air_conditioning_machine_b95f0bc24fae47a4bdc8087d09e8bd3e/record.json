@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_air_conditioning_machine_b95f0bc24fae47a4bdc8087d09e8bd3e",
   "created_at": "2026-04-12T14:13:27Z",
   "updated_at": "2026-04-22T08:31:44Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A wall-mounted mini-split air conditioning machine with a long indoor body, a full-width lower discharge flap, and two small mode buttons near one end. The l..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "7de0c599ceb62842dea983bdf38bfc87a6cf27f636b37088f025a5572503532d",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_air_conditioning_machine_b95f0bc24fae47a4bdc8087d09e8bd3e",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

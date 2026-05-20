@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_opposed_twinslide_gripper_0df15dad68444ad0b798c1df0b3f4bf5",
   "created_at": "2026-03-31T17:20:51Z",
   "updated_at": "2026-03-31T18:45:15Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A fork-finger parallel gripper. A dense center spine carries two long fork-like jaws on mirrored guides, with the guide bodies visibly deeper than the finger..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "14c9f400136dc692120b90f00554a800b336204d20d6e64d4fb1db6c7f564fae",
-    "model_py_sha256": "91b731556defe6615aa7a94c666c094e44a3f0505ba47490ccbe2bee7e46f616"
+    "model_py_sha256": "3384222b735b8ec4eb99ebd2dd7db64aacd1cc7b4b63d97ebd8f74ea7a851866"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_opposed_twinslide_gripper_0df15dad68444ad0b798c1df0b3f4bf5",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

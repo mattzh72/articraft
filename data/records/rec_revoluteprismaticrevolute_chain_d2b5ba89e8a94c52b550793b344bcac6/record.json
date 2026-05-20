@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_revoluteprismaticrevolute_chain_d2b5ba89e8a94c52b550793b344bcac6",
   "created_at": "2026-03-31T17:20:51Z",
   "updated_at": "2026-04-06T01:40:18Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "An under-slung hinge-slider-wrist unit. A top support carries a pivoting frame below it, the frame carries a short slider, and the slider carries a small wri..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "e2e22a15d6824b1ef7773407f1670ec9399e8d45ef00af5ec05dbc4be8af5781",
-    "model_py_sha256": "ae4ceb9291edf5a91a552e951204e097c45ddcf1cb9d014caf544b81a77f8cf4"
+    "model_py_sha256": "127335fcdc623b1126e276aaa04d2f8fcbbc57649bc56a4701a5d4a6c9293061"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_revoluteprismaticrevolute_chain_d2b5ba89e8a94c52b550793b344bcac6",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

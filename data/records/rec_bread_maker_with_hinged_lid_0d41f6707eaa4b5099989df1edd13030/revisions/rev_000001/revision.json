@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "record_id": "rec_bread_maker_with_hinged_lid_0d41f6707eaa4b5099989df1edd13030",
+  "revision_id": "rev_000001",
+  "created_at": "2026-04-11T16:13:01Z",
+  "prompt_kind": "single_prompt",
+  "prompt_sha256": "1e8f30b414ca608dc9c7339b89d7f7bbea50fe4113179a2f4d13e8478688a3ba",
+  "source": {
+    "run_id": "run_20260411_161301_441737_20260411-home-appliance-categories-5each-gpt54-h",
+    "prompt_batch_id": null,
+    "batch_spec_id": "20260411_home_appliance_categories_5each_gpt54_high",
+    "row_id": "bread_maker_005",
+    "prompt_index": 30
+  },
+  "generation": {
+    "provider": "openai",
+    "model_id": "gpt-5.4",
+    "thinking_level": "high",
+    "openai_transport": "http",
+    "openai_reasoning_summary": "auto",
+    "max_turns": 165,
+    "max_cost_usd": null
+  },
+  "artifacts": {
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
+    "prompt_series_json": null,
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
+  },
+  "hashes": {
+    "prompt_sha256": "1e8f30b414ca608dc9c7339b89d7f7bbea50fe4113179a2f4d13e8478688a3ba",
+    "model_py_sha256": "6a4dcbc04d98355667b1669fd4d76446d57dae2052bce197f5e6b79d3477e3f6"
+  },
+  "run_summary": {
+    "turn_count": 18,
+    "tool_call_count": 19,
+    "compile_attempt_count": 4,
+    "final_status": "success"
+  },
+  "parent": null,
+  "seed": null,
+  "inherited_inputs": []
+}

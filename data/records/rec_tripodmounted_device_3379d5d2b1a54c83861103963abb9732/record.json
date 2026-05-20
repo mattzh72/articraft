@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_tripodmounted_device_3379d5d2b1a54c83861103963abb9732",
   "created_at": "2026-04-27T02:29:26Z",
   "updated_at": "2026-04-27T09:41:41Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A surveying device on a tripod with rigid legs, a pan head, and a tilting body plus a side leveling knob. The three legs rotate on hinges at the crown, the h..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "8fa93a933bcff754dedfd9436089422824a0f337578656289d24f0a63d007f3b",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_tripodmounted_device_3379d5d2b1a54c83861103963abb9732",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

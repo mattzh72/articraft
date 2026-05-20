@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_watch_winder_box_with_hinged_lid_9559e635c9154b0c92fac5de8f311c08",
   "created_at": "2026-04-27T12:40:18Z",
   "updated_at": "2026-04-28T07:45:16Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A realistic, highly detailed Watch Winder Box With Hinged Lid in a rugged utility variant, with a rigid presentation box, transparent or framed lid, and an i..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "241a99979413a3c4316853190051f4a2b7604e0738d79e4d757611f95428de2c",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_watch_winder_box_with_hinged_lid_9559e635c9154b0c92fac5de8f311c08",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

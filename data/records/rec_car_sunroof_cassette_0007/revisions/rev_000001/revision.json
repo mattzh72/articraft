@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "record_id": "rec_car_sunroof_cassette_0007",
+  "revision_id": "rev_000001",
+  "created_at": "2026-03-27T12:11:33Z",
+  "prompt_kind": "single_prompt",
+  "prompt_sha256": "41719a1bc8e630599ef0d5cf2b48b535b1aa2122822c87d459197e646f82d13d",
+  "source": {
+    "run_id": "run_20260326_115111_793307_base-sdk-categories-part1-20260326",
+    "prompt_batch_id": null,
+    "batch_spec_id": "base_sdk_categories_part1_20260326",
+    "row_id": "row_0079",
+    "prompt_index": 79
+  },
+  "generation": {
+    "provider": "openai",
+    "model_id": "gpt-5.4",
+    "thinking_level": "high",
+    "openai_transport": "http",
+    "openai_reasoning_summary": "auto",
+    "max_turns": 50
+  },
+  "artifacts": {
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
+    "prompt_series_json": null,
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
+  },
+  "hashes": {
+    "prompt_sha256": "41719a1bc8e630599ef0d5cf2b48b535b1aa2122822c87d459197e646f82d13d",
+    "model_py_sha256": "52f9d3f9ef507ea72f67441afbebd2174814f3ea0b0015f998f20d0c5b6ea142"
+  },
+  "run_summary": {
+    "turn_count": 9,
+    "tool_call_count": 8,
+    "compile_attempt_count": 3,
+    "final_status": "success"
+  },
+  "parent": null,
+  "seed": null,
+  "inherited_inputs": []
+}

@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_globe_e575d6b61a1d44ceb5e8632dd7419b36",
   "created_at": "2026-04-04T14:26:47Z",
   "updated_at": "2026-04-05T13:27:56Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A minimalist globe on a canted single-sided axle over a ring base. The sphere is carried by one polar spindle from a slender support arm, and the arm stands..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "489cf80d154e1783cc046b76ef4109f7e72600ae769427fa9ef2a0e8becbb107",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_globe_e575d6b61a1d44ceb5e8632dd7419b36",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

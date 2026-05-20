@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_single_yaw_axis_module_2dc10bb75ae34815a80408db88d564d8",
   "created_at": "2026-04-02T16:32:45Z",
   "updated_at": "2026-04-06T01:34:14Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A short-column yaw fixture. A fixed base supports a stub column and a compact rotating table whose diameter is clearly larger than the column below it. One r..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "d669897007ef7a6cc411b4831fc3e8de83f1c75c5b5b765a41db8c8bbcd77a39",
-    "model_py_sha256": "ae1a35f52ed634a694d6d714813f61747ed8731160ccdac56152a4688a80b205"
+    "model_py_sha256": "e80f44daec08ea1340a6ca6781dffaef53dcf57368a616f1832a555493588d58"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_single_yaw_axis_module_2dc10bb75ae34815a80408db88d564d8",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

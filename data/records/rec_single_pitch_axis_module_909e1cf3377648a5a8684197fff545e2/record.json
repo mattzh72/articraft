@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_single_pitch_axis_module_909e1cf3377648a5a8684197fff545e2",
   "created_at": "2026-04-29T04:02:49Z",
   "updated_at": "2026-04-29T04:38:57Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "Create a realistic monitor tilt module. Geometry/details required: stand neck, rear hinge barrel, screen mounting plate, side caps, and cable slot. Articulat..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
     "cost_json": null,
-    "inputs_dir": "inputs"
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "a701f002f4a91d11cbcf5669edf8c132034bfb07bcbc31598ca316a6182a56f6",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_single_pitch_axis_module_909e1cf3377648a5a8684197fff545e2",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_single_revolute_hinge_87863b85f0fe4d2f803209858ca52603",
   "created_at": "2026-03-30T17:57:46Z",
   "updated_at": "2026-04-01T11:01:29Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A heavy weld-on hinge. Two rectangular leaves with alternating knuckles wrap around a central pin barrel, and one leaf is visibly grounded by a thicker mount..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "598925c066cc5a19259a797c63e054a37d66ffa83795c951b60831235233eb66",
-    "model_py_sha256": "bfe380dcf23d7679af30e45f6f89f8289824999b514a0751bc6a6568cf171473"
+    "model_py_sha256": "05b483fc09c89d41ebf2e0f1cd708b5b07bd026b99412b5937850e37f7f753f7"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_single_revolute_hinge_87863b85f0fe4d2f803209858ca52603",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

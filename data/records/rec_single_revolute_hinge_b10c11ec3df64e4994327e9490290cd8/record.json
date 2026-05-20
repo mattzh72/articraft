@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_single_revolute_hinge_b10c11ec3df64e4994327e9490290cd8",
   "created_at": "2026-04-03T21:46:47Z",
   "updated_at": "2026-04-06T01:23:11Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A strap hinge module. A fixed strap plate and a carried strap plate meet at a long barrel with simple alternating knuckles. The carried strap plate rotates o..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "240349551eb8845bfaae66c8be0be567bd382bcbb541188a3eda07d2e808ec2c",
-    "model_py_sha256": "fb21b114ef9d4020ac58632db6f810d3636090a9cc27da5999079337ee167f35"
+    "model_py_sha256": "1c6f399155258cd756e8598fed07419cad561e07fce1df9701f35850e609e85d"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_single_revolute_hinge_b10c11ec3df64e4994327e9490290cd8",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_air_conditioning_machine_6ac5193b732846058756635abc122d86",
   "created_at": "2026-04-12T14:13:27Z",
   "updated_at": "2026-04-22T08:31:12Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A ceiling cassette air conditioning machine with a square panel, four corner louvers, and a narrow hinged service hatch near one edge. Each corner louver rot..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "b854f7639f888bcf6e90ab3c61690f17cac2d17273bc8fb71d0b163c1ed39a03",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_air_conditioning_machine_6ac5193b732846058756635abc122d86",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

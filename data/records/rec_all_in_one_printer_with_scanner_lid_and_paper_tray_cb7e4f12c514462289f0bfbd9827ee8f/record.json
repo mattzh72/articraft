@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_all_in_one_printer_with_scanner_lid_and_paper_tray_cb7e4f12c514462289f0bfbd9827ee8f",
   "created_at": "2026-04-11T18:03:18Z",
   "updated_at": "2026-04-22T14:22:37Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A compact cube all-in-one printer with a flatbed lid, a slide-out lower tray, a flip-down output door, and a front panel with a selector knob and three contr..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "ebf3e9cd446a1661b6dde789b227f369c0be7c0cb5ac23175fc3fb9b302e43c1",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_all_in_one_printer_with_scanner_lid_and_paper_tray_cb7e4f12c514462289f0bfbd9827ee8f",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

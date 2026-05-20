@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_easel_b213a0b4f3db4327ba2d687ef3e5fd3a",
   "created_at": "2026-04-12T15:20:53Z",
   "updated_at": "2026-04-12T15:57:28Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A studio display easel with an H-frame, a sliding top clamp, and a hinged reference shelf at one side. The top clamp slides prismatically on the central mast..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "ac7696a33f395df467b4bc3ff57b8d08f7f259f38247becb9bca6b9ea4734705",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_easel_b213a0b4f3db4327ba2d687ef3e5fd3a",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

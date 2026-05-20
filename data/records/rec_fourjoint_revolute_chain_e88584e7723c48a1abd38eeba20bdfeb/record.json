@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_fourjoint_revolute_chain_e88584e7723c48a1abd38eeba20bdfeb",
   "created_at": "2026-03-29T15:31:29Z",
   "updated_at": "2026-04-01T11:24:49Z",
@@ -22,16 +22,17 @@
     "prompt_preview": "A long serial linkage with five slim box links, a fixed root foot, and a small square pad at the far end. The links should alternate slightly in length so th..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "90a2549d3eea9bd337b45abbac0f2e6da23f60ac2485407e5d203c23fe24add0",
-    "model_py_sha256": "f8a032b51abed98aec6e5210bec3a82be7edf7b43bb437b288751a6364b1a68b"
+    "model_py_sha256": "2f5c5109c83ca0d5d046b229e289e6a9b8c641a26ae271201c8c5ebbbbf873f3"
   },
   "collections": [
     "dataset"
@@ -39,5 +40,12 @@
   "author": "mattzh72",
   "rated_by": "mattzh72",
   "secondary_rating": 5,
-  "secondary_rated_by": "Zhaomou Song"
+  "secondary_rated_by": "Zhaomou Song",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_fourjoint_revolute_chain_e88584e7723c48a1abd38eeba20bdfeb",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

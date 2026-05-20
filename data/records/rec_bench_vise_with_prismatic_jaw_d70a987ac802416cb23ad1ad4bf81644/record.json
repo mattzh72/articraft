@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_bench_vise_with_prismatic_jaw_d70a987ac802416cb23ad1ad4bf81644",
   "created_at": "2026-04-12T15:05:01Z",
   "updated_at": "2026-04-22T08:05:16Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A woodworking vise with a fixed rear jaw, a wide wooden front jaw plate, and a screw handle plus a side guide-lock knob. The front jaw slides prismatically o..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "822ebf2acb122cf1b3f631cc1f584f7cee010c6ce12cf28e706c70754ec554b1",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_bench_vise_with_prismatic_jaw_d70a987ac802416cb23ad1ad4bf81644",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

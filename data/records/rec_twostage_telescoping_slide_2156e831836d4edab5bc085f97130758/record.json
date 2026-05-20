@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_twostage_telescoping_slide_2156e831836d4edab5bc085f97130758",
   "created_at": "2026-03-29T15:31:29Z",
   "updated_at": "2026-04-01T11:27:12Z",
@@ -22,16 +22,17 @@
     "prompt_preview": "A precision linear extension with an outer beam, an internal moving rail, and a compact nose carriage riding on the inner rail. The three nested levels shoul..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "0fc702232bd30a338edbceb39a230a21abcbcf3e956534285257ded1405b65e4",
-    "model_py_sha256": "e39e8e061fbe3f4bf2219f647d6f1b2d66abb78b67c5e412ce0ff0ce90022933"
+    "model_py_sha256": "52dab3cf283eb338a90f691fb6f46590435058c2fec029e6a793e938fdea8602"
   },
   "collections": [
     "dataset"
@@ -39,5 +40,12 @@
   "author": "mattzh72",
   "rated_by": "mattzh72",
   "secondary_rating": 5,
-  "secondary_rated_by": "Zhaomou Song"
+  "secondary_rated_by": "Zhaomou Song",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_twostage_telescoping_slide_2156e831836d4edab5bc085f97130758",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

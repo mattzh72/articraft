@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_radial_arm_with_sliding_carriage_a1b1cacd529447fda9792c502fc5c1e5",
   "created_at": "2026-03-30T17:57:46Z",
   "updated_at": "2026-04-01T11:03:53Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A shop radial-arm carriage assembly. A grounded pedestal supports a shoulder housing and a horizontal beam, while a smaller carriage is captured on the beam..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "3d35e95f01c33b92254487a4d3cc7f449100d3bbdbd6941ebeba4e3b7ad86afb",
-    "model_py_sha256": "018ee68e275ddf5668ed5c0a057af9b159d4abc6bc7f4add1019b2f9a795c5cc"
+    "model_py_sha256": "5b49af8e5c79dd4869fb724d1f689724dd59eeef91b1fd1248d3a5cc320dd635"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_radial_arm_with_sliding_carriage_a1b1cacd529447fda9792c502fc5c1e5",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

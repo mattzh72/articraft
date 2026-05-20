@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_crane_tower_412ea195b17c422b862c0250ca414bd9",
   "created_at": "2026-04-27T14:01:29Z",
   "updated_at": "2026-04-28T00:30:03Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A hammerhead top-slewing tower crane with a square lattice mast, a wide double-chord horizontal jib with a counter-jib extending opposite, a slewing ring on..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "07d425e99848f668ea59be0de17c4270aacbee0383d514d4c497d8f72b5c0e1c",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_crane_tower_412ea195b17c422b862c0250ca414bd9",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

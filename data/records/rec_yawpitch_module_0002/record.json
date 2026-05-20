@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_yawpitch_module_0002",
   "created_at": "2026-03-12T18:41:57Z",
   "updated_at": "2026-04-01T10:35:10Z",
@@ -20,16 +20,17 @@
     "prompt_preview": "A two-axis turret module with a base yaw turntable supporting a pitch yoke, using simple mechanical brackets, bearing rings, and a boxy payload mount."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "ea3660d81cd7ecdaf471db08dfd8b2ef338223c3530bd218d1d9da43b355ebfb",
-    "model_py_sha256": "dbe2a2f7a0f643091c39bf99bf1e9d172a7b50f3732b88ae8c1f80faacce0251"
+    "model_py_sha256": "51ffcf5e9e7128f16cef19743a2f240b2c58418ff605fc1b525090c135c2bf30"
   },
   "collections": [
     "dataset"
@@ -37,5 +38,12 @@
   "author": "mattzh72",
   "rated_by": "mattzh72",
   "secondary_rating": 4,
-  "secondary_rated_by": "Zhaomou Song"
+  "secondary_rated_by": "Zhaomou Song",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_yawpitch_module_0002",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

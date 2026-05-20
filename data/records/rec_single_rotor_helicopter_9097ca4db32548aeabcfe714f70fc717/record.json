@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_single_rotor_helicopter_9097ca4db32548aeabcfe714f70fc717",
   "created_at": "2026-04-09T16:54:33Z",
   "updated_at": "2026-04-11T15:35:13Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A medical transport helicopter with a tall fuselage, skid landing gear, a four-blade main rotor, and a tail boom with a small tail rotor at the rear. One sid..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "bda131978e6e2116d7627d3c291056ad358f6bbb074b8e25d7465a52b5390f65",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_single_rotor_helicopter_9097ca4db32548aeabcfe714f70fc717",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

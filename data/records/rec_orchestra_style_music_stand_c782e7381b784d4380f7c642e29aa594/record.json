@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_orchestra_style_music_stand_c782e7381b784d4380f7c642e29aa594",
   "created_at": "2026-04-02T22:48:25Z",
   "updated_at": "2026-04-06T01:29:04Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "An orchestra-style stand with a rectangular tray, a round pedestal base, and two small page clips along the top edge. The tray rotates on a horizontal revolu..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "eaab54c81d7662013ff44dd04ec1e3dd0c80445ba2a9fb74be2886ee493ef11a",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_orchestra_style_music_stand_c782e7381b784d4380f7c642e29aa594",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_orthogonal_yz_stage_28edfbc891bb46f8b7ab28e5eabf2c58",
   "created_at": "2026-04-03T21:46:47Z",
   "updated_at": "2026-04-06T01:26:27Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A vertical-and-sideways stage block. A grounded mast supports a compact moving head, and the moving head supports a short transverse slide. The stage uses on..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "09416f46d901a5344b586a5f2a438252e1412dbad518e18d284d5504eec35b08",
-    "model_py_sha256": "ad971120a1905f72a2ddf8040e4557740729417caa8df196e8c1fbd9598b58bf"
+    "model_py_sha256": "9c876bbb380a90d85396d2dbbea963b25451c2b12feb414fb807fcfa829dbc19"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_orthogonal_yz_stage_28edfbc891bb46f8b7ab28e5eabf2c58",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

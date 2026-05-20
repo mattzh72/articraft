@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_windshield_sun_visor_0d5a5f61556b4dd7b10d6494f7cec287",
   "created_at": "2026-04-27T03:27:32Z",
   "updated_at": "2026-04-27T07:35:19Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "Create a premium consumer-grade Windshield sun visor with elegant proportions and tight surfacing, but keep the mechanics honest: a visor panel on a roof hin..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "83a014348478b395425297e1a914e46ce999f98ab84cf927ca5b4053064e7c46",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_windshield_sun_visor_0d5a5f61556b4dd7b10d6494f7cec287",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

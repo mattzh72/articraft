@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_single_continuous_rotary_shaft_92deeaa6aca640af8321ca1c9f492b2c",
   "created_at": "2026-03-30T17:57:46Z",
   "updated_at": "2026-04-01T11:00:17Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A wall-backed rotary shaft assembly. A backplate carries two standoff bearings and a forward-projecting shaft with a round faceplate, making the support path..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "3a84ceec1e2c4345d365789b225c852cae8ceeb81b420a4e22f33805c1de0f5b",
-    "model_py_sha256": "d70eacc0e8250b94649d4fe7d2eadb2cc7d7c7e2e16fdced5724879c5d994a99"
+    "model_py_sha256": "94e821c7fa4010b2912ade9a32193f8b14e0f6ee85b1ceb6a4de97c269cb267a"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_single_continuous_rotary_shaft_92deeaa6aca640af8321ca1c9f492b2c",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

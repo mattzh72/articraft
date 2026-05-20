@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_clamp_meter_with_hinged_jaw_and_rotary_selector_2762f2758ce24265b6f3a930821fc468",
   "created_at": "2026-04-11T23:12:51Z",
   "updated_at": "2026-04-22T14:12:36Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A slim field clamp meter with a narrow jaw opening, a short trigger tucked under the head, and a compact rotary selector, plus a side flashlight button above..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "52edbc91b1877555500911b297c9e63f6cce6e8812fef941c712f83bd559531d",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_clamp_meter_with_hinged_jaw_and_rotary_selector_2762f2758ce24265b6f3a930821fc468",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

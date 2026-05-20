@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_refrigerator_with_hinged_doors_5a68fc33f2ab441b8423ed59de0c7985",
   "created_at": "2026-04-27T02:08:31Z",
   "updated_at": "2026-04-27T10:18:11Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A beverage refrigerator with a glazed front door and a side control knob. The tall narrow cabinet has one glass-front door mounted to one side and a small th..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "0a41c6b0cef0a419d9ad7934e7424e055d62e9837beaf4207af63ea522e3cb46",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_refrigerator_with_hinged_doors_5a68fc33f2ab441b8423ed59de0c7985",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

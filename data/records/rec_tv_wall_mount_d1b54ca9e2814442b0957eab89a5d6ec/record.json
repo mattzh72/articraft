@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_tv_wall_mount_d1b54ca9e2814442b0957eab89a5d6ec",
   "created_at": "2026-03-29T15:31:29Z",
   "updated_at": "2026-04-01T11:32:11Z",
@@ -22,16 +22,17 @@
     "prompt_preview": "A long-reach TV wall mount shown without a screen, with a wall plate, a long first arm, a shorter second arm, and a square head frame with a tilt cradle. The..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "225fd3e3c9ec3e69998794e9708f9db7a12d50713d283d5d0afebd073c0ceece",
-    "model_py_sha256": "26211ed9c707fbbb9dced9be343fb1557c1427b242a89a23ed98f8dbb382b6a6"
+    "model_py_sha256": "2c2c8b94614fbde3d249f81b07b710e2196d989e0888fadf9943c5a2447fc4de"
   },
   "collections": [
     "dataset"
@@ -39,5 +40,12 @@
   "author": "mattzh72",
   "rated_by": "mattzh72",
   "secondary_rating": 2,
-  "secondary_rated_by": "Zhaomou Song"
+  "secondary_rated_by": "Zhaomou Song",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_tv_wall_mount_d1b54ca9e2814442b0957eab89a5d6ec",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

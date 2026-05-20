@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_pitchroll_module_fbe027fe89cb4a9d801a7ff23ebe64c6",
   "created_at": "2026-03-30T17:57:46Z",
   "updated_at": "2026-04-01T11:17:55Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A low-profile pitch-roll gimbal. A broad base supports a compact outer frame and a smaller inner cradle, keeping the nested supports distinct without adding..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "323d1c7773099e919ec21f96d04a55e9a5284dde938b355b494237ba5450beba",
-    "model_py_sha256": "c45473c6b279346a727f0d166f979d9396806da438ba4ca07da74184bac316df"
+    "model_py_sha256": "6d66d0946828984e983f8a6d3f25be0fcb1fb68767ec026ca85c68b363602429"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_pitchroll_module_fbe027fe89cb4a9d801a7ff23ebe64c6",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

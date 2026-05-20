@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_observation_wheel_1ccdb4eca3e84d1b84b3ab17b94dbe5f",
   "created_at": "2026-04-27T03:59:24Z",
   "updated_at": "2026-04-27T05:32:07Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A fairground observation wheel with an A-frame support and open gondola seats. The large spoked wheel stands between two side supports, and the seats hang fr..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "b181af04754a6f7b28bcb246279e5bedb9248abc47062d3dd008fcf9c20b7af0",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_observation_wheel_1ccdb4eca3e84d1b84b3ab17b94dbe5f",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

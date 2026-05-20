@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_orthogonal_yz_stage_3b31ebdd25dd406aa95f231f72d8c68d",
   "created_at": "2026-03-31T17:20:51Z",
   "updated_at": "2026-04-06T01:37:35Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A backplane YZ stage. A grounded rear frame carries a horizontal carriage, and that carriage carries a hanging vertical slide with a small tool face. The hor..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "9bbcb0350ddac114e9671b44bf2666c2e7796f496647b5ef13682a5fe6f9dc3c",
-    "model_py_sha256": "5f1f80937eeea20ca9f614eb88033c4b00ecaf7a45c1b06ec794e2b72a1f9342"
+    "model_py_sha256": "d06c2ee247c2109c0006ef32c8b5a173c9cf9aaad67c94be906a96cfc8150c31"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_orthogonal_yz_stage_3b31ebdd25dd406aa95f231f72d8c68d",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

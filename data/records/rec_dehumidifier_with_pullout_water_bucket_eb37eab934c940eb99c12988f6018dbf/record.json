@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_dehumidifier_with_pullout_water_bucket_eb37eab934c940eb99c12988f6018dbf",
   "created_at": "2026-04-11T18:03:18Z",
   "updated_at": "2026-04-11T18:49:44Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A tall household dehumidifier with a lower pullout water bucket, a rear filter access door, and a top control panel carrying a humidistat dial plus three sep..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "e1a5a923a00dea6ae939e7c7a19932d82e45a4f7d85c42c8a70d7d098e0c37aa",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_dehumidifier_with_pullout_water_bucket_eb37eab934c940eb99c12988f6018dbf",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

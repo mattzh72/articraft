@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_overear_headphones_with_folding_earcups_e3dd14cf298d457d854452af8322dcff",
   "created_at": "2026-04-04T14:46:30Z",
   "updated_at": "2026-04-05T12:34:48Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A DJ headphone with swiveling earcups and a collapsible headband. The padded headband carries one yoke at each end, and the earcups are mounted to rotate inw..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "1cdaa82dddd71763ca451a9f50b3b27aaea302de89d97514334e88fe51b9845a",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_overear_headphones_with_folding_earcups_e3dd14cf298d457d854452af8322dcff",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_cctv_mast_with_pantilt_camera_head_3466f30e0fcf42b8b5f8938420ea3677",
   "created_at": "2026-04-27T01:48:40Z",
   "updated_at": "2026-04-27T10:30:37Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A stadium floodlight-pole CCTV arm with a tall pole, a fixed crossbar, and a camera arm branching from the mast. The camera arm is fixed to the mast. The cam..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "22498263d41a9b6ddc6e75a355b153363d58bb70c3d0f605ef345ee54136aba3",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_cctv_mast_with_pantilt_camera_head_3466f30e0fcf42b8b5f8938420ea3677",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

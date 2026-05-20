@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_vertical_slide_with_wrist_hinge_0003",
   "created_at": "2026-03-25T18:37:12Z",
   "updated_at": "2026-04-01T10:23:10Z",
@@ -22,16 +22,17 @@
     "prompt_preview": "Design a realistic, highly detailed vertical slide with wrist hinge as a standalone mechanical study assembly for the sdk_hybrid pipeline, with a vertical gu..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "cb594b0e8b709f067023e971f06d8e00f8afa0a0463c08dc08c4fe315d2046ce",
-    "model_py_sha256": "6f8881e873297a119f371929c9fdcf5b85fc45f56b78569ae08250851a778073"
+    "model_py_sha256": "ef546629764079d23ea651174656be127e8f20f331cd65a24834c35f800ed495"
   },
   "collections": [
     "dataset"
@@ -39,5 +40,12 @@
   "author": "mattzh72",
   "rated_by": "mattzh72",
   "secondary_rating": 5,
-  "secondary_rated_by": "Zhaomou Song"
+  "secondary_rated_by": "Zhaomou Song",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_vertical_slide_with_wrist_hinge_0003",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

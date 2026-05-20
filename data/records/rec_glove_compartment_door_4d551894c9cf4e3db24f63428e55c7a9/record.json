@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_glove_compartment_door_4d551894c9cf4e3db24f63428e55c7a9",
   "created_at": "2026-04-26T10:15:43Z",
   "updated_at": "2026-04-27T10:43:19Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "An automotive glove compartment door integrated into a simple dashboard opening. A shallow bin sits behind the opening, and a rectangular front door with a h..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "96e0ae9b72cb0282f48e4170d36fa3b2f1a270d71db9635bad57a54edcc6bf65",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_glove_compartment_door_4d551894c9cf4e3db24f63428e55c7a9",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

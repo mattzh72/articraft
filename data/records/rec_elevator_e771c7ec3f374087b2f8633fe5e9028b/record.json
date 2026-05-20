@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_elevator_e771c7ec3f374087b2f8633fe5e9028b",
   "created_at": "2026-04-27T13:11:39Z",
   "updated_at": "2026-04-28T07:24:39Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A panoramic scenic elevator with a three-sided glass car on a vertical prismatic joint inside a glass-encased guide column, a single sliding door panel on a..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "ba404074afa627ba19c065ca310f15810c1bfafd538c5dcd83e407cb007f3f17",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_elevator_e771c7ec3f374087b2f8633fe5e9028b",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

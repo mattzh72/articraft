@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_cantilever_articulated_arm_7f3283bc24a547c8aa9488238d6b470b",
   "created_at": "2026-03-29T04:00:44Z",
   "updated_at": "2026-04-01T10:07:43Z",
@@ -22,16 +22,17 @@
     "prompt_preview": "A wall-mounted transfer arm with a stout backplate, an angled shoulder bracket, a tapered first link, a deep elbow knuckle, and a square end plate. The arm s..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "aee0a8364b960fee45ea2dc751658fbbb247d798da5f1ace01acd218ab59a264",
-    "model_py_sha256": "fa7ef4403e3dbaa37cbb660cab92dbb08aeca93fe8c2be67aa243f906cbd53ff"
+    "model_py_sha256": "fa4392f56f871c90fbaec1097550f02eb8aee7a3863d02563ac9d7c56f2713b6"
   },
   "collections": [
     "dataset"
@@ -39,5 +40,12 @@
   "author": "mattzh72",
   "rated_by": "mattzh72",
   "secondary_rating": 4,
-  "secondary_rated_by": "Zhaomou Song"
+  "secondary_rated_by": "Zhaomou Song",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_cantilever_articulated_arm_7f3283bc24a547c8aa9488238d6b470b",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

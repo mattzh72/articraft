@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "record_id": "rec_overear_headphones_with_folding_earcups_e3dd14cf298d457d854452af8322dcff",
+  "revision_id": "rev_000001",
+  "created_at": "2026-04-04T14:46:30Z",
+  "prompt_kind": "single_prompt",
+  "prompt_sha256": "1cdaa82dddd71763ca451a9f50b3b27aaea302de89d97514334e88fe51b9845a",
+  "source": {
+    "run_id": "run_20260404_142601_868264_20260402-base-sdk-categories-part2-plus-new-cate",
+    "prompt_batch_id": null,
+    "batch_spec_id": "20260402_base_sdk_categories_part2_plus_new_categories_round5",
+    "row_id": "overear_headphones_with_folding_earcups_12",
+    "prompt_index": 272
+  },
+  "generation": {
+    "provider": "openai",
+    "model_id": "gpt-5.4",
+    "thinking_level": "high",
+    "openai_transport": "http",
+    "openai_reasoning_summary": "auto",
+    "max_turns": 40,
+    "max_cost_usd": 2.0
+  },
+  "artifacts": {
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
+    "prompt_series_json": null,
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
+  },
+  "hashes": {
+    "prompt_sha256": "1cdaa82dddd71763ca451a9f50b3b27aaea302de89d97514334e88fe51b9845a",
+    "model_py_sha256": "2f9a6e1f48214833b8508fbbc19e224726dbe73a773b7d946ea78fc89a6d0007"
+  },
+  "run_summary": {
+    "turn_count": 30,
+    "tool_call_count": 32,
+    "compile_attempt_count": 6,
+    "final_status": "success"
+  },
+  "parent": null,
+  "seed": null,
+  "inherited_inputs": []
+}

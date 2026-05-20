@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_robotic_arms_11254cc879224ccb8a4ed2d29342a8b0",
   "created_at": "2026-04-05T22:06:23Z",
   "updated_at": "2026-04-06T14:25:17Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A three-joint robotic arm for pick-and-place work. A pedestal base carries a shoulder housing, upper arm link, forearm link, and compact wrist head. Joints:..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "571f36de4139057806dec37782899bd1ea643b0d1f8072b4e2da5d28786248b7",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_robotic_arms_11254cc879224ccb8a4ed2d29342a8b0",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

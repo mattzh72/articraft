@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_pitchroll_module_bed85c8ce2104465be780f34f85f8204",
   "created_at": "2026-04-03T21:46:47Z",
   "updated_at": "2026-04-06T01:22:36Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A trunnion-and-spindle pitch-roll unit. A side-supported pitch frame carries a centered roll spindle with a short front face. Pitch is a revolute joint about..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "b278c88433fe2c6d9264c9c5acc9fb89260e7d9e6634e1947a311ccd32c610a8",
-    "model_py_sha256": "b0c6e399843f2df4956d47efce1deea9f69bcde480806d2d5ff4cefb67ce11c6"
+    "model_py_sha256": "65fea3fbc9e7b8120faa6a4a95e46ddb5010b1a9d41352c907be6af55752de35"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_pitchroll_module_bed85c8ce2104465be780f34f85f8204",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_conventional_oven_with_dropdown_door_6bd95380a45046d0bbdfbb7da279415a",
   "created_at": "2026-03-29T15:11:04Z",
   "updated_at": "2026-03-29T17:03:27Z",
@@ -22,12 +22,13 @@
     "prompt_preview": "A range cooker with a rotisserie: a wide stainless-steel freestanding body, a glass-panel door that drops on a full-width bottom revolute hinge with a bar pu..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "9af353475e1580651a942a5b70ae176bf858c119d330208e933270d30bdf6994",
@@ -39,5 +40,12 @@
   "author": "Zhaomou Song",
   "rated_by": "Zhaomou Song",
   "secondary_rating": null,
-  "secondary_rated_by": null
+  "secondary_rated_by": null,
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_conventional_oven_with_dropdown_door_6bd95380a45046d0bbdfbb7da279415a",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

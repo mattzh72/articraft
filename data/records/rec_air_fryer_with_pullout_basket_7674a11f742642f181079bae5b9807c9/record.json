@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_air_fryer_with_pullout_basket_7674a11f742642f181079bae5b9807c9",
   "created_at": "2026-04-11T18:03:18Z",
   "updated_at": "2026-04-11T18:49:36Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A wide air fryer with a large basket drawer, a fixed internal divider plate, and a front panel carrying a selector knob plus five rectangular program buttons..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "0314fcdd9ffbf69dc1ff86de6e36d70fcbfd47fb498c2ba4273a9da4a819ffd6",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_air_fryer_with_pullout_basket_7674a11f742642f181079bae5b9807c9",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

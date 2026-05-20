@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_single_revolute_hinge_10e80a853d334dae88813ff9dd8143d6",
   "created_at": "2026-03-30T17:57:46Z",
   "updated_at": "2026-04-07T10:14:48Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A fork-and-tab hinge assembly. A clevis-like fixed side captures a single moving tab between its cheeks with a through-pin and short barrel segments. The tab..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "cb492d40220989fe7b6b9e5a851a3e421463e8abd0c30e5bbbdd19911d010e4e",
-    "model_py_sha256": "af8ae76e3e01e9655f101d3af9d90ca27123a671e1cc7bdc724b5101d61035a1"
+    "model_py_sha256": "b371e06dd9d90fe71d6a923f74bd21bda607f6f6aad331a102e3cbb463df4cbd"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_single_revolute_hinge_10e80a853d334dae88813ff9dd8143d6",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

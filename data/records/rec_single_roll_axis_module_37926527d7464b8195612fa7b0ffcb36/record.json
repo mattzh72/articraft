@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_single_roll_axis_module_37926527d7464b8195612fa7b0ffcb36",
   "created_at": "2026-04-03T21:46:47Z",
   "updated_at": "2026-04-06T01:25:56Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A fork-supported roll cartridge. A grounded fork frame supports a short cylindrical roll cartridge centered between the fork arms. The cartridge rotates on o..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "dae1000a7c4af46f634d464ec775ad5fa9979efcc5d3dc8b6e3015397affdcb4",
-    "model_py_sha256": "a2dec05a659a3415a5a28aba2212e1ee74b78548a56571636db6852322bb6d99"
+    "model_py_sha256": "fe3d5929656e262838c263954f5503804eb79010acdbbda72e47b56a10b634de"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_single_roll_axis_module_37926527d7464b8195612fa7b0ffcb36",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

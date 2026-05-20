@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_glove_compartment_door_9975aa40864b415f869d5dbe960f8af7",
   "created_at": "2026-04-27T13:06:32Z",
   "updated_at": "2026-04-28T07:28:16Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A passenger-car glove compartment with a bottom-hinged door and twin side stay arms. The storage bin is fixed in a dashboard opening, and the front door pane..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "362e113a480607733b38d68b0b8e5c41cf8f601067e31ee1b5c1f72a668f6ffb",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_glove_compartment_door_9975aa40864b415f869d5dbe960f8af7",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

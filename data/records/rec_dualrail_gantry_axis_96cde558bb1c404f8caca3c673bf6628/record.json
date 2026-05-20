@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_dualrail_gantry_axis_96cde558bb1c404f8caca3c673bf6628",
   "created_at": "2026-04-03T21:46:47Z",
   "updated_at": "2026-04-06T01:25:43Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A bridge-on-rails gantry axis. Two grounded base rails carry a bridge beam, and the bridge beam carries a short center truck with a plain faceplate. The brid..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "8450c92d0bfb5510b243e21670211fabc492e12e7b7e3f6fb58e80a519b9d4f9",
-    "model_py_sha256": "e336dacde86caec1588f139d26b1fdaa63296350787a6d42e2982c8236951ff2"
+    "model_py_sha256": "86ae4355e3e87882439af633bd55665db240f6f1a26dcb55bbf9b555f1ab6c7b"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_dualrail_gantry_axis_96cde558bb1c404f8caca3c673bf6628",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

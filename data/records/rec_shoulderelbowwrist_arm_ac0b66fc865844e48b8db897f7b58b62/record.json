@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_shoulderelbowwrist_arm_ac0b66fc865844e48b8db897f7b58b62",
   "created_at": "2026-04-01T18:09:34Z",
   "updated_at": "2026-04-06T01:35:56Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A fork-root three-joint arm. A grounded fork captures the first arm link, followed by a forearm and a short wrist flange. The arm has shoulder, elbow, and wr..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "1ff295ea40f658edfaf1674c5d1d42f57edff78a76710545ee9bcea9d6d7084a",
-    "model_py_sha256": "be55ab144bebb06a31053f96b2ff63067e2efb58c487050746898727e99d7042"
+    "model_py_sha256": "0463e85f5f01a0a8e1074d2330f4d9ae859c585eb104172dd385f79480911f73"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_shoulderelbowwrist_arm_ac0b66fc865844e48b8db897f7b58b62",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

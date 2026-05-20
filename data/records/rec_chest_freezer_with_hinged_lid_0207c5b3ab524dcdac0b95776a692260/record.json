@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_chest_freezer_with_hinged_lid_0207c5b3ab524dcdac0b95776a692260",
   "created_at": "2026-04-27T02:29:26Z",
   "updated_at": "2026-04-27T09:39:07Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A hospital specimen chest freezer with a narrow rectangular body, a top hinged lid on two barrel revolute hinges at the lid rear edge, and an internal partit..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "5d2381cf53f033a11ea2d1fbcbef269e4cf06be7b8d41e68156d53704addbb97",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_chest_freezer_with_hinged_lid_0207c5b3ab524dcdac0b95776a692260",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

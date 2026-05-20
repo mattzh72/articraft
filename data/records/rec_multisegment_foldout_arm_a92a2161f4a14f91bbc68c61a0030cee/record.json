@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_multisegment_foldout_arm_a92a2161f4a14f91bbc68c61a0030cee",
   "created_at": "2026-03-31T17:20:51Z",
   "updated_at": "2026-04-06T01:39:55Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "An under-slung multi-segment fold-out arm. A top support bracket carries the first link below it, and the remaining links hang in sequence to a small platfor..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "08ef3ec9b441b58fe7115d3f4a44dd0104ddca396c621dd2c9c80ac13957894c",
-    "model_py_sha256": "64e7f10b48fdc5ae19eec0efd39bd5837225e576616f6abb08b1f28617097c60"
+    "model_py_sha256": "08e42618c426ca61cf75b425cb07dc47a2cfb7abcaa341c7e8842776c4cff486"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_multisegment_foldout_arm_a92a2161f4a14f91bbc68c61a0030cee",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

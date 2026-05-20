@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_prismaticrevolute_chain_3e6ee69e3f51453cb1037fa555837b47",
   "created_at": "2026-03-30T17:57:46Z",
   "updated_at": "2026-04-07T10:05:40Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A compact transfer axis with a hinged output tab. A fixed guide body supports a moving carriage head with a small flap-like arm on its front face. The carria..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "11c31974a9e0657ba9274b801bb3c5093e81ea67d8f6c90e6f7369728d100f02",
-    "model_py_sha256": "7248bf5b43fdfff54aaf42637d114ac5960931a61a913fa7f0ab84a9f17973e0"
+    "model_py_sha256": "11d7d3ff729f968ad4b3484b194d194f01d71c34e5b95a25c2a213db7b508808"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_prismaticrevolute_chain_3e6ee69e3f51453cb1037fa555837b47",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

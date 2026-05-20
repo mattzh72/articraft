@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_single_prismatic_slider_9db73cebcb3a40df95571bb871f42b60",
   "created_at": "2026-04-02T16:32:45Z",
   "updated_at": "2026-04-06T01:33:03Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A compact service carriage slide. A grounded body supports one short carriage with a plain top plate and simple stop features at the ends of travel. The carr..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "415b86f98685ef574278f798ddcd7a1095e62c7693a5a45ac3a9dce97cd6327f",
-    "model_py_sha256": "7dcf1ef1c97f01b426956326768a071c3234880f349aee80ec4c826571b93e5e"
+    "model_py_sha256": "c49ec8a6e7dfec10c59d3fd11f1802b82b1339645dbe069e7c75407a0e9a7065"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_single_prismatic_slider_9db73cebcb3a40df95571bb871f42b60",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

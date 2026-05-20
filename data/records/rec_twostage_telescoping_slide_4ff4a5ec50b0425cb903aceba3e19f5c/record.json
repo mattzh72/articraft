@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_twostage_telescoping_slide_4ff4a5ec50b0425cb903aceba3e19f5c",
   "created_at": "2026-04-01T18:09:34Z",
   "updated_at": "2026-04-06T01:36:58Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A compact service telescoping slide. A broad grounded body supports a simple nested runner with clear remaining overlap when extended. The runner is a prisma..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "42596cfbccdda634576e6abb10b6ed0d27de5af4fbc47a51b3f9ac7dae501755",
-    "model_py_sha256": "aa4b78cfa393959fe5eba7f5daa8dc07d14e1c56c45b1b6e2b8570ed9c5f3e6a"
+    "model_py_sha256": "2ad8c0f61a00035d2f8bdc1d794bd316b7498149b14e49e7fd5835edfbf0f398"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_twostage_telescoping_slide_4ff4a5ec50b0425cb903aceba3e19f5c",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

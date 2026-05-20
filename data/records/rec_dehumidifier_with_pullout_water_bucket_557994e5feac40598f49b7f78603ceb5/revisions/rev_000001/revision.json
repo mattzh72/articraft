@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "record_id": "rec_dehumidifier_with_pullout_water_bucket_557994e5feac40598f49b7f78603ceb5",
+  "revision_id": "rev_000001",
+  "created_at": "2026-04-11T18:03:18Z",
+  "prompt_kind": "single_prompt",
+  "prompt_sha256": "a859e87a9dc0ea85bfb7e1c3d568d4e387656ca13ccac08c4fd3466da73e74dd",
+  "source": {
+    "run_id": "run_20260411_180318_024642_20260411-home-appliance-categories-plus15-gpt54-",
+    "prompt_batch_id": null,
+    "batch_spec_id": "20260411_home_appliance_categories_plus15_gpt54_high",
+    "row_id": "dehumidifier_plus15_13",
+    "prompt_index": 58
+  },
+  "generation": {
+    "provider": "openai",
+    "model_id": "gpt-5.4",
+    "thinking_level": "high",
+    "openai_transport": "http",
+    "openai_reasoning_summary": "auto",
+    "max_turns": 175,
+    "max_cost_usd": null
+  },
+  "artifacts": {
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
+    "prompt_series_json": null,
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
+  },
+  "hashes": {
+    "prompt_sha256": "a859e87a9dc0ea85bfb7e1c3d568d4e387656ca13ccac08c4fd3466da73e74dd",
+    "model_py_sha256": "5829fbd87f826fce4d408b72ae462918bc06ae5b933e0cf3fc3ab650babba44f"
+  },
+  "run_summary": {
+    "turn_count": 23,
+    "tool_call_count": 27,
+    "compile_attempt_count": 5,
+    "final_status": "success"
+  },
+  "parent": null,
+  "seed": null,
+  "inherited_inputs": []
+}

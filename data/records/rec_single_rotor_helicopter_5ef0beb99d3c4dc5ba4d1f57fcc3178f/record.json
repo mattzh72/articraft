@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_single_rotor_helicopter_5ef0beb99d3c4dc5ba4d1f57fcc3178f",
   "created_at": "2026-04-09T16:54:33Z",
   "updated_at": "2026-04-11T15:44:14Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "An observation helicopter with a wide glazed cabin, skid gear, a two-blade main rotor above the roof, and a slim tail boom with a tail rotor at the rear. The..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "78ebe98fe5d338841407b1eaa30025b6e3f5b022870e40e7f966bd2897f583f9",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_single_rotor_helicopter_5ef0beb99d3c4dc5ba4d1f57fcc3178f",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

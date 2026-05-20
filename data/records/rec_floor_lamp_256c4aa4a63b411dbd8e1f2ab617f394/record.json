@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_floor_lamp_256c4aa4a63b411dbd8e1f2ab617f394",
   "created_at": "2026-04-12T14:57:42Z",
   "updated_at": "2026-04-22T08:07:34Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A pharmacy-style floor lamp with a round base, an adjustable upright, and a pivoting horizontal shade bar plus a front dimmer slider. The upright slides pris..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "62af6525fa18d8b61408e68b36ddbf87f9f2ad88e585b96a1ce3ae14133dc0e8",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_floor_lamp_256c4aa4a63b411dbd8e1f2ab617f394",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_single_prismatic_slider_8feca7ce82494e4fae0509105a2c2fc7",
   "created_at": "2026-04-02T16:32:45Z",
   "updated_at": "2026-04-06T01:34:23Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A fork-captured linear runner. A grounded fork frame captures one straight sliding member between its arms with clear clearance around the member. The slidin..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "c3d754c7d7db5280d8cabb4f6198b096bd15cbaaffa7ef87bad0450a3de47e2b",
-    "model_py_sha256": "31837e806133c6eb314104a2cc3644d6cc8a6a4d3323305aeda2e1d256259ced"
+    "model_py_sha256": "707b9f0d80b1aab4f1793c34e5fc2c713c2c36c16cfc5dda89d752d0aaaff802"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_single_prismatic_slider_8feca7ce82494e4fae0509105a2c2fc7",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

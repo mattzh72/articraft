@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "record_id": "rec_a-sit-down-driving-arcade-cabinet-with-a-large-f_20260401_030827_271628_7d0c5bae",
+  "revision_id": "rev_000001",
+  "created_at": "2026-04-01T03:08:27Z",
+  "prompt_kind": "single_prompt",
+  "prompt_sha256": "c07e9392a9aeeef0c8dba35b2c7459bfbb7a8dc0e79d55acb57f723a3d30e15f",
+  "source": {
+    "run_id": "run_20260401_030827_271628_7d0c5bae",
+    "prompt_batch_id": null,
+    "batch_spec_id": null,
+    "row_id": null,
+    "prompt_index": null
+  },
+  "generation": {
+    "provider": "openai",
+    "model_id": "gpt-5.4",
+    "thinking_level": "high",
+    "openai_transport": "http",
+    "openai_reasoning_summary": "auto",
+    "max_turns": 50,
+    "max_cost_usd": null
+  },
+  "artifacts": {
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
+    "prompt_series_json": null,
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
+  },
+  "hashes": {
+    "prompt_sha256": "c07e9392a9aeeef0c8dba35b2c7459bfbb7a8dc0e79d55acb57f723a3d30e15f",
+    "model_py_sha256": "241d8fc82a3be49ef4e52dabbd95f9024a0b3fad2f2ad37a6cf811f79763b5d0"
+  },
+  "run_summary": {
+    "turn_count": 7,
+    "tool_call_count": 6,
+    "compile_attempt_count": 3,
+    "final_status": "success"
+  },
+  "parent": null,
+  "seed": null,
+  "inherited_inputs": []
+}

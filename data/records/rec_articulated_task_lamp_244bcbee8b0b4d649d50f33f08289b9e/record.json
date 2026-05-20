@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_articulated_task_lamp_244bcbee8b0b4d649d50f33f08289b9e",
   "created_at": "2026-04-27T13:18:49Z",
   "updated_at": "2026-04-28T07:20:24Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A clamp-mount task lamp with a single spring-balanced arm on a revolute shoulder joint and a pivoting cylindrical shade at the tip."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "ac2c5b22bdd48a8c2046f631dad3944e088602b429e0c732c1a914d32d05bf3d",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_articulated_task_lamp_244bcbee8b0b4d649d50f33f08289b9e",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

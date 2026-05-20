@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_sluice_gate_with_vertical_lift_panel_ba75bc8c78ab4066a75a79992f831292",
   "created_at": "2026-04-07T15:14:51Z",
   "updated_at": "2026-04-07T15:42:42Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A sluice gate assembly with two vertical side guides anchored to a rigid frame and a flat gate panel captured between the guides over a water channel opening..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "1ef47cef5156cf8f4400ff124b365657579c80a3be5dd7a1011a630a21fd39e6",
-    "model_py_sha256": "20fca69d0d0ee78650ec40d914d0252785d078f5fbeb30b9e7c367ce0eafb382"
+    "model_py_sha256": "c5237cf3232a83ecde298f1e76a27a4da6c1521756a0d19d4e7573e4f5bfbd24"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_sluice_gate_with_vertical_lift_panel_ba75bc8c78ab4066a75a79992f831292",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

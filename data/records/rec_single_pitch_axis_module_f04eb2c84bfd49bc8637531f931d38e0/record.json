@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_single_pitch_axis_module_f04eb2c84bfd49bc8637531f931d38e0",
   "created_at": "2026-03-29T15:31:29Z",
   "updated_at": "2026-04-01T11:26:07Z",
@@ -22,16 +22,17 @@
     "prompt_preview": "A single-axis tilt module with a broad pedestal, paired support plates, and a narrow payload frame pivoting between the plates. The fixed pedestal should rea..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "6e113cdb8d45241f39e8b96d24327146c7b798d9e810ff8092f140463c4bb25f",
-    "model_py_sha256": "737af57331b2c9713ed8817d73f3dd7063bdc4e04686448688eb6d917cb46c87"
+    "model_py_sha256": "6ae47ee200c3754f4974a93857d3d3b19412fab92fdf4401f5811df21ee02ef9"
   },
   "collections": [
     "dataset"
@@ -39,5 +40,12 @@
   "author": "mattzh72",
   "rated_by": "mattzh72",
   "secondary_rating": 3,
-  "secondary_rated_by": "Zhaomou Song"
+  "secondary_rated_by": "Zhaomou Song",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_single_pitch_axis_module_f04eb2c84bfd49bc8637531f931d38e0",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

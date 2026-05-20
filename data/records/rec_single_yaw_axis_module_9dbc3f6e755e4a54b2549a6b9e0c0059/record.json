@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_single_yaw_axis_module_9dbc3f6e755e4a54b2549a6b9e0c0059",
   "created_at": "2026-04-03T21:46:47Z",
   "updated_at": "2026-04-06T01:26:28Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A ring-base yaw stage. A grounded ring base carries a compact upper plate on a centered rotary core that remains visible beneath the plate. One revolute join..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "ee258f09f43965772076215862903316ab41ea36189d1f71774aa54e37d84a6c",
-    "model_py_sha256": "a9e4b82d10d286c2f3fd4686cabbcf97e4ca1a9dd09a11ea57b1dc3d9c35977b"
+    "model_py_sha256": "dafca26b40126487ca3db429f2b744f33e2804f21ab6c95cc45d0a719123452e"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_single_yaw_axis_module_9dbc3f6e755e4a54b2549a6b9e0c0059",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

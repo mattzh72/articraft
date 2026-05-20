@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_single_prismatic_slider_b225c61122264bd39073f06950dd547a",
   "created_at": "2026-03-31T17:20:51Z",
   "updated_at": "2026-04-06T01:40:19Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A saddle-type carriage slide. A fixed lower guide supports one broad moving saddle that wraps the guide more deeply than a simple block. The saddle is one pr..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "515ccb70397e2cb3c761bcc6e06f32d76cb630867523f0bb4c67ad13e6364155",
-    "model_py_sha256": "1121fc8c86ef2c133691c40035823d539de30d186a0574c74a9d1f8e7bc1eafd"
+    "model_py_sha256": "26f5fb7cd7e91cafd0f72e0d0e6c8462c63c08b4c619a469c52e7aee16c6263e"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_single_prismatic_slider_b225c61122264bd39073f06950dd547a",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

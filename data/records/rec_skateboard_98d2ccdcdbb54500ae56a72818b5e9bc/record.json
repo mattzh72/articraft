@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_skateboard_98d2ccdcdbb54500ae56a72818b5e9bc",
   "created_at": "2026-03-30T16:26:06Z",
   "updated_at": "2026-03-31T22:15:35Z",
@@ -22,12 +22,13 @@
     "prompt_preview": "Produce an outdoor weatherproof Skateboard. Use sealed interfaces, drip-aware overhangs, corrosion-resistant hardware, and protected joints, anchored on a de..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "fd8a9b70d3236b6c321427fb509ae85f7594261e0cae00e56e90be8d21689580",
@@ -39,5 +40,12 @@
   "rated_by": "shawlyu",
   "author": "shawlyu",
   "secondary_rating": 5,
-  "secondary_rated_by": "RuiningLi"
+  "secondary_rated_by": "RuiningLi",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_skateboard_98d2ccdcdbb54500ae56a72818b5e9bc",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

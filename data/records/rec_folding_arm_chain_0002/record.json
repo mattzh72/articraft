@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_folding_arm_chain_0002",
   "created_at": "2026-03-12T18:18:08Z",
   "updated_at": "2026-04-01T10:31:05Z",
@@ -20,16 +20,17 @@
     "prompt_preview": "A folding arm chain made of several flat-bar segments linked by revolute joints, arranged like a deployable industrial linkage."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "140fa17593c97509f6f6c05db551333942e242bf4f7b4e76bb5eff544249bb34",
-    "model_py_sha256": "ab5f78110c34e7d00be3988526d47269707b5e1a9c54ceacb9e9ad7043144aea"
+    "model_py_sha256": "03ceda18943bad1a0f0a65566dff71f24bd72eb63c89f6ab0d2a29f08de2037b"
   },
   "collections": [
     "dataset"
@@ -37,5 +38,12 @@
   "author": "mattzh72",
   "rated_by": "mattzh72",
   "secondary_rating": 5,
-  "secondary_rated_by": "Zhaomou Song"
+  "secondary_rated_by": "Zhaomou Song",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_folding_arm_chain_0002",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

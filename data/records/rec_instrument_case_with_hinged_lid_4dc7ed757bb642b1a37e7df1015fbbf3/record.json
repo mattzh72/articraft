@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_instrument_case_with_hinged_lid_4dc7ed757bb642b1a37e7df1015fbbf3",
   "created_at": "2026-03-29T14:48:35Z",
   "updated_at": "2026-04-01T12:45:21Z",
@@ -22,12 +22,13 @@
     "prompt_preview": "A portable mixer case with a deep lower shell and a broad lid supported by short stay links. The body is a rounded rectangle with a rear piano hinge, and a p..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "e8cee5c2e51d8c0be85f43114a08179a4e83f3a819e451b444aac88c06c61caa",
@@ -39,5 +40,12 @@
   "author": "RuiningLi",
   "rated_by": "RuiningLi",
   "secondary_rating": 5,
-  "secondary_rated_by": "shawlyu"
+  "secondary_rated_by": "shawlyu",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_instrument_case_with_hinged_lid_4dc7ed757bb642b1a37e7df1015fbbf3",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

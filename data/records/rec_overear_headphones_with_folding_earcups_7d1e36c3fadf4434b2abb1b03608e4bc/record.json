@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_overear_headphones_with_folding_earcups_7d1e36c3fadf4434b2abb1b03608e4bc",
   "created_at": "2026-03-29T15:01:46Z",
   "updated_at": "2026-04-01T13:47:04Z",
@@ -22,12 +22,13 @@
     "prompt_preview": "A noise-canceling over-ear headphone set with oval cups and fold-flat yokes. The earcups are carried by slim yokes at the ends of the headband, and the yokes..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "69f9e5fb7db859d44a954630a382742d50d2a634559356bde167572f4fc955db",
@@ -39,5 +40,12 @@
   "author": "RuiningLi",
   "rated_by": "RuiningLi",
   "secondary_rating": 5,
-  "secondary_rated_by": "shawlyu"
+  "secondary_rated_by": "shawlyu",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_overear_headphones_with_folding_earcups_7d1e36c3fadf4434b2abb1b03608e4bc",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

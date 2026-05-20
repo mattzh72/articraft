@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_wall_safe_with_hinged_door_and_dial_8b9f7f36ed94414e9347d51161971f01",
   "created_at": "2026-04-27T03:26:26Z",
   "updated_at": "2026-04-27T07:36:37Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A compact wall safe with a square front frame, a right-hinged door, a combination dial, and a short latch lever near the lower edge. The door rotates on a ve..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "130c9c430078ddfd01b868b0f42e6109952604533af3e2d65a9f1ae7c23caaca",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_wall_safe_with_hinged_door_and_dial_8b9f7f36ed94414e9347d51161971f01",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

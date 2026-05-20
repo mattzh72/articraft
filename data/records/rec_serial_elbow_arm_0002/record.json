@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_serial_elbow_arm_0002",
   "created_at": "2026-03-12T18:31:30Z",
   "updated_at": "2026-04-01T10:33:54Z",
@@ -20,16 +20,17 @@
     "prompt_preview": "A compact serial elbow arm with rotary shoulder and elbow joints, rigid box-section links, and a simple end mounting plate."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "7032f57bc5276172c73b6e83b976a6d2bb81afe4ff8bea4a47b041793e2baf13",
-    "model_py_sha256": "93991d25cc362795d1485d1a139571981c010e910b30dbe987b873a2021121fa"
+    "model_py_sha256": "04fa82b726e936375e8a6329af4f5c381e4c1c76e0e59ec565b1497ed6195d8a"
   },
   "collections": [
     "dataset"
@@ -37,5 +38,12 @@
   "author": "mattzh72",
   "rated_by": "mattzh72",
   "secondary_rating": 5,
-  "secondary_rated_by": "Zhaomou Song"
+  "secondary_rated_by": "Zhaomou Song",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_serial_elbow_arm_0002",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

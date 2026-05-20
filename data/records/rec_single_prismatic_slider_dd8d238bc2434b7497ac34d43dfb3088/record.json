@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_single_prismatic_slider_dd8d238bc2434b7497ac34d43dfb3088",
   "created_at": "2026-03-30T17:57:46Z",
   "updated_at": "2026-04-01T11:05:42Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A single linear slide module. A fixed rail body carries one rectangular carriage with guide overlap, end stops, and a simple tooling plate on top. One prisma..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "df0706939b0614cc8a250c28441265aa40974d1a0b61b6abff430917d7f130fa",
-    "model_py_sha256": "a34c73c3e63c340eb4df383408dbd3eadbef2e5b6391ec7ba6c0fb176b3bd903"
+    "model_py_sha256": "497cf34e65c4b3c686e5b6c2997b2d6778b7c9968c33002c471351605c55ce36"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_single_prismatic_slider_dd8d238bc2434b7497ac34d43dfb3088",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

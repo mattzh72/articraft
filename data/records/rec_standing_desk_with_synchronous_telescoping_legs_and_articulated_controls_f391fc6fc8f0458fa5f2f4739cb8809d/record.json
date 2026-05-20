@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_standing_desk_with_synchronous_telescoping_legs_and_articulated_controls_f391fc6fc8f0458fa5f2f4739cb8809d",
   "created_at": "2026-04-04T15:01:02Z",
   "updated_at": "2026-04-05T11:52:24Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A four-leg conference standing desk with a broad rectangular top and a side-mounted control knob. The rigid top spans a heavy underframe over four telescopin..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "e15474f48b4a45a186df0d367a67d5a0c0f9ffedc233bbd910f9814a0b189200",
-    "model_py_sha256": "5ba7abe318b8c260c2a4fec75de829fcaba8f471dd47a41a7ff1f47422f7d35f"
+    "model_py_sha256": "8dbdeef14777f3ffa15d625a79ead06ec9c773bfc7a038d864502d1ddaae9754"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_standing_desk_with_synchronous_telescoping_legs_and_articulated_controls_f391fc6fc8f0458fa5f2f4739cb8809d",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

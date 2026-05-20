@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_joystick_mechanism_fa1fb554a4654fa3a096c3e649e3348b",
   "created_at": "2026-04-27T03:43:11Z",
   "updated_at": "2026-04-27T06:51:01Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A cardan-ring joystick mechanism. A grounded cup base supports an outer ring, an inner ring, and a rigid central stick fixed to the inner ring. The outer and..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "0975cdef67152254d7ccc50b7e878421fcd4eb9722904ecfe083ffd4645de5b6",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_joystick_mechanism_fa1fb554a4654fa3a096c3e649e3348b",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

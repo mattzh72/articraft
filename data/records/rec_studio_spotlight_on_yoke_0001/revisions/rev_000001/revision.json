@@ -1,0 +1,43 @@
+{
+  "schema_version": 1,
+  "record_id": "rec_studio_spotlight_on_yoke_0001",
+  "revision_id": "rev_000001",
+  "created_at": "2026-03-16T01:23:44Z",
+  "prompt_kind": "single_prompt",
+  "prompt_sha256": "11c50c3852d5153dcbf64e11646acae8d0d6d5396590c4e1fc7d66265a5300e3",
+  "source": {
+    "run_id": "run_import_studio_spotlight_on_yoke_20260316-011021-realism-articulation-v1",
+    "prompt_batch_id": "realism_articulation_v1",
+    "prompt_index": 1
+  },
+  "generation": {
+    "provider": "openai",
+    "model_id": "gpt-5.4",
+    "thinking_level": "high",
+    "openai_transport": "http",
+    "openai_reasoning_summary": null,
+    "max_turns": 30
+  },
+  "artifacts": {
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
+    "prompt_series_json": null,
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
+  },
+  "hashes": {
+    "prompt_sha256": "11c50c3852d5153dcbf64e11646acae8d0d6d5396590c4e1fc7d66265a5300e3",
+    "model_py_sha256": "56a88e10d93591b71ffafb359e9b331d7e4116fd640335b12dd6ebcb61492c48"
+  },
+  "run_summary": {
+    "turn_count": 13,
+    "tool_call_count": null,
+    "compile_attempt_count": null,
+    "final_status": "success"
+  },
+  "parent": null,
+  "seed": null,
+  "inherited_inputs": []
+}

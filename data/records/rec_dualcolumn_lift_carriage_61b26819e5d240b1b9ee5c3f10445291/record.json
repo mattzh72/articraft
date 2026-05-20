@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_dualcolumn_lift_carriage_61b26819e5d240b1b9ee5c3f10445291",
   "created_at": "2026-04-03T21:46:47Z",
   "updated_at": "2026-04-06T01:25:43Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A boxed dual-column lift carriage. Two grounded guide columns are tied by a base and top crosshead, and a rectangular carriage rides between them on wrapped..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "aa8894d5765d57486c2c26c813c304d23b0b4871c0bab6822fb721acee39ce69",
-    "model_py_sha256": "6f2954bfe12068e9c9612de2160e985e24d89920e7d8e39b35c9798b684e6f47"
+    "model_py_sha256": "435608c798d12cea1d768cd6b23444bff7b51d0791f7d6ca55684477c25e4f91"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_dualcolumn_lift_carriage_61b26819e5d240b1b9ee5c3f10445291",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

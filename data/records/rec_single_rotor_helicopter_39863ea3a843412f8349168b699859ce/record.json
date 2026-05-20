@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_single_rotor_helicopter_39863ea3a843412f8349168b699859ce",
   "created_at": "2026-04-11T14:56:29Z",
   "updated_at": "2026-04-11T15:23:41Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A fire utility helicopter with a robust fuselage, skid landing gear, a five-blade main rotor, and a tail boom carrying a tail rotor near the tip. The engine..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "ed911877f7fb6e2faa3e1a2f8d3bf205febea2db956f7ab524407c8bfab0ce63",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_single_rotor_helicopter_39863ea3a843412f8349168b699859ce",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

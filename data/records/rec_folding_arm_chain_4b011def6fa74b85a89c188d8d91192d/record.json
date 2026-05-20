@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_folding_arm_chain_4b011def6fa74b85a89c188d8d91192d",
   "created_at": "2026-03-31T17:20:51Z",
   "updated_at": "2026-04-07T10:09:16Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A scissor-like folding arm chain. A grounded side bracket carries three boxed links in sequence so the arm can fold into a compact stack while still extendin..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "7714193af921e08e4ba838b7a93ad7bbfd255d98d39161bb56c852cc5ebc4c0f",
-    "model_py_sha256": "89e37c3291b52bd443cc747ba1ece7d7bd7e152fee46ca7a73fd576bc4581044"
+    "model_py_sha256": "00ff36bcab1dd6ef859e55e1cfcb740bd273b9544f64e6d1d5cd3cdbcb2757f2"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_folding_arm_chain_4b011def6fa74b85a89c188d8d91192d",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_traditional_windmill_313a97426bb8434097ff3cb6128216a5",
   "created_at": "2026-04-27T03:47:28Z",
   "updated_at": "2026-04-27T06:50:14Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "Create a cost-optimized mass-manufacturable Traditional windmill. Base architecture: a tower with rotor hub, blade lattice, and cap/nacelle support. Reduce p..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "69694cdca6b0a048586a8c5af50a5ff92ea031e7ef6422459f2db5953efc1f72",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_traditional_windmill_313a97426bb8434097ff3cb6128216a5",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

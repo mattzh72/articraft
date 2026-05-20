@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_xyz_cartesian_stage_daaacdee0ed84a8c8e3aea28fe79aacd",
   "created_at": "2026-04-03T21:46:47Z",
   "updated_at": "2026-04-06T01:25:22Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A inspection XYZ gantry-lite stage. A fixed base carries a long X slide, the X slide carries a transverse Y runner, and the Y runner carries a compact vertic..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "873079f1f4c3e417bcf8b9b44a71a62d3aefee5777b195a6b18eb40af8f6f6fc",
-    "model_py_sha256": "677f88358ee0fe076e5e064f1713b8c0b9c30769dcbb22d31300a1c773b8f536"
+    "model_py_sha256": "d9eabbdd4000df436f49e7d2a60e58aa2a0d9b689c591de1d1a6ab77ec71ec0e"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_xyz_cartesian_stage_daaacdee0ed84a8c8e3aea28fe79aacd",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_single_roll_axis_module_d5c115881b9d435dbd04d224a3861dab",
   "created_at": "2026-04-02T16:32:45Z",
   "updated_at": "2026-04-06T01:34:07Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A compact production roll module. A grounded box body supports a short spindle stage ending in a round output plate, with the support path explicit from body..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "d80a1aa8996c2c111faf61bc2202184f126accd3881bd39e72b46cfc1478ef01",
-    "model_py_sha256": "9d5725e4baa1aa0a1066f302a3b3c7eea45a2ce4d0d056e0cbaa381b778eaa62"
+    "model_py_sha256": "4cb52415c9663054e7fdca8fa7798c235e5cb8b73688abda54d5348ab9ea0cf7"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_single_roll_axis_module_d5c115881b9d435dbd04d224a3861dab",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

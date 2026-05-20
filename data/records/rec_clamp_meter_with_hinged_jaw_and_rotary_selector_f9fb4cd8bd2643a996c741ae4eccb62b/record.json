@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_clamp_meter_with_hinged_jaw_and_rotary_selector_f9fb4cd8bd2643a996c741ae4eccb62b",
   "created_at": "2026-04-11T23:13:28Z",
   "updated_at": "2026-04-22T14:03:55Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "An automotive clamp meter with an offset jaw shape, a rounded grip, a center function dial, and a short stand molded into the back, plus two mode buttons nea..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "eb6cd8267a77569e41d5645929ef28ca7018cb7a38bb8a15611cb0a51224d0b7",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_clamp_meter_with_hinged_jaw_and_rotary_selector_f9fb4cd8bd2643a996c741ae4eccb62b",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

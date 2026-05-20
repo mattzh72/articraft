@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_tv_wall_mount_9bb379833eb44245acc508c0485b58e1",
   "created_at": "2026-04-03T21:46:47Z",
   "updated_at": "2026-04-06T01:22:31Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A short-arm TV wall bracket without the display. A fixed wall plate carries two rigid arm links and a small mounting head with separate pan and tilt pieces...."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "13da111833a6f446af87fa3c9740581209483face01b6d384551938c957d3569",
-    "model_py_sha256": "776cb63e8decff9e98ef1321dbbdd88d6cbdea0d363e79da6007d6db6a4da970"
+    "model_py_sha256": "fbd3648bade71744a25c8ed22c13fa67c280fd339198d237072dfe5130821eb8"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_tv_wall_mount_9bb379833eb44245acc508c0485b58e1",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

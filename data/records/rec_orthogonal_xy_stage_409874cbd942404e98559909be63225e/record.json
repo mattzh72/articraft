@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_orthogonal_xy_stage_409874cbd942404e98559909be63225e",
   "created_at": "2026-03-29T15:31:29Z",
   "updated_at": "2026-04-01T11:23:44Z",
@@ -22,16 +22,17 @@
     "prompt_preview": "A precision slide table with a rectangular base plate, a long lower carriage, and a shorter cross-slide supporting a top instrument pad. The lower and upper..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "dd24c2ec8f5424a89681685ac9b42fa8b029ad95d45347ed9f830c817e7d5bb2",
-    "model_py_sha256": "c86c9b9c4ea2167aa7f2857b3e0141245cb781b9ac5747f2ea0340dea9a69a4c"
+    "model_py_sha256": "145fbc9728a5628fd5bb8dff3c1aaee2b83329d75c04bc664c1b0d93d6d6cc44"
   },
   "collections": [
     "dataset"
@@ -39,5 +40,12 @@
   "author": "mattzh72",
   "rated_by": "mattzh72",
   "secondary_rating": 5,
-  "secondary_rated_by": "Zhaomou Song"
+  "secondary_rated_by": "Zhaomou Song",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_orthogonal_xy_stage_409874cbd942404e98559909be63225e",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

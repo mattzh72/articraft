@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_ceiling_light_fixture_1a2e8cbcb42c459a9b871b4f7990b889",
   "created_at": "2026-04-12T14:33:58Z",
   "updated_at": "2026-04-22T08:15:08Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A modern ceiling light fixture with a compact canopy, three adjustable rod arms, and small conical shades with rear switches. The three rod arms rotate on hi..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "adf1a0c6761e701909dfb80974a0701e2c2ffb7a7195cebf4e942e7e447ac29b",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_ceiling_light_fixture_1a2e8cbcb42c459a9b871b4f7990b889",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_stove_top_acb31ee0dc114085ab1521da4209f87e",
   "created_at": "2026-04-27T12:34:59Z",
   "updated_at": "2026-04-28T07:49:17Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A realistic, highly detailed stove top appliance with a substantial body, cooktop surface, front-facing controls, and an oven door below. The door and standa..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "580a91d66ba7f971bb8db91625f2229f0ad66f95900b7cf2b1a60bb36704562c",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_stove_top_acb31ee0dc114085ab1521da4209f87e",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

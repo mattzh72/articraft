@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_opposed_twinslide_gripper_305ed45cc9034dd1a178f46c3c3501da",
   "created_at": "2026-03-30T17:57:46Z",
   "updated_at": "2026-04-01T11:07:44Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A low-profile twin-slide gripper. A broad center spine supports two shallow side slides and two compact jaws that close into a small rectangular work area. E..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "c069fa7f858977b2df8313731f2da2a1047a25b6e819723e2da7a5d113d79930",
-    "model_py_sha256": "7640fb6a54b3cc6563b49e6b8335b9f9d0a98a2190dae35990df459386f9c3d6"
+    "model_py_sha256": "cb35bf9216bf3ac3138621fd20f05a061a56873076ff71a1a8fdeeabb93c75d5"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_opposed_twinslide_gripper_305ed45cc9034dd1a178f46c3c3501da",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

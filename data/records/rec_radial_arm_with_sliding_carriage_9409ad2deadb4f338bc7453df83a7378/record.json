@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_radial_arm_with_sliding_carriage_9409ad2deadb4f338bc7453df83a7378",
   "created_at": "2026-03-30T17:57:46Z",
   "updated_at": "2026-04-06T01:42:09Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A column-mounted radial-arm module. A fixed post carries a rotary turret with a straight beam, and the beam supports a traveling truck on top or beneath it...."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "ee39b3f4870734bb2d7eb6261b076a811bd2430de4e9a112745f131a42da99af",
-    "model_py_sha256": "2cf4af62afca3b59e1bf6ef8c52f07634847799c222c409a068aa6ec0d26c45d"
+    "model_py_sha256": "c35d551d704794cc37fd17325ea1971a635e539fde6158130209d95dbbcec5ce"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_radial_arm_with_sliding_carriage_9409ad2deadb4f338bc7453df83a7378",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

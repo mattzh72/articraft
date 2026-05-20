@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_extension_ladder_f87d987519db435cbbee481175a32a39",
   "created_at": "2026-04-03T22:03:54Z",
   "updated_at": "2026-04-04T15:36:02Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A telescoping compact aluminium ladder with multiple short stile sections that collapse accordion-style. Each section's top slides prismatically into the one..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "4d394f7bb85f4c36e6260ea2b8f281c90954262839b016d362274758bfde9937",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_extension_ladder_f87d987519db435cbbee481175a32a39",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

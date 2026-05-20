@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_playground_swing_215b55774493472b8231c1cda0629a98",
   "created_at": "2026-04-04T14:54:41Z",
   "updated_at": "2026-04-05T12:18:58Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A tire swing suspended from a top beam by a short rigid yoke. The circular tire seat hangs below a central support block on the beam through two short rigid..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "685b19c537ddee5623989ff64a304df20988bcffc0e0b4315706dbed79d6d242",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_playground_swing_215b55774493472b8231c1cda0629a98",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

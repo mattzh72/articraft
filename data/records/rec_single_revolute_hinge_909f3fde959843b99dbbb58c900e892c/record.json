@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_single_revolute_hinge_909f3fde959843b99dbbb58c900e892c",
   "created_at": "2026-04-02T16:32:45Z",
   "updated_at": "2026-04-06T01:34:13Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A narrow inspection-lid hinge. A slim fixed leaf and a slimmer moving leaf are tied by a compact barrel with just enough segmentation to read as a real hinge..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "c7978a378f8e54cb81c88234fd9a45b54d551cf05c86d61490bbceb84c412d28",
-    "model_py_sha256": "ec85e1f67b2acf5dd46a693a849a923b70e3d7455dad9b92f7bcb7b04aa225df"
+    "model_py_sha256": "d6ff3b0c72d8f542f7b87877d6244011f210e9a86346ff341400bf24a6de8bac"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_single_revolute_hinge_909f3fde959843b99dbbb58c900e892c",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

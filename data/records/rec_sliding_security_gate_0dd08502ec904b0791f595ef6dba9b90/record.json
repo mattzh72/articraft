@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_sliding_security_gate_0dd08502ec904b0791f595ef6dba9b90",
   "created_at": "2026-04-27T13:31:16Z",
   "updated_at": "2026-04-28T07:11:29Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "Model Sliding security gate as an industrial safety-first variant for heavy duty cycles. Start from a rigid gate leaf guided by track/roller hardware and lat..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "85cabc7b23cdeb0a0e541c103ea87cf288ba280f445a5099c7fdf5547aa4f21a",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_sliding_security_gate_0dd08502ec904b0791f595ef6dba9b90",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

@@ -543,13 +543,6 @@ def _run_data_check(args: argparse.Namespace) -> int:
     return _dataset(args, ["validate-format"])
 
 
-def _run_data_migrate_records_v3(args: argparse.Namespace) -> int:
-    argv = ["migrate-records-v3"]
-    if args.dry_run:
-        argv.append("--dry-run")
-    return _dataset(args, argv)
-
-
 def _run_env_bootstrap(args: argparse.Namespace) -> int:
     return env_cli.main([str(args.repo_root)])
 
@@ -706,13 +699,6 @@ def _build_parser() -> argparse.ArgumentParser:
     data_check = data_sub.add_parser("check", help="Validate checked-in data format.")
     _add_repo_root(data_check)
     data_check.set_defaults(func=_run_data_check)
-    data_migrate_v3 = data_sub.add_parser(
-        "migrate-records-v3",
-        help="Migrate flat v2 records to revision-based v3 records.",
-    )
-    _add_repo_root(data_migrate_v3)
-    data_migrate_v3.add_argument("--dry-run", action="store_true")
-    data_migrate_v3.set_defaults(func=_run_data_migrate_records_v3)
 
     external = subparsers.add_parser(
         "external",

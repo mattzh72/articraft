@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_orthogonal_yz_stage_f29bf68f7107491b9f71b43d232b29fe",
   "created_at": "2026-04-03T21:46:47Z",
   "updated_at": "2026-04-06T01:22:25Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A upright YZ transfer module. A fixed upright guide carries a moving Z carriage, and the Z carriage carries a short lateral slide with a rectangular output f..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "98fb598a7adf5ce003e47096f5f1e4c6752a3b64aa873f81d1a60e292e5b476b",
-    "model_py_sha256": "01e6d05035bfb208179600c061741fe424c78348e8d2986b83aecdded5a0b7bb"
+    "model_py_sha256": "f427664a69741ad8cf3ebd0d245a43049190db281b14402550135ba88d7a6604"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_orthogonal_yz_stage_f29bf68f7107491b9f71b43d232b29fe",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

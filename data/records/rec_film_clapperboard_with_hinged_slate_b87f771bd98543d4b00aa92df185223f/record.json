@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_film_clapperboard_with_hinged_slate_b87f771bd98543d4b00aa92df185223f",
   "created_at": "2026-04-11T23:05:11Z",
   "updated_at": "2026-04-22T14:19:35Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A full-width cinema slate with a black board, a bold striped clapstick, and a rear battery compartment built into the timecode housing. The battery compartme..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "1c4632a18556cc177de4f022057ab532f0070f713b2833daa148ec4b009d8632",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_film_clapperboard_with_hinged_slate_b87f771bd98543d4b00aa92df185223f",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

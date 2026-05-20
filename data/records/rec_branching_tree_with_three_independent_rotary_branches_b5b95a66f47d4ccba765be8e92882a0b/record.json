@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_branching_tree_with_three_independent_rotary_branches_b5b95a66f47d4ccba765be8e92882a0b",
   "created_at": "2026-03-31T17:20:51Z",
   "updated_at": "2026-03-31T18:41:43Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A service-panel three-branch bracket. A grounded backplate supports three branch pods arranged around a vertical spine, with compact end plates at the branch..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "8ed173399066e9d57fbb55fbc8a071514a2acbeffb81a723f6284cabc1f1545a",
-    "model_py_sha256": "e84b7570e390ca8ad7e7010848355f6da651e73f81e83ea6ae6f6d325a844dd4"
+    "model_py_sha256": "84afa58659336e300807dc098a7926eac5813dd4109f4822b027be4df7ec5d04"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_branching_tree_with_three_independent_rotary_branches_b5b95a66f47d4ccba765be8e92882a0b",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

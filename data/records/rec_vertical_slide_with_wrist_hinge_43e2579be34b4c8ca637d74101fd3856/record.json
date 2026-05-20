@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_vertical_slide_with_wrist_hinge_43e2579be34b4c8ca637d74101fd3856",
   "created_at": "2026-03-31T17:20:51Z",
   "updated_at": "2026-03-31T18:46:56Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A side-wall vertical axis with wrist tab. A grounded side plate supports a vertical carriage and a compact hinged output tab on that carriage. The carriage i..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "857a04c02c6644dd47a158973fccf66f209a9246b10aaac7a6aba4d1d0a44896",
-    "model_py_sha256": "10e573dbc05227da32d80ab4598947bb82ff6dd7edda37a7898aa3a2fb2a46e5"
+    "model_py_sha256": "24918fd4b6f04c88bf0aec132622880f913787d1ddae6215721ea020814d0487"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_vertical_slide_with_wrist_hinge_43e2579be34b4c8ca637d74101fd3856",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

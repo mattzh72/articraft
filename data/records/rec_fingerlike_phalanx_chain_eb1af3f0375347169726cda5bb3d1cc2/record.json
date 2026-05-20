@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_fingerlike_phalanx_chain_eb1af3f0375347169726cda5bb3d1cc2",
   "created_at": "2026-03-29T15:31:29Z",
   "updated_at": "2026-04-01T11:32:15Z",
@@ -22,16 +22,17 @@
     "prompt_preview": "A slim probing finger chain with three narrow phalanx links, double side cheeks at each knuckle, and a spatulate fingertip pad. The silhouette should feel lo..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "b3f062083bffb7f6d6e8be62bdce4ef91334443fd0c93ee5298c2c1350f1645e",
-    "model_py_sha256": "4086eccd0b95be1e7ee3152143b72ce931810748e9c84a3ac663a1650b25d317"
+    "model_py_sha256": "d8dba60a275029e46439505a160e407559815d418fdc20c7af5cab74a0d328c8"
   },
   "collections": [
     "dataset"
@@ -39,5 +40,12 @@
   "author": "mattzh72",
   "rated_by": "mattzh72",
   "secondary_rating": 5,
-  "secondary_rated_by": "Zhaomou Song"
+  "secondary_rated_by": "Zhaomou Song",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_fingerlike_phalanx_chain_eb1af3f0375347169726cda5bb3d1cc2",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

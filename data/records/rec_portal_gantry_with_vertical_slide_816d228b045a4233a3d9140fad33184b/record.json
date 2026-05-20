@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_portal_gantry_with_vertical_slide_816d228b045a4233a3d9140fad33184b",
   "created_at": "2026-03-29T15:31:29Z",
   "updated_at": "2026-04-01T11:25:24Z",
@@ -22,16 +22,17 @@
     "prompt_preview": "A gantry robot axis with two grounded side frames, a tall top beam, a compact beam rider, and a Z carriage nested into the rider face. The structure should r..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "cc1aa646afb3f07f7e89fffc3dd7f3f4283072be265bdc0ba222ddf8f3c50b63",
-    "model_py_sha256": "3d7a1cb9e133777b1f2b1ad32541b1491510955ed954809bbc484099b81a55c3"
+    "model_py_sha256": "f9eec51fff0ca66a0b0f24f23c6435901864b7a65d659157ed0a360627f72c72"
   },
   "collections": [
     "dataset"
@@ -39,5 +40,12 @@
   "author": "mattzh72",
   "rated_by": "mattzh72",
   "secondary_rating": 3,
-  "secondary_rated_by": "Zhaomou Song"
+  "secondary_rated_by": "Zhaomou Song",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_portal_gantry_with_vertical_slide_816d228b045a4233a3d9140fad33184b",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

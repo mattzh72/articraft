@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_revoluterevoluteprismatic_chain_2a8e4aaeb6e8444fb3441b6a5831ee50",
   "created_at": "2026-03-29T15:31:29Z",
   "updated_at": "2026-04-01T11:29:34Z",
@@ -22,16 +22,17 @@
     "prompt_preview": "A small pedestal arm with a short upper link, a longer forearm, and a cylindrical slide nose ending in a square flange. The mechanism should feel like a comp..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "a79a02bd7ec3137c50b19008063ebb892e5241d9d288da90a58627d08f93edc8",
-    "model_py_sha256": "9e17c999a52871feace9b2784828f6b26d3aaadd462be555f7f48988f10cd302"
+    "model_py_sha256": "5d13d217b5a44f6ecc2238ffe9f10f8aad4479b73e1d66b1992512e8c134158a"
   },
   "collections": [
     "dataset"
@@ -39,5 +40,12 @@
   "author": "mattzh72",
   "rated_by": "mattzh72",
   "secondary_rating": 3,
-  "secondary_rated_by": "Zhaomou Song"
+  "secondary_rated_by": "Zhaomou Song",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_revoluterevoluteprismatic_chain_2a8e4aaeb6e8444fb3441b6a5831ee50",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_frontload_washing_machine_66dd09c40e4245c48e70ee560080c8af",
   "created_at": "2026-04-26T08:06:36Z",
   "updated_at": "2026-04-28T08:18:21Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A commercial front-load washing machine with a wide rectangular body, a large porthole door, and a pull-out detergent drawer. The front door opens on revolut..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "272618c05ccff7fa631bd199111bd24809616409e04e89d66b80bfc3c07f505f",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_frontload_washing_machine_66dd09c40e4245c48e70ee560080c8af",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

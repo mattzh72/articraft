@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_revoluteprismaticrevolute_chain_5d7f8d880a83459ebc286de737c618dd",
   "created_at": "2026-03-30T17:57:46Z",
   "updated_at": "2026-04-01T10:54:43Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A compact hinge-slide-hinge mechanism. A fixed base clevis supports a carried slider body, and the slider body supports a small output tab at its far end. Th..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "f89bed6989373aefb0a152d6ec40503c6fbf9e5cb6b29407c1996057aa1af11a",
-    "model_py_sha256": "fae957fe2cb8af07afefc61519a51efd0ee7f0802536f69da2c453b263e6a048"
+    "model_py_sha256": "5dcce3667f2954aca58c8a469e950fa13372ca650f302a4943c6fc93ede32264"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_revoluteprismaticrevolute_chain_5d7f8d880a83459ebc286de737c618dd",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

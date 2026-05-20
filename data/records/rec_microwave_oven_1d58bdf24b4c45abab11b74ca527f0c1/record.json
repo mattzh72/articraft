@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_microwave_oven_1d58bdf24b4c45abab11b74ca527f0c1",
   "created_at": "2026-04-04T14:41:28Z",
   "updated_at": "2026-04-05T13:04:24Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A microwave with a top-hinged viewing door and a lower keypad strip. The broad front opening is covered by a glazed panel hinged at the top edge, and the con..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "6666e105fa6e0a1f7d11cf97c8be37b115eb4bb7fb008a68930df6095f9dfa58",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_microwave_oven_1d58bdf24b4c45abab11b74ca527f0c1",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

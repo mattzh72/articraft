@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_yawpitchroll_wrist_9b13ae6a5f554cc6b0e0b1692c8aad23",
   "created_at": "2026-04-02T16:32:45Z",
   "updated_at": "2026-04-06T01:31:42Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A compact service three-axis wrist. A broad grounded body supports a lower rotary stage, a pitch cradle, and a compact roll flange with clear spacing between..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "e998b3249676b4ee07b62211f2f320e8595f4cb559f2e1178af83dea21e9e01f",
-    "model_py_sha256": "5ebb9b81a56385f0adfee1931d7dcb4b6bc2a66f6b2bafe49c6f167e963b2212"
+    "model_py_sha256": "1701f7a74f3fc9cc51485810fb76d02add528f16737f7b0e8371806612c274d7"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_yawpitchroll_wrist_9b13ae6a5f554cc6b0e0b1692c8aad23",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

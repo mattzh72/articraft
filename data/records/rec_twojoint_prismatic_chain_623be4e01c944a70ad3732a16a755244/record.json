@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_twojoint_prismatic_chain_623be4e01c944a70ad3732a16a755244",
   "created_at": "2026-03-28T03:32:30Z",
   "updated_at": "2026-04-01T10:10:39Z",
@@ -22,16 +22,17 @@
     "prompt_preview": "A two-stage linear slide. A fixed outer guide carries a first carriage, and that carriage carries a second short guide with an end plate. Both joints are pri..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "4d15516a15314e47d387b79072cb8e3cbf276b486dd64ac2c7a3e5b20dc879b5",
-    "model_py_sha256": "501d4761b404570ecb8ec91b56e156e346bb65385465d6a3c83e82ced2b10cdc"
+    "model_py_sha256": "b4b8e9e1fadb6f0dea81afd14342e463d44feaf829e874c53ff3b786e12c4dbe"
   },
   "collections": [
     "dataset"
@@ -39,5 +40,12 @@
   "author": "mattzh72",
   "rated_by": "mattzh72",
   "secondary_rating": 5,
-  "secondary_rated_by": "Zhaomou Song"
+  "secondary_rated_by": "Zhaomou Song",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_twojoint_prismatic_chain_623be4e01c944a70ad3732a16a755244",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

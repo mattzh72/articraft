@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_lazy_susan_d8d9e3ee360a4aa3a0e99ce6a3e0c332",
   "created_at": "2026-04-27T12:34:55Z",
   "updated_at": "2026-04-28T07:51:19Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A realistic, highly detailed table with an integrated lazy Susan, featuring a stable table base, a broad tabletop surface, and a centered rotating serving tr..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "851307c7f31c92dae397fbb0824a81da5068e3b3fe8318701a757bdff839ffa7",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_lazy_susan_d8d9e3ee360a4aa3a0e99ce6a3e0c332",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

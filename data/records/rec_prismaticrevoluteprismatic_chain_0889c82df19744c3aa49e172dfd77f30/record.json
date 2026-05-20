@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_prismaticrevoluteprismatic_chain_0889c82df19744c3aa49e172dfd77f30",
   "created_at": "2026-03-29T15:31:29Z",
   "updated_at": "2026-04-01T11:30:32Z",
@@ -22,16 +22,17 @@
     "prompt_preview": "A linear positioning module with a fixed rail, a traveling middle bracket, and a telescoping tool nose projecting from the far side of that bracket. The midd..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "ae2cdcf79f19d32a27b8f87b6db3c39f58a02741c3175f9a082f448d07dc5682",
-    "model_py_sha256": "654072408992741e63941c6822be3b2b010a084fe86d5e83e430f624196939b0"
+    "model_py_sha256": "e1182b04f6041791091e9af65829c204049b7d299898324c77d803f06cf76f8b"
   },
   "collections": [
     "dataset"
@@ -39,5 +40,12 @@
   "author": "mattzh72",
   "rated_by": "mattzh72",
   "secondary_rating": 5,
-  "secondary_rated_by": "Zhaomou Song"
+  "secondary_rated_by": "Zhaomou Song",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_prismaticrevoluteprismatic_chain_0889c82df19744c3aa49e172dfd77f30",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

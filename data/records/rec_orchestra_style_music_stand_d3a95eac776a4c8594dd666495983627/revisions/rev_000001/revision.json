@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "record_id": "rec_orchestra_style_music_stand_d3a95eac776a4c8594dd666495983627",
+  "revision_id": "rev_000001",
+  "created_at": "2026-04-02T22:48:25Z",
+  "prompt_kind": "single_prompt",
+  "prompt_sha256": "51e9512c7a35c06fd97dfe0dae09e5d8a790fdf8fb5543315f5e85db3247487a",
+  "source": {
+    "run_id": "run_20260402_224817_997046_20260402-sdk-misc-backfill-8cats-10each-gpt54-hi",
+    "prompt_batch_id": null,
+    "batch_spec_id": "20260402_sdk_misc_backfill_8cats_10each_gpt54_high",
+    "row_id": "20260402_sdk_misc_055",
+    "prompt_index": 55
+  },
+  "generation": {
+    "provider": "openai",
+    "model_id": "gpt-5.4",
+    "thinking_level": "high",
+    "openai_transport": "http",
+    "openai_reasoning_summary": "auto",
+    "max_turns": 50,
+    "max_cost_usd": 2.5
+  },
+  "artifacts": {
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
+    "prompt_series_json": null,
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
+  },
+  "hashes": {
+    "prompt_sha256": "51e9512c7a35c06fd97dfe0dae09e5d8a790fdf8fb5543315f5e85db3247487a",
+    "model_py_sha256": "48f80acd314eda7c2d4ca7b395c5613453c1165bdaafa0a9be48d8bcc8681e09"
+  },
+  "run_summary": {
+    "turn_count": 27,
+    "tool_call_count": 26,
+    "compile_attempt_count": 7,
+    "final_status": "success"
+  },
+  "parent": null,
+  "seed": null,
+  "inherited_inputs": []
+}

@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_single_pitch_axis_module_53cacc6d29ec4ee6af9fc2116c695a0e",
   "created_at": "2026-04-02T16:32:45Z",
   "updated_at": "2026-04-06T01:32:21Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A bridge-capped pitch module. A rigid lower saddle carries a short bridge over a compact moving head and a narrow output face. One revolute joint tilts the h..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "81eed4ad9767ef6d1e7b25ea359bf3a0479da0618fd1bd8b88ce459f2c963420",
-    "model_py_sha256": "218ffc45e803c1ba9066a4de187008a839dcde5897b909cca2c809e1313e1322"
+    "model_py_sha256": "0db21c16c50a1784ef1d81355544ee8cd02027a600243b50f6fd0d1c63406de6"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_single_pitch_axis_module_53cacc6d29ec4ee6af9fc2116c695a0e",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

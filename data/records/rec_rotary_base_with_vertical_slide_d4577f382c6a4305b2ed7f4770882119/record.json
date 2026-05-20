@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_rotary_base_with_vertical_slide_d4577f382c6a4305b2ed7f4770882119",
   "created_at": "2026-03-31T17:20:51Z",
   "updated_at": "2026-03-31T18:39:03Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A bridge-backed rotary lift head. A rear frame supports a yaw stage and a carried vertical slide with a plain output plate. The yaw stage is a revolute joint..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "a47f79dd39cec9c5a43e12aee215e7be2052904c7b905e9eb2cbabce6e722848",
-    "model_py_sha256": "aca732075e6d505d06abc5825cce85944098bfc3e3ad23662832ca81673f78b7"
+    "model_py_sha256": "2a5592cf144b2913a48882093fd3eee9a6c3731096e7fb3e8c6e917e3ccab13f"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_rotary_base_with_vertical_slide_d4577f382c6a4305b2ed7f4770882119",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

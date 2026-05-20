@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_playground_swing_1ccb2e94810e44459d9c5c20a103f514",
   "created_at": "2026-04-27T03:27:32Z",
   "updated_at": "2026-04-27T07:35:56Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A toddler bucket swing on a steel playground frame. The deep seat is hung from two side support straps connected to the top beam through short hanger joints...."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "b8c7b99d1da45a5a8a3b2e1e1bf49b5a6a6707f59aed4440012ead3894d315e7",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_playground_swing_1ccb2e94810e44459d9c5c20a103f514",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

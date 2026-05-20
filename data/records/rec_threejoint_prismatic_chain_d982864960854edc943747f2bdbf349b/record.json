@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_threejoint_prismatic_chain_d982864960854edc943747f2bdbf349b",
   "created_at": "2026-03-29T15:31:29Z",
   "updated_at": "2026-04-01T11:23:52Z",
@@ -22,16 +22,17 @@
     "prompt_preview": "A precision extension module with a grounded outer body, a long middle carriage, a shorter inner carriage, and a compact nose plate. The nested order should..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "7225e71106da5dfedfa14873f87dfba0664798efc0e5c337321b810403ce1fc1",
-    "model_py_sha256": "11741f11f81bf2f05857d081db97d3c025d5036a015dad46877e7f14742cac6c"
+    "model_py_sha256": "af4ce5dc6d5ba93198cf5af072fa21e2b5983c5725c62560a4f9d133e1347056"
   },
   "collections": [
     "dataset"
@@ -39,5 +40,12 @@
   "author": "mattzh72",
   "rated_by": "mattzh72",
   "secondary_rating": 5,
-  "secondary_rated_by": "Zhaomou Song"
+  "secondary_rated_by": "Zhaomou Song",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_threejoint_prismatic_chain_d982864960854edc943747f2bdbf349b",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

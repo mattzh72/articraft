@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_rotating_observatory_dome_53432481783d47b7ba01e1752ce9575a",
   "created_at": "2026-04-05T22:10:12Z",
   "updated_at": "2026-04-06T14:14:48Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "An observatory dome with a rotating shell and a slit shutter. A base ring supports the dome shell, and a single shutter leaf closes the slit opening near the..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "eb185f88fab5e4a517a8f946b6dfe0c3c4dce95851623b8a64a3bc2d1b25ec03",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_rotating_observatory_dome_53432481783d47b7ba01e1752ce9575a",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

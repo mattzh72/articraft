@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_lever_chain_55b0a664dd5e47a9891fdc5c736fa539",
   "created_at": "2026-03-30T17:57:46Z",
   "updated_at": "2026-04-07T10:05:02Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "An open-frame lever chain. The root support is a simple pedestal, the links step down slightly in size toward the tip, and the end of the chain carries a sma..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "233371084141e3d863cc955e8749bab0eb97747a94ef2228600c69ef22b66562",
-    "model_py_sha256": "83445ed2284b9a2b738d02eca364923dc5822e9bbee147789b0b006d54035473"
+    "model_py_sha256": "d084b8b269758d759e3d1b5e0914fb578cc81be451745c04cc92c65c9113ffe4"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_lever_chain_55b0a664dd5e47a9891fdc5c736fa539",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

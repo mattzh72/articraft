@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_twostage_telescoping_slide_376ae39cd4a041699cfa1a63ee292953",
   "created_at": "2026-03-28T03:32:30Z",
   "updated_at": "2026-04-01T10:11:00Z",
@@ -22,16 +22,17 @@
     "prompt_preview": "A two-stage telescoping slide like a heavy drawer runner. A fixed outer channel carries an inner sliding channel and a small mounting tray at the moving end...."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "b8abc531422b06783ff86f8fa1c4fe0080eb0e2825ad1bf3f23bf4b639ed17b5",
-    "model_py_sha256": "1f1b3ea726d2e285517839f7645d334179bd26a39dcd360ba1ebd0d548c74e7b"
+    "model_py_sha256": "d75b286b84ea485d26dd469132f8bb10daefcda9cff152d8fd3f775803cfa9c8"
   },
   "collections": [
     "dataset"
@@ -39,5 +40,12 @@
   "author": "mattzh72",
   "rated_by": "mattzh72",
   "secondary_rating": 5,
-  "secondary_rated_by": "Zhaomou Song"
+  "secondary_rated_by": "Zhaomou Song",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_twostage_telescoping_slide_376ae39cd4a041699cfa1a63ee292953",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

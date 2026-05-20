@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_remote_weapon_station_559a7bf58b5b4ffe839d0303be514a39",
   "created_at": "2026-04-04T14:58:06Z",
   "updated_at": "2026-04-05T12:15:21Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A modular weapon station with a square base, a tilting launcher module, and a camera mast. The base supports the yaw stage, while the module is carried betwe..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "b77ce89e1b055e3b49cc74b1bc34ae9c7d4e1f51ec48ff844f5e2378aeda1a24",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_remote_weapon_station_559a7bf58b5b4ffe839d0303be514a39",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

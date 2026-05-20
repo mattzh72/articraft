@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_blender_a3c28f7cd8fb4f63a44426c3474604b7",
   "created_at": "2026-04-12T14:35:50Z",
   "updated_at": "2026-04-22T08:15:23Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A milkshake spindle blender with a tall base, a vertical support column, and a motor arm carrying a spindle over a cup rest. The motor arm rotates downward o..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "2e1ef3cac535dba1da8999a4ba878d130a594e504539887c23bbc961968f4d0e",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_blender_a3c28f7cd8fb4f63a44426c3474604b7",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

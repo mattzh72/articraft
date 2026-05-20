@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_articulated_task_lamp_15bd124cb9714f1f92e1a3efb785697c",
   "created_at": "2026-04-03T21:36:31Z",
   "updated_at": "2026-04-04T10:19:30Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A workshop vice-clamp task lamp with a C-clamp base, a two-link arm, and a cylindrical reflector shade. The first link revolves on a revolute joint at the cl..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "2b2d7b38f2d0fc5d436f383b7faed832828e4ce660c3b38753c43b282c40bae8",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_articulated_task_lamp_15bd124cb9714f1f92e1a3efb785697c",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

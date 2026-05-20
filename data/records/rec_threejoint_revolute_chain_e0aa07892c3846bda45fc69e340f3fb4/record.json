@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_threejoint_revolute_chain_e0aa07892c3846bda45fc69e340f3fb4",
   "created_at": "2026-03-30T17:57:46Z",
   "updated_at": "2026-04-01T11:02:15Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A bench-top three-joint revolute chain. A base foot supports a stack of slim links with clear side plates at the joints, and the distal link ends in a compac..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "7c961d05a875b51c3d24cffb445c44a2d036fff907f95cca5738f36021848d98",
-    "model_py_sha256": "6022ccd72e723349560e18624ec0dac778c64d72178f2b188874188d7a3fcf61"
+    "model_py_sha256": "27dee4dd413173e28049ca2424f4df54b4741ec7f19de317219470ff6b010113"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_threejoint_revolute_chain_e0aa07892c3846bda45fc69e340f3fb4",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

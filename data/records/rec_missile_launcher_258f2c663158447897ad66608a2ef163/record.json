@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_missile_launcher_258f2c663158447897ad66608a2ef163",
   "created_at": "2026-04-27T13:05:22Z",
   "updated_at": "2026-04-28T07:26:56Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A box-canister missile launcher with four square tubes on a pedestal mount. The canister pack is bolted to an elevating yoke, and the yoke stands on a rotati..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "862aa00784fc23e2a61f9bf0781bf1fee6c39005e0316642c1cf2eb8d7f0cbe5",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_missile_launcher_258f2c663158447897ad66608a2ef163",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

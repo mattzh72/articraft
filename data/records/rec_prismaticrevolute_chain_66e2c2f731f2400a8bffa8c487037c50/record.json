@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_prismaticrevolute_chain_66e2c2f731f2400a8bffa8c487037c50",
   "created_at": "2026-04-03T21:46:47Z",
   "updated_at": "2026-04-06T01:22:07Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A rail-slide with hinged nose. A grounded rail supports a sliding truck, and the truck supports a compact hinged nose link. The truck translates on a prismat..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "f5fb2df9cc5a77cc262ea83ee35f21cc59c9bb928b9820d0d9428360f870ee1b",
-    "model_py_sha256": "cc2cbddf0517c6d81288674f7bfad82a553342199953abff698bb6360523f548"
+    "model_py_sha256": "ee1024599c53afd7ac84c00366f3835546d2d872b8dba9e199ba4ca6c4299971"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_prismaticrevolute_chain_66e2c2f731f2400a8bffa8c487037c50",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

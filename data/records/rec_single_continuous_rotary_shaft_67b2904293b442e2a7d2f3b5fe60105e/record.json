@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_single_continuous_rotary_shaft_67b2904293b442e2a7d2f3b5fe60105e",
   "created_at": "2026-03-29T15:31:29Z",
   "updated_at": "2026-04-01T11:32:39Z",
@@ -22,16 +22,17 @@
     "prompt_preview": "A compact rotary drum module with a low base frame, a central bearing housing, and a cylindrical drum carried on one supported shaft axis. The rotating drum..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "cd63aeb7e28f2fa0ad85aa9a138ccbed61f318e523baf996d01d4897842be1cb",
-    "model_py_sha256": "0d3a8eaa05a7a5491591a6ce281e799fd3bccddd8c67cee75e64a0ffc2553d5e"
+    "model_py_sha256": "92bc0fc2381a8762a97aacd0dc824ddcc32ecc4263fe3594ad2836eda29df645"
   },
   "collections": [
     "dataset"
@@ -39,5 +40,12 @@
   "author": "mattzh72",
   "rated_by": "mattzh72",
   "secondary_rating": 5,
-  "secondary_rated_by": "Zhaomou Song"
+  "secondary_rated_by": "Zhaomou Song",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_single_continuous_rotary_shaft_67b2904293b442e2a7d2f3b5fe60105e",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

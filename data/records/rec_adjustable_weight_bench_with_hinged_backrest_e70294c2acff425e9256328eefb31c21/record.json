@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_adjustable_weight_bench_with_hinged_backrest_e70294c2acff425e9256328eefb31c21",
   "created_at": "2026-04-27T03:08:29Z",
   "updated_at": "2026-04-27T07:56:31Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "An adjustable decline bench with a long back pad, an articulated seat, and a front leg-roller assembly, plus a front carry handle between the wheels. the fra..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "02c0297c0e5cc648afd60b8c475741b0a460a3b4b4e80fef9216f782222b1998",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_adjustable_weight_bench_with_hinged_backrest_e70294c2acff425e9256328eefb31c21",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_toy_car_286105f9dd7f45bfbffca8e84bfee0ae",
   "created_at": "2026-04-27T12:52:34Z",
   "updated_at": "2026-04-28T07:39:05Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A toy hatchback car with a short nose, a tall passenger cabin, a rear liftgate, and four small wheels. The four wheels rotate continuously on their axles, th..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "e9a7bb69d3c08bd58b3f287c22e3a0a29f6bdfcaff77d9553f426a0454d4dd19",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_toy_car_286105f9dd7f45bfbffca8e84bfee0ae",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_yawpitch_module_358a252858b644a0926fe4f8517e315c",
   "created_at": "2026-04-02T16:32:45Z",
   "updated_at": "2026-04-06T01:31:47Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "An under-slung yaw-pitch fixture. A top support carries a yaw stage below it, and the yaw stage carries a forked pitch cradle. The yaw stage and pitch cradle..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "a137bea10d6d341dcabd7d4b3fa7f759bd2b6dceaa6624860ea021791e82d38e",
-    "model_py_sha256": "aa05122611fe0c6d8b3d584999b030d38aa511201d543cf3ae40b2a340d3e374"
+    "model_py_sha256": "2cc04c0c2ea646a79c813166c2e156a934a24af8cb0ca00e6ac0ff872c015aed"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_yawpitch_module_358a252858b644a0926fe4f8517e315c",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

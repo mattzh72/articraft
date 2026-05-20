@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_air_fryer_with_pullout_basket_21d5168db6624dfeb492161c31e330dd",
   "created_at": "2026-04-11T18:03:18Z",
   "updated_at": "2026-04-22T14:24:24Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A compact mini air fryer with a rounded square shell, a shallow pullout basket, and a simple control layout with a top timer knob, a side power rocker, and o..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "752626a6264c532a1e5e1c8ddd01a9a65ab90b725a74e42234ff395f29db4906",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_air_fryer_with_pullout_basket_21d5168db6624dfeb492161c31e330dd",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

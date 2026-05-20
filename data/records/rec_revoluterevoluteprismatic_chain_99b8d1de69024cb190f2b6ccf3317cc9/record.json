@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_revoluterevoluteprismatic_chain_99b8d1de69024cb190f2b6ccf3317cc9",
   "created_at": "2026-03-30T17:57:46Z",
   "updated_at": "2026-04-06T01:42:23Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A service arm module with an extendable end stage. A fixed support carries an upper link and a forelink, and the forelink supports a short guided slider that..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "e8b8bf7f84ba31fd53d14682ca822106b2e99111abefb93d8504328db78561bb",
-    "model_py_sha256": "be8d9a58c7b00446f98d95c67f329c030b826866381a4aea834d3c73678df96d"
+    "model_py_sha256": "ce60255c15c6c36b8c42e47e41ce9f80df58413fc3552be5566ea1134e7c41dc"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_revoluterevoluteprismatic_chain_99b8d1de69024cb190f2b6ccf3317cc9",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

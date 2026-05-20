@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_tv_wall_mount_0001",
   "created_at": "2026-03-16T01:24:45Z",
   "updated_at": "2026-04-01T10:36:22Z",
@@ -20,16 +20,17 @@
     "prompt_preview": "A realistic, highly detailed TV wall mount with a solid wall plate, articulated support arms, and a believable screen bracket assembly. The swing, tilt, and..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "ff9de7c1e4d10d4fdc4b93a71b97523b644c5864308f78be44fd38383424e014",
-    "model_py_sha256": "3080640d5f05131d6d59ad9d0b4853a3bf59b8b9484bce0bbd39aca9ac5a8cae"
+    "model_py_sha256": "8d2193a0c8e4a14293653731d2fba30a7a7e5c9093928a60054a0802da8b7b7a"
   },
   "collections": [
     "dataset"
@@ -37,5 +38,12 @@
   "author": "mattzh72",
   "rated_by": "mattzh72",
   "secondary_rating": 5,
-  "secondary_rated_by": "Zhaomou Song"
+  "secondary_rated_by": "Zhaomou Song",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_tv_wall_mount_0001",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

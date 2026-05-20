@@ -1,0 +1,43 @@
+{
+  "schema_version": 1,
+  "record_id": "rec_chest_freezer_with_hinged_lid_0001",
+  "revision_id": "rev_000001",
+  "created_at": "2026-03-17T02:40:33Z",
+  "prompt_kind": "single_prompt",
+  "prompt_sha256": "48683ffc5980dc19f85ec228ae5ac84e8db7f2485ad50186d974c2009ac1b2a1",
+  "source": {
+    "run_id": "run_import_chest_freezer_with_hinged_lid_20260317-023258-chest-freezer-with-hinged-lid-0001",
+    "prompt_batch_id": "realism_articulation_v1",
+    "prompt_index": 1
+  },
+  "generation": {
+    "provider": "openai",
+    "model_id": "gpt-5.4",
+    "thinking_level": "high",
+    "openai_transport": "http",
+    "openai_reasoning_summary": null,
+    "max_turns": 30
+  },
+  "artifacts": {
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
+    "prompt_series_json": null,
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
+  },
+  "hashes": {
+    "prompt_sha256": "48683ffc5980dc19f85ec228ae5ac84e8db7f2485ad50186d974c2009ac1b2a1",
+    "model_py_sha256": "718d9e359b08e56846ad32f8c56ca684fc3ffa3b00ac1d0bf577a6ecf470fa1d"
+  },
+  "run_summary": {
+    "turn_count": 6,
+    "tool_call_count": null,
+    "compile_attempt_count": null,
+    "final_status": "success"
+  },
+  "parent": null,
+  "seed": null,
+  "inherited_inputs": []
+}

@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_revoluteprismaticrevolute_chain_835bb3f550574b9aab77749c346045df",
   "created_at": "2026-03-30T17:57:46Z",
   "updated_at": "2026-04-01T11:16:15Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A service mechanism with a hinged root and wristed slider tip. A fixed support carries a pivoting frame, the frame guides a short extension block, and the ex..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "2b77928121dc4dcf6b498786401ea46ae14e8922d1d6488b02ce627c496132cb",
-    "model_py_sha256": "ee9ce5b1e1cec3618d6b34009eb77ac2bc5f85b8b8b81f2cd6b0d32b5bc74db5"
+    "model_py_sha256": "e6d9a6fd73212e9aa161f35c73b472ce3488c08de117d252e0ead44103a9b240"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_revoluteprismaticrevolute_chain_835bb3f550574b9aab77749c346045df",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

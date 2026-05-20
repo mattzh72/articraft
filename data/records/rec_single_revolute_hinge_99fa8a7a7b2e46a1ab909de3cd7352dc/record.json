@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_single_revolute_hinge_99fa8a7a7b2e46a1ab909de3cd7352dc",
   "created_at": "2026-04-27T03:08:45Z",
   "updated_at": "2026-04-27T08:17:23Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "An offset-leaf enclosure hinge. A fixed leaf and a slightly offset moving leaf meet at a compact knuckle barrel so the closed profile stays clean. One revolu..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "9844ff17c85039530c902c0df1d8c2c8474f667957830c22384cbd0e7b2d1449",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_single_revolute_hinge_99fa8a7a7b2e46a1ab909de3cd7352dc",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

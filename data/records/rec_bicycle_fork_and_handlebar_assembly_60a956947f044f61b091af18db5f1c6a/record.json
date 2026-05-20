@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_bicycle_fork_and_handlebar_assembly_60a956947f044f61b091af18db5f1c6a",
   "created_at": "2026-03-28T12:10:08Z",
   "updated_at": "2026-04-28T08:05:32Z",
@@ -22,12 +22,13 @@
     "prompt_preview": "A full-suspension mountain bike fork with a crown bridge joining two outer legs, two inner stanchion tubes sliding on prismatic joints inside the outer legs,..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "1166b82999acb517723a3ac4491dea9d8166e33b09238ac1bc00eb3770e24ebe",
@@ -39,5 +40,12 @@
   "author": "Zhaomou Song",
   "rated_by": "mattzh72",
   "secondary_rating": null,
-  "secondary_rated_by": null
+  "secondary_rated_by": null,
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_bicycle_fork_and_handlebar_assembly_60a956947f044f61b091af18db5f1c6a",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

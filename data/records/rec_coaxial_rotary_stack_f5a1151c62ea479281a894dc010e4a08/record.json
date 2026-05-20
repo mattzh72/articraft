@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_coaxial_rotary_stack_f5a1151c62ea479281a894dc010e4a08",
   "created_at": "2026-03-29T04:00:44Z",
   "updated_at": "2026-04-01T10:03:28Z",
@@ -22,16 +22,17 @@
     "prompt_preview": "A nested ring turntable with a low platter, a thick intermediate ring, and a compact upper fixture cup carried on the same upright centerline. The housings s..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "1f4452cda406bc3e3feab354f9aa8447abe61622058c05d5aa92a38d058b42c2",
-    "model_py_sha256": "c2c7bb05257be06161e13103a769a48a53c1ad75e8e8ff533d6a98cc25be83c6"
+    "model_py_sha256": "bf65f7486782858fbf686751fdfcd4a08bd572190739cc121c91ae3a37316edf"
   },
   "collections": [
     "dataset"
@@ -39,5 +40,12 @@
   "author": "mattzh72",
   "rated_by": "mattzh72",
   "secondary_rating": 5,
-  "secondary_rated_by": "Zhaomou Song"
+  "secondary_rated_by": "Zhaomou Song",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_coaxial_rotary_stack_f5a1151c62ea479281a894dc010e4a08",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

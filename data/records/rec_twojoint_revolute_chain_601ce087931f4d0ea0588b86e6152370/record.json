@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_twojoint_revolute_chain_601ce087931f4d0ea0588b86e6152370",
   "created_at": "2026-03-30T17:57:46Z",
   "updated_at": "2026-04-06T01:42:14Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A boxed industrial two-joint revolute chain. A reinforced base cheek supports deeper-section links with visible pin bosses, and the final link terminates in..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "268956ee43d0942876e8100f0b3f5620593ccb7a6ee0c31b8dfaa18212e1d125",
-    "model_py_sha256": "2c96478b64b8fd5268719ca8c83d22f2ca335e2a95a6192284dc0c15a6f31140"
+    "model_py_sha256": "eb337aeec1a8a2282e9d8a1abce492a81b3777792f3900f29905d0eb5544683a"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_twojoint_revolute_chain_601ce087931f4d0ea0588b86e6152370",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

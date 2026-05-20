@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_jet_engine_ad0120c0d2044068a41c16862a2b8bdf",
   "created_at": "2026-04-27T12:31:45Z",
   "updated_at": "2026-04-28T07:45:53Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A realistic, highly detailed jet engine with a convincing nacelle, intake, fan assembly, core, and exhaust structure. The fan and any standard exposed mechan..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "634cddfd630be4c0a9ecae27ea286e8f73d758a87015e5e802c97ae440417cc7",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_jet_engine_ad0120c0d2044068a41c16862a2b8bdf",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

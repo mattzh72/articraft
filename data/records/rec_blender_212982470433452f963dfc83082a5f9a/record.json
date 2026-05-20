@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_blender_212982470433452f963dfc83082a5f9a",
   "created_at": "2026-04-03T23:44:02Z",
   "updated_at": "2026-04-04T10:32:32Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A cold-press slow juicer with a wide rectangular base, a large hopper funnel on top, and an auger chamber. The hopper lid opens on a revolute hinge at the li..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "bf24a9b6910b1a5d946c6daa5db33f6912721d85d7a2611a5e121b69765f04af",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_blender_212982470433452f963dfc83082a5f9a",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

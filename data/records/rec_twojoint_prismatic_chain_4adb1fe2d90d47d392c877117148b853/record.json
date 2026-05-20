@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_twojoint_prismatic_chain_4adb1fe2d90d47d392c877117148b853",
   "created_at": "2026-04-03T21:46:47Z",
   "updated_at": "2026-04-06T01:26:08Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A nested two-carriage transfer chain. A fixed guide frame carries a broad first carriage, and the first carriage carries a smaller output carriage. The carri..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "771c61833c7b3ad46b86b14d4a8d38a29550d0cd10f0af7dfa73c894552b4d91",
-    "model_py_sha256": "a026d938abe233671466322a4c35919cc811278646ba98e7ff6efb0b318e79e1"
+    "model_py_sha256": "f7f0e41062ea4470632a13ebbd87e3bfa3c78e8a50564abdc1179faf75115cf9"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_twojoint_prismatic_chain_4adb1fe2d90d47d392c877117148b853",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

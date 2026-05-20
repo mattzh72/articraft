@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_wheelie_bin_with_hinged_lid_72bbed106fa3404192b6be926d6ad5e8",
   "created_at": "2026-04-27T03:09:04Z",
   "updated_at": "2026-04-27T08:05:16Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "Design a retrofit/legacy-inspired Wheelie bin with hinged lid that blends old-school construction cues with modern reliability. Keep the core as a wheeled bi..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "c894e4dbe3c0bcf7470fa9830e5e5f77590a3624e1c0fbd61ed0eb7cd0c6bec9",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_wheelie_bin_with_hinged_lid_72bbed106fa3404192b6be926d6ad5e8",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

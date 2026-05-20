@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_single_continuous_rotary_shaft_1b3793c51b97493db4b50b8f25c64ef5",
   "created_at": "2026-04-02T16:32:45Z",
   "updated_at": "2026-04-06T01:34:12Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "An under-slung rotary shaft unit. A top bracket supports a short shaft between two hanging bearings so the grounded support remains visually distinct from th..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "4a964fea008b1a14b7bacd91d46f016e0cd19077b4bd76a197fb1356714d6417",
-    "model_py_sha256": "65bbd055ffa04ee4e88923973b04f39e99982e0f1506ea2a6ed08bc1abe1f108"
+    "model_py_sha256": "573bdf781df3feca2244da2be7fc98cea1af4e40111d18e160b01c239767dfc1"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_single_continuous_rotary_shaft_1b3793c51b97493db4b50b8f25c64ef5",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_hand_truck_dolly_1c2c2ed5d8aa4c229a3316976ce68d09",
   "created_at": "2026-04-04T14:26:47Z",
   "updated_at": "2026-04-05T13:22:36Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A folding luggage hand truck with telescoping handle rails. The compact frame has two inset wheels, a hinged toe plate at the bottom, and nested handle tubes..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "be8c24764a1f8b0db18bd17ba14ff7e3979d0f747ff4399e180c0c713970c32f",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_hand_truck_dolly_1c2c2ed5d8aa4c229a3316976ce68d09",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

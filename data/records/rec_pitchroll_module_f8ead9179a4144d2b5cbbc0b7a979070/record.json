@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_pitchroll_module_f8ead9179a4144d2b5cbbc0b7a979070",
   "created_at": "2026-03-31T17:20:51Z",
   "updated_at": "2026-03-31T18:47:05Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A compact service pitch-roll head. A broad grounded body supports a compact outer frame and a smaller inner cradle with simple hard edges. The head uses one..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "e81aade5e7a8c59d17177c42290c254ea975b7daf28b31ae54edd45f5fb5184d",
-    "model_py_sha256": "601d2a74c3e1eaa6b86697911ad0dac278469ed366ff6162e0870d40319c6277"
+    "model_py_sha256": "bdcd918f66cf969f12050bde02d6963b8992d47d6d719c4c0de953e33a937667"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_pitchroll_module_f8ead9179a4144d2b5cbbc0b7a979070",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

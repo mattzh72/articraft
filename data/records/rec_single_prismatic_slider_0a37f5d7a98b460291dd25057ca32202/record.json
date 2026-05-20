@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_single_prismatic_slider_0a37f5d7a98b460291dd25057ca32202",
   "created_at": "2026-04-29T08:08:50Z",
   "updated_at": "2026-04-29T08:29:07Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "Create a realistic sliding latch bolt. Geometry/details required: fixed latch housing, rectangular sliding bolt, guide slots, raised knob, strike-side receiv..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
     "cost_json": null,
-    "inputs_dir": "inputs"
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "01e87cc7212d56450e1753d44f0e53a13cb4396c04753c58e89a07cb70e7fbfc",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_single_prismatic_slider_0a37f5d7a98b460291dd25057ca32202",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_threejoint_prismatic_chain_df40f1ea6d55462ebb6c5b402888504a",
   "created_at": "2026-03-29T04:00:44Z",
   "updated_at": "2026-04-01T10:03:53Z",
@@ -22,16 +22,17 @@
     "prompt_preview": "A compact ram stack with a base housing, three nested rectangular sleeves, and a flat end plate at the far tip. The sleeves should read as rigid sliding stag..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "d372565ddc67d4eda530de9a59d055dc1859cdbae57a50bb2476274f1f26350e",
-    "model_py_sha256": "15dd298d47ac64065ec7e8dcf2a77b30df6b7150b29e22de1b643a8aa483ec49"
+    "model_py_sha256": "6e002e8c38ac8182ca0f34b7f3260d14e71a198da6cf9235bfa0f0ec807b986d"
   },
   "collections": [
     "dataset"
@@ -39,5 +40,12 @@
   "author": "mattzh72",
   "rated_by": "mattzh72",
   "secondary_rating": 5,
-  "secondary_rated_by": "Zhaomou Song"
+  "secondary_rated_by": "Zhaomou Song",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_threejoint_prismatic_chain_df40f1ea6d55462ebb6c5b402888504a",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

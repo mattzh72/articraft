@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_car_axles_5df409389cdc43a5894347a3dae24590",
   "created_at": "2026-04-27T02:08:31Z",
   "updated_at": "2026-04-27T10:19:08Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A snowmobile front ski spindle assembly with a vertical king-post, an A-arm wishbone, and a ski mounting saddle. The A-arm inner ends pivot on revolute joint..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "84fd8a4b0e314aa577e0fe21b97ba1cdd8a0c91b979192ee5706ad62d6edce93",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_car_axles_5df409389cdc43a5894347a3dae24590",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

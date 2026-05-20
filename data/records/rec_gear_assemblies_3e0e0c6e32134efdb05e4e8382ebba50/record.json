@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_gear_assemblies_3e0e0c6e32134efdb05e4e8382ebba50",
   "created_at": "2026-04-03T21:46:47Z",
   "updated_at": "2026-04-06T01:24:34Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A open transfer gearbox with countershaft. A base frame carries an input shaft, a countershaft, and an output shaft, each with a simple spur gear and clear b..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "0f2d2698946494dd694e03c465ca2c3069ab059e0918cbcc6a30ac95f0ab3e9b",
-    "model_py_sha256": "4815b3a2a253d91ba184c67db865c4d787ac8a5af5681670139470b0fe86fc1d"
+    "model_py_sha256": "9a6edf5a9c8d03ed3df1a2125f1096fc14c19cc49ad253d51a31101cb511f8ab"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_gear_assemblies_3e0e0c6e32134efdb05e4e8382ebba50",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

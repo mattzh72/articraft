@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_prismaticrevoluteprismatic_chain_8ac303b01ae140b6b92864192010bbc7",
   "created_at": "2026-03-30T17:57:46Z",
   "updated_at": "2026-04-01T10:59:45Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A low-profile slide-link-slide mechanism. A grounded linear guide supports a moving block, the block carries a hinged link frame, and the link frame guides a..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "1de03d36ef530b3cd7db8a3f75871fb6aa5e9de71c5e5cfeb49bc68c175eb3f9",
-    "model_py_sha256": "1ffa2113bf9507c10983009432deccffa9030c428216786e1db734118cf47e65"
+    "model_py_sha256": "d2b94298ca8fadaf17a83d8f24da60e8bfe5a5a8791afefc683b007010d81b82"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_prismaticrevoluteprismatic_chain_8ac303b01ae140b6b92864192010bbc7",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

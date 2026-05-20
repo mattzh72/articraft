@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_lazy_susan_5ad12cf0c64e4a69930ed26af9f96a8e",
   "created_at": "2026-04-27T01:57:44Z",
   "updated_at": "2026-04-27T10:25:19Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A cabinet-insert lazy Susan with two kidney-shaped shelves on a common vertical shaft. The two shelves are mounted at different heights on a central pole ins..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "544e8f8229e78d3f0e7c809550f948dfcbdfcd4cd37da2c2633b930572e89bdb",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_lazy_susan_5ad12cf0c64e4a69930ed26af9f96a8e",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

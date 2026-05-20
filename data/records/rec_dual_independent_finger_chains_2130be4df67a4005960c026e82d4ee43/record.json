@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_dual_independent_finger_chains_2130be4df67a4005960c026e82d4ee43",
   "created_at": "2026-03-31T17:20:51Z",
   "updated_at": "2026-03-31T18:40:30Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A service gripper built as two digit chains. A dense center body supports two separate fingers with clear pin bosses at each joint and simple fingertip pads...."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "cd774f5b09aedaf68659c0001965d11297937572ed86d33b300e841f3d973680",
-    "model_py_sha256": "69ae5fccc86e0b5b70ea94caa7f9921436a0a28b2bdb52d9382968cf00ee303d"
+    "model_py_sha256": "a635ca1610aaada9835b20478ac3fbbdd5fffcd6abbdbb2aca3917268a773164"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_dual_independent_finger_chains_2130be4df67a4005960c026e82d4ee43",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

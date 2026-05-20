@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_single_yaw_axis_module_cebd87f9b7484a73b55073f0341de4fd",
   "created_at": "2026-03-30T17:57:46Z",
   "updated_at": "2026-04-01T11:01:49Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A compact bench a vertical-axis rotary module. A grounded base plate carries a boxed support, a supported shaft or trunnion set, and a small tooling face wit..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "de89a54c71d495e8e39209f4a5add865e93f40fcf7ca29ce665212a9db3754be",
-    "model_py_sha256": "64b367c56b34a0010c71048ff9c4deb1adf2d2ded2594f17f198cc0bc067921f"
+    "model_py_sha256": "77a64a18e63bd5552e3f2d94c2d60471735846c2dee4b57484853d0f216febac"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_single_yaw_axis_module_cebd87f9b7484a73b55073f0341de4fd",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_folding_arm_chain_7ed3518707b748e4beeadf9361a1dcc7",
   "created_at": "2026-03-29T15:31:29Z",
   "updated_at": "2026-04-01T11:31:55Z",
@@ -22,16 +22,17 @@
     "prompt_preview": "A folding support stay with a fixed root bracket, three flat bar links of different lengths, and a triangular end shoe. The links should overlap cleanly when..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "c71c6933ea101965f6c6091091eb35338102d422fb59ca78daf53b71cfe918ff",
-    "model_py_sha256": "5c31e104a738f90fe427824d231815d42cad5e0486ad58e6eb569cfaed50d3bf"
+    "model_py_sha256": "b2660a55023fa3ed4d8c699df6a4b1351e9557daece649eb77897730f64bac56"
   },
   "collections": [
     "dataset"
@@ -39,5 +40,12 @@
   "author": "mattzh72",
   "rated_by": "mattzh72",
   "secondary_rating": 5,
-  "secondary_rated_by": "Zhaomou Song"
+  "secondary_rated_by": "Zhaomou Song",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_folding_arm_chain_7ed3518707b748e4beeadf9361a1dcc7",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

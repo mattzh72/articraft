@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_shoulderelbowwrist_arm_c38010c773464573b66062600dffee98",
   "created_at": "2026-03-31T17:20:51Z",
   "updated_at": "2026-03-31T18:41:09Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A yaw-shoulder wristed arm. A grounded base pedestal supports an upper arm, a forearm, and a short wrist link ending in a tool flange. The shoulder, elbow, a..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "4ee1ed05d193cdbefd90649bc5cd8e00b621a933612248aa4133af888d3cd357",
-    "model_py_sha256": "e2268ff5d94dcc5e663cbfe491765de83436d69bb12bb1127a005fdaf2d0af53"
+    "model_py_sha256": "1373db5f2e355f1caf660c12d36b2c8032958629ae9282182267b24756acaf0c"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_shoulderelbowwrist_arm_c38010c773464573b66062600dffee98",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

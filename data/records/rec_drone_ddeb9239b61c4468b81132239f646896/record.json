@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_drone_ddeb9239b61c4468b81132239f646896",
   "created_at": "2026-04-03T21:59:14Z",
   "updated_at": "2026-04-04T15:08:30Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A single-rotor helicopter drone with a slim fuselage body, a main rotor mast, and a rear anti-torque tail rotor. The main rotor hub and blade assembly rotate..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "a8e7dce10e59e1a7cfb499a2dc01c4a621b31fe20206acffaf13825be914f7fb",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_drone_ddeb9239b61c4468b81132239f646896",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

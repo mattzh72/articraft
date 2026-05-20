@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_yawpitch_module_9dcc89f2ed544d9a9dfd5dcaac0e56a6",
   "created_at": "2026-04-26T10:01:06Z",
   "updated_at": "2026-04-27T10:43:43Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A bridge-backed yaw-pitch module. A rear support frame carries a compact yaw base and a smaller pitch yoke with a simple output face. The yaw base and pitch..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "2cc2c8edfd6924b21aee7bf84a252fe244b7952e82219f5d607b6e50c2f4d35d",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_yawpitch_module_9dcc89f2ed544d9a9dfd5dcaac0e56a6",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

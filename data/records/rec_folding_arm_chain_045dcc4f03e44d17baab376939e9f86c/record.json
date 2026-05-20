@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_folding_arm_chain_045dcc4f03e44d17baab376939e9f86c",
   "created_at": "2026-03-31T17:20:51Z",
   "updated_at": "2026-03-31T18:33:10Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A bridge-mounted folding arm chain. A fixed bridge support carries a root clevis and a sequence of links whose section sizes taper toward the distal small en..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "fda58f21a2ad7cdb59f6cdb84462f7e7a6cfb7f6d44fa88ae09f8483e9326fa6",
-    "model_py_sha256": "906ad894a3cd4947e603a4ceea467671021dfcc52d1ff3bd2e421eff66a7b72b"
+    "model_py_sha256": "342de7a7fe25b8ca0a4c3a4b4edd0fff3cc03673bf05b5957bed5539c45cfe41"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_folding_arm_chain_045dcc4f03e44d17baab376939e9f86c",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_threejoint_prismatic_chain_152e2958d768418da97bb74628cdda86",
   "created_at": "2026-03-29T15:31:29Z",
   "updated_at": "2026-04-01T11:20:12Z",
@@ -22,16 +22,17 @@
     "prompt_preview": "A nested drawer shuttle with a fixed outer tray, a middle tray, an inner tray, and a small terminal platform. The trays should step inward cleanly so the ser..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "3d5bd0a26296b9147921a7978ade83bad104152579412e23de3b292c90a5ac48",
-    "model_py_sha256": "d9310a0a634662da80934476f6d3e9117785ccf5b2ee560d1f327d095b32ded6"
+    "model_py_sha256": "c3fa4e5afffc293ee578ad652022efdad2ea407a43b8e82391591f2d11b28a2d"
   },
   "collections": [
     "dataset"
@@ -39,5 +40,12 @@
   "author": "mattzh72",
   "rated_by": "mattzh72",
   "secondary_rating": 5,
-  "secondary_rated_by": "Zhaomou Song"
+  "secondary_rated_by": "Zhaomou Song",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_threejoint_prismatic_chain_152e2958d768418da97bb74628cdda86",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_branching_tree_with_three_independent_rotary_branches_89dd7d2b7e484fb0959e46d7f73e2505",
   "created_at": "2026-03-31T17:20:51Z",
   "updated_at": "2026-03-31T18:47:34Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "An under-slung three-branch rotary frame. A top bridge supports three hanging branch arms on separate brackets, making the fixed support read differently fro..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "abf16a13c69e2315a904ef8bb0b207fc7136f1301e03819b46584c33b49fbcc5",
-    "model_py_sha256": "1ca735d4576cf0e17be6d3298aad36a1e846a04c08e962eb014d4979bbb5d24d"
+    "model_py_sha256": "528c6b2636dd9273743efa1b2a1ad8a7ef26266e631e34396884e212dfa54f81"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_branching_tree_with_three_independent_rotary_branches_89dd7d2b7e484fb0959e46d7f73e2505",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

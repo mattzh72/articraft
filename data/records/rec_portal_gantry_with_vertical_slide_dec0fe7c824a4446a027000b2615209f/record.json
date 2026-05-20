@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_portal_gantry_with_vertical_slide_dec0fe7c824a4446a027000b2615209f",
   "created_at": "2026-04-03T21:46:47Z",
   "updated_at": "2026-04-06T01:24:41Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A routing-style portal gantry. Two grounded side frames support a bridge beam that travels on base rails, and a center carriage on the beam carries a vertica..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "f915be483269d2a7d5cc691c8969a8f7a0c4304a57040dd37dfd7d68fb796571",
-    "model_py_sha256": "cd6975ca4c7b8cd90149aa0bedc087ae14e6360a0876c18cdb4b614f1a596333"
+    "model_py_sha256": "ddf29ecff8a92cdcfd25774d4ca69f5fb5c3f3634947baf3733439e3d0ef964a"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_portal_gantry_with_vertical_slide_dec0fe7c824a4446a027000b2615209f",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

@@ -51,16 +51,6 @@ class CollectionStore:
 
     def load_workbench(self) -> dict | None:
         entries_by_id: dict[str, WorkbenchEntry] = {}
-        legacy = self.repo.read_json(self.repo.layout.local_workbench_path())
-        if isinstance(legacy, dict):
-            legacy_entries = legacy.get("entries", [])
-            if isinstance(legacy_entries, list):
-                for item in legacy_entries:
-                    if not isinstance(item, dict):
-                        continue
-                    entry = _workbench_entry_from_payload(item)
-                    if entry is not None:
-                        entries_by_id[entry.record_id] = entry
 
         records_root = self.repo.layout.records_root
         if records_root.exists():
@@ -80,7 +70,7 @@ class CollectionStore:
                 updated_at=_utc_now(),
                 entries=list(entries_by_id.values()),
             ).to_dict()
-        return legacy if isinstance(legacy, dict) else None
+        return None
 
     def ensure_workbench(self) -> dict:
         existing = self.load_workbench()
@@ -133,17 +123,7 @@ class CollectionStore:
 
     def remove_workbench_entries(self, record_id: str) -> bool:
         path = self.repo.layout.record_workbench_entry_path(record_id)
-        removed = False
         if path.exists():
             path.unlink()
-            removed = True
-        legacy = self.repo.read_json(self.repo.layout.local_workbench_path())
-        if isinstance(legacy, dict):
-            entries = list(legacy.get("entries", []))
-            filtered = [entry for entry in entries if str(entry.get("record_id", "")) != record_id]
-            if len(filtered) != len(entries):
-                legacy["entries"] = filtered
-                legacy["updated_at"] = _utc_now()
-                self.repo.write_json(self.repo.layout.local_workbench_path(), legacy)
-                removed = True
-        return removed
+            return True
+        return False

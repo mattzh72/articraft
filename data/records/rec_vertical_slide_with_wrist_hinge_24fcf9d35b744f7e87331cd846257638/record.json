@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_vertical_slide_with_wrist_hinge_24fcf9d35b744f7e87331cd846257638",
   "created_at": "2026-03-29T04:00:44Z",
   "updated_at": "2026-04-01T10:08:50Z",
@@ -22,16 +22,17 @@
     "prompt_preview": "A gantry-carried Z carriage with twin rails, a narrow moving block, and a pitch wrist at the lower end holding a small tool plate. The sliding stage and the..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "176019009bd009fde9a822b4b9ae9ff177a5c68fa8936361ea7c0ca1bc2bf599",
-    "model_py_sha256": "bd91cc496a0674feb7e877e4600830429a3c382fabccb90c592175fc6d8095dc"
+    "model_py_sha256": "c91dcba8dd8bca081de3afbbb95a4b93885858c7b9669e338245426ef9e9e3db"
   },
   "collections": [
     "dataset"
@@ -39,5 +40,12 @@
   "author": "mattzh72",
   "rated_by": "mattzh72",
   "secondary_rating": 3,
-  "secondary_rated_by": "Zhaomou Song"
+  "secondary_rated_by": "Zhaomou Song",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_vertical_slide_with_wrist_hinge_24fcf9d35b744f7e87331cd846257638",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

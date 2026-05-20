@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_twojoint_revolute_chain_1fcd7d6bb67c41689d5cb04996d97473",
   "created_at": "2026-03-31T17:20:51Z",
   "updated_at": "2026-03-31T18:40:17Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "An under-slung two-joint revolute chain. A top support bracket carries the first link below it, and the remaining links hang in sequence to a compact end tab..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "2825c58cc14fd2159a4846abef5c7847a3285b8f053c4b3f15b0f5a20b01325d",
-    "model_py_sha256": "9884e108bcd25e1f67ec260e0145f02a00ed7128a1055abf2f14508e4d0b6226"
+    "model_py_sha256": "08b784fa3e0adeef38d5b9210123ee1f71a638c0db7d26519b0e1eaef8e05b0a"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_twojoint_revolute_chain_1fcd7d6bb67c41689d5cb04996d97473",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

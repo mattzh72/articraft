@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_vertical_slide_with_wrist_hinge_1c8b75ed541f48a3bf079d4d3cfd1fb9",
   "created_at": "2026-03-30T17:57:46Z",
   "updated_at": "2026-04-01T11:14:28Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A service lift module with a wristed face. A grounded mast supports one moving platen, and the platen carries a compact hinged end plate that stays clearly s..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "f123a36d8072ed3f9895e14fcf2262331fa10ca016a8a32f27ef33d2f33ce708",
-    "model_py_sha256": "d5ac98d9add4bff662c147f673487542a52343001ccd9770d3d2dca6f4aa2ebb"
+    "model_py_sha256": "8e46873300d1b71953278d97801c83f6fb9cf0bb3a25c0af23e5af0216333092"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_vertical_slide_with_wrist_hinge_1c8b75ed541f48a3bf079d4d3cfd1fb9",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

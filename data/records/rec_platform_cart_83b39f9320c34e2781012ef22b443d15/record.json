@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_platform_cart_83b39f9320c34e2781012ef22b443d15",
   "created_at": "2026-04-27T03:42:24Z",
   "updated_at": "2026-04-27T06:15:23Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A platform cart with a sliding deck extension under the front edge and four caster assemblies underneath. The main deck is rectangular, and a secondary platf..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "92280ef2afb1f95d50954e2250e635dda5fe403cc446d0c8c5cf6841c04ebe62",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_platform_cart_83b39f9320c34e2781012ef22b443d15",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

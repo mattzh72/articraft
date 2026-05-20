@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_vertical_slide_with_wrist_hinge_69c901ea2a59411a8f7f8080d715d3be",
   "created_at": "2026-03-30T17:57:46Z",
   "updated_at": "2026-04-01T11:00:58Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A wall-backed vertical axis with tilt head. A rigid backplate carries a vertical guide and a moving front carriage with a short hinged output tab. The carria..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "adec072286b0d1a41f813aa858cb41f2abd088a857b2e76bc7ab7891c8f4d5b0",
-    "model_py_sha256": "f5b5662994d1515911a7621ccd7be48c9f5a55eb2331665d9a529e2a3442a764"
+    "model_py_sha256": "ce1653c0008446e8c4bfb977dac80cd96cf5e04163e7a5993524ef798929d942"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_vertical_slide_with_wrist_hinge_69c901ea2a59411a8f7f8080d715d3be",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

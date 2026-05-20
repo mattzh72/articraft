@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_overbed_table_9fed447735de49a7bef507a48629e224",
   "created_at": "2026-04-27T14:06:56Z",
   "updated_at": "2026-04-28T00:13:16Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A hospital overbed table with a C-shaped rolling base, a single telescoping column, a rectangular tray top, and a squeeze-release lever under the front edge,..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "572154178d3a925c126656f944a02205fd7fcc172b63fb78a7c97c1fb9415949",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_overbed_table_9fed447735de49a7bef507a48629e224",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

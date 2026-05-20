@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_single_prismatic_slider_3eba2b0a3e694439be606e0daa14f61e",
   "created_at": "2026-03-29T15:31:29Z",
   "updated_at": "2026-03-30T16:45:42Z",
@@ -22,16 +22,17 @@
     "prompt_preview": "A drawer-like instrument slide with a fixed base channel, a traveling carriage tray, and a blocky front stop feature. The base and carriage should read as on..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "d2d6bcafa0b582177339536f7f75ca5681df52e9ffcbb9b85950dd1099716301",
-    "model_py_sha256": "d64c28977eb1df1c3748bc69e673f910dfb275459466b35941a3e27e375f893f"
+    "model_py_sha256": "7b294a0494d55fc149b419c620018eb6b47e67f9bc7d522369631005fcc69657"
   },
   "collections": [
     "dataset"
@@ -39,5 +40,12 @@
   "author": "mattzh72",
   "rated_by": "mattzh72",
   "secondary_rating": 4,
-  "secondary_rated_by": "RuiningLi"
+  "secondary_rated_by": "RuiningLi",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_single_prismatic_slider_3eba2b0a3e694439be606e0daa14f61e",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

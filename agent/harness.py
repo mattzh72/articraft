@@ -952,7 +952,7 @@ class ArticraftAgent:
         try:
             import aiofiles
 
-            async with aiofiles.open(self.file_path, "r") as file:
+            async with aiofiles.open(self.file_path, "r", encoding="utf-8") as file:
                 return await file.read()
         except Exception:
             return None

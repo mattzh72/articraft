@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_cantilever_articulated_arm_24c67e93e3fa4c3990061124f78ec3a3",
   "created_at": "2026-04-03T21:46:47Z",
   "updated_at": "2026-04-06T01:22:45Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A pedestal cantilever inspection arm. A pedestal base supports a serial arm chain with a deep shoulder link, a slimmer forelink, and a compact wrist block at..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "c62476cc89b570d23694a2993aa0e14a61c6ba21ef41f877c1782d15aec5a9ab",
-    "model_py_sha256": "8bd5ac257199158998364f0d46185f8c330638779248261dddd7a5859ec8e253"
+    "model_py_sha256": "180cf3320a4dd5df0bcc11647d6f11d18db789a8a2ae6b3060fa7d25bac79a3d"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_cantilever_articulated_arm_24c67e93e3fa4c3990061124f78ec3a3",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

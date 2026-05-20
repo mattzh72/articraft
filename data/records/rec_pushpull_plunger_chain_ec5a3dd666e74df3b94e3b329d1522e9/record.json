@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_pushpull_plunger_chain_ec5a3dd666e74df3b94e3b329d1522e9",
   "created_at": "2026-03-30T17:57:46Z",
   "updated_at": "2026-04-01T11:11:25Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A service latch-style plunger assembly. A grounded sleeve supports a sliding plunger, and the plunger nose meets a short output lever mounted in a fork at th..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "cfe0245b272812ff430fa2252cbfeaa08f01f7437acaea603f48561313af619c",
-    "model_py_sha256": "5ad7514c81bd5a0da8afe687e57eec4e63a89a9070035bd8023315a07e2ca09c"
+    "model_py_sha256": "5ba5e69d34cf8deb93ccaae40eedc7ff07fd6fb4de8c8e77579568ab4126e85c"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_pushpull_plunger_chain_ec5a3dd666e74df3b94e3b329d1522e9",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

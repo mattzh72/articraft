@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_missile_launcher_a939f080c56c46a1956ea114a285da0d",
   "created_at": "2026-04-27T03:14:00Z",
   "updated_at": "2026-04-27T07:38:35Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A truck-bed style missile launcher module without the vehicle. A rectangular base frame carries a central slewing ring and an elevation arm that supports a b..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "d9f34b3a709de4c83349f0fff1bd97211ab7d9a418b7d7fcc8d1d04978a96d52",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_missile_launcher_a939f080c56c46a1956ea114a285da0d",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_astronomical_telescope_on_tripod_88b3f04df0bd4fe9a4cda3eb431d8a39",
   "created_at": "2026-04-27T14:10:39Z",
   "updated_at": "2026-04-28T00:02:16Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A Maksutov-Cassegrain telescope on a compact alt-az mount with two revolute axes and a folding aluminium tripod."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "b773dfabd19649ea4a57cf1f9bd38fe0f2e59cd994dc384f3542e0471504e5b9",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_astronomical_telescope_on_tripod_88b3f04df0bd4fe9a4cda3eb431d8a39",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

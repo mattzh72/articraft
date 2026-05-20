@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_desk_with_drawer_a258ae2eeeee4f9bb4f1c0451eac0b17",
   "created_at": "2026-04-03T21:39:23Z",
   "updated_at": "2026-04-04T14:10:28Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A vanity dressing table with a wide rectangular top, two side drawers, and a large hinged mirror above. The mirror pivots on revolute hinges at the left and..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "1aac6afce3cded85d499195fa7c06106cb72819df685d675ddc00507b5e2f28a",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_desk_with_drawer_a258ae2eeeee4f9bb4f1c0451eac0b17",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

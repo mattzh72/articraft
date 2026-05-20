@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_electrical_cabinet_door_3188a1ac28aa44db84cd91c56446610d",
   "created_at": "2026-04-27T02:51:12Z",
   "updated_at": "2026-04-27T08:20:19Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "An outdoor GRP weatherproof enclosure on a pole with a wide rectangular body and a hinged lid. The lid hinges on two revolute knuckles at the lid's rear edge..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "679c4de0f7b22c637b7d07453d6d3b16bf9c7cc6e448ccd38514b65e0ccf90e0",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_electrical_cabinet_door_3188a1ac28aa44db84cd91c56446610d",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

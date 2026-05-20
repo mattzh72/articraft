@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_turnstile_gates_c0b3c5b88fbd45f8b7c5ef363aa6e069",
   "created_at": "2026-04-27T12:41:39Z",
   "updated_at": "2026-04-28T07:45:30Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A realistic, highly detailed Turnstile Gates in a refined premium variant, with a central post, radial gate arms, and bearing-supported rotation hardware tie..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "bba1f3b610eb7226b2b9429e77c92158a3e13fc5a23f6d3f7bb99e9cd526ca9a",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_turnstile_gates_c0b3c5b88fbd45f8b7c5ef363aa6e069",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

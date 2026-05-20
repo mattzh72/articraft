@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_single_continuous_rotary_shaft_c7ebe104a6f148378fc8710d30931bee",
   "created_at": "2026-04-02T16:32:45Z",
   "updated_at": "2026-04-06T01:34:14Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A center-bearing line shaft module. A grounded frame supports a shaft through a deeper center bearing body and lighter end guides so the support hierarchy st..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "adf1348fc53edb406c528e44707803fcebe3b3e8ab679737982cc257f2418da7",
-    "model_py_sha256": "745d935e4ba8a197317c80182f3bbec14f7f60b66e905e9fd9fce04d5c367869"
+    "model_py_sha256": "56399a9fe1a4683ab99f4d593da90671a7c6a3bbdc76412ee94f0c37c3093504"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_single_continuous_rotary_shaft_c7ebe104a6f148378fc8710d30931bee",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

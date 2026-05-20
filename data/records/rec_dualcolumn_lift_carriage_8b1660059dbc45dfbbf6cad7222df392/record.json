@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_dualcolumn_lift_carriage_8b1660059dbc45dfbbf6cad7222df392",
   "created_at": "2026-04-03T21:46:47Z",
   "updated_at": "2026-04-06T01:24:40Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A round-post lift carriage module. A heavy base supports two round guide posts and a broad carriage plate that wraps both posts with separate sleeves. The ca..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "2eb6dd9dfa3f60d912d45754cf7dab4a0c95d4a0bd93b3e81f8c999b62822510",
-    "model_py_sha256": "56c78191ffb4209133b4f862914a62bf22e57fdaa434798290086771d8e47025"
+    "model_py_sha256": "9b382daed914dea286f544aa0dce7e4db3417130798084d946b68758ec82e5df"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_dualcolumn_lift_carriage_8b1660059dbc45dfbbf6cad7222df392",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

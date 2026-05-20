@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "record_id": "rec_roof_vent_tower_with_hinged_flap_47e9a8236bf1404d86d2b6cbe7a4db88",
+  "revision_id": "rev_000001",
+  "created_at": "2026-03-30T16:08:09Z",
+  "prompt_kind": "single_prompt",
+  "prompt_sha256": "424417dd94bf92f942c9c6e03c3e0210d99a3ee85e5ac7605880e7e8704003ad",
+  "source": {
+    "run_id": "run_20260330_160753_925388_20260325-backfill-part3-gpt54-high",
+    "prompt_batch_id": null,
+    "batch_spec_id": "20260325_backfill_part3_gpt54_high",
+    "row_id": "roof_vent_tower_with_hinged_flap_backfill_4",
+    "prompt_index": 28
+  },
+  "generation": {
+    "provider": "openai",
+    "model_id": "gpt-5.4",
+    "thinking_level": "high",
+    "openai_transport": "http",
+    "openai_reasoning_summary": "auto",
+    "max_turns": 50,
+    "max_cost_usd": null
+  },
+  "artifacts": {
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
+    "prompt_series_json": null,
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
+  },
+  "hashes": {
+    "prompt_sha256": "424417dd94bf92f942c9c6e03c3e0210d99a3ee85e5ac7605880e7e8704003ad",
+    "model_py_sha256": "49f455055856e8a55d2a38ee6d27d9ec68f78e19eba7922699ab3cf816f83a43"
+  },
+  "run_summary": {
+    "turn_count": 26,
+    "tool_call_count": 25,
+    "compile_attempt_count": 11,
+    "final_status": "success"
+  },
+  "parent": null,
+  "seed": null,
+  "inherited_inputs": []
+}

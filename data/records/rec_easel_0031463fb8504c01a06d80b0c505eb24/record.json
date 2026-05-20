@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_easel_0031463fb8504c01a06d80b0c505eb24",
   "created_at": "2026-04-12T15:21:18Z",
   "updated_at": "2026-04-12T15:53:04Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A tripod easel with folding legs, a top clamp, and a lower tray plus a side clamp knob for the mast. The three legs rotate on their crown hinges, the top cla..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "702282167cb58f5c66491e379a94235f8a5df60d9a75290f949de4d146a318f9",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_easel_0031463fb8504c01a06d80b0c505eb24",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

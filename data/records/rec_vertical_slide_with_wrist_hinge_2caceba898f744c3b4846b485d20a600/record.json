@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_vertical_slide_with_wrist_hinge_2caceba898f744c3b4846b485d20a600",
   "created_at": "2026-03-30T17:57:46Z",
   "updated_at": "2026-04-01T11:14:03Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A low-profile vertical slide carrying a hinged bracket. A broad lower mount supports a vertical guide stage and a small forward-projecting hinged face on the..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "5335ae8e640ab6160651aa84c0379f229e54ebcfac6f0dee6f1183745a710ac6",
-    "model_py_sha256": "5284478df1088da79598c84d638ecc8af51f5a490919bb12573480ff753f078d"
+    "model_py_sha256": "42a78d05007f4978329f49040683b6b8cefbd5c1dbd8e61cb62d9ac7b36a14e9"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_vertical_slide_with_wrist_hinge_2caceba898f744c3b4846b485d20a600",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_louvered_shutter_assembly_0470c5472ccc4d908162c0b9680f9be5",
   "created_at": "2026-04-27T14:17:36Z",
   "updated_at": "2026-04-27T21:44:30Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "An exterior storm shutter panel with wider slats and a stout outer frame. The single leaf is hinged to one side of the opening, and a vertical linkage bar ne..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "862fe08652b2ab667269b92889208bb1cbd850db5fcea7eea49f3734a97f9aee",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_louvered_shutter_assembly_0470c5472ccc4d908162c0b9680f9be5",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

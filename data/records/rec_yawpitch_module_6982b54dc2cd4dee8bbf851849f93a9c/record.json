@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_yawpitch_module_6982b54dc2cd4dee8bbf851849f93a9c",
   "created_at": "2026-03-31T17:20:51Z",
   "updated_at": "2026-03-31T18:39:47Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A turntable-and-fork yaw-pitch head. A grounded lower stage carries a fork, and the fork supports a compact pitch cradle between its arms. The lower stage ya..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "6556b63ae4b9a339459122d3e9706f2590accfd7aa635e67656983277b6912a7",
-    "model_py_sha256": "a9dff7274144b996101c8720a5a30ffc93ad07fa45f313c49d25f07ffe932638"
+    "model_py_sha256": "ba87daa06aaecd9bc3140adbeae1fe2b6ef73d7ad969e3cbb35dea11df41b046"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_yawpitch_module_6982b54dc2cd4dee8bbf851849f93a9c",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_coaxial_rotary_stack_9bb13f1821ae46fcb3247d98d6c3e5b9",
   "created_at": "2026-04-03T21:46:47Z",
   "updated_at": "2026-04-06T01:25:53Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A pedestal coaxial rotary column. A short pedestal carries a lower table, an elevated middle ring, and a compact top flange all centered on one vertical spin..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "70446e342f561ed13d9213b3dcb65dd68bbf7646245a9cb8b804bb5661974b63",
-    "model_py_sha256": "3f9eb7f3d0e8a3d5bf119ba3b55efe41489ff174c52f69ba73550332a9dbac67"
+    "model_py_sha256": "6959b6e572a84f99a65087710ce63ff65c0aa25b8c8afd267d5208d80ef2da4f"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_coaxial_rotary_stack_9bb13f1821ae46fcb3247d98d6c3e5b9",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

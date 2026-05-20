@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_branching_tree_with_two_independent_rotary_branches_0001",
   "created_at": "2026-03-12T18:18:08Z",
   "updated_at": "2026-04-01T10:30:01Z",
@@ -20,16 +20,17 @@
     "prompt_preview": "A branching mechanism with one base structure feeding two separate revolute arms, each branch moving independently with its own hinge chain."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "44bcaa4494f6de863d5219c33d9b8f079c547b9eff56fdf8bf05debc1e1ebceb",
-    "model_py_sha256": "f238b725600808b4794ea6b2f1dfcca39cfec65792eff3b03fcb34cb345618f2"
+    "model_py_sha256": "41f7943f8ccd0edfb4aec10400713efc64d8a074fe5e221b57da7e2d377f6f08"
   },
   "collections": [
     "dataset"
@@ -37,5 +38,12 @@
   "author": "mattzh72",
   "rated_by": "mattzh72",
   "secondary_rating": 5,
-  "secondary_rated_by": "Zhaomou Song"
+  "secondary_rated_by": "Zhaomou Song",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_branching_tree_with_two_independent_rotary_branches_0001",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

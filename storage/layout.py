@@ -33,10 +33,6 @@ class StorageLayout:
         return self.data_root / "records"
 
     @property
-    def local_root(self) -> Path:
-        return self.data_root / "local"
-
-    @property
     def cache_root(self) -> Path:
         return self.data_root / "cache"
 
@@ -82,9 +78,6 @@ class StorageLayout:
     def batch_spec_path(self, batch_id: str) -> Path:
         return self.batch_specs_root / f"{batch_id}.csv"
 
-    def local_workbench_path(self) -> Path:
-        return self.local_root / "workbench.json"
-
     def dataset_manifest_path(self) -> Path:
         return self.manifests_root / "dataset.json"
 
@@ -102,9 +95,6 @@ class StorageLayout:
 
     def record_dataset_entry_path(self, record_id: str) -> Path:
         return self.record_collections_dir(record_id) / "dataset.json"
-
-    def legacy_record_dataset_entry_path(self, record_id: str) -> Path:
-        return self.record_dir(record_id) / "dataset_entry.json"
 
     def record_workbench_entry_path(self, record_id: str) -> Path:
         return self.record_collections_dir(record_id) / "workbench.json"
@@ -211,7 +201,6 @@ class StorageLayout:
             self.system_prompts_root,
             self.batch_specs_root,
             self.records_root,
-            self.local_root,
             self.manifests_root,
             self.trajectory_unroll_records_root,
             self.trajectory_unroll_staging_root,

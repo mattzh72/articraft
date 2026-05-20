@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_palm_with_multiple_uncoupled_finger_chains_4e9d6f8a9bd644d699d557c01b002624",
   "created_at": "2026-04-04T14:48:57Z",
   "updated_at": "2026-04-05T12:30:32Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A research hand palm with five separate finger chains and a sliding palm-width adjustment stage. The front finger-mount rail is carried on a short sliding st..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "c8b4760c5099c28dde4219c353cb721fe833168d8f88eb13c599dd6b20533985",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_palm_with_multiple_uncoupled_finger_chains_4e9d6f8a9bd644d699d557c01b002624",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

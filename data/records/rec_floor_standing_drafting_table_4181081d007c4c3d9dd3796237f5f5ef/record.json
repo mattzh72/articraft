@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_floor_standing_drafting_table_4181081d007c4c3d9dd3796237f5f5ef",
   "created_at": "2026-04-02T22:48:25Z",
   "updated_at": "2026-04-06T01:30:22Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A floor-standing drafting table with a heavy pedestal base, a telescoping central column, and a rectangular drafting board with a pencil tray below the front..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "b260d463e49963f0c42cbaa898a4ed43e22ff47528ff65243af8b6a62ffa9475",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_floor_standing_drafting_table_4181081d007c4c3d9dd3796237f5f5ef",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

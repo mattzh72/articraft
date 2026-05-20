@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_opposed_twinslide_gripper_a4c2b4ea98ad4746ab802ae0b45e4666",
   "created_at": "2026-03-29T15:31:29Z",
   "updated_at": "2026-04-01T11:24:20Z",
@@ -22,16 +22,17 @@
     "prompt_preview": "A compact precision gripper with a narrow central backbone, paired carriage shoes, and two tapered jaws that meet at a small rectangular work zone. The cente..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "f3cb35ad1d58593a3cb6bb89d8538674454c9ae030c50d953cd0f82bd0f78a4a",
-    "model_py_sha256": "a0edd3bedcb4567556b83daa41604a90dc8cd023d354b3b4e38d85c39942957f"
+    "model_py_sha256": "735aa1582de7b7e28ec5f33ed8bfc1e666304d8965ae5dad397253d60ab53890"
   },
   "collections": [
     "dataset"
@@ -39,5 +40,12 @@
   "author": "mattzh72",
   "rated_by": "mattzh72",
   "secondary_rating": 5,
-  "secondary_rated_by": "Zhaomou Song"
+  "secondary_rated_by": "Zhaomou Song",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_opposed_twinslide_gripper_a4c2b4ea98ad4746ab802ae0b45e4666",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

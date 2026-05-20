@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_studio_spotlight_on_yoke_c3547ee92d634be5bcbab9f86f8c7f10",
   "created_at": "2026-04-12T15:26:53Z",
   "updated_at": "2026-04-12T15:50:00Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A compact spotlight on a tabletop yoke stand with a cylindrical can, a front accessory ring, and a rear rocker switch. The yoke pans on a vertical head joint..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "b96c380a8be2181a1d0a9998b6570b25f17afd840a2668be0ecdd6066f376042",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_studio_spotlight_on_yoke_c3547ee92d634be5bcbab9f86f8c7f10",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

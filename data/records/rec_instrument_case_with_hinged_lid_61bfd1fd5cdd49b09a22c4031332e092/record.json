@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_instrument_case_with_hinged_lid_61bfd1fd5cdd49b09a22c4031332e092",
   "created_at": "2026-04-27T13:14:27Z",
   "updated_at": "2026-04-28T07:24:01Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A long drum-hardware case with a trunk-like body and a full-width hinged lid. The deep rectangular lower shell carries the load volume, the lid opens from th..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "7f1b6ed3f810199c985f8ea33406ce009bc2aa2ba4f1721985a3dec1b741c0f4",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_instrument_case_with_hinged_lid_61bfd1fd5cdd49b09a22c4031332e092",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

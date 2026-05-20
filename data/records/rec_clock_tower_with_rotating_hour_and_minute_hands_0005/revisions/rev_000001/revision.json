@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "record_id": "rec_clock_tower_with_rotating_hour_and_minute_hands_0005",
+  "revision_id": "rev_000001",
+  "created_at": "2026-03-27T12:19:51Z",
+  "prompt_kind": "single_prompt",
+  "prompt_sha256": "be123d45c4c76b8d520ee943eafece3b592429192bcdca713d22431529009174",
+  "source": {
+    "run_id": "run_20260329_135943_801538_e6241884",
+    "prompt_batch_id": null,
+    "batch_spec_id": null,
+    "row_id": null,
+    "prompt_index": null
+  },
+  "generation": {
+    "provider": "openai",
+    "model_id": "gpt-5.4",
+    "thinking_level": "high",
+    "openai_transport": "http",
+    "openai_reasoning_summary": "auto",
+    "max_turns": 50
+  },
+  "artifacts": {
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
+    "prompt_series_json": null,
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
+  },
+  "hashes": {
+    "prompt_sha256": "be123d45c4c76b8d520ee943eafece3b592429192bcdca713d22431529009174",
+    "model_py_sha256": "d87c9e062f82429fbf81f8cfc78bbcee6a8c73eb55a7afff3a9dd5c921b86b75"
+  },
+  "run_summary": {
+    "turn_count": 16,
+    "tool_call_count": 15,
+    "compile_attempt_count": 8,
+    "final_status": "success"
+  },
+  "parent": null,
+  "seed": null,
+  "inherited_inputs": []
+}

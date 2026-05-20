@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_monitor_mount_7f279c1c446a4af580ee558440d9ea43",
   "created_at": "2026-03-31T17:20:51Z",
   "updated_at": "2026-03-31T18:35:30Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A bridge-backed monitor mount. A rigid rear frame carries a lower arm, an upper arm, and a compact display plate, with the head hardware clearly smaller than..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "2fa166ef37c5e69ff1be89c237fbd849d68cc15f8b46e67510878def719e2ad6",
-    "model_py_sha256": "916cc29a705ae9abdab2e88ffb3242981675062742b8262c32805b37a803b9bb"
+    "model_py_sha256": "77fc1f4d5ae215dbb5ff75751451d687a4418f6beec07bd18df419aa65089035"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_monitor_mount_7f279c1c446a4af580ee558440d9ea43",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

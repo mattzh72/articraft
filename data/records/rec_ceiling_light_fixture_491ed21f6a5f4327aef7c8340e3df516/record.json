@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_ceiling_light_fixture_491ed21f6a5f4327aef7c8340e3df516",
   "created_at": "2026-04-27T02:22:31Z",
   "updated_at": "2026-04-27T09:50:18Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A kitchen island multi-pendant track bar with a long rectangular ceiling rail and five adjustable pendant cords. The rail is fixed to the ceiling. Each penda..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "623a960440004a22b1adc6147161f15d1ae69c5c832d13082f3aad8738d2efb8",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_ceiling_light_fixture_491ed21f6a5f4327aef7c8340e3df516",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

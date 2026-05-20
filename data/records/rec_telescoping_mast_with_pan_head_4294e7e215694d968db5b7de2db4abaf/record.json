@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_telescoping_mast_with_pan_head_4294e7e215694d968db5b7de2db4abaf",
   "created_at": "2026-04-03T21:46:47Z",
   "updated_at": "2026-04-06T01:25:37Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A tower mast with pan cartridge. A fixed lower sleeve supports nested telescoping members, and the uppermost member supports a compact rotary cartridge. The..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "8047911064cc80d8fd0a357a565e431aef5ab6127f5cf45445b0fed5cee96752",
-    "model_py_sha256": "c2df14e3a75ce256855b7e12349c211f8244edcaf9c37a73f32c0040d71c971b"
+    "model_py_sha256": "3e696aa24d172eafbe069a2e9cdcac215dfdd20e798e1dcef8f69ba4b754e2f1"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_telescoping_mast_with_pan_head_4294e7e215694d968db5b7de2db4abaf",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

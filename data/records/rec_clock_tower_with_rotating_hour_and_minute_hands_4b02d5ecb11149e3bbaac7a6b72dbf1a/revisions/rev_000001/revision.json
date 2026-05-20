@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "record_id": "rec_clock_tower_with_rotating_hour_and_minute_hands_4b02d5ecb11149e3bbaac7a6b72dbf1a",
+  "revision_id": "rev_000001",
+  "created_at": "2026-04-26T13:44:48Z",
+  "prompt_kind": "single_prompt",
+  "prompt_sha256": "58070e18c6d1accbc199956125be13dcd1b33a95484dac010648b21ce8f318f6",
+  "source": {
+    "run_id": "run_20260426_133558_742008_20260426-avg-rating-gt-4p2-gpt54-prompts-gemini3",
+    "prompt_batch_id": null,
+    "batch_spec_id": "20260426_avg_rating_gt_4p2_gpt54_prompts_gemini31pro_high_2000",
+    "row_id": "clock_tower_with_rotating_hour_and_minute_hands_001",
+    "prompt_index": 45
+  },
+  "generation": {
+    "provider": "gemini",
+    "model_id": "gemini-3.1-pro-preview",
+    "thinking_level": "high",
+    "openai_transport": null,
+    "openai_reasoning_summary": null,
+    "max_turns": 100,
+    "max_cost_usd": 1.5
+  },
+  "artifacts": {
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
+    "prompt_series_json": null,
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
+  },
+  "hashes": {
+    "prompt_sha256": "58070e18c6d1accbc199956125be13dcd1b33a95484dac010648b21ce8f318f6",
+    "model_py_sha256": "b4ca3fce0d2b9be6e34e76c3b2024abf87c67a8bd66793f8338ff295eee43b85"
+  },
+  "run_summary": {
+    "turn_count": 15,
+    "tool_call_count": 17,
+    "compile_attempt_count": 5,
+    "final_status": "success"
+  },
+  "parent": null,
+  "seed": null,
+  "inherited_inputs": []
+}

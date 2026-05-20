@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_panini_press_with_clamshell_lid_22d7c97d61c2485bb01e4f52fbcceca8",
   "created_at": "2026-04-11T23:25:47Z",
   "updated_at": "2026-04-22T08:43:57Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A commercial contact grill with a heavy lower frame, a floating top platen, and a short side browning-control knob, plus a timer knob on the front face. the..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "8a49a4a4576543b139670893e04828a456677df9fe11ef4c48207abd0af8a275",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_panini_press_with_clamshell_lid_22d7c97d61c2485bb01e4f52fbcceca8",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

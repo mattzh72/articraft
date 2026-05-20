@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_mastmounted_fork_carriage_0002",
   "created_at": "2026-03-25T18:37:12Z",
   "updated_at": "2026-04-01T10:28:31Z",
@@ -22,16 +22,17 @@
     "prompt_preview": "Design a realistic, highly detailed mast-mounted fork carriage as a standalone mechanical study assembly for the sdk_hybrid pipeline, with a vertical mast fr..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "f4a177b7037626a95b7645602465f49a7d8c832e9545083f8ea5be2072ce60b4",
-    "model_py_sha256": "1b67271b73c4c8eaf03b6c9fd9b9c80d36260ef66fb24da5d66f3e6b26cea78c"
+    "model_py_sha256": "3b1df20f685c821b420324ec9c407518b3e8773a8a19460f44093dc14f8984da"
   },
   "collections": [
     "dataset"
@@ -39,5 +40,12 @@
   "author": "mattzh72",
   "rated_by": "mattzh72",
   "secondary_rating": 5,
-  "secondary_rated_by": "Zhaomou Song"
+  "secondary_rated_by": "Zhaomou Song",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_mastmounted_fork_carriage_0002",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

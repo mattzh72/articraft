@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_cash_register_7c2a950953a54de0be06a463eae1316f",
   "created_at": "2026-04-11T07:35:31Z",
   "updated_at": "2026-04-11T08:21:07Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A countertop cash register with a wedge-shaped control body, a front cash drawer, and a rear customer display on a short neck. The drawer slides prismaticall..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "955c6cad8a4e51da859f37980486985904a7e7ca4a180de2ab8b9d20d4d4a629",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_cash_register_7c2a950953a54de0be06a463eae1316f",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_stove_top_c6c1c951fa0548d5ad5760729f8b6836",
   "created_at": "2026-04-12T14:18:22Z",
   "updated_at": "2026-04-22T08:32:07Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A two-burner tabletop gas stove top with a rectangular body, a hinged top cover, and a separate latch lever at the front edge. The top cover rotates upward o..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "4fce6b26ce221354de5ef6c6d1853f0fcf463fe3ac722c2f747caf5fcc169679",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_stove_top_c6c1c951fa0548d5ad5760729f8b6836",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

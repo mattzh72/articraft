@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_fingerlike_phalanx_chain_877656b3c2c9436db5c2a8e56a95069b",
   "created_at": "2026-03-31T17:20:51Z",
   "updated_at": "2026-03-31T18:40:32Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A broad-knuckle articulated finger. A palm-side base block supports three tapered digit segments that decrease in size toward the tip. The three digit segmen..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "f81f303e4d1dc0bc69abf03ca150b7c6d79a07b5a01640b0cac53379c434e64c",
-    "model_py_sha256": "786b027734b03b152396a0e57e616848407a643c999d9e6e1e61ee827f7940d9"
+    "model_py_sha256": "5874e16d6d812338fb088869f3fa1268b1df00e68749e323089da2dc5cea7d58"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_fingerlike_phalanx_chain_877656b3c2c9436db5c2a8e56a95069b",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_fingerlike_phalanx_chain_769b5c9cfcb64cbd9ee9447a71f23e49",
   "created_at": "2026-04-27T02:51:13Z",
   "updated_at": "2026-04-27T08:28:13Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A finger-like phalanx chain. A grounded knuckle block carries three tapered phalanx links with clear side cheeks and pin joints, ending in a blunt fingertip..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "a844242a1e0ab76455dd9065e891a19d4578bcfcff7043e853d06032b70622cd",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_fingerlike_phalanx_chain_769b5c9cfcb64cbd9ee9447a71f23e49",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

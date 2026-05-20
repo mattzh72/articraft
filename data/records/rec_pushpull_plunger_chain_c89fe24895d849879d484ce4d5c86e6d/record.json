@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_pushpull_plunger_chain_c89fe24895d849879d484ce4d5c86e6d",
   "created_at": "2026-03-29T04:00:44Z",
   "updated_at": "2026-04-01T10:09:38Z",
@@ -22,16 +22,17 @@
     "prompt_preview": "An ejector-style plunger stack with a base block, nested tubular guides, and three aligned rod sections stepping down in diameter toward the tip. The guide b..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "419e25cba3b52edb07cd39d5abfddc793f24d1b1f5d12b67ab73eacc9009dd53",
-    "model_py_sha256": "b3f3bf92ec4c7cd08e30981f9524e1eee10da33146447acda8ac654a279fafd9"
+    "model_py_sha256": "710174236f235b2aaf3b8de412accbde69f373a25d2f936e44195441ba7b72e9"
   },
   "collections": [
     "dataset"
@@ -39,5 +40,12 @@
   "author": "mattzh72",
   "rated_by": "mattzh72",
   "secondary_rating": 5,
-  "secondary_rated_by": "Zhaomou Song"
+  "secondary_rated_by": "Zhaomou Song",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_pushpull_plunger_chain_c89fe24895d849879d484ce4d5c86e6d",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

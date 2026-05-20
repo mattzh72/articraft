@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_cantilever_articulated_arm_2b4ca8d07744455489bdaea75d988452",
   "created_at": "2026-03-30T17:57:46Z",
   "updated_at": "2026-04-06T01:42:24Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "An open-frame cantilever arm assembly. A grounded pedestal supports a long first link, a shorter second link, and a wrist plate, with the links sized to read..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "2c055121bb328d6920b01da7a2faeaab699973ce0a9d1b974cd54975c66ec50e",
-    "model_py_sha256": "66c53bcc55f3ed1af281a7cf20fe31007fc80ebd24fdc5437614f501aaa20f99"
+    "model_py_sha256": "0b6e7bd8a4b5a1f1a4c511a9ba55d74e4584ee3eedb9b8842890d7043149a132"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_cantilever_articulated_arm_2b4ca8d07744455489bdaea75d988452",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

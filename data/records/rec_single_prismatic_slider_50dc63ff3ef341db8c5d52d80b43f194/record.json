@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_single_prismatic_slider_50dc63ff3ef341db8c5d52d80b43f194",
   "created_at": "2026-03-30T17:57:46Z",
   "updated_at": "2026-04-01T11:10:02Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A low-profile shuttle axis. A broad base plate supports a shallow rail set and a boxy moving shuttle with visible bearing length and stop hardware at both en..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "3f2b5a9b08e56665c435dd69d6bf88dbaa16af5f611728553e98852aba80cb67",
-    "model_py_sha256": "10605fd9fb04eb6a4a3ed738bc54b50531b58d6ccad96e6fc3d5c7365278dd5e"
+    "model_py_sha256": "985f08d472a54ef7ab7ba2f36477d35a9524f4ddfa25e552decd1d84148ec41c"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_single_prismatic_slider_50dc63ff3ef341db8c5d52d80b43f194",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

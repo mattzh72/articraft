@@ -1,0 +1,51 @@
+{
+  "schema_version": 3,
+  "record_id": "rec_create-a-realistic-articulated-folding-chair-wit_20260517_210240_446613_c973b101",
+  "created_at": "2026-05-17T21:02:40Z",
+  "updated_at": "2026-05-17T21:23:47Z",
+  "rating": 3,
+  "secondary_rating": null,
+  "author": "JamesEverett28",
+  "rated_by": "JamesEverett28",
+  "secondary_rated_by": null,
+  "kind": "generated_model",
+  "prompt_kind": "single_prompt",
+  "category_slug": "folding_chair",
+  "source": {
+    "run_id": "run_20260517_210240_446613_c973b101",
+    "prompt_batch_id": null,
+    "batch_spec_id": null,
+    "row_id": null,
+    "prompt_index": null
+  },
+  "sdk_package": "sdk",
+  "provider": "openai",
+  "model_id": "gpt-5.5-2026-04-23",
+  "display": {
+    "title": "Create a realistic articulated folding chair with hinged legs and a foldable backrest.",
+    "prompt_preview": "Create a realistic articulated folding chair with hinged legs and a foldable backrest."
+  },
+  "artifacts": {
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
+    "prompt_series_json": null,
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
+  },
+  "hashes": {
+    "prompt_sha256": "4871f281dc64a6d2211006d30e9a727643934db530f748519535c790630464bc",
+    "model_py_sha256": "aa9fbb5eeaf0ae2cd11e5c77b0039a6ad1a805401c8a280258b6954fc65de808"
+  },
+  "collections": [
+    "dataset"
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_create-a-realistic-articulated-folding-chair-wit_20260517_210240_446613_c973b101",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
+}

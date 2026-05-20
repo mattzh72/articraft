@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_vane_array_with_independent_pivots_f2c41eaf72944c86a621ec846c158223",
   "created_at": "2026-04-01T18:09:34Z",
   "updated_at": "2026-04-06T01:35:31Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A fork-backed louver array. A rear support frame carries a stack of parallel slats whose supports are visible at both ends. The slats articulate as independe..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "807d1301164a71083931a316f4b1843fb2f33f312db110d9dda6718ba83887f9",
-    "model_py_sha256": "5d93b2f90d7d10dee183d3db4f1dc042d81f0f5e53e33c548d79a9a4ffa6a013"
+    "model_py_sha256": "9bff83a20fe782f6d821ab910aaa56a1eb28a2c60cc5129aef7349d1c6654142"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_vane_array_with_independent_pivots_f2c41eaf72944c86a621ec846c158223",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

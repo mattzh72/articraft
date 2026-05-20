@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_elevator_e1f10dacee8a44cc9804b7353dfcbe07",
   "created_at": "2026-04-03T22:23:40Z",
   "updated_at": "2026-04-04T15:34:09Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A glass panoramic elevator with a rectangular car and a sliding door panel on a vertical rail system. The car slides prismatically along two vertical guide r..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "147eba6fd3e901985de0621ead59fd72141dfb2c7622c86613b0e4aad71df858",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_elevator_e1f10dacee8a44cc9804b7353dfcbe07",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

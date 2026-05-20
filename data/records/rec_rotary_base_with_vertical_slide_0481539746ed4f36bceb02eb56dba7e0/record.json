@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_rotary_base_with_vertical_slide_0481539746ed4f36bceb02eb56dba7e0",
   "created_at": "2026-04-03T21:46:47Z",
   "updated_at": "2026-04-06T01:21:06Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A pan-base Z-slide module. A fixed lower rotary table carries an upright guide frame with a compact moving head. The rotary table is a revolute joint about v..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "2e713674af0660965833289ceae38594970b9d539f2713aababdfe66652dcfe4",
-    "model_py_sha256": "881d643e9781de92818947096b1c485f885075d7d32869fd418adb7eead14222"
+    "model_py_sha256": "22e5bea347390f30876fbb77cc02a102688900883750fedeb26deb12a7778bf5"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_rotary_base_with_vertical_slide_0481539746ed4f36bceb02eb56dba7e0",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

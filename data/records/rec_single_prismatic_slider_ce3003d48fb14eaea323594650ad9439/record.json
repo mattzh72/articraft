@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_single_prismatic_slider_ce3003d48fb14eaea323594650ad9439",
   "created_at": "2026-04-02T16:32:45Z",
   "updated_at": "2026-04-06T01:34:19Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A raised guideway slide. A short pedestal supports an elevated straight guide with one carriage riding on top of it. The carriage is one prismatic joint alon..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "3bbee5bf8b613ceaaabdf0b65e95df386916a4997c1a960ba937e65951b44bc0",
-    "model_py_sha256": "508195b899283b1cf740e126b65fbca915cec85f5f31ace35c49c614cbcacc36"
+    "model_py_sha256": "bbeaa350673f8e013d3196e92eee149c6a5993705b3295b3016199a9bdaa9326"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_single_prismatic_slider_ce3003d48fb14eaea323594650ad9439",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

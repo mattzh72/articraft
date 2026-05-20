@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_yawpitchroll_wrist_a6283d5aed6c4768a862e9107c62a66e",
   "created_at": "2026-04-27T02:13:18Z",
   "updated_at": "2026-04-27T10:02:05Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A yaw-pitch-roll wrist module. A grounded base yoke carries a yaw stage, the yaw stage carries a pitch cradle, and the pitch cradle carries a compact roll ca..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "e7d38d442710d12f043e0017908e6ecf00e7c233748a3a2f0a17edb80b92f62e",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_yawpitchroll_wrist_a6283d5aed6c4768a862e9107c62a66e",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

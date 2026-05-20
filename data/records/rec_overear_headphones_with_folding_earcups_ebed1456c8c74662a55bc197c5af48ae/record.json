@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_overear_headphones_with_folding_earcups_ebed1456c8c74662a55bc197c5af48ae",
   "created_at": "2026-03-28T13:52:33Z",
   "updated_at": "2026-04-01T16:23:41Z",
@@ -22,12 +22,13 @@
     "prompt_preview": "A pair of over-ear headphones with a padded headband and two circular earcups. Each earcup is carried by a short yoke at the end of a headband arm, and each..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "9cb0d53044b1a00df1e7c99fdc45dbcc03646b178333c8c066b7545977f574fa",
@@ -39,5 +40,12 @@
   "author": "RuiningLi",
   "rated_by": "RuiningLi",
   "secondary_rating": 5,
-  "secondary_rated_by": "shawlyu"
+  "secondary_rated_by": "shawlyu",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_overear_headphones_with_folding_earcups_ebed1456c8c74662a55bc197c5af48ae",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

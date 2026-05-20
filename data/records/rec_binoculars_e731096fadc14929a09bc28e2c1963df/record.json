@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_binoculars_e731096fadc14929a09bc28e2c1963df",
   "created_at": "2026-04-27T02:53:09Z",
   "updated_at": "2026-04-27T08:20:42Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "Giant astronomical observation binoculars on a parallelogram fork mount. Two large cylindrical objective tubes are fixed to a wide bridge cradle. The cradle..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "8d4c2dd0d3938c524554367f7da25e70de9c3bb8cd6ef914b06fb01fd67a73ea",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_binoculars_e731096fadc14929a09bc28e2c1963df",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

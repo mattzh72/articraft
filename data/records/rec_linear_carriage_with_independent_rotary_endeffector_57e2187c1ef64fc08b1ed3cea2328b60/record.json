@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_linear_carriage_with_independent_rotary_endeffector_57e2187c1ef64fc08b1ed3cea2328b60",
   "created_at": "2026-04-03T21:46:47Z",
   "updated_at": "2026-04-06T01:22:26Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A box-rail carriage with rotary nose. A grounded box rail supports a sliding carriage with a short nose spindle mounted to the front face. The carriage is a..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "3e87a15236f1304570006ebec18df70ff8161fd486fb2d825980f743ef2843d8",
-    "model_py_sha256": "9dc33ab23ffd61d2919c9e7a42a4ab6aa3ece959386bbead744dd04a2133dc6e"
+    "model_py_sha256": "83e0a5c70d9c930d03b49756ecbf859ec17d361dc23657d62256aa587db3042b"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_linear_carriage_with_independent_rotary_endeffector_57e2187c1ef64fc08b1ed3cea2328b60",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

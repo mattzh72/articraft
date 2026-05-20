@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_revoluteprismatic_chain_0001",
   "created_at": "2026-03-17T02:39:29Z",
   "updated_at": "2026-04-01T10:34:30Z",
@@ -20,16 +20,17 @@
     "prompt_preview": "A pivoting inspection arm mounted on one revolute base hinge followed by a single linear extension stage."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "c517d4ebf29399c81e75703d09fc6dd7a7abdb3f1dcf30d6190d4d23a79b0d66",
-    "model_py_sha256": "7c1aa3612da57d59b2ef5517f11141aa8c8a66333de39e84c8bbafd9964717fa"
+    "model_py_sha256": "45305c59da858f40c5b0e8f9cc49ef6f4da2b9b452b0056a080bcb1523d93e51"
   },
   "collections": [
     "dataset"
@@ -37,5 +38,12 @@
   "author": "mattzh72",
   "rated_by": "mattzh72",
   "secondary_rating": 5,
-  "secondary_rated_by": "Zhaomou Song"
+  "secondary_rated_by": "Zhaomou Song",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_revoluteprismatic_chain_0001",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

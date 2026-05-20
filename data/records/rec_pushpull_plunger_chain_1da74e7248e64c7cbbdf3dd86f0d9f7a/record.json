@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_pushpull_plunger_chain_1da74e7248e64c7cbbdf3dd86f0d9f7a",
   "created_at": "2026-04-01T18:09:34Z",
   "updated_at": "2026-04-06T01:36:45Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A fork-backed plunger chain. A rear support frame carries a guide sleeve and a short lever in front of it, with the plunger tip driving the lever root. The s..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "ca300f8a84e44e7e5af3372e9cd9c4455deec918c56af7a76e9fabc625ebf1aa",
-    "model_py_sha256": "86db8ea0dc042e37d0224b65038f27c65c4944037d896fd40f3db38940a6ae03"
+    "model_py_sha256": "999e9ceeff5bddae437b2ec94681dc8a94ca5f5d8396a0c8881a2354617e4f64"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_pushpull_plunger_chain_1da74e7248e64c7cbbdf3dd86f0d9f7a",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

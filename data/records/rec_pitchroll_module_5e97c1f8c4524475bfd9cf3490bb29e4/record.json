@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_pitchroll_module_5e97c1f8c4524475bfd9cf3490bb29e4",
   "created_at": "2026-03-29T15:31:29Z",
   "updated_at": "2026-04-01T11:30:27Z",
@@ -22,16 +22,17 @@
     "prompt_preview": "A fork-and-spindle sensor bracket with a base frame, a horizontal pitch yoke, and a cylindrical roll cartridge mounted at the nose of the yoke. The pitch sup..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "bd7d8d9dbde716d3997b8098315ace273238ca129b4fa9c2759136ded996d56b",
-    "model_py_sha256": "e98bbb8c9a2a2e6cf5a85dc08b95885c17d1cb0754184be144d5ee75b8b70f2e"
+    "model_py_sha256": "c5b1dc447a658d939083d6e86880fe9f4ef065823c116264886c0c18b09d5ff2"
   },
   "collections": [
     "dataset"
@@ -39,5 +40,12 @@
   "author": "mattzh72",
   "rated_by": "mattzh72",
   "secondary_rating": 5,
-  "secondary_rated_by": "Zhaomou Song"
+  "secondary_rated_by": "Zhaomou Song",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_pitchroll_module_5e97c1f8c4524475bfd9cf3490bb29e4",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

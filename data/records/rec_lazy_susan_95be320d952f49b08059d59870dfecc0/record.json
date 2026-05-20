@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_lazy_susan_95be320d952f49b08059d59870dfecc0",
   "created_at": "2026-04-29T08:08:50Z",
   "updated_at": "2026-04-29T08:42:55Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "Create a realistic plastic pantry turntable. Geometry/details required: low white base, rotating tray with high rim, molded ribs, front label tab, and center..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
     "cost_json": null,
-    "inputs_dir": "inputs"
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "567fdfdec7fc833e4f0c752d5509ba7babc9666591b4f4260407530751815159",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_lazy_susan_95be320d952f49b08059d59870dfecc0",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

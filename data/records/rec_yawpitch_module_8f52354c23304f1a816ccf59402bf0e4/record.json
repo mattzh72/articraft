@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_yawpitch_module_8f52354c23304f1a816ccf59402bf0e4",
   "created_at": "2026-04-27T02:51:11Z",
   "updated_at": "2026-04-27T09:32:15Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A two-axis gimbal module. A yaw turntable base carries a U-shaped fork, and the fork supports a pitch cradle with a small faceplate between its arms. Yaw is..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "014accfa6ffcb4c6ae367d0cf480f4768cd63a8482f190257684c811de807e82",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_yawpitch_module_8f52354c23304f1a816ccf59402bf0e4",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

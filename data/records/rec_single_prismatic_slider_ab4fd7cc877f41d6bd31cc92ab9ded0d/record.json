@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_single_prismatic_slider_ab4fd7cc877f41d6bd31cc92ab9ded0d",
   "created_at": "2026-04-29T02:52:57Z",
   "updated_at": "2026-04-29T04:39:31Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "Create a realistic rack-like linear carriage. Geometry/details required: flat base, two parallel rails, central sliding carriage, small bearing blocks, bolt..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
     "cost_json": null,
-    "inputs_dir": "inputs"
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "e17ddc8a8767d256c71096a473b09bc6cb2b122d690abf462022529a1857f2f3",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_single_prismatic_slider_ab4fd7cc877f41d6bd31cc92ab9ded0d",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

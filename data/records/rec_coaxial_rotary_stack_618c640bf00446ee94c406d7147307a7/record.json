@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_coaxial_rotary_stack_618c640bf00446ee94c406d7147307a7",
   "created_at": "2026-04-03T21:46:47Z",
   "updated_at": "2026-04-06T01:22:34Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A wafer-style coaxial stage stack. A broad lower platter supports two thinner upper decks on a common shaft, and each deck remains visually distinct as its o..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "715b7d25bf6395e3c6ed0114a90ab8dbd9d12eca97f834c538b2e30dec9eed5d",
-    "model_py_sha256": "6b7ddba7d3b45e8ca1bb2262aefbe44ccb2417d18cb76d353e3aad4b911336e9"
+    "model_py_sha256": "03f704a7fac7d4b181fa1e4312e5d018bb14b9d9f77f4aa9c2811a4b325d224c"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_coaxial_rotary_stack_618c640bf00446ee94c406d7147307a7",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

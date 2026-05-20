@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_graphics_card_with_cooling_fans_21b89290f63a470e994dc098fbef2ab0",
   "created_at": "2026-03-28T13:45:33Z",
   "updated_at": "2026-04-01T14:32:11Z",
@@ -22,12 +22,13 @@
     "prompt_preview": "A large triple-fan graphics card with a rigid backplate and an angled outer shroud. The flat card body supports three evenly spaced fan openings over the hea..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "8a65f46a14adf8cf2c54280c93d6e0dec163afc76aeed77ca44560bc0c4aade9",
@@ -39,5 +40,12 @@
   "author": "RuiningLi",
   "rated_by": "RuiningLi",
   "secondary_rating": 4,
-  "secondary_rated_by": "shawlyu"
+  "secondary_rated_by": "shawlyu",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_graphics_card_with_cooling_fans_21b89290f63a470e994dc098fbef2ab0",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

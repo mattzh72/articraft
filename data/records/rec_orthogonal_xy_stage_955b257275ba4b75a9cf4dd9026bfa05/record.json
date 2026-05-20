@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_orthogonal_xy_stage_955b257275ba4b75a9cf4dd9026bfa05",
   "created_at": "2026-03-30T17:57:46Z",
   "updated_at": "2026-04-01T11:08:54Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A low-profile XY positioning module. A broad mounting plate supports a shallow lower slide and a smaller upper cross-slide, keeping the two carriage levels d..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "3bcbed0f12f5b2b1b9c4114f64bc4040d3e939985b9a91c9c3c16d86937628fd",
-    "model_py_sha256": "d9a3844488f443423e0793f463d765b4b09819ee659a6bcf433982375bc5dfea"
+    "model_py_sha256": "b8692cc873ed773a8dc0d511575684b5aa691f3a89471d69cdb96ab1a112b77d"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_orthogonal_xy_stage_955b257275ba4b75a9cf4dd9026bfa05",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

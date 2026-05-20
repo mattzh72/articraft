@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_twostage_telescoping_slide_bd933b522ca7498d9ab6fb06c8c98cbf",
   "created_at": "2026-04-03T21:46:47Z",
   "updated_at": "2026-04-06T01:21:59Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A double-box telescoping slide. A grounded outer section carries a middle box member, and the middle member carries a slim inner member. The slide uses two s..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "d9d26e44098aae91fa8c688cfb62788421913e7b9201a36d20a5faded0e3458e",
-    "model_py_sha256": "e0c9e271ca44f9fb86fcfd99723c6017bf3b650620e4ac2ddb42322f4ef839d5"
+    "model_py_sha256": "6895bd408c2957cb5d469d11ad164164627692c1eb6d27d9bef772761a58deb2"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_twostage_telescoping_slide_bd933b522ca7498d9ab6fb06c8c98cbf",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

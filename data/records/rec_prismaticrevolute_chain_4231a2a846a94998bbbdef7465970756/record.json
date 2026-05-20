@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_prismaticrevolute_chain_4231a2a846a94998bbbdef7465970756",
   "created_at": "2026-04-03T21:46:47Z",
   "updated_at": "2026-04-06T01:22:36Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A slider-and-tab mechanism. A grounded slide frame supports a straight carriage, and the carriage supports a small hinged tab at its leading edge. The carria..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "13991e18a5bfb2d4b3bf13cbd45cba9c54d60b8565d8d9ea5b5f58d9fcd20ea5",
-    "model_py_sha256": "cf2d42050bb0d0f9082b9d60ad143d5299c08ff574d2523e26654e6665ed8ae4"
+    "model_py_sha256": "41c316473edc684d90ddcd6b60715c7e6b7d3ac5dc81d99e1c6f2b00ac407833"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_prismaticrevolute_chain_4231a2a846a94998bbbdef7465970756",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

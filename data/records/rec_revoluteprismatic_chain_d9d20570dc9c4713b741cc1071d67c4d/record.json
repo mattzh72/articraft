@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_revoluteprismatic_chain_d9d20570dc9c4713b741cc1071d67c4d",
   "created_at": "2026-03-31T17:20:51Z",
   "updated_at": "2026-03-31T18:38:52Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A bridge-backed pivot arm with extension nose. A rear support carries a hinged arm, and the arm carries a short telescoping tip. The arm is a revolute joint..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "4ed5676cc2cd63371e41fa7e705741ecd0d5a467e9ae3a680e88d76e1e5e5227",
-    "model_py_sha256": "3d753992fdf8dfa4f99a31f3ed6231f4c635c0b72a9cec47f4da35311e9ced04"
+    "model_py_sha256": "78ab992ff1b2b51cc62165641d5c402107b63a33f5feecca6b5d6c017df46fe5"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_revoluteprismatic_chain_d9d20570dc9c4713b741cc1071d67c4d",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

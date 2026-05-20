@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_box_fan_with_control_knob_6a62e6ff31564c17adb6082393aa4d9c",
   "created_at": "2026-04-27T13:46:36Z",
   "updated_at": "2026-04-28T00:45:45Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A clip-on desk fan with a small square housing gripped by a C-clamp bracket on a revolute swivel joint, a three-blade propeller behind a wire grille on a cen..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "50121e00b67f8bb449b48932b6f99e5d41660f18472ad3b4abb7957e66ab356a",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_box_fan_with_control_knob_6a62e6ff31564c17adb6082393aa4d9c",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

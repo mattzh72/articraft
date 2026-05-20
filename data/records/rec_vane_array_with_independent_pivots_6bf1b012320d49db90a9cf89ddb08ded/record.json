@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_vane_array_with_independent_pivots_6bf1b012320d49db90a9cf89ddb08ded",
   "created_at": "2026-03-30T17:57:46Z",
   "updated_at": "2026-04-01T11:06:58Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A vane array with independent pivots. A grounded frame carries a row of rigid slats or vanes, each supported at its ends by simple side brackets or pivots. E..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "f60f472471c0e7cdd590bcbde8aba1f806cfa8ed4366ab8a5e42ec7f31a5854c",
-    "model_py_sha256": "b8e2873381f280edd216dab5c2a3c3752ada80a512538aa2d30ca9ee25ad486c"
+    "model_py_sha256": "abd48b3cd1c6e524cb2e3fbe2a9867bf404095d88a6a2a5e8bd5ea5ad15ae8a3"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_vane_array_with_independent_pivots_6bf1b012320d49db90a9cf89ddb08ded",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

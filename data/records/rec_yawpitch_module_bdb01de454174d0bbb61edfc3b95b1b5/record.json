@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_yawpitch_module_bdb01de454174d0bbb61edfc3b95b1b5",
   "created_at": "2026-04-02T16:32:45Z",
   "updated_at": "2026-04-06T01:32:19Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A tower-mounted yaw-pitch module. A short pedestal supports a yaw base and a carried pitch yoke, creating a rooted upright silhouette. The base yaws on a ver..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "335b87c4215617c72259d98f6b711641d2627db6073fdbd604690cef1f50aa68",
-    "model_py_sha256": "c8eb7db71e98b2db55efb71d65e3361350ef62cec377b4af3ee9f41cca00452a"
+    "model_py_sha256": "5c4d890bc28dd3f0d42e6d429e2b581400fbac9298ccee73bbafd7fc87520ddd"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_yawpitch_module_bdb01de454174d0bbb61edfc3b95b1b5",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

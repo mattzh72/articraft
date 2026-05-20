@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "record_id": "rec_all_in_one_printer_with_scanner_lid_and_paper_tray_cb7e4f12c514462289f0bfbd9827ee8f",
+  "revision_id": "rev_000001",
+  "created_at": "2026-04-11T18:03:18Z",
+  "prompt_kind": "single_prompt",
+  "prompt_sha256": "ebf3e9cd446a1661b6dde789b227f369c0be7c0cb5ac23175fc3fb9b302e43c1",
+  "source": {
+    "run_id": "run_20260411_180318_024642_20260411-home-appliance-categories-plus15-gpt54-",
+    "prompt_batch_id": null,
+    "batch_spec_id": "20260411_home_appliance_categories_plus15_gpt54_high",
+    "row_id": "aio_printer_plus15_12",
+    "prompt_index": 72
+  },
+  "generation": {
+    "provider": "openai",
+    "model_id": "gpt-5.4",
+    "thinking_level": "high",
+    "openai_transport": "http",
+    "openai_reasoning_summary": "auto",
+    "max_turns": 190,
+    "max_cost_usd": null
+  },
+  "artifacts": {
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
+    "prompt_series_json": null,
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
+  },
+  "hashes": {
+    "prompt_sha256": "ebf3e9cd446a1661b6dde789b227f369c0be7c0cb5ac23175fc3fb9b302e43c1",
+    "model_py_sha256": "588545159eef7f9fd6c687823adb35cc6908bd838527f1868b6fa805d6cec45a"
+  },
+  "run_summary": {
+    "turn_count": 27,
+    "tool_call_count": 30,
+    "compile_attempt_count": 8,
+    "final_status": "success"
+  },
+  "parent": null,
+  "seed": null,
+  "inherited_inputs": []
+}

@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_candy_vending_machine_884d5abcfed449e4bd667d3e3da3eed2",
   "created_at": "2026-04-11T23:47:37Z",
   "updated_at": "2026-04-12T12:19:59Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A twin-globe candy vendor with two clear round bowls mounted side by side above a shared metal base and a central collection cup. Each bowl has its own dispe..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "2b95ad9eb45ba1b3f88f0ea835d5f76f94cb3c4b83316cb6dd37277572e91bd8",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_candy_vending_machine_884d5abcfed449e4bd667d3e3da3eed2",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

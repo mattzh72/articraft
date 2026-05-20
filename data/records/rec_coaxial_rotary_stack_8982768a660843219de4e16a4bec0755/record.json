@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_coaxial_rotary_stack_8982768a660843219de4e16a4bec0755",
   "created_at": "2026-03-28T03:32:30Z",
   "updated_at": "2026-04-01T10:12:40Z",
@@ -22,16 +22,17 @@
     "prompt_preview": "A compact rotary indexing stack. Nested circular stages sit on one vertical shaft with a base turntable, a middle ring, and a top flange for tooling. The bas..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "87316fb62739328d0689edce7894f0c316243aa985fc2dbf485b3f2a1ad37745",
-    "model_py_sha256": "220013987b68e6d332ec223979f86705333e72a1ac51cc52b45af52700000895"
+    "model_py_sha256": "e4c7bfe7ef29f78f9c3775d3c87227ca6b158266830fb9927a59f124b1b6731a"
   },
   "collections": [
     "dataset"
@@ -39,5 +40,12 @@
   "author": "mattzh72",
   "rated_by": "mattzh72",
   "secondary_rating": 5,
-  "secondary_rated_by": "Zhaomou Song"
+  "secondary_rated_by": "Zhaomou Song",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_coaxial_rotary_stack_8982768a660843219de4e16a4bec0755",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

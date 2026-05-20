@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_air_fryer_with_pullout_basket_06ff8882ac1f45f6b590d64ec0ab0d85",
   "created_at": "2026-04-11T18:03:18Z",
   "updated_at": "2026-04-11T18:52:59Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A modern tall air fryer with a side-vented body, a lower pullout basket, and a narrow front control cluster with a selector knob over three preset buttons. T..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "fc719f21d383921187adbd2705044175394960b6544e4bc676c94f43c6b6ee67",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_air_fryer_with_pullout_basket_06ff8882ac1f45f6b590d64ec0ab0d85",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

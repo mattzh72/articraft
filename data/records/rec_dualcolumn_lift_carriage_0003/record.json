@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_dualcolumn_lift_carriage_0003",
   "created_at": "2026-03-25T23:15:42Z",
   "updated_at": "2026-04-01T10:17:36Z",
@@ -22,16 +22,17 @@
     "prompt_preview": "A dual-column lift carriage. Two vertical guide columns are tied by a base and top crosshead, with a rectangular carriage riding between them on four guide b..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "8eb1ff8af1007ebf4fb12d6548ca45fd96768b1bc297b6ec0e68731b929b619f",
-    "model_py_sha256": "95688988c0082844d9a6ad1f01a52d79d67659010962d17e92629145d640a784"
+    "model_py_sha256": "6f394031d6d03b3fb9ac5c6a21d641206577617eb05eaee0626155d9fcc08b5a"
   },
   "collections": [
     "dataset"
@@ -39,5 +40,12 @@
   "author": "mattzh72",
   "rated_by": "shawlyu",
   "secondary_rating": 5,
-  "secondary_rated_by": "Zhaomou Song"
+  "secondary_rated_by": "Zhaomou Song",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_dualcolumn_lift_carriage_0003",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

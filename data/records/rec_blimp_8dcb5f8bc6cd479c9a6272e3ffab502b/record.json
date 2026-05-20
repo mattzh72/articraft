@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_blimp_8dcb5f8bc6cd479c9a6272e3ffab502b",
   "created_at": "2026-04-27T12:51:34Z",
   "updated_at": "2026-04-28T07:37:23Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "An advertising blimp with a cigar-shaped envelope, an underslung gondola, twin side engine nacelles, and a cruciform tail, plus a small wheeled landing gear..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "e388caf3023e19d07ebae56d1fc1cd8a70897fbd6866aea2865d6ad16f500da8",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_blimp_8dcb5f8bc6cd479c9a6272e3ffab502b",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

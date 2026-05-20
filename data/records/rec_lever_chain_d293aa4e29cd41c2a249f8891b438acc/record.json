@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_lever_chain_d293aa4e29cd41c2a249f8891b438acc",
   "created_at": "2026-03-29T04:00:44Z",
   "updated_at": "2026-04-01T10:00:28Z",
@@ -22,16 +22,17 @@
     "prompt_preview": "A compact over-center style lever train with a fixed root bracket, three narrow lever bars, and a slotted end tab on the last member. The joint blocks should..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "3a400f7be7df7aabc9bae26e8d056fa7e4eb46993a06c1c8315c5289ef66270d",
-    "model_py_sha256": "1b0dd092270583c3c3f6401d9ff828b27bc25b5c77f4ec04550f152366a24d68"
+    "model_py_sha256": "425ae0b265aecafde4a546a41cd4eb249df7ae101f24419119bd58ef510f54ec"
   },
   "collections": [
     "dataset"
@@ -39,5 +40,12 @@
   "author": "mattzh72",
   "rated_by": "mattzh72",
   "secondary_rating": 5,
-  "secondary_rated_by": "Zhaomou Song"
+  "secondary_rated_by": "Zhaomou Song",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_lever_chain_d293aa4e29cd41c2a249f8891b438acc",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

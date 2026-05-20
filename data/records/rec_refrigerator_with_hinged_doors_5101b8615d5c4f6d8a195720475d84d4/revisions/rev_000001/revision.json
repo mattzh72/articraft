@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "record_id": "rec_refrigerator_with_hinged_doors_5101b8615d5c4f6d8a195720475d84d4",
+  "revision_id": "rev_000001",
+  "created_at": "2026-04-27T02:53:39Z",
+  "prompt_kind": "single_prompt",
+  "prompt_sha256": "e6f9a8c7f756037c72b90caf7a91d79d5a0952875d3c7080e74b8f6abb2f730f",
+  "source": {
+    "run_id": "run_20260427_013816_361309_20260426-gpt55-gpt54-promising-exact-2k",
+    "prompt_batch_id": null,
+    "batch_spec_id": "20260426_gpt55_gpt54_promising_exact_2k",
+    "row_id": "g55c_1187_refrigerator_with_hinged_doors_47521207",
+    "prompt_index": 1187
+  },
+  "generation": {
+    "provider": "openai",
+    "model_id": "gpt-5.5-2026-04-23",
+    "thinking_level": "high",
+    "openai_transport": "http",
+    "openai_reasoning_summary": "auto",
+    "max_turns": 100,
+    "max_cost_usd": null
+  },
+  "artifacts": {
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
+    "prompt_series_json": null,
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
+  },
+  "hashes": {
+    "prompt_sha256": "e6f9a8c7f756037c72b90caf7a91d79d5a0952875d3c7080e74b8f6abb2f730f",
+    "model_py_sha256": "4bac3e716426fb3a7a284c47f120183d53387c98466af87c44f02cff609b938a"
+  },
+  "run_summary": {
+    "turn_count": 13,
+    "tool_call_count": 15,
+    "compile_attempt_count": 4,
+    "final_status": "success"
+  },
+  "parent": null,
+  "seed": null,
+  "inherited_inputs": []
+}

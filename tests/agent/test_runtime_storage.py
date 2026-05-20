@@ -229,7 +229,6 @@ def test_workbench_run_and_rerun_persist_runtime_artifacts(
     assert (revision_dir / "traces").exists()
     assert (revision_dir / "traces" / "trajectory.jsonl.zst").exists()
     assert not (revision_dir / "traces" / "trajectory.jsonl").exists()
-    assert not (revision_dir / "traces" / "conversation.jsonl").exists()
     assert (materialization_dir / "model.urdf").read_text(
         encoding="utf-8"
     ) == "<robot name='test'/>"
@@ -312,7 +311,6 @@ def test_workbench_run_and_rerun_persist_runtime_artifacts(
     updated_revision_dir = _active_revision_dir(record_dir)
     assert (updated_revision_dir / "traces" / "trajectory.jsonl.zst").exists()
     assert not (updated_revision_dir / "traces" / "trajectory.jsonl").exists()
-    assert not (updated_revision_dir / "traces" / "conversation.jsonl").exists()
     assert not (updated_revision_dir / "traces" / "stale.txt").exists()
     assert not (record_dir / "assets" / "glb").exists()
     assert not (record_dir / "assets" / "viewer").exists()

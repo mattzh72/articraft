@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_coaxial_rotary_stack_0ac53fe2cb354ac397530039e58e7392",
   "created_at": "2026-04-03T21:46:47Z",
   "updated_at": "2026-04-06T01:26:24Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A nested-ring coaxial indexing stack. A heavy lower turntable carries a middle ring and a smaller top flange on one centered spindle, with simple bearing col..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "835c64b5457b5b9bbc2cfadb52e520063fc38d332bbb7134d03bc82378d50f81",
-    "model_py_sha256": "8b850f38cb16d2e73bfe147b0425d12bb85865d19facdee326eb4a0dbabbef5d"
+    "model_py_sha256": "f2a032511dfaf966bdd5620034898c2f3e5b126aee7a965eb9a82c12cfcd2ee7"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_coaxial_rotary_stack_0ac53fe2cb354ac397530039e58e7392",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_lounge_chair_with_independent_backrest_and_footrest_4eb54447562e44dc9817b565112ed829",
   "created_at": "2026-03-29T14:55:23Z",
   "updated_at": "2026-04-01T12:52:57Z",
@@ -22,12 +22,13 @@
     "prompt_preview": "A cinema-style recliner with padded arms, a tall back, and a hinged ottoman-style footrest. The chair body stands on a low base, the backrest mounts on side..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "33bd12b09befdfa81ddedd58feaad426f182cabbdd629ceea4891f5ac11f599a",
@@ -39,5 +40,12 @@
   "author": "RuiningLi",
   "rated_by": "RuiningLi",
   "secondary_rating": 5,
-  "secondary_rated_by": "shawlyu"
+  "secondary_rated_by": "shawlyu",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_lounge_chair_with_independent_backrest_and_footrest_4eb54447562e44dc9817b565112ed829",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

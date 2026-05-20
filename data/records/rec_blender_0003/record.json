@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_blender_0003",
   "created_at": "2026-03-26T10:21:21Z",
   "updated_at": "2026-03-29T11:19:22Z",
@@ -22,16 +22,17 @@
     "prompt_preview": "A heavy commercial countertop blender with a die-cast base and a ventilated rear panel, a tall square-section jar with a molded handle and a lip-lock lid wit..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "8db9beaa9f8d2a51e89c47a2d744b5f94f636838b27c701f3175b9e8b7ec15fd",
-    "model_py_sha256": "3956366dff03aa26151485bd5086ab5491fe1f6695c20fc18688d8d5ebb637c9"
+    "model_py_sha256": "2eb430794f8a67d8d6da18700e11ff89ccdb98d3ffe14af9378e032c1c5168d6"
   },
   "collections": [
     "dataset"
@@ -39,5 +40,12 @@
   "author": "Zhaomou Song",
   "rated_by": "Zhaomou Song",
   "secondary_rating": null,
-  "secondary_rated_by": null
+  "secondary_rated_by": null,
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_blender_0003",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

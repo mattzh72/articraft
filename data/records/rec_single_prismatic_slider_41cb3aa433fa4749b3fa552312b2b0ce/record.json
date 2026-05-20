@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_single_prismatic_slider_41cb3aa433fa4749b3fa552312b2b0ce",
   "created_at": "2026-04-03T21:46:47Z",
   "updated_at": "2026-04-06T01:25:41Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A bridge-guided linear carriage. A grounded bridge frame supports a single carried slider running through a boxed guide channel. The carried slider is one pr..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "6edbe8a30a86812ff8542df51c059992d9474684a99cd74c5b0670051d7c9627",
-    "model_py_sha256": "7e61630a29669253886fd6b118897292a1b2117604b0c4323766819706f8e60f"
+    "model_py_sha256": "f91056c21813c7af4b28a9ff81105967bd88690dbc95bc4eee12793ec35f285e"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_single_prismatic_slider_41cb3aa433fa4749b3fa552312b2b0ce",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_extension_ladder_65d8e72f08fd459e860e83d8017f5cc4",
   "created_at": "2026-04-03T22:04:38Z",
   "updated_at": "2026-04-04T15:37:59Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A work-platform ladder with twin stile rails, rungs, and a top platform that folds flat. The work platform folds on a revolute hinge at the platform rear att..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "29f5af3e53643284e4898c9bf424951f199064c3115d44980be71eb266c2e2a3",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_extension_ladder_65d8e72f08fd459e860e83d8017f5cc4",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

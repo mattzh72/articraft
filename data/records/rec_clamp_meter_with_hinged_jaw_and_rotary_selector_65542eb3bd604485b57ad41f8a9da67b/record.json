@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_clamp_meter_with_hinged_jaw_and_rotary_selector_65542eb3bd604485b57ad41f8a9da67b",
   "created_at": "2026-04-11T23:12:16Z",
   "updated_at": "2026-04-22T14:10:51Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A handheld electrician's clamp meter with a C-shaped jaw, a thick insulated body, and a broad function dial under the display, plus three front buttons below..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "23d15149361cffb489719c0093a8b21ffcdc3889d6d60802ae44e68584efd039",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_clamp_meter_with_hinged_jaw_and_rotary_selector_65542eb3bd604485b57ad41f8a9da67b",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

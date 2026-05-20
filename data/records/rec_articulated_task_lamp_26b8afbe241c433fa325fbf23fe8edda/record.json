@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_articulated_task_lamp_26b8afbe241c433fa325fbf23fe8edda",
   "created_at": "2026-04-12T14:19:13Z",
   "updated_at": "2026-04-22T08:31:14Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A wall-mounted task lamp with a circular wall plate, a short lower arm, a longer upper arm, and a bell shade. The lower arm rotates on a hinge at the wall pl..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "6fa06964bce587db9f0d0b760e0eb9e2df21e818e02986920c9bf30a4efede7c",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_articulated_task_lamp_26b8afbe241c433fa325fbf23fe8edda",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

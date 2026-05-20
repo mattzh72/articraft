@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_cantilever_articulated_arm_0002",
   "created_at": "2026-03-12T18:17:38Z",
   "updated_at": "2026-04-01T10:30:56Z",
@@ -20,16 +20,17 @@
     "prompt_preview": "An overhung mechanical arm with a fixed pedestal and multiple rotary joints reaching outward, using boxed beams and compact actuator housings."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "040afefb97e8d5986b1cabe8ec3c42e112a082a674a99fb5b7c0f885690fab3d",
-    "model_py_sha256": "bf113c859c22466c7e6d7fe1fcac6c4e8a364220df1729306a36ddce7ecffdaa"
+    "model_py_sha256": "ef2567382d60e9b25e3dbccb22e0563b881dd82d409858364c313e0a6099374e"
   },
   "collections": [
     "dataset"
@@ -37,5 +38,12 @@
   "author": "mattzh72",
   "rated_by": "mattzh72",
   "secondary_rating": 4,
-  "secondary_rated_by": "Zhaomou Song"
+  "secondary_rated_by": "Zhaomou Song",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_cantilever_articulated_arm_0002",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

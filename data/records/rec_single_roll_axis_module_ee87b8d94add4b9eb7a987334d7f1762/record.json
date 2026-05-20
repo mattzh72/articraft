@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_single_roll_axis_module_ee87b8d94add4b9eb7a987334d7f1762",
   "created_at": "2026-04-01T18:09:34Z",
   "updated_at": "2026-04-06T01:36:03Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "An under-slung roll-axis spindle module. A top support bracket carries the moving member below it, creating a different silhouette while keeping the same sin..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "2f2b6f9faccb43f02c6091a80d985b9ccfe4000ffce259f62db00af895d5afec",
-    "model_py_sha256": "20bf655d2089c677082106356fae95471a5c4d52970c76e3b5133103b88abc88"
+    "model_py_sha256": "2c214f54ef995b784741b40542e8fb3039b23e30810e43b5302afbe7be92f40a"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_single_roll_axis_module_ee87b8d94add4b9eb7a987334d7f1762",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_louvered_shutter_assembly_a04e2c00b72b418da67df2047e3d0cba",
   "created_at": "2026-04-27T14:07:30Z",
   "updated_at": "2026-04-28T00:11:40Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A cafe-style shutter set with two half-height louvered leaves. The paired leaves are framed panels hinged at the outer sides of the opening, and each panel h..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "e23dce395a50b796ec55cf2d7c61ea9d12d5c5fa28bef35a1f70cc31c9588539",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_louvered_shutter_assembly_a04e2c00b72b418da67df2047e3d0cba",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_single_revolute_hinge_6c6ea65bf4b54f5cb8735c5cd4d4c57d",
   "created_at": "2026-03-29T04:00:44Z",
   "updated_at": "2026-04-01T10:01:12Z",
@@ -22,16 +22,17 @@
     "prompt_preview": "An offset inspection hatch hinge with a short mounting leaf, a taller moving leaf, and a spacer-like barrel that keeps the leaves apart. The hinge geometry s..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "e1f005759bb9e205e151a5a78ebae65b36491047ca78c7d7e48b3f610e2cf3d8",
-    "model_py_sha256": "600d0db709da20c872b2a8de81f7b9b270bdf42ac79a1f78d2b55725028ff6e8"
+    "model_py_sha256": "99128f8d3d8b471a2a404fe6dae730d65afd1e76b8228f114b63ffd22ec91e54"
   },
   "collections": [
     "dataset"
@@ -39,5 +40,12 @@
   "author": "mattzh72",
   "rated_by": "mattzh72",
   "secondary_rating": 5,
-  "secondary_rated_by": "Zhaomou Song"
+  "secondary_rated_by": "Zhaomou Song",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_single_revolute_hinge_6c6ea65bf4b54f5cb8735c5cd4d4c57d",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

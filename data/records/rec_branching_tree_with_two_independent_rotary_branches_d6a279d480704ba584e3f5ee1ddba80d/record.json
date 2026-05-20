@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_branching_tree_with_two_independent_rotary_branches_d6a279d480704ba584e3f5ee1ddba80d",
   "created_at": "2026-03-30T17:57:46Z",
   "updated_at": "2026-04-01T11:03:17Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A pedestal-mounted two-branch tooling tree. A heavy foot and vertical column carry two rotary arms on discrete clamp blocks, and each arm ends in a small rec..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "68c62920496d1ea1fdd2cd61e390b5f62b089c520afe9d55af804d51d9f0b4a4",
-    "model_py_sha256": "a44f406be66a3085c2023c4b0c1e5654ea98897f5dbc09025d0de9b2a9add645"
+    "model_py_sha256": "b4c80af0b086ddeddc1588efdde51962c19f476b747f12f7e971fd23c6e1e383"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_branching_tree_with_two_independent_rotary_branches_d6a279d480704ba584e3f5ee1ddba80d",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

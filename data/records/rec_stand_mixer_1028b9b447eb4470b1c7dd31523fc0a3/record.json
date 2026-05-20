@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_stand_mixer_1028b9b447eb4470b1c7dd31523fc0a3",
   "created_at": "2026-04-05T05:05:29Z",
   "updated_at": "2026-04-05T07:24:49Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A deluxe home-baking stand mixer with a heavy die-cast base, a broad stainless bowl on a front carriage, and a head with a short nose carrying a wire whisk...."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "e07be503304a3719457dde4e481ff0dadab5d5db123640df4626d89f874d3994",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_stand_mixer_1028b9b447eb4470b1c7dd31523fc0a3",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

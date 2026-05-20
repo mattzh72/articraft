@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_revolving_door_d41163fdc1b7409e9bc4dfc813bc81c5",
   "created_at": "2026-04-27T03:09:06Z",
   "updated_at": "2026-04-27T08:06:09Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A high-security two-stage airlock with two separate revolving drum units in sequence. Each drum has its own central post carrying four rectangular panel wing..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "6d6f7912de9343f4f55964f42433a4e684491ae379aa7d4debaf6e08f3415c6d",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_revolving_door_d41163fdc1b7409e9bc4dfc813bc81c5",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_rotary_base_with_vertical_slide_0001",
   "created_at": "2026-03-12T18:28:53Z",
   "updated_at": "2026-04-01T10:34:33Z",
@@ -20,16 +20,17 @@
     "prompt_preview": "A turntable pedestal supporting a Z-axis elevator, with cylindrical base housing, linear guide rails, and a rigid top carriage."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "e91210dc82eb00d8f02ffc064f4b366373190d83954a7c5ffcd6727f34448daf",
-    "model_py_sha256": "19b03abe605ff16bb7d0749f9db36a4d6a6a53071e8cb8d767f35e2c2a440660"
+    "model_py_sha256": "122a39b8e5256c25dac979b773de13bd8ad533448b785154ba8d8aab983e2b17"
   },
   "collections": [
     "dataset"
@@ -37,5 +38,12 @@
   "author": "mattzh72",
   "rated_by": "mattzh72",
   "secondary_rating": 5,
-  "secondary_rated_by": "Zhaomou Song"
+  "secondary_rated_by": "Zhaomou Song",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_rotary_base_with_vertical_slide_0001",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

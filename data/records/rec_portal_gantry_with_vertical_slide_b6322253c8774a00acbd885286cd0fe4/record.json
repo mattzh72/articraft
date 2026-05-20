@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_portal_gantry_with_vertical_slide_b6322253c8774a00acbd885286cd0fe4",
   "created_at": "2026-04-03T21:46:47Z",
   "updated_at": "2026-04-06T01:24:44Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A bridge-and-lift portal module. A grounded base with two side rails supports a moving portal bridge, and the bridge supports a center runner with a vertical..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "7ad27fc90b47326974285611f8cbb5f9df95b9d3afe84211ecbc4c7dc2c41aa2",
-    "model_py_sha256": "122fe943465828123d30f2e479c40b24b895a112147623d1d532781d4df7258b"
+    "model_py_sha256": "7a1d4c68afcdb5983b22d02f976767e1b9be9f1479aba55c6e7b41c5867dc320"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_portal_gantry_with_vertical_slide_b6322253c8774a00acbd885286cd0fe4",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

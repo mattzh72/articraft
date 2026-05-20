@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_air_pump_with_t_handle_8b32414cf1bd4e9d901be3b80d2db394",
   "created_at": "2026-04-04T15:03:15Z",
   "updated_at": "2026-04-05T11:38:00Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A service-station pump with a vertical cylinder and a rotating pressure selector knob. The barrel rises from a heavy base, and a small selector knob is mount..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "4568443b27ee9fc9710d7731ff38d0f0eabddcc6688afabf4ee3fbc8d7f1e402",
-    "model_py_sha256": "18ddd84c545d50f77435edbdafbc1a213e07d20edd9c103270395c5a383a23f7"
+    "model_py_sha256": "9518cdb44af24b5526df6449b5272e56cf2809ba5772ebe557199909d01e6b48"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_air_pump_with_t_handle_8b32414cf1bd4e9d901be3b80d2db394",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_louvered_shutter_assembly_ead0aaf5800345e59e3ee5f8577f177c",
   "created_at": "2026-04-04T14:38:22Z",
   "updated_at": "2026-04-05T13:09:19Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A cafe-style shutter with short upper and lower louvered panels. Each panel is framed independently and mounted to the window surround on side hinges, with l..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "bd31dad88cf3c8bb06cfc265723c40f08f4245bea014d0c8335c99f9ffdb76aa",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_louvered_shutter_assembly_ead0aaf5800345e59e3ee5f8577f177c",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

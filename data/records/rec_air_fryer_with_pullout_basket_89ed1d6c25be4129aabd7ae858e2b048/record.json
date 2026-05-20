@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_air_fryer_with_pullout_basket_89ed1d6c25be4129aabd7ae858e2b048",
   "created_at": "2026-04-11T16:13:01Z",
   "updated_at": "2026-04-22T14:28:56Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A compact round air fryer with a bulbous upper shell, a short pullout drawer, a removable crisping plate inside the basket, and a front control strip with th..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "b47f6541fa0842c9bd08a1a641b680e58e4a0292aa6deec925fc0b89c28897de",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_air_fryer_with_pullout_basket_89ed1d6c25be4129aabd7ae858e2b048",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

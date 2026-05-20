@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "record_id": "rec_camera_lens_0005",
+  "revision_id": "rev_000001",
+  "created_at": "2026-03-27T11:58:03Z",
+  "prompt_kind": "single_prompt",
+  "prompt_sha256": "1ae56fe94c03fcf79ace186d955e76ccb3f332b97ae17ee20df35f988c17ef61",
+  "source": {
+    "run_id": "run_20260326_115111_793307_base-sdk-categories-part1-20260326",
+    "prompt_batch_id": null,
+    "batch_spec_id": "base_sdk_categories_part1_20260326",
+    "row_id": "row_0062",
+    "prompt_index": 62
+  },
+  "generation": {
+    "provider": "openai",
+    "model_id": "gpt-5.4",
+    "thinking_level": "high",
+    "openai_transport": "http",
+    "openai_reasoning_summary": "auto",
+    "max_turns": 50
+  },
+  "artifacts": {
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
+    "prompt_series_json": null,
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
+  },
+  "hashes": {
+    "prompt_sha256": "1ae56fe94c03fcf79ace186d955e76ccb3f332b97ae17ee20df35f988c17ef61",
+    "model_py_sha256": "ab07f1b95dd1d388667bef9fd6cfbc17d45702069512eefa247c22fde7ddf329"
+  },
+  "run_summary": {
+    "turn_count": 9,
+    "tool_call_count": 9,
+    "compile_attempt_count": 3,
+    "final_status": "success"
+  },
+  "parent": null,
+  "seed": null,
+  "inherited_inputs": []
+}

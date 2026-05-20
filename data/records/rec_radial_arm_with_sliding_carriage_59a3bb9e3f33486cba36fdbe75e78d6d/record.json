@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_radial_arm_with_sliding_carriage_59a3bb9e3f33486cba36fdbe75e78d6d",
   "created_at": "2026-03-31T17:20:51Z",
   "updated_at": "2026-04-06T01:40:57Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A side-wall radial arm module. A grounded side plate supports a rotary boss and a straight arm with a compact tool carriage on its face. The rotary boss is a..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "4937ef2544076b4f7b69223b2f37a2c4e221bde50ec2a494516136c3ef04b549",
-    "model_py_sha256": "1a62b9f54b74be37ac5d7e6c3578a96f172f8a49d9276bf554b383edf3a5914f"
+    "model_py_sha256": "e7aa3b5329f505dd9ef663d18d69006a9271a5ea5a4ad09b381ff0113c75ffdb"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_radial_arm_with_sliding_carriage_59a3bb9e3f33486cba36fdbe75e78d6d",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

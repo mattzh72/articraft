@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_dj_equipment_6c95f444461947b9a1e582e600b5173f",
   "created_at": "2026-04-27T03:26:26Z",
   "updated_at": "2026-04-27T07:33:42Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A grid MIDI performance pad controller with a square flat housing and sixty-four pads in an 8x8 grid. Each pad compresses prismatically on short vertical tra..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "25d1e95a98102140c70803aa7d8f8f20faadbad6a2537fda67295ac3a8c41732",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_dj_equipment_6c95f444461947b9a1e582e600b5173f",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

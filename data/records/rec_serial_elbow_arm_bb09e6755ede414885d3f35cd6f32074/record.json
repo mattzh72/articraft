@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_serial_elbow_arm_bb09e6755ede414885d3f35cd6f32074",
   "created_at": "2026-04-27T03:36:44Z",
   "updated_at": "2026-04-27T07:27:43Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A compact serial elbow arm with a grounded shoulder housing, a straight upper link, a broad elbow hub, and a short forearm ending in a rectangular pad. The t..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "974ce532a895fdcfbfa7c8ec9618249a2085c802e4b5f43efe93d34dd0640807",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_serial_elbow_arm_bb09e6755ede414885d3f35cd6f32074",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

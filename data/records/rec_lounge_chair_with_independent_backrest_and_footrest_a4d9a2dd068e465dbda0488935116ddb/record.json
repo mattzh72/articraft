@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_lounge_chair_with_independent_backrest_and_footrest_a4d9a2dd068e465dbda0488935116ddb",
   "created_at": "2026-04-04T14:37:58Z",
   "updated_at": "2026-04-05T12:57:59Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A modern lounge chair with a disc pedestal, a split backrest, and an under-seat leg rest. The wide seat sits on a rotating base, while the main back section..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "b1b4a3061c9b1b3319af6b3a4346419b0dfa5dad7a319d0fbc006386d63915f4",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_lounge_chair_with_independent_backrest_and_footrest_a4d9a2dd068e465dbda0488935116ddb",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

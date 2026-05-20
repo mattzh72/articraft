@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_single_prismatic_slider_ff2b071d22af43aab6ec221783f0f8eb",
   "created_at": "2026-04-29T03:03:59Z",
   "updated_at": "2026-04-29T04:39:34Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "Create a realistic instrument fader slider. Geometry/details required: a shallow control panel slot, sliding fader cap, track rails, tick marks as raised geo..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
     "cost_json": null,
-    "inputs_dir": "inputs"
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "30310a68f68f867cbfe80fd102aa893c32914cad0c75cbb105768c231087482b",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_single_prismatic_slider_ff2b071d22af43aab6ec221783f0f8eb",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

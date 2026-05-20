@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_internet_router_3854aba7d7644cefbb2511f84cf4debc",
   "created_at": "2026-04-04T14:31:59Z",
   "updated_at": "2026-04-05T13:21:31Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A small 4G router with a hinged kickstand and two stub antennas. The upright rectangular body carries the kickstand on the rear face and one short antenna at..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "8f4ec6d605c091c453add76ebbb7ebe537f109d3d41cbc5b41a6fbe6ef738289",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_internet_router_3854aba7d7644cefbb2511f84cf4debc",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

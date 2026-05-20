@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_flatbed_scanner_with_hinged_lid_9d8e8418ce43428aacfee17bbb29c358",
   "created_at": "2026-04-27T02:33:46Z",
   "updated_at": "2026-04-27T09:51:04Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A 3D object scanning platform with a rectangular scanner body, a wide hinged lid on revolute hinges at the rear edge, a rotating object turntable on a contin..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "14cec8788d8bd3e3c6d12c69d4d0d110e829123bc1ebac21f60eab58dea701c7",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_flatbed_scanner_with_hinged_lid_9d8e8418ce43428aacfee17bbb29c358",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

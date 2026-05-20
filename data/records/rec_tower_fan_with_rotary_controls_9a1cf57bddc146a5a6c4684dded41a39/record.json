@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_tower_fan_with_rotary_controls_9a1cf57bddc146a5a6c4684dded41a39",
   "created_at": "2026-04-27T12:54:20Z",
   "updated_at": "2026-04-28T07:28:33Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A slim household tower fan with a narrow vertical body, a rounded base, and two knurled dials on the top cap, plus a separate oscillation button on the top d..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "1e67897f2da9ccec1275d7534277fddee57cbef91c633629cebb381ad2a35e1f",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_tower_fan_with_rotary_controls_9a1cf57bddc146a5a6c4684dded41a39",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

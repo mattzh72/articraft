@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_orthogonal_xy_stage_dd66781fb508477a9c2253f549b034ca",
   "created_at": "2026-04-03T21:46:47Z",
   "updated_at": "2026-04-06T01:25:33Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A lab fixture XY slide block. A grounded lower guide carries a broad carriage, and the carriage supports a transverse upper slide with a compact top deck. Th..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "cba029fc388d74b6484daa7b6c3a63e89676cbc414b6850beffd8c2b2744c3e1",
-    "model_py_sha256": "769686312287147c17147962bfee2d6bc242565d9adad66ce0be8dc57eb5f95e"
+    "model_py_sha256": "fede82277345cd8b1cd4764955384e5772845f4d649a4bd89557a9178560f071"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_orthogonal_xy_stage_dd66781fb508477a9c2253f549b034ca",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

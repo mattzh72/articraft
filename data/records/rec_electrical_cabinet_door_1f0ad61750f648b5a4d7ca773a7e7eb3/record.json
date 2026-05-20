@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_electrical_cabinet_door_1f0ad61750f648b5a4d7ca773a7e7eb3",
   "created_at": "2026-04-01T12:22:57Z",
   "updated_at": "2026-04-04T15:13:28Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A lockable underground pit electrical cabinet with a square low-profile housing, a hinged top lid on two barrel revolute hinges at the lid rear edge, and a r..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "2bd6079025c1680eeca49cd6f46dd22ee15e20f7aaee7747604f87251dd7df8c",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_electrical_cabinet_door_1f0ad61750f648b5a4d7ca773a7e7eb3",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

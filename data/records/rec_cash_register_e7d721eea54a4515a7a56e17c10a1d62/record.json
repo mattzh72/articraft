@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_cash_register_e7d721eea54a4515a7a56e17c10a1d62",
   "created_at": "2026-04-11T23:21:42Z",
   "updated_at": "2026-04-22T14:07:39Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A cafe register with a compact drawer base, a low angled keypad deck, and a small rear display on a short stand, plus a bank of menu keys and a numeric pad o..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "2a981d774c6b00eca7a4a8b394651843cc9e57f936955d56fc4939ea6f115019",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_cash_register_e7d721eea54a4515a7a56e17c10a1d62",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

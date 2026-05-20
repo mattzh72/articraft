@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_prismaticrevoluteprismatic_chain_b9fa26af3a3842beb5da955fbd60ec89",
   "created_at": "2026-03-31T17:20:51Z",
   "updated_at": "2026-03-31T18:33:13Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A side-wall slide with wristed extension. A grounded side plate supports a slide carriage, the carriage supports a hinged body, and the hinged body supports..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "dc45523fac5ffa507ad0d79b406a47577c82caf368da85f8fad16e662a407250",
-    "model_py_sha256": "447fc26da61368d222074e7995b1746a34985af031b941fd9c89487f685407c5"
+    "model_py_sha256": "667d42c8d47657ef27ca82646bac510ca63fafffb9218dbcc93395e8bfbf3f6c"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_prismaticrevoluteprismatic_chain_b9fa26af3a3842beb5da955fbd60ec89",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

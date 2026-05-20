@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_tower_fan_with_rotary_controls_b8d4b87b10a84ad295c13cf65376dff8",
   "created_at": "2026-04-11T23:30:50Z",
   "updated_at": "2026-04-22T08:36:58Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A compact office tower fan with a short rectangular tower, a round base, and a recessed top control cluster with rotary knobs, plus a carry handle integrated..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "df7b028be1b6be6d5fdd9fc3b663b575ecabf5f8a530a36be6f688d783be300d",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_tower_fan_with_rotary_controls_b8d4b87b10a84ad295c13cf65376dff8",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

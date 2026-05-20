@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "record_id": "rec_sliding_window_56eeb8973f174862910cfd4f55eba441",
+  "revision_id": "rev_000001",
+  "created_at": "2026-04-29T08:08:50Z",
+  "prompt_kind": "single_prompt",
+  "prompt_sha256": "52afb80e40f03ffac81e80a840617655a19cea2930936a2e1db60cf70e742fc0",
+  "source": {
+    "run_id": "run_20260429_080849_919375_20260429-openrouter-tencent-hy3-free-easy-50",
+    "prompt_batch_id": null,
+    "batch_spec_id": "20260429_openrouter_tencent_hy3_free_easy_50",
+    "row_id": "sliding_window_003",
+    "prompt_index": 33
+  },
+  "generation": {
+    "provider": "openrouter",
+    "model_id": "tencent/hy3-preview:free",
+    "thinking_level": "high",
+    "openai_transport": null,
+    "openai_reasoning_summary": null,
+    "max_turns": 200,
+    "max_cost_usd": null
+  },
+  "artifacts": {
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
+    "prompt_series_json": null,
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": null,
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
+  },
+  "hashes": {
+    "prompt_sha256": "52afb80e40f03ffac81e80a840617655a19cea2930936a2e1db60cf70e742fc0",
+    "model_py_sha256": "7ba40e677a15318cae0b6417360b83ed5adc4726d499b764e281a5d9aa4ae75f"
+  },
+  "run_summary": {
+    "turn_count": 17,
+    "tool_call_count": 18,
+    "compile_attempt_count": 4,
+    "final_status": "success"
+  },
+  "parent": null,
+  "seed": null,
+  "inherited_inputs": []
+}

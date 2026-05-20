@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_mastmounted_fork_carriage_a77a2a3193304ea7a9323cfa5240df59",
   "created_at": "2026-03-30T17:57:46Z",
   "updated_at": "2026-04-06T01:42:10Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A narrow warehouse fork carriage assembly. A fixed mast structure supports a boxy moving carriage that wraps the rails and carries two spaced forks at its lo..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "2ec2ab548ef6889720d5b8947a247760af21113ef24df7b0727f8890f717f3b3",
-    "model_py_sha256": "fa46180b2a6e90ab71bbcc986c6ed6e1a6d147ad5cebb0527022d6215f398d25"
+    "model_py_sha256": "5d2ed0d40417a63ce7204e4680ef04ae031603660ea2e84b18a61219dffc5edd"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_mastmounted_fork_carriage_a77a2a3193304ea7a9323cfa5240df59",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

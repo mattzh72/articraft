@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_single_continuous_rotary_shaft_9490c89229c64fa7abc5dbc847f17cd7",
   "created_at": "2026-04-03T21:46:47Z",
   "updated_at": "2026-04-06T01:21:47Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A bridge-supported drive shaft. A grounded bridge frame supports a straight rotary shaft in two bearing saddles, with the output end kept visibly distinct fr..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "7ebc8368c14fd99d5542204ac566a3075e7fa8f839b098442d00f4b75c30edc4",
-    "model_py_sha256": "5b481f7b52c8f06d3b25e7e2815ed9e001801b52ff8920c84b076ec7067126bd"
+    "model_py_sha256": "7b60c64c643db1e36fd1ee6fb10822c46ac822de6ee3e2e29b60ce2e1d74d877"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_single_continuous_rotary_shaft_9490c89229c64fa7abc5dbc847f17cd7",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_coaxial_rotary_stack_ae835656daf54c25a1e5b681c37e2902",
   "created_at": "2026-04-01T18:09:34Z",
   "updated_at": "2026-04-06T01:36:54Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "An under-slung coaxial stage stack. A top support and center shaft carry multiple concentric stages below, giving the stack a hanging silhouette. The concent..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "32ccc1076172e4de4852667b741b09f46b0c6f2598e3ae702fc1337ccc4bc711",
-    "model_py_sha256": "95af4d6dd24fe0957d0e57c552bb31a874c40d17581f2bffeb8411e62b2e3976"
+    "model_py_sha256": "37da91b8d308078129666410e0f70a4752ed81abf05420cca9796b40f862fdd5"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_coaxial_rotary_stack_ae835656daf54c25a1e5b681c37e2902",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_binoculars_3899083d34d2411b894ed8aa470f4de1",
   "created_at": "2026-04-03T22:08:15Z",
   "updated_at": "2026-04-04T10:29:57Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "Theatre opera glasses as pocket binoculars with two short cylindrical barrels on a narrow bridge and a central pivot hinge. The two barrel halves fold on a c..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "f3ecd5c06b0711ac093c95e79e8e83b680717a9ff5347df513bea48ddda063e4",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_binoculars_3899083d34d2411b894ed8aa470f4de1",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

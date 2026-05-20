@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_telescoping_mast_with_pan_head_87c199d3ee8b4131a93bbba712e9f6d5",
   "created_at": "2026-03-31T17:20:51Z",
   "updated_at": "2026-03-31T18:47:18Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A fork-backed telescoping mast assembly. A rear support captures the mast root and carries nested upright stages ending in a small rotary faceplate. The mast..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "65e1d512e1563407b7e0a299277e64c48b67c8dafffe2fd85401356461437f7a",
-    "model_py_sha256": "6a08335bcbb46d5e9ab578c7bae78f83a0450ef3e53fb9c57b0e15d60b5b9b9c"
+    "model_py_sha256": "cbbcb0d17006b0cbc3d6a772888851b76524aa0a84fa3f34dcf791d71d913560"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_telescoping_mast_with_pan_head_87c199d3ee8b4131a93bbba712e9f6d5",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

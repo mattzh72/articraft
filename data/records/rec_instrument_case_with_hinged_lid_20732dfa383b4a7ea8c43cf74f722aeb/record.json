@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_instrument_case_with_hinged_lid_20732dfa383b4a7ea8c43cf74f722aeb",
   "created_at": "2026-04-04T14:26:47Z",
   "updated_at": "2026-04-05T13:26:21Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A portable synth case with a hard lower shell and a broad hinged lid. The rectangular lower base supports the instrument bed, and the lid spans the full open..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "c3208ff51a7fa930c79da80cd1153726834917aafb89b97ba3d12840b76586a8",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_instrument_case_with_hinged_lid_20732dfa383b4a7ea8c43cf74f722aeb",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

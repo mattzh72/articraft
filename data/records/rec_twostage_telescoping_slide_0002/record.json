@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_twostage_telescoping_slide_0002",
   "created_at": "2026-03-12T18:37:22Z",
   "updated_at": "2026-04-01T10:35:42Z",
@@ -20,16 +20,17 @@
     "prompt_preview": "A two-stage telescoping slide with nested rails, one prismatic extension path, and a rigid base mounting plate."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "d3e515244d425035a0da395d44f4760b6eb9d6ea59cb1fae24d3e5cd3d612d78",
-    "model_py_sha256": "9e12ac35b9e32af9050c182a22349887ac27acc6a84382631d8387fbf788132d"
+    "model_py_sha256": "65c756cfe6073da123ae4416a087d8526c19b4bacf8c2c055cf768290200e9bd"
   },
   "collections": [
     "dataset"
@@ -37,5 +38,12 @@
   "author": "mattzh72",
   "rated_by": "mattzh72",
   "secondary_rating": 5,
-  "secondary_rated_by": "Zhaomou Song"
+  "secondary_rated_by": "Zhaomou Song",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_twostage_telescoping_slide_0002",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

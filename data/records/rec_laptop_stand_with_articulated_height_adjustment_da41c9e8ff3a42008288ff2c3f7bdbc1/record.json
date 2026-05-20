@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_laptop_stand_with_articulated_height_adjustment_da41c9e8ff3a42008288ff2c3f7bdbc1",
   "created_at": "2026-04-09T16:54:33Z",
   "updated_at": "2026-04-22T03:40:15Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A laptop stand with a rectangular base, two short telescoping rear posts, and a single rigid tray spanning between the post tops. The two posts are matched c..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "0dec0a72db1ba4bbff7c490854e2af4ee365ac13c797261e26eaac5cde4a47ec",
-    "model_py_sha256": "0d1cae5d6c00f2f54ad40e0bb0c472363e2384063b913351764fe9880f30068d"
+    "model_py_sha256": "527684c8e43a262c5a2542425ec2b46e536ba8e5c6c8fb842e526dbb731eaad1"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_laptop_stand_with_articulated_height_adjustment_da41c9e8ff3a42008288ff2c3f7bdbc1",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

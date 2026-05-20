@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "record_id": "rec_a-precision-roll-axis-rotary-module-with-a-singl_20260325_151025_071295_d39ce0ad",
+  "revision_id": "rev_000001",
+  "created_at": "2026-03-25T15:10:25Z",
+  "prompt_kind": "single_prompt",
+  "prompt_sha256": "3a46a469eab7fc4597a3dfb638dcb7feb12d4838093b04138d1fab8d6c32ba22",
+  "source": {
+    "run_id": "run_20260325_151025_071295_d39ce0ad",
+    "prompt_batch_id": null,
+    "batch_spec_id": null,
+    "row_id": null,
+    "prompt_index": null
+  },
+  "generation": {
+    "provider": "openai",
+    "model_id": "gpt-5.4",
+    "thinking_level": "high",
+    "openai_transport": "http",
+    "openai_reasoning_summary": "auto",
+    "max_turns": 50
+  },
+  "artifacts": {
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
+    "prompt_series_json": null,
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
+  },
+  "hashes": {
+    "prompt_sha256": "3a46a469eab7fc4597a3dfb638dcb7feb12d4838093b04138d1fab8d6c32ba22",
+    "model_py_sha256": "7358fe6a924ba6e8e9ca26fb9f6829308701d948609b44a1568c65b30a28aeec"
+  },
+  "run_summary": {
+    "turn_count": 15,
+    "tool_call_count": 15,
+    "compile_attempt_count": 5,
+    "final_status": "success"
+  },
+  "parent": null,
+  "seed": null,
+  "inherited_inputs": []
+}

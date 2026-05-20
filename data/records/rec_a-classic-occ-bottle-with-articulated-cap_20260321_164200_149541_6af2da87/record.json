@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_a-classic-occ-bottle-with-articulated-cap_20260321_164200_149541_6af2da87",
   "created_at": "2026-03-21T16:42:00Z",
   "updated_at": "2026-04-29T09:23:36Z",
@@ -22,16 +22,17 @@
     "prompt_preview": "A classic occ bottle with articulated cap"
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "ac6023f38ad50897e5eacff243ab8adafb20d02cf21ebadac8b1da01fd772f72",
-    "model_py_sha256": "afbdb71cf402efd3da123b0ba355e5693ba08dc2383f346ff9bd75ac483a5e9f"
+    "model_py_sha256": "82f1b34f68e35acde7d803f3c2a910aae71516afa7b83538f2d6a1fc064ea230"
   },
   "collections": [
     "dataset"
@@ -39,5 +40,12 @@
   "author": "mattzh72",
   "rated_by": "mattzh72",
   "secondary_rating": null,
-  "secondary_rated_by": null
+  "secondary_rated_by": null,
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_a-classic-occ-bottle-with-articulated-cap_20260321_164200_149541_6af2da87",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

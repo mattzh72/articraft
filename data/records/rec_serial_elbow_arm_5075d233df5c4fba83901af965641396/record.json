@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_serial_elbow_arm_5075d233df5c4fba83901af965641396",
   "created_at": "2026-03-28T03:32:30Z",
   "updated_at": "2026-04-01T10:11:58Z",
@@ -22,16 +22,17 @@
     "prompt_preview": "A simple two-link elbow arm. A fixed base carries an upper arm link, and the upper arm supports a forearm link ending in a small tool pad. The shoulder and e..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "2b1142d570f9497853245fa794f50b5d6b292adb836840fcfa69f41781bb17d3",
-    "model_py_sha256": "47ba1631ca9fc0f0bb0ba1bcde2cb94a7eabe3f60e91427871da032322da8dbc"
+    "model_py_sha256": "183ff2e5c24e63794d5911e96d6cec09e7c6589d00f4c66e18343ca8ad92cdb5"
   },
   "collections": [
     "dataset"
@@ -39,5 +40,12 @@
   "author": "mattzh72",
   "rated_by": "mattzh72",
   "secondary_rating": 5,
-  "secondary_rated_by": "Zhaomou Song"
+  "secondary_rated_by": "Zhaomou Song",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_serial_elbow_arm_5075d233df5c4fba83901af965641396",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

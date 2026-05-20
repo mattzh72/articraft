@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_threejoint_revolute_chain_8ed4b1bddbf147ffade4756ac689d1ba",
   "created_at": "2026-03-30T17:57:46Z",
   "updated_at": "2026-04-01T11:18:25Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "An open-frame three-joint revolute chain. The root support is a simple pedestal, the links step down slightly in size toward the tip, and the end of the chai..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "a55bc9a5701434f5aad77efef4975a004a1ca6ffa6727cc4413d579b83608394",
-    "model_py_sha256": "bbc865c3a09c477fd1c4be854ff37b686e6a622a5259a050ef2cc4cc971bf8db"
+    "model_py_sha256": "d2ba251b879ffa30a678ea0ff34fb2925fbe0930e456f9750a34b20611413c77"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_threejoint_revolute_chain_8ed4b1bddbf147ffade4756ac689d1ba",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

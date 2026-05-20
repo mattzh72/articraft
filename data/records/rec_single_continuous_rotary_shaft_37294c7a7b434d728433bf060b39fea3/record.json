@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_single_continuous_rotary_shaft_37294c7a7b434d728433bf060b39fea3",
   "created_at": "2026-04-02T16:32:45Z",
   "updated_at": "2026-04-06T01:33:10Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A split-bearing shaft module. A fixed base and two separated bearing blocks support one shaft with a stop collar on one side and a flange on the other. The s..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "15f5c9b54ad10f1aba26588c31c3e7c2abc03088897d4947baa69261a9821c06",
-    "model_py_sha256": "160eba30db5af2cf65bbe000daa432204a76ca638f05dba5d3f2b1e63f9dc42b"
+    "model_py_sha256": "1595dd05be04189e178380ae27c92e87a4ae93b1c8fb160a4888b6518e693141"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_single_continuous_rotary_shaft_37294c7a7b434d728433bf060b39fea3",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

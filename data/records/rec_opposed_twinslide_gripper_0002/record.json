@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_opposed_twinslide_gripper_0002",
   "created_at": "2026-03-25T18:37:12Z",
   "updated_at": "2026-04-01T10:28:21Z",
@@ -22,16 +22,17 @@
     "prompt_preview": "Design a realistic, highly detailed opposed twin-slide gripper as a standalone mechanical study assembly for the sdk_hybrid pipeline, with a symmetric grippe..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "0ede1a88ba172c7c556b4b50cecc52267ed5a767e20c359cf11c461e261473a2",
-    "model_py_sha256": "28d7a25e011c19585a803e7b5b100ccbede1b0b0a34d7370c63707d00806ad9b"
+    "model_py_sha256": "fea4f937036008be4ded7bfc27fbfa3768d270c48ae605146450d9c7bd4a3dd9"
   },
   "collections": [
     "dataset"
@@ -39,5 +40,12 @@
   "author": "mattzh72",
   "rated_by": "mattzh72",
   "secondary_rating": 4,
-  "secondary_rated_by": "Zhaomou Song"
+  "secondary_rated_by": "Zhaomou Song",
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_opposed_twinslide_gripper_0002",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

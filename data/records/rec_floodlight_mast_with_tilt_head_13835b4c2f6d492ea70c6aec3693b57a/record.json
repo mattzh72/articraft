@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_floodlight_mast_with_tilt_head_13835b4c2f6d492ea70c6aec3693b57a",
   "created_at": "2026-04-03T23:44:02Z",
   "updated_at": "2026-04-04T15:45:28Z",
@@ -26,12 +26,13 @@
     "prompt_preview": "A sports ground corner floodlight pole with a round steel pole, a fixed horizontal outreach arm, and a multi-lamp cluster. The arm is fixed to the pole top...."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "0034ce5b3386bf8d2d61e6ee76d3af0d873ce7b248b30b2402850f4e630faace",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_floodlight_mast_with_tilt_head_13835b4c2f6d492ea70c6aec3693b57a",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

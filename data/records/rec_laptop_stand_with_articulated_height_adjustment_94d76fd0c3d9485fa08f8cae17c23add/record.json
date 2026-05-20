@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_laptop_stand_with_articulated_height_adjustment_94d76fd0c3d9485fa08f8cae17c23add",
   "created_at": "2026-04-09T16:54:33Z",
   "updated_at": "2026-04-22T14:26:22Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "An aluminum laptop stand with an oval base, a central pedestal, and a rigid top platform with a broad cooling cutout. The pedestal carries a simple head that..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "36d9db6e736d3927503f2070ef6aee1a69f27c6708b9b7cb7d97b83f7ce08136",
-    "model_py_sha256": "872cd01a083da75c151cb7be62f8883566fb736b78c845a71cf0b61ad32a1d64"
+    "model_py_sha256": "a492cd597c73a06ace6ca16a39c21fab2152f26281f85ff3959156620fbbc1e3"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_laptop_stand_with_articulated_height_adjustment_94d76fd0c3d9485fa08f8cae17c23add",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }

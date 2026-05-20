@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_shoulderelbowwrist_arm_8cb961358b764be4afe385010fef4ce7",
   "created_at": "2026-03-31T17:20:51Z",
   "updated_at": "2026-03-31T18:48:54Z",
@@ -26,18 +26,26 @@
     "prompt_preview": "A tower-mounted wristed arm. A short pedestal supports two main links and a compact terminal wrist stage, with the sections stepping down in mass from root t..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "9c39cfc853684f8acbd4fea846841f9e3a635a0960ed4f371c1fa33b94031c23",
-    "model_py_sha256": "e802f7107c10284bedb19ca8102a055aaf1849e1d23b15daf21859864be79539"
+    "model_py_sha256": "9a565f323ff461f1fb364302e3263c82f56b612a83a0386698c918a715e44d8f"
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_shoulderelbowwrist_arm_8cb961358b764be4afe385010fef4ce7",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }
