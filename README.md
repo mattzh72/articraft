@@ -30,6 +30,10 @@ From the repo root, run:
 ```bash
 just setup
 ```
+To set up a checkout from another working directory, pass the repository root:
+```bash
+just setup ./path/to/checkout
+```
 
 Fresh clones are code-first: `data/records/**` is stored with Git LFS and excluded from automatic LFS fetch by `.lfsconfig`, so it does not need to be hydrated before developing the code or browsing indexed metadata. Hydrate records only when you want to inspect, render, or edit their payloads:
 
