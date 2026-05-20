@@ -1,13 +1,13 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_id": "rec_create-a-realistic-fully-articulated-6-dof-robot_20260515_013626_467384_e7334473",
   "created_at": "2026-05-15T01:36:26Z",
   "updated_at": "2026-05-19T23:56:34Z",
   "rating": 5,
   "secondary_rating": 5,
   "author": "ytw25",
-  "rated_by": null,
-  "secondary_rated_by": null,
+  "rated_by": "ytw25",
+  "secondary_rated_by": "ytw25",
   "kind": "generated_model",
   "prompt_kind": "single_prompt",
   "category_slug": "robotic_arms",
@@ -26,12 +26,13 @@
     "prompt_preview": "Create a realistic, fully-articulated 6-DOF robotic arm mounted on a sturdy industrial base, designed to look like something you'd find in an actual factory..."
   },
   "artifacts": {
-    "prompt_txt": "prompt.txt",
+    "prompt_txt": "revisions/rev_000001/prompt.txt",
     "prompt_series_json": null,
-    "model_py": "model.py",
-    "provenance_json": "provenance.json",
-    "cost_json": "cost.json",
-    "inputs_dir": "inputs"
+    "model_py": "revisions/rev_000001/model.py",
+    "provenance_json": "revisions/rev_000001/provenance.json",
+    "cost_json": "revisions/rev_000001/cost.json",
+    "inputs_dir": "revisions/rev_000001/inputs",
+    "traces_dir": "revisions/rev_000001/traces"
   },
   "hashes": {
     "prompt_sha256": "59bd82cd3a022dce2cb66abc6f94985ea437ad0c694010e72078a03fbd3c0549",
@@ -39,5 +40,12 @@
   },
   "collections": [
     "dataset"
-  ]
+  ],
+  "active_revision_id": "rev_000001",
+  "lineage": {
+    "origin_record_id": "rec_create-a-realistic-fully-articulated-6-dof-robot_20260515_013626_467384_e7334473",
+    "parent_record_id": null,
+    "parent_revision_id": null,
+    "edit_mode": "root"
+  }
 }
