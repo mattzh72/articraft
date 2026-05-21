@@ -11,6 +11,11 @@ from shutil import which
 
 from agent import runner as agent_runner
 from agent.providers.factory import infer_provider_from_model_id
+from articraft.env_defaults import (
+    default_model_from_env,
+    default_thinking_level_from_env,
+    load_repo_env,
+)
 from articraft.values import PROVIDER_VALUES, THINKING_LEVEL_VALUES
 from cli import compile_all as compile_all_cli
 from cli import compile_record as compile_record_cli
@@ -24,9 +29,6 @@ from cli.common import provider_for_record_image, refresh_dataset_manifest_if_me
 from storage.records_index import find_record_index_row
 from storage.repo import StorageRepo
 from storage.search import SearchIndex
-
-DEFAULT_MODEL = "gpt-5.5-2026-04-23"
-DEFAULT_THINKING = "high"
 
 DatasetDispatchKey = tuple[str, str | None]
 DatasetArgBuilder = Callable[[argparse.Namespace], list[str]]
@@ -44,7 +46,7 @@ def _infer_provider(model_id: str) -> str:
 
 
 def _model_and_provider(args: argparse.Namespace) -> tuple[str, str]:
-    model_id = str(args.model or DEFAULT_MODEL)
+    model_id = str(args.model or default_model_from_env())
     provider = str(args.provider or _infer_provider(model_id))
     return model_id, provider
 
@@ -101,7 +103,7 @@ def _run_generate(args: argparse.Namespace) -> int:
         "--model",
         model_id,
         "--thinking",
-        args.thinking_level,
+        args.thinking_level or default_thinking_level_from_env(),
     ]
     if args.image:
         argv.extend(["--image", args.image])
@@ -124,7 +126,7 @@ def _run_draft(args: argparse.Namespace) -> int:
         "--model-id",
         model_id,
         "--thinking-level",
-        args.thinking_level,
+        args.thinking_level or default_thinking_level_from_env(),
     ]
     if args.image:
         argv.extend(["--image", args.image])
@@ -389,7 +391,7 @@ def _run_dataset_run(args: argparse.Namespace) -> int:
         "--model-id",
         model_id,
         "--thinking-level",
-        args.thinking_level,
+        args.thinking_level or default_thinking_level_from_env(),
     ]
     if args.image:
         argv.extend(["--image", args.image])
@@ -601,11 +603,11 @@ def _add_repo_root(parser: argparse.ArgumentParser) -> None:
 
 def _add_generation_options(parser: argparse.ArgumentParser) -> None:
     parser.add_argument("--provider", choices=PROVIDER_VALUES)
-    parser.add_argument("--model", default=DEFAULT_MODEL, help="Model ID to use.")
+    parser.add_argument("--model", default=None, help="Model ID to use.")
     parser.add_argument(
         "--thinking-level",
         "--thinking",
-        default=DEFAULT_THINKING,
+        default=None,
         choices=THINKING_LEVEL_VALUES,
         help="Thinking budget level.",
     )
@@ -890,8 +892,18 @@ def _build_parser() -> argparse.ArgumentParser:
     return parser
 
 
+def _repo_root_from_argv(args_list: list[str]) -> Path:
+    for index, arg in enumerate(args_list):
+        if arg == "--repo-root" and index + 1 < len(args_list):
+            return Path(args_list[index + 1]).resolve()
+        if arg.startswith("--repo-root="):
+            return Path(arg.removeprefix("--repo-root=")).resolve()
+    return Path.cwd()
+
+
 def main(argv: list[str] | None = None) -> int:
     args_list = sys.argv[1:] if argv is None else argv
+    load_repo_env(_repo_root_from_argv(args_list))
     if args_list and args_list[0] == "internal":
         parser = _build_internal_parser()
         args = parser.parse_args(args_list[1:])

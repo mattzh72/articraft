@@ -75,6 +75,7 @@ def test_runner_accepts_openai_api_keys_env(
     monkeypatch.delenv("OPENAI_API_KEY", raising=False)
     monkeypatch.setenv("OPENAI_API_KEYS", "sk-first,sk-second")
     monkeypatch.setenv("ARTICRAFT_MAX_COST_USD", "1.25")
+    monkeypatch.setenv("ARTICRAFT_THINKING_LEVEL", "xhigh")
 
     exit_code = runner.main(
         [
@@ -89,6 +90,7 @@ def test_runner_accepts_openai_api_keys_env(
 
     assert exit_code == 0
     assert captured["max_cost_usd"] == 1.25
+    assert captured["thinking_level"] == "xhigh"
 
 
 def test_runner_dump_provider_payload_supports_openrouter(
@@ -100,6 +102,8 @@ def test_runner_dump_provider_payload_supports_openrouter(
             "test prompt",
             "--provider",
             "openrouter",
+            "--thinking",
+            "high",
             "--dump-provider-payload",
         ]
     )
@@ -127,6 +131,8 @@ def test_runner_dump_provider_payload_supports_anthropic(
             "test prompt",
             "--provider",
             "anthropic",
+            "--thinking",
+            "high",
             "--dump-provider-payload",
         ]
     )
@@ -142,3 +148,27 @@ def test_runner_dump_provider_payload_supports_anthropic(
     assert "<process>" in system_text
     assert "Work evidence-first. Before editing, read `model.py`" in system_text
     assert payload["messages"][0]["role"] == "user"
+
+
+def test_runner_dump_provider_payload_uses_openai_env_defaults(
+    monkeypatch: pytest.MonkeyPatch,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    monkeypatch.setattr(runner, "load_dotenv", lambda: None)
+    monkeypatch.setenv("ARTICRAFT_MODEL", "gpt-5.5")
+    monkeypatch.setenv("ARTICRAFT_THINKING_LEVEL", "xhigh")
+
+    exit_code = runner.main(
+        [
+            "--prompt",
+            "test prompt",
+            "--provider",
+            "openai",
+            "--dump-provider-payload",
+        ]
+    )
+
+    assert exit_code == 0
+    payload = json.loads(capsys.readouterr().out)
+    assert payload["model"] == "gpt-5.5"
+    assert payload["reasoning"]["effort"] == "xhigh"

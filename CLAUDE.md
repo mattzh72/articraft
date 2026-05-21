@@ -137,7 +137,7 @@ Validation rules:
 
 - `provider` must be `openai`, `gemini`, `anthropic`, or `openrouter`.
 - `model_id` must agree with the inferred provider when inference is possible.
-- `thinking_level` must be `low`, `med`, or `high`.
+- `thinking_level` must be `low`, `med`, `high`, or `xhigh`.
 - `max_turns` must be a positive integer.
 - `image_path` is intentionally unsupported in batch CSV v1.
 - New batch specs should generally leave per-row cost caps blank unless requested and use `max_turns=100` by default.
@@ -175,9 +175,9 @@ Provider keys go in `.env`:
 - `ANTHROPIC_API_KEYS` or `ANTHROPIC_API_KEY`
 - `OPENROUTER_API_KEYS` or `OPENROUTER_API_KEY`
 
-Optional defaults include `ARTICRAFT_MAX_COST_USD` for per-run budgets and provider-specific knobs such as OpenAI transport/cache settings, Anthropic cache settings, and OpenRouter token/retry settings.
+Optional defaults include `ARTICRAFT_MODEL` for the default generation model, `ARTICRAFT_THINKING_LEVEL` for the default thinking level, `ARTICRAFT_MAX_COST_USD` for per-run budgets, and provider-specific knobs such as OpenAI transport/cache settings, Anthropic cache settings, and OpenRouter token/retry settings.
 
-`articraft generate` defaults to `gpt-5.5-2026-04-23` with `--thinking-level high`. Provider inference handles known OpenAI, Gemini, Claude, and OpenRouter-style model IDs; pass `--provider` explicitly when using an ambiguous model name.
+`articraft generate` uses `ARTICRAFT_MODEL` and `ARTICRAFT_THINKING_LEVEL` from `.env` when present; otherwise it defaults to `gpt-5.5-2026-04-23` with `--thinking-level high`. Provider inference handles known OpenAI, Gemini, Claude, and OpenRouter-style model IDs; pass `--provider` explicitly when using an ambiguous model name.
 
 ## Paper Dataset Counts
 

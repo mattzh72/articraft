@@ -35,20 +35,26 @@ def _write_category(repo: StorageRepo, slug: str = "hinge") -> None:
     )
 
 
-def _write_batch_spec(repo: StorageRepo) -> None:
+def _write_batch_spec(repo: StorageRepo, thinking_level: str = "high") -> None:
     path = repo.layout.batch_spec_path("demo")
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(
         (
             "row_id,category_slug,category_title,prompt,provider,model_id,"
             "thinking_level,max_turns,sdk_package\n"
-            "row_1,hinge,Hinge,Make a hinge,openai,gpt-5.4,high,10,sdk\n"
+            f"row_1,hinge,Hinge,Make a hinge,openai,gpt-5.4,{thinking_level},10,sdk\n"
         ),
         encoding="utf-8",
     )
 
 
-def _write_record(repo: StorageRepo, record_id: str, prompt_sha: str, dataset_id: str) -> None:
+def _write_record(
+    repo: StorageRepo,
+    record_id: str,
+    prompt_sha: str,
+    dataset_id: str,
+    thinking_level: str = "high",
+) -> None:
     record_dir = repo.layout.record_dir(record_id)
     revision_id = "rev_000001"
     revision_dir = repo.layout.record_revision_dir(record_id, revision_id)
@@ -80,7 +86,7 @@ def _write_record(repo: StorageRepo, record_id: str, prompt_sha: str, dataset_id
     generation = {
         "provider": "openai",
         "model_id": "gpt-5.4",
-        "thinking_level": "high",
+        "thinking_level": thinking_level,
         "max_turns": 10,
     }
     _write_json(
@@ -182,6 +188,19 @@ def test_validate_data_format_accepts_canonical_data_and_skips_local_workbench(
     assert result.record_count == 1
     assert result.dataset_entry_count == 1
     assert result.skipped_local_record_count == 1
+
+
+def test_validate_data_format_accepts_xhigh_thinking_level(tmp_path: Path) -> None:
+    repo = StorageRepo(tmp_path)
+    repo.ensure_layout()
+    prompt_sha = _write_system_prompt(repo)
+    _write_category(repo)
+    _write_batch_spec(repo, thinking_level="xhigh")
+    _write_record(repo, "rec_hinge_0001", prompt_sha, "ds_hinge_0001", thinking_level="xhigh")
+
+    result = validate_data_format(repo)
+
+    assert result.errors == []
 
 
 def test_validate_data_format_reports_cross_record_dataset_errors(tmp_path: Path) -> None:

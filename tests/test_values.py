@@ -36,3 +36,9 @@ def test_thinking_level_helpers_keep_public_med_spelling() -> None:
     assert normalize_thinking_level("medium") is ThinkingLevel.MED
     assert provider_reasoning_level("med") == "medium"
     assert reasoning_level_alias("med") == "medium"
+
+
+def test_thinking_level_helpers_accept_xhigh() -> None:
+    assert normalize_thinking_level("xhigh") is ThinkingLevel.XHIGH
+    assert provider_reasoning_level("xhigh") == "xhigh"
+    assert reasoning_level_alias("xhigh") == "xhigh"

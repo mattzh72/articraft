@@ -150,6 +150,80 @@ def test_dataset_run_delegates_without_removed_audit_flag(
     ]
 
 
+def test_generate_uses_env_model_and_thinking_defaults(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    calls: list[list[str]] = []
+    (tmp_path / ".env").write_text(
+        "ARTICRAFT_MODEL=gpt-5.5\nARTICRAFT_THINKING_LEVEL=xhigh\n",
+        encoding="utf-8",
+    )
+
+    def _fake_agent_runner(argv: list[str]) -> int:
+        calls.append(argv)
+        return 0
+
+    monkeypatch.setattr(articraft_cli.agent_runner, "main", _fake_agent_runner)
+    monkeypatch.delenv("ARTICRAFT_MODEL", raising=False)
+    monkeypatch.delenv("ARTICRAFT_THINKING_LEVEL", raising=False)
+
+    exit_code = articraft_cli.main(
+        [
+            "generate",
+            "make a desk lamp",
+            "--repo-root",
+            str(tmp_path),
+        ]
+    )
+
+    assert exit_code == 0
+    assert calls == [
+        [
+            "--repo-root",
+            str(tmp_path),
+            "--prompt",
+            "make a desk lamp",
+            "--provider",
+            "openai",
+            "--model",
+            "gpt-5.5",
+            "--thinking",
+            "xhigh",
+        ]
+    ]
+
+
+def test_generate_loads_env_defaults_from_equals_repo_root(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    calls: list[list[str]] = []
+    (tmp_path / ".env").write_text(
+        "ARTICRAFT_MODEL=gpt-5.5\nARTICRAFT_THINKING_LEVEL=xhigh\n",
+        encoding="utf-8",
+    )
+
+    def _fake_agent_runner(argv: list[str]) -> int:
+        calls.append(argv)
+        return 0
+
+    monkeypatch.setattr(articraft_cli.agent_runner, "main", _fake_agent_runner)
+    monkeypatch.delenv("ARTICRAFT_MODEL", raising=False)
+    monkeypatch.delenv("ARTICRAFT_THINKING_LEVEL", raising=False)
+
+    exit_code = articraft_cli.main(
+        [
+            "generate",
+            "make a desk lamp",
+            f"--repo-root={tmp_path}",
+        ]
+    )
+
+    assert exit_code == 0
+    assert calls[0][-4:] == ["--model", "gpt-5.5", "--thinking", "xhigh"]
+
+
 def test_workbench_status_delegates_to_workbench_module(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,

@@ -55,7 +55,7 @@ Generate your first model directly from a prompt using `articraft generate`:
 uv run articraft generate "Create a realistic articulated desk lamp with a weighted base, two hinged arms, and an adjustable lamp head."
 ```
 
-If you specify no overrides, it defaults to `--model gpt-5.5-2026-04-23 --thinking-level high`. You can change models and caps:
+If you specify no overrides, it uses `ARTICRAFT_MODEL` and `ARTICRAFT_THINKING_LEVEL` from `.env` when present, otherwise `--model gpt-5.5-2026-04-23 --thinking-level high`. You can change models and caps:
 ```bash
 uv run articraft generate --model gemini-3-flash-preview --max-cost-usd 1.5 "Create a compact desk fan with adjustable tilt."
 ```

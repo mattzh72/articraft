@@ -564,6 +564,48 @@ def test_build_batch_config_rejects_legacy_scaffold_mode_column(tmp_path: Path) 
         )
 
 
+def test_build_batch_config_accepts_xhigh_thinking_level(tmp_path: Path) -> None:
+    repo = StorageRepo(tmp_path)
+    repo.ensure_layout()
+    CategoryStore(repo).save(
+        CategoryRecord(schema_version=1, slug="hinge", title="Hinge", description="")
+    )
+
+    spec_path = tmp_path / "source_specs" / "xhigh.csv"
+    _write_csv(
+        spec_path,
+        [
+            {
+                "row_id": "row_1",
+                "category_slug": "hinge",
+                "category_title": "Hinge",
+                "prompt": "make hinge",
+                "provider": "openai",
+                "model_id": "gpt-5.5",
+                "thinking_level": "xhigh",
+                "max_turns": "10",
+                "sdk_package": "sdk",
+            }
+        ],
+    )
+
+    config = batch_runner.build_batch_config(
+        repo_root=tmp_path,
+        spec_arg=str(spec_path),
+        concurrency=1,
+        system_prompt_path="designer_system_prompt.txt",
+        qc_blurb_path=None,
+        resume=False,
+        resume_policy="failed_or_pending",
+        keep_awake=False,
+        pause_file=None,
+        pause_poll_seconds=1.0,
+        keyboard_pause_enabled=False,
+    )
+
+    assert config.rows[0].thinking_level == "xhigh"
+
+
 def test_run_batch_max_cost_cli_override_and_csv_override(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:

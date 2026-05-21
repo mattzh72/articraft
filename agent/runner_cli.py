@@ -23,6 +23,7 @@ from agent.single_run import run_from_input
 from agent.tools import build_initial_user_content as _build_initial_user_content
 from agent.tools import resolve_image_path as _resolve_image_path
 from agent.tui.single_run import LLMWaitAwareStreamHandler
+from articraft.env_defaults import default_thinking_level_from_env
 from articraft.values import PROVIDER_VALUES, THINKING_LEVEL_VALUES, ProviderName
 
 
@@ -123,7 +124,7 @@ def main(
     )
     parser.add_argument(
         "--thinking",
-        default="high",
+        default=None,
         choices=THINKING_LEVEL_VALUES,
         help="Thinking budget level.",
     )
@@ -169,6 +170,7 @@ def main(
         help=argparse.SUPPRESS,
     )
     args = parser.parse_args(argv)
+    thinking_level = args.thinking or default_thinking_level_from_env()
     if args.collection == "dataset":
         if not args.dataset_id:
             parser.error("--dataset-id is required when --collection dataset.")
@@ -214,7 +216,7 @@ def main(
         model_id = _default_model_id(
             provider=args.provider,
             model_id=args.model,
-            thinking_level=args.thinking,
+            thinking_level=thinking_level,
             openai_transport=args.openai_transport,
             openai_reasoning_summary=openai_reasoning_summary,
         )
@@ -224,7 +226,7 @@ def main(
             provider=args.provider,
             model_id=model_id,
             openai_transport=args.openai_transport,
-            thinking_level=args.thinking,
+            thinking_level=thinking_level,
             system_prompt_path=args.system_prompt,
             sdk_package=sdk_package,
             openai_reasoning_summary=openai_reasoning_summary,
@@ -256,7 +258,7 @@ def main(
             provider=args.provider,
             model_id=args.model,
             openai_transport=args.openai_transport,
-            thinking_level=args.thinking,
+            thinking_level=thinking_level,
             max_turns=args.max_turns,
             system_prompt_path=args.system_prompt,
             sdk_package=sdk_package,

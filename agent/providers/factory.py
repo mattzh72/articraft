@@ -14,12 +14,13 @@ from agent.providers.gemini import (
     GeminiLLM,
     gemini_client_config_from_env,
 )
-from agent.providers.openai import DEFAULT_OPENAI_MODEL, OpenAILLM, openai_api_key_from_env
+from agent.providers.openai import OpenAILLM, openai_api_key_from_env
 from agent.providers.openrouter import (
     DEFAULT_OPENROUTER_MODEL,
     OpenRouterLLM,
     openrouter_api_key_from_env,
 )
+from articraft.env_defaults import default_model_from_env
 from articraft.values import (
     PROVIDER_VALUE_SET,
     ProviderName,
@@ -77,7 +78,7 @@ def default_model_id(config: ProviderConfig) -> str:
     if provider is ProviderName.OPENROUTER:
         return DEFAULT_OPENROUTER_MODEL
     if provider is ProviderName.OPENAI:
-        return DEFAULT_OPENAI_MODEL
+        return default_model_from_env()
     raise ValueError(f"Unsupported provider: {config.provider}")
 
 

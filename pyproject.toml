@@ -36,6 +36,7 @@ dependencies = [
     "bm25s>=0.3.2.post1",
     "scipy>=1.17.1",
     "anthropic>=0.101.0",
+    "socksio>=1.0.0",
 ]
 
 [project.scripts]
