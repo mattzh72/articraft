@@ -4,7 +4,7 @@ import logging
 import os
 from pathlib import Path
 
-from dotenv import load_dotenv
+from dotenv import dotenv_values
 
 logger = logging.getLogger(__name__)
 
@@ -18,9 +18,23 @@ def load_repo_env(repo_root: Path | None = None) -> None:
     """Load repo-local defaults before CLI argument defaults are resolved."""
     root = repo_root or Path.cwd()
     dotenv_path = root / ".env"
-    if dotenv_path.exists():
-        load_dotenv(dotenv_path=dotenv_path, override=True)
-        logger.debug("Loaded Articraft environment defaults from %s", dotenv_path)
+    if not dotenv_path.exists():
+        return
+
+    loaded_count = 0
+    for key, value in dotenv_values(dotenv_path=dotenv_path).items():
+        if value is None or not value.strip():
+            continue
+        current_value = os.environ.get(key)
+        if current_value is not None and current_value.strip():
+            continue
+        os.environ[key] = value
+        loaded_count += 1
+    logger.debug(
+        "Loaded %s non-empty Articraft environment value(s) from %s",
+        loaded_count,
+        dotenv_path,
+    )
 
 
 def default_model_from_env() -> str:

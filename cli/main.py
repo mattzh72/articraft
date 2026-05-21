@@ -16,7 +16,7 @@ from articraft.env_defaults import (
     default_thinking_level_from_env,
     load_repo_env,
 )
-from articraft.values import PROVIDER_VALUES, THINKING_LEVEL_VALUES
+from articraft.values import PROVIDER_VALUES, THINKING_LEVEL_VALUE_SET, THINKING_LEVEL_VALUES
 from cli import compile_all as compile_all_cli
 from cli import compile_record as compile_record_cli
 from cli import dataset as dataset_cli
@@ -49,6 +49,15 @@ def _model_and_provider(args: argparse.Namespace) -> tuple[str, str]:
     model_id = str(args.model or default_model_from_env())
     provider = str(args.provider or _infer_provider(model_id))
     return model_id, provider
+
+
+def _thinking_level_from_args(args: argparse.Namespace) -> str:
+    thinking_level = str(args.thinking_level or default_thinking_level_from_env())
+    if thinking_level not in THINKING_LEVEL_VALUE_SET:
+        raise ValueError(
+            "ARTICRAFT_THINKING_LEVEL must be one of: " + ", ".join(THINKING_LEVEL_VALUES)
+        )
+    return thinking_level
 
 
 def _dataset(args: argparse.Namespace, argv: list[str]) -> int:
@@ -90,6 +99,7 @@ def _run_status(args: argparse.Namespace) -> int:
 def _run_generate(args: argparse.Namespace) -> int:
     try:
         model_id, provider = _model_and_provider(args)
+        thinking_level = _thinking_level_from_args(args)
     except ValueError as exc:
         print(str(exc))
         return 1
@@ -103,7 +113,7 @@ def _run_generate(args: argparse.Namespace) -> int:
         "--model",
         model_id,
         "--thinking",
-        args.thinking_level or default_thinking_level_from_env(),
+        thinking_level,
     ]
     if args.image:
         argv.extend(["--image", args.image])
@@ -115,6 +125,7 @@ def _run_generate(args: argparse.Namespace) -> int:
 def _run_draft(args: argparse.Namespace) -> int:
     try:
         model_id, provider = _model_and_provider(args)
+        thinking_level = _thinking_level_from_args(args)
     except ValueError as exc:
         print(str(exc))
         return 1
@@ -126,7 +137,7 @@ def _run_draft(args: argparse.Namespace) -> int:
         "--model-id",
         model_id,
         "--thinking-level",
-        args.thinking_level or default_thinking_level_from_env(),
+        thinking_level,
     ]
     if args.image:
         argv.extend(["--image", args.image])
@@ -378,6 +389,7 @@ def _run_dataset_batch_new(args: argparse.Namespace) -> int:
 def _run_dataset_run(args: argparse.Namespace) -> int:
     try:
         model_id, provider = _model_and_provider(args)
+        thinking_level = _thinking_level_from_args(args)
     except ValueError as exc:
         print(str(exc))
         return 1
@@ -391,7 +403,7 @@ def _run_dataset_run(args: argparse.Namespace) -> int:
         "--model-id",
         model_id,
         "--thinking-level",
-        args.thinking_level or default_thinking_level_from_env(),
+        thinking_level,
     ]
     if args.image:
         argv.extend(["--image", args.image])
@@ -637,7 +649,14 @@ def _add_internal_edit_options(
 def _add_internal_pre_commit_commands(subparsers: argparse._SubParsersAction) -> None:
     pre_commit = subparsers.add_parser("pre-commit")
     pre_commit_sub = pre_commit.add_subparsers(dest="pre_commit_command", required=True)
-    for command in ("forbidden-paths", "secrets", "smoke-tests", "data-format", "data-check"):
+    for command in (
+        "forbidden-paths",
+        "secrets",
+        "smoke-tests",
+        "lfs-push-records",
+        "data-format",
+        "data-check",
+    ):
         pre_commit_cmd = pre_commit_sub.add_parser(command)
         pre_commit_cmd.add_argument("paths", nargs="*")
         mapped_command = "data-format" if command == "data-check" else command

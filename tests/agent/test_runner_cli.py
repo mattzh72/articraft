@@ -174,6 +174,61 @@ def test_runner_dump_provider_payload_uses_openai_env_defaults(
     assert payload["reasoning"]["effort"] == "xhigh"
 
 
+def test_runner_infers_provider_from_env_default_model(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    repo_root = tmp_path / "repo"
+    repo_root.mkdir()
+    (repo_root / ".env").write_text(
+        "ARTICRAFT_MODEL=gemini-3-flash-preview\nARTICRAFT_THINKING_LEVEL=high\n",
+        encoding="utf-8",
+    )
+    monkeypatch.delenv("ARTICRAFT_MODEL", raising=False)
+    monkeypatch.delenv("ARTICRAFT_THINKING_LEVEL", raising=False)
+
+    exit_code = runner.main(
+        [
+            "--prompt",
+            "test prompt",
+            "--repo-root",
+            str(repo_root),
+            "--dump-provider-payload",
+        ]
+    )
+
+    assert exit_code == 0
+    payload = json.loads(capsys.readouterr().out)
+    assert payload["model"] == "gemini-3-flash-preview"
+    assert "contents" in payload
+    assert "reasoning" not in payload
+
+
+def test_runner_rejects_invalid_env_thinking_level(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    repo_root = tmp_path / "repo"
+    repo_root.mkdir()
+    (repo_root / ".env").write_text("ARTICRAFT_THINKING_LEVEL=not-a-level\n", encoding="utf-8")
+    monkeypatch.delenv("ARTICRAFT_THINKING_LEVEL", raising=False)
+
+    with pytest.raises(SystemExit, match="2"):
+        runner.main(
+            [
+                "--prompt",
+                "test prompt",
+                "--repo-root",
+                str(repo_root),
+                "--dump-provider-payload",
+            ]
+        )
+
+    assert "ARTICRAFT_THINKING_LEVEL must be one of" in capsys.readouterr().err
+
+
 def test_runner_loads_env_defaults_from_repo_root(
     monkeypatch: pytest.MonkeyPatch,
     tmp_path: Path,

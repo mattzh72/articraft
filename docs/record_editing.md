@@ -14,7 +14,6 @@ You can pass the same model controls used by generation:
 
 ```bash
 uv run articraft fork data/records/<record_id> \
-  --model gemini-3-flash-preview \
   --thinking-level low \
   --max-cost-usd 1.5 \
   "make the hinge wider and reinforce the mounting plate"

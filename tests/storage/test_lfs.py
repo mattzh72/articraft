@@ -131,7 +131,8 @@ def test_hydrate_records_runs_targeted_lfs_pull(
 
     assert result.hydrated_count == 2
     assert ["git", "lfs", "version"] in commands
-    assert ["git", "lfs", "install", "--local"] in commands
+    assert ["git", "lfs", "install", "--local", "--skip-repo"] in commands
+    assert ["git", "config", "--local", "lfs.sshtransfer", "never"] in commands
     assert any(
         command[:4] == ["git", "lfs", "pull", "--include"]
         and "data/records/rec_alpha/**" in command[4]
