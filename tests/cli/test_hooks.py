@@ -26,7 +26,7 @@ def _stock_lfs_hook(hook_name: str) -> str:
     )
 
 
-def test_install_hooks_removes_only_stock_lfs_hooks_and_sets_sshtransfer(
+def test_install_hooks_removes_only_stock_lfs_hooks_and_sets_local_git_defaults(
     tmp_path: Path,
 ) -> None:
     _git(tmp_path, "init")
@@ -52,4 +52,11 @@ def test_install_hooks_removes_only_stock_lfs_hooks_and_sets_sshtransfer(
     assert not stock_post_merge.exists()
     assert not stock_pre_push_legacy.exists()
     assert custom_post_commit.read_text(encoding="utf-8") == "#!/bin/sh\necho custom\n"
+    assert result.configured_git_settings == {
+        "lfs.sshtransfer": "never",
+        "core.untrackedCache": "true",
+        "core.fsmonitor": "true",
+    }
     assert _git(tmp_path, "config", "--get", "lfs.sshtransfer") == "never"
+    assert _git(tmp_path, "config", "--get", "core.untrackedCache") == "true"
+    assert _git(tmp_path, "config", "--get", "core.fsmonitor") == "true"

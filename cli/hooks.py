@@ -142,6 +142,7 @@ class PostCommitHookStatus:
 @dataclass(slots=True, frozen=True)
 class HookInstallResult:
     removed_stock_lfs_hooks: list[Path] = field(default_factory=list)
+    configured_git_settings: dict[str, str] = field(default_factory=dict)
 
 
 def run_post_commit_record_metadata_sync(repo_root: Path) -> PostCommitRecordMetadataResult:
@@ -199,8 +200,17 @@ def remove_stock_git_lfs_hooks(repo_root: Path) -> list[Path]:
 def install_hooks(repo_root: Path) -> HookInstallResult:
     repo_root = repo_root.resolve()
     removed = remove_stock_git_lfs_hooks(repo_root)
-    _git_run(repo_root, "config", "--local", "lfs.sshtransfer", "never")
-    return HookInstallResult(removed_stock_lfs_hooks=removed)
+    git_settings = {
+        "lfs.sshtransfer": "never",
+        "core.untrackedCache": "true",
+        "core.fsmonitor": "true",
+    }
+    for key, value in git_settings.items():
+        _git_run(repo_root, "config", "--local", key, value)
+    return HookInstallResult(
+        removed_stock_lfs_hooks=removed,
+        configured_git_settings=git_settings,
+    )
 
 
 def _build_parser() -> argparse.ArgumentParser:
@@ -231,7 +241,9 @@ def main(argv: list[str] | None = None) -> int:
             print("Removed stock Git LFS hooks:")
             for hook_path in result.removed_stock_lfs_hooks:
                 print(f"  - {hook_path}")
-        print("Configured lfs.sshtransfer=never.")
+        print("Configured local Git settings:")
+        for key, value in result.configured_git_settings.items():
+            print(f"  - {key}={value}")
         return 0
 
     if args.command == "check":
