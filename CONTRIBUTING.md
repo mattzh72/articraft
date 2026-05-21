@@ -9,8 +9,9 @@ Thank you for your interest in improving Articraft! We welcome contributions fro
     ```bash
     uv sync --group dev
     npm --prefix viewer/web ci
-    uv run pre-commit install --hook-type pre-commit --hook-type pre-push
+    just hooks-install
     ```
+    If your pre-push hook stalls while opening a PR, rerun `just hooks-install` to restore the managed hook and local LFS push settings.
 
 ## Development Workflow
 

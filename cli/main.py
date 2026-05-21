@@ -635,7 +635,14 @@ def _add_internal_edit_options(
 def _add_internal_pre_commit_commands(subparsers: argparse._SubParsersAction) -> None:
     pre_commit = subparsers.add_parser("pre-commit")
     pre_commit_sub = pre_commit.add_subparsers(dest="pre_commit_command", required=True)
-    for command in ("forbidden-paths", "secrets", "smoke-tests", "data-format", "data-check"):
+    for command in (
+        "forbidden-paths",
+        "secrets",
+        "smoke-tests",
+        "lfs-push-records",
+        "data-format",
+        "data-check",
+    ):
         pre_commit_cmd = pre_commit_sub.add_parser(command)
         pre_commit_cmd.add_argument("paths", nargs="*")
         mapped_command = "data-format" if command == "data-check" else command

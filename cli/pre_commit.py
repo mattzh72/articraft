@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import os
 import re
 import subprocess
 import sys
@@ -24,6 +25,9 @@ FORBIDDEN_PATHS = (
     re.compile(r"^data/records/[^/]+/assets(?:/|$)"),
 )
 RECORD_PATH_RE = re.compile(r"^data/records/([^/]+)(?:/|$)")
+LFS_POINTER_HEADER = "version https://git-lfs.github.com/spec/v1"
+LFS_POINTER_OID_RE = re.compile(r"^oid sha256:([0-9a-f]{64})$", re.MULTILINE)
+TRUE_ENV_VALUES = {"1", "true", "yes", "on"}
 SECRET_PATTERNS = (
     ("OpenAI API key assignment", re.compile(r"OPENAI_API_KEYS?\s*=\s*['\"]?[^'\"\s]+")),
     (
@@ -162,12 +166,104 @@ def run_data_format_validation() -> int:
     return result.returncode
 
 
+def normalize_record_path(path: str) -> str | None:
+    candidate = Path(path)
+    if candidate.is_absolute():
+        try:
+            path = candidate.relative_to(REPO_ROOT).as_posix()
+        except ValueError:
+            return None
+    normalized = path.replace("\\", "/")
+    while normalized.startswith("./"):
+        normalized = normalized[2:]
+    if not RECORD_PATH_RE.search(normalized):
+        return None
+    return normalized
+
+
+def changed_record_paths_from_push_env(fallback_paths: list[str]) -> list[str]:
+    from_ref = os.environ.get("PRE_COMMIT_FROM_REF")
+    to_ref = os.environ.get("PRE_COMMIT_TO_REF")
+    if from_ref and to_ref:
+        result = subprocess.run(
+            [
+                "git",
+                "diff",
+                "--name-only",
+                "--diff-filter=ACMRT",
+                from_ref,
+                to_ref,
+                "--",
+                "data/records",
+            ],
+            cwd=REPO_ROOT,
+            check=False,
+            capture_output=True,
+            text=True,
+        )
+        if result.returncode == 0:
+            return sorted(
+                path
+                for path in {
+                    normalize_record_path(line) for line in (result.stdout or "").splitlines()
+                }
+                if path
+            )
+
+    return sorted(
+        path for path in {normalize_record_path(raw_path) for raw_path in fallback_paths} if path
+    )
+
+
+def lfs_pointer_oid_for_ref(ref: str, path: str) -> str | None:
+    result = subprocess.run(
+        ["git", "show", f"{ref}:{path}"],
+        cwd=REPO_ROOT,
+        check=False,
+        capture_output=True,
+        text=True,
+    )
+    if result.returncode != 0 or not result.stdout.startswith(LFS_POINTER_HEADER):
+        return None
+    match = LFS_POINTER_OID_RE.search(result.stdout)
+    if not match:
+        return None
+    return match.group(1)
+
+
+def push_changed_record_lfs_objects(paths: list[str]) -> int:
+    if os.environ.get("GIT_LFS_SKIP_PUSH", "").lower() in TRUE_ENV_VALUES:
+        return 0
+
+    remote = os.environ.get("PRE_COMMIT_REMOTE_NAME") or "origin"
+    to_ref = os.environ.get("PRE_COMMIT_TO_REF") or "HEAD"
+    record_paths = changed_record_paths_from_push_env(paths)
+    if not record_paths:
+        return 0
+
+    object_ids = sorted(
+        {oid for path in record_paths if (oid := lfs_pointer_oid_for_ref(to_ref, path)) is not None}
+    )
+    if not object_ids:
+        return 0
+
+    print(f"Pushing {len(object_ids)} changed Git LFS record object(s).")
+    result = subprocess.run(
+        ["git", "-c", "lfs.sshtransfer=never", "lfs", "push", "--object-id", remote, "--stdin"],
+        cwd=REPO_ROOT,
+        check=False,
+        input="\n".join(object_ids) + "\n",
+        text=True,
+    )
+    return result.returncode
+
+
 def main(argv: list[str] | None = None) -> int:
     args = sys.argv[1:] if argv is None else argv
     if not args:
         print(
             "Usage: articraft internal pre-commit "
-            "<forbidden-paths|secrets|data-check|smoke-tests> [paths...]"
+            "<forbidden-paths|secrets|data-check|lfs-push-records|smoke-tests> [paths...]"
         )
         return 2
 
@@ -179,6 +275,8 @@ def main(argv: list[str] | None = None) -> int:
         return detect_secrets(paths)
     if command in {"data-check", "data-format"}:
         return run_data_format_validation()
+    if command == "lfs-push-records":
+        return push_changed_record_lfs_objects(paths)
     if command == "smoke-tests":
         return run_smoke_tests()
 

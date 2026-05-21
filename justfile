@@ -40,6 +40,7 @@ setup:
     # Create a local env template once; never overwrite an existing secrets file.
     uv run --frozen articraft env bootstrap
     uv sync --frozen --group dev
+    uv run --frozen articraft hooks install
     uv run --frozen pre-commit install --hook-type pre-commit --hook-type pre-push
     @if command -v npm >/dev/null 2>&1; then \
         npm --prefix viewer/web ci; \
@@ -52,6 +53,7 @@ setup:
 
 hooks-install:
     just uv-version-check
+    uv run --frozen articraft hooks install
     uv run --frozen pre-commit install --hook-type pre-commit --hook-type pre-push
 
 format:

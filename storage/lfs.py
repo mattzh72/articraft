@@ -340,7 +340,8 @@ def _selection_reason(
 
 def _ensure_git_lfs_available(repo: StorageRepo) -> None:
     _run_git_command(repo, ["git", "lfs", "version"])
-    _run_git_command(repo, ["git", "lfs", "install", "--local"])
+    _run_git_command(repo, ["git", "lfs", "install", "--local", "--skip-repo"])
+    _run_git_command(repo, ["git", "config", "--local", "lfs.sshtransfer", "never"])
 
 
 def _sparse_checkout_add(repo: StorageRepo, record_ids: list[str]) -> None:
@@ -399,7 +400,7 @@ def _run_git_command(repo: StorageRepo, command: list[str]) -> None:
         message = stderr or stdout or f"{command[0]} exited with status {exc.returncode}"
         if command[:3] == ["git", "lfs", "version"]:
             message = (
-                "Git LFS is required for record hydration. Install Git LFS, then run "
-                "`git lfs install` in this repo."
+                "Git LFS is required for record hydration. Install Git LFS, then rerun "
+                "the hydration command."
             )
         raise RuntimeError(message) from exc
