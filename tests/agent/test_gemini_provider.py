@@ -52,6 +52,12 @@ def test_gemini_factory_default_model_is_35_flash() -> None:
     assert default_model_id(ProviderConfig(provider="gemini")) == DEFAULT_GEMINI_MODEL
 
 
+def test_provider_config_uses_env_thinking_default(monkeypatch) -> None:
+    monkeypatch.setenv("ARTICRAFT_THINKING_LEVEL", "xhigh")
+
+    assert ProviderConfig().thinking_level == "xhigh"
+
+
 def test_gemini_context_window_pressure_reports_prompt_fraction() -> None:
     provider = GeminiLLM(model_id="gemini-3.1-pro-preview", dry_run=True)
 

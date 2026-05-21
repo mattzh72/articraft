@@ -312,3 +312,48 @@ def test_dataset_store_updates_cached_dataset_id_index_after_promote(tmp_path: P
         promoted_at="2026-03-18T00:00:01Z",
     )
     assert datasets.find_record_id_by_dataset_id("ds_hinges_new") == "rec_new"
+
+
+def test_dataset_manifest_does_not_rescan_records_index_for_each_record_dir(
+    tmp_path: Path,
+    monkeypatch,
+) -> None:
+    repo = StorageRepo(tmp_path)
+    repo.ensure_layout()
+    index_rows = [
+        {
+            "schema_version": 1,
+            "record_id": f"rec_indexed_{index}",
+            "dataset_id": f"ds_indexed_{index}",
+            "category_slug": "hinges",
+            "promoted_at": "2026-03-18T00:01:00Z",
+        }
+        for index in range(3)
+    ]
+    repo.write_text(
+        repo.layout.records_index_path,
+        "".join(json.dumps(row) + "\n" for row in index_rows),
+    )
+    for index in range(5):
+        repo.layout.record_dir(f"rec_unhydrated_{index}").mkdir(parents=True)
+
+    from storage import datasets as datasets_module
+
+    calls = 0
+    original_load_records_index = datasets_module.load_records_index
+
+    def counting_load_records_index(repo: StorageRepo):
+        nonlocal calls
+        calls += 1
+        return original_load_records_index(repo)
+
+    monkeypatch.setattr(datasets_module, "load_records_index", counting_load_records_index)
+
+    manifest = DatasetStore(repo).write_dataset_manifest()
+
+    assert manifest["generated"] == [
+        {"name": "ds_indexed_0", "record_id": "rec_indexed_0"},
+        {"name": "ds_indexed_1", "record_id": "rec_indexed_1"},
+        {"name": "ds_indexed_2", "record_id": "rec_indexed_2"},
+    ]
+    assert calls == 1

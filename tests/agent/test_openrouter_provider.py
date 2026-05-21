@@ -85,6 +85,29 @@ def test_openrouter_request_preview_uses_chat_completions_shape() -> None:
     assert 0 < payload["max_tokens"] < DEFAULT_OPENROUTER_MAX_TOKENS
 
 
+def test_openrouter_reasoning_effort_preserves_supported_levels() -> None:
+    for level in ("minimal", "low", "medium", "high", "xhigh"):
+        provider = OpenRouterLLM(thinking_level=level, dry_run=True)
+        payload = provider.build_request_preview(
+            system_prompt="system",
+            messages=[{"role": "user", "content": "task"}],
+            tools=[],
+        )
+
+        assert payload["extra_body"]["reasoning"] == {"enabled": True, "effort": level}
+
+
+def test_openrouter_reasoning_can_be_disabled() -> None:
+    provider = OpenRouterLLM(thinking_level="none", dry_run=True)
+    payload = provider.build_request_preview(
+        system_prompt="system",
+        messages=[{"role": "user", "content": "task"}],
+        tools=[],
+    )
+
+    assert payload["extra_body"]["reasoning"] == {"enabled": False}
+
+
 def test_openrouter_response_preserves_reasoning_details_for_next_turn() -> None:
     provider = OpenRouterLLM(dry_run=True)
     response = SimpleNamespace(

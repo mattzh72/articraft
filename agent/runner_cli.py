@@ -23,7 +23,7 @@ from agent.single_run import run_from_input
 from agent.tools import build_initial_user_content as _build_initial_user_content
 from agent.tools import resolve_image_path as _resolve_image_path
 from agent.tui.single_run import LLMWaitAwareStreamHandler
-from articraft.env_defaults import default_thinking_level_from_env
+from articraft.env_defaults import default_thinking_level_from_env, load_repo_env
 from articraft.values import PROVIDER_VALUES, THINKING_LEVEL_VALUES, ProviderName
 
 
@@ -170,6 +170,7 @@ def main(
         help=argparse.SUPPRESS,
     )
     args = parser.parse_args(argv)
+    load_repo_env(args.repo_root)
     thinking_level = args.thinking or default_thinking_level_from_env()
     if args.collection == "dataset":
         if not args.dataset_id:

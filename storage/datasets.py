@@ -46,7 +46,7 @@ class DatasetStore:
             return dataset_id_to_record_id
 
         for record_dir in sorted(path for path in records_root.iterdir() if path.is_dir()):
-            entry = self.load_entry(record_dir.name)
+            entry = self._load_entry_file(record_dir.name)
             if not isinstance(entry, dict):
                 continue
             dataset_id = str(entry.get("dataset_id") or "")
@@ -67,10 +67,15 @@ class DatasetStore:
     def dataset_ids(self) -> set[str]:
         return set(self._dataset_id_index())
 
-    def load_entry(self, record_id: str) -> dict | None:
+    def _load_entry_file(self, record_id: str) -> dict | None:
         validated_record_id = validate_record_id(record_id)
         entry = self.repo.read_json(self.repo.layout.record_dataset_entry_path(validated_record_id))
-        if isinstance(entry, dict):
+        return entry if isinstance(entry, dict) else None
+
+    def load_entry(self, record_id: str) -> dict | None:
+        validated_record_id = validate_record_id(record_id)
+        entry = self._load_entry_file(validated_record_id)
+        if entry is not None:
             return entry
         for row in load_records_index(self.repo):
             if row.get("record_id") != validated_record_id:
@@ -96,7 +101,8 @@ class DatasetStore:
             )
         entries_by_record_id = {str(item["record_id"]): item for item in entries}
         for record_dir in sorted(path for path in records_root.iterdir() if path.is_dir()):
-            entry = self.load_entry(record_dir.name)
+            # Avoid load_entry() here; its records-index fallback is for single-record lookups.
+            entry = self._load_entry_file(record_dir.name)
             if entry is not None:
                 entries_by_record_id[str(entry["record_id"])] = entry
         entries = list(entries_by_record_id.values())

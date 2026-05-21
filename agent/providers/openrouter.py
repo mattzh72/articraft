@@ -492,7 +492,7 @@ def _reasoning_config_from_thinking_level(thinking_level: str) -> dict[str, Any]
     if level in {"0", "false", "none", "off", "disabled"}:
         return {"enabled": False}
     reasoning: dict[str, Any] = {"enabled": True}
-    if level in {"low", "high"}:
+    if level in {"minimal", "low", "medium", "high", "xhigh"}:
         reasoning["effort"] = level
     return reasoning
 

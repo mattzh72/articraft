@@ -172,3 +172,38 @@ def test_runner_dump_provider_payload_uses_openai_env_defaults(
     payload = json.loads(capsys.readouterr().out)
     assert payload["model"] == "gpt-5.5"
     assert payload["reasoning"]["effort"] == "xhigh"
+
+
+def test_runner_loads_env_defaults_from_repo_root(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    repo_root = tmp_path / "repo"
+    repo_root.mkdir()
+    (repo_root / ".env").write_text(
+        "ARTICRAFT_MODEL=gpt-5.5-direct-runner\nARTICRAFT_THINKING_LEVEL=xhigh\n",
+        encoding="utf-8",
+    )
+    other_cwd = tmp_path / "cwd"
+    other_cwd.mkdir()
+    monkeypatch.chdir(other_cwd)
+    monkeypatch.delenv("ARTICRAFT_MODEL", raising=False)
+    monkeypatch.delenv("ARTICRAFT_THINKING_LEVEL", raising=False)
+
+    exit_code = runner.main(
+        [
+            "--prompt",
+            "test prompt",
+            "--provider",
+            "openai",
+            "--repo-root",
+            str(repo_root),
+            "--dump-provider-payload",
+        ]
+    )
+
+    assert exit_code == 0
+    payload = json.loads(capsys.readouterr().out)
+    assert payload["model"] == "gpt-5.5-direct-runner"
+    assert payload["reasoning"]["effort"] == "xhigh"
