@@ -55,10 +55,12 @@ Generate your first model directly from a prompt using `articraft generate`:
 uv run articraft generate "Create a realistic articulated desk lamp with a weighted base, two hinged arms, and an adjustable lamp head."
 ```
 
-If you specify no overrides, it defaults to `--model gpt-5.5-2026-04-23 --thinking-level high`. You can change models and caps:
+If you specify no overrides, it defaults to `--model gpt-5.5-2026-04-23 --thinking-level high`. You can also set a per-run cost cap:
 ```bash
-uv run articraft generate --model gemini-3-flash-preview --max-cost-usd 1.5 "Create a compact desk fan with adjustable tilt."
+uv run articraft generate --max-cost-usd 1.5 "Create a compact desk fan with adjustable tilt."
 ```
+
+To generate from a reference image, see [Image-Conditioned Generation](docs/image_conditioned_generation.md).
 
 ### 5. Open the Viewer
 Browse the objects you just generated. The local viewer API and React frontend can be started with:
@@ -93,6 +95,7 @@ By contributing data to the Articraft project, you acknowledge and agree that yo
 
 - **[Architecture & Project Structure](docs/architecture.md)**
 - **[Editing Existing Records](docs/record_editing.md)**
+- **[Image-Conditioned Generation](docs/image_conditioned_generation.md)**
 - **[Dataset Generation & Batch Processing](docs/dataset_generation.md)**
 - **[Contributing Standards & Workflow](CONTRIBUTING.md)**
 - **[Security Policy](SECURITY.md)**
