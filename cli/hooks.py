@@ -10,6 +10,7 @@ from typing import Literal
 REPO_ROOT = Path(__file__).resolve().parent.parent
 POST_COMMIT_GUARD_ENV = "ARTICRAFT_POST_COMMIT_AUTHOR_SYNC_RUNNING"
 MANAGED_POST_COMMIT_MARKER = "# articraft-managed-post-commit"
+GIT_LFS_HOOK_NAMES = ("pre-push", "post-checkout", "post-commit", "post-merge")
 MANAGED_POST_COMMIT_SCRIPT = """#!/usr/bin/env bash
 {marker}
 set -euo pipefail
@@ -138,6 +139,11 @@ class PostCommitHookStatus:
         return self.status == "installed"
 
 
+@dataclass(slots=True, frozen=True)
+class HookInstallResult:
+    removed_stock_lfs_hooks: list[Path] = field(default_factory=list)
+
+
 def run_post_commit_record_metadata_sync(repo_root: Path) -> PostCommitRecordMetadataResult:
     _ = repo_root
     return PostCommitRecordMetadataResult()
@@ -165,10 +171,45 @@ def install_post_commit_hook(repo_root: Path) -> Path:
     return status.hook_path
 
 
+def _is_stock_git_lfs_hook(path: Path, hook_name: str) -> bool:
+    if not path.exists() or not path.is_file():
+        return False
+    try:
+        text = path.read_text(encoding="utf-8")
+    except OSError:
+        return False
+    return (
+        "This repository is configured for Git LFS" in text
+        and f'git lfs {hook_name} "$@"' in text.splitlines()
+    )
+
+
+def remove_stock_git_lfs_hooks(repo_root: Path) -> list[Path]:
+    removed: list[Path] = []
+    for hook_name in GIT_LFS_HOOK_NAMES:
+        for suffix in ("", ".legacy"):
+            hook_path = _git_path(repo_root, f"hooks/{hook_name}{suffix}")
+            if not _is_stock_git_lfs_hook(hook_path, hook_name):
+                continue
+            hook_path.unlink()
+            removed.append(hook_path)
+    return removed
+
+
+def install_hooks(repo_root: Path) -> HookInstallResult:
+    repo_root = repo_root.resolve()
+    removed = remove_stock_git_lfs_hooks(repo_root)
+    _git_run(repo_root, "config", "--local", "lfs.sshtransfer", "never")
+    return HookInstallResult(removed_stock_lfs_hooks=removed)
+
+
 def _build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="articraft hooks")
     subparsers = parser.add_subparsers(dest="command", required=True)
-    subparsers.add_parser("install", help="No-op compatibility command; sync hook is disabled.")
+    subparsers.add_parser(
+        "install",
+        help="Repair Articraft hook defaults without overwriting custom hooks.",
+    )
     subparsers.add_parser(
         "check",
         help="Report whether an old managed post-commit hook is installed, missing, or unmanaged.",
@@ -185,8 +226,12 @@ def main(argv: list[str] | None = None) -> int:
     args = parser.parse_args(argv)
 
     if args.command == "install":
-        hook_path = install_post_commit_hook(REPO_ROOT)
-        print(f"Managed post-commit metadata sync is disabled; no hook installed at {hook_path}")
+        result = install_hooks(REPO_ROOT)
+        if result.removed_stock_lfs_hooks:
+            print("Removed stock Git LFS hooks:")
+            for hook_path in result.removed_stock_lfs_hooks:
+                print(f"  - {hook_path}")
+        print("Configured lfs.sshtransfer=never.")
         return 0
 
     if args.command == "check":

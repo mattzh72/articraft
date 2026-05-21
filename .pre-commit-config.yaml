@@ -58,3 +58,11 @@ repos:
         language: system
         pass_filenames: false
         stages: [pre-push]
+      - id: lfs-push-records
+        name: push changed record LFS objects
+        entry: uv run articraft internal pre-commit lfs-push-records
+        language: system
+        always_run: true
+        pass_filenames: false
+        files: ^data/records/
+        stages: [pre-push]
