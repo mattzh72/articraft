@@ -9,10 +9,8 @@ import os
 from dataclasses import dataclass, field
 from pathlib import Path
 
+from articraft.config import ARTICRAFT_MAX_COST_USD_ENV_VAR
 from articraft.values import ProviderName, normalize_provider_name
-
-MAX_COST_ENV_VAR = "ARTICRAFT_MAX_COST_USD"
-
 
 GEMINI_FLASH_PRICING: dict[str, float] = {
     "input_uncached": 0.50,
@@ -421,4 +419,7 @@ def parse_max_cost_usd(value: object, *, label: str = "max_cost_usd") -> float |
 
 def max_cost_usd_from_env(env: dict[str, str] | None = None) -> float | None:
     values = os.environ if env is None else env
-    return parse_max_cost_usd(values.get(MAX_COST_ENV_VAR), label=MAX_COST_ENV_VAR)
+    return parse_max_cost_usd(
+        values.get(ARTICRAFT_MAX_COST_USD_ENV_VAR),
+        label=ARTICRAFT_MAX_COST_USD_ENV_VAR,
+    )

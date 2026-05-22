@@ -29,14 +29,6 @@ from agent.providers.base import (
 from agent.providers.compaction_policy import decide_compaction
 from articraft.values import reasoning_level_alias
 
-try:
-    from dotenv import load_dotenv  # type: ignore
-except Exception:  # pragma: no cover
-
-    def load_dotenv(*args: Any, **kwargs: Any) -> None:  # type: ignore
-        return None
-
-
 _logger = logging.getLogger(__name__)
 
 _GEMINI_DANGER_ZONE_TOKENS = 700_000
@@ -45,12 +37,6 @@ _GEMINI_PREFIX_CACHE_REFRESH_WINDOW_SECONDS = 300
 _GEMINI_COMPACTION_PROMPT_FILE = "gemini_compaction.md"
 DEFAULT_GEMINI_MODEL = "gemini-3.5-flash"
 DEFAULT_GEMINI_COMPACTION_MODEL = "gemini-3-flash-preview"
-
-
-def _load_cwd_dotenv_override() -> None:
-    dotenv_path = Path.cwd() / ".env"
-    if dotenv_path.exists():
-        load_dotenv(dotenv_path=dotenv_path, override=True)
 
 
 class GeminiLLM:
@@ -81,7 +67,6 @@ class GeminiLLM:
             self._client_lock = threading.Lock()
             self._next_client_index = 0
         else:
-            _load_cwd_dotenv_override()
             config = gemini_client_config_from_env()
             from google import genai  # type: ignore
 

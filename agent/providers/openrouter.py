@@ -26,14 +26,6 @@ from agent.providers.base import (
 )
 from articraft.values import reasoning_level_alias
 
-try:
-    from dotenv import load_dotenv  # type: ignore
-except Exception:  # pragma: no cover
-
-    def load_dotenv(*args: Any, **kwargs: Any) -> None:  # type: ignore
-        return None
-
-
 logger = logging.getLogger(__name__)
 
 DEFAULT_OPENROUTER_MODEL = "tencent/hy3-preview:free"
@@ -41,12 +33,6 @@ OPENROUTER_BASE_URL = "https://openrouter.ai/api/v1"
 DEFAULT_OPENROUTER_CONTEXT_TOKENS = 262_144
 DEFAULT_OPENROUTER_MAX_TOKENS = 262_144
 DEFAULT_OPENROUTER_OUTPUT_SAFETY_TOKENS = 1_024
-
-
-def _load_cwd_dotenv_override() -> None:
-    dotenv_path = Path.cwd() / ".env"
-    if dotenv_path.exists():
-        load_dotenv(dotenv_path=dotenv_path, override=True)
 
 
 def openrouter_api_keys_from_env(env: dict[str, str] | None = None) -> list[str]:
@@ -111,7 +97,6 @@ class OpenRouterLLM:
             self._client = None
             self._client_is_async = False
         else:
-            _load_cwd_dotenv_override()
             api_key = openrouter_api_key_from_env()
             if not api_key:
                 raise ValueError(

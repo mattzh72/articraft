@@ -14,7 +14,6 @@ from agent.providers.anthropic import (
     AnthropicLLM,
     _api_error_from_sdk_exception,
     _async_retry,
-    _load_cwd_dotenv_override,
     _should_retry_anthropic_exception,
     anthropic_api_key_from_env,
     anthropic_api_keys_from_env,
@@ -60,15 +59,13 @@ def test_anthropic_api_key_from_env_uses_key_pool_when_primary_missing() -> None
     assert key in {"sk-ant-first", "sk-ant-second"}
 
 
-def test_anthropic_provider_loads_dotenv_over_exported_key(monkeypatch, tmp_path) -> None:
+def test_anthropic_api_key_from_env_does_not_load_cwd_dotenv(monkeypatch, tmp_path) -> None:
     env_name = "ANTHROPIC_API_" + "KEY"
     monkeypatch.chdir(tmp_path)
     monkeypatch.setenv(env_name, "test-exported")
     (tmp_path / ".env").write_text(f"{env_name}=test-dotenv\n", encoding="utf-8")
 
-    _load_cwd_dotenv_override()
-
-    assert anthropic_api_key_from_env() == "test-dotenv"
+    assert anthropic_api_key_from_env() == "test-exported"
 
 
 def test_anthropic_default_model_is_current_opus() -> None:

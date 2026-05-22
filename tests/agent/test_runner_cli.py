@@ -71,7 +71,6 @@ def test_runner_accepts_openai_api_keys_env(
         return 0
 
     monkeypatch.setattr(runner, "run_from_input", _fake_run_from_input)
-    monkeypatch.setattr(runner, "load_dotenv", lambda: None)
     monkeypatch.delenv("OPENAI_API_KEY", raising=False)
     monkeypatch.setenv("OPENAI_API_KEYS", "sk-first,sk-second")
     monkeypatch.setenv("ARTICRAFT_MAX_COST_USD", "1.25")
@@ -154,7 +153,6 @@ def test_runner_dump_provider_payload_uses_openai_env_defaults(
     monkeypatch: pytest.MonkeyPatch,
     capsys: pytest.CaptureFixture[str],
 ) -> None:
-    monkeypatch.setattr(runner, "load_dotenv", lambda: None)
     monkeypatch.setenv("ARTICRAFT_MODEL", "gpt-5.5")
     monkeypatch.setenv("ARTICRAFT_THINKING_LEVEL", "xhigh")
 

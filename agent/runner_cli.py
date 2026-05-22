@@ -12,8 +12,6 @@ import sys
 from pathlib import Path
 from typing import Awaitable, Callable, Optional
 
-from dotenv import load_dotenv
-
 from agent.cost import max_cost_usd_from_env, parse_max_cost_usd
 from agent.payload_preview import build_provider_payload_preview
 from agent.prompts import normalize_sdk_package
@@ -23,7 +21,7 @@ from agent.single_run import run_from_input
 from agent.tools import build_initial_user_content as _build_initial_user_content
 from agent.tools import resolve_image_path as _resolve_image_path
 from agent.tui.single_run import LLMWaitAwareStreamHandler
-from articraft.env_defaults import (
+from articraft.config import (
     default_model_from_env,
     default_thinking_level_from_env,
     load_repo_env,
@@ -95,15 +93,12 @@ def main(
     *,
     run_from_input_func: Callable[..., Awaitable[int]] = run_from_input,
     build_provider_payload_preview_func: Callable[..., dict] = build_provider_payload_preview,
-    load_dotenv_func: Callable[[], object] = load_dotenv,
 ) -> int:
     logging.basicConfig(
         level=logging.INFO,
         format="%(levelname)s: %(message)s",
         handlers=[LLMWaitAwareStreamHandler()],
     )
-    load_dotenv_func()
-
     parser = argparse.ArgumentParser(
         description="Generate an articulated object and persist it to workbench or dataset storage."
     )

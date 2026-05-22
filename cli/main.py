@@ -11,7 +11,7 @@ from shutil import which
 
 from agent import runner as agent_runner
 from agent.providers.factory import infer_provider_from_model_id
-from articraft.env_defaults import (
+from articraft.config import (
     default_model_from_env,
     default_thinking_level_from_env,
     load_repo_env,

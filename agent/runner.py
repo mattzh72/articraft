@@ -16,8 +16,6 @@ import logging
 from pathlib import Path
 from typing import Any
 
-from dotenv import load_dotenv
-
 from agent.compiler import (
     compile_urdf as _compile_urdf,
 )
@@ -281,7 +279,6 @@ def main(argv: list[str] | None = None) -> int:
         argv,
         run_from_input_func=run_from_input,
         build_provider_payload_preview_func=build_provider_payload_preview,
-        load_dotenv_func=load_dotenv,
     )
 
 

@@ -20,7 +20,7 @@ from agent.providers.openrouter import (
     OpenRouterLLM,
     openrouter_api_key_from_env,
 )
-from articraft.env_defaults import default_model_from_env, default_thinking_level_from_env
+from articraft.config import default_model_from_env, default_thinking_level_from_env
 from articraft.values import (
     PROVIDER_VALUE_SET,
     ProviderName,

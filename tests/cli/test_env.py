@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from cli.env import bootstrap_env
+from articraft.config import bootstrap_env
 
 
 def test_bootstrap_env_imports_generation_defaults(tmp_path) -> None:

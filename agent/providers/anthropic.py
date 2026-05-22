@@ -30,14 +30,6 @@ from agent.providers.base import (
 )
 from articraft.values import reasoning_level_alias
 
-try:
-    from dotenv import load_dotenv  # type: ignore
-except ImportError:  # pragma: no cover
-
-    def load_dotenv(*args: Any, **kwargs: Any) -> None:  # type: ignore
-        return None
-
-
 logger = logging.getLogger(__name__)
 
 ANTHROPIC_BASE_URL = "https://api.anthropic.com"
@@ -54,12 +46,6 @@ _ADAPTIVE_THINKING_MODELS = (
     "claude-opus-4-6",
     "claude-sonnet-4-6",
 )
-
-
-def _load_cwd_dotenv_override() -> None:
-    dotenv_path = Path.cwd() / ".env"
-    if dotenv_path.exists():
-        load_dotenv(dotenv_path=dotenv_path, override=True)
 
 
 @dataclass(slots=True)
@@ -139,7 +125,6 @@ class AnthropicLLM:
         self.api_key: str | None = None
         self._client: Any = None
         if not dry_run:
-            _load_cwd_dotenv_override()
             self.api_key = anthropic_api_key_from_env()
             if not self.api_key:
                 raise ValueError(
