@@ -782,7 +782,7 @@ def test_visible_finish_attempt_ends_turn_and_shares_compile_gate(
         {},
     ],
 )
-def test_no_action_response_counts_turn_and_requires_compile(
+def test_no_action_response_fails_fast_after_streak(
     monkeypatch: pytest.MonkeyPatch,
     tmp_path: Path,
     no_action_response: dict[str, object],
@@ -806,7 +806,7 @@ def test_no_action_response_counts_turn_and_requires_compile(
     agent = ArticraftAgent(
         file_path=str(tmp_path / "model.py"),
         provider="openai",
-        max_turns=2,
+        max_turns=10,
         display_enabled=False,
     )
     agent.display = _CountingDisplay()
@@ -814,10 +814,11 @@ def test_no_action_response_counts_turn_and_requires_compile(
     result = asyncio.run(agent.run("make a hinge"))
 
     assert result.success is False
-    assert result.reason == TerminateReason.MAX_TURNS
-    assert result.turn_count == 2
-    assert getattr(agent.llm, "calls") == 2
-    assert agent.display.end_turn_calls == 2
+    assert result.reason == TerminateReason.ERROR
+    assert "3 consecutive no-action responses" in result.message
+    assert result.turn_count == 3
+    assert getattr(agent.llm, "calls") == 3
+    assert agent.display.end_turn_calls == 3
 
     user_messages = [
         str(message.get("content", ""))

@@ -57,6 +57,7 @@ logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
 CONSOLE = Console()
 _FIND_EXAMPLES_SKIPPED_CONTENT = "{Skipped: full content already returned earlier in this run.}"
+MAX_CONSECUTIVE_NO_ACTION_TURNS = 3
 
 
 def _minimal_scaffold_text(
@@ -1064,6 +1065,7 @@ class ArticraftAgent:
         completed_turns = 0
         llm_calls = 0
         tool_call_count = 0
+        consecutive_no_action_turns = 0
 
         while completed_turns < self.max_turns:
             turn = completed_turns + 1
@@ -1259,6 +1261,30 @@ class ArticraftAgent:
             is_no_action_response = not tool_calls and not text.strip()
             if is_no_action_response:
                 completed_turns += 1
+                consecutive_no_action_turns += 1
+                if consecutive_no_action_turns >= MAX_CONSECUTIVE_NO_ACTION_TURNS:
+                    message = (
+                        "LLM produced "
+                        f"{consecutive_no_action_turns} consecutive no-action responses "
+                        "(no visible text and no tool calls). Aborting early to avoid "
+                        "burning turns."
+                    )
+                    logger.warning(message)
+                    self._persist_cost_tracking()
+                    self.display.end_turn(success=False, error=message)
+                    return AgentResult(
+                        success=False,
+                        reason=TerminateReason.ERROR,
+                        message=message,
+                        conversation=conversation,
+                        compile_warnings=self._compile_warnings_snapshot(),
+                        turn_count=completed_turns,
+                        tool_call_count=tool_call_count,
+                        compile_attempt_count=(
+                            self._ensure_compile_feedback().compile_attempt_count
+                        ),
+                        usage=usage_totals or None,
+                    )
                 if self._latest_code_is_fresh():
                     logger.info(
                         "No-action response after fresh compile; requesting visible final response."
@@ -1270,6 +1296,7 @@ class ArticraftAgent:
                 self.display.end_turn(success=True)
                 continue
 
+            consecutive_no_action_turns = 0
             completed_turns += 1
 
             termination_message = self._termination_message(text, tool_calls)
