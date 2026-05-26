@@ -13,6 +13,10 @@
 - If `apply_patch` or `replace` fails because text did not match, call `read_file(path="model.py")` again and retry with one smaller exact edit; do not repeat a stale patch.
 - Modify the existing editable code; use `write_file` only when you intentionally want to replace the whole editable section.
 - Avoid `write_file` for large code unless a full rewrite is truly necessary; long JSON-encoded `content` strings are easier to corrupt than a focused `apply_patch` or `replace`.
+- For realistic complex objects, make an internal structure plan before the first edit: semantic parts, load-bearing/support geometry, articulations, visible surface strategy, exact support/overlap checks, and which docs or examples you need to read.
+- Complexity must be justified by the real object. Add nested bodies, hollow shells, panels, ribs, rails, brackets, handles, controls, grilles, holes, fasteners, and mount features when they make the model more truthful; do not add unsupported floating detail or decorative clutter.
+- When the requested object is mechanism-rich or enclosure-like, one coherent `write_file` scaffold with small helper functions can be better than many fragile patches. Keep names semantic, helpers compact, and compile after the scaffold before adding enrichment details.
+- If a clean compile still leaves only a placeholder silhouette or misses prompt-critical real features, perform one focused realism enrichment pass and compile again. Stop when additional detail would be decorative rather than physically or visually meaningful.
 - Put small trim, ticks, rails, caps, decorative strips, and other non-moving details on an existing semantic parent part unless the detail needs its own articulation.
 - For captured mechanical interfaces such as hinge barrels in sleeves, trunnion pins in sockets, dish lugs in side brackets, knob shafts in bosses, and seated door rails, plan the exact scoped `ctx.allow_overlap(...)` and proof check when authoring the interface instead of waiting for compile to discover it.
 - Use only SDK material/visual signatures shown in the provided docs or current examples. `Material` requires `name` and accepts only `rgba`, `color`, and `texture`; do not invent kwargs such as `roughness`, `metallic`, or `base_color`. `Part.visual(...)` must use either `material=` or the alias `color=`, never both.
@@ -23,6 +27,6 @@
 - Match the real mechanism's articulation type: use `ArticulationType.CONTINUOUS` only for freely rotating spindles, rollers, wheels, cradles, and unbounded knobs; use bounded `REVOLUTE` for hinges, levers, doors, and finite-range appliance controls such as temperature, timer, mode, and selector knobs; use `PRISMATIC` for buttons, sliders, drawers, and telescoping travel.
 - Run `compile_model` after substantive edits, inspect `<compile_signals>`, and fix named compile/QC defects before concluding.
 - When you no longer need tools, conclude instead of continuing to reflect in text.
-- After a clean compile on the latest revision, conclude immediately unless you can name one specific unresolved defect.
+- After a clean compile on the latest revision, conclude immediately if the realism/mechanism brief is satisfied; if not, name the missing prompt-critical feature and perform one focused repair.
 - Do not do extra verification, review chatter, or refinement passes after success without a named defect.
 </tools>

@@ -55,10 +55,10 @@ def test_first_turn_runtime_guidance_is_shared() -> None:
     expected = (
         "<runtime_task_guidance>\n"
         "- Read the current `model.py` before editing.\n"
-        "- Make one small coherent change at a time.\n"
+        "- Start with a realism-first structure plan. Use one coherent scaffold when the real object needs layered bodies, hollow forms, mechanisms, or repeated features; otherwise make small focused edits.\n"
         "- Treat visual realism as part of the deliverable: make the object read clearly as the requested thing, with believable proportions, silhouette, colors/materials, and major visible surface treatment.\n"
         "- Run `compile_model` to check your latest revision.\n"
-        "- If compile is clean and you cannot name one specific remaining defect, conclude.\n"
+        "- If compile is clean and the model already satisfies the realism/mechanism brief, conclude.\n"
         "</runtime_task_guidance>"
     )
 

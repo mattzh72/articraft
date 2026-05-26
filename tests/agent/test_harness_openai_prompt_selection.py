@@ -117,11 +117,12 @@ def test_openai_prompt_resolution_and_payload_preview() -> None:
     # Shared runtime first-turn task guidance
     assert task_message.startswith("<runtime_task_guidance>")
     assert "Read the current `model.py` before editing." in task_message
-    assert "Make one small coherent change at a time." in task_message
+    assert "Start with a realism-first structure plan." in task_message
+    assert "one coherent scaffold" in task_message
     assert "silhouette, colors/materials, and major visible surface treatment." in task_message
     assert "Run `compile_model` to check your latest revision." in task_message
     assert (
-        "If compile is clean and you cannot name one specific remaining defect, conclude."
+        "If compile is clean and the model already satisfies the realism/mechanism brief, conclude."
         in task_message
     )
     assert task_message.endswith("a pair of scissors")
@@ -365,13 +366,14 @@ def test_gemini_prompt_resolution_and_payload_preview() -> None:
     # Shared runtime first-turn task guidance
     assert gemini_task_message.startswith("<runtime_task_guidance>")
     assert "Read the current `model.py` before editing." in gemini_task_message
-    assert "Make one small coherent change at a time." in gemini_task_message
+    assert "Start with a realism-first structure plan." in gemini_task_message
+    assert "one coherent scaffold" in gemini_task_message
     assert (
         "silhouette, colors/materials, and major visible surface treatment." in gemini_task_message
     )
     assert "Run `compile_model` to check your latest revision." in gemini_task_message
     assert (
-        "If compile is clean and you cannot name one specific remaining defect, conclude."
+        "If compile is clean and the model already satisfies the realism/mechanism brief, conclude."
         in gemini_task_message
     )
     assert gemini_task_message.endswith("a pair of scissors")

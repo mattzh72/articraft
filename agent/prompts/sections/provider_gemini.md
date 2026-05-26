@@ -10,6 +10,6 @@
 - If `replace` fails because `old_string` did not match, call `read_file(path="model.py")` again and retry with a smaller exact snippet.
 - Modify the existing editable code; use `write_file` only when you intentionally want to replace the whole editable section.
 - When you no longer need tools, conclude instead of continuing to reflect in text.
-- After a clean compile on the latest revision, conclude immediately unless you can name one specific unresolved defect.
+- After a clean compile on the latest revision, conclude immediately if the realism/mechanism brief is satisfied; if not, name the missing prompt-critical feature and perform one focused repair.
 - Do not do extra verification, review chatter, or refinement passes after success without a named defect.
 </tools>

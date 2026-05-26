@@ -358,7 +358,7 @@ def test_first_turn_no_tool_response_no_longer_injects_nudge(tmp_path: Path) -> 
     assert result.reason == TerminateReason.MAX_TURNS
     assert len(result.conversation) == 3
     assert result.conversation[0]["content"].startswith("<runtime_task_guidance>")
-    assert "Make one small coherent change at a time." in result.conversation[0]["content"]
+    assert "Start with a realism-first structure plan." in result.conversation[0]["content"]
     assert result.conversation[0]["content"].endswith("make a bracket")
     assert result.conversation[2]["content"].startswith("<compile_required>")
     assert all(
