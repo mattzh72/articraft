@@ -38,6 +38,10 @@ SECRET_PATTERNS = (
         "Anthropic API key assignment",
         re.compile(r"ANTHROPIC_API_KEYS?\s*=\s*['\"]?[^'\"\s]+"),
     ),
+    (
+        "DashScope API key assignment",
+        re.compile(r"DASHSCOPE_API_KEYS?\s*=\s*['\"]?[^'\"\s]+"),
+    ),
     ("Gemini API keys assignment", re.compile(r"GEMINI_API_KEYS\s*=\s*['\"]?[^'\"\s]+")),
     ("OpenAI secret token", re.compile(r"\bsk-[A-Za-z0-9_-]{16,}\b")),
     (

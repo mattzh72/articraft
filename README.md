@@ -65,7 +65,6 @@ uv run articraft generate --max-cost-usd 1.5 "Create a compact desk fan with adj
 ```
 
 To generate from a reference image, see [Image-Conditioned Generation](docs/image_conditioned_generation.md).
-
 ### 5. Open the Viewer
 Browse the objects you just generated. The local viewer API and React frontend can be started with:
 ```bash
@@ -98,6 +97,7 @@ By contributing data to the Articraft project, you acknowledge and agree that yo
 ## Documentation & Advanced Usage
 
 - **[Architecture & Project Structure](docs/architecture.md)**
+- **[Qwen / DashScope Quickstart](docs/qwen_dashscope_quickstart.md)**
 - **[Editing Existing Records](docs/record_editing.md)**
 - **[Image-Conditioned Generation](docs/image_conditioned_generation.md)**
 - **[Dataset Generation & Batch Processing](docs/dataset_generation.md)**

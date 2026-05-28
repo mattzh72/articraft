@@ -126,3 +126,9 @@ viewer:
 viewer-dev:
     just uv-version-check
     uv run --frozen articraft viewer --dev --host {{ quote(host) }} --port {{ quote(port) }}
+
+dashscope-test:
+    bash scripts/dashscope_run.sh official-test
+
+dashscope-generate prompt:
+    bash scripts/dashscope_run.sh generate {{ quote(prompt) }}

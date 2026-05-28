@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import os
 from collections.abc import Callable
 from dataclasses import dataclass, field
 
@@ -9,6 +10,11 @@ from agent.providers.anthropic import (
     anthropic_api_key_from_env,
 )
 from agent.providers.base import ProviderClient
+from agent.providers.dashscope import (
+    DEFAULT_DASHSCOPE_MODEL,
+    DashScopeLLM,
+    dashscope_api_key_from_env,
+)
 from agent.providers.gemini import (
     DEFAULT_GEMINI_MODEL,
     GeminiLLM,
@@ -54,6 +60,7 @@ class ProviderConfig:
 @dataclass(slots=True, frozen=True)
 class ProviderConstructors:
     anthropic: Callable[..., ProviderClient] = AnthropicLLM
+    dashscope: Callable[..., ProviderClient] = DashScopeLLM
     gemini: Callable[..., ProviderClient] = GeminiLLM
     openai: Callable[..., ProviderClient] = OpenAILLM
     openrouter: Callable[..., ProviderClient] = OpenRouterLLM
@@ -74,6 +81,8 @@ def default_model_id(config: ProviderConfig) -> str:
     provider = _normalize_provider_name(config.provider)
     if provider is ProviderName.ANTHROPIC:
         return DEFAULT_ANTHROPIC_MODEL
+    if provider is ProviderName.DASHSCOPE:
+        return os.environ.get("DASHSCOPE_MODEL") or DEFAULT_DASHSCOPE_MODEL
     if provider is ProviderName.GEMINI:
         return DEFAULT_GEMINI_MODEL
     if provider is ProviderName.OPENROUTER:
@@ -94,6 +103,12 @@ def create_provider_client(
     provider_constructors = constructors or ProviderConstructors()
     if provider is ProviderName.ANTHROPIC:
         return provider_constructors.anthropic(
+            model_id=model_id,
+            thinking_level=config.thinking_level,
+            dry_run=dry_run,
+        )
+    if provider is ProviderName.DASHSCOPE:
+        return provider_constructors.dashscope(
             model_id=model_id,
             thinking_level=config.thinking_level,
             dry_run=dry_run,
@@ -129,6 +144,12 @@ def validate_provider_credentials(provider: str) -> None:
         if not anthropic_api_key_from_env():
             raise ValueError(
                 "Anthropic credentials are required. Set ANTHROPIC_API_KEY or ANTHROPIC_API_KEYS."
+            )
+        return
+    if provider_norm is ProviderName.DASHSCOPE:
+        if not dashscope_api_key_from_env():
+            raise ValueError(
+                "DashScope credentials are required. Set DASHSCOPE_API_KEY or DASHSCOPE_API_KEYS."
             )
         return
     if provider_norm is ProviderName.GEMINI:

@@ -15,7 +15,7 @@ def test_runner_help_text(capsys: pytest.CaptureFixture[str]) -> None:
     help_text = capsys.readouterr().out
     assert "--prompt" in help_text
     assert "--image" in help_text
-    assert "--provider {anthropic,gemini,openai,openrouter}" in help_text
+    assert "--provider {anthropic,dashscope,gemini,openai,openrouter}" in help_text
     assert "--openai-transport {http,websocket}" in help_text
     assert "--collection {workbench,dataset}" in help_text
     assert "--dataset-id DATASET_ID" in help_text
@@ -118,6 +118,29 @@ def test_runner_dump_provider_payload_supports_openrouter(
     assert (
         "Work evidence-first. Before editing, read `model.py`" in payload["messages"][0]["content"]
     )
+    assert payload["messages"][1]["role"] == "user"
+
+
+def test_runner_dump_provider_payload_supports_dashscope(
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    exit_code = runner.main(
+        [
+            "--prompt",
+            "test prompt",
+            "--provider",
+            "dashscope",
+            "--dump-provider-payload",
+        ]
+    )
+
+    assert exit_code == 0
+    payload = json.loads(capsys.readouterr().out)
+    assert payload["base_url"] == "https://dashscope.aliyuncs.com/compatible-mode/v1"
+    assert payload["model"] == "qwen3.6-flash"
+    assert payload["extra_body"] == {"enable_thinking": True}
+    assert payload["messages"][0]["role"] == "system"
+    assert "<process>" in payload["messages"][0]["content"]
     assert payload["messages"][1]["role"] == "user"
 
 

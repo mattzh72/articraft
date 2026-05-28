@@ -10,7 +10,7 @@ from pathlib import Path
 from shutil import which
 
 from agent import runner as agent_runner
-from agent.providers.factory import infer_provider_from_model_id
+from agent.providers.factory import ProviderConfig, default_model_id, infer_provider_from_model_id
 from articraft.config import (
     default_model_from_env,
     default_thinking_level_from_env,
@@ -46,8 +46,16 @@ def _infer_provider(model_id: str) -> str:
 
 
 def _model_and_provider(args: argparse.Namespace) -> tuple[str, str]:
-    model_id = str(args.model or default_model_from_env())
-    provider = str(args.provider or _infer_provider(model_id))
+    if args.model:
+        model_id = str(args.model)
+        provider = str(args.provider or _infer_provider(model_id))
+        return model_id, provider
+    if args.provider:
+        provider = str(args.provider)
+        model_id = default_model_id(ProviderConfig(provider=provider))
+        return model_id, provider
+    model_id = str(default_model_from_env())
+    provider = str(_infer_provider(model_id))
     return model_id, provider
 
 

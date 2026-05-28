@@ -18,6 +18,7 @@ from articraft.values import (
     [
         ("gpt-5.5-2026-04-23", ProviderName.OPENAI),
         ("claude-sonnet-4-5", ProviderName.ANTHROPIC),
+        ("qwen3.6-flash", ProviderName.DASHSCOPE),
         ("gemini-3-flash-preview", ProviderName.GEMINI),
         ("gemini-3.5-flash", ProviderName.GEMINI),
         ("openai/gpt-5.4", ProviderName.OPENROUTER),

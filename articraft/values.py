@@ -5,6 +5,7 @@ from enum import StrEnum
 
 class ProviderName(StrEnum):
     ANTHROPIC = "anthropic"
+    DASHSCOPE = "dashscope"
     GEMINI = "gemini"
     OPENAI = "openai"
     OPENROUTER = "openrouter"
@@ -39,6 +40,8 @@ def infer_provider_from_model_id(model_id: str | None) -> ProviderName | None:
         return ProviderName.OPENAI
     if model_norm.startswith("claude-"):
         return ProviderName.ANTHROPIC
+    if model_norm.startswith("qwen"):
+        return ProviderName.DASHSCOPE
     if model_norm.startswith("gemini-"):
         return ProviderName.GEMINI
     if "/" in model_norm or model_norm.startswith("openrouter/"):

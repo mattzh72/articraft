@@ -40,6 +40,8 @@ class SdkProfile:
             return None
         if provider_norm is ProviderName.OPENAI:
             return self.openai_prompt_name
+        if provider_norm is ProviderName.DASHSCOPE:
+            return self.openrouter_prompt_name
         if provider_norm is ProviderName.GEMINI:
             return self.gemini_prompt_name
         if provider_norm is ProviderName.OPENROUTER:
