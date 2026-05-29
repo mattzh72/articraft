@@ -125,22 +125,43 @@ class OpenAILLM:
             }
             if self.request_timeout_seconds and self.request_timeout_seconds > 0:
                 client_kwargs["timeout"] = float(self.request_timeout_seconds)
-            try:
-                from openai import AsyncOpenAI  # type: ignore
 
-                self._client = AsyncOpenAI(**client_kwargs)
-                self._client_is_async = True
-            except Exception:
+            azure_endpoint = os.environ.get("AZURE_OPENAI_ENDPOINT", "").strip()
+            azure_api_version = os.environ.get("AZURE_OPENAI_API_VERSION", "").strip()
+            azure_v1_endpoint = _azure_v1_base_url(azure_endpoint)
+
+            if azure_v1_endpoint:
+                # Azure "v1 API surface" is OpenAI-compatible: use AsyncOpenAI with
+                # base_url and Bearer auth (the OpenAI SDK default). Some Cognitive
+                # Services resources require the legacy `api-key` header instead;
+                # set AZURE_OPENAI_USE_API_KEY_HEADER=1 to opt in. api-version is
+                # only sent when explicitly configured.
+                client_kwargs["base_url"] = azure_v1_endpoint
+                if _env_truthy("AZURE_OPENAI_USE_API_KEY_HEADER"):
+                    client_kwargs["default_headers"] = {"api-key": api_key}
+                if azure_api_version:
+                    client_kwargs["default_query"] = {"api-version": azure_api_version}
+                self.transport = "http"
+                self._client = _build_openai_client(client_kwargs)
+                self._client_is_async = isinstance(self._client, _async_openai_cls())
+            elif azure_endpoint:
+                client_kwargs["azure_endpoint"] = azure_endpoint
+                client_kwargs["api_version"] = azure_api_version or "2025-04-01-preview"
+                # Legacy Azure Responses API does not support the websocket transport.
+                self.transport = "http"
                 try:
-                    from openai import OpenAI  # type: ignore
-                except Exception as exc:  # pragma: no cover
-                    raise RuntimeError(
-                        "OpenAI provider selected but the `openai` package is not installed. "
-                        "Install it (e.g. `uv add openai`), then try again."
-                    ) from exc
+                    from openai import AsyncAzureOpenAI  # type: ignore
 
-                self._client = OpenAI(**client_kwargs)
-                self._client_is_async = False
+                    self._client = AsyncAzureOpenAI(**client_kwargs)
+                    self._client_is_async = True
+                except Exception:
+                    from openai import AzureOpenAI  # type: ignore
+
+                    self._client = AzureOpenAI(**client_kwargs)
+                    self._client_is_async = False
+            else:
+                self._client = _build_openai_client(client_kwargs)
+                self._client_is_async = isinstance(self._client, _async_openai_cls())
 
         base_url = os.environ.get("OPENAI_BASE_URL")
         client_base_url = getattr(getattr(self, "_client", None), "base_url", None)
@@ -1001,6 +1022,44 @@ def _normalize_transport(transport: str) -> str:
     if value not in {"http", "websocket"}:
         raise ValueError(f"Unsupported OpenAI transport: {transport}")
     return value
+
+
+def _async_openai_cls() -> Any:
+    from openai import AsyncOpenAI  # type: ignore
+
+    return AsyncOpenAI
+
+
+def _env_truthy(name: str) -> bool:
+    return os.environ.get(name, "").strip().lower() in {"1", "true", "yes", "on"}
+
+
+def _azure_v1_base_url(endpoint: str) -> Optional[str]:
+    """Return a normalized base_url if endpoint targets the Azure v1 API surface."""
+    if not endpoint:
+        return None
+    stripped = endpoint.rstrip("/")
+    parsed = urlparse(stripped)
+    parts = [segment for segment in parsed.path.split("/") if segment]
+    if len(parts) >= 2 and parts[-2] == "openai" and parts[-1].startswith("v"):
+        return stripped + "/"
+    return None
+
+
+def _build_openai_client(client_kwargs: dict[str, Any]) -> Any:
+    try:
+        from openai import AsyncOpenAI  # type: ignore
+
+        return AsyncOpenAI(**client_kwargs)
+    except Exception:
+        try:
+            from openai import OpenAI  # type: ignore
+        except Exception as exc:  # pragma: no cover
+            raise RuntimeError(
+                "OpenAI provider selected but the `openai` package is not installed. "
+                "Install it (e.g. `uv add openai`), then try again."
+            ) from exc
+        return OpenAI(**client_kwargs)
 
 
 def _responses_websocket_url(base_url: Optional[str]) -> str:
