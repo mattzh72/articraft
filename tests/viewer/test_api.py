@@ -5,6 +5,7 @@ from pathlib import Path
 from types import SimpleNamespace
 
 import pytest
+from fastapi import FastAPI
 from fastapi.testclient import TestClient
 
 from storage import dataset_workflow
@@ -24,6 +25,7 @@ from storage.records import RecordStore
 from storage.repo import StorageRepo
 from storage.runs import RunStore
 from viewer.api.app import create_app
+from viewer.api.frontend import install_frontend_routes
 from viewer.api.store import _effective_rating, _within_rating_filter
 
 
@@ -81,6 +83,31 @@ def test_effective_rating_filter_uses_bucket_ranges() -> None:
     assert _effective_rating(5, 4) == 4.5
     assert _within_rating_filter(4.5, ["4"]) is True
     assert _within_rating_filter(4.5, ["5"]) is False
+
+
+def test_frontend_missing_assets_do_not_fallback_to_index(tmp_path: Path) -> None:
+    dist_dir = tmp_path / "dist"
+    assets_dir = dist_dir / "assets"
+    assets_dir.mkdir(parents=True)
+    (dist_dir / "index.html").write_text("<html>viewer shell</html>", encoding="utf-8")
+    (assets_dir / "main.js").write_text("console.log('viewer');", encoding="utf-8")
+
+    app = FastAPI()
+    install_frontend_routes(app, dist_dir=dist_dir)
+    client = TestClient(app)
+
+    route_response = client.get("/viewer")
+    assert route_response.status_code == 200
+    assert route_response.text == "<html>viewer shell</html>"
+
+    asset_response = client.get("/assets/main.js")
+    assert asset_response.status_code == 200
+    assert asset_response.text == "console.log('viewer');"
+    assert asset_response.headers["cache-control"] == "public, max-age=31536000, immutable"
+
+    missing_asset_response = client.get("/assets/missing.js")
+    assert missing_asset_response.status_code == 404
+    assert "viewer shell" not in missing_asset_response.text
 
 
 def test_viewer_api_surfaces_external_creator_metadata(tmp_path: Path) -> None:

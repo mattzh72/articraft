@@ -41,6 +41,8 @@ def install_frontend_routes(app: FastAPI, *, dist_dir: Path | None = None) -> No
                     else "no-cache"
                 )
                 return FileResponse(target, headers={"Cache-Control": cache_control})
+            if requested_path.parts[:1] == ("assets",):
+                raise HTTPException(status_code=404)
             return FileResponse(
                 resolved_dist_dir / "index.html",
                 headers={"Cache-Control": "no-cache"},
