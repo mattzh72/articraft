@@ -11,6 +11,7 @@ OPENAI_DESIGNER_PROMPT_NAME = "designer_system_prompt_openai.txt"
 GEMINI_DESIGNER_PROMPT_NAME = "designer_system_prompt_gemini.txt"
 OPENROUTER_DESIGNER_PROMPT_NAME = "designer_system_prompt_openrouter.txt"
 ANTHROPIC_DESIGNER_PROMPT_NAME = "designer_system_prompt_anthropic.txt"
+DEEPSEEK_DESIGNER_PROMPT_NAME = "designer_system_prompt_deepseek.txt"
 
 PROMPTS_ROOT = Path(__file__).resolve().parent
 GENERATED_PROMPTS_DIR = PROMPTS_ROOT / "generated"
@@ -50,6 +51,7 @@ def resolve_system_prompt_path(
         GEMINI_DESIGNER_PROMPT_NAME,
         OPENROUTER_DESIGNER_PROMPT_NAME,
         ANTHROPIC_DESIGNER_PROMPT_NAME,
+        DEEPSEEK_DESIGNER_PROMPT_NAME,
     }
     profile_prompt_name = profile.prompt_name_for_provider(provider_norm)
     if path.name in default_names and profile_prompt_name is not None:

@@ -9,6 +9,7 @@ OPENAI_DESIGNER_PROMPT_NAME = "designer_system_prompt_openai.txt"
 GEMINI_DESIGNER_PROMPT_NAME = "designer_system_prompt_gemini.txt"
 OPENROUTER_DESIGNER_PROMPT_NAME = "designer_system_prompt_openrouter.txt"
 ANTHROPIC_DESIGNER_PROMPT_NAME = "designer_system_prompt_anthropic.txt"
+DEEPSEEK_DESIGNER_PROMPT_NAME = "designer_system_prompt_deepseek.txt"
 
 
 @dataclass(slots=True, frozen=True)
@@ -21,6 +22,7 @@ class SdkProfile:
     gemini_prompt_name: str
     openrouter_prompt_name: str
     anthropic_prompt_name: str
+    deepseek_prompt_name: str
 
     def docs_for_mode(self, docs_mode: str) -> tuple[Path, ...]:
         if docs_mode == "full":
@@ -46,6 +48,8 @@ class SdkProfile:
             return self.openrouter_prompt_name
         if provider_norm is ProviderName.ANTHROPIC:
             return self.anthropic_prompt_name
+        if provider_norm is ProviderName.DEEPSEEK:
+            return self.deepseek_prompt_name
         return None
 
 
@@ -106,6 +110,7 @@ SDK_PROFILES: dict[str, SdkProfile] = {
         gemini_prompt_name=GEMINI_DESIGNER_PROMPT_NAME,
         openrouter_prompt_name=OPENROUTER_DESIGNER_PROMPT_NAME,
         anthropic_prompt_name=ANTHROPIC_DESIGNER_PROMPT_NAME,
+        deepseek_prompt_name=DEEPSEEK_DESIGNER_PROMPT_NAME,
     ),
 }
 

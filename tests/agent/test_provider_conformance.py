@@ -3,6 +3,7 @@ from __future__ import annotations
 import pytest
 
 from agent.providers.anthropic import AnthropicLLM
+from agent.providers.deepseek import DeepSeekLLM
 from agent.providers.gemini import GeminiLLM
 from agent.providers.openai import OpenAILLM
 from agent.providers.openrouter import OpenRouterLLM
@@ -190,6 +191,7 @@ def test_anthropic_preview_preserves_replayed_tool_call_chain() -> None:
         OpenAILLM(dry_run=True),
         GeminiLLM(dry_run=True),
         OpenRouterLLM(dry_run=True),
+        DeepSeekLLM(dry_run=True),
     ],
 )
 def test_provider_previews_accept_required_tool_schema(provider: object) -> None:

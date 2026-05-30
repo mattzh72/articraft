@@ -29,6 +29,7 @@ from agent.prompts import (
 )
 from agent.providers.anthropic import AnthropicLLM
 from agent.providers.base import ProviderClient
+from agent.providers.deepseek import DeepSeekLLM
 from agent.providers.factory import (
     ProviderConfig,
     ProviderConstructors,
@@ -235,6 +236,7 @@ class ArticraftAgent:
             ),
             constructors=ProviderConstructors(
                 anthropic=AnthropicLLM,
+                deepseek=DeepSeekLLM,
                 gemini=GeminiLLM,
                 openai=OpenAILLM,
                 openrouter=OpenRouterLLM,

@@ -9,6 +9,11 @@ from agent.providers.anthropic import (
     anthropic_api_key_from_env,
 )
 from agent.providers.base import ProviderClient
+from agent.providers.deepseek import (
+    DEFAULT_DEEPSEEK_MODEL,
+    DeepSeekLLM,
+    deepseek_api_key_from_env,
+)
 from agent.providers.gemini import (
     DEFAULT_GEMINI_MODEL,
     GeminiLLM,
@@ -54,6 +59,7 @@ class ProviderConfig:
 @dataclass(slots=True, frozen=True)
 class ProviderConstructors:
     anthropic: Callable[..., ProviderClient] = AnthropicLLM
+    deepseek: Callable[..., ProviderClient] = DeepSeekLLM
     gemini: Callable[..., ProviderClient] = GeminiLLM
     openai: Callable[..., ProviderClient] = OpenAILLM
     openrouter: Callable[..., ProviderClient] = OpenRouterLLM
@@ -74,6 +80,8 @@ def default_model_id(config: ProviderConfig) -> str:
     provider = _normalize_provider_name(config.provider)
     if provider is ProviderName.ANTHROPIC:
         return DEFAULT_ANTHROPIC_MODEL
+    if provider is ProviderName.DEEPSEEK:
+        return DEFAULT_DEEPSEEK_MODEL
     if provider is ProviderName.GEMINI:
         return DEFAULT_GEMINI_MODEL
     if provider is ProviderName.OPENROUTER:
@@ -104,6 +112,12 @@ def create_provider_client(
             thinking_level=config.thinking_level,
             dry_run=dry_run,
         )
+    if provider is ProviderName.DEEPSEEK:
+        return provider_constructors.deepseek(
+            model_id=model_id,
+            thinking_level=config.thinking_level,
+            dry_run=dry_run,
+        )
     if provider is ProviderName.OPENROUTER:
         return provider_constructors.openrouter(
             model_id=model_id,
@@ -130,6 +144,10 @@ def validate_provider_credentials(provider: str) -> None:
             raise ValueError(
                 "Anthropic credentials are required. Set ANTHROPIC_API_KEY or ANTHROPIC_API_KEYS."
             )
+        return
+    if provider_norm is ProviderName.DEEPSEEK:
+        if not deepseek_api_key_from_env():
+            raise ValueError("DeepSeek credentials are required. Set DEEPSEEK_API_KEY.")
         return
     if provider_norm is ProviderName.GEMINI:
         gemini_client_config_from_env()
