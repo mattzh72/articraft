@@ -114,11 +114,10 @@ def _run_generate(args: argparse.Namespace) -> int:
         args.prompt,
         "--provider",
         provider,
-        "--thinking",
-        thinking_level,
     ]
     if model_id:
         argv.extend(["--model", model_id])
+    argv.extend(["--thinking", thinking_level])
     if args.image:
         argv.extend(["--image", args.image])
     if args.max_cost_usd is not None:
@@ -138,11 +137,10 @@ def _run_draft(args: argparse.Namespace) -> int:
         args.prompt,
         "--provider",
         provider,
-        "--thinking-level",
-        thinking_level,
     ]
     if model_id:
         argv.extend(["--model-id", model_id])
+    argv.extend(["--thinking-level", thinking_level])
     if args.image:
         argv.extend(["--image", args.image])
     if args.max_cost_usd is not None:
@@ -404,11 +402,10 @@ def _run_dataset_run(args: argparse.Namespace) -> int:
         args.category_slug,
         "--provider",
         provider,
-        "--thinking-level",
-        thinking_level,
     ]
     if model_id:
         argv.extend(["--model-id", model_id])
+    argv.extend(["--thinking-level", thinking_level])
     if args.image:
         argv.extend(["--image", args.image])
     if args.dataset_id:
