@@ -27,7 +27,7 @@ Each row is one dataset generation job.
 | `category_slug` | Yes | Dataset category slug. |
 | `category_title` | Sometimes | Required for any row whose `category_slug` does not already exist. |
 | `prompt` | Yes | The generation prompt. |
-| `provider` | Yes | `openai`, `gemini`, `anthropic`, or `openrouter`. |
+| `provider` | Yes | `openai`, `gemini`, `anthropic`, `deepseek`, or `openrouter`. |
 | `model_id` | Yes | Model to use. Must agree with `provider`. |
 | `thinking_level` | Yes | `low`, `med`, or `high`. |
 | `max_turns` | Yes | Positive integer turn cap. |
