@@ -1248,6 +1248,35 @@ def render_compile_signals(
     return "\n".join(parts)
 
 
+NAMED_COMPILE_DEFECT_RULE = (
+    "- Make the next edit a small repair to the named compile defect; do not "
+    "add new visual detail until that defect is gone."
+)
+INTENTIONAL_QC_ALLOWANCE_RULE = (
+    "- If any disconnected or overlapping finding appears intentional, declare "
+    "or correct explicit allowances for every intentional case. Scope each "
+    "allowance to the exact reported part or element pair, include a concrete "
+    "reason, and pair it with an exact proof check such as `expect_overlap`, "
+    "`expect_contact`, or `expect_within`. Otherwise, use the finding to guide "
+    "the underlying support path, mount, geometry, or pose fix."
+)
+EXACT_REPORTED_OVERLAP_RULE = (
+    "- When authoring an overlap allowance or geometry fix, use the exact "
+    "reported part/element names; do not authorize nearby geometry while "
+    "leaving the reported pair unhandled."
+)
+SMALL_OVERLAP_GEOMETRY_REPAIR_RULE = (
+    "- If the same overlap pair keeps failing after one allowance/proof attempt, "
+    "make the smallest geometry edit to the reported elements instead: shorten, "
+    "thin, offset, or split the colliding feature."
+)
+PRESERVE_PROMPT_CRITICAL_GEOMETRY_RULE = (
+    "- Preserve prompt-critical visible geometry while repairing the overlap. "
+    "Do not replace a hollow/open/cut/curved mesh with a simpler capped "
+    "primitive unless that simpler shape is still faithful to the requested object."
+)
+
+
 def _response_rules_for_failures(
     failures: list[CompileSignal],
     *,
@@ -1264,13 +1293,6 @@ def _response_rules_for_failures(
         return rules
 
     primary = failures[0]
-    intentional_qc_allowance_rule = (
-        "- If any disconnected or overlapping finding appears intentional, "
-        "consider declaring or correcting explicit allowances for every "
-        "intentional case. Scope each allowance to the exact part or element "
-        "pair and include a concrete reason. Otherwise, use the finding to "
-        "guide the underlying support path, mount, geometry, or pose fix."
-    )
     rules: list[str]
     if primary.kind == "compile_runtime":
         rules = [
@@ -1295,17 +1317,20 @@ def _response_rules_for_failures(
         ]
     elif primary.source == "compiler" and primary.kind == "isolated_part":
         rules = [
+            NAMED_COMPILE_DEFECT_RULE,
             "- Treat the compiler-owned floating/disconnected part finding as primary evidence before tuning authored exact checks.",
             "- If the support path is not obvious, consider using `probe_model` with `find_floating_parts(...)`, `nearest_neighbors(...)`, or `mount_report(...)` before another geometry edit.",
-            intentional_qc_allowance_rule,
+            INTENTIONAL_QC_ALLOWANCE_RULE,
         ]
     elif primary.source == "compiler" and primary.kind == "real_overlap":
         rules = [
+            NAMED_COMPILE_DEFECT_RULE,
             "- Compiler-owned overlap QC reported a real 3D overlap in the current pose. First decide whether it looks like intentional embedding or an unintended collision.",
             "- If the cause is not obvious from the reported pair and pose, consider using `probe_model` with `pair_report(...)`, `overlap_report(...)`, or `mount_report(...)` before another geometry edit.",
-            "- Preserve prompt-critical visible geometry while repairing the overlap. Do not replace a hollow/open/cut/curved mesh with a simpler capped primitive unless that simpler shape is still faithful to the requested object.",
+            PRESERVE_PROMPT_CRITICAL_GEOMETRY_RULE,
             "- If the overlap could be intentional, inspect any existing `allow_overlap(...)` coverage and compare its part and element scope to the reported pair before changing geometry.",
-            intentional_qc_allowance_rule,
+            EXACT_REPORTED_OVERLAP_RULE,
+            INTENTIONAL_QC_ALLOWANCE_RULE,
         ]
     elif primary.kind == "missing_exact_geometry":
         rules = [
@@ -1322,16 +1347,19 @@ def _response_rules_for_failures(
         ]
     elif primary.kind == "real_overlap":
         rules = [
+            NAMED_COMPILE_DEFECT_RULE,
             "- Fix or explicitly justify the real 3D overlap in the tested pose before adding more exact checks.",
             "- If the relationship is ambiguous, consider using `probe_model` with `pair_report(...)`, `overlap_report(...)`, or `mount_report(...)` before changing geometry.",
-            "- Preserve prompt-critical visible geometry while repairing the overlap. Do not replace a hollow/open/cut/curved mesh with a simpler capped primitive unless that simpler shape is still faithful to the requested object.",
-            intentional_qc_allowance_rule,
+            PRESERVE_PROMPT_CRITICAL_GEOMETRY_RULE,
+            EXACT_REPORTED_OVERLAP_RULE,
+            INTENTIONAL_QC_ALLOWANCE_RULE,
         ]
     elif primary.kind == "isolated_part":
         rules = [
+            NAMED_COMPILE_DEFECT_RULE,
             "- Fix the floating/disconnected part failure before tuning secondary geometry.",
             "- If the support path is unclear, consider using `probe_model` with `find_floating_parts(...)`, `nearest_neighbors(...)`, or `mount_report(...)` before changing geometry.",
-            intentional_qc_allowance_rule,
+            INTENTIONAL_QC_ALLOWANCE_RULE,
         ]
     else:
         rules = [
@@ -1357,4 +1385,6 @@ def _response_rules_for_failures(
             rules.append(
                 "- You are in a repair loop. A short `probe_model` snippet is likely to be more informative than another small placement, tolerance, or primitive tweak. Consider `pair_report(...)`, `mount_report(...)`, `find_floating_parts(...)`, or `nearest_neighbors(...)` before patching again."
             )
+            if primary.kind == "real_overlap":
+                rules.append(SMALL_OVERLAP_GEOMETRY_REPAIR_RULE)
     return rules

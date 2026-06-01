@@ -377,11 +377,6 @@ class ArticraftAgent:
             "_seen_baseline_qc_guidance_sigs",
             set(),
         )
-        injector._seen_compile_repair_guidance_sigs = getattr(
-            self,
-            "_seen_compile_repair_guidance_sigs",
-            set(),
-        )
         injector._seen_api_error_guidance_sigs = getattr(
             self,
             "_seen_api_error_guidance_sigs",
@@ -457,19 +452,6 @@ class ArticraftAgent:
         tool_results: list[ToolResult],
     ) -> None:
         self._ensure_guidance_injector().maybe_inject_code_contract_guidance(
-            conversation,
-            tool_calls=tool_calls,
-            tool_results=tool_results,
-        )
-
-    def _maybe_inject_compile_repair_guidance(
-        self,
-        conversation: list[dict],
-        *,
-        tool_calls: list[dict],
-        tool_results: list[ToolResult],
-    ) -> None:
-        self._ensure_guidance_injector().maybe_inject_compile_repair_guidance(
             conversation,
             tool_calls=tool_calls,
             tool_results=tool_results,
@@ -1429,11 +1411,6 @@ class ArticraftAgent:
                     logger.warning("Tool %s failed: %s", func_name, result.error)
 
             self._maybe_inject_edit_code_guidance(
-                conversation,
-                tool_calls=tool_calls,
-                tool_results=turn_tool_results,
-            )
-            self._maybe_inject_compile_repair_guidance(
                 conversation,
                 tool_calls=tool_calls,
                 tool_results=turn_tool_results,

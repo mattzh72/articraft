@@ -463,6 +463,9 @@ def test_render_compile_signals_separates_failures_and_allowance_notes() -> None
     assert "  allow_isolated_part('latch')" in rendered
     assert "  allow_overlap('base', 'latch')" in rendered
     assert "Suggested next steps:" in rendered
+    assert "small repair to the named compile defect" in rendered
+    assert "exact reported part or element pair" in rendered
+    assert "codex_cli_compile_repair_guidance" not in rendered
 
 
 def test_compile_signal_bundle_classifies_isolated_part_failures_cleanly() -> None:
@@ -659,71 +662,6 @@ def test_harness_injects_baseline_qc_guidance(tmp_path: Path) -> None:
     assert "`check_model_valid()`" in conversation[0]["content"]
     assert "`check_mesh_assets_ready()`" in conversation[0]["content"]
     assert "`fail_if_parts_overlap_in_current_pose()`" in conversation[0]["content"]
-
-
-def test_harness_injects_codex_compile_repair_guidance_once(tmp_path: Path) -> None:
-    model_path = tmp_path / "model.py"
-    model_path.write_text("object_model = None\n", encoding="utf-8")
-
-    agent = ArticraftAgent.__new__(ArticraftAgent)
-    agent.file_path = str(model_path)
-    agent.provider = "codex-cli"
-    agent.trace_writer = None
-
-    conversation: list[dict] = []
-    tool_calls = [{"function": {"name": "compile_model", "arguments": "{}"}}]
-    tool_results = [
-        ToolResult(
-            output=(
-                "<compile_signals>\n"
-                "Part overlaps detected between left_panel and latch.\n"
-                "Floating disconnected parts: latch_trim\n"
-                "</compile_signals>"
-            ),
-            compilation={"status": "error", "error": "compile failed"},
-            tool_call_id="call_1",
-        )
-    ]
-
-    agent._maybe_inject_compile_repair_guidance(
-        conversation,
-        tool_calls=tool_calls,
-        tool_results=tool_results,
-    )
-    agent._maybe_inject_compile_repair_guidance(
-        conversation,
-        tool_calls=tool_calls,
-        tool_results=tool_results,
-    )
-
-    assert len(conversation) == 1
-    assert "<codex_cli_compile_repair_guidance>" in conversation[0]["content"]
-    assert "floating/disconnected or overlap geometry" in conversation[0]["content"]
-
-
-def test_harness_skips_codex_compile_repair_guidance_for_openai(tmp_path: Path) -> None:
-    model_path = tmp_path / "model.py"
-    model_path.write_text("object_model = None\n", encoding="utf-8")
-
-    agent = ArticraftAgent.__new__(ArticraftAgent)
-    agent.file_path = str(model_path)
-    agent.provider = "openai"
-    agent.trace_writer = None
-
-    conversation: list[dict] = []
-    agent._maybe_inject_compile_repair_guidance(
-        conversation,
-        tool_calls=[{"function": {"name": "compile_model", "arguments": "{}"}}],
-        tool_results=[
-            ToolResult(
-                output="Part overlaps detected.",
-                compilation={"status": "error", "error": "compile failed"},
-                tool_call_id="call_1",
-            )
-        ],
-    )
-
-    assert conversation == []
 
 
 def test_harness_injects_codex_api_error_guidance(tmp_path: Path) -> None:

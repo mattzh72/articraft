@@ -88,8 +88,7 @@ def test_render_compile_signals_generalizes_intentional_qc_allowance_guidance() 
 
     expected = (
         "If any disconnected or overlapping finding appears intentional, "
-        "consider declaring or correcting explicit allowances for every "
-        "intentional case."
+        "declare or correct explicit allowances for every intentional case."
     )
     assert expected in isolated_rendered
     assert expected in overlap_rendered

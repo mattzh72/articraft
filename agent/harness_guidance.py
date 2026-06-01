@@ -22,15 +22,6 @@ BASELINE_QC_CALLS = frozenset(
         "fail_if_parts_overlap_in_current_pose",
     }
 )
-COMPILE_REPAIR_KEYWORDS = frozenset(
-    {
-        "floating disconnected parts",
-        "part overlap",
-        "parts overlap",
-        "overlaps detected",
-        "disconnected geometry islands",
-    }
-)
 API_ERROR_KEYWORDS = frozenset(
     {
         "attributeerror",
@@ -53,38 +44,6 @@ class CodeContractScan:
 
 def _sha256_text(text: str) -> str:
     return hashlib.sha256(text.encode("utf-8")).hexdigest()
-
-
-def _compile_repair_detail_lines(output: str) -> list[str]:
-    selected_lines: list[str] = []
-    for line in output.splitlines():
-        normalized = " ".join(line.split())
-        if not normalized:
-            continue
-        lowered = normalized.lower()
-        if (
-            "pair=" in lowered
-            or "part=" in lowered
-            or "elem_a=" in lowered
-            or "elem_b=" in lowered
-            or "floating" in lowered
-            or "disconnected" in lowered
-            or "overlap" in lowered
-        ):
-            selected_lines.append(normalized[:500])
-        if len(selected_lines) >= 12:
-            break
-    return selected_lines
-
-
-def _compile_repair_signature(output: str, matched_keywords: tuple[str, ...]) -> str:
-    selected_lines = _compile_repair_detail_lines(output)
-    return _sha256_text(
-        json.dumps(
-            {"keywords": matched_keywords, "lines": selected_lines},
-            sort_keys=True,
-        )
-    )
 
 
 def _constant_string(node: ast.AST) -> str | None:
@@ -175,13 +134,11 @@ class GuidanceInjector:
         self._seen_tool_error_sigs: set[str] = set()
         self._seen_exact_geometry_contract_sigs: set[str] = set()
         self._seen_baseline_qc_guidance_sigs: set[str] = set()
-        self._seen_compile_repair_guidance_sigs: set[str] = set()
         self._seen_api_error_guidance_sigs: set[str] = set()
 
     def reset(self) -> None:
         self._seen_exact_geometry_contract_sigs = set()
         self._seen_baseline_qc_guidance_sigs = set()
-        self._seen_compile_repair_guidance_sigs = set()
         self._seen_api_error_guidance_sigs = set()
 
     def _append_guidance_message(self, conversation: list[dict], content: str) -> None:
@@ -282,96 +239,6 @@ class GuidanceInjector:
             if self.tool_call_name(tool_call) in MUTATING_TOOL_NAMES:
                 return True
         return False
-
-    def maybe_inject_compile_repair_guidance(
-        self,
-        conversation: list[dict],
-        *,
-        tool_calls: list[dict],
-        tool_results: list[ToolResult],
-    ) -> None:
-        if self.provider != "codex-cli":
-            return
-
-        for tool_call, result in zip(tool_calls, tool_results, strict=False):
-            if self.tool_call_name(tool_call) != "compile_model":
-                continue
-            compilation = result.compilation if isinstance(result.compilation, dict) else {}
-            if compilation.get("status") != "error":
-                continue
-            output = result.output if isinstance(result.output, str) else str(result.output or "")
-            output_lower = output.lower()
-            matched_keywords = tuple(
-                sorted(keyword for keyword in COMPILE_REPAIR_KEYWORDS if keyword in output_lower)
-            )
-            if not matched_keywords:
-                continue
-
-            sig = _compile_repair_signature(output, matched_keywords)
-            if sig in self._seen_compile_repair_guidance_sigs:
-                return
-            self._seen_compile_repair_guidance_sigs.add(sig)
-            detail_lines = _compile_repair_detail_lines(output)
-            reported_pairs = []
-            if detail_lines:
-                reported_pairs = [
-                    "<reported_pairs>",
-                    *[f"- {line}" for line in detail_lines[:6]],
-                    "</reported_pairs>",
-                ]
-
-            self._append_guidance_message(
-                conversation,
-                "\n".join(
-                    [
-                        "<codex_cli_compile_repair_guidance>",
-                        *reported_pairs,
-                        (
-                            "- The latest compile failed on floating/disconnected or overlap "
-                            "geometry. Make the next edit a small repair to the named defect."
-                        ),
-                        (
-                            "- For floating/disconnected parts, attach the named detail to an "
-                            "existing semantic parent part/link or remove the separate helper part."
-                        ),
-                        (
-                            "- For overlaps, reduce/remove decorative collision geometry, add "
-                            "clearance, or keep small details visual-only when collisions are the "
-                            "source of the failure."
-                        ),
-                        (
-                            "- If the named overlap is an intentional local embedding, retained "
-                            "shaft, seated trim, or captured pin/boss, add a scoped "
-                            "`ctx.allow_overlap(...)` for the exact elements plus an exact proof "
-                            "check such as `expect_overlap`, `expect_contact`, or `expect_within`."
-                        ),
-                        (
-                            "- Door/frame rails, lips, hinge sleeves, knob shafts/bosses, and "
-                            "closed-position nested trim are usually local intentional interfaces; "
-                            "prefer one exact scoped allowance plus proof over broad geometry churn."
-                        ),
-                        (
-                            "- If existing `expect_*` checks already prove the same mechanical "
-                            "interface, add the missing `ctx.allow_overlap(...)` for the exact "
-                            "reported pair instead of inventing a neighboring allowance."
-                        ),
-                        (
-                            "- Use the exact `elem_a` and `elem_b` names from the compile signal. "
-                            "Do not authorize a nearby element while leaving the reported pair "
-                            "unhandled."
-                        ),
-                        (
-                            "- If the same pair keeps failing after one allowance/proof attempt, "
-                            "make the smallest geometry edit to the reported elements instead: "
-                            "shorten, thin, offset, or split the colliding feature."
-                        ),
-                        "- Do not add new visual detail until the named compile defect is gone.",
-                        "- After that one repair, run `compile_model` again.",
-                        "</codex_cli_compile_repair_guidance>",
-                    ]
-                ),
-            )
-            return
 
     def maybe_inject_api_error_guidance(
         self,
