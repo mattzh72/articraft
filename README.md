@@ -48,7 +48,7 @@ uv run articraft data hydrate --all
 ### 3. Add API Keys
 Open `.env` and set one or more provider keys (e.g. `OPENAI_API_KEY`, `GEMINI_API_KEYS`, `ANTHROPIC_API_KEYS`, `DASHSCOPE_API_KEY`).
 
-> **No API Keys?** No problem! If you don't have API keys set up, you can use external AI agents like Claude Code, Codex, or Cursor. Just point them to this repository and prompt them:
+> **No API Keys?** No problem. You can use external AI agents like Claude Code, Codex, or Cursor instead. For Codex setup, including how to add the Codex plugin, see [Codex Plugin Setup](docs/codex_plugin.md). Then point the agent at this repository and prompt it:
 > 
 > *"Create a realistic articulated [object name] and add it to the Articraft dataset. Follow EXTERNAL_AGENT_DATA.md."*
 
@@ -84,20 +84,6 @@ Forking creates a new child record and leaves the parent unchanged. See [Editing
 
 ---
 
-## Codex Plugin Setup
-
-This repository includes a repo-local Codex plugin under `plugins/articraft/` for Articraft-specific Codex workflows.
-
-After completing the Quickstart setup above on a new computer:
-
-1. Open this repository in Codex.
-2. Restart or reload Codex so it can discover `.agents/plugins/marketplace.json`.
-3. In the Codex plugin or marketplace UI, install **Articraft** from **Articraft Local**.
-
-The plugin itself adds Codex guidance and does not introduce any additional credential requirements beyond the Articraft workflows you choose to run.
-
----
-
 ## Contribute Data
 
 A huge part of Articraft's mission is crowdsourcing a diverse, massive dataset of articulated 3D models. We welcome generation via our CLI, batch processing, or through external AI agents (like Claude Code, Codex, or Cursor).
@@ -113,6 +99,7 @@ By contributing data to the Articraft project, you acknowledge and agree that yo
 
 - **[Architecture & Project Structure](docs/architecture.md)**
 - **[Qwen / DashScope Quickstart](docs/qwen_dashscope_quickstart.md)**
+- **[Codex Plugin Setup](docs/codex_plugin.md)**
 - **[Editing Existing Records](docs/record_editing.md)**
 - **[Image-Conditioned Generation](docs/image_conditioned_generation.md)**
 - **[Dataset Generation & Batch Processing](docs/dataset_generation.md)**
