@@ -30,6 +30,8 @@ from agent.prompts import (
 from agent.providers.anthropic import AnthropicLLM
 from agent.providers.base import ProviderClient
 from agent.providers.codex_cli import CodexCliLLM
+from agent.providers.dashscope import DashScopeLLM
+from agent.providers.deepseek import DeepSeekLLM
 from agent.providers.factory import (
     ProviderConfig,
     ProviderConstructors,
@@ -58,6 +60,7 @@ logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
 CONSOLE = Console()
 _FIND_EXAMPLES_SKIPPED_CONTENT = "{Skipped: full content already returned earlier in this run.}"
+MAX_CONSECUTIVE_NO_ACTION_TURNS = 3
 
 
 def _minimal_scaffold_text(
@@ -237,6 +240,8 @@ class ArticraftAgent:
             constructors=ProviderConstructors(
                 anthropic=AnthropicLLM,
                 codex_cli=CodexCliLLM,
+                dashscope=DashScopeLLM,
+                deepseek=DeepSeekLLM,
                 gemini=GeminiLLM,
                 openai=OpenAILLM,
                 openrouter=OpenRouterLLM,
@@ -655,6 +660,37 @@ class ArticraftAgent:
 
     def _build_assistant_message(self, message: dict) -> dict:
         return self._ensure_message_codec().build_assistant_message(message)
+
+    def _extract_provider_diagnostics(self, message: dict) -> dict[str, Any] | None:
+        if not isinstance(message, dict):
+            return None
+        diagnostics = message.get("provider_diagnostics")
+        return diagnostics if isinstance(diagnostics, dict) and diagnostics else None
+
+    def _trace_provider_diagnostics(self, diagnostics: dict[str, Any]) -> None:
+        if not self.trace_writer:
+            return
+        payload: dict[str, Any] = {
+            "provider": self.provider,
+            "diagnostics": diagnostics,
+        }
+        model_id = getattr(self.llm, "model_id", None)
+        if isinstance(model_id, str) and model_id:
+            payload["model_id"] = model_id
+        self.trace_writer.write_event("llm_response", payload)
+
+    def _format_provider_diagnostic_summary(self, diagnostics: dict[str, Any] | None) -> str:
+        if not isinstance(diagnostics, dict):
+            return ""
+        parts: list[str] = []
+        status = diagnostics.get("status")
+        if isinstance(status, str) and status:
+            parts.append(f"status={status}")
+        incomplete_details = diagnostics.get("incomplete_details")
+        reason = incomplete_details.get("reason") if isinstance(incomplete_details, dict) else None
+        if isinstance(reason, str) and reason:
+            parts.append(f"reason={reason}")
+        return " ".join(parts)
 
     def _tool_call_name(self, tool_call: dict) -> str:
         return self._ensure_message_codec().tool_call_name(tool_call)
@@ -1104,6 +1140,8 @@ class ArticraftAgent:
         completed_turns = 0
         llm_calls = 0
         tool_call_count = 0
+        consecutive_no_action_turns = 0
+        last_provider_diagnostics: dict[str, Any] | None = None
 
         while completed_turns < self.max_turns:
             turn = completed_turns + 1
@@ -1234,6 +1272,11 @@ class ArticraftAgent:
             for key, value in usage.items():
                 usage_totals[key] = usage_totals.get(key, 0) + value
 
+            provider_diagnostics = self._extract_provider_diagnostics(response)
+            if provider_diagnostics:
+                last_provider_diagnostics = provider_diagnostics
+                self._trace_provider_diagnostics(provider_diagnostics)
+
             assistant_message = self._build_assistant_message(response)
             has_assistant_payload = any(
                 key in assistant_message
@@ -1299,6 +1342,35 @@ class ArticraftAgent:
             is_no_action_response = not tool_calls and not text.strip()
             if is_no_action_response:
                 completed_turns += 1
+                consecutive_no_action_turns += 1
+                if consecutive_no_action_turns >= MAX_CONSECUTIVE_NO_ACTION_TURNS:
+                    message = (
+                        "LLM produced "
+                        f"{consecutive_no_action_turns} consecutive no-action responses "
+                        "(no visible text and no tool calls). Aborting early to avoid "
+                        "burning turns."
+                    )
+                    diagnostic_summary = self._format_provider_diagnostic_summary(
+                        last_provider_diagnostics
+                    )
+                    if diagnostic_summary:
+                        message = f"{message} Last provider response: {diagnostic_summary}."
+                    logger.warning(message)
+                    self._persist_cost_tracking()
+                    self.display.end_turn(success=False, error=message)
+                    return AgentResult(
+                        success=False,
+                        reason=TerminateReason.ERROR,
+                        message=message,
+                        conversation=conversation,
+                        compile_warnings=self._compile_warnings_snapshot(),
+                        turn_count=completed_turns,
+                        tool_call_count=tool_call_count,
+                        compile_attempt_count=(
+                            self._ensure_compile_feedback().compile_attempt_count
+                        ),
+                        usage=usage_totals or None,
+                    )
                 if self._latest_code_is_fresh():
                     logger.info(
                         "No-action response after fresh compile; requesting visible final response."
@@ -1310,6 +1382,7 @@ class ArticraftAgent:
                 self.display.end_turn(success=True)
                 continue
 
+            consecutive_no_action_turns = 0
             completed_turns += 1
 
             termination_message = self._termination_message(text, tool_calls)

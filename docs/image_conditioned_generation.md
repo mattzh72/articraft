@@ -66,6 +66,7 @@ Supported formats depend on the provider:
 | `anthropic` | PNG, JPEG, WebP, GIF |
 | `openrouter` | PNG, JPEG, WebP, GIF |
 | `gemini` | PNG, JPEG, WebP, HEIC, HEIF |
+| `deepseek` | Not supported (no vision capability) |
 
 Images must be local files. Gemini image inputs must stay under the inline request limit; other providers reject images larger than 50 MB.
 

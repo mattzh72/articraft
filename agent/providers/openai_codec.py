@@ -9,6 +9,18 @@ from pathlib import Path
 from typing import Any, Optional
 
 
+def _get_value(obj: Any, field: str) -> Any:
+    if isinstance(obj, dict):
+        return obj.get(field)
+    return getattr(obj, field, None)
+
+
+def _scalar(value: Any) -> Any:
+    if isinstance(value, (str, int, float, bool)):
+        return value
+    return None
+
+
 def make_json_schema_nullable(schema: dict[str, Any]) -> dict[str, Any]:
     normalized = copy.deepcopy(schema)
     schema_type = normalized.get("type")
@@ -267,16 +279,12 @@ def serialize_response_output(response: Any) -> list[dict[str, Any]]:
 
 
 def extract_usage(response: Any) -> Optional[dict[str, int]]:
-    usage = (
-        response.get("usage") if isinstance(response, dict) else getattr(response, "usage", None)
-    )
+    usage = _get_value(response, "usage")
     if usage is None:
         return None
 
     def get(field: str) -> Any:
-        if isinstance(usage, dict):
-            return usage.get(field)
-        return getattr(usage, field, None)
+        return _get_value(usage, field)
 
     def get_details() -> Any:
         for name in ("input_tokens_details", "prompt_tokens_details", "input_token_details"):
@@ -296,6 +304,7 @@ def extract_usage(response: Any) -> Optional[dict[str, int]]:
     output_tokens = get("output_tokens")
     total_tokens = get("total_tokens")
     cached_tokens = get("cached_tokens")
+    reasoning_tokens = None
     if not isinstance(cached_tokens, int):
         details = get_details()
         for field in (
@@ -308,6 +317,16 @@ def extract_usage(response: Any) -> Optional[dict[str, int]]:
             if isinstance(value, int):
                 cached_tokens = value
                 break
+    for details_name in (
+        "output_tokens_details",
+        "completion_tokens_details",
+        "output_token_details",
+    ):
+        output_details = get(details_name)
+        value = get_from(output_details, "reasoning_tokens")
+        if isinstance(value, int):
+            reasoning_tokens = value
+            break
 
     cleaned: dict[str, int] = {}
     if isinstance(input_tokens, int):
@@ -318,53 +337,43 @@ def extract_usage(response: Any) -> Optional[dict[str, int]]:
         cleaned["total_tokens"] = total_tokens
     if isinstance(cached_tokens, int):
         cleaned["cached_tokens"] = cached_tokens
+    if isinstance(reasoning_tokens, int):
+        cleaned["reasoning_tokens"] = reasoning_tokens
 
     return cleaned or None
 
 
-def convert_response(response: Any) -> dict[str, Any]:
+def convert_response(response: Any, *, transport: str | None = None) -> dict[str, Any]:
     text_fragments: list[str] = []
     reasoning_fragments: list[str] = []
     tool_calls: list[dict[str, Any]] = []
     usage = extract_usage(response)
 
-    output = (
-        response.get("output") if isinstance(response, dict) else getattr(response, "output", None)
-    )
+    output = _get_value(response, "output")
     output = output or []
     for item in output:
         if item is None:
             continue
 
-        item_type = item.get("type") if isinstance(item, dict) else getattr(item, "type", None)
+        item_type = _get_value(item, "type")
         if item_type == "reasoning":
-            summary = (
-                item.get("summary") if isinstance(item, dict) else getattr(item, "summary", None)
-            )
+            summary = _get_value(item, "summary")
             reasoning_text = extract_reasoning_summary(summary)
             if reasoning_text:
                 reasoning_fragments.append(reasoning_text)
             continue
 
         if item_type == "message":
-            content = (
-                item.get("content") if isinstance(item, dict) else getattr(item, "content", None)
-            )
+            content = _get_value(item, "content")
             text = extract_message_text(content)
             if text:
                 text_fragments.append(text)
             continue
 
         if item_type == "function_call":
-            name = item.get("name") if isinstance(item, dict) else getattr(item, "name", None)
-            arguments = (
-                item.get("arguments")
-                if isinstance(item, dict)
-                else getattr(item, "arguments", None)
-            )
-            call_id = (
-                item.get("call_id") if isinstance(item, dict) else getattr(item, "call_id", None)
-            )
+            name = _get_value(item, "name")
+            arguments = _get_value(item, "arguments")
+            call_id = _get_value(item, "call_id")
             tool_calls.append(
                 {
                     "id": call_id or f"call_{uuid.uuid4().hex}",
@@ -378,13 +387,9 @@ def convert_response(response: Any) -> dict[str, Any]:
             continue
 
         if item_type == "custom_tool_call":
-            name = item.get("name") if isinstance(item, dict) else getattr(item, "name", None)
-            input_text = (
-                item.get("input") if isinstance(item, dict) else getattr(item, "input", None)
-            )
-            call_id = (
-                item.get("call_id") if isinstance(item, dict) else getattr(item, "call_id", None)
-            )
+            name = _get_value(item, "name")
+            input_text = _get_value(item, "input")
+            call_id = _get_value(item, "call_id")
             tool_calls.append(
                 {
                     "id": call_id or f"call_{uuid.uuid4().hex}",
@@ -405,13 +410,89 @@ def convert_response(response: Any) -> dict[str, Any]:
         result["thought_summary"] = "\n".join(reasoning_fragments).strip()
     if usage:
         result["usage"] = usage
+    diagnostics = extract_provider_diagnostics(response, transport=transport)
+    if diagnostics:
+        result["provider_diagnostics"] = diagnostics
     return result
 
 
+def extract_provider_diagnostics(response: Any, *, transport: str | None = None) -> dict[str, Any]:
+    diagnostics: dict[str, Any] = {}
+
+    response_id = _get_value(response, "id")
+    if isinstance(response_id, str) and response_id:
+        diagnostics["response_id"] = response_id
+
+    status = _get_value(response, "status")
+    if isinstance(status, str) and status:
+        diagnostics["status"] = status
+
+    incomplete_details = _sanitize_incomplete_details(_get_value(response, "incomplete_details"))
+    if incomplete_details:
+        diagnostics["incomplete_details"] = incomplete_details
+
+    output_items = _summarize_output_items(_get_value(response, "output"))
+    if output_items:
+        diagnostics["output_items"] = output_items
+
+    if diagnostics and isinstance(transport, str) and transport:
+        diagnostics["transport"] = transport
+
+    return diagnostics
+
+
+def _sanitize_incomplete_details(details: Any) -> dict[str, Any]:
+    if details is None:
+        return {}
+
+    raw: dict[str, Any] = {}
+    dump = getattr(details, "model_dump", None)
+    if callable(dump):
+        try:
+            dumped = dump(mode="json", exclude_none=True, warnings="none")
+        except TypeError:
+            dumped = dump()
+        if isinstance(dumped, dict):
+            raw = dumped
+    elif isinstance(details, dict):
+        raw = details
+    else:
+        for field in ("reason", "message", "type", "code"):
+            value = _get_value(details, field)
+            if value is not None:
+                raw[field] = value
+
+    sanitized: dict[str, Any] = {}
+    for key in ("reason", "message", "type", "code"):
+        value = raw.get(key)
+        scalar = _scalar(value)
+        if scalar is not None:
+            sanitized[key] = scalar
+    return sanitized
+
+
+def _summarize_output_items(output: Any) -> list[dict[str, Any]]:
+    if not isinstance(output, list):
+        return []
+
+    summaries: list[dict[str, Any]] = []
+    for index, item in enumerate(output):
+        if item is None:
+            continue
+        summary: dict[str, Any] = {"index": index}
+        item_type = _get_value(item, "type")
+        if isinstance(item_type, str) and item_type:
+            summary["type"] = item_type
+        status = _get_value(item, "status")
+        if isinstance(status, str) and status:
+            summary["status"] = status
+        if len(summary) > 1:
+            summaries.append(summary)
+    return summaries
+
+
 def extract_response_id(response: Any) -> Optional[str]:
-    response_id = (
-        response.get("id") if isinstance(response, dict) else getattr(response, "id", None)
-    )
+    response_id = _get_value(response, "id")
     if isinstance(response_id, str) and response_id:
         return response_id
     return None

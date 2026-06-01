@@ -20,9 +20,12 @@ from articraft.values import (
         ("claude-sonnet-4-5", ProviderName.ANTHROPIC),
         ("codex-cli-default", ProviderName.CODEX_CLI),
         ("codex/gpt-5.5", ProviderName.CODEX_CLI),
+        ("qwen3.6-flash", ProviderName.DASHSCOPE),
         ("gemini-3-flash-preview", ProviderName.GEMINI),
         ("gemini-3.5-flash", ProviderName.GEMINI),
         ("openai/gpt-5.4", ProviderName.OPENROUTER),
+        ("qwen/qwen3.6-flash", ProviderName.OPENROUTER),
+        ("deepseek-v4-pro", ProviderName.DEEPSEEK),
     ],
 )
 def test_infer_provider_from_model_id(model_id: str, provider: ProviderName) -> None:

@@ -108,7 +108,7 @@ def test_codex_cli_generate_converts_schema_payload_to_tool_calls() -> None:
         captured["output_path"] = output_path
         return CodexCliExecResult(
             returncode=0,
-            stdout="tokens used\n1,234\n",
+            stdout="  Tokens used: 1,234\n",
             stderr="",
             last_message=json.dumps(
                 {

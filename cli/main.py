@@ -41,28 +41,22 @@ def _infer_provider(model_id: str) -> str:
         return provider
     raise ValueError(
         f"Unable to infer provider for model '{model_id}'. "
-        "Pass --provider explicitly or use a known OpenAI, Gemini, Anthropic, "
-        "OpenRouter, or Codex CLI model ID."
+        "Pass --provider explicitly or use a known OpenAI, Gemini, Anthropic, DashScope, "
+        "OpenRouter, DeepSeek, or Codex CLI model ID."
     )
 
 
 def _model_and_provider(args: argparse.Namespace) -> tuple[str, str]:
+    if args.model:
+        model_id = str(args.model)
+        provider = str(args.provider or _infer_provider(model_id))
+        return model_id, provider
     if args.provider:
         provider = str(args.provider)
-        model_id = str(
-            args.model
-            or default_model_id(
-                ProviderConfig(
-                    provider=provider,
-                    thinking_level=str(
-                        getattr(args, "thinking_level", default_thinking_level_from_env())
-                    ),
-                )
-            )
-        )
+        model_id = default_model_id(ProviderConfig(provider=provider))
         return model_id, provider
-    model_id = str(args.model or default_model_from_env())
-    provider = str(args.provider or _infer_provider(model_id))
+    model_id = str(default_model_from_env())
+    provider = str(_infer_provider(model_id))
     return model_id, provider
 
 
@@ -125,11 +119,10 @@ def _run_generate(args: argparse.Namespace) -> int:
         args.prompt,
         "--provider",
         provider,
-        "--model",
-        model_id,
-        "--thinking",
-        thinking_level,
     ]
+    if model_id:
+        argv.extend(["--model", model_id])
+    argv.extend(["--thinking", thinking_level])
     if args.image:
         argv.extend(["--image", args.image])
     if args.max_cost_usd is not None:
@@ -149,11 +142,10 @@ def _run_draft(args: argparse.Namespace) -> int:
         args.prompt,
         "--provider",
         provider,
-        "--model-id",
-        model_id,
-        "--thinking-level",
-        thinking_level,
     ]
+    if model_id:
+        argv.extend(["--model-id", model_id])
+    argv.extend(["--thinking-level", thinking_level])
     if args.image:
         argv.extend(["--image", args.image])
     if args.max_cost_usd is not None:
@@ -415,11 +407,10 @@ def _run_dataset_run(args: argparse.Namespace) -> int:
         args.category_slug,
         "--provider",
         provider,
-        "--model-id",
-        model_id,
-        "--thinking-level",
-        thinking_level,
     ]
+    if model_id:
+        argv.extend(["--model-id", model_id])
+    argv.extend(["--thinking-level", thinking_level])
     if args.image:
         argv.extend(["--image", args.image])
     if args.dataset_id:

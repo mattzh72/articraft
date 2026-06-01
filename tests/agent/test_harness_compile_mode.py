@@ -10,6 +10,7 @@ import pytest
 import agent.harness as harness
 from agent.feedback import build_compile_signal_bundle
 from agent.harness import ArticraftAgent
+from agent.harness_compile import CompileFeedbackLoop
 from agent.models import CompileReport, TerminateReason
 from agent.tools.compile_model import CompileModelTool
 from agent.tools.registry import ToolRegistry
@@ -200,6 +201,37 @@ def test_execute_compile_model_failure_leaves_latest_revision_stale() -> None:
     }
     assert "<compile_signals>" in str(result.output)
     assert "bad loft" in str(result.output)
+
+
+def test_compile_required_reminder_distinguishes_never_compiled_from_stale_edit() -> None:
+    loop = CompileFeedbackLoop(
+        file_path="model.py",
+        sdk_package="sdk",
+        runtime_limits=None,
+        checkpoint_urdf_path=None,
+    )
+    conversation: list[dict] = []
+
+    loop.append_compile_required_reminder(conversation, trace_writer=None)
+
+    first_content = str(conversation[-1]["content"])
+    assert "No successful compile has completed yet." in first_content
+    assert "changed since the last successful compile" not in first_content
+
+    loop._last_successful_compile_report = CompileReport(
+        urdf_xml="<robot />",
+        warnings=[],
+        signal_bundle=build_compile_signal_bundle(status="success"),
+    )
+    loop._last_successful_compile_revision = 0
+    loop.mark_code_mutated("replace")
+    conversation = []
+
+    loop.append_compile_required_reminder(conversation, trace_writer=None)
+
+    stale_content = str(conversation[-1]["content"])
+    assert "The latest code has changed since the last successful compile." in stale_content
+    assert "No successful compile has completed yet." not in stale_content
 
 
 def test_execute_tool_calls_batch_runs_parallel_safe_gemini_calls_concurrently() -> None:
@@ -782,7 +814,7 @@ def test_visible_finish_attempt_ends_turn_and_shares_compile_gate(
         {},
     ],
 )
-def test_no_action_response_counts_turn_and_requires_compile(
+def test_no_action_response_fails_fast_after_streak(
     monkeypatch: pytest.MonkeyPatch,
     tmp_path: Path,
     no_action_response: dict[str, object],
@@ -806,7 +838,7 @@ def test_no_action_response_counts_turn_and_requires_compile(
     agent = ArticraftAgent(
         file_path=str(tmp_path / "model.py"),
         provider="openai",
-        max_turns=2,
+        max_turns=10,
         display_enabled=False,
     )
     agent.display = _CountingDisplay()
@@ -814,10 +846,11 @@ def test_no_action_response_counts_turn_and_requires_compile(
     result = asyncio.run(agent.run("make a hinge"))
 
     assert result.success is False
-    assert result.reason == TerminateReason.MAX_TURNS
-    assert result.turn_count == 2
-    assert getattr(agent.llm, "calls") == 2
-    assert agent.display.end_turn_calls == 2
+    assert result.reason == TerminateReason.ERROR
+    assert "3 consecutive no-action responses" in result.message
+    assert result.turn_count == 3
+    assert getattr(agent.llm, "calls") == 3
+    assert agent.display.end_turn_calls == 3
 
     user_messages = [
         str(message.get("content", ""))
@@ -826,6 +859,144 @@ def test_no_action_response_counts_turn_and_requires_compile(
     ]
     assert sum("<compile_required>" in content for content in user_messages) == 2
     assert all("<final_response_required>" not in content for content in user_messages)
+
+
+def test_provider_diagnostics_are_traced_without_changing_no_action_flow(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+) -> None:
+    diagnostics = {
+        "response_id": "resp_incomplete",
+        "status": "incomplete",
+        "incomplete_details": {"reason": "max_output_tokens"},
+        "output_items": [{"index": 0, "type": "reasoning", "status": "incomplete"}],
+        "transport": "http",
+    }
+
+    class _DiagnosticLLM:
+        model_id = "gpt-5.5"
+
+        def __init__(self, *args: object, **kwargs: object) -> None:
+            return None
+
+        async def generate_with_tools(
+            self, *, system_prompt: str, messages: list[dict], tools: list[dict]
+        ) -> dict:
+            assert tools
+            return {
+                "content": "",
+                "tool_calls": [],
+                "thought_summary": "Still thinking.",
+                "usage": {
+                    "prompt_tokens": 10,
+                    "candidates_tokens": 5,
+                    "total_tokens": 15,
+                    "reasoning_tokens": 5,
+                },
+                "provider_diagnostics": diagnostics,
+            }
+
+        async def close(self) -> None:
+            return None
+
+    trace_dir = tmp_path / "traces"
+    monkeypatch.setattr(harness, "OpenAILLM", _DiagnosticLLM)
+    agent = ArticraftAgent(
+        file_path=str(tmp_path / "model.py"),
+        provider="openai",
+        max_turns=1,
+        trace_dir=str(trace_dir),
+        display_enabled=False,
+    )
+    agent.display = _CountingDisplay()
+
+    result = asyncio.run(agent.run("make a hinge"))
+    if agent.trace_writer:
+        agent.trace_writer.close()
+
+    assert result.success is False
+    assert result.reason == TerminateReason.MAX_TURNS
+
+    records = [
+        json.loads(line)
+        for line in (trace_dir / "trajectory.jsonl").read_text(encoding="utf-8").splitlines()
+    ]
+    llm_response_events = [record for record in records if record.get("type") == "llm_response"]
+    assert llm_response_events == [
+        {
+            "ts": llm_response_events[0]["ts"],
+            "type": "llm_response",
+            "provider": "openai",
+            "model_id": "gpt-5.5",
+            "diagnostics": diagnostics,
+        }
+    ]
+
+    assistant_messages = [
+        record["message"]
+        for record in records
+        if record.get("type") == "message" and record.get("message", {}).get("role") == "assistant"
+    ]
+    assert assistant_messages[-1] == {
+        "role": "assistant",
+        "thought_summary": "Still thinking.",
+        "usage": {
+            "prompt_tokens": 10,
+            "candidates_tokens": 5,
+            "total_tokens": 15,
+            "reasoning_tokens": 5,
+        },
+    }
+    assert "provider_diagnostics" not in assistant_messages[-1]
+
+    user_messages = [
+        str(message.get("content", ""))
+        for message in result.conversation
+        if message.get("role") == "user"
+    ]
+    assert sum("<compile_required>" in content for content in user_messages) == 1
+
+
+def test_no_action_fail_fast_includes_last_provider_status(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+) -> None:
+    class _NoActionDiagnosticLLM:
+        model_id = "gpt-5.5"
+
+        def __init__(self, *args: object, **kwargs: object) -> None:
+            return None
+
+        async def generate_with_tools(
+            self, *, system_prompt: str, messages: list[dict], tools: list[dict]
+        ) -> dict:
+            return {
+                "content": "",
+                "tool_calls": [],
+                "provider_diagnostics": {
+                    "status": "incomplete",
+                    "incomplete_details": {"reason": "max_output_tokens"},
+                },
+            }
+
+        async def close(self) -> None:
+            return None
+
+    monkeypatch.setattr(harness, "OpenAILLM", _NoActionDiagnosticLLM)
+    agent = ArticraftAgent(
+        file_path=str(tmp_path / "model.py"),
+        provider="openai",
+        max_turns=10,
+        display_enabled=False,
+    )
+    agent.display = _CountingDisplay()
+
+    result = asyncio.run(agent.run("make a hinge"))
+
+    assert result.success is False
+    assert result.reason == TerminateReason.ERROR
+    assert "3 consecutive no-action responses" in result.message
+    assert "Last provider response: status=incomplete reason=max_output_tokens." in result.message
 
 
 def test_fresh_code_no_action_requires_visible_final_response(

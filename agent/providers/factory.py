@@ -12,6 +12,16 @@ from agent.providers.anthropic import (
 )
 from agent.providers.base import ProviderClient
 from agent.providers.codex_cli import DEFAULT_CODEX_CLI_MODEL, CodexCliLLM
+from agent.providers.dashscope import (
+    DEFAULT_DASHSCOPE_MODEL,
+    DashScopeLLM,
+    dashscope_api_key_from_env,
+)
+from agent.providers.deepseek import (
+    DEFAULT_DEEPSEEK_MODEL,
+    DeepSeekLLM,
+    deepseek_api_key_from_env,
+)
 from agent.providers.gemini import (
     DEFAULT_GEMINI_MODEL,
     GeminiLLM,
@@ -58,6 +68,8 @@ class ProviderConfig:
 class ProviderConstructors:
     anthropic: Callable[..., ProviderClient] = AnthropicLLM
     codex_cli: Callable[..., ProviderClient] = CodexCliLLM
+    dashscope: Callable[..., ProviderClient] = DashScopeLLM
+    deepseek: Callable[..., ProviderClient] = DeepSeekLLM
     gemini: Callable[..., ProviderClient] = GeminiLLM
     openai: Callable[..., ProviderClient] = OpenAILLM
     openrouter: Callable[..., ProviderClient] = OpenRouterLLM
@@ -91,6 +103,10 @@ def default_model_id(config: ProviderConfig) -> str:
             "Codex CLI provider requires an explicit model. Pass `--model <codex-model-id>` "
             "or set ARTICRAFT_CODEX_MODEL so runs do not silently inherit the local Codex CLI default."
         )
+    if provider is ProviderName.DASHSCOPE:
+        return os.environ.get("DASHSCOPE_MODEL") or DEFAULT_DASHSCOPE_MODEL
+    if provider is ProviderName.DEEPSEEK:
+        return DEFAULT_DEEPSEEK_MODEL
     if provider is ProviderName.GEMINI:
         return DEFAULT_GEMINI_MODEL
     if provider is ProviderName.OPENROUTER:
@@ -123,6 +139,18 @@ def create_provider_client(
         )
     if provider is ProviderName.GEMINI:
         return provider_constructors.gemini(
+            model_id=model_id,
+            thinking_level=config.thinking_level,
+            dry_run=dry_run,
+        )
+    if provider is ProviderName.DEEPSEEK:
+        return provider_constructors.deepseek(
+            model_id=model_id,
+            thinking_level=config.thinking_level,
+            dry_run=dry_run,
+        )
+    if provider is ProviderName.DASHSCOPE:
+        return provider_constructors.dashscope(
             model_id=model_id,
             thinking_level=config.thinking_level,
             dry_run=dry_run,
@@ -161,6 +189,16 @@ def validate_provider_credentials(provider: str) -> None:
                 "Codex CLI provider requires the `codex` executable. "
                 "Install/login to Codex CLI or set ARTICRAFT_CODEX_CLI_BIN."
             )
+        return
+    if provider_norm is ProviderName.DASHSCOPE:
+        if not dashscope_api_key_from_env():
+            raise ValueError(
+                "DashScope credentials are required. Set DASHSCOPE_API_KEY or DASHSCOPE_API_KEYS."
+            )
+        return
+    if provider_norm is ProviderName.DEEPSEEK:
+        if not deepseek_api_key_from_env():
+            raise ValueError("DeepSeek credentials are required. Set DEEPSEEK_API_KEY.")
         return
     if provider_norm is ProviderName.GEMINI:
         gemini_client_config_from_env()

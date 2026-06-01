@@ -1,12 +1,13 @@
-import { lazy, Suspense, type JSX } from "react";
+import { Suspense, type JSX } from "react";
 
+import { lazyWithChunkReload } from "@/lib/lazy";
 import { useRoute } from "@/lib/useRoute";
 import { ViewerProvider } from "@/lib/viewer-context";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { AppHeader } from "@/components/layout/AppHeader";
 
-const ViewerShell = lazy(() => import("@/ViewerShell"));
-const DashboardPage = lazy(() =>
+const ViewerShell = lazyWithChunkReload(() => import("@/ViewerShell"));
+const DashboardPage = lazyWithChunkReload(() =>
   import("@/components/dashboard/DashboardPage").then((module) => ({
     default: module.DashboardPage,
   })),

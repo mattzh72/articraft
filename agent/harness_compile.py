@@ -99,11 +99,15 @@ class CompileFeedbackLoop:
         *,
         trace_writer: object | None,
     ) -> None:
+        if self._last_successful_compile_report is None:
+            reason = "No successful compile has completed yet."
+        else:
+            reason = "The latest code has changed since the last successful compile."
         msg = {
             "role": "user",
             "content": (
                 "<compile_required>\n"
-                "The latest code has changed since the last successful compile.\n"
+                f"{reason}\n"
                 "Run `compile_model` before concluding.\n"
                 "</compile_required>"
             ),

@@ -1,5 +1,4 @@
 import {
-  lazy,
   Suspense,
   useDeferredValue,
   useEffect,
@@ -10,6 +9,7 @@ import {
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 
 import { DASHBOARD_REFRESH_EVENT } from "@/lib/dashboard-events";
+import { lazyWithChunkReload } from "@/lib/lazy";
 import type { DashboardData, TimeFilter } from "@/lib/types";
 import { dashboardQueryOptions } from "@/lib/viewer-queries";
 import { DashboardFilterBar } from "@/components/dashboard/DashboardFilterBar";
@@ -17,13 +17,13 @@ import { OverviewSection } from "@/components/dashboard/OverviewSection";
 import { CategoriesSection } from "@/components/dashboard/CategoriesSection";
 import { STAR_SLIDER_MAX, STAR_SLIDER_MIN } from "@/components/dashboard/dashboard-filters";
 
-const CostTrendSection = lazy(() =>
+const CostTrendSection = lazyWithChunkReload(() =>
   import("@/components/dashboard/CostTrendSection").then((module) => ({
     default: module.CostTrendSection,
   })),
 );
 
-const SupercategoriesSection = lazy(() =>
+const SupercategoriesSection = lazyWithChunkReload(() =>
   import("@/components/dashboard/SupercategoriesSection").then((module) => ({
     default: module.SupercategoriesSection,
   })),

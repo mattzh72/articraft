@@ -181,6 +181,8 @@ class GuidanceInjector:
     def reset(self) -> None:
         self._seen_exact_geometry_contract_sigs = set()
         self._seen_baseline_qc_guidance_sigs = set()
+        self._seen_compile_repair_guidance_sigs = set()
+        self._seen_api_error_guidance_sigs = set()
 
     def _append_guidance_message(self, conversation: list[dict], content: str) -> None:
         msg = {"role": "user", "content": content}

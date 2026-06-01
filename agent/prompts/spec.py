@@ -74,6 +74,18 @@ PROMPT_VARIANTS: tuple[PromptVariant, ...] = (
         output=GENERATED_DIR / "designer_system_prompt_anthropic.txt",
         description="Anthropic designer prompt for the unified SDK.",
     ),
+    PromptVariant(
+        name="designer_deepseek",
+        sections=(
+            SECTIONS_DIR / "designer_common.md",
+            SECTIONS_DIR / "link_naming.md",
+            SECTIONS_DIR / "provider_deepseek.md",
+            SECTIONS_DIR / "provider_openrouter_process.md",
+            SECTIONS_DIR / "sdk_base.md",
+        ),
+        output=GENERATED_DIR / "designer_system_prompt_deepseek.txt",
+        description="DeepSeek designer prompt for the unified SDK.",
+    ),
 )
 
 

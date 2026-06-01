@@ -30,6 +30,12 @@ SUPPORTED_IMAGE_MIME_TYPES_BY_PROVIDER: dict[str, set[str]] = {
         "image/webp",
         "image/gif",
     },
+    ProviderName.DASHSCOPE.value: {
+        "image/png",
+        "image/jpeg",
+        "image/webp",
+        "image/gif",
+    },
     ProviderName.OPENAI.value: {
         "image/png",
         "image/jpeg",

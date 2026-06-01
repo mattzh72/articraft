@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import time
 
-from storage.records_index import find_record_index_row
+from storage.records_index import find_record_index_row, load_records_index
 from viewer.api.agent_harness import agent_harness_from_record, within_agent_harness_filters
 from viewer.api.schemas import (
     DashboardCategoryStatsResponse,
@@ -40,6 +40,42 @@ def _sorted_agent_harnesses(values: set[str]) -> list[str]:
 
 
 class ViewerDashboardStore(ViewerStoreComponent):
+    def _dashboard_record_from_index_row(
+        self,
+        row: dict,
+        *,
+        category_slug_override: str | None = None,
+    ) -> DashboardRecord | None:
+        record_id = _coerce_string(row.get("record_id"))
+        if record_id is None:
+            return None
+        return DashboardRecord(
+            record_id=record_id,
+            created_at=_coerce_string(row.get("created_at")),
+            sdk_package=_normalize_sdk_package_value(row.get("sdk_package")),
+            total_cost_usd=(
+                float(row.get("total_cost_usd"))
+                if isinstance(row.get("total_cost_usd"), (int, float))
+                else None
+            ),
+            effective_rating=(
+                float(row.get("effective_rating"))
+                if isinstance(row.get("effective_rating"), (int, float))
+                else None
+            ),
+            author=_coerce_string(row.get("author")),
+            agent_harness=_coerce_string(row.get("agent_harness")) or "articraft",
+            run_id=_coerce_string(row.get("run_id")),
+            category_slug=category_slug_override or _coerce_string(row.get("category_slug")),
+            model_id=_coerce_string(row.get("model_id")),
+            input_tokens=row.get("input_tokens")
+            if isinstance(row.get("input_tokens"), int)
+            else None,
+            output_tokens=(
+                row.get("output_tokens") if isinstance(row.get("output_tokens"), int) else None
+            ),
+        )
+
     def _dashboard_record(
         self,
         record_id: str,
@@ -51,31 +87,9 @@ class ViewerDashboardStore(ViewerStoreComponent):
             row = find_record_index_row(self.repo, record_id)
             if row is None:
                 return None
-            return DashboardRecord(
-                record_id=record_id,
-                created_at=_coerce_string(row.get("created_at")),
-                sdk_package=_normalize_sdk_package_value(row.get("sdk_package")),
-                total_cost_usd=(
-                    float(row.get("total_cost_usd"))
-                    if isinstance(row.get("total_cost_usd"), (int, float))
-                    else None
-                ),
-                effective_rating=(
-                    float(row.get("effective_rating"))
-                    if isinstance(row.get("effective_rating"), (int, float))
-                    else None
-                ),
-                author=_coerce_string(row.get("author")),
-                agent_harness=_coerce_string(row.get("agent_harness")) or "articraft",
-                run_id=_coerce_string(row.get("run_id")),
-                category_slug=category_slug_override or _coerce_string(row.get("category_slug")),
-                model_id=_coerce_string(row.get("model_id")),
-                input_tokens=row.get("input_tokens")
-                if isinstance(row.get("input_tokens"), int)
-                else None,
-                output_tokens=row.get("output_tokens")
-                if isinstance(row.get("output_tokens"), int)
-                else None,
+            return self._dashboard_record_from_index_row(
+                row,
+                category_slug_override=category_slug_override,
             )
 
         artifacts = record.get("artifacts") or {}
@@ -111,19 +125,29 @@ class ViewerDashboardStore(ViewerStoreComponent):
             if now - cached_at < self._STATS_TTL:
                 return cached
 
-        records: list[DashboardRecord] = []
-        seen: set[str] = set()
-        for item in self.dataset_store.list_entries():
-            record_id = _coerce_string(item.get("record_id"))
-            if not record_id or record_id in seen:
-                continue
-            seen.add(record_id)
-            record = self._dashboard_record(
-                record_id,
-                category_slug_override=_coerce_string(item.get("category_slug")),
-            )
-            if record is not None:
-                records.append(record)
+        index_rows = load_records_index(self.repo)
+        if index_rows:
+            records = [
+                record
+                for row in index_rows
+                if row.get("dataset_id")
+                for record in [self._dashboard_record_from_index_row(row)]
+                if record is not None
+            ]
+        else:
+            records = []
+            seen: set[str] = set()
+            for item in self.dataset_store.list_entries():
+                record_id = _coerce_string(item.get("record_id"))
+                if not record_id or record_id in seen:
+                    continue
+                seen.add(record_id)
+                record = self._dashboard_record(
+                    record_id,
+                    category_slug_override=_coerce_string(item.get("category_slug")),
+                )
+                if record is not None:
+                    records.append(record)
         self._dashboard_records_cache = (now, records)
         return records
 

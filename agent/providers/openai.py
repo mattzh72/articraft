@@ -881,7 +881,7 @@ class OpenAILLM:
         return openai_codec.extract_usage(response)
 
     def _convert_response(self, response: Any) -> dict[str, Any]:
-        return openai_codec.convert_response(response)
+        return openai_codec.convert_response(response, transport=self.transport)
 
     def _extract_response_id(self, response: Any) -> Optional[str]:
         return openai_codec.extract_response_id(response)

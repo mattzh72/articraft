@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import asyncio
+import json
 import logging
 import sys
 from types import SimpleNamespace
@@ -364,6 +365,89 @@ def test_openai_default_compaction_model_is_mini() -> None:
 
     assert DEFAULT_OPENAI_COMPACTION_MODEL == "gpt-5.4-mini"
     assert provider.compaction_model_id == "gpt-5.4-mini"
+
+
+def test_convert_response_preserves_incomplete_diagnostics_and_reasoning_tokens() -> None:
+    provider = OpenAILLM(dry_run=True)
+    response = {
+        "id": "resp_incomplete",
+        "status": "incomplete",
+        "incomplete_details": {
+            "reason": "max_output_tokens",
+            "debug": {"raw": "not copied"},
+        },
+        "output": [
+            {
+                "type": "reasoning",
+                "status": "incomplete",
+                "summary": [{"type": "summary_text", "text": "Still planning."}],
+            }
+        ],
+        "usage": {
+            "input_tokens": 12,
+            "output_tokens": 7,
+            "total_tokens": 19,
+            "input_tokens_details": {"cached_tokens": 3},
+            "output_tokens_details": {"reasoning_tokens": 7},
+        },
+    }
+
+    converted = provider._convert_response(response)
+
+    assert converted["content"] == ""
+    assert converted["tool_calls"] == []
+    assert converted["thought_summary"] == "Still planning."
+    assert converted["usage"] == {
+        "prompt_tokens": 12,
+        "candidates_tokens": 7,
+        "total_tokens": 19,
+        "cached_tokens": 3,
+        "reasoning_tokens": 7,
+    }
+    assert converted["provider_diagnostics"] == {
+        "response_id": "resp_incomplete",
+        "status": "incomplete",
+        "incomplete_details": {"reason": "max_output_tokens"},
+        "output_items": [{"index": 0, "type": "reasoning", "status": "incomplete"}],
+        "transport": "http",
+    }
+
+
+def test_websocket_incomplete_response_converts_with_diagnostics() -> None:
+    provider = OpenAILLM(dry_run=True, transport="websocket")
+    payload = {
+        "type": "response.incomplete",
+        "response": {
+            "id": "resp_ws",
+            "status": "incomplete",
+            "incomplete_details": {"reason": "max_output_tokens"},
+            "output": [{"type": "reasoning", "status": "incomplete"}],
+            "usage": {
+                "input_tokens": 10,
+                "output_tokens": 5,
+                "total_tokens": 15,
+                "output_tokens_details": {"reasoning_tokens": 5},
+            },
+        },
+    }
+
+    class _FakeWebSocket:
+        async def recv(self) -> str:
+            return json.dumps(payload)
+
+    response = asyncio.run(provider._receive_websocket_response(_FakeWebSocket()))
+    converted = provider._convert_response(response)
+
+    assert converted["content"] == ""
+    assert converted["tool_calls"] == []
+    assert converted["usage"]["reasoning_tokens"] == 5
+    assert converted["provider_diagnostics"] == {
+        "response_id": "resp_ws",
+        "status": "incomplete",
+        "incomplete_details": {"reason": "max_output_tokens"},
+        "output_items": [{"index": 0, "type": "reasoning", "status": "incomplete"}],
+        "transport": "websocket",
+    }
 
 
 def test_convert_tools_normalizes_function_schemas_for_responses_strict_mode() -> None:

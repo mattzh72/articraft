@@ -27,9 +27,9 @@ Each row is one dataset generation job.
 | `category_slug` | Yes | Dataset category slug. |
 | `category_title` | Sometimes | Required for any row whose `category_slug` does not already exist. |
 | `prompt` | Yes | The generation prompt. |
-| `provider` | Yes | `openai`, `gemini`, `anthropic`, `openrouter`, or `codex-cli`. |
-| `model_id` | Yes | Model to use. Must agree with `provider`. |
-| `thinking_level` | Yes | `low`, `med`, or `high`. |
+| `provider` | Yes | `openai`, `gemini`, `anthropic`, `dashscope`, `deepseek`, `openrouter`, or `codex-cli`. |
+| `model_id` | Yes | Model to use. Must agree with `provider` except `codex-cli`, which accepts Codex CLI model IDs. |
+| `thinking_level` | Yes | `low`, `med`, `high`, or `xhigh`. |
 | `max_turns` | Yes | Positive integer turn cap. |
 | `max_cost_usd` | No | Optional positive per-row USD budget. |
 | `label` | No | Optional free-form label. |
@@ -37,7 +37,7 @@ Each row is one dataset generation job.
 **Notes:**
 - `image_path` is not supported in batch CSV v1
 - Duplicate `row_id` values are rejected
-- Use `provider=codex-cli` with `model_id=codex-cli-default` for no-key Codex generation through the internal Articraft harness. Turn/tool/compile trajectory remains available; total token count is recorded when Codex CLI emits its `tokens used` line, but billable cost remains unavailable.
+- Use `provider=codex-cli` with an explicit Codex model ID for no-key Codex generation through the internal Articraft harness. Turn/tool/compile trajectory remains available; total token count is recorded when Codex CLI emits its `tokens used` line, but billable cost remains unavailable.
 
 ## 3. Run the first pass
 

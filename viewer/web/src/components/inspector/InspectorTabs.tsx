@@ -1,6 +1,7 @@
-import { lazy, Suspense, useState, type JSX } from "react";
+import { Suspense, useState, type JSX } from "react";
 import { GitFork } from "lucide-react";
 
+import { lazyWithChunkReload } from "@/lib/lazy";
 import type { InspectorTab } from "@/lib/types";
 import { useViewer, useViewerDispatch } from "@/lib/viewer-context";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -11,13 +12,13 @@ import { defaultRenderOptions, type RenderOptions } from "@/components/viewer3d/
 import type { SnapshotExporter } from "@/components/viewer3d/SceneCanvas";
 import type { UrdfJoint } from "@/components/inspector/JointSlider";
 
-const CodePanel = lazy(() =>
+const CodePanel = lazyWithChunkReload(() =>
   import("@/components/inspector/CodePanel").then((module) => ({
     default: module.CodePanel,
   })),
 );
 
-const MetadataPanel = lazy(() =>
+const MetadataPanel = lazyWithChunkReload(() =>
   import("@/components/inspector/MetadataPanel").then((module) => ({
     default: module.MetadataPanel,
   })),

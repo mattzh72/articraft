@@ -839,10 +839,11 @@ def _extract_usage_from_stdio(*, stdout: str, stderr: str) -> dict[str, int] | N
     totals: list[int] = []
     lines = combined.splitlines()
     for index, line in enumerate(lines):
-        normalized = line.strip().lower()
-        if "tokens used" not in normalized:
+        lowered = line.lower()
+        if "tokens used" not in lowered:
             continue
-        candidates = [line.partition("tokens used")[2]]
+        marker_index = lowered.find("tokens used")
+        candidates = [line[marker_index + len("tokens used") :]]
         if index + 1 < len(lines):
             candidates.append(lines[index + 1])
         for candidate in candidates:

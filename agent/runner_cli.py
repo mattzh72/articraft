@@ -76,7 +76,7 @@ def _resolve_model_and_provider(
             parser.error(
                 f"Unable to infer provider for model '{model_id}'. "
                 "Pass --provider explicitly or use a known OpenAI, Gemini, Anthropic, "
-                "or OpenRouter model ID."
+                "DashScope, OpenRouter, DeepSeek, or Codex CLI model ID."
             )
     return model_id, provider
 
@@ -223,6 +223,18 @@ def main(
         return 1
 
     openai_reasoning_summary = "auto"
+
+    try:
+        model_id_arg = _default_model_id(
+            provider=provider,
+            model_id=model_id_arg,
+            thinking_level=thinking_level,
+            openai_transport=args.openai_transport,
+            openai_reasoning_summary=openai_reasoning_summary,
+        )
+    except ValueError as exc:
+        print(str(exc), file=sys.stderr)
+        return 1
 
     if provider != ProviderName.OPENAI.value and args.openai_transport != "http":
         print("--openai-transport is only supported for --provider openai.", file=sys.stderr)

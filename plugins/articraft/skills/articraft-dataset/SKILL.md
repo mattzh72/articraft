@@ -56,7 +56,7 @@ category_slug,prompt,provider,model_id,thinking_level,max_turns
 Supported providers:
 
 ```text
-openai, gemini, anthropic, openrouter, codex-cli
+openai, gemini, anthropic, dashscope, deepseek, openrouter, codex-cli
 ```
 
 Use `codex-cli` when the user wants no-key Codex generation while keeping Articraft's internal harness loop. For `codex-cli`, set an explicit Codex model in `model_id`; do not use the legacy `codex-cli-default` sentinel in new batch specs.
@@ -64,7 +64,7 @@ Use `codex-cli` when the user wants no-key Codex generation while keeping Articr
 Supported thinking levels:
 
 ```text
-low, med, high
+low, med, high, xhigh
 ```
 
 `image_path` is intentionally unsupported in batch CSV v1.

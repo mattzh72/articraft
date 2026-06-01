@@ -46,7 +46,7 @@ uv run articraft data hydrate --all
 ```
 
 ### 3. Add API Keys
-Open `.env` and set one or more provider keys (e.g. `OPENAI_API_KEY`, `GEMINI_API_KEYS`, `ANTHROPIC_API_KEYS`).
+Open `.env` and set one or more provider keys (e.g. `OPENAI_API_KEY`, `GEMINI_API_KEYS`, `ANTHROPIC_API_KEYS`, `DASHSCOPE_API_KEY`).
 
 > **No API Keys?** No problem! If you don't have API keys set up, you can use external AI agents like Claude Code, Codex, or Cursor. Just point them to this repository and prompt them:
 > 
@@ -112,6 +112,7 @@ By contributing data to the Articraft project, you acknowledge and agree that yo
 ## Documentation & Advanced Usage
 
 - **[Architecture & Project Structure](docs/architecture.md)**
+- **[Qwen / DashScope Quickstart](docs/qwen_dashscope_quickstart.md)**
 - **[Editing Existing Records](docs/record_editing.md)**
 - **[Image-Conditioned Generation](docs/image_conditioned_generation.md)**
 - **[Dataset Generation & Batch Processing](docs/dataset_generation.md)**

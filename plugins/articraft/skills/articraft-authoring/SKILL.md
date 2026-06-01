@@ -81,7 +81,7 @@ uv run articraft generate --provider codex-cli --model <codex-model-id> --image 
 For legacy external Codex drafting, create the record through the external CLI and identify Codex:
 
 ```bash
-uv run articraft external init --agent codex --model-id <model-id> --thinking-level <low|med|high> "<prompt>"
+uv run articraft external init --agent codex --model-id <model-id> --thinking-level <low|med|high|xhigh> "<prompt>"
 ```
 
 If the model or thinking level is unknown, omit those flags rather than guessing.
