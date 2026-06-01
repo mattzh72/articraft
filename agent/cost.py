@@ -72,6 +72,12 @@ ANTHROPIC_OPUS_4_7_PRICING: dict[str, float] = {
 ANTHROPIC_OPUS_4_6_PRICING = ANTHROPIC_OPUS_4_7_PRICING
 ANTHROPIC_OPUS_4_5_PRICING = ANTHROPIC_OPUS_4_7_PRICING
 
+DEEPSEEK_V4_PRO_PRICING: dict[str, float] = {
+    "input_uncached": 0.435,
+    "input_cached": 0.003625,
+    "output": 0.87,
+}
+
 ANTHROPIC_SONNET_4_PRICING: dict[str, float] = {
     "input_uncached": 3.00,
     "input_cached": 0.30,
@@ -368,6 +374,10 @@ def is_claude_haiku_4_5_model(model_id: str) -> bool:
     return model_id.strip().lower().startswith("claude-haiku-4-5")
 
 
+def is_deepseek_v4_pro_model(model_id: str) -> bool:
+    return model_id.strip().lower().startswith("deepseek-v4-pro")
+
+
 def pricing_for_provider_model(provider: str, model_id: str) -> dict[str, float] | None:
     if not (provider or "").strip():
         return None
@@ -399,6 +409,8 @@ def pricing_for_provider_model(provider: str, model_id: str) -> dict[str, float]
         is_gpt_5_3_codex_model(model_id) or is_gpt_5_2_model(model_id)
     ):
         return OPENAI_GPT_5_3_CODEX_PRICING
+    if provider_norm is ProviderName.DEEPSEEK and is_deepseek_v4_pro_model(model_id):
+        return DEEPSEEK_V4_PRO_PRICING
     return None
 
 

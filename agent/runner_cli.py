@@ -76,7 +76,7 @@ def _resolve_model_and_provider(
             parser.error(
                 f"Unable to infer provider for model '{model_id}'. "
                 "Pass --provider explicitly or use a known OpenAI, Gemini, Anthropic, "
-                "or OpenRouter model ID."
+                "DashScope, OpenRouter, or DeepSeek model ID."
             )
     return model_id, provider
 

@@ -216,7 +216,7 @@ class BrowseIndexRecord:
             "source_files": [source_file.to_payload() for source_file in self.source_files],
         }
 
-    def to_summary(self) -> RecordSummaryResponse:
+    def to_summary(self, *, payload_status: str | None = None) -> RecordSummaryResponse:
         return RecordSummaryResponse(
             record_id=self.record_id,
             title=self.title,
@@ -251,7 +251,7 @@ class BrowseIndexRecord:
             has_compile_report=self.has_compile_report,
             has_provenance=self.has_provenance,
             has_cost=self.has_cost,
-            payload_status=self.payload_status,
+            payload_status=payload_status or self.payload_status,
         )
 
 
@@ -366,7 +366,7 @@ class DatasetBrowseIndex:
             offset=normalized_offset,
             limit=normalized_limit,
             record_ids=[row.record_id for row in paged_rows],
-            records=[row.to_summary() for row in paged_rows],
+            records=[self._row_to_summary(row) for row in paged_rows],
             facets=_facets_for_run(snapshot, run_id=run_id),
         )
 
@@ -520,10 +520,13 @@ class DatasetBrowseIndex:
                 secondary_rating_filter=secondary_rating_filter,
             ):
                 continue
-            summaries.append(row.to_summary())
+            summaries.append(self._row_to_summary(row))
             if len(summaries) >= normalized_limit:
                 break
         return summaries
+
+    def _row_to_summary(self, row: BrowseIndexRecord) -> RecordSummaryResponse:
+        return row.to_summary(payload_status=record_payload_status(self.repo, row.record_id))
 
     def snapshot(self) -> BrowseIndexSnapshot:
         with self._lock:
@@ -629,12 +632,38 @@ class DatasetBrowseIndex:
             raise
 
     def _snapshot_is_fresh(self, snapshot: BrowseIndexSnapshot) -> bool:
+        if self._records_index_snapshot_is_fresh(snapshot):
+            return True
         if self._current_dataset_record_ids() != snapshot.source_record_ids:
             return False
+        return self._source_files_are_current(snapshot)
+
+    def _records_index_snapshot_is_fresh(self, snapshot: BrowseIndexSnapshot) -> bool:
+        if not snapshot.rows:
+            return False
+        records_index_path = _relative_path(self.repo.layout.records_index_path, self.repo.root)
+        records_index_source: BrowseSourceFile | None = None
+        for row in snapshot.rows:
+            row_source = next(
+                (
+                    source_file
+                    for source_file in row.source_files
+                    if source_file.path == records_index_path
+                ),
+                None,
+            )
+            if row_source is None:
+                return False
+            records_index_source = row_source
+        return records_index_source is not None and records_index_source.is_current(self.repo.root)
+
+    def _source_files_are_current(self, snapshot: BrowseIndexSnapshot) -> bool:
+        source_files_by_path: dict[str, BrowseSourceFile] = {}
+        for row in snapshot.rows:
+            for source_file in row.source_files:
+                source_files_by_path.setdefault(source_file.path, source_file)
         return all(
-            source_file.is_current(self.repo.root)
-            for row in snapshot.rows
-            for source_file in row.source_files
+            source_file.is_current(self.repo.root) for source_file in source_files_by_path.values()
         )
 
     def _current_dataset_record_ids(self) -> frozenset[str]:
@@ -729,14 +758,8 @@ class DatasetBrowseIndex:
             has_compile_report=bool(row.get("has_compile_report", False)),
             has_provenance=bool(row.get("has_provenance", False)),
             has_cost=bool(row.get("has_cost", False)),
-            payload_status=record_payload_status(self.repo, record_id),
-            source_files=(
-                source_file,
-                BrowseSourceFile.from_path(
-                    self.repo.root,
-                    self.repo.layout.record_metadata_path(record_id),
-                ),
-            ),
+            payload_status="hydrated",
+            source_files=(source_file,),
         )
 
     def _build_row(self, record_dir: Path) -> BrowseIndexRecord | None:

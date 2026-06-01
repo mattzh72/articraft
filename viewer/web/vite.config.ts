@@ -15,6 +15,8 @@ export default defineConfig({
   },
   build: {
     chunkSizeWarningLimit: 900,
+    // Keep prior hashed chunks so open viewer tabs can lazy-load after a rebuild.
+    emptyOutDir: false,
     rollupOptions: {
       output: {
         manualChunks: {

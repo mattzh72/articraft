@@ -232,3 +232,4 @@ __marimo__/
 assets/
 
 .npm-cache/
+.local-dev

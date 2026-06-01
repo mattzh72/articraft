@@ -9,6 +9,7 @@ class ProviderName(StrEnum):
     GEMINI = "gemini"
     OPENAI = "openai"
     OPENROUTER = "openrouter"
+    DEEPSEEK = "deepseek"
 
 
 class ThinkingLevel(StrEnum):
@@ -46,6 +47,8 @@ def infer_provider_from_model_id(model_id: str | None) -> ProviderName | None:
         return ProviderName.GEMINI
     if "/" in model_norm or model_norm.startswith("openrouter/"):
         return ProviderName.OPENROUTER
+    if model_norm.startswith("deepseek-"):
+        return ProviderName.DEEPSEEK
     return None
 
 

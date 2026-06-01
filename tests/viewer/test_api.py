@@ -5,6 +5,7 @@ from pathlib import Path
 from types import SimpleNamespace
 
 import pytest
+from fastapi import FastAPI
 from fastapi.testclient import TestClient
 
 from storage import dataset_workflow
@@ -24,6 +25,7 @@ from storage.records import RecordStore
 from storage.repo import StorageRepo
 from storage.runs import RunStore
 from viewer.api.app import create_app
+from viewer.api.frontend import install_frontend_routes
 from viewer.api.store import _effective_rating, _within_rating_filter
 
 
@@ -81,6 +83,31 @@ def test_effective_rating_filter_uses_bucket_ranges() -> None:
     assert _effective_rating(5, 4) == 4.5
     assert _within_rating_filter(4.5, ["4"]) is True
     assert _within_rating_filter(4.5, ["5"]) is False
+
+
+def test_frontend_missing_assets_do_not_fallback_to_index(tmp_path: Path) -> None:
+    dist_dir = tmp_path / "dist"
+    assets_dir = dist_dir / "assets"
+    assets_dir.mkdir(parents=True)
+    (dist_dir / "index.html").write_text("<html>viewer shell</html>", encoding="utf-8")
+    (assets_dir / "main.js").write_text("console.log('viewer');", encoding="utf-8")
+
+    app = FastAPI()
+    install_frontend_routes(app, dist_dir=dist_dir)
+    client = TestClient(app)
+
+    route_response = client.get("/viewer")
+    assert route_response.status_code == 200
+    assert route_response.text == "<html>viewer shell</html>"
+
+    asset_response = client.get("/assets/main.js")
+    assert asset_response.status_code == 200
+    assert asset_response.text == "console.log('viewer');"
+    assert asset_response.headers["cache-control"] == "public, max-age=31536000, immutable"
+
+    missing_asset_response = client.get("/assets/missing.js")
+    assert missing_asset_response.status_code == 404
+    assert "viewer shell" not in missing_asset_response.text
 
 
 def test_viewer_api_surfaces_external_creator_metadata(tmp_path: Path) -> None:
@@ -357,6 +384,106 @@ def test_viewer_api_uses_records_index_for_unhydrated_dataset_record(tmp_path: P
     file_response = client.get("/api/records/rec_unhydrated_001/files/model.py")
     assert file_response.status_code == 409
     assert "data hydrate --record rec_unhydrated_001" in file_response.json()["detail"]
+
+
+def test_dataset_browse_resolves_payload_status_only_for_returned_rows(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    repo = StorageRepo(tmp_path)
+    repo.ensure_layout()
+    rows = [
+        {
+            "schema_version": 1,
+            "record_id": "rec_fast_old_001",
+            "dataset_id": "ds_fast_old_001",
+            "category_slug": "hinges",
+            "title": "Old indexed hinge",
+            "prompt_preview": "Older indexed row.",
+            "created_at": "2026-03-18T08:00:00Z",
+            "updated_at": "2026-03-18T08:00:00Z",
+            "collections": ["dataset"],
+        },
+        {
+            "schema_version": 1,
+            "record_id": "rec_fast_new_001",
+            "dataset_id": "ds_fast_new_001",
+            "category_slug": "hinges",
+            "title": "New indexed hinge",
+            "prompt_preview": "Newer indexed row.",
+            "created_at": "2026-03-18T09:00:00Z",
+            "updated_at": "2026-03-18T09:00:00Z",
+            "collections": ["dataset"],
+        },
+    ]
+    repo.write_text(
+        repo.layout.records_index_path,
+        "".join(json.dumps(row, separators=(",", ":")) + "\n" for row in rows),
+    )
+
+    calls: list[str] = []
+
+    def fake_payload_status(_repo: StorageRepo, record_id: str) -> str:
+        calls.append(record_id)
+        return "missing"
+
+    monkeypatch.setattr("viewer.api.browse_index.record_payload_status", fake_payload_status)
+    client = TestClient(create_app(repo_root=tmp_path))
+
+    browse_ids = client.get("/api/records/browse/ids?source=dataset")
+    assert browse_ids.status_code == 200
+    assert calls == []
+
+    browse = client.get("/api/records/browse?source=dataset&limit=1")
+    assert browse.status_code == 200
+    assert [record["record_id"] for record in browse.json()["records"]] == ["rec_fast_new_001"]
+    assert browse.json()["records"][0]["payload_status"] == "missing"
+    assert calls == ["rec_fast_new_001"]
+
+
+def test_dashboard_uses_records_index_rows_without_per_record_lookup(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    repo = StorageRepo(tmp_path)
+    repo.ensure_layout()
+    repo.write_text(
+        repo.layout.records_index_path,
+        "".join(
+            json.dumps(
+                {
+                    "schema_version": 1,
+                    "record_id": f"rec_dashboard_{index:03d}",
+                    "dataset_id": f"ds_dashboard_{index:03d}",
+                    "category_slug": "hinges",
+                    "title": f"Dashboard row {index}",
+                    "prompt_preview": "Indexed dashboard row.",
+                    "created_at": f"2026-03-18T08:0{index}:00Z",
+                    "updated_at": f"2026-03-18T08:0{index}:00Z",
+                    "effective_rating": 5.0,
+                    "total_cost_usd": 1.25,
+                    "input_tokens": 1000,
+                    "output_tokens": 100,
+                    "agent_harness": "articraft",
+                    "collections": ["dataset"],
+                },
+                separators=(",", ":"),
+            )
+            + "\n"
+            for index in range(1, 3)
+        ),
+    )
+
+    def fail_per_record_lookup(_repo: StorageRepo, _record_id: str) -> dict:
+        raise AssertionError("dashboard should use records_index rows directly")
+
+    monkeypatch.setattr("viewer.api.store_dashboard.find_record_index_row", fail_per_record_lookup)
+    client = TestClient(create_app(repo_root=tmp_path))
+
+    dashboard = client.get("/api/dashboard")
+    assert dashboard.status_code == 200
+    assert dashboard.json()["overview"]["total_records"] == 2
+    assert dashboard.json()["category_stats"]["hinges"]["count"] == 2
 
 
 def test_viewer_api_promote_uses_category_slug_not_display_title(

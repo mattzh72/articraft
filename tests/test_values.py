@@ -22,6 +22,7 @@ from articraft.values import (
         ("gemini-3-flash-preview", ProviderName.GEMINI),
         ("gemini-3.5-flash", ProviderName.GEMINI),
         ("openai/gpt-5.4", ProviderName.OPENROUTER),
+        ("deepseek-v4-pro", ProviderName.DEEPSEEK),
     ],
 )
 def test_infer_provider_from_model_id(model_id: str, provider: ProviderName) -> None:

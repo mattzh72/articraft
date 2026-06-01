@@ -1,10 +1,13 @@
 import { startTransition, useState, useCallback, useEffect, useMemo, useRef, type JSX } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 import { AlertTriangle, ChevronLeft } from "lucide-react";
 import type { PanelImperativeHandle, PanelSize } from "react-resizable-panels";
 import * as THREE from "three";
 
+import { hydrateRecord } from "@/lib/api";
 import { useViewer } from "@/lib/viewer-context";
 import { updateUrlSearchParams } from "@/lib/url";
+import { viewerQueryKeys } from "@/lib/viewer-queries";
 import {
   ResizablePanelGroup,
   ResizablePanel,
@@ -22,6 +25,7 @@ import { useJointController } from "@/components/viewer3d/useJointController";
 import type { SnapshotExporter } from "@/components/viewer3d/SceneCanvas";
 import type { UrdfJoint, UrdfSpec } from "@/components/viewer3d/urdf-parser";
 import { MissingArtifactsOverlay } from "@/components/layout/MissingArtifactsOverlay";
+import { HydrationRequiredOverlay } from "@/components/layout/HydrationRequiredOverlay";
 
 const JOINT_POSE_QUERY_PARAM = "pose";
 const INSPECTOR_QUERY_PARAM = "inspector";
@@ -296,6 +300,7 @@ function previewJointValue(joint: UrdfJoint, phase: number): number {
 
 export default function ViewerShell(): JSX.Element {
   const { bootstrap, selectedRecordId, selectedRecordSummary, selection } = useViewer();
+  const queryClient = useQueryClient();
   const { options: renderOptions, setOption: setRenderOption } = useRenderOptions();
 
   const [urdfSpec, setUrdfSpec] = useState<UrdfSpec | null>(null);
@@ -303,6 +308,7 @@ export default function ViewerShell(): JSX.Element {
   const [previewJointValues, setPreviewJointValues] = useState<Map<string, number>>(new Map());
   const [inspectorCollapsed, setInspectorCollapsed] = useState(readInspectorCollapsedFromUrl);
   const [snapshotExporter, setSnapshotExporter] = useState<SnapshotExporter | null>(null);
+  const [hydrateState, setHydrateState] = useState<"idle" | "hydrating" | "error">("idle");
   const [modelLoadState, setModelLoadState] = useState<{
     loading: boolean;
     error: string | null;
@@ -475,6 +481,12 @@ export default function ViewerShell(): JSX.Element {
   const selectedRecord = useMemo(() => {
     return selection?.kind === "record" ? selectedRecordSummary : null;
   }, [selectedRecordSummary, selection]);
+  const isRecordPayloadPending = selection?.kind === "record" && !selectedRecord;
+  const hydrationRequiredRecord =
+    selection?.kind === "record" && selectedRecord && selectedRecord.payload_status !== "hydrated"
+      ? selectedRecord
+      : null;
+  const effectiveBaseFileUrl = isRecordPayloadPending || hydrationRequiredRecord ? null : baseFileUrl;
   const assetRevisionKey = selection
     ? selection.kind === "staging"
       ? selectedStagingEntry?.checkpoint_updated_at ?? selectedStagingEntry?.updated_at ?? null
@@ -486,6 +498,9 @@ export default function ViewerShell(): JSX.Element {
       : `staging:${selection.runId}:${selection.recordId}`
     : null;
   const missingArtifactsState = useMemo(() => {
+    if (hydrationRequiredRecord) {
+      return null;
+    }
     if (selection?.kind !== "record" || !selectedRecord) {
       return null;
     }
@@ -502,12 +517,61 @@ export default function ViewerShell(): JSX.Element {
       hasCompileReport: selectedRecord.has_compile_report,
       detail,
     };
-  }, [modelLoadState.error, modelLoadState.missingArtifacts, selectedRecord, selection]);
+  }, [hydrationRequiredRecord, modelLoadState.error, modelLoadState.missingArtifacts, selectedRecord, selection]);
+
+  const handleHydrateSelectedRecord = useCallback(async () => {
+    if (!hydrationRequiredRecord || hydrateState === "hydrating") {
+      return;
+    }
+
+    setHydrateState("hydrating");
+    try {
+      await hydrateRecord(hydrationRequiredRecord.record_id);
+      await queryClient.invalidateQueries({ queryKey: viewerQueryKeys.root() });
+      setHydrateState("idle");
+    } catch {
+      setHydrateState("error");
+    }
+  }, [hydrateState, hydrationRequiredRecord, queryClient]);
+
+  const hydrationOverlay = hydrationRequiredRecord ? (
+    <HydrationRequiredOverlay
+      record={hydrationRequiredRecord}
+      hydrating={hydrateState === "hydrating"}
+      error={
+        hydrateState === "error"
+          ? "Hydration failed. Check Git LFS access, or run the command below from the repository root."
+          : null
+      }
+      onHydrate={handleHydrateSelectedRecord}
+    />
+  ) : null;
+
+  const compactHydrationOverlay = hydrationRequiredRecord ? (
+    <HydrationRequiredOverlay
+      record={hydrationRequiredRecord}
+      hydrating={hydrateState === "hydrating"}
+      error={
+        hydrateState === "error"
+          ? "Hydration failed. Check Git LFS access, or run the command below from the repository root."
+          : null
+      }
+      onHydrate={handleHydrateSelectedRecord}
+      compact
+    />
+  ) : null;
 
   const inspectorUrdfSpec = urdfSpec ? { joints: urdfSpec.joints } : null;
   const displayedJointValues = renderOptions.autoAnimate ? previewJointValues : jointValues;
   const collisionSupport = useMemo<CollisionSupportState | null>(() => {
-    if (!selection || !urdfSpec || modelLoadState.loading || modelLoadState.error) {
+    if (
+      !selection
+      || !urdfSpec
+      || modelLoadState.loading
+      || modelLoadState.error
+      || isRecordPayloadPending
+      || hydrationRequiredRecord
+    ) {
       return null;
     }
 
@@ -579,7 +643,7 @@ export default function ViewerShell(): JSX.Element {
         : "This asset currently shows visual meshes only.",
       compileCommand: compileRecordId ? `just compile data/records/${compileRecordId}` : null,
     };
-  }, [modelLoadState.collisionGeometryState, modelLoadState.error, modelLoadState.loading, selectedStagingEntry?.persisted_record?.record_id, selection, urdfSpec]);
+  }, [hydrationRequiredRecord, isRecordPayloadPending, modelLoadState.collisionGeometryState, modelLoadState.error, modelLoadState.loading, selectedStagingEntry?.persisted_record?.record_id, selection, urdfSpec]);
 
   useEffect(() => {
     if (!collisionSupport || collisionSupport.available || !renderOptions.showCollisions) {
@@ -610,6 +674,7 @@ export default function ViewerShell(): JSX.Element {
       missingArtifacts: false,
       collisionGeometryState: EMPTY_COLLISION_GEOMETRY_STATE,
     });
+    setHydrateState("idle");
   }, [selectionKey]);
 
   return (
@@ -623,7 +688,7 @@ export default function ViewerShell(): JSX.Element {
         <ResizableHandle withHandle />
         <ResizablePanel defaultSize="55%" className="min-w-0">
           <ViewportPanel
-            baseFileUrl={baseFileUrl}
+            baseFileUrl={effectiveBaseFileUrl}
             assetRevisionKey={assetRevisionKey}
             selectionKey={selectionKey}
             jointPoseSignal={displayedJointValues}
@@ -634,13 +699,13 @@ export default function ViewerShell(): JSX.Element {
             onLoadStateChange={setModelLoadState}
             overlayNotice={collisionNotice}
             disabledOverlay={
-              missingArtifactsState ? (
+              hydrationOverlay ?? (missingArtifactsState ? (
                 <MissingArtifactsOverlay
                   recordId={missingArtifactsState.recordId}
                   hasCompileReport={missingArtifactsState.hasCompileReport}
                   detail={missingArtifactsState.detail}
                 />
-              ) : undefined
+              ) : undefined)
             }
           />
         </ResizablePanel>
@@ -656,14 +721,14 @@ export default function ViewerShell(): JSX.Element {
         >
           <Inspector
             disabledOverlay={
-              missingArtifactsState ? (
+              compactHydrationOverlay ?? (missingArtifactsState ? (
                 <MissingArtifactsOverlay
                   recordId={missingArtifactsState.recordId}
                   hasCompileReport={missingArtifactsState.hasCompileReport}
                   detail={missingArtifactsState.detail}
                   compact
                 />
-              ) : undefined
+              ) : undefined)
             }
           >
             <InspectorTabs
