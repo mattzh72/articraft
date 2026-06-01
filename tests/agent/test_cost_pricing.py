@@ -132,6 +132,40 @@ def test_gemini_flash_preview_pricing_remains_generic_flash_rates() -> None:
     }
 
 
+def test_dashscope_qwen36_flash_pricing_uses_context_tiers() -> None:
+    pricing = pricing_for_provider_model("dashscope", "qwen3.6-flash")
+
+    assert pricing == {
+        "input_uncached": 0.25,
+        "input_cached": 0.25,
+        "output": 1.50,
+        "prompt_tier_threshold_tokens": 256_000,
+        "input_uncached_above_threshold": 1.00,
+        "input_cached_above_threshold": 1.00,
+        "output_above_threshold": 4.00,
+    }
+
+
+def test_dashscope_qwen36_flash_pricing_calculates_high_context_tier() -> None:
+    pricing = pricing_for_provider_model("dashscope", "qwen3.6-flash")
+    assert pricing is not None
+
+    cost = calculate_cost(
+        {
+            "prompt_tokens": 300_000,
+            "cached_tokens": 100_000,
+            "candidates_tokens": 10_000,
+            "total_tokens": 310_000,
+        },
+        pricing,
+    )
+
+    assert cost.input_uncached_cost == pytest.approx(0.2)
+    assert cost.input_cached_cost == pytest.approx(0.1)
+    assert cost.output_cost == pytest.approx(0.04)
+    assert cost.total_cost == pytest.approx(0.34)
+
+
 def test_gpt55_pricing_uses_explicit_model_rates() -> None:
     pricing = pricing_for_provider_model("openai", "gpt-5.5-2026-04-23")
 

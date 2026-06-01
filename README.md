@@ -46,7 +46,7 @@ uv run articraft data hydrate --all
 ```
 
 ### 3. Add API Keys
-Open `.env` and set one or more provider keys (e.g. `OPENAI_API_KEY`, `GEMINI_API_KEYS`, `ANTHROPIC_API_KEYS`).
+Open `.env` and set one or more provider keys (e.g. `OPENAI_API_KEY`, `GEMINI_API_KEYS`, `ANTHROPIC_API_KEYS`, `DASHSCOPE_API_KEY`).
 
 > **No API Keys?** No problem! If you don't have API keys set up, you can use external AI agents like Claude Code, Codex, or Cursor. Just point them to this repository and prompt them:
 > 
@@ -65,6 +65,7 @@ uv run articraft generate --max-cost-usd 1.5 "Create a compact desk fan with adj
 ```
 
 To generate from a reference image, see [Image-Conditioned Generation](docs/image_conditioned_generation.md).
+
 ### 5. Open the Viewer
 Browse the objects you just generated. The local viewer API and React frontend can be started with:
 ```bash

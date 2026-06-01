@@ -22,6 +22,7 @@ from articraft.values import (
         ("gemini-3-flash-preview", ProviderName.GEMINI),
         ("gemini-3.5-flash", ProviderName.GEMINI),
         ("openai/gpt-5.4", ProviderName.OPENROUTER),
+        ("qwen/qwen3.6-flash", ProviderName.OPENROUTER),
         ("deepseek-v4-pro", ProviderName.DEEPSEEK),
     ],
 )

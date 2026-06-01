@@ -10,13 +10,6 @@ if [[ -f "${ROOT_DIR}/.env" ]]; then
   set +a
 fi
 
-if [[ -f "${ROOT_DIR}/.env.dashscope" ]]; then
-  set -a
-  # shellcheck disable=SC1091
-  source "${ROOT_DIR}/.env.dashscope"
-  set +a
-fi
-
 # shellcheck disable=SC1091
 source "${ROOT_DIR}/scripts/dashscope_env.sh"
 
@@ -36,7 +29,7 @@ cmd="${1:-}"
 case "${cmd}" in
   official-test)
     if [[ -z "${DASHSCOPE_API_KEY:-}" ]]; then
-      echo "Missing DASHSCOPE_API_KEY. Put it in .env or .env.dashscope." >&2
+      echo "Missing DASHSCOPE_API_KEY. Put it in .env." >&2
       exit 1
     fi
     uv --cache-dir "${ROOT_DIR}/.uv-cache" run python - <<'PY'
@@ -57,7 +50,7 @@ PY
     ;;
   generate)
     if [[ -z "${DASHSCOPE_API_KEY:-}" ]]; then
-      echo "Missing DASHSCOPE_API_KEY. Put it in .env or .env.dashscope." >&2
+      echo "Missing DASHSCOPE_API_KEY. Put it in .env." >&2
       exit 1
     fi
     shift

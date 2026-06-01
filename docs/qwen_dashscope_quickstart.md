@@ -1,22 +1,24 @@
 # Qwen (DashScope) Quickstart
 
-## 1) Configure environment
+## 1) Configure Environment
 
-Create a local `.env.dashscope` at repo root:
+Create or update the repo-local `.env`:
 
 ```bash
-cat > .env.dashscope <<'EOF'
-DASHSCOPE_BASE_URL=https://dashscope.aliyuncs.com/compatible-mode/v1
-DASHSCOPE_MODEL=qwen3.6-flash
-DASHSCOPE_API_KEY=
-EOF
+uv run articraft env bootstrap
 ```
 
-Then fill your real key locally in `.env.dashscope`.
+Then set these values in `.env`:
 
-Do not commit `.env.dashscope` or real API keys.
+```bash
+DASHSCOPE_API_KEY=
+DASHSCOPE_MODEL=qwen3.6-flash
+DASHSCOPE_BASE_URL=https://dashscope.aliyuncs.com/compatible-mode/v1
+```
 
-## 2) Verify the API connection
+Do not commit `.env` or real API keys.
+
+## 2) Verify the API Connection
 
 ```bash
 just dashscope-test
@@ -28,7 +30,7 @@ Expected output:
 ok
 ```
 
-## 3) Run generation with Qwen
+## 3) Run Generation with Qwen
 
 ```bash
 just dashscope-generate "Create a compact articulated desk fan."
@@ -40,7 +42,7 @@ Or directly:
 uv run articraft generate --provider dashscope --model qwen3.6-flash "Create a compact articulated desk fan."
 ```
 
-## 4) View results
+## 4) View Results
 
 ```bash
 just viewer

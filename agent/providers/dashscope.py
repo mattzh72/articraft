@@ -8,7 +8,6 @@ are served through chat.completions rather than OpenAI's Responses API.
 from __future__ import annotations
 
 import asyncio
-import copy
 import logging
 import os
 import random
@@ -21,13 +20,17 @@ from agent.providers.base import (
     build_context_window_pressure,
 )
 from agent.providers.openrouter import (
-    OpenRouterLLM,
     _async_retry,
-    _convert_chat_messages,
+    _convert_message_content,
     _convert_tools,
     _estimate_prompt_tokens,
+    _extract_usage,
+    _first_choice,
+    _get,
+    _serialize_tool_calls,
     _should_retry_openrouter_exception,
 )
+from articraft.values import reasoning_level_alias
 
 try:
     from dotenv import load_dotenv  # type: ignore
@@ -39,9 +42,13 @@ except Exception:  # pragma: no cover
 
 DEFAULT_DASHSCOPE_BASE_URL = "https://dashscope.aliyuncs.com/compatible-mode/v1"
 DEFAULT_DASHSCOPE_MODEL = "qwen3.6-flash"
-DEFAULT_DASHSCOPE_CONTEXT_TOKENS = 262_144
-DEFAULT_DASHSCOPE_MAX_TOKENS = 0
+DEFAULT_DASHSCOPE_CONTEXT_TOKENS = 1_000_000
+DEFAULT_DASHSCOPE_MAX_TOKENS = 64_000
 DEFAULT_DASHSCOPE_OUTPUT_SAFETY_TOKENS = 1_024
+_DASHSCOPE_THINKING_BUDGET_BY_LEVEL = {
+    "low": 16_000,
+    "medium": 32_000,
+}
 logger = logging.getLogger(__name__)
 
 
@@ -81,7 +88,7 @@ def dashscope_api_key_from_env(env: dict[str, str] | None = None) -> str | None:
     return random.choice(keys) if keys else None
 
 
-class DashScopeLLM(OpenRouterLLM):
+class DashScopeLLM:
     """DashScope Chat Completions client for Qwen tool-calling workflows."""
 
     def __init__(
@@ -217,6 +224,33 @@ class DashScopeLLM(OpenRouterLLM):
         )
         return self._convert_response(response)
 
+    async def close(self) -> None:
+        client = getattr(self, "_client", None)
+        if client is None:
+            return None
+        close_method = getattr(client, "close", None)
+        if close_method is None:
+            return None
+        result = close_method()
+        if asyncio.iscoroutine(result):
+            await result
+        return None
+
+    async def _chat_completion(self, request_payload: dict[str, Any]) -> Any:
+        payload = dict(request_payload)
+        extra_body = payload.pop("extra_body", None)
+        if self._client_is_async:
+            if extra_body is None:
+                return await self._client.chat.completions.create(**payload)
+            return await self._client.chat.completions.create(**payload, extra_body=extra_body)
+        if extra_body is None:
+            return await asyncio.to_thread(self._client.chat.completions.create, **payload)
+        return await asyncio.to_thread(
+            self._client.chat.completions.create,
+            **payload,
+            extra_body=extra_body,
+        )
+
     def _build_chat_payload(
         self,
         *,
@@ -227,14 +261,14 @@ class DashScopeLLM(OpenRouterLLM):
         chat_messages: list[dict[str, Any]] = []
         if system_prompt.strip():
             chat_messages.append({"role": "system", "content": system_prompt})
-        chat_messages.extend(_convert_chat_messages(messages))
+        chat_messages.extend(_convert_dashscope_chat_messages(messages))
 
         payload: dict[str, Any] = {
             "model": self.model_id,
             "messages": chat_messages,
         }
         if self.extra_body:
-            payload["extra_body"] = copy.deepcopy(self.extra_body)
+            payload["extra_body"] = dict(self.extra_body)
         converted_tools = _convert_tools(tools)
         if converted_tools:
             payload["tools"] = converted_tools
@@ -256,21 +290,89 @@ class DashScopeLLM(OpenRouterLLM):
             return min(self.max_tokens, 16)
         return min(self.max_tokens, available)
 
+    def _convert_response(self, response: Any) -> dict[str, Any]:
+        choice = _first_choice(response)
+        message = _get(choice, "message")
+        if message is None:
+            return {}
+
+        content = _get(message, "content")
+        tool_calls = _serialize_tool_calls(_get(message, "tool_calls"))
+        reasoning_content = _get(message, "reasoning_content")
+        usage = _extract_usage(response)
+
+        result: dict[str, Any] = {
+            "content": content if isinstance(content, str) else "",
+            "tool_calls": tool_calls,
+        }
+        if isinstance(reasoning_content, str) and reasoning_content.strip():
+            result["thought_summary"] = reasoning_content.strip()
+            result["extra_content"] = {
+                "dashscope": {
+                    "reasoning_content": reasoning_content,
+                }
+            }
+        if usage:
+            result["usage"] = usage
+        return result
+
+
+def _convert_dashscope_chat_messages(messages: list[dict]) -> list[dict[str, Any]]:
+    converted: list[dict[str, Any]] = []
+    for message in messages:
+        if not isinstance(message, dict):
+            continue
+        role = message.get("role")
+        if role == "user":
+            converted.append({"role": "user", "content": _convert_message_content(message)})
+            continue
+        if role == "assistant":
+            assistant: dict[str, Any] = {"role": "assistant"}
+            content = message.get("content")
+            assistant["content"] = content if isinstance(content, str) else None
+            tool_calls = message.get("tool_calls")
+            if tool_calls:
+                assistant["tool_calls"] = tool_calls
+            extra_content = message.get("extra_content")
+            if isinstance(extra_content, dict):
+                dashscope = extra_content.get("dashscope")
+                if isinstance(dashscope, dict):
+                    reasoning_content = dashscope.get("reasoning_content")
+                    if reasoning_content:
+                        assistant["reasoning_content"] = reasoning_content
+            converted.append(assistant)
+            continue
+        if role == "tool":
+            tool_message: dict[str, Any] = {
+                "role": "tool",
+                "tool_call_id": message.get("tool_call_id") or message.get("call_id"),
+                "content": message.get("content") or "",
+            }
+            name = message.get("name")
+            if isinstance(name, str) and name:
+                tool_message["name"] = name
+            converted.append(tool_message)
+    return converted
+
 
 def _dashscope_extra_body(thinking_level: str) -> dict[str, Any]:
+    level = reasoning_level_alias(thinking_level)
     raw = os.environ.get("DASHSCOPE_ENABLE_THINKING")
     if raw is None:
-        enable_thinking = True
+        enable_thinking = level not in {"0", "false", "none", "off", "disabled"}
     else:
         enable_thinking = raw.strip().lower() not in {"0", "false", "no", "off", "disabled"}
     extra: dict[str, Any] = {"enable_thinking": enable_thinking}
 
-    budget = os.environ.get("DASHSCOPE_THINKING_BUDGET")
-    if budget and budget.strip():
-        try:
-            extra["thinking_budget"] = int(budget.strip().replace("_", ""))
-        except ValueError:
-            pass
+    if enable_thinking:
+        budget = os.environ.get("DASHSCOPE_THINKING_BUDGET")
+        if budget and budget.strip():
+            try:
+                extra["thinking_budget"] = int(budget.strip().replace("_", ""))
+            except ValueError:
+                pass
+        elif level in _DASHSCOPE_THINKING_BUDGET_BY_LEVEL:
+            extra["thinking_budget"] = _DASHSCOPE_THINKING_BUDGET_BY_LEVEL[level]
     return extra
 
 

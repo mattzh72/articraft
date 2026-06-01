@@ -78,6 +78,26 @@ DEEPSEEK_V4_PRO_PRICING: dict[str, float] = {
     "output": 0.87,
 }
 
+DASHSCOPE_QWEN_3_6_FLASH_PRICING: dict[str, float] = {
+    "input_uncached": 0.25,
+    "input_cached": 0.25,
+    "output": 1.50,
+    "prompt_tier_threshold_tokens": 256_000,
+    "input_uncached_above_threshold": 1.00,
+    "input_cached_above_threshold": 1.00,
+    "output_above_threshold": 4.00,
+}
+
+DASHSCOPE_QWEN_3_6_PLUS_PRICING: dict[str, float] = {
+    "input_uncached": 0.50,
+    "input_cached": 0.50,
+    "output": 3.00,
+    "prompt_tier_threshold_tokens": 256_000,
+    "input_uncached_above_threshold": 2.00,
+    "input_cached_above_threshold": 2.00,
+    "output_above_threshold": 6.00,
+}
+
 ANTHROPIC_SONNET_4_PRICING: dict[str, float] = {
     "input_uncached": 3.00,
     "input_cached": 0.30,
@@ -378,6 +398,14 @@ def is_deepseek_v4_pro_model(model_id: str) -> bool:
     return model_id.strip().lower().startswith("deepseek-v4-pro")
 
 
+def is_dashscope_qwen3_6_flash_model(model_id: str) -> bool:
+    return model_id.strip().lower().startswith("qwen3.6-flash")
+
+
+def is_dashscope_qwen3_6_plus_model(model_id: str) -> bool:
+    return model_id.strip().lower().startswith("qwen3.6-plus")
+
+
 def pricing_for_provider_model(provider: str, model_id: str) -> dict[str, float] | None:
     if not (provider or "").strip():
         return None
@@ -411,6 +439,10 @@ def pricing_for_provider_model(provider: str, model_id: str) -> dict[str, float]
         return OPENAI_GPT_5_3_CODEX_PRICING
     if provider_norm is ProviderName.DEEPSEEK and is_deepseek_v4_pro_model(model_id):
         return DEEPSEEK_V4_PRO_PRICING
+    if provider_norm is ProviderName.DASHSCOPE and is_dashscope_qwen3_6_flash_model(model_id):
+        return DASHSCOPE_QWEN_3_6_FLASH_PRICING
+    if provider_norm is ProviderName.DASHSCOPE and is_dashscope_qwen3_6_plus_model(model_id):
+        return DASHSCOPE_QWEN_3_6_PLUS_PRICING
     return None
 
 

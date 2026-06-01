@@ -60,7 +60,19 @@ def test_dashscope_request_preview_uses_compatible_chat_shape() -> None:
     ]
     assert payload["tools"][0]["type"] == "function"
     assert payload["extra_body"] == {"enable_thinking": True}
-    assert "max_tokens" not in payload
+    assert payload["max_tokens"] == 64000
+
+
+def test_dashscope_low_thinking_sets_smaller_budget() -> None:
+    provider = DashScopeLLM(thinking_level="low", dry_run=True)
+
+    payload = provider.build_request_preview(
+        system_prompt="system",
+        messages=[{"role": "user", "content": "task"}],
+        tools=[],
+    )
+
+    assert payload["extra_body"] == {"enable_thinking": True, "thinking_budget": 16000}
 
 
 def test_dashscope_generate_uses_chat_completions() -> None:
@@ -90,3 +102,39 @@ def test_dashscope_generate_uses_chat_completions() -> None:
     assert captured["model"] == DEFAULT_DASHSCOPE_MODEL
     assert captured["extra_body"] == {"enable_thinking": True}
     assert response["content"] == "ok"
+
+
+def test_dashscope_response_preserves_reasoning_content_for_next_turn() -> None:
+    provider = DashScopeLLM(dry_run=True)
+    result = provider._convert_response(
+        SimpleNamespace(
+            choices=[
+                SimpleNamespace(
+                    message=SimpleNamespace(
+                        content="",
+                        tool_calls=[],
+                        reasoning_content="Planning the tool call.",
+                    )
+                )
+            ],
+            usage=None,
+        )
+    )
+
+    assert result["thought_summary"] == "Planning the tool call."
+    assert result["extra_content"]["dashscope"]["reasoning_content"] == "Planning the tool call."
+
+    payload = provider.build_request_preview(
+        system_prompt="system",
+        messages=[
+            {
+                "role": "assistant",
+                "content": "",
+                "extra_content": result["extra_content"],
+            },
+            {"role": "tool", "tool_call_id": "call_1", "content": "compiled"},
+        ],
+        tools=[],
+    )
+
+    assert payload["messages"][1]["reasoning_content"] == "Planning the tool call."
