@@ -37,14 +37,22 @@ def deepseek_api_key_from_env(env: dict[str, str] | None = None) -> str | None:
     return key.strip() if key and key.strip() else None
 
 
-def _thinking_config_from_thinking_level(thinking_level: str) -> dict[str, Any]:
+def _thinking_config_from_thinking_level(thinking_level: str) -> dict[str, str]:
     level = reasoning_level_alias(thinking_level)
     if level in {"0", "false", "none", "off", "disabled"}:
         return {"type": "disabled"}
-    thinking: dict[str, Any] = {"type": "enabled"}
-    if level in {"minimal", "low", "medium", "high", "xhigh"}:
-        thinking["effort"] = level
-    return thinking
+    return {"type": "enabled"}
+
+
+def _reasoning_effort_from_thinking_level(thinking_level: str) -> str | None:
+    level = reasoning_level_alias(thinking_level)
+    if level in {"0", "false", "none", "off", "disabled"}:
+        return None
+    if level in {"xhigh", "max"}:
+        return "max"
+    if level in {"minimal", "low", "medium", "high"}:
+        return "high"
+    return None
 
 
 class DeepSeekLLM:
@@ -60,6 +68,7 @@ class DeepSeekLLM:
         self.model_id = model_id
         self.thinking_level = thinking_level
         self.thinking = _thinking_config_from_thinking_level(thinking_level)
+        self.reasoning_effort = _reasoning_effort_from_thinking_level(thinking_level)
         self.max_tokens = _env_int("DEEPSEEK_MAX_TOKENS", DEFAULT_DEEPSEEK_MAX_TOKENS)
         self.context_tokens = _env_int("DEEPSEEK_CONTEXT_TOKENS", DEFAULT_DEEPSEEK_CONTEXT_TOKENS)
         self.output_safety_tokens = _env_int(
@@ -126,7 +135,7 @@ class DeepSeekLLM:
         return build_context_window_pressure(
             provider="deepseek",
             usage=usage,
-            max_context_tokens=DEFAULT_DEEPSEEK_CONTEXT_TOKENS,
+            max_context_tokens=self.context_tokens,
         )
 
     async def prepare_next_request(
@@ -220,6 +229,8 @@ class DeepSeekLLM:
             "messages": chat_messages,
             "extra_body": {"thinking": self.thinking},
         }
+        if self.reasoning_effort:
+            payload["reasoning_effort"] = self.reasoning_effort
         converted_tools = _convert_tools(tools)
         if converted_tools:
             payload["tools"] = converted_tools

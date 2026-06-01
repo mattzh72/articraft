@@ -53,6 +53,18 @@ def test_deepseek_context_window_pressure_uses_1m_context_tokens() -> None:
     assert pressure.output_tokens == 4_096
 
 
+def test_deepseek_context_window_pressure_uses_env_context_tokens(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setenv("DEEPSEEK_CONTEXT_TOKENS", "200000")
+    provider = DeepSeekLLM(dry_run=True)
+
+    pressure = provider.context_window_pressure({"prompt_tokens": 100_000})
+
+    assert pressure.max_context_tokens == 200_000
+    assert pressure.remaining_context_tokens == 100_000
+
+
 def test_deepseek_request_preview_uses_chat_completions_shape() -> None:
     provider = DeepSeekLLM(dry_run=True)
     payload = provider.build_request_preview(
@@ -78,7 +90,8 @@ def test_deepseek_request_preview_uses_chat_completions_shape() -> None:
     ]
     assert "tools" in payload
     assert "extra_body" in payload
-    assert "thinking" in payload["extra_body"]
+    assert payload["extra_body"]["thinking"] == {"type": "enabled"}
+    assert payload["reasoning_effort"] == "high"
 
 
 def test_deepseek_thinking_can_be_disabled() -> None:
@@ -91,14 +104,15 @@ def test_deepseek_thinking_can_be_disabled() -> None:
 
     thinking = payload["extra_body"]["thinking"]
     assert thinking["type"] == "disabled"
+    assert "reasoning_effort" not in payload
 
 
-def test_deepseek_thinking_effort_preserves_levels() -> None:
+def test_deepseek_reasoning_effort_maps_supported_levels() -> None:
     for level, expected_effort in [
-        ("low", "low"),
-        ("med", "medium"),
+        ("low", "high"),
+        ("med", "high"),
         ("high", "high"),
-        ("xhigh", "xhigh"),
+        ("xhigh", "max"),
     ]:
         provider = DeepSeekLLM(model_id="deepseek-v4-pro", thinking_level=level, dry_run=True)
         payload = provider.build_request_preview(
@@ -108,7 +122,8 @@ def test_deepseek_thinking_effort_preserves_levels() -> None:
         )
         thinking = payload["extra_body"]["thinking"]
         assert thinking["type"] == "enabled"
-        assert thinking.get("effort") == expected_effort
+        assert "effort" not in thinking
+        assert payload["reasoning_effort"] == expected_effort
 
 
 def test_deepseek_chat_response_has_no_reasoning_content() -> None:
