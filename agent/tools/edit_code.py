@@ -12,11 +12,7 @@ from agent.tools.base import (
     make_tool_schema,
     validate_tool_params,
 )
-from agent.tools.code_region import (
-    extract_editable_code,
-    map_syntax_error_line_to_editable,
-    replace_editable_code,
-)
+from agent.tools.model_contract import missing_required_model_contract
 
 
 class EditCodeParams(ToolParamsModel):
@@ -45,32 +41,37 @@ class EditCodeInvocation(BoundFileToolInvocation[EditCodeParams, str]):
             async with aiofiles.open(self.file_path, mode="r", encoding="utf-8") as f:
                 full_code = await f.read()
 
-            editable_code = extract_editable_code(full_code)
-
             if not self.params.old_string:
-                if editable_code.strip():
+                if full_code.strip():
                     return ToolResult(
                         error=(
-                            "old_string cannot be empty unless the editable section is empty. "
+                            "old_string cannot be empty unless model.py is empty. "
                             "Please provide the exact string to replace."
                         )
                     )
-                new_editable_code = self.params.new_string
-                new_code = replace_editable_code(full_code, new_editable_code)
+                new_code = self.params.new_string
+                missing = missing_required_model_contract(new_code)
+                if missing:
+                    return ToolResult(
+                        error=(
+                            "replace must initialize model.py with the complete top-level contract: "
+                            + ", ".join(missing)
+                        )
+                    )
                 validation = self._validate_python_syntax(new_code, self.file_path or "<string>")
                 async with aiofiles.open(self.file_path, mode="w", encoding="utf-8") as f:
                     await f.write(new_code)
                 return ToolResult(output="Code edited successfully", compilation=validation)
 
-            # Check if old_string exists in editable code
-            if self.params.old_string not in editable_code:
+            # Check if old_string exists in the full model file.
+            if self.params.old_string not in full_code:
                 return ToolResult(
                     error="Could not find the old_string in the code. "
                     "Make sure the string matches exactly, including whitespace and indentation. "
                 )
 
             # Count occurrences
-            occurrences = editable_code.count(self.params.old_string)
+            occurrences = full_code.count(self.params.old_string)
             if occurrences > 1 and not self.params.replace_all:
                 return ToolResult(
                     error=f"The old_string appears {occurrences} times in the code. "
@@ -80,14 +81,18 @@ class EditCodeInvocation(BoundFileToolInvocation[EditCodeParams, str]):
 
             # Perform replacement
             if self.params.replace_all:
-                new_editable_code = editable_code.replace(
-                    self.params.old_string, self.params.new_string
-                )
+                new_code = full_code.replace(self.params.old_string, self.params.new_string)
             else:
-                new_editable_code = editable_code.replace(
-                    self.params.old_string, self.params.new_string, 1
+                new_code = full_code.replace(self.params.old_string, self.params.new_string, 1)
+
+            missing = missing_required_model_contract(new_code)
+            if missing:
+                return ToolResult(
+                    error=(
+                        "replace must preserve the complete top-level model.py contract: "
+                        + ", ".join(missing)
+                    )
                 )
-            new_code = replace_editable_code(full_code, new_editable_code)
 
             # Validate Python syntax
             validation = self._validate_python_syntax(new_code, self.file_path or "<string>")
@@ -120,18 +125,11 @@ class EditCodeInvocation(BoundFileToolInvocation[EditCodeParams, str]):
                 "error": None,
             }
         except SyntaxError as e:
-            editable_line = map_syntax_error_line_to_editable(full_code, e.lineno)
-            if editable_line is not None and editable_line != e.lineno:
-                error_msg = (
-                    f"Syntax error: {e.msg} (editable line {editable_line}, full line {e.lineno})"
-                )
-            else:
-                error_msg = f"Syntax error: {e.msg} (line {e.lineno})"
+            error_msg = f"Syntax error: {e.msg} (line {e.lineno})"
             return {
                 "status": "error",
                 "error": error_msg,
                 "error_line": e.lineno,
-                "error_line_editable": editable_line,
             }
         except Exception as e:
             return {
@@ -150,7 +148,7 @@ class ReplaceParams(ToolParamsModel):
 
 
 class ReplaceInvocation(BoundFileToolInvocation[ReplaceParams, str]):
-    """Invocation for editable-region replacements under the official-style name."""
+    """Invocation for full-file replacements under the official-style name."""
 
     def get_description(self) -> str:
         preview = self.params.old_string[:50]
@@ -170,18 +168,18 @@ class ReplaceInvocation(BoundFileToolInvocation[ReplaceParams, str]):
 
 
 class ReplaceTool(BaseDeclarativeTool):
-    """Gemini-style replace tool scoped to the editable section."""
+    """Gemini-style replace tool scoped to the full model file."""
 
     def __init__(self) -> None:
         schema = make_tool_schema(
             name="replace",
             description=(
-                "Replace text within the current editable code section.\n\n"
+                "Replace text within the current bound `model.py` file.\n\n"
                 "This is the Gemini-style edit tool for the bound `model.py` artifact.\n"
-                "It operates only on the editable user section, not on scaffold code.\n\n"
+                "It operates on the full visible model script, including imports and the object_model footer.\n\n"
                 "Matching behavior:\n"
                 "- `old_string` must match EXACTLY, including whitespace, indentation, and newlines\n"
-                "- If the editable section is empty, `old_string` may be empty to insert the initial code\n"
+                "- If `model.py` is empty, `old_string` may be empty to insert the initial code\n"
                 "- By default, `old_string` must appear exactly once\n"
                 "- Set `allow_multiple=true` to replace all exact matches\n"
                 '- If exact matching fails, reread `read_file(path="model.py")` and retry with a smaller exact snippet'
@@ -190,7 +188,7 @@ class ReplaceTool(BaseDeclarativeTool):
                 "old_string": {
                     "type": "string",
                     "description": (
-                        "Exact literal text to find inside the editable code section. "
+                        "Exact literal text to find inside the full model.py file. "
                         "Must match including whitespace and indentation."
                     ),
                 },

@@ -14,7 +14,6 @@ from agent.tools.base import (
     make_tool_schema,
     validate_tool_params,
 )
-from agent.tools.code_region import extract_editable_code
 from agent.workspace_docs import VirtualWorkspace
 
 
@@ -35,13 +34,11 @@ class ReadFileInvocation(BoundFileToolInvocation[ReadFileParams, str]):
         *,
         offset_provided: bool = False,
         limit_provided: bool = False,
-        editable_model_only: bool = False,
     ):
         super().__init__(params)
         self.virtual_workspace: VirtualWorkspace | None = None
         self.offset_provided = offset_provided
         self.limit_provided = limit_provided
-        self.editable_model_only = editable_model_only
 
     def bind_virtual_workspace(self, workspace: VirtualWorkspace) -> None:
         self.virtual_workspace = workspace
@@ -65,9 +62,6 @@ class ReadFileInvocation(BoundFileToolInvocation[ReadFileParams, str]):
                     full_code = await f.read()
             else:
                 return ToolResult(error=f"Unable to resolve {self.params.path}")
-
-            if self.editable_model_only and resolved.virtual_path == "model.py":
-                full_code = extract_editable_code(full_code)
 
             lines = full_code.splitlines()
             offset = self.params.offset or 1
@@ -106,29 +100,16 @@ class ReadFileInvocation(BoundFileToolInvocation[ReadFileParams, str]):
 class ReadFileTool(BaseDeclarativeTool):
     """Tool for reading the current file with line numbers."""
 
-    def __init__(self, *, editable_model_only: bool = False) -> None:
-        self.editable_model_only = editable_model_only
-        if editable_model_only:
-            description = (
-                "Read an exact file from the virtual workspace with 1-indexed line numbers.\n\n"
-                'Use `path="model.py"` for the editable artifact script; for Gemini this returns the '
-                "current editable code section only. "
-                "Use `path` under `docs/` for read-only SDK guidance and references.\n\n"
-                "Returned lines are formatted as `L{line_number}: ...`.\n\n"
-                "Use `offset` to choose the first line (1-indexed) and `limit` to cap the total number "
-                "of returned lines. Omit both for a full read of the selected view. Omit `limit` with "
-                "an explicit `offset` to read from that offset to EOF."
-            )
-        else:
-            description = (
-                "Read an exact file from the virtual workspace with 1-indexed line numbers.\n\n"
-                'Use `path="model.py"` for the editable artifact script. '
-                "Use `path` under `docs/` for read-only SDK guidance and references.\n\n"
-                "Returned lines are formatted as `L{line_number}: ...`.\n\n"
-                "Use `offset` to choose the first line (1-indexed) and `limit` to cap the total number "
-                "of returned lines. Omit both for a full-file read. Omit `limit` with an explicit `offset` "
-                "to read from that offset to EOF."
-            )
+    def __init__(self) -> None:
+        description = (
+            "Read an exact file from the virtual workspace with 1-indexed line numbers.\n\n"
+            'Use `path="model.py"` for the full model artifact script. '
+            "Use `path` under `docs/` for read-only SDK guidance and references.\n\n"
+            "Returned lines are formatted as `L{line_number}: ...`.\n\n"
+            "Use `offset` to choose the first line (1-indexed) and `limit` to cap the total number "
+            "of returned lines. Omit both for a full-file read. Omit `limit` with an explicit `offset` "
+            "to read from that offset to EOF."
+        )
         schema = make_tool_schema(
             name="read_file",
             description=description,
@@ -136,7 +117,7 @@ class ReadFileTool(BaseDeclarativeTool):
                 "path": {
                     "type": "string",
                     "description": (
-                        "Virtual workspace path to read. Use `model.py` for the editable model "
+                        "Virtual workspace path to read. Use `model.py` for the model "
                         "file and `docs/...` for mounted read-only SDK docs."
                     ),
                 },
@@ -159,6 +140,5 @@ class ReadFileTool(BaseDeclarativeTool):
             validated,
             offset_provided="offset" in params and params["offset"] is not None,
             limit_provided="limit" in params and params["limit"] is not None,
-            editable_model_only=self.editable_model_only,
         )
         return invocation

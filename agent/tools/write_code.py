@@ -1,10 +1,8 @@
 """
-WriteCode tool - Replace the editable code section in one operation.
+WriteCode tool - Replace model.py in one operation.
 """
 
 from __future__ import annotations
-
-import ast
 
 import aiofiles
 
@@ -15,11 +13,7 @@ from agent.tools.base import (
     ToolResult,
     make_tool_schema,
 )
-from agent.tools.code_region import (
-    find_code_region,
-    map_syntax_error_line_to_editable,
-    replace_editable_code,
-)
+from agent.tools.model_contract import missing_required_model_contract
 
 
 class WriteCodeParams(ToolParamsModel):
@@ -29,59 +23,40 @@ class WriteCodeParams(ToolParamsModel):
 
 
 class WriteCodeInvocation(BoundFileToolInvocation[WriteCodeParams, str]):
-    """Invocation for replacing editable code"""
+    """Invocation for replacing the full model file."""
 
     def get_description(self) -> str:
         preview = self.params.code[:50].replace("\n", "\\n")
         if len(self.params.code) > 50:
             preview += "..."
-        return f"Rewrite editable code in current target file: '{preview}'"
+        return f"Rewrite current model.py file: '{preview}'"
 
     async def execute(self) -> ToolResult:
         try:
             if not self.file_path:
                 return ToolResult(error="file_path is required")
 
-            async with aiofiles.open(self.file_path, mode="r", encoding="utf-8") as f:
-                full_code = await f.read()
-
-            region = find_code_region(full_code)
-            if region.has_region:
-                missing = self._missing_required_functions(self.params.code)
-                if missing:
-                    return ToolResult(
-                        error=(
-                            "write_code must include required top-level functions in the editable section: "
-                            + ", ".join(missing)
-                        )
+            missing = missing_required_model_contract(self.params.code)
+            if missing:
+                return ToolResult(
+                    error=(
+                        "write_file must include the complete top-level model.py contract: "
+                        + ", ".join(missing)
                     )
+                )
 
-            new_full_code = replace_editable_code(full_code, self.params.code)
-            validation = self._validate_python_syntax(new_full_code, self.file_path or "<string>")
+            validation = self._validate_python_syntax(
+                self.params.code, self.file_path or "<string>"
+            )
 
             async with aiofiles.open(self.file_path, mode="w", encoding="utf-8") as f:
-                await f.write(new_full_code)
+                await f.write(self.params.code)
 
-            return ToolResult(output="Code rewritten successfully", compilation=validation)
+            return ToolResult(output="model.py rewritten successfully", compilation=validation)
         except FileNotFoundError:
             return ToolResult(error=f"File {self.file_path} not found")
         except Exception as exc:
             return ToolResult(error=f"Error writing code: {str(exc)}")
-
-    def _missing_required_functions(self, editable_code: str) -> list[str]:
-        required = ["build_object_model", "run_tests"]
-        try:
-            tree = ast.parse(editable_code)
-        except SyntaxError:
-            # Let syntax validation surface this with richer line mapping.
-            return []
-
-        defined = {
-            node.name
-            for node in tree.body
-            if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef))
-        }
-        return [name for name in required if name not in defined]
 
     def _validate_python_syntax(self, full_code: str, filename: str) -> dict:
         try:
@@ -91,16 +66,11 @@ class WriteCodeInvocation(BoundFileToolInvocation[WriteCodeParams, str]):
                 "error": None,
             }
         except SyntaxError as exc:
-            editable_line = map_syntax_error_line_to_editable(full_code, exc.lineno)
-            if editable_line is not None and editable_line != exc.lineno:
-                error_msg = f"Syntax error: {exc.msg} (editable line {editable_line}, full line {exc.lineno})"
-            else:
-                error_msg = f"Syntax error: {exc.msg} (line {exc.lineno})"
+            error_msg = f"Syntax error: {exc.msg} (line {exc.lineno})"
             return {
                 "status": "error",
                 "error": error_msg,
                 "error_line": exc.lineno,
-                "error_line_editable": editable_line,
             }
         except Exception as exc:
             return {
@@ -117,13 +87,13 @@ class WriteFileParams(ToolParamsModel):
 
 
 class WriteFileInvocation(BoundFileToolInvocation[WriteFileParams, str]):
-    """Invocation for full editable-section rewrites under the official-style name."""
+    """Invocation for full model.py rewrites under the official-style name."""
 
     def get_description(self) -> str:
         preview = self.params.content[:50].replace("\n", "\\n")
         if len(self.params.content) > 50:
             preview += "..."
-        return f"Write editable code in current target file: '{preview}'"
+        return f"Write current model.py file: '{preview}'"
 
     async def execute(self) -> ToolResult:
         mapped = WriteCodeParams(code=self.params.content)
@@ -133,24 +103,24 @@ class WriteFileInvocation(BoundFileToolInvocation[WriteFileParams, str]):
 
 
 class WriteFileTool(BaseDeclarativeTool):
-    """Gemini-style write_file tool scoped to the editable section."""
+    """Gemini-style write_file tool scoped to the full model file."""
 
     def __init__(self) -> None:
         schema = make_tool_schema(
             name="write_file",
             description=(
-                "Replace the entire editable code section in the current bound `model.py` artifact.\n\n"
-                "This is the Gemini-style full rewrite tool. It writes only the editable user section, "
-                "not scaffold imports or footer code.\n\n"
+                "Replace the entire current bound `model.py` artifact.\n\n"
+                "This is the Gemini-style full rewrite tool. It writes the full visible model script, "
+                "including imports and `object_model = build_object_model()`.\n\n"
                 "Use this when a targeted `replace` would be awkward or when you intend to rewrite the "
-                "whole editable section from scratch."
+                "whole model file from scratch."
             ),
             parameters={
                 "content": {
                     "type": "string",
                     "description": (
-                        "Full replacement content for the editable code section. "
-                        "In scaffolded files, include top-level build_object_model() and run_tests()."
+                        "Full replacement content for model.py. Include imports, top-level "
+                        "build_object_model(), run_tests(), and object_model = build_object_model()."
                     ),
                 },
                 "path": {

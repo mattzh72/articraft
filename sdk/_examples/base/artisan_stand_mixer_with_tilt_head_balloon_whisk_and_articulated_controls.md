@@ -41,9 +41,6 @@ values raise the head instead of pitching it down into the bowl.
 ```python
 from __future__ import annotations
 
-# User code should import every SDK/stdlib symbol it uses instead of relying on
-# hidden scaffold imports.
-# >>> USER_CODE_START
 import math
 from sdk import (
     ArticulatedObject,
@@ -289,5 +286,4 @@ def build_object_model() -> ArticulatedObject:
 
 
 object_model = build_object_model()
-# >>> USER_CODE_END
 ```

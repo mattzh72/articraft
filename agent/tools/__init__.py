@@ -91,7 +91,7 @@ def build_tool_registry(
         ]
     elif provider_norm is ProviderName.CODEX_CLI:
         tools = [
-            ReadFileTool(editable_model_only=True),
+            ReadFileTool(),
             ApplyPatchJsonTool(),
             ReplaceTool(),
             WriteFileTool(),
@@ -100,7 +100,7 @@ def build_tool_registry(
         ]
     else:
         tools = [
-            ReadFileTool(editable_model_only=True),
+            ReadFileTool(),
             ReplaceTool(),
             WriteFileTool(),
             CompileModelTool(),

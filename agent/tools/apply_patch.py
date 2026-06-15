@@ -16,7 +16,6 @@ from agent.tools.base import (
     make_tool_schema,
     validate_tool_params,
 )
-from agent.tools.code_region import map_syntax_error_line_to_editable
 
 APPLY_PATCH_LARK_GRAMMAR = """start: begin_patch hunk+ end_patch
 begin_patch: "*** Begin Patch" LF
@@ -93,16 +92,11 @@ class ApplyPatchInvocation(BoundFileToolInvocation[ApplyPatchParams, str]):
             compile(full_code, filename, "exec")
             return {"status": "success", "error": None}
         except SyntaxError as exc:
-            editable_line = map_syntax_error_line_to_editable(full_code, exc.lineno)
-            if editable_line is not None and editable_line != exc.lineno:
-                error_msg = f"Syntax error: {exc.msg} (editable line {editable_line}, full line {exc.lineno})"
-            else:
-                error_msg = f"Syntax error: {exc.msg} (line {exc.lineno})"
+            error_msg = f"Syntax error: {exc.msg} (line {exc.lineno})"
             return {
                 "status": "error",
                 "error": error_msg,
                 "error_line": exc.lineno,
-                "error_line_editable": editable_line,
             }
         except Exception as exc:
             return {"status": "error", "error": f"Validation error: {str(exc)}"}

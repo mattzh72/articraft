@@ -48,10 +48,6 @@ The modeling patterns worth copying are:
 ```python
 from __future__ import annotations
 
-# The harness only exposes the editable block to the model.
-# User code should import every SDK/stdlib symbol it uses instead of relying on
-# hidden scaffold imports.
-# >>> USER_CODE_START
 import math
 
 from sdk import (
@@ -470,8 +466,6 @@ def build_object_model() -> ArticulatedObject:
 
     return model
 
-
-# >>> USER_CODE_END
 
 object_model = build_object_model()
 ```

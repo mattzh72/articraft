@@ -39,7 +39,7 @@
 - `find_examples` searches curated SDK examples for patterns. Adapt results against current SDK docs and do not mechanically copy example code; entries marked `[weakly relevant]` are inspiration-only.
 - Read exact current file text with `read_file(path="model.py")` before you patch.
 - Prefer several small `apply_patch` edits over one giant patch or full-file rewrite.
-- Modify the existing editable code rather than assuming a blank start.
+- Modify the existing `model.py` rather than assuming a blank start.
 </tools>
 
 <modeling>

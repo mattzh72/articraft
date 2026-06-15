@@ -470,7 +470,7 @@ def test_codex_cli_compacts_old_history_before_later_request() -> None:
                     {
                         "summary": (
                             "The object is a folding chair. Earlier attempts fixed the hinge axis; "
-                            "continue from the current editable code and compile before finishing."
+                            "continue from the current model.py and compile before finishing."
                         )
                     }
                 ),

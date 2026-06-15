@@ -629,6 +629,9 @@ def build_object_model():
 
 def run_tests():
     return None
+
+
+object_model = build_object_model()
 """.strip()
 
     class _SequenceLLM:

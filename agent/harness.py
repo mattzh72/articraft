@@ -49,7 +49,6 @@ from agent.tools import (
     build_tool_registry,
 )
 from agent.tools.base import ToolResult
-from agent.tools.code_region import extract_editable_code
 from agent.traces import TraceWriter
 from agent.tui.single_run import SingleRunDisplay
 from agent.workspace_docs import build_virtual_workspace
@@ -858,18 +857,18 @@ class ArticraftAgent:
         if func_name == "replace":
             old_string_key = "old_string"
             try:
-                editable = extract_editable_code(Path(self.file_path).read_text(encoding="utf-8"))
+                model_code = Path(self.file_path).read_text(encoding="utf-8")
             except Exception:
-                editable = None
+                model_code = None
             if (
                 func_args.get(old_string_key) == ""
-                and editable is not None
-                and editable.strip() != ""
+                and model_code is not None
+                and model_code.strip() != ""
             ):
                 result = ToolResult(
                     error=(
-                        "old_string cannot be empty unless the editable code section is empty. "
-                        'Call `read_file(path="model.py")` to copy exact current editable text and retry.'
+                        "old_string cannot be empty unless model.py is empty. "
+                        'Call `read_file(path="model.py")` to copy exact current file text and retry.'
                     ),
                     tool_call_id=tool_id,
                 )
@@ -885,17 +884,17 @@ class ArticraftAgent:
                     tool_message["thought_signature"] = thought_signature
                 return result, tool_message
             if (
-                editable is not None
-                and editable.strip() == ""
+                model_code is not None
+                and model_code.strip() == ""
                 and func_args.get(old_string_key) != ""
             ):
                 result = ToolResult(
                     error=(
-                        "Editable code section is empty. Initialize it with "
+                        "model.py is empty. Initialize it with "
                         "`write_file(content=...)` or with "
                         f"{func_name} using "
                         'old_string="" and new_string containing the initial '
-                        "build_object_model() and run_tests() implementation."
+                        "imports, build_object_model(), run_tests(), and object_model assignment."
                     ),
                     tool_call_id=tool_id,
                 )

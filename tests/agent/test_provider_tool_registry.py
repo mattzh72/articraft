@@ -194,21 +194,21 @@ def test_openai_tool_registry_executes_full_read_without_paging_args(tmp_path: P
     assert result.output == "L1: alpha\nL2: beta\nL3: gamma"
 
 
-def test_gemini_tool_registry_reads_only_editable_model_region(tmp_path: Path) -> None:
+def test_gemini_tool_registry_reads_full_model_file(tmp_path: Path) -> None:
     repo_root = Path(__file__).resolve().parents[2]
     model_path = tmp_path / "model.py"
     model_path.write_text(
         "\n".join(
             [
                 "from sdk import *",
-                "# >>> USER_CODE_START",
+                "",
                 "def build_object_model():",
                 "    return 'alpha'",
                 "",
                 "def run_tests():",
                 "    return None",
-                "# >>> USER_CODE_END",
-                "FOOTER = True",
+                "",
+                "object_model = build_object_model()",
             ]
         )
         + "\n",
@@ -234,9 +234,13 @@ def test_gemini_tool_registry_reads_only_editable_model_region(tmp_path: Path) -
 
     assert result.error is None
     assert result.output == (
-        "L1: def build_object_model():\n"
-        "L2:     return 'alpha'\n"
-        "L3: \n"
-        "L4: def run_tests():\n"
-        "L5:     return None"
+        "L1: from sdk import *\n"
+        "L2: \n"
+        "L3: def build_object_model():\n"
+        "L4:     return 'alpha'\n"
+        "L5: \n"
+        "L6: def run_tests():\n"
+        "L7:     return None\n"
+        "L8: \n"
+        "L9: object_model = build_object_model()"
     )

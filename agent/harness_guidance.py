@@ -366,7 +366,7 @@ class GuidanceInjector:
                 (
                     "<edit_retry_guidance>\n"
                     f"- Your last {func_name} failed because `old_string` did not match the file exactly.\n"
-                    '- Do NOT guess. Call `read_file(path="model.py")` again, then pick a smaller exact snippet from the current editable code as `old_string` and retry.\n'
+                    '- Do NOT guess. Call `read_file(path="model.py")` again, then pick a smaller exact snippet from the current model.py as `old_string` and retry.\n'
                     "- Keep edits surgical.\n"
                     "</edit_retry_guidance>"
                 ),

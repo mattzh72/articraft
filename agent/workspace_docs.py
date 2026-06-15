@@ -100,7 +100,7 @@ def load_sdk_docs_reference(
 
     parts = [
         "\n\n# Workspace Documentation (read-only)\n",
-        "The virtual workspace exposes `model.py` as the editable artifact script and `docs/` "
+        "The virtual workspace exposes `model.py` as the full model artifact script and `docs/` "
         "as read-only SDK guidance.\n",
         "`docs/sdk/references/quickstart.md` is the preloaded SDK entrypoint and reference index.\n",
         "Use `read_file(path=...)` with these virtual paths when you need exact text.\n",

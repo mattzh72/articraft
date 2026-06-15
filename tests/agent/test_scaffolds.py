@@ -52,3 +52,19 @@ def test_base_scaffold_matches_harness_fallback() -> None:
     )
     for fragment in legacy_fragments:
         assert fragment not in scaffold_text
+
+
+def test_base_examples_do_not_use_legacy_marker_contract() -> None:
+    repo_root = Path(__file__).resolve().parents[2]
+    example_dir = repo_root / "sdk" / "_examples" / "base"
+    legacy_fragments = (
+        "USER_CODE_START",
+        "USER_CODE_END",
+        "hidden scaffold imports",
+        "The harness only exposes the editable block",
+    )
+
+    for example_path in sorted(example_dir.glob("*.md")):
+        example_text = example_path.read_text(encoding="utf-8")
+        for fragment in legacy_fragments:
+            assert fragment not in example_text, f"{fragment!r} found in {example_path}"
