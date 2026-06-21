@@ -12,6 +12,7 @@ from agent.feedback import build_compile_signal_bundle
 from agent.harness import ArticraftAgent
 from agent.harness_compile import CompileFeedbackLoop
 from agent.models import CompileReport, TerminateReason
+from agent.providers.openai import OpenAILLM
 from agent.tools.compile_model import CompileModelTool
 from agent.tools.registry import ToolRegistry
 from agent.tools.write_code import WriteFileTool
@@ -860,8 +861,119 @@ def test_no_action_response_fails_fast_after_streak(
         for message in result.conversation
         if message.get("role") == "user"
     ]
-    assert sum("<compile_required>" in content for content in user_messages) == 2
+    compile_required_messages = [
+        content for content in user_messages if "<compile_required>" in content
+    ]
+    assert len(compile_required_messages) == 2
+    assert "Run `compile_model` before concluding." in compile_required_messages[0]
+    assert "Do not continue with reasoning-only output." not in compile_required_messages[0]
+    assert "Do not continue with reasoning-only output." in compile_required_messages[1]
+    assert "`apply_patch`, `replace`, or `write_file`" in compile_required_messages[1]
+    assert "then call `compile_model`" in compile_required_messages[1]
+    assert (
+        "Do not return a final response until the latest code has compiled successfully."
+        in compile_required_messages[1]
+    )
     assert all("<final_response_required>" not in content for content in user_messages)
+
+
+def test_no_action_streak_clears_after_actionable_tool_call(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+) -> None:
+    class _SequenceLLM:
+        model_id = "gpt-5.5"
+
+        def __init__(self, *args: object, **kwargs: object) -> None:
+            reasoning_only_diagnostics = {
+                "status": "completed",
+                "response_shape": "reasoning_only_completion",
+            }
+            self._responses = [
+                {
+                    "content": "",
+                    "tool_calls": [],
+                    "provider_diagnostics": reasoning_only_diagnostics,
+                },
+                {
+                    "content": "",
+                    "tool_calls": [],
+                    "provider_diagnostics": reasoning_only_diagnostics,
+                },
+                {
+                    "content": "",
+                    "tool_calls": [
+                        {
+                            "id": "call_compile",
+                            "type": "function",
+                            "function": {"name": "compile_model", "arguments": "{}"},
+                        }
+                    ],
+                },
+                {
+                    "content": "",
+                    "tool_calls": [],
+                    "thought_summary": "Compile passed, preparing final response.",
+                },
+                {"content": "Done.", "tool_calls": []},
+            ]
+
+        async def generate_with_tools(
+            self, *, system_prompt: str, messages: list[dict], tools: list[dict]
+        ) -> dict:
+            assert tools
+            return self._responses.pop(0)
+
+        async def close(self) -> None:
+            return None
+
+    report = CompileReport(
+        urdf_xml="<robot />",
+        warnings=[],
+        signal_bundle=build_compile_signal_bundle(status="success"),
+    )
+
+    monkeypatch.setattr(harness, "OpenAILLM", _SequenceLLM)
+    agent = ArticraftAgent(
+        file_path=str(tmp_path / "model.py"),
+        provider="openai",
+        max_turns=6,
+        display_enabled=False,
+    )
+    agent.tool_registry = ToolRegistry([CompileModelTool()])
+    agent.display = _CountingDisplay()
+
+    async def fake_compile() -> CompileReport:
+        return report
+
+    async def fake_persist(_: str) -> None:
+        return None
+
+    agent._compile_urdf_report_async = fake_compile
+    agent._persist_compile_success_checkpoint_async = fake_persist
+
+    result = asyncio.run(agent.run("make a hinge"))
+
+    assert result.success is True
+    assert result.reason == TerminateReason.CODE_VALID
+    assert result.turn_count == 5
+    assert result.compile_attempt_count == 1
+
+    user_messages = [
+        str(message.get("content", ""))
+        for message in result.conversation
+        if message.get("role") == "user"
+    ]
+    compile_required_messages = [
+        content for content in user_messages if "<compile_required>" in content
+    ]
+    final_required_messages = [
+        content for content in user_messages if "<final_response_required>" in content
+    ]
+    assert len(compile_required_messages) == 2
+    assert "response_shape=reasoning_only_completion" in compile_required_messages[1]
+    assert len(final_required_messages) == 1
+    assert "Do not continue with reasoning-only output." not in final_required_messages[0]
 
 
 def test_provider_diagnostics_are_traced_without_changing_no_action_flow(
@@ -960,6 +1072,34 @@ def test_provider_diagnostics_are_traced_without_changing_no_action_flow(
     assert sum("<compile_required>" in content for content in user_messages) == 1
 
 
+def test_openai_completed_reasoning_only_response_records_distinct_diagnostic() -> None:
+    provider = OpenAILLM(dry_run=True)
+    response = {
+        "id": "resp_reasoning_only",
+        "status": "completed",
+        "output": [
+            {
+                "type": "reasoning",
+                "status": "completed",
+                "summary": [{"type": "summary_text", "text": "Still planning."}],
+            }
+        ],
+    }
+
+    converted = provider._convert_response(response)
+
+    assert converted["content"] == ""
+    assert converted["tool_calls"] == []
+    assert converted["thought_summary"] == "Still planning."
+    assert converted["provider_diagnostics"] == {
+        "response_id": "resp_reasoning_only",
+        "status": "completed",
+        "output_items": [{"index": 0, "type": "reasoning", "status": "completed"}],
+        "transport": "http",
+        "response_shape": "reasoning_only_completion",
+    }
+
+
 def test_no_action_fail_fast_includes_last_provider_status(
     monkeypatch: pytest.MonkeyPatch,
     tmp_path: Path,
@@ -1000,6 +1140,51 @@ def test_no_action_fail_fast_includes_last_provider_status(
     assert result.reason == TerminateReason.ERROR
     assert "3 consecutive no-action responses" in result.message
     assert "Last provider response: status=incomplete reason=max_output_tokens." in result.message
+
+
+def test_no_action_fail_fast_names_reasoning_only_completion(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+) -> None:
+    class _NoActionDiagnosticLLM:
+        model_id = "gpt-5.5"
+
+        def __init__(self, *args: object, **kwargs: object) -> None:
+            return None
+
+        async def generate_with_tools(
+            self, *, system_prompt: str, messages: list[dict], tools: list[dict]
+        ) -> dict:
+            return {
+                "content": "",
+                "tool_calls": [],
+                "provider_diagnostics": {
+                    "status": "completed",
+                    "response_shape": "reasoning_only_completion",
+                },
+            }
+
+        async def close(self) -> None:
+            return None
+
+    monkeypatch.setattr(harness, "OpenAILLM", _NoActionDiagnosticLLM)
+    agent = ArticraftAgent(
+        file_path=str(tmp_path / "model.py"),
+        provider="openai",
+        max_turns=10,
+        display_enabled=False,
+    )
+    agent.display = _CountingDisplay()
+
+    result = asyncio.run(agent.run("make a hinge"))
+
+    assert result.success is False
+    assert result.reason == TerminateReason.ERROR
+    assert "3 consecutive no-action responses" in result.message
+    assert (
+        "Last provider response: status=completed response_shape=reasoning_only_completion."
+        in result.message
+    )
 
 
 def test_fresh_code_no_action_requires_visible_final_response(
