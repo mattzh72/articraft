@@ -881,10 +881,41 @@ class OpenAILLM:
         return openai_codec.extract_usage(response)
 
     def _convert_response(self, response: Any) -> dict[str, Any]:
-        return openai_codec.convert_response(response, transport=self.transport)
+        converted = openai_codec.convert_response(response, transport=self.transport)
+        if _is_completed_reasoning_only_response(response):
+            diagnostics = converted.setdefault("provider_diagnostics", {})
+            if isinstance(diagnostics, dict):
+                diagnostics["response_shape"] = "reasoning_only_completion"
+        return converted
 
     def _extract_response_id(self, response: Any) -> Optional[str]:
         return openai_codec.extract_response_id(response)
+
+
+def _response_value(obj: Any, field: str) -> Any:
+    if isinstance(obj, dict):
+        return obj.get(field)
+    return getattr(obj, field, None)
+
+
+def _is_completed_reasoning_only_response(response: Any) -> bool:
+    if _response_value(response, "status") != "completed":
+        return False
+
+    output = _response_value(response, "output")
+    if not isinstance(output, list) or not output:
+        return False
+
+    saw_reasoning = False
+    for item in output:
+        if item is None:
+            continue
+        item_type = _response_value(item, "type")
+        if item_type != "reasoning":
+            return False
+        saw_reasoning = True
+
+    return saw_reasoning
 
 
 def _hard_pressure_threshold_for_model(model_id: str) -> int | None:
