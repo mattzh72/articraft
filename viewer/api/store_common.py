@@ -17,19 +17,14 @@ from viewer.api.store_filesystem import (
     _truncate_text,
 )
 from viewer.api.store_filters import (
-    _local_day_key_from_timestamp_ms,
-    _local_day_start_ms_from_timestamp_ms,
     _normalize_time_filter_value,
-    _parse_iso_timestamp_ms,
     _within_author_filters,
     _within_category_filters,
     _within_cost_filter,
-    _within_dashboard_stars_filter,
-    _within_dashboard_time_filter,
     _within_rating_filter,
     _within_time_filter,
 )
-from viewer.api.store_types import DashboardRecord, MaterializeRecordAssetsResult
+from viewer.api.store_types import MaterializeRecordAssetsResult
 from viewer.api.store_values import (
     _coerce_float,
     _coerce_int,
@@ -63,12 +58,9 @@ __all__ = [
     "_file_mtime_to_utc",
     "_first_nonempty_line",
     "_latest_path_mtime_to_utc",
-    "_local_day_key_from_timestamp_ms",
-    "_local_day_start_ms_from_timestamp_ms",
     "_mtime_to_utc",
     "_normalize_sdk_package_value",
     "_normalize_time_filter_value",
-    "_parse_iso_timestamp_ms",
     "_parse_sort_key",
     "_relative_path",
     "_remove_path_if_exists",
@@ -79,10 +71,7 @@ __all__ = [
     "_within_author_filters",
     "_within_category_filters",
     "_within_cost_filter",
-    "_within_dashboard_stars_filter",
-    "_within_dashboard_time_filter",
     "_within_rating_filter",
     "_within_time_filter",
-    "DashboardRecord",
     "MaterializeRecordAssetsResult",
 ]

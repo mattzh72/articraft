@@ -2,9 +2,7 @@ from __future__ import annotations
 
 from typing import Any
 
-from pydantic import BaseModel, Field, field_validator
-
-from storage.identifiers import validate_category_slug, validate_dataset_id
+from pydantic import BaseModel, Field
 
 
 class HealthResponse(BaseModel):
@@ -14,13 +12,6 @@ class HealthResponse(BaseModel):
 class DeleteRecordResponse(BaseModel):
     status: str
     record_id: str
-
-
-class HydrateRecordResponse(BaseModel):
-    status: str
-    record_id: str
-    hydrated_count: int = 0
-    message: str | None = None
 
 
 class DeleteStagingResponse(BaseModel):
@@ -68,6 +59,9 @@ class RecordSummaryResponse(BaseModel):
     output_tokens: int | None = None
     total_cost_usd: float | None = None
     category_slug: str | None = None
+    category_title: str | None = None
+    label: str | None = None
+    tags: list[str] = Field(default_factory=list)
     run_id: str | None = None
     run_status: str | None = None
     run_message: str | None = None
@@ -76,12 +70,10 @@ class RecordSummaryResponse(BaseModel):
     parent_record_id: str | None = None
     revision_count: int = 0
     has_history: bool = False
-    collections: list[str] = Field(default_factory=list)
     materialization_status: str | None = None
     has_compile_report: bool = False
     has_provenance: bool = False
     has_cost: bool = False
-    payload_status: str = "hydrated"
 
 
 class RecordBrowseFacetsResponse(BaseModel):
@@ -95,7 +87,7 @@ class RecordBrowseFacetsResponse(BaseModel):
 
 
 class RecordBrowseResponse(BaseModel):
-    source: str
+    source: str = "library"
     total: int
     source_total: int
     offset: int
@@ -106,39 +98,9 @@ class RecordBrowseResponse(BaseModel):
 
 
 class RecordBrowseIdsResponse(BaseModel):
-    source: str
+    source: str = "library"
     total: int
     record_ids: list[str] = Field(default_factory=list)
-
-
-class WorkbenchEntryResponse(BaseModel):
-    record_id: str
-    added_at: str
-    label: str | None = None
-    tags: list[str] = Field(default_factory=list)
-    archived: bool = False
-    record: RecordSummaryResponse | None = None
-
-
-class DatasetEntryResponse(BaseModel):
-    record_id: str
-    dataset_id: str
-    category_slug: str
-    promoted_at: str
-    record: RecordSummaryResponse | None = None
-
-
-class SupercategoryOptionResponse(BaseModel):
-    slug: str
-    title: str
-    description: str = ""
-    category_slugs: list[str] = Field(default_factory=list)
-
-
-class CategoryOptionResponse(BaseModel):
-    slug: str
-    title: str
-    supercategory_slug: str | None = None
 
 
 class StagingEntryResponse(BaseModel):
@@ -150,7 +112,6 @@ class StagingEntryResponse(BaseModel):
     message: str | None = None
     created_at: str | None = None
     updated_at: str | None = None
-    collection: str | None = None
     category_slug: str | None = None
     provider: str | None = None
     model_id: str | None = None
@@ -173,7 +134,6 @@ class StagingEntryResponse(BaseModel):
 class RunSummaryResponse(BaseModel):
     run_id: str
     run_mode: str | None = None
-    collection: str | None = None
     status: str | None = None
     created_at: str | None = None
     updated_at: str | None = None
@@ -253,22 +213,6 @@ class RecordSecondaryRatingResponse(BaseModel):
     updated_at: str | None = None
 
 
-class PromoteRecordRequest(BaseModel):
-    category_title: str | None = Field(default=None, min_length=1)
-    category_slug: str | None = Field(default=None, min_length=1)
-    dataset_id: str | None = None
-
-    @field_validator("category_slug")
-    @classmethod
-    def _validate_category_slug(cls, value: str | None) -> str | None:
-        return validate_category_slug(value) if value is not None else None
-
-    @field_validator("dataset_id")
-    @classmethod
-    def _validate_dataset_id(cls, value: str | None) -> str | None:
-        return validate_dataset_id(value) if value is not None else None
-
-
 class RecordTextFileResponse(BaseModel):
     record_id: str
     file_path: str
@@ -287,27 +231,21 @@ class RunDetailResponse(BaseModel):
 
 class ViewerBootstrapResponse(BaseModel):
     repo_root: str
+    data_root: str
     generated_at: str
-    workbench_entries: list[WorkbenchEntryResponse]
-    dataset_entries: list[DatasetEntryResponse]
+    library_records: list[RecordSummaryResponse]
     staging_entries: list[StagingEntryResponse]
     runs: list[RunSummaryResponse]
-    supercategories: list[SupercategoryOptionResponse] = Field(default_factory=list)
 
 
 class CategoryStatsResponse(BaseModel):
     count: int
-    sdk_package: str | None = None
     average_rating: float | None = None
     average_cost_usd: float | None = None
-    average_input_tokens: float | None = None
-    average_output_tokens: float | None = None
 
 
 class RepoStatsResponse(BaseModel):
     total_records: int
-    workbench_count: int
-    dataset_count: int
     total_runs: int
     total_cost_usd: float | None = None
     data_size_bytes: int | None = None
@@ -316,61 +254,3 @@ class RepoStatsResponse(BaseModel):
     model_counts: dict[str, int] = Field(default_factory=dict)
     provider_counts: dict[str, int] = Field(default_factory=dict)
     rating_distribution: dict[str, int] = Field(default_factory=dict)
-
-
-class DashboardCostBoundsResponse(BaseModel):
-    min: float
-    max: float
-
-
-class DashboardOverviewResponse(BaseModel):
-    total_records: int
-    total_runs: int
-    total_cost_usd: float | None = None
-    average_cost_usd: float | None = None
-    data_size_bytes: int | None = None
-    category_count: int
-    model_count: int
-    sdk_count: int
-    is_filtered: bool = False
-
-
-class DashboardCategoryStatsResponse(BaseModel):
-    count: int
-    sdk_package: str | None = None
-    average_rating: float | None = None
-    average_cost_usd: float | None = None
-    average_input_tokens: float | None = None
-    average_output_tokens: float | None = None
-    input_token_sample_count: int = 0
-    output_token_sample_count: int = 0
-
-
-class DashboardCostTrendPointResponse(BaseModel):
-    date_key: str
-    day_start_ms: int
-    record_count: int
-    total_cost_usd: float
-    daily_average_cost_usd: float | None = None
-    rolling_average_cost_usd: float | None = None
-
-
-class DashboardCostTrendResponse(BaseModel):
-    points: list[DashboardCostTrendPointResponse] = Field(default_factory=list)
-    latest_average_cost_usd: float | None = None
-    previous_average_cost_usd: float | None = None
-    delta_usd: float | None = None
-    delta_pct: float | None = None
-
-
-class DashboardResponse(BaseModel):
-    generated_at: str
-    supercategories: list[SupercategoryOptionResponse] = Field(default_factory=list)
-    available_sdks: list[str] = Field(default_factory=list)
-    available_agent_harnesses: list[str] = Field(default_factory=list)
-    available_authors: list[str] = Field(default_factory=list)
-    available_categories: list[str] = Field(default_factory=list)
-    cost_bounds: DashboardCostBoundsResponse | None = None
-    overview: DashboardOverviewResponse
-    category_stats: dict[str, DashboardCategoryStatsResponse] = Field(default_factory=dict)
-    cost_trend: DashboardCostTrendResponse

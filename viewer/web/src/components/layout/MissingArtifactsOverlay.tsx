@@ -45,16 +45,7 @@ export function MissingArtifactsOverlay({
               Compile This Record
             </p>
             <code className="mt-1 block overflow-x-auto rounded-md border border-[var(--border-subtle)] bg-[var(--surface-1)] px-3 py-2 font-mono text-[11px] text-[var(--text-primary)]">
-              {`just compile data/records/${recordId}`}
-            </code>
-          </div>
-
-          <div>
-            <p className="text-[10px] font-medium uppercase tracking-[0.06em] text-[var(--text-quaternary)]">
-              Precompile Saved Records
-            </p>
-            <code className="mt-1 block overflow-x-auto rounded-md border border-[var(--border-subtle)] bg-[var(--surface-1)] px-3 py-2 font-mono text-[11px] text-[var(--text-primary)]">
-              just compile-all
+              {`uv run articraft compile ${recordId}`}
             </code>
           </div>
         </div>

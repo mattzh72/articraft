@@ -40,8 +40,6 @@ setup root='.':
     # Create a local env template once; never overwrite an existing secrets file.
     uv run --frozen --directory {{ quote(root) }} articraft env bootstrap
     uv sync --frozen --group dev --directory {{ quote(root) }}
-    uv run --frozen --directory {{ quote(root) }} articraft hooks install
-    uv run --frozen --directory {{ quote(root) }} pre-commit install --hook-type pre-commit --hook-type pre-push
     @if command -v npm >/dev/null 2>&1; then \
         npm --prefix {{ quote(root + "/viewer/web") }} ci; \
         npm --prefix {{ quote(root + "/viewer/web") }} run typecheck; \
@@ -50,11 +48,6 @@ setup root='.':
         echo "Install Node.js and npm to run the viewer and frontend hooks."; \
     fi
     uv run --frozen --directory {{ quote(root) }} articraft init
-
-hooks-install:
-    just uv-version-check
-    uv run --frozen articraft hooks install
-    uv run --frozen pre-commit install --hook-type pre-commit --hook-type pre-push
 
 format:
     just uv-version-check
@@ -72,46 +65,11 @@ compile-full record:
     just uv-version-check
     uv run --frozen articraft compile --target full {{ quote(record) }}
 
-compile-all:
-    just uv-version-check
-    uv run --frozen articraft compile-all
-
-compile-all-force:
-    just uv-version-check
-    uv run --frozen articraft compile-all --target visual --force
-
-compile-all-force-limit limit:
-    just uv-version-check
-    uv run --frozen articraft compile-all --target visual --force --limit {{ quote(limit) }}
-
-compile-all-full-force:
-    just uv-version-check
-    uv run --frozen articraft compile-all --target full --force
-
-data-hydrate-all:
-    just uv-version-check
-    uv run --frozen articraft data hydrate --all
-
-data-hydrate-record record:
-    just uv-version-check
-    uv run --frozen articraft data hydrate --record {{ quote(record) }}
-
-data-hydrate-category category:
-    just uv-version-check
-    uv run --frozen articraft data hydrate --category {{ quote(category) }}
-
-data-hydrate-time from to:
-    just uv-version-check
-    uv run --frozen articraft data hydrate --time-from {{ quote(from) }} --time-to {{ quote(to) }}
-
 smoke-tests:
     just uv-version-check
     uv run --frozen --group dev pytest -q \
-      tests/agent \
       tests/storage \
       tests/viewer/test_api.py \
-      tests/workbench \
-      tests/dataset/test_imports.py \
       tests/sdk/test_imports.py \
       tests/cli
 

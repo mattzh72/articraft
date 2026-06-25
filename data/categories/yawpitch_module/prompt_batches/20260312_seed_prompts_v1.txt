@@ -1,4 +1,0 @@
-A two-axis turret module with a base yaw turntable supporting a pitch yoke, using simple mechanical brackets, bearing rings, and a boxy payload mount.
-A compact camera gimbal head with one vertical yaw axis and one horizontal pitch axis, rendered as a clean industrial CAD assembly.
-A pan-tilt surveillance head with a rotary base and tilting upper fork, using simple cast-like housings and flat equipment brackets.
-A two-axis pan-tilt unit for an inspection sensor, with one pan stage below one tilt stage, designed as a practical CAD assembly.

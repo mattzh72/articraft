@@ -12,22 +12,8 @@ Use this skill when the user asks to compile records, browse generated objects, 
 For one record:
 
 ```bash
-uv run articraft compile data/records/<record_id>
+uv run articraft compile <record_id>
 ```
-
-For fast visual materialization before browsing:
-
-```bash
-uv run articraft compile-all
-```
-
-For full non-strict bulk compile:
-
-```bash
-uv run articraft compile-all --target full
-```
-
-Add `--strict` only when validation-heavy full compile is intended.
 
 ## Start The Viewer
 

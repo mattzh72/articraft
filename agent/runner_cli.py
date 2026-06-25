@@ -8,6 +8,7 @@ import argparse
 import asyncio
 import json
 import logging
+import os
 import sys
 from pathlib import Path
 from typing import Awaitable, Callable, Optional
@@ -32,6 +33,15 @@ from articraft.values import (
     THINKING_LEVEL_VALUES,
     ProviderName,
 )
+
+
+def _resolve_data_dir(repo_root: Path, data_dir: Path | None) -> Path:
+    if data_dir is not None:
+        return data_dir.expanduser().resolve()
+    configured = os.getenv("ARTICRAFT_DATA_DIR")
+    if configured:
+        return Path(configured).expanduser().resolve()
+    return repo_root.expanduser().resolve() / "data"
 
 
 def _load_qc_blurb_text(qc_blurb_path: Optional[str], *, repo_root: Path) -> Optional[str]:
@@ -100,7 +110,7 @@ def main(
         handlers=[LLMWaitAwareStreamHandler()],
     )
     parser = argparse.ArgumentParser(
-        description="Generate an articulated object and persist it to workbench or dataset storage."
+        description="Generate an articulated object and persist it to local library storage."
     )
     parser.add_argument("--prompt", required=True, help="Text prompt for the object.")
     parser.add_argument(
@@ -118,29 +128,20 @@ def main(
         "--repo-root",
         type=Path,
         default=Path(__file__).resolve().parents[1],
-        help="Repository root where data/records and data/cache/runs will be written.",
+        help="Articraft code repository root.",
     )
     parser.add_argument(
-        "--label", default=None, help="Optional workbench label for the saved record."
-    )
-    parser.add_argument(
-        "--tag", action="append", default=[], help="Optional workbench tag. Repeatable."
-    )
-    parser.add_argument(
-        "--collection",
-        default="workbench",
-        choices=["workbench", "dataset"],
-        help="Target collection for the generated record. Defaults to workbench.",
-    )
-    parser.add_argument(
-        "--dataset-id",
+        "--data-dir",
+        type=Path,
         default=None,
-        help="Stable dataset identifier to assign when --collection dataset is used.",
+        help="Articraft data root. Defaults to ARTICRAFT_DATA_DIR, then <repo-root>/data.",
     )
+    parser.add_argument("--label", default=None, help="Optional label for the saved record.")
+    parser.add_argument("--tag", action="append", default=[], help="Optional tag. Repeatable.")
     parser.add_argument(
         "--category",
         default=None,
-        help="Optional category slug to attach to the record. Required for --collection dataset.",
+        help="Optional category slug to attach to the record.",
     )
     parser.add_argument("--model", default=None, help="Model id (provider-specific).")
     parser.add_argument(
@@ -203,14 +204,6 @@ def main(
     load_repo_env(args.repo_root)
     model_id_arg, provider = _resolve_model_and_provider(args, parser)
     thinking_level = _resolve_thinking_level(args, parser)
-    if args.collection == "dataset":
-        if not args.dataset_id:
-            parser.error("--dataset-id is required when --collection dataset.")
-        if not args.category:
-            parser.error("--category is required when --collection dataset.")
-    elif args.dataset_id:
-        parser.error("--dataset-id is only supported with --collection dataset.")
-
     try:
         sdk_package = normalize_sdk_package(args.sdk_package)
         max_cost_usd = (
@@ -241,6 +234,7 @@ def main(
         return 1
 
     repo_root = args.repo_root.resolve()
+    data_root = _resolve_data_dir(repo_root, args.data_dir)
     try:
         qc_blurb_text = _load_qc_blurb_text(args.qc_blurb, repo_root=repo_root)
     except Exception as exc:
@@ -297,7 +291,8 @@ def main(
             user_content,
             prompt_text=prompt_with_qc,
             display_prompt=args.prompt,
-            repo_root=args.repo_root.resolve(),
+            repo_root=repo_root,
+            data_root=data_root,
             image_path=image_path,
             provider=provider,
             model_id=model_id_arg,
@@ -310,8 +305,6 @@ def main(
             max_cost_usd=max_cost_usd,
             label=args.label,
             tags=list(args.tag or []),
-            collection=args.collection,
             category_slug=args.category,
-            dataset_id=args.dataset_id,
         )
     )

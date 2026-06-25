@@ -4,9 +4,8 @@ from dataclasses import asdict, dataclass, field
 from pathlib import Path
 from typing import Any, Literal
 
-CollectionName = Literal["dataset", "workbench"]
 PromptKind = Literal["single_prompt", "prompt_series"]
-RunMode = Literal["dataset_batch", "dataset_single", "workbench_batch", "workbench_single"]
+RunMode = Literal["library_single"]
 MaterializationStatus = Literal["missing", "available"]
 CreatorMode = Literal["internal_agent", "external_agent"]
 ExternalAgentName = Literal["codex", "claude-code", "cursor"]
@@ -15,9 +14,6 @@ ExternalAgentName = Literal["codex", "claude-code", "cursor"]
 @dataclass(slots=True, frozen=True)
 class SourceRef:
     run_id: str | None = None
-    prompt_batch_id: str | None = None
-    batch_spec_id: str | None = None
-    row_id: str | None = None
     prompt_index: int | None = None
 
     def to_dict(self) -> dict[str, Any]:
@@ -84,11 +80,13 @@ class Record:
     display: DisplayMetadata
     artifacts: RecordArtifacts
     hashes: RecordHashes = field(default_factory=RecordHashes)
-    collections: list[CollectionName] = field(default_factory=list)
     active_revision_id: str | None = None
     lineage: dict[str, Any] | None = None
     creator: CreatorMetadata | None = None
     author: str | None = None
+    label: str | None = None
+    tags: list[str] = field(default_factory=list)
+    category_title: str | None = None
     rated_by: str | None = None
     secondary_rating: int | None = None
     secondary_rated_by: str | None = None
@@ -111,10 +109,12 @@ class Record:
             "sdk_package": self.sdk_package,
             "provider": self.provider,
             "model_id": self.model_id,
+            "label": self.label,
+            "tags": list(self.tags),
+            "category_title": self.category_title,
             "display": self.display.to_dict(),
             "artifacts": self.artifacts.to_dict(),
             "hashes": self.hashes.to_dict(),
-            "collections": list(self.collections),
         }
         if self.active_revision_id is not None:
             payload["active_revision_id"] = self.active_revision_id
@@ -240,68 +240,11 @@ class CompileReport:
 
 
 @dataclass(slots=True, frozen=True)
-class DatasetEntry:
-    schema_version: int
-    dataset_id: str
-    record_id: str
-    category_slug: str
-    promoted_at: str
-
-    def to_dict(self) -> dict[str, Any]:
-        return asdict(self)
-
-
-@dataclass(slots=True, frozen=True)
-class DatasetCollection:
-    schema_version: int
-    collection: Literal["dataset"]
-    updated_at: str
-    entries: list[DatasetEntry] = field(default_factory=list)
-
-    def to_dict(self) -> dict[str, Any]:
-        return {
-            "schema_version": self.schema_version,
-            "collection": self.collection,
-            "updated_at": self.updated_at,
-            "entries": [entry.to_dict() for entry in self.entries],
-        }
-
-
-@dataclass(slots=True, frozen=True)
-class WorkbenchEntry:
-    record_id: str
-    added_at: str
-    label: str | None = None
-    tags: list[str] = field(default_factory=list)
-    archived: bool = False
-
-    def to_dict(self) -> dict[str, Any]:
-        return asdict(self)
-
-
-@dataclass(slots=True, frozen=True)
-class WorkbenchCollection:
-    schema_version: int
-    collection: Literal["workbench"]
-    updated_at: str
-    entries: list[WorkbenchEntry] = field(default_factory=list)
-
-    def to_dict(self) -> dict[str, Any]:
-        return {
-            "schema_version": self.schema_version,
-            "collection": self.collection,
-            "updated_at": self.updated_at,
-            "entries": [entry.to_dict() for entry in self.entries],
-        }
-
-
-@dataclass(slots=True, frozen=True)
 class CategoryRecord:
     schema_version: int
     slug: str
     title: str
     description: str = ""
-    prompt_batch_ids: list[str] = field(default_factory=list)
     target_sdk_version: str | None = None
     current_count: int | None = None
     last_item_index: int | None = None
@@ -318,7 +261,6 @@ class RunRecord:
     schema_version: int
     run_id: str
     run_mode: RunMode
-    collection: CollectionName
     created_at: str
     updated_at: str
     provider: str
@@ -326,38 +268,12 @@ class RunRecord:
     sdk_package: str
     status: str = "pending"
     category_slug: str | None = None
-    category_slugs: list[str] = field(default_factory=list)
-    prompt_batch_id: str | None = None
-    batch_spec_id: str | None = None
     prompt_count: int = 0
     results_file: str = "results.jsonl"
     settings_summary: dict[str, Any] = field(default_factory=dict)
 
     def to_dict(self) -> dict[str, Any]:
         return asdict(self)
-
-
-@dataclass(slots=True, frozen=True)
-class SupercategoryEntry:
-    slug: str
-    title: str
-    description: str = ""
-    category_slugs: list[str] = field(default_factory=list)
-
-    def to_dict(self) -> dict[str, Any]:
-        return asdict(self)
-
-
-@dataclass(slots=True, frozen=True)
-class SupercategoryManifest:
-    schema_version: int
-    supercategories: list[SupercategoryEntry] = field(default_factory=list)
-
-    def to_dict(self) -> dict[str, Any]:
-        return {
-            "schema_version": self.schema_version,
-            "supercategories": [entry.to_dict() for entry in self.supercategories],
-        }
 
 
 @dataclass(slots=True, frozen=True)

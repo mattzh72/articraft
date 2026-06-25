@@ -23,13 +23,13 @@ uv run articraft generate \
 
 If you override the model and Articraft cannot infer the provider from the model ID, pass `--provider` explicitly.
 
-## Generate Directly into a Dataset Category
+## Generate into a Category
 
-Use `--image` with `articraft dataset run`:
+Use `--image` with `articraft generate` and pass a category slug:
 
 ```bash
-uv run articraft dataset run \
-  --category-slug desk-lamps \
+uv run articraft generate \
+  --category desk_lamps \
   --image path/to/reference.png \
   "Create an articulated desk lamp based on this reference image."
 ```
@@ -39,7 +39,7 @@ uv run articraft dataset run \
 Image input is also supported for copy edits with `articraft fork`:
 
 ```bash
-uv run articraft fork data/records/<record_id> \
+uv run articraft fork <record_id> \
   --image path/to/reference.png \
   "Update the object to match the latch shape in the reference image."
 ```
@@ -69,7 +69,3 @@ Supported formats depend on the provider:
 | `deepseek` | Not supported (no vision capability) |
 
 Images must be local files. Gemini image inputs must stay under the inline request limit; other providers reject images larger than 50 MB.
-
-## Batch Limitation
-
-Tracked batch CSV generation does not currently support image inputs. The batch CSV v1 format rejects an `image_path` column, so use `articraft dataset run` for image-conditioned dataset records.

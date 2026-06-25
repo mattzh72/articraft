@@ -1,359 +1,77 @@
 from __future__ import annotations
 
-import json
 from pathlib import Path
 
-from storage.categories import CategoryStore
-from storage.collections import CollectionStore
-from storage.datasets import DatasetStore
-from storage.materialize import MaterializationStore, build_materialization_fingerprint
-from storage.models import (
-    CategoryRecord,
-    CompileReport,
-    DisplayMetadata,
-    EnvironmentSettings,
-    GenerationSettings,
-    PromptingSettings,
-    Provenance,
-    Record,
-    RecordArtifacts,
-    RunRecord,
-    RunSummary,
-    SdkSettings,
-    SourceRef,
-)
+from storage.library_manifest import load_manifest
+from storage.models import DisplayMetadata, Record, RecordArtifacts, SourceRef
 from storage.records import RecordStore
 from storage.repo import StorageRepo
-from storage.runs import RunStore
+from storage.revisions import INITIAL_REVISION_ID, revision_artifacts_payload
 
 
-def test_storage_repo_round_trips_records_collections_and_runs(tmp_path: Path) -> None:
-    repo = StorageRepo(tmp_path)
-    repo.ensure_layout()
-
-    collections = CollectionStore(repo)
-    collections.append_workbench_entry(
-        record_id="rec_123",
-        added_at="2026-03-18T00:00:00Z",
-        label="trial",
-        tags=["hinge"],
+def _record(record_id: str) -> Record:
+    artifacts = revision_artifacts_payload(
+        revision_id=INITIAL_REVISION_ID,
+        has_cost_file=False,
     )
-    workbench = collections.load_workbench()
-    assert workbench is not None
-    assert workbench["entries"][0]["record_id"] == "rec_123"
-    assert repo.layout.record_workbench_entry_path("rec_123").exists()
-
-    categories = CategoryStore(repo)
-    categories.save(
-        CategoryRecord(
-            schema_version=1,
-            slug="hinges",
-            title="Hinges",
-        )
-    )
-    assert repo.layout.category_metadata_path("hinges").exists()
-
-    record_store = RecordStore(repo)
-    record = Record(
-        schema_version=2,
-        record_id="rec_123",
-        created_at="2026-03-18T00:00:00Z",
-        updated_at="2026-03-18T00:00:00Z",
+    return Record(
+        schema_version=3,
+        record_id=record_id,
+        created_at="2026-01-01T00:00:00Z",
+        updated_at="2026-01-01T00:00:00Z",
         rating=None,
         kind="generated_model",
         prompt_kind="single_prompt",
-        category_slug="hinges",
-        source=SourceRef(run_id="run_123", prompt_batch_id="batch_001", prompt_index=3),
+        category_slug=None,
+        source=SourceRef(run_id=None),
         sdk_package="sdk",
         provider="openai",
-        model_id="gpt-5.4",
-        display=DisplayMetadata(title="Hinge", prompt_preview="model a hinge"),
-        artifacts=RecordArtifacts(
-            prompt_txt="prompt.txt",
-            prompt_series_json=None,
-            model_py="model.py",
-            provenance_json="provenance.json",
-            cost_json="cost.json",
-        ),
+        model_id="gpt-test",
+        display=DisplayMetadata(title="Lamp", prompt_preview="make a lamp"),
+        artifacts=RecordArtifacts(**artifacts),
+        active_revision_id=INITIAL_REVISION_ID,
     )
-    record_store.write_record(record)
-    assert repo.layout.record_metadata_path("rec_123").exists()
-    assert repo.read_json(repo.layout.record_metadata_path("rec_123"))["rating"] is None
-    assert repo.layout.record_inputs_dir("rec_123").exists()
-    assert not repo.layout.record_assets_dir("rec_123").exists()
-
-    datasets = DatasetStore(repo)
-    promoted = datasets.promote_record(
-        record_id="rec_123",
-        dataset_id="hinge_dataset_001",
-        promoted_at="2026-03-18T00:01:00Z",
-    )
-    assert promoted["record_id"] == "rec_123"
-    assert repo.layout.record_dataset_entry_path("rec_123").exists()
-    assert datasets.validate() == []
-    manifest = datasets.write_dataset_manifest()
-    assert manifest["generated"] == [{"name": "hinge_dataset_001", "record_id": "rec_123"}]
-    assert repo.layout.dataset_manifest_path().exists()
-
-    report = CompileReport(
-        schema_version=1,
-        record_id="rec_123",
-        status="success",
-        urdf_path="model.urdf",
-        warnings=[],
-    )
-    materialize = MaterializationStore(repo)
-    materialize.write_compile_report("rec_123", report)
-    assert repo.layout.record_materialization_compile_report_path("rec_123").exists()
-
-    provenance = Provenance(
-        schema_version=2,
-        record_id="rec_123",
-        generation=GenerationSettings(provider="openai", model_id="gpt-5.4", thinking_level="high"),
-        prompting=PromptingSettings(
-            system_prompt_file="designer_system_prompt_openai.txt",
-            system_prompt_sha256="abc",
-        ),
-        sdk=SdkSettings(sdk_package="sdk", sdk_version="workspace", sdk_fingerprint="sdk-hash"),
-        environment=EnvironmentSettings(python_version="3.11.11", platform="darwin-arm64"),
-        run_summary=RunSummary(final_status="success"),
-    )
-    record_store.write_provenance("rec_123", provenance)
-    assert (repo.layout.record_dir("rec_123") / "provenance.json").exists()
-    assert categories.load("hinges") is not None
-
-    status = materialize.asset_status("rec_123")
-    assert not status.meshes_present
-    assert not status.glb_present
-    assert not status.viewer_present
-    assert status.assets_dir == repo.layout.record_materialization_assets_dir("rec_123")
-
-    fingerprint = build_materialization_fingerprint(
-        model_py_sha256="py-hash",
-        sdk_fingerprint="sdk-hash",
-    )
-    assert len(fingerprint) == 64
-
-    runs = RunStore(repo)
-    runs.write_run(
-        RunRecord(
-            schema_version=1,
-            run_id="run_123",
-            run_mode="workbench_single",
-            collection="workbench",
-            created_at="2026-03-18T00:00:00Z",
-            updated_at="2026-03-18T00:00:01Z",
-            provider="openai",
-            model_id="gpt-5.4",
-            sdk_package="sdk",
-            status="success",
-            prompt_count=1,
-        )
-    )
-    assert repo.layout.run_metadata_path("run_123").exists()
-    runs.append_result("run_123", {"record_id": "rec_123", "status": "success"})
-    results = repo.layout.run_results_path("run_123").read_text(encoding="utf-8")
-    assert '"record_id": "rec_123"' in results
-    assert categories.delete("hinges")
-    assert not repo.layout.category_dir("hinges").exists()
 
 
-def test_workbench_records_write_local_gitignore_marker(tmp_path: Path) -> None:
+def _write_active_files(repo: StorageRepo, record_id: str) -> None:
+    revision_dir = repo.layout.record_revision_dir(record_id, INITIAL_REVISION_ID)
+    revision_dir.mkdir(parents=True, exist_ok=True)
+    (revision_dir / "prompt.txt").write_text("make a lamp", encoding="utf-8")
+    (revision_dir / "model.py").write_text("object_model = None\n", encoding="utf-8")
+    repo.write_json(revision_dir / "provenance.json", {"schema_version": 2, "record_id": record_id})
+
+
+def test_storage_repo_json_round_trip(tmp_path: Path) -> None:
     repo = StorageRepo(tmp_path)
     repo.ensure_layout()
 
-    RecordStore(repo).write_record(
-        Record(
-            schema_version=2,
-            record_id="rec_workbench",
-            created_at="2026-03-18T00:00:00Z",
-            updated_at="2026-03-18T00:00:00Z",
-            rating=None,
-            kind="generated_model",
-            prompt_kind="single_prompt",
-            category_slug="hinges",
-            source=SourceRef(run_id="run_123"),
-            sdk_package="sdk",
-            provider="openai",
-            model_id="gpt-5.4",
-            display=DisplayMetadata(title="Workbench", prompt_preview="workbench"),
-            artifacts=RecordArtifacts(
-                prompt_txt="prompt.txt",
-                prompt_series_json=None,
-                model_py="model.py",
-                provenance_json="provenance.json",
-                cost_json="cost.json",
-            ),
-            collections=["workbench"],
-        )
-    )
+    path = repo.layout.data_root / "local.json"
+    repo.write_json(path, {"ok": True})
 
-    marker = repo.layout.record_dir("rec_workbench") / ".gitignore"
-    assert marker.exists()
-    assert "*" in marker.read_text(encoding="utf-8")
-
-    DatasetStore(repo).promote_record(
-        record_id="rec_workbench",
-        dataset_id="ds_hinges_workbench",
-        category_slug="hinges",
-        promoted_at="2026-03-18T00:01:00Z",
-    )
-    assert not marker.exists()
+    assert repo.read_json(path) == {"ok": True}
 
 
-def test_run_store_upsert_result_compacts_latest_rows(tmp_path: Path) -> None:
+def test_record_store_write_upserts_manifest(tmp_path: Path) -> None:
     repo = StorageRepo(tmp_path)
     repo.ensure_layout()
-    runs = RunStore(repo)
-    runs.write_run(
-        RunRecord(
-            schema_version=1,
-            run_id="run_123",
-            run_mode="dataset_batch",
-            collection="dataset",
-            created_at="2026-03-18T00:00:00Z",
-            updated_at="2026-03-18T00:00:01Z",
-            provider="openai",
-            model_id="gpt-5.4",
-            sdk_package="sdk",
-            status="running",
-            prompt_count=2,
-        )
-    )
+    _write_active_files(repo, "rec_lamp")
 
-    runs.upsert_result("run_123", {"row_id": "row_a", "status": "running"}, key="row_id")
-    runs.upsert_result("run_123", {"row_id": "row_b", "status": "running"}, key="row_id")
-    runs.upsert_result("run_123", {"row_id": "row_a", "status": "success"}, key="row_id")
+    RecordStore(repo).write_record(_record("rec_lamp"))
 
-    raw_rows = [
-        json.loads(line)
-        for line in repo.layout.run_results_path("run_123").read_text(encoding="utf-8").splitlines()
-    ]
-    assert [row["status"] for row in raw_rows] == ["running", "running", "success"]
-
-    latest_rows = runs.read_latest_results("run_123", key="row_id")
-    assert latest_rows == [
-        {"row_id": "row_a", "status": "success"},
-        {"row_id": "row_b", "status": "running"},
-    ]
-
-    runs.compact_results("run_123", key="row_id")
-    compacted_rows = [
-        json.loads(line)
-        for line in repo.layout.run_results_path("run_123").read_text(encoding="utf-8").splitlines()
-    ]
-    assert compacted_rows == latest_rows
+    rows = load_manifest(repo)
+    assert len(rows) == 1
+    assert rows[0]["record_id"] == "rec_lamp"
+    assert rows[0]["title"] == "Lamp"
 
 
-def test_dataset_store_updates_cached_dataset_id_index_after_promote(tmp_path: Path) -> None:
+def test_record_store_delete_removes_record_and_manifest_row(tmp_path: Path) -> None:
     repo = StorageRepo(tmp_path)
     repo.ensure_layout()
-    datasets = DatasetStore(repo)
-    record_store = RecordStore(repo)
+    _write_active_files(repo, "rec_lamp")
+    store = RecordStore(repo)
+    store.write_record(_record("rec_lamp"))
 
-    first_record = Record(
-        schema_version=2,
-        record_id="rec_existing",
-        created_at="2026-03-18T00:00:00Z",
-        updated_at="2026-03-18T00:00:00Z",
-        rating=None,
-        kind="generated_model",
-        prompt_kind="single_prompt",
-        category_slug="hinges",
-        source=SourceRef(run_id="run_123", prompt_index=1),
-        sdk_package="sdk",
-        provider="openai",
-        model_id="gpt-5.4",
-        display=DisplayMetadata(title="Existing", prompt_preview="existing"),
-        artifacts=RecordArtifacts(
-            prompt_txt="prompt.txt",
-            prompt_series_json=None,
-            model_py="model.py",
-            provenance_json="provenance.json",
-            cost_json="cost.json",
-        ),
-    )
-    second_record = Record(
-        schema_version=2,
-        record_id="rec_new",
-        created_at="2026-03-18T00:00:00Z",
-        updated_at="2026-03-18T00:00:00Z",
-        rating=None,
-        kind="generated_model",
-        prompt_kind="single_prompt",
-        category_slug="hinges",
-        source=SourceRef(run_id="run_123", prompt_index=2),
-        sdk_package="sdk",
-        provider="openai",
-        model_id="gpt-5.4",
-        display=DisplayMetadata(title="New", prompt_preview="new"),
-        artifacts=RecordArtifacts(
-            prompt_txt="prompt.txt",
-            prompt_series_json=None,
-            model_py="model.py",
-            provenance_json="provenance.json",
-            cost_json="cost.json",
-        ),
-    )
-    record_store.write_record(first_record)
-    record_store.write_record(second_record)
-    datasets.promote_record(
-        record_id="rec_existing",
-        dataset_id="ds_hinges_existing",
-        category_slug="hinges",
-        promoted_at="2026-03-18T00:00:00Z",
-    )
+    assert store.delete_record("rec_lamp") is True
 
-    assert datasets.find_record_id_by_dataset_id("ds_hinges_existing") == "rec_existing"
-    datasets.promote_record(
-        record_id="rec_new",
-        dataset_id="ds_hinges_new",
-        category_slug="hinges",
-        promoted_at="2026-03-18T00:00:01Z",
-    )
-    assert datasets.find_record_id_by_dataset_id("ds_hinges_new") == "rec_new"
-
-
-def test_dataset_manifest_does_not_rescan_records_index_for_each_record_dir(
-    tmp_path: Path,
-    monkeypatch,
-) -> None:
-    repo = StorageRepo(tmp_path)
-    repo.ensure_layout()
-    index_rows = [
-        {
-            "schema_version": 1,
-            "record_id": f"rec_indexed_{index}",
-            "dataset_id": f"ds_indexed_{index}",
-            "category_slug": "hinges",
-            "promoted_at": "2026-03-18T00:01:00Z",
-        }
-        for index in range(3)
-    ]
-    repo.write_text(
-        repo.layout.records_index_path,
-        "".join(json.dumps(row) + "\n" for row in index_rows),
-    )
-    for index in range(5):
-        repo.layout.record_dir(f"rec_unhydrated_{index}").mkdir(parents=True)
-
-    from storage import datasets as datasets_module
-
-    calls = 0
-    original_load_records_index = datasets_module.load_records_index
-
-    def counting_load_records_index(repo: StorageRepo):
-        nonlocal calls
-        calls += 1
-        return original_load_records_index(repo)
-
-    monkeypatch.setattr(datasets_module, "load_records_index", counting_load_records_index)
-
-    manifest = DatasetStore(repo).write_dataset_manifest()
-
-    assert manifest["generated"] == [
-        {"name": "ds_indexed_0", "record_id": "rec_indexed_0"},
-        {"name": "ds_indexed_1", "record_id": "rec_indexed_1"},
-        {"name": "ds_indexed_2", "record_id": "rec_indexed_2"},
-    ]
-    assert calls == 1
+    assert not repo.layout.record_dir("rec_lamp").exists()
+    assert load_manifest(repo) == []

@@ -7,10 +7,11 @@ from pathlib import Path
 @dataclass(slots=True, frozen=True)
 class StorageLayout:
     root: Path
+    external_data_root: Path | None = None
 
     @property
     def data_root(self) -> Path:
-        return self.root / "data"
+        return self.external_data_root or self.root / "data"
 
     @property
     def supercategories_path(self) -> Path:
@@ -25,16 +26,12 @@ class StorageLayout:
         return self.data_root / "system_prompts"
 
     @property
-    def batch_specs_root(self) -> Path:
-        return self.data_root / "batch_specs"
-
-    @property
     def records_root(self) -> Path:
         return self.data_root / "records"
 
     @property
-    def records_index_path(self) -> Path:
-        return self.data_root / "records_index.jsonl"
+    def records_manifest_path(self) -> Path:
+        return self.data_root / "records_manifest.jsonl"
 
     @property
     def cache_root(self) -> Path:
@@ -73,35 +70,11 @@ class StorageLayout:
     def system_prompt_path(self, prompt_sha256: str) -> Path:
         return self.system_prompts_root / f"{prompt_sha256}.txt"
 
-    def prompt_batches_dir(self, category_slug: str) -> Path:
-        return self.category_dir(category_slug) / "prompt_batches"
-
-    def prompt_batch_path(self, category_slug: str, batch_id: str) -> Path:
-        return self.prompt_batches_dir(category_slug) / f"{batch_id}.txt"
-
-    def batch_spec_path(self, batch_id: str) -> Path:
-        return self.batch_specs_root / f"{batch_id}.csv"
-
-    def dataset_manifest_path(self) -> Path:
-        return self.manifests_root / "dataset.json"
-
-    def search_index_path(self) -> Path:
-        return self.cache_root / "search_index.json"
-
     def record_dir(self, record_id: str) -> Path:
         return self.records_root / record_id
 
     def record_metadata_path(self, record_id: str) -> Path:
         return self.record_dir(record_id) / "record.json"
-
-    def record_collections_dir(self, record_id: str) -> Path:
-        return self.record_dir(record_id) / "collections"
-
-    def record_dataset_entry_path(self, record_id: str) -> Path:
-        return self.record_collections_dir(record_id) / "dataset.json"
-
-    def record_workbench_entry_path(self, record_id: str) -> Path:
-        return self.record_collections_dir(record_id) / "workbench.json"
 
     def record_revisions_dir(self, record_id: str) -> Path:
         return self.record_dir(record_id) / "revisions"
@@ -203,7 +176,6 @@ class StorageLayout:
         for path in (
             self.categories_root,
             self.system_prompts_root,
-            self.batch_specs_root,
             self.records_root,
             self.manifests_root,
             self.trajectory_unroll_records_root,

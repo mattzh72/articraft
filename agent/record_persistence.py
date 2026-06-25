@@ -1,5 +1,5 @@
 """
-Persistence helpers for workbench records, generated records, and materialized assets.
+Persistence helpers for local library records and materialized assets.
 """
 
 from __future__ import annotations
@@ -35,8 +35,6 @@ from agent.run_context import (
 )
 from agent.tools import resolve_image_path as _resolve_image_path
 from articraft.values import ProviderName
-from storage.collections import CollectionStore
-from storage.datasets import DatasetStore
 from storage.materialize import (
     MaterializationStore,
     build_compile_fingerprint_from_inputs,
@@ -240,18 +238,6 @@ def _normalize_prompt_kind(value: Any) -> str:
     return prompt_kind
 
 
-def _normalize_collection_names(values: Any, fallback: str) -> list[str]:
-    normalized: list[str] = []
-    if isinstance(values, list):
-        for value in values:
-            text = str(value or "").strip()
-            if text in {"dataset", "workbench"} and text not in normalized:
-                normalized.append(text)
-    if not normalized:
-        normalized.append(fallback)
-    return normalized
-
-
 def _build_record_display(
     *,
     existing_record: dict | None,
@@ -310,22 +296,11 @@ def _resolve_input_image_for_record(
     return _resolve_image_path(str(files[0]), provider=provider)
 
 
-def _load_workbench_entry(collections: CollectionStore, *, record_id: str) -> dict | None:
-    workbench = collections.load_workbench() or {}
-    entries = workbench.get("entries", []) if isinstance(workbench, dict) else []
-    for entry in entries:
-        if isinstance(entry, dict) and str(entry.get("record_id") or "") == record_id:
-            return entry
-    return None
-
-
 @dataclass(slots=True, frozen=True)
 class SuccessRecordWrite:
     repo_root: Path
     storage_repo: StorageRepo
     record_store: RecordStore
-    collections: CollectionStore
-    datasets: DatasetStore
     context: SingleRunContext
     prompt_text: str
     display_prompt: str
@@ -347,17 +322,9 @@ class SuccessRecordWrite:
     compile_attempt_count: int
     label: str | None
     tags: list[str]
-    collection: str
     category_slug: str | None
-    dataset_id: str | None
-    prompt_batch_id: str | None = None
-    batch_spec_id: str | None = None
-    row_id: str | None = None
     prompt_index: int | None = None
     existing_record: dict | None = None
-    workbench_entry: dict | None = None
-    dataset_entry: dict | None = None
-    update_dataset_manifest: bool = True
     record_author: str | None = None
     lineage: dict[str, Any] | None = None
     revision_parent: dict[str, str] | None = None
@@ -365,10 +332,11 @@ class SuccessRecordWrite:
     inherited_inputs: list[dict[str, str]] | None = None
 
 
-def create_workbench_draft_record(
+def create_draft_record(
     *,
     repo_root: Path,
     prompt_text: str,
+    data_root: Path | None = None,
     image_path: Path | None = None,
     provider: str = "openai",
     model_id: str | None = None,
@@ -390,11 +358,10 @@ def create_workbench_draft_record(
         raise ValueError("Prompt is required.")
 
     resolved_repo_root = repo_root.resolve()
-    storage_repo = StorageRepo(resolved_repo_root)
+    storage_repo = StorageRepo(resolved_repo_root, data_root=data_root)
     storage_repo.ensure_layout()
     record_author = resolve_record_author_func(resolved_repo_root)
     record_store = RecordStore(storage_repo)
-    collections = CollectionStore(storage_repo)
 
     context = _build_single_run_context(
         repo_root=resolved_repo_root,
@@ -535,6 +502,8 @@ def create_workbench_draft_record(
         sdk_package=sdk_package,
         provider=selected_provider,
         model_id=selected_model_id,
+        label=label,
+        tags=list(tags or []),
         display=DisplayMetadata(
             title=_display_title(normalized_prompt, label=label),
             prompt_preview=_prompt_preview(normalized_prompt),
@@ -552,7 +521,6 @@ def create_workbench_draft_record(
             prompt_sha256=prompt_sha,
             model_py_sha256=model_py_sha,
         ),
-        collections=["workbench"],
         active_revision_id=context.revision_id,
         lineage={
             "origin_record_id": context.record_id,
@@ -572,12 +540,6 @@ def create_workbench_draft_record(
         author=record_author,
     )
     record_store.write_record(record)
-    collections.append_workbench_entry(
-        record_id=context.record_id,
-        added_at=context.created_at,
-        label=label,
-        tags=list(tags or []),
-    )
     return context.record_dir
 
 
@@ -593,8 +555,6 @@ def write_success_record(
     repo_root = request.repo_root
     storage_repo = request.storage_repo
     record_store = request.record_store
-    collections = request.collections
-    datasets = request.datasets
     context = request.context
     prompt_text = request.prompt_text
     display_prompt = request.display_prompt
@@ -616,17 +576,9 @@ def write_success_record(
     compile_attempt_count = request.compile_attempt_count
     label = request.label
     tags = request.tags
-    collection = request.collection
     category_slug = request.category_slug
-    dataset_id = request.dataset_id
-    prompt_batch_id = request.prompt_batch_id
-    batch_spec_id = request.batch_spec_id
-    row_id = request.row_id
     prompt_index = request.prompt_index
     existing_record = request.existing_record
-    workbench_entry = request.workbench_entry
-    dataset_entry = request.dataset_entry
-    update_dataset_manifest = request.update_dataset_manifest
     record_author = request.record_author
     lineage = request.lineage
     revision_parent = request.revision_parent
@@ -763,9 +715,6 @@ def write_success_record(
 
     source_payload = SourceRef(
         run_id=context.run_id,
-        prompt_batch_id=prompt_batch_id,
-        batch_spec_id=batch_spec_id,
-        row_id=row_id,
         prompt_index=prompt_index,
     ).to_dict()
     generation_payload = GenerationSettings(
@@ -849,14 +798,13 @@ def write_success_record(
         category_slug=category_slug,
         source=SourceRef(
             run_id=context.run_id,
-            prompt_batch_id=prompt_batch_id,
-            batch_spec_id=batch_spec_id,
-            row_id=row_id,
             prompt_index=prompt_index,
         ),
         sdk_package=sdk_package,
         provider=provider,
         model_id=model_id,
+        label=label,
+        tags=tags,
         display=_build_record_display(
             existing_record=existing_record,
             display_prompt=display_prompt,
@@ -869,11 +817,6 @@ def write_success_record(
         hashes=RecordHashes(
             prompt_sha256=prompt_sha,
             model_py_sha256=model_py_sha,
-        ),
-        collections=(
-            _normalize_collection_names(existing_record.get("collections"), collection)
-            if isinstance(existing_record, dict)
-            else [collection]
         ),
         active_revision_id=revision_id,
         lineage=lineage,
@@ -902,46 +845,4 @@ def write_success_record(
         context.record_id,
         required=("model_py", "provenance_json"),
     )
-
-    if workbench_entry is not None:
-        collections.upsert_workbench_entry(
-            record_id=context.record_id,
-            added_at=_first_string(workbench_entry.get("added_at"), _utc_now()),
-            label=str(workbench_entry.get("label") or "").strip() or None,
-            tags=[
-                str(tag)
-                for tag in (
-                    workbench_entry.get("tags", []) if isinstance(workbench_entry, dict) else []
-                )
-            ],
-            archived=bool(workbench_entry.get("archived", False)),
-        )
-    elif collection == "workbench":
-        collections.append_workbench_entry(
-            record_id=context.record_id,
-            added_at=_utc_now(),
-            label=label,
-            tags=tags,
-        )
-
-    if dataset_entry is not None:
-        storage_repo.write_json(
-            storage_repo.layout.record_dataset_entry_path(context.record_id),
-            dataset_entry,
-        )
-        if update_dataset_manifest:
-            datasets.write_dataset_manifest()
-    elif collection == "dataset":
-        if not dataset_id:
-            raise ValueError("dataset_id is required when collection=dataset")
-        datasets.promote_record(
-            record_id=context.record_id,
-            dataset_id=dataset_id,
-            category_slug=category_slug,
-            promoted_at=_utc_now(),
-        )
-        if update_dataset_manifest:
-            datasets.write_dataset_manifest()
-    elif collection != "workbench":
-        raise ValueError(f"Unsupported collection: {collection}")
     return context.record_dir

@@ -6,11 +6,8 @@ export function findRecordInBootstrap(
 ): RecordSummary | null {
   if (!bootstrap) return null;
 
-  for (const entry of bootstrap.workbench_entries) {
-    if (entry.record_id === recordId && entry.record) return entry.record;
-  }
-  for (const entry of bootstrap.dataset_entries) {
-    if (entry.record_id === recordId && entry.record) return entry.record;
+  for (const record of bootstrap.library_records) {
+    if (record.record_id === recordId) return record;
   }
   return null;
 }

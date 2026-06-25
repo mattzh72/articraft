@@ -166,7 +166,6 @@ def canonical_record_paths(repo: StorageRepo, record_id: str) -> dict[str, Path]
         "cost_json": active_cost_path(repo, record_id),
         "inputs_dir": active_inputs_dir(repo, record_id),
         "traces_dir": active_traces_dir(repo, record_id),
-        "dataset_entry_json": repo.layout.record_dataset_entry_path(record_id),
     }
 
 

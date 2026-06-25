@@ -100,7 +100,7 @@ class IndexedExampleDocument:
 
 
 @dataclass(slots=True, frozen=True)
-class ExampleSearchIndex:
+class ExampleIndex:
     documents: tuple[IndexedExampleDocument, ...]
     retriever: bm25s.BM25
 
@@ -452,7 +452,7 @@ def load_example_documents(sdk_package: str) -> tuple[ExampleDocument, ...]:
 
 
 @lru_cache(maxsize=8)
-def load_example_search_index(sdk_package: str) -> ExampleSearchIndex:
+def load_example_search_index(sdk_package: str) -> ExampleIndex:
     documents = tuple(_index_document(doc) for doc in load_example_documents(sdk_package))
     retriever = bm25s.BM25()
     if documents:
@@ -460,7 +460,7 @@ def load_example_search_index(sdk_package: str) -> ExampleSearchIndex:
             [list(document.weighted_tokens) for document in documents],
             show_progress=False,
         )
-    return ExampleSearchIndex(documents=documents, retriever=retriever)
+    return ExampleIndex(documents=documents, retriever=retriever)
 
 
 def _collect_candidate_match(

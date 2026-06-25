@@ -1,11 +1,11 @@
 ---
-name: articraft-dataset
-description: Use when working with Articraft dataset categories, batch specs, batch runs, dataset validation, manifests, or contribution preparation.
+name: articraft-library
+description: Use when working with Articraft local library records, categories, manifest rebuilds, validation, or data-folder maintenance.
 ---
 
-# Articraft Dataset
+# Articraft Local Library
 
-Use this skill when the user asks about Articraft dataset generation, batch CSVs, categories, manifest updates, dataset validation, or contribution workflow.
+Use this skill when the user asks about Articraft record authoring, categories, local data validation, manifest updates, or sharing a data folder.
 
 ## Commands
 
@@ -15,84 +15,51 @@ Check current state:
 
 ```bash
 uv run articraft status
-uv run articraft dataset status
+uv run articraft library status
 ```
 
-Validate checked-in data:
+Validate a local data folder:
 
 ```bash
-uv run articraft data check
-uv run articraft dataset validate
+uv run articraft library check --require-records
 ```
 
-Build the manifest:
+Rebuild the manifest:
 
 ```bash
-uv run articraft dataset manifest
+uv run articraft library rebuild-manifest
 ```
 
-## Batch Specs
-
-Batch specs live under:
-
-```text
-data/batch_specs/
-```
-
-Create a new batch CSV with the canonical header:
+List records:
 
 ```bash
-uv run articraft dataset batch-new <batch-id>
+uv run articraft library list
 ```
 
-Required columns are:
-
-```text
-category_slug,prompt,provider,model_id,thinking_level,max_turns
-```
-
-`category_title` is required for new categories. Recommended optional columns are `row_id`, `max_cost_usd`, `label`, and `sdk_package`. Use `max_turns=100` by default unless the user requests another value. Leave per-row cost caps blank unless explicitly requested.
-
-Supported providers:
-
-```text
-openai, gemini, anthropic, dashscope, deepseek, openrouter, codex-cli
-```
-
-Use `codex-cli` when the user wants no-key Codex generation while keeping Articraft's internal harness loop. For `codex-cli`, set an explicit Codex model in `model_id`; do not use the legacy `codex-cli-default` sentinel in new batch specs.
-
-Supported thinking levels:
-
-```text
-low, med, high, xhigh
-```
-
-`image_path` is intentionally unsupported in batch CSV v1.
-
-## Running Batches
-
-Run a tracked batch:
+Assign a category:
 
 ```bash
-uv run articraft dataset batch data/batch_specs/<batch-id>.csv --row-concurrency 8 --subprocess-concurrency auto
+uv run articraft library set-category <record-id> <category_slug>
 ```
 
-Resume the latest prior run for the same spec:
+## Data Root
+
+The default data root is the gitignored `<repo-root>/data`. To use another local/exportable folder, pass `--data-dir` or set:
 
 ```bash
-uv run articraft dataset batch data/batch_specs/<batch-id>.csv --row-concurrency 8 --subprocess-concurrency auto --resume
+export ARTICRAFT_DATA_DIR=/path/to/articraft-data
 ```
 
-Use stable explicit `row_id` values when authoring specs meant to be resumed or reviewed.
+The data root contains top-level `records/`, `categories/`, `records_manifest.jsonl`, `system_prompts/`, and `cache/`.
 
 ## Contribution Rules
 
-Dataset contribution work should follow `CONTRIBUTING.md` and `EXTERNAL_AGENT_DATA.md`. Workbench records are local drafts. Only records assigned to a dataset category should be prepared for commit.
+Data authoring work should follow `CONTRIBUTING.md` and `EXTERNAL_AGENT_DATA.md`.
 
-Before a data PR, run the relevant checks and report exact commands:
+Before sharing a data folder, run the relevant checks and report exact commands:
 
 ```bash
-uv run articraft data check
+uv run articraft library check --require-records
 just smoke-tests
 ```
 

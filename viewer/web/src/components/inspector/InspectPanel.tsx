@@ -9,7 +9,7 @@ import {
   saveRecordRating,
   saveRecordSecondaryRating,
 } from "@/lib/api";
-import { formatCost } from "@/lib/dashboard-stats";
+import { formatCost } from "@/lib/viewer-format";
 import { buildRecordPath, buildRepoPath, copyTextToClipboard } from "@/lib/record-path";
 import { findStagingEntryInBootstrap } from "@/lib/record-summary";
 import { useViewer, useViewerDispatch } from "@/lib/viewer-context";
@@ -369,7 +369,7 @@ export function InspectPanel({
   const record = selection?.kind === "record" ? selectedRecordSummary : null;
   const joints = useMemo(() => urdfSpec?.joints ?? [], [urdfSpec?.joints]);
   const movableJointCount = joints.filter(isMovableJoint).length;
-  const recordPath = bootstrap && selectedRecordId ? buildRecordPath(bootstrap.repo_root, selectedRecordId) : null;
+  const recordPath = bootstrap && selectedRecordId ? buildRecordPath(bootstrap.data_root, selectedRecordId) : null;
   const stagingPath =
     bootstrap && stagingEntry ? buildRepoPath(bootstrap.repo_root, stagingEntry.staging_dir) : (stagingEntry?.staging_dir ?? null);
   const stagingSelectionKey =

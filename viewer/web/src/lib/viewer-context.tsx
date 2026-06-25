@@ -11,8 +11,6 @@ import { useQuery } from "@tanstack/react-query";
 
 import { HttpError } from "@/lib/api";
 import { normalizeAgentHarnessFilters } from "@/lib/agent-harness";
-import { isRunActive } from "@/lib/dashboard-stats";
-import { useRoute } from "@/lib/useRoute";
 import {
   bootstrapQueryOptions,
   recordSummaryQueryOptions,
@@ -25,8 +23,7 @@ import type {
   RatingFilter,
   RatingFilterValue,
   RecordSummary,
-  SourceFilter,
-  TimeFilter,
+  RunSummary,
   TimeFilterPoint,
   ViewerAction,
   ViewerBootstrap,
@@ -40,7 +37,6 @@ const URL_QUERY_PARAMS = {
   browser: "browser",
   tab: "tab",
   search: "q",
-  source: "source",
   timeFrom: "time_from",
   timeTo: "time_to",
   model: "model",
@@ -56,12 +52,9 @@ const URL_QUERY_PARAMS = {
 } as const;
 
 const INSPECTOR_TABS = ["inspect", "render", "code", "metadata"] as const satisfies readonly InspectorTab[];
-const BROWSER_TABS = ["workbench", "dataset", "staging"] as const satisfies readonly BrowserTab[];
-const SOURCE_FILTERS = ["workbench", "dataset"] as const satisfies readonly SourceFilter[];
+const BROWSER_TABS = ["library", "staging"] as const satisfies readonly BrowserTab[];
 const TIME_FILTER_POINTS = new Set<string>(["1y", "180d", "90d", "60d", "30d", "14d", "7d", "3d", "24h", "12h", "6h", "1h"]);
 const RATING_FILTERS = ["1", "2", "3", "4", "5", "unrated"] as const satisfies readonly RatingFilterValue[];
-const DEFAULT_DATASET_RATING_FILTER = ["5", "unrated"] as const satisfies readonly RatingFilterValue[];
-
 const STAGING_POLL_INTERVAL_MS = 3000;
 
 function computeEffectiveRating(
@@ -100,8 +93,8 @@ const defaultViewerUrlState: ViewerUrlState = {
   selectedRecordId: null,
   selectedInspectorTab: "inspect",
   searchQuery: "",
-  browserTab: "workbench",
-  sourceFilter: "workbench",
+  browserTab: "library",
+  sourceFilter: "library",
   timeFilter: { oldest: null, newest: null },
   modelFilter: null,
   sdkFilter: null,
@@ -115,8 +108,7 @@ const defaultViewerUrlState: ViewerUrlState = {
 };
 
 function selectionToSelectedRecordId(selection: ViewerSelection | null): string | null {
-  if (!selection) return null;
-  return selection.kind === "record" ? selection.recordId : null;
+  return selection?.kind === "record" ? selection.recordId : null;
 }
 
 function parseEnumParam<const T extends readonly string[]>(
@@ -132,37 +124,24 @@ function parseCostBoundParam(value: string | null): number | null {
   if (!value) {
     return null;
   }
-
   const parsed = Number(value);
-  if (!Number.isFinite(parsed) || parsed < 0) {
-    return null;
-  }
-
-  return parsed;
+  return Number.isFinite(parsed) && parsed >= 0 ? parsed : null;
 }
 
 function normalizeCostFilter(costFilter: CostFilter): CostFilter {
-  const min = costFilter.min;
-  const max = costFilter.max;
-
-  if (min == null && max == null) {
-    return { min: null, max: null };
+  if (costFilter.min != null && costFilter.max != null && costFilter.min > costFilter.max) {
+    return { min: costFilter.max, max: costFilter.min };
   }
-  if (min != null && max != null && min > max) {
-    return { min: max, max: min };
-  }
-  return { min, max };
+  return costFilter;
 }
 
 function parseStagingParam(value: string | null): ViewerSelection | null {
   const normalizedValue = value?.trim() ?? "";
   if (!normalizedValue) return null;
-  const parts = normalizedValue.split(":");
-  if (parts.length < 2) return null;
-  const runId = parts[0]?.trim() ?? "";
-  const recordId = parts.slice(1).join(":").trim();
+  const [runId, ...recordParts] = normalizedValue.split(":");
+  const recordId = recordParts.join(":").trim();
   if (!runId || !recordId) return null;
-  return { kind: "staging", runId, recordId };
+  return { kind: "staging", runId: runId.trim(), recordId };
 }
 
 function normalizeOptionalQueryParam(value: string | null): string | null {
@@ -187,28 +166,6 @@ function normalizeRatingFilter(values: string[]): RatingFilter {
   );
 }
 
-function datasetDefaultRatingFilter(): RatingFilter {
-  return [...DEFAULT_DATASET_RATING_FILTER];
-}
-
-function sameRatingFilter(left: RatingFilter, right: RatingFilter): boolean {
-  if (left.length !== right.length) {
-    return false;
-  }
-  const normalizedLeft = new Set(left);
-  return right.every((value) => normalizedLeft.has(value));
-}
-
-function ratingFilterForBrowserTab(tab: BrowserTab, current: RatingFilter): RatingFilter {
-  if (tab === "dataset" && current.length === 0) {
-    return datasetDefaultRatingFilter();
-  }
-  if (tab === "workbench" && sameRatingFilter(current, datasetDefaultRatingFilter())) {
-    return [];
-  }
-  return current;
-}
-
 function readViewerUrlState(): ViewerUrlState {
   if (typeof window === "undefined") {
     return defaultViewerUrlState;
@@ -218,7 +175,6 @@ function readViewerUrlState(): ViewerUrlState {
     const params = new URLSearchParams(window.location.search);
     const rawRecordId = normalizeOptionalQueryParam(params.get(URL_QUERY_PARAMS.record));
     const rawStaging = normalizeOptionalQueryParam(params.get(URL_QUERY_PARAMS.staging));
-
     let selection: ViewerSelection | null = null;
     if (rawStaging) {
       selection = parseStagingParam(rawStaging);
@@ -227,79 +183,47 @@ function readViewerUrlState(): ViewerUrlState {
       selection = { kind: "record", recordId: rawRecordId };
     }
 
-    const selectedRecordId = selectionToSelectedRecordId(selection);
-    const selectedInspectorTab = parseEnumParam(
-      params.get(URL_QUERY_PARAMS.tab),
-      INSPECTOR_TABS,
-      defaultViewerUrlState.selectedInspectorTab,
-    );
-    const searchQuery = params.get(URL_QUERY_PARAMS.search) ?? defaultViewerUrlState.searchQuery;
-    const parsedSourceFilter = parseEnumParam(
-      params.get(URL_QUERY_PARAMS.source),
-      SOURCE_FILTERS,
-      defaultViewerUrlState.sourceFilter,
-    );
-    const parsedBrowserTab = parseEnumParam(
+    const browserTab = parseEnumParam(
       params.get(URL_QUERY_PARAMS.browser),
       BROWSER_TABS,
-      selection?.kind === "staging" ? "staging" : parsedSourceFilter,
+      selection?.kind === "staging" ? "staging" : "library",
     );
-    const sourceFilter =
-      parsedBrowserTab === "staging" ? parsedSourceFilter : parsedBrowserTab;
-    const timeFilter: TimeFilter = {
-      oldest: parseTimeFilterPoint(params.get(URL_QUERY_PARAMS.timeFrom)),
-      newest: parseTimeFilterPoint(params.get(URL_QUERY_PARAMS.timeTo)),
-    };
-    const modelFilter = normalizeOptionalQueryParam(params.get(URL_QUERY_PARAMS.model));
-    const sdkFilter = normalizeOptionalQueryParam(params.get(URL_QUERY_PARAMS.sdk));
-    const agentHarnessFilters = normalizeAgentHarnessFilters(
-      params.getAll(URL_QUERY_PARAMS.agentHarness),
-    );
-    const authorFilters = Array.from(
-      new Set(
-        params
-          .getAll(URL_QUERY_PARAMS.author)
-          .map((value) => value.trim())
-          .filter((value) => value.length > 0),
-      ),
-    );
-    const categoryFilters = Array.from(
-      new Set(
-        params
-          .getAll(URL_QUERY_PARAMS.category)
-          .map((value) => value.trim())
-          .filter((value) => value.length > 0),
-      ),
-    );
-    const costFilter = normalizeCostFilter({
-      min: parseCostBoundParam(params.get(URL_QUERY_PARAMS.costMin)),
-      max: parseCostBoundParam(params.get(URL_QUERY_PARAMS.costMax)),
-    });
-    const ratingFilter = params.has(URL_QUERY_PARAMS.rating)
-      ? normalizeRatingFilter(params.getAll(URL_QUERY_PARAMS.rating))
-      : parsedBrowserTab === "dataset"
-      ? datasetDefaultRatingFilter()
-      : [];
-    const secondaryRatingFilter = normalizeRatingFilter(params.getAll(URL_QUERY_PARAMS.secondaryRating));
-    const selectedRunId = normalizeOptionalQueryParam(params.get(URL_QUERY_PARAMS.run));
 
     return {
       selection,
-      selectedRecordId,
-      selectedInspectorTab,
-      searchQuery,
-      browserTab: parsedBrowserTab,
-      sourceFilter,
-      timeFilter,
-      modelFilter,
-      sdkFilter,
-      agentHarnessFilters,
-      authorFilters,
-      categoryFilters,
-      costFilter,
-      ratingFilter,
-      secondaryRatingFilter,
-      selectedRunId,
+      selectedRecordId: selectionToSelectedRecordId(selection),
+      selectedInspectorTab: parseEnumParam(
+        params.get(URL_QUERY_PARAMS.tab),
+        INSPECTOR_TABS,
+        defaultViewerUrlState.selectedInspectorTab,
+      ),
+      searchQuery: params.get(URL_QUERY_PARAMS.search) ?? "",
+      browserTab,
+      sourceFilter: "library",
+      timeFilter: {
+        oldest: parseTimeFilterPoint(params.get(URL_QUERY_PARAMS.timeFrom)),
+        newest: parseTimeFilterPoint(params.get(URL_QUERY_PARAMS.timeTo)),
+      },
+      modelFilter: normalizeOptionalQueryParam(params.get(URL_QUERY_PARAMS.model)),
+      sdkFilter: normalizeOptionalQueryParam(params.get(URL_QUERY_PARAMS.sdk)),
+      agentHarnessFilters: normalizeAgentHarnessFilters(
+        params.getAll(URL_QUERY_PARAMS.agentHarness),
+      ),
+      authorFilters: Array.from(
+        new Set(params.getAll(URL_QUERY_PARAMS.author).map((value) => value.trim()).filter(Boolean)),
+      ),
+      categoryFilters: Array.from(
+        new Set(params.getAll(URL_QUERY_PARAMS.category).map((value) => value.trim()).filter(Boolean)),
+      ),
+      costFilter: normalizeCostFilter({
+        min: parseCostBoundParam(params.get(URL_QUERY_PARAMS.costMin)),
+        max: parseCostBoundParam(params.get(URL_QUERY_PARAMS.costMax)),
+      }),
+      ratingFilter: normalizeRatingFilter(params.getAll(URL_QUERY_PARAMS.rating)),
+      secondaryRatingFilter: normalizeRatingFilter(
+        params.getAll(URL_QUERY_PARAMS.secondaryRating),
+      ),
+      selectedRunId: normalizeOptionalQueryParam(params.get(URL_QUERY_PARAMS.run)),
     };
   } catch {
     return defaultViewerUrlState;
@@ -312,8 +236,6 @@ function syncViewerStateToUrl(state: ViewerUrlState): void {
   }
 
   const url = new URL(window.location.href);
-
-  // Selection: record or staging param
   if (state.selection?.kind === "record") {
     url.searchParams.set(URL_QUERY_PARAMS.record, state.selection.recordId);
     url.searchParams.delete(URL_QUERY_PARAMS.staging);
@@ -325,7 +247,7 @@ function syncViewerStateToUrl(state: ViewerUrlState): void {
     url.searchParams.delete(URL_QUERY_PARAMS.staging);
   }
 
-  if (state.selectedInspectorTab !== defaultViewerUrlState.selectedInspectorTab) {
+  if (state.selectedInspectorTab !== "inspect") {
     url.searchParams.set(URL_QUERY_PARAMS.tab, state.selectedInspectorTab);
   } else {
     url.searchParams.delete(URL_QUERY_PARAMS.tab);
@@ -337,88 +259,51 @@ function syncViewerStateToUrl(state: ViewerUrlState): void {
     url.searchParams.delete(URL_QUERY_PARAMS.search);
   }
 
-  url.searchParams.set(URL_QUERY_PARAMS.browser, state.browserTab);
-
-  if (state.browserTab === "staging" && state.sourceFilter !== defaultViewerUrlState.sourceFilter) {
-    url.searchParams.set(URL_QUERY_PARAMS.source, state.sourceFilter);
+  if (state.browserTab === "staging") {
+    url.searchParams.set(URL_QUERY_PARAMS.browser, "staging");
   } else {
-    url.searchParams.delete(URL_QUERY_PARAMS.source);
+    url.searchParams.delete(URL_QUERY_PARAMS.browser);
   }
 
-  if (state.browserTab !== "staging" && state.timeFilter.oldest) {
-    url.searchParams.set(URL_QUERY_PARAMS.timeFrom, state.timeFilter.oldest);
-  } else {
-    url.searchParams.delete(URL_QUERY_PARAMS.timeFrom);
-  }
-  if (state.browserTab !== "staging" && state.timeFilter.newest) {
-    url.searchParams.set(URL_QUERY_PARAMS.timeTo, state.timeFilter.newest);
-  } else {
-    url.searchParams.delete(URL_QUERY_PARAMS.timeTo);
-  }
-
-  if (state.browserTab !== "staging" && state.modelFilter) {
-    url.searchParams.set(URL_QUERY_PARAMS.model, state.modelFilter);
-  } else {
-    url.searchParams.delete(URL_QUERY_PARAMS.model);
-  }
-
-  if (state.browserTab !== "staging" && state.sdkFilter) {
-    url.searchParams.set(URL_QUERY_PARAMS.sdk, state.sdkFilter);
-  } else {
-    url.searchParams.delete(URL_QUERY_PARAMS.sdk);
-  }
-
-  url.searchParams.delete(URL_QUERY_PARAMS.agentHarness);
-  if (state.browserTab !== "staging") {
-    for (const agentHarnessFilter of [...state.agentHarnessFilters].sort((left, right) => left.localeCompare(right))) {
-      url.searchParams.append(URL_QUERY_PARAMS.agentHarness, agentHarnessFilter);
+  const setSingle = (key: string, value: string | null) => {
+    if (value) {
+      url.searchParams.set(key, value);
+    } else {
+      url.searchParams.delete(key);
     }
-  }
+  };
 
-  url.searchParams.delete(URL_QUERY_PARAMS.author);
-  if (state.browserTab !== "staging" && state.sourceFilter === "dataset") {
-    for (const authorFilter of [...state.authorFilters].sort((left, right) => left.localeCompare(right))) {
-      url.searchParams.append(URL_QUERY_PARAMS.author, authorFilter);
-    }
-  }
+  setSingle(URL_QUERY_PARAMS.timeFrom, state.timeFilter.oldest);
+  setSingle(URL_QUERY_PARAMS.timeTo, state.timeFilter.newest);
+  setSingle(URL_QUERY_PARAMS.model, state.modelFilter);
+  setSingle(URL_QUERY_PARAMS.sdk, state.sdkFilter);
+  setSingle(URL_QUERY_PARAMS.run, state.selectedRunId);
+  setSingle(URL_QUERY_PARAMS.costMin, state.costFilter.min == null ? null : String(state.costFilter.min));
+  setSingle(URL_QUERY_PARAMS.costMax, state.costFilter.max == null ? null : String(state.costFilter.max));
 
-  url.searchParams.delete(URL_QUERY_PARAMS.category);
-  if (state.browserTab !== "staging" && state.sourceFilter === "dataset") {
-    for (const categoryFilter of [...state.categoryFilters].sort((left, right) => left.localeCompare(right))) {
-      url.searchParams.append(URL_QUERY_PARAMS.category, categoryFilter);
-    }
+  for (const key of [
+    URL_QUERY_PARAMS.agentHarness,
+    URL_QUERY_PARAMS.author,
+    URL_QUERY_PARAMS.category,
+    URL_QUERY_PARAMS.rating,
+    URL_QUERY_PARAMS.secondaryRating,
+  ]) {
+    url.searchParams.delete(key);
   }
-
-  if (state.browserTab !== "staging" && state.costFilter.min != null) {
-    url.searchParams.set(URL_QUERY_PARAMS.costMin, String(state.costFilter.min));
-  } else {
-    url.searchParams.delete(URL_QUERY_PARAMS.costMin);
+  for (const value of [...state.agentHarnessFilters].sort()) {
+    url.searchParams.append(URL_QUERY_PARAMS.agentHarness, value);
   }
-
-  if (state.browserTab !== "staging" && state.costFilter.max != null) {
-    url.searchParams.set(URL_QUERY_PARAMS.costMax, String(state.costFilter.max));
-  } else {
-    url.searchParams.delete(URL_QUERY_PARAMS.costMax);
+  for (const value of [...state.authorFilters].sort()) {
+    url.searchParams.append(URL_QUERY_PARAMS.author, value);
   }
-
-  url.searchParams.delete(URL_QUERY_PARAMS.rating);
-  if (state.browserTab !== "staging") {
-    for (const ratingFilter of [...state.ratingFilter].sort((left, right) => left.localeCompare(right))) {
-      url.searchParams.append(URL_QUERY_PARAMS.rating, ratingFilter);
-    }
+  for (const value of [...state.categoryFilters].sort()) {
+    url.searchParams.append(URL_QUERY_PARAMS.category, value);
   }
-
-  url.searchParams.delete(URL_QUERY_PARAMS.secondaryRating);
-  if (state.browserTab !== "staging") {
-    for (const secondaryRatingFilter of [...state.secondaryRatingFilter].sort((left, right) => left.localeCompare(right))) {
-      url.searchParams.append(URL_QUERY_PARAMS.secondaryRating, secondaryRatingFilter);
-    }
+  for (const value of [...state.ratingFilter].sort()) {
+    url.searchParams.append(URL_QUERY_PARAMS.rating, value);
   }
-
-  if (state.browserTab !== "staging" && state.selectedRunId) {
-    url.searchParams.set(URL_QUERY_PARAMS.run, state.selectedRunId);
-  } else {
-    url.searchParams.delete(URL_QUERY_PARAMS.run);
+  for (const value of [...state.secondaryRatingFilter].sort()) {
+    url.searchParams.append(URL_QUERY_PARAMS.secondaryRating, value);
   }
 
   window.history.replaceState(window.history.state, "", url);
@@ -440,19 +325,9 @@ function seedRecordCacheFromBootstrap(
   existing: Record<string, RecordSummary>,
 ): Record<string, RecordSummary> {
   const next: Record<string, RecordSummary> = { ...existing };
-
-  for (const entry of bootstrap.workbench_entries) {
-    if (entry.record) {
-      next[entry.record_id] = entry.record;
-    }
+  for (const record of bootstrap.library_records) {
+    next[record.record_id] = record;
   }
-
-  for (const entry of bootstrap.dataset_entries) {
-    if (entry.record) {
-      next[entry.record_id] = entry.record;
-    }
-  }
-
   return next;
 }
 
@@ -469,10 +344,7 @@ function updateRecordSummaryFields(
   if (!summary || summary.record_id !== recordId) {
     return summary;
   }
-  const nextSummary: RecordSummary = {
-    ...summary,
-    ...updates,
-  };
+  const nextSummary: RecordSummary = { ...summary, ...updates };
   return {
     ...nextSummary,
     effective_rating: computeEffectiveRating(nextSummary.rating, nextSummary.secondary_rating),
@@ -489,18 +361,11 @@ function updateRecordCacheFields(
     >
   >,
 ): Record<string, RecordSummary> {
-  const current = recordCache[recordId];
-  if (!current) {
-    return recordCache;
-  }
-  const nextRecord = updateRecordSummaryFields(current, recordId, updates);
+  const nextRecord = updateRecordSummaryFields(recordCache[recordId] ?? null, recordId, updates);
   if (!nextRecord) {
     return recordCache;
   }
-  return {
-    ...recordCache,
-    [recordId]: nextRecord,
-  };
+  return { ...recordCache, [recordId]: nextRecord };
 }
 
 function updateBootstrapRecordFields(
@@ -516,29 +381,24 @@ function updateBootstrapRecordFields(
   if (!bootstrap) {
     return bootstrap;
   }
-
   return {
     ...bootstrap,
-    workbench_entries: bootstrap.workbench_entries.map((entry) => ({
-      ...entry,
-      record: updateRecordSummaryFields(entry.record, recordId, updates),
-    })),
-    dataset_entries: bootstrap.dataset_entries.map((entry) => ({
-      ...entry,
-      record: updateRecordSummaryFields(entry.record, recordId, updates),
-    })),
+    library_records: bootstrap.library_records.map((record) =>
+      updateRecordSummaryFields(record, recordId, updates) ?? record,
+    ),
   };
 }
 
-function removeRecordFromBootstrap(bootstrap: ViewerBootstrap | null, recordId: string): ViewerBootstrap | null {
+function removeRecordFromBootstrap(
+  bootstrap: ViewerBootstrap | null,
+  recordId: string,
+): ViewerBootstrap | null {
   if (!bootstrap) {
     return bootstrap;
   }
-
   return {
     ...bootstrap,
-    workbench_entries: bootstrap.workbench_entries.filter((entry) => entry.record_id !== recordId),
-    dataset_entries: bootstrap.dataset_entries.filter((entry) => entry.record_id !== recordId),
+    library_records: bootstrap.library_records.filter((record) => record.record_id !== recordId),
   };
 }
 
@@ -569,6 +429,11 @@ function applySelection(state: ViewerState, selection: ViewerSelection | null): 
   };
 }
 
+function isRunActive(run: RunSummary): boolean {
+  const status = (run.status ?? "").toLowerCase();
+  return Boolean(status) && status !== "success" && status !== "failed";
+}
+
 function viewerReducer(state: ViewerState, action: ViewerAction): ViewerState {
   switch (action.type) {
     case "SET_BOOTSTRAP": {
@@ -586,9 +451,6 @@ function viewerReducer(state: ViewerState, action: ViewerAction): ViewerState {
       };
     }
     case "UPSERT_RECORDS": {
-      if (action.payload.length === 0) {
-        return state;
-      }
       const nextRecordCache = { ...state.recordCache };
       for (const record of action.payload) {
         nextRecordCache[record.record_id] = record;
@@ -597,9 +459,7 @@ function viewerReducer(state: ViewerState, action: ViewerAction): ViewerState {
         ...state,
         recordCache: nextRecordCache,
         selectedRecordSummary:
-          state.selectedRecordSummary?.record_id === state.selectedRecordId
-            ? state.selectedRecordSummary
-            : state.selectedRecordId != null
+          state.selectedRecordId != null
             ? nextRecordCache[state.selectedRecordId] ?? state.selectedRecordSummary
             : null,
       };
@@ -611,10 +471,7 @@ function viewerReducer(state: ViewerState, action: ViewerAction): ViewerState {
         recordCache:
           action.payload == null
             ? state.recordCache
-            : {
-                ...state.recordCache,
-                [action.payload.record_id]: action.payload,
-              },
+            : { ...state.recordCache, [action.payload.record_id]: action.payload },
       };
     case "SYNC_FROM_URL":
       return {
@@ -626,7 +483,6 @@ function viewerReducer(state: ViewerState, action: ViewerAction): ViewerState {
             : null,
       };
     case "DELETE_RECORD_LOCAL": {
-      const nextBootstrap = removeRecordFromBootstrap(state.bootstrap, action.payload);
       const nextMultiSelection = new Set(state.multiSelection);
       nextMultiSelection.delete(action.payload);
       const nextSelection =
@@ -635,7 +491,7 @@ function viewerReducer(state: ViewerState, action: ViewerAction): ViewerState {
           : state.selection;
       return {
         ...state,
-        bootstrap: nextBootstrap,
+        bootstrap: removeRecordFromBootstrap(state.bootstrap, action.payload),
         recordCache: removeRecordFromCache(state.recordCache, action.payload),
         selection: nextSelection,
         selectedRecordId: selectionToSelectedRecordId(nextSelection),
@@ -648,30 +504,22 @@ function viewerReducer(state: ViewerState, action: ViewerAction): ViewerState {
       };
     }
     case "SET_INSPECTOR_TAB":
-      return {
-        ...state,
-        selectedInspectorTab: action.payload,
-      };
-    case "SELECT_RECORD": {
-      const selection: ViewerSelection | null = action.payload
-        ? { kind: "record", recordId: action.payload }
-        : null;
-      return applySelection(state, selection);
-    }
+      return { ...state, selectedInspectorTab: action.payload };
+    case "SELECT_RECORD":
+      return applySelection(
+        state,
+        action.payload ? { kind: "record", recordId: action.payload } : null,
+      );
     case "SELECT_ITEM":
       return applySelection(state, action.payload);
     case "UPDATE_STAGING": {
       if (!state.bootstrap) return state;
-      const nextBootstrap: ViewerBootstrap = {
-        ...state.bootstrap,
-        staging_entries: action.payload,
-      };
-      // If current selection is a staging entry that no longer exists, clear it
       let nextSelection = state.selection;
       if (nextSelection?.kind === "staging") {
-        const { runId, recordId } = nextSelection;
+        const currentSelection = nextSelection;
         const stillExists = action.payload.some(
-          (entry) => entry.run_id === runId && entry.record_id === recordId,
+          (entry) =>
+            entry.run_id === currentSelection.runId && entry.record_id === currentSelection.recordId,
         );
         if (!stillExists) {
           nextSelection = null;
@@ -679,7 +527,7 @@ function viewerReducer(state: ViewerState, action: ViewerAction): ViewerState {
       }
       return {
         ...state,
-        bootstrap: nextBootstrap,
+        bootstrap: { ...state.bootstrap, staging_entries: action.payload },
         selection: nextSelection,
         selectedRecordId: selectionToSelectedRecordId(nextSelection),
       };
@@ -687,46 +535,30 @@ function viewerReducer(state: ViewerState, action: ViewerAction): ViewerState {
     case "UPDATE_RECORD_RATING":
       return {
         ...state,
-        recordCache: updateRecordCacheFields(
-          state.recordCache,
-          action.payload.recordId,
-          {
-            rating: action.payload.rating,
-            rated_by: null,
-            updated_at: action.payload.updatedAt,
-          },
-        ),
+        recordCache: updateRecordCacheFields(state.recordCache, action.payload.recordId, {
+          rating: action.payload.rating,
+          rated_by: null,
+          updated_at: action.payload.updatedAt,
+        }),
         selectedRecordSummary: updateRecordSummaryFields(
           state.selectedRecordSummary,
           action.payload.recordId,
-          {
-            rating: action.payload.rating,
-            rated_by: null,
-            updated_at: action.payload.updatedAt,
-          },
+          { rating: action.payload.rating, rated_by: null, updated_at: action.payload.updatedAt },
         ),
-        bootstrap: updateBootstrapRecordFields(
-          state.bootstrap,
-          action.payload.recordId,
-          {
-            rating: action.payload.rating,
-            rated_by: null,
-            updated_at: action.payload.updatedAt,
-          },
-        ),
+        bootstrap: updateBootstrapRecordFields(state.bootstrap, action.payload.recordId, {
+          rating: action.payload.rating,
+          rated_by: null,
+          updated_at: action.payload.updatedAt,
+        }),
       };
     case "UPDATE_RECORD_SECONDARY_RATING":
       return {
         ...state,
-        recordCache: updateRecordCacheFields(
-          state.recordCache,
-          action.payload.recordId,
-          {
-            secondary_rating: action.payload.secondaryRating,
-            secondary_rated_by: null,
-            updated_at: action.payload.updatedAt,
-          },
-        ),
+        recordCache: updateRecordCacheFields(state.recordCache, action.payload.recordId, {
+          secondary_rating: action.payload.secondaryRating,
+          secondary_rated_by: null,
+          updated_at: action.payload.updatedAt,
+        }),
         selectedRecordSummary: updateRecordSummaryFields(
           state.selectedRecordSummary,
           action.payload.recordId,
@@ -736,15 +568,11 @@ function viewerReducer(state: ViewerState, action: ViewerAction): ViewerState {
             updated_at: action.payload.updatedAt,
           },
         ),
-        bootstrap: updateBootstrapRecordFields(
-          state.bootstrap,
-          action.payload.recordId,
-          {
-            secondary_rating: action.payload.secondaryRating,
-            secondary_rated_by: null,
-            updated_at: action.payload.updatedAt,
-          },
-        ),
+        bootstrap: updateBootstrapRecordFields(state.bootstrap, action.payload.recordId, {
+          secondary_rating: action.payload.secondaryRating,
+          secondary_rated_by: null,
+          updated_at: action.payload.updatedAt,
+        }),
       };
     case "TOGGLE_INSPECTOR":
       return { ...state, inspectorOpen: !state.inspectorOpen };
@@ -755,32 +583,9 @@ function viewerReducer(state: ViewerState, action: ViewerAction): ViewerState {
     case "SET_SEARCH":
       return { ...state, searchQuery: action.payload, multiSelection: new Set() };
     case "SET_BROWSER_TAB":
-      if (action.payload === "staging") {
-        return { ...state, browserTab: action.payload };
-      }
-      return {
-        ...state,
-        browserTab: action.payload,
-        sourceFilter: action.payload,
-        modelFilter: null,
-        sdkFilter: null,
-        agentHarnessFilters: [],
-        ratingFilter: ratingFilterForBrowserTab(action.payload, state.ratingFilter),
-        selectedRunId: null,
-        multiSelection: new Set(),
-      };
+      return { ...state, browserTab: action.payload, multiSelection: new Set() };
     case "SET_SOURCE_FILTER":
-      return {
-        ...state,
-        browserTab: action.payload,
-        sourceFilter: action.payload,
-        modelFilter: null,
-        sdkFilter: null,
-        agentHarnessFilters: [],
-        ratingFilter: ratingFilterForBrowserTab(action.payload, state.ratingFilter),
-        selectedRunId: null,
-        multiSelection: new Set(),
-      };
+      return { ...state, sourceFilter: "library", browserTab: "library" };
     case "SET_TIME_FILTER":
       return { ...state, timeFilter: action.payload };
     case "SET_MODEL_FILTER":
@@ -790,9 +595,9 @@ function viewerReducer(state: ViewerState, action: ViewerAction): ViewerState {
     case "SET_AGENT_HARNESS_FILTERS":
       return { ...state, agentHarnessFilters: normalizeAgentHarnessFilters(action.payload) };
     case "SET_AUTHOR_FILTERS":
-      return { ...state, authorFilters: Array.from(new Set(action.payload.filter((value) => value.trim().length > 0))) };
+      return { ...state, authorFilters: Array.from(new Set(action.payload.filter(Boolean))) };
     case "SET_CATEGORY_FILTERS":
-      return { ...state, categoryFilters: Array.from(new Set(action.payload.filter((value) => value.trim().length > 0))) };
+      return { ...state, categoryFilters: Array.from(new Set(action.payload.filter(Boolean))) };
     case "SET_COST_FILTER":
       return { ...state, costFilter: normalizeCostFilter(action.payload) };
     case "SET_RATING_FILTER":
@@ -814,20 +619,17 @@ function viewerReducer(state: ViewerState, action: ViewerAction): ViewerState {
       const { targetId, visibleIds } = action.payload;
       const targetIndex = visibleIds.indexOf(targetId);
       if (targetIndex === -1) return state;
-
-      // Find the last-toggled item that is currently selected, or fall back to first selected
       let anchorIndex = -1;
-      for (let i = 0; i < visibleIds.length; i++) {
+      for (let i = 0; i < visibleIds.length; i += 1) {
         if (state.multiSelection.has(visibleIds[i])) {
           anchorIndex = i;
         }
       }
       if (anchorIndex === -1) anchorIndex = targetIndex;
-
       const start = Math.min(anchorIndex, targetIndex);
       const end = Math.max(anchorIndex, targetIndex);
       const next = new Set(state.multiSelection);
-      for (let i = start; i <= end; i++) {
+      for (let i = start; i <= end; i += 1) {
         next.add(visibleIds[i]);
       }
       return { ...state, multiSelection: next };
@@ -846,7 +648,6 @@ const ViewerDispatchContext = createContext<Dispatch<ViewerAction>>(() => {});
 
 export function ViewerProvider({ children }: { children: ReactNode }): JSX.Element {
   const [state, dispatch] = useReducer(viewerReducer, initialState);
-  const route = useRoute();
   const selectedCachedRecord =
     state.selection?.kind === "record" && state.selectedRecordId
       ? state.recordCache[state.selectedRecordId] ?? null
@@ -854,12 +655,8 @@ export function ViewerProvider({ children }: { children: ReactNode }): JSX.Eleme
   const bootstrapQuery = useQuery(bootstrapQueryOptions());
   const activeBootstrap = state.bootstrap ?? bootstrapQuery.data ?? null;
   const shouldPollStaging =
-    route.page === "viewer"
-      && activeBootstrap != null
-      && (
-        state.browserTab === "staging"
-        || activeBootstrap.runs.some((run) => isRunActive(run))
-      );
+    activeBootstrap != null
+    && (state.browserTab === "staging" || activeBootstrap.runs.some((run) => isRunActive(run)));
   const stagingEntriesQuery = useQuery({
     ...stagingEntriesQueryOptions(),
     enabled: shouldPollStaging,
@@ -903,22 +700,19 @@ export function ViewerProvider({ children }: { children: ReactNode }): JSX.Eleme
       dispatch({ type: "SET_SELECTED_RECORD_SUMMARY", payload: null });
       return;
     }
-
     if (selectedCachedRecord) {
       dispatch({ type: "SET_SELECTED_RECORD_SUMMARY", payload: selectedCachedRecord });
     }
-  }, [dispatch, selectedCachedRecord, state.selectedRecordId, state.selection]);
+  }, [selectedCachedRecord, state.selectedRecordId, state.selection]);
 
   useEffect(() => {
     if (state.selection?.kind !== "record" || !state.selectedRecordId) {
       return;
     }
-
     if (selectedRecordSummaryQuery.data) {
       dispatch({ type: "SET_SELECTED_RECORD_SUMMARY", payload: selectedRecordSummaryQuery.data });
     }
   }, [
-    dispatch,
     selectedRecordSummaryQuery.data,
     state.selectedRecordId,
     state.selection?.kind,
@@ -932,7 +726,6 @@ export function ViewerProvider({ children }: { children: ReactNode }): JSX.Eleme
     ) {
       return;
     }
-
     if (
       selectedRecordSummaryQuery.error instanceof HttpError
       && selectedRecordSummaryQuery.error.status === 404
@@ -940,12 +733,10 @@ export function ViewerProvider({ children }: { children: ReactNode }): JSX.Eleme
       dispatch({ type: "DELETE_RECORD_LOCAL", payload: state.selectedRecordId });
       return;
     }
-
     if (!selectedCachedRecord) {
       dispatch({ type: "SET_SELECTED_RECORD_SUMMARY", payload: null });
     }
   }, [
-    dispatch,
     selectedCachedRecord,
     selectedRecordSummaryQuery.error,
     state.selectedRecordId,
@@ -959,10 +750,6 @@ export function ViewerProvider({ children }: { children: ReactNode }): JSX.Eleme
   }, [stagingEntriesQuery.data]);
 
   useEffect(() => {
-    if (route.page !== "viewer") {
-      return;
-    }
-
     syncViewerStateToUrl({
       selection: state.selection,
       selectedRecordId: state.selectedRecordId,
@@ -982,34 +769,31 @@ export function ViewerProvider({ children }: { children: ReactNode }): JSX.Eleme
       selectedRunId: state.selectedRunId,
     });
   }, [
+    state.agentHarnessFilters,
+    state.authorFilters,
+    state.browserTab,
     state.categoryFilters,
     state.costFilter,
     state.modelFilter,
-    state.sdkFilter,
-    state.agentHarnessFilters,
-    state.authorFilters,
     state.ratingFilter,
-    state.secondaryRatingFilter,
-    state.browserTab,
+    state.sdkFilter,
     state.searchQuery,
+    state.secondaryRatingFilter,
     state.selectedInspectorTab,
     state.selectedRecordId,
     state.selectedRunId,
     state.selection,
     state.sourceFilter,
     state.timeFilter,
-    route.page,
   ]);
 
   useEffect(() => {
     if (typeof window === "undefined") {
       return;
     }
-
     const handlePopState = () => {
       dispatch({ type: "SYNC_FROM_URL", payload: readViewerUrlState() });
     };
-
     window.addEventListener("popstate", handlePopState);
     return () => {
       window.removeEventListener("popstate", handlePopState);

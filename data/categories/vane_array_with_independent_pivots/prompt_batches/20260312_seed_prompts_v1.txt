@@ -1,6 +1,0 @@
-A vane array with several slim blades, each rotating about its own pivot shaft inside a rigid support frame.
-An adjustable louver-style mechanism composed of independent pivoting vanes, modeled with parallel shafts and neat mechanical spacing.
-A shutter stack of narrow slats, each mounted on an independent pivot, arranged like a precise mechanical louver assembly.
-A layered slat mechanism with multiple independently pivoting shutters, using repeated hinge shafts and rigid side rails.
-A panel with multiple flap elements, each mounted on its own independent hinge axis, arranged in a uniform mechanical array.
-A rectangular frame carrying several independently hinged flaps, with repeated revolute joints and clean sheet-metal-like geometry.

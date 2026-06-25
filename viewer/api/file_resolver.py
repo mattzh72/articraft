@@ -13,8 +13,6 @@ from agent.prompts import (
     OPENAI_DESIGNER_PROMPT_NAME,
 )
 from storage.identifiers import validate_record_id
-from storage.lfs import hydration_guidance, record_payload_status
-from storage.records_index import find_record_index_row
 from storage.repo import StorageRepo
 from storage.revisions import (
     active_cost_path,
@@ -73,9 +71,7 @@ class ViewerFileResolver:
         record_dir = self.repo.layout.record_dir(record_id)
 
         if not record_dir.exists():
-            self._raise_if_record_needs_hydration(record_id)
             raise HTTPException(status_code=404, detail=f"Record not found: {record_id}")
-        self._raise_if_record_needs_hydration(record_id)
 
         requested_path = self._validated_relative_path(file_path)
 
@@ -172,7 +168,6 @@ class ViewerFileResolver:
 
     def resolve_record_trace_target(self, record_id: str, file_path: str) -> tuple[Path, str]:
         self._validate_record_id(record_id)
-        self._raise_if_record_needs_hydration(record_id)
         record_dir = self.repo.layout.record_dir(record_id)
         record = self.repo.read_json(self.repo.layout.record_metadata_path(record_id))
 
@@ -264,7 +259,6 @@ class ViewerFileResolver:
         file_path: str,
     ) -> tuple[Path, Path]:
         self._validate_record_id(record_id)
-        self._raise_if_record_needs_hydration(record_id)
         revision_id = validate_revision_id(revision_id)
         root = self.repo.layout.record_revision_dir(record_id, revision_id).resolve()
         if not root.exists() or not root.is_dir():
@@ -283,7 +277,6 @@ class ViewerFileResolver:
         file_path: str,
     ) -> tuple[Path, str]:
         self._validate_record_id(record_id)
-        self._raise_if_record_needs_hydration(record_id)
         record = self.repo.read_json(self.repo.layout.record_metadata_path(record_id))
         if not isinstance(record, dict):
             raise HTTPException(status_code=404, detail=f"Record not found: {record_id}")
@@ -363,14 +356,6 @@ class ViewerFileResolver:
             validate_record_id(record_id)
         except ValueError:
             raise HTTPException(status_code=400, detail="Invalid record ID format")
-
-    def _raise_if_record_needs_hydration(self, record_id: str) -> None:
-        status = record_payload_status(self.repo, record_id)
-        if status == "hydrated":
-            return
-        if status == "missing" and find_record_index_row(self.repo, record_id) is None:
-            return
-        raise HTTPException(status_code=409, detail=hydration_guidance(record_id))
 
     @staticmethod
     def _validate_run_id(run_id: str) -> None:

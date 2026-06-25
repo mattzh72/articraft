@@ -4,7 +4,6 @@ Copy-edit workflows for existing records.
 
 from __future__ import annotations
 
-import hashlib
 import logging
 import shutil
 from pathlib import Path
@@ -13,7 +12,6 @@ from typing import Any, Callable, Optional
 from agent.cost import max_cost_usd_from_env
 from agent.defaults import resolve_max_turns
 from agent.prompts import DESIGNER_PROMPT_NAME, normalize_sdk_package
-from agent.record_persistence import _load_workbench_entry, _normalize_collection_names
 from agent.run_context import (
     RunExecutionOutcome,
     _build_single_run_context,
@@ -26,8 +24,6 @@ from agent.run_context import (
 )
 from agent.single_run import ExecuteSingleRun, execute_single_run
 from agent.tools import build_initial_user_content
-from storage.collections import CollectionStore
-from storage.datasets import DatasetStore
 from storage.records import RecordStore
 from storage.repo import StorageRepo
 from storage.revisions import (
@@ -60,11 +56,6 @@ def _system_prompt_for_internal_edit(
     if is_external_parent or stored_prompt == EXTERNAL_AGENT_DOC_PROMPT_NAME:
         return DESIGNER_PROMPT_NAME
     return stored_prompt
-
-
-def _dataset_edit_id(parent_dataset_id: str, child_record_id: str) -> str:
-    suffix = hashlib.sha1(f"{parent_dataset_id}:{child_record_id}".encode("utf-8")).hexdigest()[:10]
-    return f"{parent_dataset_id}_edit_{suffix}"
 
 
 def _parent_input_refs(
@@ -138,48 +129,12 @@ def _parent_input_refs(
     return refs
 
 
-def _child_workbench_entry(
-    parent_entry: dict[str, Any] | None,
-    *,
-    added_at: str,
-    label: str | None,
-    tags: list[str] | None,
-) -> dict[str, Any] | None:
-    if parent_entry is None and label is None and not tags:
-        return None
-    parent_tags = parent_entry.get("tags", []) if isinstance(parent_entry, dict) else []
-    parent_tag_list = [str(tag) for tag in parent_tags] if isinstance(parent_tags, list) else []
-    return {
-        "added_at": added_at,
-        "label": label
-        if label is not None
-        else (
-            str(parent_entry.get("label") or "").strip() if isinstance(parent_entry, dict) else None
-        )
-        or None,
-        "tags": list(tags if tags is not None else parent_tag_list),
-        "archived": False,
-    }
-
-
-def _ensure_record_collection(repo: StorageRepo, record_id: str, collection: str) -> None:
-    record_path = repo.layout.record_metadata_path(record_id)
-    record = repo.read_json(record_path)
-    if not isinstance(record, dict):
-        return
-    collections = record.get("collections")
-    normalized = [str(item) for item in collections] if isinstance(collections, list) else []
-    if collection not in normalized:
-        normalized.append(collection)
-        record["collections"] = normalized
-        repo.write_json(record_path, record)
-
-
 async def edit_record(
     *,
     repo_root: Path,
     parent_record_id: str,
     edit_prompt: str,
+    data_root: Path | None = None,
     image_path: Path | None = None,
     provider: str | None = None,
     model_id: str | None = None,
@@ -205,12 +160,10 @@ async def edit_record(
         )
 
     resolved_repo_root = repo_root.resolve()
-    storage_repo = StorageRepo(resolved_repo_root)
+    storage_repo = StorageRepo(resolved_repo_root, data_root=data_root)
     storage_repo.ensure_layout()
     record_author = resolve_record_author_func(resolved_repo_root)
     record_store = RecordStore(storage_repo)
-    collections = CollectionStore(storage_repo)
-    datasets = DatasetStore(storage_repo)
     run_store = RunStore(storage_repo)
 
     parent_record = record_store.load_record(parent_record_id)
@@ -335,15 +288,6 @@ async def edit_record(
     else:
         resolved_max_cost_usd = env_max_cost_usd
 
-    parent_dataset_entry = datasets.load_entry(parent_record_id)
-    parent_workbench_entry = _load_workbench_entry(collections, record_id=parent_record_id)
-    parent_collections = _normalize_collection_names(
-        parent_record.get("collections"),
-        "dataset" if isinstance(parent_dataset_entry, dict) else "workbench",
-    )
-    parent_has_workbench = "workbench" in parent_collections or parent_workbench_entry is not None
-    parent_has_dataset = isinstance(parent_dataset_entry, dict) or "dataset" in parent_collections
-
     if record_id and storage_repo.layout.record_dir(record_id).exists():
         return RunExecutionOutcome(
             exit_code=1,
@@ -355,45 +299,14 @@ async def edit_record(
     target_record_id = record_id or None
     revision_id = INITIAL_REVISION_ID
     existing_record = None
-    collection = "dataset" if parent_has_dataset else "workbench"
-    category_slug = (
-        _optional_string(parent_dataset_entry.get("category_slug"))
-        if isinstance(parent_dataset_entry, dict)
-        else None
-    ) or _optional_string(parent_record.get("category_slug"))
-    dataset_id = None
-    if collection == "dataset":
-        parent_dataset_id = (
-            _optional_string(parent_dataset_entry.get("dataset_id"))
-            if isinstance(parent_dataset_entry, dict)
-            else None
-        )
-        if not parent_dataset_id:
-            return RunExecutionOutcome(
-                exit_code=1,
-                run_id="",
-                record_id=parent_record_id,
-                status="failed",
-                message=f"Parent dataset record is missing dataset_id: {parent_record_id}",
-            )
-    workbench_entry = (
-        _child_workbench_entry(
-            parent_workbench_entry if isinstance(parent_workbench_entry, dict) else None,
-            added_at="",
-            label=label,
-            tags=tags,
-        )
-        if parent_has_workbench
-        else None
+    category_slug = _optional_string(parent_record.get("category_slug"))
+    inherited_label = label if label is not None else _optional_string(parent_record.get("label"))
+    parent_tags = parent_record.get("tags")
+    inherited_tags = (
+        list(tags)
+        if tags is not None
+        else ([str(tag) for tag in parent_tags] if isinstance(parent_tags, list) else [])
     )
-    if parent_has_workbench and workbench_entry is None:
-        workbench_entry = {
-            "added_at": "",
-            "label": label,
-            "tags": list(tags or []),
-            "archived": False,
-        }
-    dataset_entry = None
     parent_lineage = (
         parent_record.get("lineage") if isinstance(parent_record.get("lineage"), dict) else {}
     )
@@ -420,17 +333,6 @@ async def edit_record(
             status="failed",
             message=f"Record already exists: {context.record_id}",
         )
-
-    if collection == "dataset":
-        parent_dataset_id = str(parent_dataset_entry["dataset_id"])
-        dataset_id = _dataset_edit_id(parent_dataset_id, context.record_id)
-        existing_dataset_record = datasets.find_record_id_by_dataset_id(dataset_id)
-        if existing_dataset_record is not None:
-            salt = hashlib.sha1(f"{context.record_id}:{context.run_id}".encode("utf-8")).hexdigest()
-            dataset_id = f"{parent_dataset_id}_edit_{salt[:12]}"
-
-    if workbench_entry is not None and not workbench_entry.get("added_at"):
-        workbench_entry["added_at"] = context.created_at
 
     context.script_path.parent.mkdir(parents=True, exist_ok=True)
     shutil.copy2(parent_model_path, context.script_path)
@@ -466,8 +368,6 @@ async def edit_record(
         resolved_repo_root=resolved_repo_root,
         storage_repo=storage_repo,
         record_store=record_store,
-        collections=collections,
-        datasets=datasets,
         run_store=run_store,
         image_path=image_path,
         provider=selected_provider,
@@ -480,26 +380,16 @@ async def edit_record(
         sdk_package=resolved_sdk_package,
         openai_reasoning_summary=openai_reasoning_summary,
         max_cost_usd=resolved_max_cost_usd,
-        label=label,
-        tags=list(tags or []),
-        collection=collection,
+        label=inherited_label,
+        tags=inherited_tags,
         category_slug=category_slug,
-        dataset_id=dataset_id,
-        run_mode="dataset_edit" if collection == "dataset" else "workbench_edit",
+        run_mode="library_single",
         context=context,
-        update_dataset_manifest=False,
-        reconcile_category_after_success=False,
         existing_record=existing_record,
-        workbench_entry=workbench_entry,
-        dataset_entry=dataset_entry,
         record_author=record_author,
         lineage=lineage,
         revision_parent=revision_parent,
         revision_seed=revision_seed,
         inherited_inputs=inherited_inputs,
     )
-
-    if outcome.exit_code == 0 and parent_has_workbench:
-        _ensure_record_collection(storage_repo, context.record_id, "workbench")
-
     return outcome

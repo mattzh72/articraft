@@ -1,762 +1,128 @@
 from __future__ import annotations
 
-import json
 from pathlib import Path
-from types import SimpleNamespace
 
-import pytest
-from fastapi import FastAPI
 from fastapi.testclient import TestClient
 
-from storage import dataset_workflow
-from storage.categories import CategoryStore
-from storage.collections import CollectionStore
-from storage.datasets import DatasetStore
-from storage.models import (
-    CategoryRecord,
-    CreatorMetadata,
-    DisplayMetadata,
-    Record,
-    RecordArtifacts,
-    RunRecord,
-    SourceRef,
-)
-from storage.records import RecordStore
+from storage.library_manifest import rebuild_manifest
 from storage.repo import StorageRepo
-from storage.runs import RunStore
+from storage.revisions import INITIAL_REVISION_ID, revision_artifacts_payload
 from viewer.api.app import create_app
-from viewer.api.frontend import install_frontend_routes
-from viewer.api.store import _effective_rating, _within_rating_filter
-
-
-def _patch_dataset_tokens(monkeypatch: pytest.MonkeyPatch, *tokens: str) -> None:
-    iterator = iter(tokens)
-    monkeypatch.setattr(dataset_workflow, "new_dataset_token", lambda: next(iterator))
 
 
 def _write_record(
     repo: StorageRepo,
-    *,
     record_id: str,
+    *,
     title: str,
-    prompt: str,
-    category_slug: str | None = "hinges",
-    collections: list[str] | None = None,
+    category_slug: str | None = None,
     rating: int | None = None,
-    source_run_id: str | None = "run_001",
-    creator: CreatorMetadata | None = None,
 ) -> None:
-    record_dir = repo.layout.record_dir(record_id)
-    RecordStore(repo).write_record(
-        Record(
-            schema_version=1,
-            record_id=record_id,
-            created_at="2026-03-18T08:00:00Z",
-            updated_at="2026-03-18T08:00:00Z",
-            rating=rating,
-            kind="generated_model",
-            prompt_kind="single_prompt",
-            category_slug=category_slug,
-            source=SourceRef(run_id=source_run_id),
-            sdk_package="sdk",
-            provider="openai",
-            model_id="gpt-5.4",
-            display=DisplayMetadata(title=title, prompt_preview=prompt),
-            artifacts=RecordArtifacts(
-                prompt_txt="prompt.txt",
-                prompt_series_json=None,
-                model_py="model.py",
-                provenance_json="provenance.json",
-                cost_json=None,
-            ),
-            collections=collections or ["workbench"],
-            creator=creator,
-        )
-    )
-    (record_dir / "prompt.txt").write_text(prompt, encoding="utf-8")
-    (record_dir / "model.py").write_text("from __future__ import annotations\n", encoding="utf-8")
-
-
-def test_effective_rating_filter_uses_bucket_ranges() -> None:
-    assert _effective_rating(None, None) is None
-    assert _effective_rating(4, None) == 4.0
-    assert _effective_rating(5, 4) == 4.5
-    assert _within_rating_filter(4.5, ["4"]) is True
-    assert _within_rating_filter(4.5, ["5"]) is False
-
-
-def test_frontend_missing_assets_do_not_fallback_to_index(tmp_path: Path) -> None:
-    dist_dir = tmp_path / "dist"
-    assets_dir = dist_dir / "assets"
-    assets_dir.mkdir(parents=True)
-    (dist_dir / "index.html").write_text("<html>viewer shell</html>", encoding="utf-8")
-    (assets_dir / "main.js").write_text("console.log('viewer');", encoding="utf-8")
-
-    app = FastAPI()
-    install_frontend_routes(app, dist_dir=dist_dir)
-    client = TestClient(app)
-
-    route_response = client.get("/viewer")
-    assert route_response.status_code == 200
-    assert route_response.text == "<html>viewer shell</html>"
-
-    asset_response = client.get("/assets/main.js")
-    assert asset_response.status_code == 200
-    assert asset_response.text == "console.log('viewer');"
-    assert asset_response.headers["cache-control"] == "public, max-age=31536000, immutable"
-
-    missing_asset_response = client.get("/assets/missing.js")
-    assert missing_asset_response.status_code == 404
-    assert "viewer shell" not in missing_asset_response.text
-
-
-def test_viewer_api_surfaces_external_creator_metadata(tmp_path: Path) -> None:
-    repo = StorageRepo(tmp_path)
-    repo.ensure_layout()
-    _write_record(
-        repo,
-        record_id="rec_external_001",
-        title="External washer",
-        prompt="create a washing machine",
-        category_slug=None,
-        collections=["workbench"],
-        source_run_id=None,
-        creator=CreatorMetadata(
-            mode="external_agent",
-            agent="codex",
-            trace_available=False,
-        ),
-    )
-    record_path = repo.layout.record_metadata_path("rec_external_001")
-    record = repo.read_json(record_path)
-    assert isinstance(record, dict)
-    record["provider"] = "openai"
-    record["model_id"] = "gpt-5.5-2026-04-23"
-    repo.write_json(record_path, record)
-    CollectionStore(repo).append_workbench_entry(
-        record_id="rec_external_001",
-        added_at="2026-03-18T08:01:00Z",
-    )
-    trace_dir = repo.layout.record_dir("rec_external_001") / "traces"
-    trace_dir.mkdir(parents=True, exist_ok=True)
-    (trace_dir / "trajectory.jsonl").write_text('{"message": "hidden"}\n', encoding="utf-8")
-    revision_trace_dir = repo.layout.record_revision_traces_dir("rec_external_001", "rev_000001")
-    revision_trace_dir.mkdir(parents=True, exist_ok=True)
-    (revision_trace_dir / "trajectory.jsonl").write_text(
-        '{"message": "hidden"}\n',
-        encoding="utf-8",
-    )
-
-    client = TestClient(create_app(repo_root=tmp_path))
-    response = client.get("/api/bootstrap")
-
-    assert response.status_code == 200
-    external_record = response.json()["workbench_entries"][0]["record"]
-    assert external_record["creator_mode"] == "external_agent"
-    assert external_record["external_agent"] == "codex"
-    assert external_record["agent_harness"] == "codex"
-    assert external_record["has_traces"] is False
-    assert external_record["provider"] == "openai"
-    assert external_record["model_id"] == "gpt-5.5-2026-04-23"
-    assert client.get("/api/records/rec_external_001/traces/trajectory.jsonl").status_code == 404
-    assert (
-        client.get(
-            "/api/records/rec_external_001/revisions/rev_000001/traces/trajectory.jsonl"
-        ).status_code
-        == 404
-    )
-
-
-def test_viewer_api_infers_record_turn_count_from_cost_turns(tmp_path: Path) -> None:
-    repo = StorageRepo(tmp_path)
-    repo.ensure_layout()
-    _write_record(
-        repo,
-        record_id="rec_turns_001",
-        title="Turn counted record",
-        prompt="create a two turn object",
-        category_slug="hinges",
-        collections=["workbench", "dataset"],
-    )
-    CollectionStore(repo).append_workbench_entry(
-        record_id="rec_turns_001",
-        added_at="2026-03-18T08:01:00Z",
-    )
-    DatasetStore(repo).promote_record(
-        record_id="rec_turns_001",
-        dataset_id="dataset_turns_001",
-        promoted_at="2026-03-18T08:02:00Z",
-        category_slug="hinges",
-    )
-    record_dir = repo.layout.record_dir("rec_turns_001")
+    revision_dir = repo.layout.record_revision_dir(record_id, INITIAL_REVISION_ID)
+    revision_dir.mkdir(parents=True, exist_ok=True)
+    (revision_dir / "prompt.txt").write_text(f"make {title}", encoding="utf-8")
+    (revision_dir / "model.py").write_text("object_model = None\n", encoding="utf-8")
     repo.write_json(
-        record_dir / "provenance.json",
+        revision_dir / "provenance.json",
         {
             "schema_version": 2,
-            "record_id": "rec_turns_001",
+            "record_id": record_id,
             "generation": {
                 "provider": "openai",
-                "model_id": "gpt-5.4",
+                "model_id": "gpt-test",
                 "thinking_level": "high",
             },
-            "run_summary": {"final_status": "success"},
+            "run_summary": {"turn_count": 1, "final_status": "success"},
         },
     )
     repo.write_json(
-        record_dir / "cost.json",
+        repo.layout.record_metadata_path(record_id),
         {
-            "turns": [
-                {"costs_usd": {"total": 0.01}},
-                {"costs_usd": {"total": 0.02}},
-            ],
-            "total": {
-                "costs_usd": {"total": 0.03},
-                "tokens": {"prompt_tokens": 100, "candidates_tokens": 50},
-            },
-        },
-    )
-    trace_dir = record_dir / "traces"
-    trace_dir.mkdir(parents=True, exist_ok=True)
-    (trace_dir / "trajectory.jsonl").write_text(
-        '{"message":{"role":"assistant","content":"first"}}\n',
-        encoding="utf-8",
-    )
-
-    client = TestClient(create_app(repo_root=tmp_path))
-
-    bootstrap_record = client.get("/api/bootstrap").json()["workbench_entries"][0]["record"]
-    assert bootstrap_record["turn_count"] == 2
-
-    summary = client.get("/api/records/rec_turns_001/summary").json()
-    assert summary["turn_count"] == 2
-    assert summary["has_traces"] is True
-
-    dataset_browse = client.get("/api/records/browse?source=dataset").json()
-    assert dataset_browse["records"][0]["turn_count"] == 2
-
-    trace_response = client.get("/api/records/rec_turns_001/traces/trajectory.jsonl")
-    assert trace_response.status_code == 200
-    assert "first" in trace_response.text
-
-
-def test_viewer_api_filters_dataset_by_agent_harness(tmp_path: Path) -> None:
-    repo = StorageRepo(tmp_path)
-    repo.ensure_layout()
-    records = [
-        ("rec_articraft_001", "Articraft washer", "articraft_washers", None),
-        (
-            "rec_codex_001",
-            "Codex washer",
-            "codex_washers",
-            CreatorMetadata(mode="external_agent", agent="codex", trace_available=False),
-        ),
-        (
-            "rec_claude_001",
-            "Claude washer",
-            "claude_washers",
-            CreatorMetadata(mode="external_agent", agent="claude-code", trace_available=False),
-        ),
-        (
-            "rec_cursor_001",
-            "Cursor washer",
-            "cursor_washers",
-            CreatorMetadata(mode="external_agent", agent="cursor", trace_available=False),
-        ),
-    ]
-    for index, (record_id, title, category_slug, creator) in enumerate(records, start=1):
-        _write_record(
-            repo,
-            record_id=record_id,
-            title=title,
-            prompt=f"create a realistic washing machine variant {index}",
-            category_slug=category_slug,
-            collections=["dataset"],
-            source_run_id=None if creator else "run_001",
-            creator=creator,
-        )
-        DatasetStore(repo).promote_record(
-            record_id=record_id,
-            dataset_id=f"dataset_{index:03d}",
-            promoted_at=f"2026-03-18T08:0{index}:00Z",
-            category_slug=category_slug,
-        )
-
-    client = TestClient(create_app(repo_root=tmp_path))
-
-    dataset_browse = client.get("/api/records/browse?source=dataset").json()
-    assert dataset_browse["total"] == 4
-    assert dataset_browse["facets"]["agent_harnesses"] == [
-        "articraft",
-        "codex",
-        "claude-code",
-        "cursor",
-    ]
-
-    articraft_browse = client.get(
-        "/api/records/browse?source=dataset&agent_harness=articraft"
-    ).json()
-    assert articraft_browse["total"] == 1
-    assert articraft_browse["record_ids"] == ["rec_articraft_001"]
-    assert articraft_browse["records"][0]["agent_harness"] == "articraft"
-
-    external_browse = client.get(
-        "/api/records/browse?source=dataset&agent_harness=codex&agent_harness=claude-code"
-    ).json()
-    assert external_browse["total"] == 2
-    assert set(external_browse["record_ids"]) == {"rec_codex_001", "rec_claude_001"}
-
-    browse_ids = client.get(
-        "/api/records/browse/ids?source=dataset&agent_harness=claude-code"
-    ).json()
-    assert browse_ids["total"] == 1
-    assert browse_ids["record_ids"] == ["rec_claude_001"]
-
-    cursor_browse = client.get("/api/records/browse?source=dataset&agent_harness=cursor").json()
-    assert cursor_browse["total"] == 1
-    assert cursor_browse["record_ids"] == ["rec_cursor_001"]
-    assert cursor_browse["records"][0]["external_agent"] == "cursor"
-
-    search_results = client.get(
-        "/api/records/search?q=washer&source=dataset&agent_harness=codex"
-    ).json()
-    assert [item["record_id"] for item in search_results] == ["rec_codex_001"]
-
-    dashboard = client.get("/api/dashboard?agent_harness=claude-code").json()
-    assert dashboard["available_agent_harnesses"] == [
-        "articraft",
-        "codex",
-        "claude-code",
-        "cursor",
-    ]
-    assert dashboard["overview"]["total_records"] == 1
-    assert dashboard["overview"]["is_filtered"] is True
-    assert set(dashboard["category_stats"]) == {"claude_washers"}
-
-
-def test_viewer_api_smoke_bootstrap_browse_search_and_assets(tmp_path: Path) -> None:
-    repo = StorageRepo(tmp_path)
-    repo.ensure_layout()
-
-    _write_record(
-        repo,
-        record_id="rec_hinge_001",
-        title="Test hinge model",
-        prompt="create a hinge with two linked parts",
-        category_slug="hinges",
-        collections=["workbench"],
-    )
-    CollectionStore(repo).append_workbench_entry(
-        record_id="rec_hinge_001",
-        added_at="2026-03-18T08:01:00Z",
-    )
-    _write_record(
-        repo,
-        record_id="rec_latch_001",
-        title="Cabinet latch",
-        prompt="create a cabinet latch with a catch plate",
-        category_slug="latches",
-        collections=["workbench"],
-    )
-    CollectionStore(repo).append_workbench_entry(
-        record_id="rec_latch_001",
-        added_at="2026-03-18T08:02:00Z",
-    )
-    repo.write_json(
-        repo.layout.record_materialization_compile_report_path("rec_hinge_001"),
-        {
-            "schema_version": 1,
-            "record_id": "rec_hinge_001",
-            "status": "success",
-            "metrics": {},
-        },
-    )
-    asset_meshes_dir = repo.layout.record_materialization_asset_meshes_dir("rec_hinge_001")
-    asset_meshes_dir.mkdir(parents=True, exist_ok=True)
-    (asset_meshes_dir / "part.obj").write_text(
-        "o tri\nv 0 0 0\nv 1 0 0\nv 0 1 0\nf 1 2 3\n",
-        encoding="utf-8",
-    )
-
-    _write_record(
-        repo,
-        record_id="rec_dj_001",
-        title="DJ equipment",
-        prompt="A realistic DJ equipment setup with mixer and faders.",
-        category_slug="dj_equipment",
-        collections=["dataset"],
-    )
-    DatasetStore(repo).promote_record(
-        record_id="rec_dj_001",
-        dataset_id="dj_dataset_001",
-        promoted_at="2026-03-18T08:02:00Z",
-        category_slug="dj_equipment",
-    )
-    _write_record(
-        repo,
-        record_id="rec_knob_001",
-        title="Knurled knob",
-        prompt="A knurled control knob with a pointer indicator.",
-        category_slug="knobs",
-        collections=["dataset"],
-    )
-    DatasetStore(repo).promote_record(
-        record_id="rec_knob_001",
-        dataset_id="knob_dataset_001",
-        promoted_at="2026-03-18T08:03:00Z",
-        category_slug="knobs",
-    )
-
-    client = TestClient(create_app(repo_root=tmp_path))
-
-    assert client.get("/health").json()["status"] == "ok"
-
-    bootstrap = client.get("/api/bootstrap").json()
-    assert {entry["record_id"] for entry in bootstrap["workbench_entries"]} == {
-        "rec_hinge_001",
-        "rec_latch_001",
-    }
-    assert {entry["dataset_id"] for entry in bootstrap["dataset_entries"]} == {
-        "dj_dataset_001",
-        "knob_dataset_001",
-    }
-
-    dataset_browse = client.get("/api/records/browse?source=dataset&limit=1").json()
-    assert dataset_browse["total"] == 2
-    assert len(dataset_browse["record_ids"]) == 1
-    assert set(dataset_browse["facets"]["categories"]) == {"dj_equipment", "knobs"}
-
-    dataset_browse_ids = client.get("/api/records/browse/ids?source=dataset").json()
-    assert dataset_browse_ids["total"] == 2
-    assert set(dataset_browse_ids["record_ids"]) == {"rec_dj_001", "rec_knob_001"}
-
-    workbench_browse = client.get("/api/records/browse?source=workbench&limit=1").json()
-    assert workbench_browse["total"] == 2
-    assert len(workbench_browse["record_ids"]) == 1
-
-    workbench_browse_ids = client.get("/api/records/browse/ids?source=workbench").json()
-    assert workbench_browse_ids["total"] == 2
-    assert set(workbench_browse_ids["record_ids"]) == {"rec_hinge_001", "rec_latch_001"}
-
-    search_results = client.get("/api/records/search?q=hinge&source=workbench").json()
-    assert [item["record_id"] for item in search_results] == ["rec_hinge_001"]
-
-    mesh_file = client.get("/api/records/rec_hinge_001/files/assets/meshes/part.obj")
-    assert mesh_file.status_code == 200
-    assert "v 1 0 0" in mesh_file.text
-
-
-def test_viewer_api_uses_records_index_for_unhydrated_dataset_record(tmp_path: Path) -> None:
-    repo = StorageRepo(tmp_path)
-    repo.ensure_layout()
-    repo.write_text(
-        repo.layout.records_index_path,
-        json.dumps(
-            {
-                "schema_version": 1,
-                "record_id": "rec_unhydrated_001",
-                "dataset_id": "ds_unhydrated_001",
-                "category_slug": "hinges",
-                "title": "Pointer-only hinge",
-                "prompt_preview": "A hinge that is available through Git LFS.",
-                "rating": 5,
-                "effective_rating": 5.0,
-                "created_at": "2026-03-18T08:00:00Z",
-                "updated_at": "2026-03-18T08:00:00Z",
-                "sdk_package": "sdk",
-                "provider": "openai",
-                "model_id": "gpt-5.4",
-                "collections": ["dataset"],
-            }
-        )
-        + "\n",
-    )
-
-    client = TestClient(create_app(repo_root=tmp_path))
-
-    summary = client.get("/api/records/rec_unhydrated_001/summary")
-    assert summary.status_code == 200
-    assert summary.json()["payload_status"] == "missing"
-
-    browse = client.get("/api/records/browse?source=dataset")
-    assert browse.status_code == 200
-    assert browse.json()["records"][0]["record_id"] == "rec_unhydrated_001"
-    assert browse.json()["records"][0]["payload_status"] == "missing"
-
-    file_response = client.get("/api/records/rec_unhydrated_001/files/model.py")
-    assert file_response.status_code == 409
-    assert "data hydrate --record rec_unhydrated_001" in file_response.json()["detail"]
-
-
-def test_dataset_browse_resolves_payload_status_only_for_returned_rows(
-    tmp_path: Path,
-    monkeypatch: pytest.MonkeyPatch,
-) -> None:
-    repo = StorageRepo(tmp_path)
-    repo.ensure_layout()
-    rows = [
-        {
-            "schema_version": 1,
-            "record_id": "rec_fast_old_001",
-            "dataset_id": "ds_fast_old_001",
-            "category_slug": "hinges",
-            "title": "Old indexed hinge",
-            "prompt_preview": "Older indexed row.",
-            "created_at": "2026-03-18T08:00:00Z",
-            "updated_at": "2026-03-18T08:00:00Z",
-            "collections": ["dataset"],
-        },
-        {
-            "schema_version": 1,
-            "record_id": "rec_fast_new_001",
-            "dataset_id": "ds_fast_new_001",
-            "category_slug": "hinges",
-            "title": "New indexed hinge",
-            "prompt_preview": "Newer indexed row.",
-            "created_at": "2026-03-18T09:00:00Z",
-            "updated_at": "2026-03-18T09:00:00Z",
-            "collections": ["dataset"],
-        },
-    ]
-    repo.write_text(
-        repo.layout.records_index_path,
-        "".join(json.dumps(row, separators=(",", ":")) + "\n" for row in rows),
-    )
-
-    calls: list[str] = []
-
-    def fake_payload_status(_repo: StorageRepo, record_id: str) -> str:
-        calls.append(record_id)
-        return "missing"
-
-    monkeypatch.setattr("viewer.api.browse_index.record_payload_status", fake_payload_status)
-    client = TestClient(create_app(repo_root=tmp_path))
-
-    browse_ids = client.get("/api/records/browse/ids?source=dataset")
-    assert browse_ids.status_code == 200
-    assert calls == []
-
-    browse = client.get("/api/records/browse?source=dataset&limit=1")
-    assert browse.status_code == 200
-    assert [record["record_id"] for record in browse.json()["records"]] == ["rec_fast_new_001"]
-    assert browse.json()["records"][0]["payload_status"] == "missing"
-    assert calls == ["rec_fast_new_001"]
-
-
-def test_dashboard_uses_records_index_rows_without_per_record_lookup(
-    tmp_path: Path,
-    monkeypatch: pytest.MonkeyPatch,
-) -> None:
-    repo = StorageRepo(tmp_path)
-    repo.ensure_layout()
-    repo.write_text(
-        repo.layout.records_index_path,
-        "".join(
-            json.dumps(
-                {
-                    "schema_version": 1,
-                    "record_id": f"rec_dashboard_{index:03d}",
-                    "dataset_id": f"ds_dashboard_{index:03d}",
-                    "category_slug": "hinges",
-                    "title": f"Dashboard row {index}",
-                    "prompt_preview": "Indexed dashboard row.",
-                    "created_at": f"2026-03-18T08:0{index}:00Z",
-                    "updated_at": f"2026-03-18T08:0{index}:00Z",
-                    "effective_rating": 5.0,
-                    "total_cost_usd": 1.25,
-                    "input_tokens": 1000,
-                    "output_tokens": 100,
-                    "agent_harness": "articraft",
-                    "collections": ["dataset"],
-                },
-                separators=(",", ":"),
-            )
-            + "\n"
-            for index in range(1, 3)
-        ),
-    )
-
-    def fail_per_record_lookup(_repo: StorageRepo, _record_id: str) -> dict:
-        raise AssertionError("dashboard should use records_index rows directly")
-
-    monkeypatch.setattr("viewer.api.store_dashboard.find_record_index_row", fail_per_record_lookup)
-    client = TestClient(create_app(repo_root=tmp_path))
-
-    dashboard = client.get("/api/dashboard")
-    assert dashboard.status_code == 200
-    assert dashboard.json()["overview"]["total_records"] == 2
-    assert dashboard.json()["category_stats"]["hinges"]["count"] == 2
-
-
-def test_viewer_api_promote_uses_category_slug_not_display_title(
-    tmp_path: Path,
-    monkeypatch: pytest.MonkeyPatch,
-) -> None:
-    _patch_dataset_tokens(monkeypatch, "0001")
-    repo = StorageRepo(tmp_path)
-    repo.ensure_layout()
-
-    CategoryStore(repo).save(
-        CategoryRecord(
-            schema_version=1,
-            slug="screwin_light_bulb_with_socket",
-            title="Screw-in light bulb with socket",
-            current_count=0,
-            last_item_index=0,
-            run_count=0,
-        )
-    )
-    _write_record(
-        repo,
-        record_id="rec_light_001",
-        title="Swivel bulb",
-        prompt="A screw-in light bulb with socket articulation.",
-        category_slug=None,
-        collections=["workbench"],
-        source_run_id="run_light_001",
-    )
-    CollectionStore(repo).append_workbench_entry(
-        record_id="rec_light_001",
-        added_at="2026-03-19T14:44:36Z",
-    )
-    RunStore(repo).write_run(
-        RunRecord(
-            schema_version=1,
-            run_id="run_light_001",
-            run_mode="workbench",
-            collection="workbench",
-            created_at="2026-03-19T14:44:36Z",
-            updated_at="2026-03-19T14:44:36Z",
-            provider="openai",
-            model_id="gpt-5.4",
-            sdk_package="sdk",
-            status="success",
-            category_slug=None,
-            prompt_count=1,
-        )
-    )
-
-    client = TestClient(create_app(repo_root=tmp_path))
-    promote_response = client.post(
-        "/api/records/rec_light_001/promote",
-        json={
-            "category_slug": "screwin_light_bulb_with_socket",
-            "category_title": "Screw-in light bulb with socket",
-        },
-    )
-
-    assert promote_response.status_code == 200
-    assert promote_response.json()["category_slug"] == "screwin_light_bulb_with_socket"
-    assert promote_response.json()["dataset_id"] == "ds_screwin_light_bulb_with_socket_0001"
-    assert not repo.layout.category_metadata_path("screw_in_light_bulb_with_socket").exists()
-
-
-def test_viewer_api_promote_rejects_invalid_category_slug(tmp_path: Path) -> None:
-    repo = StorageRepo(tmp_path)
-    repo.ensure_layout()
-    _write_record(
-        repo,
-        record_id="rec_invalid_slug_001",
-        title="Invalid slug",
-        prompt="A workbench record.",
-        category_slug=None,
-        collections=["workbench"],
-    )
-
-    client = TestClient(create_app(repo_root=tmp_path))
-    response = client.post(
-        "/api/records/rec_invalid_slug_001/promote",
-        json={
-            "category_slug": "../escape",
-            "category_title": "Escape",
-        },
-    )
-
-    assert response.status_code == 422
-    assert not (tmp_path / "data" / "escape").exists()
-
-
-def test_viewer_api_ensures_record_assets_on_demand(
-    tmp_path: Path,
-    monkeypatch: pytest.MonkeyPatch,
-) -> None:
-    repo = StorageRepo(tmp_path)
-    repo.ensure_layout()
-    _write_record(
-        repo,
-        record_id="rec_lazy_001",
-        title="Lazy compiled model",
-        prompt="compile this record when the viewer opens it",
-        category_slug="hinges",
-        source_run_id="run_lazy_001",
-    )
-    repo.write_json(
-        repo.layout.record_dir("rec_lazy_001") / "compile_report.json",
-        {
-            "schema_version": 1,
-            "record_id": "rec_lazy_001",
-            "status": "draft",
-            "urdf_path": "model.urdf",
-            "warnings": [],
-            "checks_run": [],
-            "metrics": {},
-        },
-    )
-    repo.write_json(
-        repo.layout.record_dir("rec_lazy_001") / "provenance.json",
-        {
-            "schema_version": 1,
-            "record_id": "rec_lazy_001",
-            "materialization": {
-                "fingerprint_inputs": {
-                    "model_py_sha256": None,
-                    "model_urdf_sha256": None,
-                }
-            },
-        },
-    )
-
-    compile_calls: list[Path] = []
-
-    def fake_compile(
-        script_path: Path,
-        *,
-        sdk_package: str = "sdk",
-        ignore_geom_qc: bool = False,
-        run_checks: bool = True,
-        target: str = "full",
-    ) -> SimpleNamespace:
-        compile_calls.append(script_path)
-        assert ignore_geom_qc is False
-        assert run_checks is False
-        assert target == "visual"
-        meshes_dir = script_path.parent / "assets" / "meshes"
-        meshes_dir.mkdir(parents=True, exist_ok=True)
-        (meshes_dir / "part.obj").write_text(
-            "o tri\nv 0 0 0\nv 1 0 0\nv 0 1 0\nf 1 2 3\n",
-            encoding="utf-8",
-        )
-        return SimpleNamespace(
-            urdf_xml=(
-                "<robot name='lazy'>"
-                "<link name='base'>"
-                "<visual><geometry><mesh filename='assets/meshes/part.obj'/></geometry></visual>"
-                "</link>"
-                "</robot>"
+            "schema_version": 3,
+            "record_id": record_id,
+            "created_at": "2026-01-01T00:00:00Z",
+            "updated_at": "2026-01-02T00:00:00Z",
+            "rating": rating,
+            "kind": "generated_model",
+            "prompt_kind": "single_prompt",
+            "category_slug": category_slug,
+            "source": {"run_id": None, "prompt_index": None},
+            "sdk_package": "sdk",
+            "provider": "openai",
+            "model_id": "gpt-test",
+            "display": {"title": title, "prompt_preview": f"make {title}"},
+            "artifacts": revision_artifacts_payload(
+                revision_id=INITIAL_REVISION_ID,
+                has_cost_file=False,
             ),
-            warnings=["warning: lazy compile"],
-        )
+            "hashes": {},
+            "active_revision_id": INITIAL_REVISION_ID,
+        },
+    )
 
-    monkeypatch.setattr("agent.compiler.compile_urdf_report", fake_compile)
-    monkeypatch.setattr("agent.compiler.compile_urdf_report_maybe_timeout", fake_compile)
 
-    client = TestClient(create_app(repo_root=tmp_path))
+def _client(tmp_path: Path) -> tuple[TestClient, StorageRepo]:
+    repo = StorageRepo(tmp_path)
+    repo.ensure_layout()
+    return TestClient(create_app(repo_root=tmp_path)), repo
 
-    urdf_response = client.get("/api/records/rec_lazy_001/files/model.urdf")
-    assert urdf_response.status_code == 200
-    assert "robot name='lazy'" in urdf_response.text
-    assert compile_calls == [repo.layout.record_dir("rec_lazy_001") / "model.py"]
 
-    mesh_response = client.get("/api/records/rec_lazy_001/files/assets/meshes/part.obj")
-    assert mesh_response.status_code == 200
-    assert "v 1 0 0" in mesh_response.text
-    assert compile_calls == [repo.layout.record_dir("rec_lazy_001") / "model.py"]
+def test_bootstrap_and_browse_records_from_manifest(tmp_path: Path) -> None:
+    client, repo = _client(tmp_path)
+    _write_record(repo, "rec_lamp", title="Desk Lamp", category_slug="desk_lamp", rating=5)
+    rebuild_manifest(repo)
+
+    bootstrap = client.get("/api/bootstrap")
+    assert bootstrap.status_code == 200
+    assert bootstrap.json()["library_records"][0]["record_id"] == "rec_lamp"
+
+    browse = client.get("/api/records/browse", params={"q": "lamp"})
+    assert browse.status_code == 200
+    payload = browse.json()
+    assert payload["total"] == 1
+    assert payload["records"][0]["title"] == "Desk Lamp"
+    assert payload["facets"]["categories"] == ["desk_lamp"]
+
+
+def test_record_summary_search_and_stats(tmp_path: Path) -> None:
+    client, repo = _client(tmp_path)
+    _write_record(repo, "rec_lamp", title="Desk Lamp", rating=4)
+    rebuild_manifest(repo)
+
+    summary = client.get("/api/records/rec_lamp/summary")
+    assert summary.status_code == 200
+    assert summary.json()["effective_rating"] == 4
+
+    search = client.get("/api/records/search", params={"q": "desk"})
+    assert search.status_code == 200
+    assert [row["record_id"] for row in search.json()] == ["rec_lamp"]
+
+    stats = client.get("/api/stats")
+    assert stats.status_code == 200
+    assert stats.json()["total_records"] == 1
+    assert stats.json()["rating_distribution"] == {"4": 1}
+
+
+def test_rating_update_upserts_manifest(tmp_path: Path) -> None:
+    client, repo = _client(tmp_path)
+    _write_record(repo, "rec_lamp", title="Desk Lamp")
+    rebuild_manifest(repo)
+
+    response = client.put("/api/records/rec_lamp/rating", json={"rating": 5})
+
+    assert response.status_code == 200
+    assert response.json()["rating"] == 5
+    [row] = rebuild_manifest(repo, migrate_metadata=False)
+    assert row["rating"] == 5
+
+
+def test_delete_record_removes_record_and_manifest_row(tmp_path: Path) -> None:
+    client, repo = _client(tmp_path)
+    _write_record(repo, "rec_lamp", title="Desk Lamp")
+    rebuild_manifest(repo)
+
+    response = client.delete("/api/records/rec_lamp")
+
+    assert response.status_code == 200
+    assert not repo.layout.record_dir("rec_lamp").exists()
+    assert repo.layout.records_manifest_path.read_text(encoding="utf-8") == ""

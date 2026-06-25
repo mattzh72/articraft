@@ -6,25 +6,25 @@ from pathlib import Path
 from typing import Any
 
 from storage.layout import StorageLayout
-from storage.lfs_pointers import is_lfs_pointer_file
 
 
 @dataclass(slots=True)
 class StorageRepo:
     root: Path
+    data_root: Path | None = None
     layout: StorageLayout = field(init=False)
 
     def __post_init__(self) -> None:
         self.root = self.root.resolve()
-        self.layout = StorageLayout(self.root)
+        if self.data_root is not None:
+            self.data_root = self.data_root.expanduser().resolve()
+        self.layout = StorageLayout(self.root, self.data_root)
 
     def ensure_layout(self) -> None:
         self.layout.ensure_base_dirs()
 
     def read_json(self, path: Path, *, default: Any = None) -> Any:
         if not path.exists():
-            return default
-        if is_lfs_pointer_file(path):
             return default
         return json.loads(path.read_text(encoding="utf-8"))
 

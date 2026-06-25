@@ -20,8 +20,8 @@ def test_compile_record_prints_structured_compile_signals(
     (record_dir / "model.py").write_text("# model\n", encoding="utf-8")
 
     class FakeViewerStore:
-        def __init__(self, repo_root: Path) -> None:
-            self.repo = StorageRepo(repo_root)
+        def __init__(self, repo_root: Path, *, data_root: Path | None = None) -> None:
+            self.repo = StorageRepo(repo_root, data_root=data_root)
             self.materialization = self
 
         def materialize_record_assets(self, record_id: str, **kwargs):

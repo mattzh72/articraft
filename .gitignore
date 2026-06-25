@@ -212,11 +212,8 @@ cython_debug/
 .cursorignore
 .cursorindexingignore
 
-# Articraft record-local derived assets and transient run state
-data/cache/
-data/local/
-data/records/*/model.urdf
-data/records/*/assets/
+# External Articraft dataset roots are not tracked in this code repository.
+data/
 performance/results/
 
 # Viewer frontend dependencies/build output

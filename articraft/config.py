@@ -86,6 +86,8 @@ def bootstrap_env(
         return False, []
 
     template_path = repo_root / ".env.example"
+    if not template_path.exists():
+        return False, []
     template_lines = template_path.read_text(encoding="utf-8").splitlines()
 
     rendered_lines: list[str] = []

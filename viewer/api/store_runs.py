@@ -180,7 +180,6 @@ class ViewerRunsStore(ViewerStoreComponent):
                         else None,
                         created_at=run_metadata.get("created_at"),
                         updated_at=updated_at,
-                        collection=run_metadata.get("collection"),
                         category_slug=run_metadata.get("category_slug"),
                         provider=run_metadata.get("provider"),
                         model_id=run_metadata.get("model_id"),
@@ -223,7 +222,6 @@ class ViewerRunsStore(ViewerStoreComponent):
         return RunSummaryResponse(
             run_id=run_id,
             run_mode=run_metadata.get("run_mode"),
-            collection=run_metadata.get("collection"),
             status=run_metadata.get("status"),
             created_at=run_metadata.get("created_at"),
             updated_at=run_metadata.get("updated_at"),
@@ -302,21 +300,13 @@ class ViewerRunsStore(ViewerStoreComponent):
             records=records,
         )
 
-    def bootstrap(self, *, include_dataset_entries: bool = True) -> ViewerBootstrapResponse:
+    def bootstrap(self) -> ViewerBootstrapResponse:
         summary_cache: dict[str, RecordSummaryResponse | None] = {}
         return ViewerBootstrapResponse(
             repo_root=self.repo_root.as_posix(),
+            data_root=self.repo.layout.data_root.as_posix(),
             generated_at=_utc_now(),
-            workbench_entries=self.records.list_workbench_entries(summary_cache=summary_cache),
-            dataset_entries=(
-                self.records.list_dataset_entries(
-                    summary_cache=summary_cache,
-                    include_records=False,
-                )
-                if include_dataset_entries
-                else []
-            ),
+            library_records=self.records.list_library_records(),
             staging_entries=self.runs.list_staging_entries(summary_cache=summary_cache),
             runs=self.runs.list_runs(),
-            supercategories=self.taxonomy.list_supercategories(),
         )

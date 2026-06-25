@@ -23,8 +23,6 @@ jobs:
     steps:
       - name: Check out repository
         uses: actions/checkout@v5
-        with:
-          lfs: false
 
       - name: Install uv
         uses: astral-sh/setup-uv@v7
@@ -46,17 +44,11 @@ jobs:
       - name: Lint Python
         run: uv run --frozen ruff check .
 
-      - name: Check data format
-        run: uv run --frozen articraft data check
-
       - name: Run smoke tests
         run: |
           uv run --frozen --group dev pytest -q \
-            tests/agent \
             tests/storage \
             tests/viewer/test_api.py \
-            tests/workbench \
-            tests/dataset/test_imports.py \
             tests/sdk/test_imports.py \
             tests/cli
 
@@ -71,8 +63,6 @@ jobs:
     steps:
       - name: Check out repository
         uses: actions/checkout@v5
-        with:
-          lfs: false
 
       - name: Set up Node.js
         uses: actions/setup-node@v5
@@ -89,104 +79,3 @@ jobs:
 
       - name: Typecheck viewer
         run: npm run typecheck
-
-  dataset-pr:
-    name: Dataset PR Checks
-    if: github.event_name == 'pull_request'
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Check out repository
-        uses: actions/checkout@v5
-        with:
-          fetch-depth: 0
-          lfs: false
-
-      - name: Install Git LFS
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y git-lfs
-          git lfs install --local
-
-      - name: Install uv
-        uses: astral-sh/setup-uv@v7
-        with:
-          version: "0.9.17"
-          enable-cache: true
-
-      - name: Set up Python
-        uses: actions/setup-python@v6
-        with:
-          python-version-file: ".python-version"
-
-      - name: Install dependencies
-        run: uv sync --frozen --group dev
-
-      - name: Hydrate changed records
-        id: changed-records
-        run: |
-          mapfile -t records < <(
-            git diff --name-only "${{ github.event.pull_request.base.sha }}"...HEAD -- data/records \
-              | awk -F/ 'NF >= 3 { print $3 }' \
-              | sort -u
-          )
-          if [ "${#records[@]}" -eq 0 ]; then
-            echo "records=" >> "$GITHUB_OUTPUT"
-            exit 0
-          fi
-          include="$(printf 'data/records/%s/**,' "${records[@]}")"
-          git lfs pull --include "${include%,}" --exclude ""
-          {
-            echo "records<<EOF"
-            printf "%s\n" "${records[@]}"
-            echo "EOF"
-          } >> "$GITHUB_OUTPUT"
-
-      - name: Validate changed records and index
-        if: steps.changed-records.outputs.records != ''
-        run: |
-          args=()
-          while IFS= read -r record_id; do
-            [ -z "$record_id" ] && continue
-            args+=(--record "$record_id")
-          done <<< "${{ steps.changed-records.outputs.records }}"
-          uv run --frozen articraft data check "${args[@]}"
-          uv run --frozen articraft data build-record-index
-          git diff --exit-code data/records_index.jsonl
-
-  full-dataset:
-    name: Full Dataset Validation
-    if: github.event_name == 'workflow_dispatch' || github.event_name == 'schedule'
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Check out repository
-        uses: actions/checkout@v5
-        with:
-          lfs: false
-
-      - name: Install Git LFS
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y git-lfs
-          git lfs install --local
-
-      - name: Install uv
-        uses: astral-sh/setup-uv@v7
-        with:
-          version: "0.9.17"
-          enable-cache: true
-
-      - name: Set up Python
-        uses: actions/setup-python@v6
-        with:
-          python-version-file: ".python-version"
-
-      - name: Install dependencies
-        run: uv sync --frozen --group dev
-
-      - name: Hydrate all records
-        run: git lfs pull --include "data/records/**" --exclude ""
-
-      - name: Validate full dataset
-        run: uv run --frozen articraft data check --require-records

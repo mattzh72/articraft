@@ -1,6 +1,7 @@
+export type AgentHarness = "articraft" | "codex" | "claude-code" | "cursor";
+
 export type RecordSummary = {
   record_id: string;
-  payload_status: "hydrated" | "unhydrated" | "missing";
   title: string;
   prompt_preview: string;
   rating: number | null;
@@ -25,6 +26,9 @@ export type RecordSummary = {
   output_tokens: number | null;
   total_cost_usd: number | null;
   category_slug: string | null;
+  category_title: string | null;
+  label: string | null;
+  tags: string[];
   run_id: string | null;
   run_status: string | null;
   run_message: string | null;
@@ -33,7 +37,6 @@ export type RecordSummary = {
   parent_record_id: string | null;
   revision_count: number;
   has_history: boolean;
-  collections: string[];
   materialization_status: string | null;
   has_compile_report: boolean;
   has_provenance: boolean;
@@ -67,34 +70,10 @@ export type RecordBrowseIdsResponse = {
   record_ids: string[];
 };
 
-export type WorkbenchEntry = {
-  record_id: string;
-  added_at: string;
-  label: string | null;
-  tags: string[];
-  archived: boolean;
-  record: RecordSummary | null;
-};
-
-export type DatasetEntry = {
-  record_id: string;
-  dataset_id: string;
-  category_slug: string;
-  promoted_at: string;
-  record: RecordSummary | null;
-};
-
-export type SupercategoryOption = {
-  slug: string;
-  title: string;
-  description: string;
-  category_slugs: string[];
-};
-
 export type CategoryOption = {
   slug: string;
   title: string;
-  supercategory_slug: string | null;
+  supercategory_slug?: string | null;
 };
 
 export type StagingEntry = {
@@ -106,7 +85,6 @@ export type StagingEntry = {
   message: string | null;
   created_at: string | null;
   updated_at: string | null;
-  collection: string | null;
   category_slug: string | null;
   provider: string | null;
   model_id: string | null;
@@ -129,7 +107,6 @@ export type StagingEntry = {
 export type RunSummary = {
   run_id: string;
   run_mode: string | null;
-  collection: string | null;
   status: string | null;
   created_at: string | null;
   updated_at: string | null;
@@ -206,13 +183,6 @@ export type DeleteRecordResult = {
   record_id: string;
 };
 
-export type HydrateRecordResult = {
-  status: string;
-  record_id: string;
-  hydrated_count: number;
-  message: string | null;
-};
-
 export type DeleteStagingResult = {
   status: string;
   run_id: string;
@@ -241,8 +211,6 @@ export type RunDetail = {
 
 export type RepoStats = {
   total_records: number;
-  workbench_count: number;
-  dataset_count: number;
   total_runs: number;
   total_cost_usd: number | null;
   data_size_bytes: number | null;
@@ -251,11 +219,8 @@ export type RepoStats = {
     string,
     {
       count: number;
-      sdk_package: string | null;
       average_rating: number | null;
       average_cost_usd: number | null;
-      average_input_tokens: number | null;
-      average_output_tokens: number | null;
     }
   >;
   model_counts: Record<string, number>;
@@ -263,81 +228,21 @@ export type RepoStats = {
   rating_distribution: Record<string, number>;
 };
 
-export type DashboardCostBounds = {
-  min: number;
-  max: number;
-};
-
-export type DashboardOverview = {
-  total_records: number;
-  total_runs: number;
-  total_cost_usd: number | null;
-  average_cost_usd: number | null;
-  data_size_bytes: number | null;
-  category_count: number;
-  model_count: number;
-  sdk_count: number;
-  is_filtered: boolean;
-};
-
-export type DashboardCategoryStats = {
-  count: number;
-  sdk_package: string | null;
-  average_rating: number | null;
-  average_cost_usd: number | null;
-  average_input_tokens: number | null;
-  average_output_tokens: number | null;
-  input_token_sample_count: number;
-  output_token_sample_count: number;
-};
-
-export type DashboardCostTrendPoint = {
-  date_key: string;
-  day_start_ms: number;
-  record_count: number;
-  total_cost_usd: number;
-  daily_average_cost_usd: number | null;
-  rolling_average_cost_usd: number | null;
-};
-
-export type DashboardCostTrend = {
-  points: DashboardCostTrendPoint[];
-  latest_average_cost_usd: number | null;
-  previous_average_cost_usd: number | null;
-  delta_usd: number | null;
-  delta_pct: number | null;
-};
-
-export type DashboardData = {
-  generated_at: string;
-  supercategories: SupercategoryOption[];
-  available_sdks: string[];
-  available_agent_harnesses: AgentHarness[];
-  available_authors: string[];
-  available_categories: string[];
-  cost_bounds: DashboardCostBounds | null;
-  overview: DashboardOverview;
-  category_stats: Record<string, DashboardCategoryStats>;
-  cost_trend: DashboardCostTrend;
-};
-
 export type ViewerBootstrap = {
   repo_root: string;
+  data_root: string;
   generated_at: string;
-  workbench_entries: WorkbenchEntry[];
-  dataset_entries: DatasetEntry[];
+  library_records: RecordSummary[];
   staging_entries: StagingEntry[];
   runs: RunSummary[];
-  supercategories: SupercategoryOption[];
 };
 
 export type ViewerSelection =
   | { kind: "record"; recordId: string }
   | { kind: "staging"; runId: string; recordId: string };
 
-export type SourceFilter = "workbench" | "dataset";
-export type BrowserTab = SourceFilter | "staging";
-export type AgentHarness = "articraft" | "codex" | "claude-code" | "cursor";
+export type SourceFilter = "library";
+export type BrowserTab = "library" | "staging";
 export type TimeFilterPoint = "1y" | "180d" | "90d" | "60d" | "30d" | "14d" | "7d" | "3d" | "24h" | "12h" | "6h" | "1h";
 export type TimeFilter = {
   oldest: TimeFilterPoint | null;
@@ -383,24 +288,25 @@ export type ViewerAction =
   | { type: "SET_SELECTED_RECORD_SUMMARY"; payload: RecordSummary | null }
   | {
       type: "SYNC_FROM_URL";
-      payload: {
-        selection: ViewerSelection | null;
-        selectedRecordId: string | null;
-        selectedInspectorTab: InspectorTab;
-        searchQuery: string;
-        browserTab: BrowserTab;
-        sourceFilter: SourceFilter;
-        timeFilter: TimeFilter;
-        modelFilter: string | null;
-        sdkFilter: string | null;
-        agentHarnessFilters: AgentHarness[];
-        authorFilters: string[];
-        categoryFilters: string[];
-        costFilter: CostFilter;
-        ratingFilter: RatingFilter;
-        secondaryRatingFilter: RatingFilter;
-        selectedRunId: string | null;
-      };
+      payload: Pick<
+        ViewerState,
+        | "selection"
+        | "selectedRecordId"
+        | "selectedInspectorTab"
+        | "searchQuery"
+        | "browserTab"
+        | "sourceFilter"
+        | "timeFilter"
+        | "modelFilter"
+        | "sdkFilter"
+        | "agentHarnessFilters"
+        | "authorFilters"
+        | "categoryFilters"
+        | "costFilter"
+        | "ratingFilter"
+        | "secondaryRatingFilter"
+        | "selectedRunId"
+      >;
     }
   | { type: "DELETE_RECORD_LOCAL"; payload: string }
   | { type: "SELECT_RECORD"; payload: string | null }

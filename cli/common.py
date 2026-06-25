@@ -1,11 +1,35 @@
 from __future__ import annotations
 
+import os
 from argparse import ArgumentParser
 from pathlib import Path
 
-from storage.datasets import DatasetStore
 from storage.repo import StorageRepo
 from storage.revisions import active_provenance_path
+
+
+def resolve_data_dir(repo_root: Path, data_dir: Path | None = None) -> Path:
+    if data_dir is not None:
+        return data_dir.expanduser().resolve()
+    configured = os.getenv("ARTICRAFT_DATA_DIR")
+    if configured:
+        return Path(configured).expanduser().resolve()
+    return repo_root.expanduser().resolve() / "data"
+
+
+def storage_repo_from_args(args: object) -> StorageRepo:
+    repo_root = getattr(args, "repo_root")
+    data_dir = getattr(args, "data_dir", None)
+    return StorageRepo(Path(repo_root), data_root=resolve_data_dir(Path(repo_root), data_dir))
+
+
+def add_data_dir_argument(parser: ArgumentParser) -> None:
+    parser.add_argument(
+        "--data-dir",
+        type=Path,
+        default=None,
+        help=("Articraft data root. Defaults to ARTICRAFT_DATA_DIR, then <repo-root>/data."),
+    )
 
 
 def add_data_root_argument(parser: ArgumentParser) -> None:
@@ -13,12 +37,9 @@ def add_data_root_argument(parser: ArgumentParser) -> None:
         "--repo-root",
         type=Path,
         default=Path.cwd(),
-        help="Repository root containing the data/ directory.",
+        help="Articraft code repository root.",
     )
-
-
-def warn_if_post_commit_hook_missing(repo_root: Path) -> None:
-    _ = repo_root
+    add_data_dir_argument(parser)
 
 
 def provider_for_record_image(
@@ -42,11 +63,3 @@ def provider_for_record_image(
     if isinstance(provider, str) and provider.strip():
         return provider
     return "openai"
-
-
-def refresh_dataset_manifest_if_member(repo: StorageRepo, record_id: str) -> bool:
-    datasets = DatasetStore(repo)
-    if datasets.load_entry(record_id) is None:
-        return False
-    datasets.write_dataset_manifest()
-    return True

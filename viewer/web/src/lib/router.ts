@@ -1,18 +1,13 @@
-export type AppRoute = { page: "dashboard" } | { page: "viewer" };
+export type AppRoute = { page: "viewer" };
 
 export function parseRoute(): AppRoute {
-  const pathname = window.location.pathname;
-  if (pathname === "/viewer" || pathname.startsWith("/viewer/")) {
-    return { page: "viewer" };
-  }
-  return { page: "dashboard" };
+  return { page: "viewer" };
 }
 
-export function navigateTo(route: AppRoute): void {
-  const path = route.page === "viewer" ? "/viewer" : "/";
-  if (window.location.pathname === path) {
+export function navigateTo(): void {
+  if (window.location.pathname === "/viewer") {
     return;
   }
-  window.history.pushState(null, "", path);
+  window.history.pushState(null, "", "/viewer");
   window.dispatchEvent(new PopStateEvent("popstate"));
 }

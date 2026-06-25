@@ -19,8 +19,8 @@ def test_runner_help_text(capsys: pytest.CaptureFixture[str]) -> None:
         "--provider {anthropic,codex-cli,dashscope,gemini,openai,openrouter,deepseek}" in help_text
     )
     assert "--openai-transport {http,websocket}" in help_text
-    assert "--collection {workbench,dataset}" in help_text
-    assert "--dataset-id DATASET_ID" in help_text
+    assert "--data-dir DATA_DIR" in help_text
+    assert "--category CATEGORY" in help_text
     assert "--max-cost-usd MAX_COST_USD" in help_text
     assert "--flash" not in help_text
     assert "--hybrid-sdk" not in help_text
@@ -35,13 +35,13 @@ def test_runner_rejects_removed_flash_flag(capsys: pytest.CaptureFixture[str]) -
     assert "unrecognized arguments: --flash" in capsys.readouterr().err
 
 
-def test_runner_requires_dataset_id_for_dataset_collection(
+def test_runner_rejects_removed_collection_flag(
     capsys: pytest.CaptureFixture[str],
 ) -> None:
     with pytest.raises(SystemExit, match="2"):
         runner.main(["--prompt", "test", "--collection", "dataset"])
 
-    assert "--dataset-id is required when --collection dataset." in capsys.readouterr().err
+    assert "unrecognized arguments: --collection dataset" in capsys.readouterr().err
 
 
 def test_runner_dump_provider_payload_supports_sdk(

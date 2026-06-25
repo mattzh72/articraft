@@ -33,8 +33,6 @@ from agent.record_persistence import (
     _copy_if_exists,
     _copytree_if_exists,
     _draft_model_template,
-    _load_workbench_entry,
-    _normalize_collection_names,
     _normalize_materialization_asset_ref,
     _normalize_prompt_kind,
     _referenced_materialization_assets,
@@ -46,7 +44,7 @@ from agent.record_persistence import (
     write_success_record,
 )
 from agent.record_persistence import (
-    create_workbench_draft_record as _create_workbench_draft_record_impl,
+    create_draft_record as _create_draft_record_impl,
 )
 from agent.rerun import rerun_record_in_place as _rerun_record_in_place_impl
 from agent.run_context import (
@@ -128,8 +126,6 @@ __all__ = [
     "_first_string",
     "_infer_provider_from_model_id",
     "_load_qc_blurb_text",
-    "_load_workbench_entry",
-    "_normalize_collection_names",
     "_normalize_materialization_asset_ref",
     "_normalize_prompt_kind",
     "_optional_bool",
@@ -160,7 +156,7 @@ __all__ = [
     "build_tool_registry",
     "compile_urdf",
     "compile_urdf_report_maybe_timeout",
-    "create_workbench_draft_record",
+    "create_draft_record",
     "edit_record",
     "main",
     "rerun_record_in_place",
@@ -248,9 +244,9 @@ async def run_from_input(user_content: Any, **kwargs: Any) -> int:
     )
 
 
-def create_workbench_draft_record(**kwargs: Any) -> Path:
-    """Create a draft workbench record without running generation."""
-    return _create_workbench_draft_record_impl(
+def create_draft_record(**kwargs: Any) -> Path:
+    """Create a draft local library record without running generation."""
+    return _create_draft_record_impl(
         **kwargs,
         resolve_record_author_func=_resolve_runtime_record_author,
     )

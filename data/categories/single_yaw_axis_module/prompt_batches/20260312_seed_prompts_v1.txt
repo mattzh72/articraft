@@ -1,4 +1,0 @@
-A pedestal-mounted yaw module with a vertical rotation axis, circular bearing housing, square motor base, and rigid top plate.
-A compact rotary indexing base providing one yaw axis, with a cylindrical turntable, bolted support frame, and mechanical end-stop details.
-A pan-only turntable mechanism with a low-profile rotary base, circular top plate, and rigid mounting pedestal for a sensor payload.
-A horizontal scanning platform with one vertical-axis pan joint, bearing race detail, and an industrial mounting frame.

@@ -10,6 +10,8 @@ import pytest
 from agent import runner
 from agent.models import AgentResult, TerminateReason
 from agent.prompts import DESIGNER_PROMPT_NAME
+from storage.library_manifest import manifest_by_id
+from storage.repo import StorageRepo
 from tests.helpers import FakeAgent
 
 
@@ -25,14 +27,6 @@ def _active_revision_dir(record_dir: Path) -> Path:
 
 def _artifact_path(record_dir: Path, filename: str) -> Path:
     return _active_revision_dir(record_dir) / filename
-
-
-def _dataset_entry_path(record_dir: Path) -> Path:
-    return record_dir / "collections" / "dataset.json"
-
-
-def _workbench_entry_path(record_dir: Path) -> Path:
-    return record_dir / "collections" / "workbench.json"
 
 
 class DeletingImageAgent(FakeAgent):
@@ -192,7 +186,7 @@ class AllInTotalsAgent(FakeAgent):
         )
 
 
-def test_workbench_run_and_rerun_persist_runtime_artifacts(
+def test_library_run_and_rerun_persist_runtime_artifacts(
     fake_agent: None,
     tmp_path: Path,
 ) -> None:
@@ -241,10 +235,13 @@ def test_workbench_run_and_rerun_persist_runtime_artifacts(
     assert compile_report["metrics"]["materialization_fingerprint"]
     assert not (materialization_dir / "assets" / "meshes").exists()
 
-    workbench_path = _workbench_entry_path(record_dir)
-    workbench_entry = json.loads(workbench_path.read_text(encoding="utf-8"))
-    assert workbench_entry["record_id"] == record_dir.name
-    assert workbench_entry["label"] == "gearbox try"
+    record = json.loads((record_dir / "record.json").read_text(encoding="utf-8"))
+    assert record["record_id"] == record_dir.name
+    assert record["label"] == "gearbox try"
+    assert record["tags"] == ["gear", "test"]
+    manifest_row = manifest_by_id(StorageRepo(repo_root))[record_dir.name]
+    assert manifest_row["label"] == "gearbox try"
+    assert manifest_row["tags"] == ["gear", "test"]
 
     runs_root = repo_root / "data" / "cache" / "runs"
     run_dirs = [path for path in runs_root.iterdir() if path.is_dir()]
@@ -270,8 +267,12 @@ def test_workbench_run_and_rerun_persist_runtime_artifacts(
         encoding="utf-8",
     )
 
-    workbench_entry["archived"] = True
-    workbench_path.write_text(json.dumps(workbench_entry, indent=2) + "\n", encoding="utf-8")
+    original_record["rating"] = 4
+    original_record["rated_by"] = "mattzh72"
+    (record_dir / "record.json").write_text(
+        json.dumps(original_record, indent=2) + "\n",
+        encoding="utf-8",
+    )
 
     _artifact_path(record_dir, "model.py").write_text("# stale\n", encoding="utf-8")
     _artifact_path(record_dir, "cost.json").write_text('{"stale": true}\n', encoding="utf-8")
@@ -316,11 +317,14 @@ def test_workbench_run_and_rerun_persist_runtime_artifacts(
     assert not (record_dir / "assets" / "viewer").exists()
     assert not (materialization_dir / "assets" / "meshes").exists()
 
-    workbench_entry = json.loads(workbench_path.read_text(encoding="utf-8"))
-    assert workbench_entry["record_id"] == record_dir.name
-    assert workbench_entry["label"] == "gearbox try"
-    assert workbench_entry["tags"] == ["gear", "test"]
-    assert workbench_entry["archived"] is True
+    assert updated_record["label"] == "gearbox try"
+    assert updated_record["tags"] == ["gear", "test"]
+    assert updated_record["rating"] == 4
+    assert updated_record["rated_by"] == "mattzh72"
+    manifest_row = manifest_by_id(StorageRepo(repo_root))[record_dir.name]
+    assert manifest_row["label"] == "gearbox try"
+    assert manifest_row["tags"] == ["gear", "test"]
+    assert manifest_row["rating"] == 4
 
     run_dirs = sorted(path for path in runs_root.iterdir() if path.is_dir())
     assert len(run_dirs) == 2
@@ -372,13 +376,13 @@ def test_run_from_input_stamps_author_and_rerun_preserves_existing_author(
     assert updated_record["author"] == "mattzh72"
 
 
-def test_create_workbench_draft_record_stamps_author_immediately(
+def test_create_draft_record_stamps_author_and_manifest_immediately(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     monkeypatch.setattr(runner, "_resolve_runtime_record_author", lambda repo_root: "mattzh72")
 
-    record_dir = runner.create_workbench_draft_record(
+    record_dir = runner.create_draft_record(
         repo_root=tmp_path,
         prompt_text="make a draft hinge",
         provider="openai",
@@ -390,6 +394,7 @@ def test_create_workbench_draft_record_stamps_author_immediately(
 
     record = json.loads((record_dir / "record.json").read_text(encoding="utf-8"))
     assert record["author"] == "mattzh72"
+    assert manifest_by_id(StorageRepo(tmp_path))[record_dir.name]["record_id"] == record_dir.name
 
 
 def test_over_budget_run_persists_failed_run_metadata_without_record(
@@ -553,7 +558,7 @@ def test_successful_run_copies_only_referenced_mesh_assets(
     assert not (materialization_dir / "assets" / "glb").exists()
 
 
-def test_dataset_run_and_rerun_preserve_dataset_metadata(
+def test_library_run_and_rerun_preserve_category_metadata(
     fake_agent: None,
     tmp_path: Path,
 ) -> None:
@@ -570,9 +575,7 @@ def test_dataset_run_and_rerun_preserve_dataset_metadata(
             max_turns=30,
             system_prompt_path=DESIGNER_PROMPT_NAME,
             sdk_package="sdk",
-            collection="dataset",
             category_slug="crane_tower",
-            dataset_id="ds_crane_tower_0001",
         )
     )
     assert exit_code == 0
@@ -583,42 +586,21 @@ def test_dataset_run_and_rerun_preserve_dataset_metadata(
     record_dir = record_dirs[0]
 
     record = json.loads((record_dir / "record.json").read_text(encoding="utf-8"))
-    assert record["collections"] == ["dataset"]
     assert record["category_slug"] == "crane_tower"
-
-    dataset_entry = json.loads(_dataset_entry_path(record_dir).read_text(encoding="utf-8"))
-    assert dataset_entry["dataset_id"] == "ds_crane_tower_0001"
-    assert dataset_entry["category_slug"] == "crane_tower"
-
-    category = json.loads(
-        (repo_root / "data" / "categories" / "crane_tower" / "category.json").read_text(
-            encoding="utf-8"
-        )
-    )
-    assert category == {
-        "schema_version": 1,
-        "slug": "crane_tower",
-        "title": "Crane Tower",
-        "description": "",
-    }
-
-    manifest = json.loads(
-        (repo_root / "data" / "cache" / "manifests" / "dataset.json").read_text(encoding="utf-8")
-    )
-    assert manifest["generated"] == [{"name": "ds_crane_tower_0001", "record_id": record_dir.name}]
-    assert not (repo_root / "data" / "local" / "workbench.json").exists()
+    assert not (record_dir / "collections").exists()
+    manifest_row = manifest_by_id(StorageRepo(repo_root))[record_dir.name]
+    assert manifest_row["category_slug"] == "crane_tower"
+    assert manifest_row["category_title"] == "Crane Tower"
 
     runs_root = repo_root / "data" / "cache" / "runs"
     run_dirs = [path for path in runs_root.iterdir() if path.is_dir()]
     assert len(run_dirs) == 1
     run_metadata = json.loads((run_dirs[0] / "run.json").read_text(encoding="utf-8"))
     assert run_metadata["status"] == "success"
-    assert run_metadata["collection"] == "dataset"
-    assert run_metadata["run_mode"] == "dataset_single"
+    assert run_metadata["run_mode"] == "library_single"
     assert not (run_dirs[0] / "staging" / record_dir.name).exists()
 
     original_run_id = record["source"]["run_id"]
-    original_promoted_at = dataset_entry["promoted_at"]
     _artifact_path(record_dir, "model.py").write_text("# stale dataset\n", encoding="utf-8")
 
     rerun_exit_code = asyncio.run(
@@ -632,7 +614,6 @@ def test_dataset_run_and_rerun_preserve_dataset_metadata(
     record = json.loads((record_dir / "record.json").read_text(encoding="utf-8"))
     assert record["record_id"] == record_dir.name
     assert record["source"]["run_id"] != original_run_id
-    assert record["collections"] == ["dataset"]
     assert record["category_slug"] == "crane_tower"
     assert (
         _artifact_path(record_dir, "model.py")
@@ -640,38 +621,19 @@ def test_dataset_run_and_rerun_preserve_dataset_metadata(
         .startswith("from __future__ import annotations")
     )
 
-    dataset_entry = json.loads(_dataset_entry_path(record_dir).read_text(encoding="utf-8"))
-    assert dataset_entry["dataset_id"] == "ds_crane_tower_0001"
-    assert dataset_entry["category_slug"] == "crane_tower"
-    assert dataset_entry["promoted_at"] == original_promoted_at
-
-    category = json.loads(
-        (repo_root / "data" / "categories" / "crane_tower" / "category.json").read_text(
-            encoding="utf-8"
-        )
-    )
-    assert category == {
-        "schema_version": 1,
-        "slug": "crane_tower",
-        "title": "Crane Tower",
-        "description": "",
-    }
-
-    manifest = json.loads(
-        (repo_root / "data" / "cache" / "manifests" / "dataset.json").read_text(encoding="utf-8")
-    )
-    assert manifest["generated"] == [{"name": "ds_crane_tower_0001", "record_id": record_dir.name}]
+    manifest_row = manifest_by_id(StorageRepo(repo_root))[record_dir.name]
+    assert manifest_row["category_slug"] == "crane_tower"
+    assert manifest_row["category_title"] == "Crane Tower"
 
     run_dirs = sorted(path for path in runs_root.iterdir() if path.is_dir())
     assert len(run_dirs) == 2
     latest_run_metadata = json.loads((run_dirs[-1] / "run.json").read_text(encoding="utf-8"))
     assert latest_run_metadata["status"] == "success"
-    assert latest_run_metadata["collection"] == "dataset"
-    assert latest_run_metadata["run_mode"] == "dataset_single"
+    assert latest_run_metadata["run_mode"] == "library_single"
     assert not (run_dirs[-1] / "staging" / record_dir.name).exists()
 
 
-def test_workbench_run_succeeds_when_persisted_input_image_disappears(
+def test_library_run_succeeds_when_persisted_input_image_disappears(
     monkeypatch: pytest.MonkeyPatch,
     tmp_path: Path,
 ) -> None:

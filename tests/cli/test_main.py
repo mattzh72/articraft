@@ -1,33 +1,65 @@
 from __future__ import annotations
 
+import json
 from pathlib import Path
 
 import pytest
 
-from agent.run_context import RunExecutionOutcome
 from cli import main as articraft_cli
+from storage.repo import StorageRepo
+from storage.revisions import INITIAL_REVISION_ID, revision_artifacts_payload
 
 
 def _help_text(argv: list[str], capsys: pytest.CaptureFixture[str]) -> str:
     with pytest.raises(SystemExit) as exc_info:
         articraft_cli.main(argv)
     assert exc_info.value.code == 0
-    return capsys.readouterr().out
+    captured = capsys.readouterr()
+    return captured.out + captured.err
+
+
+def _write_record(repo: StorageRepo, record_id: str = "rec_lamp") -> None:
+    revision_dir = repo.layout.record_revision_dir(record_id, INITIAL_REVISION_ID)
+    revision_dir.mkdir(parents=True, exist_ok=True)
+    (revision_dir / "prompt.txt").write_text("make a lamp", encoding="utf-8")
+    (revision_dir / "model.py").write_text("object_model = None\n", encoding="utf-8")
+    repo.write_json(revision_dir / "provenance.json", {"schema_version": 2, "record_id": record_id})
+    repo.write_json(
+        repo.layout.record_metadata_path(record_id),
+        {
+            "schema_version": 3,
+            "record_id": record_id,
+            "created_at": "2026-01-01T00:00:00Z",
+            "updated_at": "2026-01-01T00:00:00Z",
+            "rating": None,
+            "kind": "generated_model",
+            "prompt_kind": "single_prompt",
+            "category_slug": None,
+            "source": {"run_id": None, "prompt_index": None},
+            "sdk_package": "sdk",
+            "provider": "openai",
+            "model_id": "gpt-test",
+            "display": {"title": "Lamp", "prompt_preview": "make a lamp"},
+            "artifacts": revision_artifacts_payload(
+                revision_id=INITIAL_REVISION_ID,
+                has_cost_file=False,
+            ),
+            "hashes": {},
+            "active_revision_id": INITIAL_REVISION_ID,
+        },
+    )
 
 
 @pytest.mark.parametrize(
     ("argv", "expected_fragments"),
     [
-        (["--help"], ("generate", "dataset", "workbench", "external", "hooks")),
-        (["dataset", "--help"], ("batch-new", "supercategory", "run")),
-        (["workbench", "--help"], ("status", "search-index")),
+        (["--help"], ("generate", "draft", "library", "external")),
+        (["library", "--help"], ("check", "rebuild-manifest", "set-category")),
         (["compile", "--help"], ("--target", "--validate")),
         (["viewer", "--help"], ("--dev", "--host", "--target")),
-        (["hooks", "--help"], ("install", "check", "post-commit-record-authors")),
-        (["internal", "pre-commit", "--help"], ("forbidden-paths", "smoke-tests")),
     ],
 )
-def test_public_command_help_surfaces_nested_commands(
+def test_public_command_help_surfaces_local_library_commands(
     capsys: pytest.CaptureFixture[str],
     argv: list[str],
     expected_fragments: tuple[str, ...],
@@ -38,135 +70,26 @@ def test_public_command_help_surfaces_nested_commands(
         assert fragment in output
 
 
-def test_removed_legacy_console_subcommands_are_not_public() -> None:
-    with pytest.raises(SystemExit) as exc_info:
-        articraft_cli.main(["dataset", "init-storage"])
+def test_init_creates_external_data_root_manifest(tmp_path: Path) -> None:
+    data_root = tmp_path / "articraft-data"
 
-    assert exc_info.value.code == 2
-
-
-def test_dataset_batch_new_creates_supported_csv_header(tmp_path: Path) -> None:
     exit_code = articraft_cli.main(
-        [
-            "dataset",
-            "batch-new",
-            "new_batch",
-            "--repo-root",
-            str(tmp_path),
-        ]
+        ["init", "--repo-root", str(tmp_path), "--data-dir", str(data_root)]
     )
 
     assert exit_code == 0
-    spec_path = tmp_path / "data" / "batch_specs" / "new_batch.csv"
-    assert spec_path.read_text(encoding="utf-8") == (
-        "row_id,category_slug,category_title,prompt,provider,model_id,"
-        "thinking_level,max_turns,max_cost_usd,label\n"
-    )
+    assert (data_root / "records").is_dir()
+    assert (data_root / "records_manifest.jsonl").read_text(encoding="utf-8") == ""
 
 
-def test_compile_command_delegates_to_compile_module(
-    tmp_path: Path,
-    monkeypatch: pytest.MonkeyPatch,
-) -> None:
+def test_generate_forwards_data_dir_and_generation_options(tmp_path: Path, monkeypatch) -> None:
     calls: list[list[str]] = []
-
-    def _fake_compile(argv: list[str]) -> int:
-        calls.append(argv)
-        return 0
-
-    monkeypatch.setattr(articraft_cli.compile_record_cli, "main", _fake_compile)
-
-    exit_code = articraft_cli.main(
-        [
-            "compile",
-            "data/records/rec_one",
-            "--repo-root",
-            str(tmp_path),
-            "--target",
-            "visual",
-            "--validate",
-            "--strict-geom-qc",
-        ]
-    )
-
-    assert exit_code == 0
-    assert calls == [
-        [
-            "--repo-root",
-            str(tmp_path),
-            "--target",
-            "visual",
-            "data/records/rec_one",
-            "--validate",
-            "--strict-geom-qc",
-        ]
-    ]
-
-
-def test_dataset_run_delegates_without_removed_audit_flag(
-    tmp_path: Path,
-    monkeypatch: pytest.MonkeyPatch,
-) -> None:
-    calls: list[list[str]] = []
-
-    def _fake_dataset(argv: list[str]) -> int:
-        calls.append(argv)
-        return 0
-
-    monkeypatch.setattr(articraft_cli.dataset_cli, "main", _fake_dataset)
-
-    exit_code = articraft_cli.main(
-        [
-            "dataset",
-            "run",
-            "make a folding chair",
-            "--category-slug",
-            "folding_chair",
-            "--repo-root",
-            str(tmp_path),
-            "--model",
-            "gemini-3-flash-preview",
-            "--thinking",
-            "low",
-        ]
-    )
-
-    assert exit_code == 0
-    assert calls == [
-        [
-            "--repo-root",
-            str(tmp_path),
-            "run-single",
-            "make a folding chair",
-            "--category-slug",
-            "folding_chair",
-            "--provider",
-            "gemini",
-            "--model-id",
-            "gemini-3-flash-preview",
-            "--thinking-level",
-            "low",
-        ]
-    ]
-
-
-def test_generate_uses_env_model_and_thinking_defaults(
-    tmp_path: Path,
-    monkeypatch: pytest.MonkeyPatch,
-) -> None:
-    calls: list[list[str]] = []
-    (tmp_path / ".env").write_text(
-        "ARTICRAFT_MODEL=gpt-5.5\nARTICRAFT_THINKING_LEVEL=xhigh\n",
-        encoding="utf-8",
-    )
 
     def _fake_agent_runner(argv: list[str]) -> int:
         calls.append(argv)
         return 0
 
     monkeypatch.setattr(articraft_cli.agent_runner, "main", _fake_agent_runner)
-    monkeypatch.delenv("ARTICRAFT_MODEL", raising=False)
-    monkeypatch.delenv("ARTICRAFT_THINKING_LEVEL", raising=False)
 
     exit_code = articraft_cli.main(
         [
@@ -174,79 +97,20 @@ def test_generate_uses_env_model_and_thinking_defaults(
             "make a desk lamp",
             "--repo-root",
             str(tmp_path),
-        ]
-    )
-
-    assert exit_code == 0
-    assert calls == [
-        [
-            "--repo-root",
-            str(tmp_path),
-            "--prompt",
-            "make a desk lamp",
+            "--data-dir",
+            str(tmp_path / "articraft-data"),
             "--provider",
             "openai",
             "--model",
-            "gpt-5.5",
-            "--thinking",
-            "xhigh",
-        ]
-    ]
-
-
-def test_generate_with_codex_cli_provider_requires_explicit_model(
-    tmp_path: Path,
-    monkeypatch: pytest.MonkeyPatch,
-    capsys: pytest.CaptureFixture[str],
-) -> None:
-    calls: list[list[str]] = []
-
-    def _fake_agent_runner(argv: list[str]) -> int:
-        calls.append(argv)
-        return 0
-
-    monkeypatch.setattr(articraft_cli.agent_runner, "main", _fake_agent_runner)
-    monkeypatch.delenv("ARTICRAFT_CODEX_MODEL", raising=False)
-
-    exit_code = articraft_cli.main(
-        [
-            "generate",
-            "make a folding chair",
-            "--provider",
-            "codex-cli",
-            "--repo-root",
-            str(tmp_path),
-        ]
-    )
-
-    assert exit_code == 1
-    assert calls == []
-    assert "requires an explicit model" in capsys.readouterr().out
-
-
-def test_generate_with_codex_cli_provider_accepts_explicit_model(
-    tmp_path: Path,
-    monkeypatch: pytest.MonkeyPatch,
-) -> None:
-    calls: list[list[str]] = []
-
-    def _fake_agent_runner(argv: list[str]) -> int:
-        calls.append(argv)
-        return 0
-
-    monkeypatch.setattr(articraft_cli.agent_runner, "main", _fake_agent_runner)
-    monkeypatch.delenv("ARTICRAFT_CODEX_MODEL", raising=False)
-
-    exit_code = articraft_cli.main(
-        [
-            "generate",
-            "make a folding chair",
-            "--provider",
-            "codex-cli",
-            "--model",
-            "codex/gpt-5.5",
-            "--repo-root",
-            str(tmp_path),
+            "gpt-test",
+            "--thinking-level",
+            "low",
+            "--category",
+            "desk_lamp",
+            "--label",
+            "smoke",
+            "--tag",
+            "hinged",
         ]
     )
 
@@ -256,217 +120,64 @@ def test_generate_with_codex_cli_provider_accepts_explicit_model(
             "--repo-root",
             str(tmp_path),
             "--prompt",
-            "make a folding chair",
+            "make a desk lamp",
+            "--thinking",
+            "low",
+            "--data-dir",
+            str(tmp_path / "articraft-data"),
             "--provider",
-            "codex-cli",
+            "openai",
             "--model",
-            "codex/gpt-5.5",
-            "--thinking",
-            "high",
+            "gpt-test",
+            "--label",
+            "smoke",
+            "--tag",
+            "hinged",
+            "--category",
+            "desk_lamp",
         ]
     ]
 
 
-def test_generate_loads_env_defaults_from_equals_repo_root(
-    tmp_path: Path,
-    monkeypatch: pytest.MonkeyPatch,
-) -> None:
-    calls: list[list[str]] = []
-    (tmp_path / ".env").write_text(
-        "ARTICRAFT_MODEL=gpt-5.5\nARTICRAFT_THINKING_LEVEL=xhigh\n",
-        encoding="utf-8",
-    )
+def test_library_rebuild_list_check_and_set_category(tmp_path: Path, capsys) -> None:
+    repo = StorageRepo(tmp_path)
+    repo.ensure_layout()
+    _write_record(repo)
 
-    def _fake_agent_runner(argv: list[str]) -> int:
-        calls.append(argv)
-        return 0
-
-    monkeypatch.setattr(articraft_cli.agent_runner, "main", _fake_agent_runner)
-    monkeypatch.delenv("ARTICRAFT_MODEL", raising=False)
-    monkeypatch.delenv("ARTICRAFT_THINKING_LEVEL", raising=False)
-
-    exit_code = articraft_cli.main(
-        [
-            "generate",
-            "make a desk lamp",
-            f"--repo-root={tmp_path}",
-        ]
-    )
-
-    assert exit_code == 0
-    assert calls[0][-4:] == ["--model", "gpt-5.5", "--thinking", "xhigh"]
-
-
-def test_generate_rejects_invalid_env_thinking_default(
-    tmp_path: Path,
-    monkeypatch: pytest.MonkeyPatch,
-    capsys: pytest.CaptureFixture[str],
-) -> None:
-    calls: list[list[str]] = []
-    (tmp_path / ".env").write_text("ARTICRAFT_THINKING_LEVEL=not-a-level\n", encoding="utf-8")
-
-    def _fake_agent_runner(argv: list[str]) -> int:
-        calls.append(argv)
-        return 0
-
-    monkeypatch.setattr(articraft_cli.agent_runner, "main", _fake_agent_runner)
-    monkeypatch.delenv("ARTICRAFT_THINKING_LEVEL", raising=False)
-
-    exit_code = articraft_cli.main(
-        [
-            "generate",
-            "make a desk lamp",
-            "--repo-root",
-            str(tmp_path),
-        ]
-    )
-
-    assert exit_code == 1
-    assert calls == []
-    assert "ARTICRAFT_THINKING_LEVEL must be one of" in capsys.readouterr().out
-
-
-def test_dataset_run_uses_dashscope_model_from_env(
-    tmp_path: Path,
-    monkeypatch: pytest.MonkeyPatch,
-) -> None:
-    calls: list[list[str]] = []
-
-    def _fake_dataset(argv: list[str]) -> int:
-        calls.append(argv)
-        return 0
-
-    monkeypatch.setattr(articraft_cli.dataset_cli, "main", _fake_dataset)
-    monkeypatch.setenv("DASHSCOPE_MODEL", "qwen3.6-flash")
-
-    exit_code = articraft_cli.main(
-        [
-            "dataset",
-            "run",
-            "make a folding chair",
-            "--category-slug",
-            "folding_chair",
-            "--repo-root",
-            str(tmp_path),
-            "--provider",
-            "dashscope",
-            "--thinking",
-            "low",
-        ]
-    )
-
-    assert exit_code == 0
-    assert calls == [
-        [
-            "--repo-root",
-            str(tmp_path),
-            "run-single",
-            "make a folding chair",
-            "--category-slug",
-            "folding_chair",
-            "--provider",
-            "dashscope",
-            "--model-id",
-            "qwen3.6-flash",
-            "--thinking-level",
-            "low",
-        ]
-    ]
-
-
-def test_workbench_status_delegates_to_workbench_module(
-    tmp_path: Path,
-    monkeypatch: pytest.MonkeyPatch,
-) -> None:
-    calls: list[list[str]] = []
-
-    def _fake_workbench(argv: list[str]) -> int:
-        calls.append(argv)
-        return 0
-
-    monkeypatch.setattr(articraft_cli.workbench_cli, "main", _fake_workbench)
-
-    assert articraft_cli.main(["workbench", "status", "--repo-root", str(tmp_path)]) == 0
-    assert calls == [["--repo-root", str(tmp_path), "status"]]
-
-
-def test_top_level_fork_uses_internal_edit(
-    tmp_path: Path,
-    monkeypatch: pytest.MonkeyPatch,
-) -> None:
-    record_dir = tmp_path / "data" / "records" / "rec_parent"
-    record_dir.mkdir(parents=True)
-    (record_dir / "record.json").write_text(
-        '{"record_id":"rec_parent","provider":"openai","active_revision_id":"rev_000001"}\n',
-        encoding="utf-8",
-    )
-    calls: list[dict] = []
-
-    async def _fake_edit_record(**kwargs):
-        calls.append(kwargs)
-        output_record_id = kwargs.get("record_id") or kwargs["parent_record_id"]
-        output_dir = tmp_path / "data" / "records" / output_record_id
-        output_dir.mkdir(parents=True, exist_ok=True)
-        (output_dir / "record.json").write_text(
-            '{"record_id":"%s","provider":"openai","active_revision_id":"rev_000001"}\n'
-            % output_record_id,
-            encoding="utf-8",
-        )
-        return RunExecutionOutcome(
-            exit_code=0,
-            run_id="run_fake",
-            record_id=output_record_id,
-            status="success",
-        )
-
-    class _FakeSearchIndex:
-        def __init__(self, repo):
-            self.repo = repo
-
-        def rebuild(self):
-            return type(
-                "Stats",
-                (),
-                {
-                    "path": tmp_path / "data" / "cache" / "search_index.json",
-                    "record_count": 1,
-                    "category_count": 0,
-                    "workbench_entry_count": 0,
-                },
-            )()
-
-    monkeypatch.setattr(
-        articraft_cli.agent_runner, "_resolve_image_path", lambda *_args, **_kwargs: None
-    )
-    monkeypatch.setattr(articraft_cli.agent_runner, "edit_record", _fake_edit_record)
-    monkeypatch.setattr(articraft_cli, "SearchIndex", _FakeSearchIndex)
+    assert articraft_cli.main(["library", "rebuild-manifest", "--repo-root", str(tmp_path)]) == 0
+    assert articraft_cli.main(["library", "list", "--repo-root", str(tmp_path)]) == 0
+    output = capsys.readouterr().out
+    assert "rec_lamp" in output
+    assert "Lamp" in output
 
     assert (
         articraft_cli.main(
-            [
-                "fork",
-                "--repo-root",
-                str(tmp_path),
-                "rec_parent",
-                "make it longer",
-                "--record-id",
-                "rec_child",
-            ]
+            ["library", "set-category", "rec_lamp", "desk_lamp", "--repo-root", str(tmp_path)]
         )
         == 0
     )
-    with pytest.raises(SystemExit) as exc_info:
-        articraft_cli.main(
-            [
-                "revise",
-                "--repo-root",
-                str(tmp_path),
-                "rec_parent",
-                "make it wider",
-            ]
-        )
+    record = json.loads(repo.layout.record_metadata_path("rec_lamp").read_text(encoding="utf-8"))
+    assert record["category_slug"] == "desk_lamp"
 
-    assert exc_info.value.code == 2
-    assert "in_place" not in calls[0]
-    assert calls[0]["record_id"] == "rec_child"
-    assert len(calls) == 1
+    assert (
+        articraft_cli.main(["library", "check", "--require-records", "--repo-root", str(tmp_path)])
+        == 0
+    )
+
+
+def test_library_delete_requires_execute(tmp_path: Path) -> None:
+    repo = StorageRepo(tmp_path)
+    repo.ensure_layout()
+    _write_record(repo)
+    articraft_cli.main(["library", "rebuild-manifest", "--repo-root", str(tmp_path)])
+
+    assert articraft_cli.main(["library", "delete", "rec_lamp", "--repo-root", str(tmp_path)]) == 0
+    assert repo.layout.record_dir("rec_lamp").exists()
+
+    assert (
+        articraft_cli.main(
+            ["library", "delete", "rec_lamp", "--execute", "--repo-root", str(tmp_path)]
+        )
+        == 0
+    )
+    assert not repo.layout.record_dir("rec_lamp").exists()

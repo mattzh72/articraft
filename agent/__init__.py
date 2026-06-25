@@ -1,1 +1,1 @@
-"""Shared agent runtime for dataset and workbench flows."""
+"""Shared agent runtime for local library flows."""

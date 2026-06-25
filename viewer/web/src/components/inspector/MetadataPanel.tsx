@@ -498,8 +498,8 @@ export function MetadataPanel(): JSX.Element {
           <SectionLabel>Metrics</SectionLabel>
           <div className="space-y-0">
             <div className="prop-row">
-              <span className="prop-label">Collections</span>
-              <span className="prop-value">{record.collections.join(", ") || "--"}</span>
+              <span className="prop-label">Category</span>
+              <span className="prop-value">{record.category_title ?? record.category_slug ?? "--"}</span>
             </div>
             <div className="prop-row">
               <span className="prop-label">Turns</span>

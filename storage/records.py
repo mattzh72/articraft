@@ -7,6 +7,8 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 from storage.identifiers import validate_record_id
+from storage.library_manifest import remove_record as remove_manifest_record
+from storage.library_manifest import upsert_record
 from storage.models import Provenance, Record
 from storage.repo import StorageRepo
 from storage.revisions import (
@@ -17,28 +19,6 @@ from storage.revisions import (
 )
 
 logger = logging.getLogger(__name__)
-
-WORKBENCH_RECORD_GITIGNORE_TEXT = "# Articraft local workbench record. Do not commit.\n*\n"
-
-
-def write_workbench_record_gitignore_marker(record_dir: Path) -> None:
-    record_dir.mkdir(parents=True, exist_ok=True)
-    (record_dir / ".gitignore").write_text(
-        WORKBENCH_RECORD_GITIGNORE_TEXT,
-        encoding="utf-8",
-    )
-
-
-def remove_workbench_record_gitignore_marker(record_dir: Path) -> None:
-    marker = record_dir / ".gitignore"
-    if not marker.exists():
-        return
-    try:
-        marker_text = marker.read_text(encoding="utf-8")
-    except UnicodeDecodeError:
-        return
-    if marker_text == WORKBENCH_RECORD_GITIGNORE_TEXT:
-        marker.unlink()
 
 
 @dataclass(slots=True)
@@ -53,7 +33,6 @@ class RecordStore:
         record_id = validate_record_id(record_id)
         record_dir = self.repo.layout.record_dir(record_id)
         record_dir.mkdir(parents=True, exist_ok=True)
-        self.repo.layout.record_collections_dir(record_id).mkdir(parents=True, exist_ok=True)
         self.repo.layout.record_revision_inputs_dir(record_id, INITIAL_REVISION_ID).mkdir(
             parents=True, exist_ok=True
         )
@@ -66,11 +45,7 @@ class RecordStore:
         payload = record.to_dict()
         payload["record_id"] = record_id
         self.repo.write_json(path, payload)
-        record_dir = self.repo.layout.record_dir(record_id)
-        if "workbench" in record.collections and "dataset" not in record.collections:
-            write_workbench_record_gitignore_marker(record_dir)
-        else:
-            remove_workbench_record_gitignore_marker(record_dir)
+        upsert_record(self.repo, record_id)
         return path
 
     def write_provenance(
@@ -137,10 +112,10 @@ class RecordStore:
         if not isinstance(record, dict):
             return None
         record[rating_field] = rating
-        # Commit-time attribution becomes stale after a local edit, so clear it until git sync restores it.
         record[rated_by_field] = None
         record["updated_at"] = self._utc_now()
         self.repo.write_json(self.repo.layout.record_metadata_path(record_id), record)
+        upsert_record(self.repo, record_id)
         return record
 
     def update_rating(self, record_id: str, rating: int) -> dict | None:
@@ -168,4 +143,5 @@ class RecordStore:
         materialization_dir = self.repo.layout.record_materialization_dir(record_id)
         if materialization_dir.exists():
             shutil.rmtree(materialization_dir)
+        remove_manifest_record(self.repo, record_id)
         return True

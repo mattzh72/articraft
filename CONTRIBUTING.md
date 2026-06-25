@@ -9,9 +9,7 @@ Thank you for your interest in improving Articraft! We welcome contributions fro
     ```bash
     uv sync --group dev
     npm --prefix viewer/web ci
-    just hooks-install
     ```
-    If your pre-push hook stalls while opening a PR, rerun `just hooks-install` to restore the managed hook and local LFS push settings.
 
 ## Development Workflow
 
@@ -20,8 +18,8 @@ We use `just` as our primary task runner. Run `just` without arguments to see al
 - `just format`: Format code using Ruff.
 - `just lint`: Lint code with Ruff.
 - `just viewer-dev`: Start both the uvicorn API and Vite frontend for rapid local UI iteration.
-- `just data-hydrate-record <record_id>`: Hydrate one LFS-backed dataset record.
-- `just data-hydrate-category <category_slug>`: Hydrate records in a category.
+- `uv run articraft status --data-dir /path/to/articraft-data`: Check an external data root.
+- `uv run articraft library check --data-dir /path/to/articraft-data --require-records`: Validate an external data root.
 
 ### Python Development
 Target Python 3.11+. The repo is managed by `uv` and uses `ruff` for all formatting and checking. Make sure you run `just format` and `just lint` before submitting a PR.
@@ -58,29 +56,25 @@ We care deeply about commit hygiene.
 1. Fill out the Pull Request template indicating exactly what area (`agent`, `storage`, `sdk`, `viewer`, `cli`) is affected.
 2. Include the exact `uv`, `just`, and `npm` commands you ran to verify the change.
 3. Attach screenshots **only** when API or viewer behavior changes.
-4. **Data Caveat:** Do not commit `.env`, `data/cache/`, `data/local/`, generated URDFs, or record asset directories. The pre-commit checks will generally block sensitive paths. Files under `data/` are exempt from the trailing-newline requirement.
+4. **Data Caveat:** Do not commit `.env`, local caches, generated URDFs, record asset directories, or `data/` to the code repository. Library data belongs in a local/exportable data root, not this harness repository.
 
-## Data Contribution Workflow
+## Local Library Workflow
 
-A huge part of Articraft's mission is crowdsourcing a massive, diverse dataset. If you're contributing objects, follow this consistent workflow:
+If you're creating objects, follow this consistent workflow:
 
 1. **Choose Your Generation Path**:
-   - *Targeted Authoring*: Use `uv run articraft dataset run <prompt> --category-slug <slug>`.
-   - *Editing Existing Assets*: Use `uv run articraft fork data/records/<record_id> "<edit prompt>"`. Forking creates a child record and leaves the parent unchanged; see [Editing Existing Records](docs/record_editing.md).
+   - *Targeted Authoring*: Use `uv run articraft generate <prompt>`.
+   - *Editing Existing Assets*: Use `uv run articraft fork <record_id> "<edit prompt>"`. Forking creates a child record and leaves the parent unchanged; see [Editing Existing Records](docs/record_editing.md).
    - *AI-Assisted*: Open Claude Code, Cursor, or Codex in the repo and prompt it to "Follow `EXTERNAL_AGENT_DATA.md`". (Do not run the `articraft external` CLI yourself; the agent will do it internally).
-   - *Bulk Generation*: Use batch CSVs. See our [Dataset Generation Guide](docs/dataset_generation.md).
 2. **Local Validation**: 
    - All assets MUST compile without errors locally. Any physics warnings, overlapping parts, or disconnected links must be fixed before proceeding.
-   - Fresh checkouts keep `data/records/**` in Git LFS. Hydrate only the records you need: `uv run articraft data hydrate --record <id>`, `--category <slug>`, `--time-from/--time-to`, `--last 7d`, or `--all`.
+   - Point Articraft at a data root with `--data-dir /path/to/articraft-data` or `ARTICRAFT_DATA_DIR=/path/to/articraft-data`.
 3. **Visual Curation & Rating**:
    - Open the viewer (`just viewer`) and manually inspect your generated asset.
    - **Crucial Step:** Rate the asset! You must use the viewer's rating system (1-5 stars) to submit an asset. We accept all ratings (even 1-star assets are incredibly useful as negative examples), but you must actively record the rating.
-4. **Finalize & Categorize**:
-   - Only records assigned to a dataset category should be pushed. Workbench records are local drafts.
-5. **Commit and PR**:
-   - Stage the changed `data/records/<id>` folders and the updated `data/records_index.jsonl`.
-   - Run `uv run articraft data build-record-index` after adding, promoting, rating, or editing records.
-   - Contributors need Git LFS installed before pushing record payloads.
-   - Create a PR with standard naming, for instance: `Add 50 washing machines to dataset`.
-   - **Massive PRs Are Welcome**: You can submit anywhere from a single object to thousands of records at once.
-   - **Screenshots Strongly Encouraged**: Including a screenshot or GIF of the asset in the PR description makes reviewer validation much faster.
+4. **Maintain the Manifest**:
+   - Run `uv run articraft library rebuild-manifest --data-dir /path/to/articraft-data` after adding, rating, categorizing, or editing records outside the normal CLI flow.
+   - Run `uv run articraft library check --data-dir /path/to/articraft-data --require-records` before sharing a data folder.
+5. **Share Data Separately**:
+   - Commit or export data from the data root itself, with paths like `records/<id>/` and `records_manifest.jsonl`.
+   - Keep the Articraft code repository focused on harness, SDK, CLI, and viewer logic.

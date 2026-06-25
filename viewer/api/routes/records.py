@@ -5,17 +5,13 @@ import asyncio
 from fastapi import APIRouter, HTTPException, Query
 
 from storage.identifiers import validate_record_id
-from storage.lfs import hydrate_records
 from viewer.api.dependencies import FileResolverDep, ViewerStoreDep
 from viewer.api.file_manager import open_in_file_manager
 from viewer.api.schemas import (
-    DatasetEntryResponse,
     DeleteRecordResponse,
     DeleteStagingResponse,
-    HydrateRecordResponse,
     OpenRecordFolderResponse,
     OpenStagingFolderResponse,
-    PromoteRecordRequest,
     RecordBrowseIdsResponse,
     RecordBrowseResponse,
     RecordHistoryResponse,
@@ -44,24 +40,6 @@ async def record_summary(record_id: str, store: ViewerStoreDep) -> RecordSummary
     return summary
 
 
-@router.post("/api/records/{record_id}/hydrate", response_model=HydrateRecordResponse)
-async def hydrate_record(record_id: str, store: ViewerStoreDep) -> HydrateRecordResponse:
-    _validate_record_id(record_id)
-    try:
-        result = await asyncio.to_thread(hydrate_records, store.repo, [record_id])
-    except ValueError as exc:
-        raise HTTPException(status_code=400, detail=str(exc)) from exc
-    except RuntimeError as exc:
-        raise HTTPException(status_code=500, detail=str(exc)) from exc
-    store.dataset_browse_index.invalidate()
-    return HydrateRecordResponse(
-        status="hydrated",
-        record_id=record_id,
-        hydrated_count=result.hydrated_count,
-        message=None,
-    )
-
-
 @router.get("/api/records/{record_id}/history", response_model=RecordHistoryResponse)
 async def record_history(record_id: str, store: ViewerStoreDep) -> RecordHistoryResponse:
     _validate_record_id(record_id)
@@ -74,7 +52,7 @@ async def record_history(record_id: str, store: ViewerStoreDep) -> RecordHistory
 @router.get("/api/records/browse", response_model=RecordBrowseResponse)
 async def browse_records(
     store: ViewerStoreDep,
-    source: str,
+    source: str = "library",
     q: str | None = None,
     run_id: str | None = None,
     time: str | None = None,
@@ -120,7 +98,7 @@ async def browse_records(
 @router.get("/api/records/browse/ids", response_model=RecordBrowseIdsResponse)
 async def browse_record_ids(
     store: ViewerStoreDep,
-    source: str,
+    source: str = "library",
     q: str | None = None,
     run_id: str | None = None,
     time: str | None = None,
@@ -207,25 +185,6 @@ async def delete_record(record_id: str, store: ViewerStoreDep) -> DeleteRecordRe
         raise HTTPException(status_code=404, detail=f"Record not found: {record_id}")
 
     return DeleteRecordResponse(status="deleted", record_id=record_id)
-
-
-@router.post("/api/records/{record_id}/promote", response_model=DatasetEntryResponse)
-async def promote_record(
-    record_id: str,
-    payload: PromoteRecordRequest,
-    store: ViewerStoreDep,
-) -> DatasetEntryResponse:
-    _validate_record_id(record_id)
-    try:
-        return await asyncio.to_thread(
-            store.promotions.promote_record_to_dataset,
-            record_id,
-            category_title=payload.category_title,
-            category_slug=payload.category_slug,
-            dataset_id=payload.dataset_id,
-        )
-    except ValueError as exc:
-        raise HTTPException(status_code=400, detail=str(exc)) from exc
 
 
 @router.delete("/api/staging/{run_id}/{record_id}", response_model=DeleteStagingResponse)

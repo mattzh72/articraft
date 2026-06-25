@@ -1,7 +1,7 @@
 [project]
 name = "articraft"
 version = "0.1.0"
-description = "Agentic articulated object generation, dataset curation, and workbench tooling."
+description = "Local-first agentic articulated object generation and viewing."
 readme = "README.md"
 requires-python = ">=3.11,<3.13"
 license = { file = "LICENSE" }
@@ -70,9 +70,7 @@ exclude = [
     "/.uv-cache",
     "/.venv",
     "/assets",
-    "/data/cache",
-    "/data/local",
-    "/data/records",
+    "/data",
     "/dist",
     "/node_modules",
     "/viewer/web/dist",

@@ -1,29 +1,23 @@
-# Data Authoring Guidelines
+# External Agent Authoring
 
-You are an external agent harness authoring Articraft data in this repository. This is your only supported workflow.
+You are an external agent authoring one Articraft local-library record. This is the supported workflow.
 
-Do not manually create `data/records/<id>` folders, invent record metadata, write Articraft agent traces, or bypass these commands.
+Do not manually create `<data-root>/records/<id>` folders, invent record metadata, write Articraft traces, or bypass the CLI commands below.
 
-If the user wants no-key Codex generation with Articraft-managed turns, tools, compile feedback, and trajectory, use the internal Codex CLI provider instead of this external workflow:
+If the user wants Articraft-managed turns, tools, compile feedback, and trajectory, use the internal Codex CLI provider instead of this external workflow:
 
 ```bash
 uv run articraft generate --provider codex-cli --model <codex-model-id> "<prompt>"
 ```
 
-You can also set `ARTICRAFT_CODEX_MODEL=<codex-model-id>` instead of passing `--model`.
-
 ## Read This First
 
-Before you create or edit a record, read the core Articraft authoring requirements:
+Before you create or edit a record, read the core authoring requirements:
 
 ```text
 agent/prompts/sections/designer_common.md
 agent/prompts/sections/link_naming.md
 ```
-
-These define the non-negotiable quality bar: realistic geometry, primary user-facing articulation, no floating parts, no unintentional overlaps, prompt-specific tests, and concise semantic link names.
-
-Quality and realism are very important here. Use every appropriate modeling tool available in the SDK and repository docs to make the geometry read as the real object, not a placeholder. For example, things that are hollow should be modeled as hollow; curved, tapered, beveled, perforated, soft, transparent, or compound forms should use suitable primitives, CadQuery geometry, lofts, sweeps, booleans, mesh helpers, colors, and materials instead of boxy approximations when the real object needs more detail.
 
 Then use the SDK docs and examples while you author:
 
@@ -32,36 +26,20 @@ sdk/_docs/
 sdk/_examples/
 ```
 
-You may also search existing examples. Prefer high-quality 5-star records as references, and use lower-rated records only as cautionary examples:
+Quality and realism are important. Build the object with meaningful parts, primary user-facing articulation, realistic connected structure, concise semantic link names, and prompt-specific checks in `run_tests()`.
 
-```bash
-uv run articraft external examples --query "washing machine"
-uv run articraft external examples --category-slug washing_machine --rating-min 5
-```
-
-Use this loop for high-quality output:
-
-1. Read the user prompt and identify the real object, scale, visible materials, main mechanisms, and controls.
-2. Read the relevant SDK docs/examples before writing geometry.
-3. Build the object with realistic connected structure and articulated primary mechanisms.
-4. Add prompt-specific checks in `run_tests()` for the visual/mechanical claims you made.
-5. Run `external check`, inspect failures/warnings, fix the model, and repeat until it passes.
-
-## 1. Initialize The Repo
-
-Run this before authoring:
+## 1. Initialize Storage
 
 ```bash
 uv sync --group dev
 uv run articraft init
 ```
 
-Dataset record payloads are stored in Git LFS. You can browse/search metadata before hydration, but hydrate any existing record before inspecting, checking, forking, or rendering it:
+By default Articraft writes to the gitignored `<repo-root>/data`. To work in another local/exportable data folder:
 
 ```bash
-uv run articraft data hydrate --record <record_id>
-uv run articraft data hydrate --category <category_slug>
-uv run articraft data hydrate --last 7d
+export ARTICRAFT_DATA_DIR=/Users/mzhou/articraft-data
+uv run articraft status
 ```
 
 ## 2. Create A Record
@@ -74,16 +52,6 @@ uv run articraft external init --agent claude-code "washing machine"
 uv run articraft external init --agent cursor "washing machine"
 ```
 
-`codex` records default to provider metadata `openai`; `claude-code` and `cursor` records default to `anthropic`.
-
-Strongly prefer registering your configured model and thinking/reasoning level. If you know either value, include it in `external init`:
-
-```bash
-uv run articraft external init --agent claude-code --model-id claude-sonnet-4-6 --thinking-level high "washing machine"
-uv run articraft external init --agent codex --model-id gpt-5.5-2026-04-23 --thinking-level high "washing machine"
-uv run articraft external init --agent cursor --model-id claude-sonnet-4-6 --thinking-level high "washing machine" # adjust to your configured model
-```
-
 The command prints `record_id` and `record_dir`. Edit only that generated record unless the user explicitly asks for broader repository changes.
 
 Allowed external agent ids are:
@@ -94,93 +62,56 @@ Allowed external agent ids are:
 
 ## 3. Edit Existing Records
 
-When the user asks you to modify an existing Articraft asset, fork it instead of manually copying record folders.
+When the user asks you to modify an existing Articraft asset, fork it instead of manually copying record folders:
 
 ```bash
-uv run articraft data hydrate --record <record_id>
-uv run articraft external fork --agent codex data/records/<record_id> "make the handle longer"
-uv run articraft external fork --agent claude-code data/records/<record_id> "make the handle longer"
-uv run articraft external fork --agent cursor data/records/<record_id> "make the handle longer"
+uv run articraft fork <record_id> "make the handle longer"
 ```
 
-`fork` creates a child record and prints the active `model=` and `prompt=` paths. Edit only the printed active `model=` path. In-place modification of an existing record is intentionally unsupported for external agents.
-
-Forked records inherit the parent collection by default. Dataset forks get a new dataset ID derived from the parent; parent traces, costs, provenance history, older model snapshots, and inputs are not copied. Historical parent conversations remain viewable through lineage in the UI.
+Forking creates a child record and leaves the parent unchanged.
 
 ## 4. Author The Object
 
-Edit:
+Edit the active model file under:
 
 ```text
-the CLI-printed active model= path
+<data-root>/records/<record_id>/revisions/<revision_id>/model.py
 ```
 
-For v3 records this is usually:
-
-```text
-data/records/<record_id>/revisions/<revision_id>/model.py
-```
-
-The user prompt is stored in:
-
-```text
-the CLI-printed active prompt= path
-```
-
-Use the SDK docs and examples:
-
-```text
-sdk/_docs/
-sdk/_examples/
-```
-
-Your object must be a high-quality articulated asset: meaningful parts, correct joints, visible mechanical structure, stable geometry, realistic materials/colors, semantic link names, and prompt-specific tests in `run_tests()`.
+The prompt is stored next to the active revision. Use `record.json` to confirm the active revision id when needed.
 
 ## 5. Iterate
 
-Run the external check during development. This compiles the record with the strict validation gate used before finalizing:
+Compile the one record you are editing:
 
 ```bash
-uv run articraft external check data/records/<record_id>
+uv run articraft compile <record_id>
 ```
 
-Repeat authoring and checking until the record passes.
+Repeat authoring and compiling until the record passes. The viewer will point missing-artifact messages at this same command.
 
 ## 6. Finalize
 
-For a workbench-only object, finalize without a category:
+Finalize the record to upsert `records_manifest.jsonl`. Add a category only when the user requested one:
 
 ```bash
-uv run articraft external finalize data/records/<record_id>
+uv run articraft external finalize <record_id>
+uv run articraft external finalize <record_id> --category-slug washing_machine
+uv run articraft library check --require-records
 ```
-
-For a dataset contribution, first inspect existing categories:
-
-```bash
-uv run articraft external categories
-```
-
-Then finalize into the best category:
-
-```bash
-uv run articraft external finalize data/records/<record_id> --category-slug washing_machine
-```
-
-Use `--category-slug` only when the user asked to add the object to the dataset.
 
 ## Rules
 
 You must:
 
-- use `articraft external init` before writing a new record from scratch
-- use `articraft external fork` before modifying an existing record
+- use `articraft external init` before writing a new external-agent record from scratch
+- use `articraft fork` before modifying an existing record
 - preserve `creator.mode=external_agent`
 - preserve `creator.agent=codex`, `creator.agent=claude-code`, or `creator.agent=cursor`
 - preserve `creator.trace_available=false`
-- use `articraft external check` and `finalize`
-- update `data/records_index.jsonl` with `uv run articraft data build-record-index` before committing dataset records
-- leave workbench-only records uncommitted
-- edit only the active revision `model.py` path printed by the CLI
+- run `articraft compile <record_id>` before finalizing
+- run `articraft external finalize <record_id>` when done
+- edit only the active revision for the one record you are authoring
 
 You must not:
 
@@ -189,4 +120,3 @@ You must not:
 - claim internal Articraft harness traces
 - write files under `traces/`
 - edit unrelated records while authoring one object
-- promote to the dataset unless the user requested dataset contribution

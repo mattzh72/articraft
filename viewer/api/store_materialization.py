@@ -91,7 +91,7 @@ class ViewerMaterializationStore(ViewerStoreComponent):
         ):
             _remove_path_if_exists(path)
 
-    def _promote_local_materialization_outputs(
+    def _persist_local_materialization_outputs(
         self,
         record_id: str,
         *,
@@ -324,7 +324,7 @@ class ViewerMaterializationStore(ViewerStoreComponent):
 
             compile_elapsed_seconds = time.perf_counter() - compile_started_at
             self.repo.write_text(urdf_path, compile_result.urdf_xml)
-            self._promote_local_materialization_outputs(
+            self._persist_local_materialization_outputs(
                 record_id,
                 record_dir=record_dir,
                 model_dir=model_path.parent,

@@ -1,8 +1,8 @@
 # Codex Plugin Setup
 
-You can contribute Articraft objects with Codex even when you do not have local provider API keys configured in `.env`. In this mode, Codex is the AI runtime and Articraft provides the repository, SDK, validation commands, and dataset workflow.
+You can create Articraft objects with Codex even when you do not have local provider API keys configured in `.env`. In this mode, Codex is the AI runtime and Articraft provides the repository, SDK, validation commands, and local library workflow.
 
-Codex-authored data must follow the same external-agent contract as Claude Code and Cursor. The source of truth is [EXTERNAL_AGENT_DATA.md](../EXTERNAL_AGENT_DATA.md), which tells Codex how to initialize, check, finalize, and categorize records.
+Codex-authored data must follow the same external-agent contract as Claude Code and Cursor. The source of truth is [EXTERNAL_AGENT_DATA.md](../EXTERNAL_AGENT_DATA.md), which tells Codex how to initialize, compile, finalize, and categorize records.
 
 ## Add The Codex Plugin
 
@@ -24,13 +24,13 @@ The plugin itself adds Codex guidance and does not introduce any additional cred
 Once Codex is connected to the repository, start with a direct request:
 
 ```text
-Create a realistic articulated [object name] and add it to the Articraft dataset. Follow EXTERNAL_AGENT_DATA.md.
+Create a realistic articulated [object name] in Articraft. Follow EXTERNAL_AGENT_DATA.md.
 ```
 
 For example:
 
 ```text
-Create a realistic articulated microscope with a tilting head, rotating objective turret, adjustable stage, and focus knobs. Add it to the Articraft dataset. Follow EXTERNAL_AGENT_DATA.md.
+Create a realistic articulated microscope with a tilting head, rotating objective turret, adjustable stage, and focus knobs. Follow EXTERNAL_AGENT_DATA.md.
 ```
 
 Codex should initialize the record with:
@@ -39,21 +39,21 @@ Codex should initialize the record with:
 uv run articraft external init --agent codex "<object prompt>"
 ```
 
-It should then edit only the CLI-printed active `model=` path, run:
+It should then edit only the generated record's active `model.py`, run:
 
 ```bash
-uv run articraft external check data/records/<record_id>
+uv run articraft compile <record_id>
 ```
 
-and finalize the record, using `--category-slug` only when adding the object to the dataset.
+and finalize the record, using `--category-slug` only when assigning a library category.
 
 ## Before Opening A PR
 
 Ask Codex to leave you with:
 
 - the generated `record_id`
-- the category slug used for dataset promotion, if any
+- the category slug used, if any
 - the validation command it ran
 - any warnings or known limitations
 
-Then inspect the object in the viewer and rate it before committing dataset records.
+Then inspect the object in the viewer and rate it before sharing the data folder.

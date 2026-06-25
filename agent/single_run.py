@@ -15,7 +15,6 @@ from agent.harness import ArticraftAgent
 from agent.models import CompileReport as AgentCompileReport
 from agent.record_persistence import (
     SuccessRecordWrite,
-    _load_workbench_entry,
     _remove_tree_if_exists,
     write_success_record,
 )
@@ -32,14 +31,7 @@ from agent.run_context import (
     _utc_now,
 )
 from agent.runtime_limits import BatchRuntimeLimits, local_work_slot
-from storage.collections import CollectionStore
-from storage.dataset_workflow import (
-    parse_canonical_dataset_sequence,
-    reconcile_category_metadata,
-)
-from storage.datasets import DatasetStore
 from storage.models import RunRecord
-from storage.queries import StorageQueries
 from storage.records import RecordStore
 from storage.repo import StorageRepo
 from storage.runs import RunStore
@@ -58,6 +50,7 @@ async def run_from_input(
     display_prompt: str | None,
     repo_root: Path,
     image_path: Path | None,
+    data_root: Path | None = None,
     provider: str,
     model_id: Optional[str] = None,
     openai_transport: str = "http",
@@ -73,9 +66,7 @@ async def run_from_input(
     max_cost_usd: float | None = None,
     label: str | None = None,
     tags: Optional[list[str]] = None,
-    collection: str = "workbench",
     category_slug: str | None = None,
-    dataset_id: str | None = None,
     record_id: str | None = None,
     run_id: str | None = None,
     record_author: str | None = None,
@@ -89,6 +80,7 @@ async def run_from_input(
         prompt_text=prompt_text,
         display_prompt=display_prompt,
         repo_root=repo_root,
+        data_root=data_root,
         image_path=image_path,
         provider=provider,
         model_id=model_id,
@@ -105,9 +97,7 @@ async def run_from_input(
         max_cost_usd=max_cost_usd,
         label=label,
         tags=tags,
-        collection=collection,
         category_slug=category_slug,
-        dataset_id=dataset_id,
         record_id=record_id,
         run_id=run_id,
         record_author=record_author,
@@ -126,6 +116,7 @@ async def run_from_input_impl(
     display_prompt: str | None,
     repo_root: Path,
     image_path: Path | None,
+    data_root: Path | None = None,
     provider: str,
     model_id: Optional[str] = None,
     openai_transport: str = "http",
@@ -141,9 +132,7 @@ async def run_from_input_impl(
     max_cost_usd: float | None = None,
     label: str | None = None,
     tags: Optional[list[str]] = None,
-    collection: str = "workbench",
     category_slug: str | None = None,
-    dataset_id: str | None = None,
     record_id: str | None = None,
     run_id: str | None = None,
     record_author: str | None = None,
@@ -153,7 +142,7 @@ async def run_from_input_impl(
     resolve_record_author_func: Callable[[Path], str | None] = _resolve_runtime_record_author,
 ) -> RunExecutionOutcome:
     resolved_repo_root = repo_root.resolve()
-    storage_repo = StorageRepo(resolved_repo_root)
+    storage_repo = StorageRepo(resolved_repo_root, data_root=data_root)
     await asyncio.to_thread(storage_repo.ensure_layout)
     resolved_record_author = record_author
     if resolved_record_author is None:
@@ -162,37 +151,8 @@ async def run_from_input_impl(
             resolved_repo_root,
         )
     record_store = RecordStore(storage_repo)
-    collections = CollectionStore(storage_repo)
-    datasets = DatasetStore(storage_repo)
     run_store = RunStore(storage_repo)
-
-    if collection not in {"workbench", "dataset"}:
-        raise ValueError(f"Unsupported collection: {collection}")
-    if collection == "dataset":
-        if not dataset_id:
-            raise ValueError("dataset_id is required when collection=dataset")
-        if not category_slug:
-            raise ValueError("category_slug is required when collection=dataset")
-        existing_record_id = await asyncio.to_thread(
-            datasets.find_record_id_by_dataset_id, dataset_id
-        )
-        if existing_record_id is not None:
-            message = f"Dataset ID already exists: {dataset_id} (record {existing_record_id})"
-            logger.error("%s", message)
-            return RunExecutionOutcome(
-                exit_code=1,
-                run_id=run_id or "",
-                record_id=record_id or existing_record_id,
-                status="failed",
-                message=message,
-                provider=provider,
-                model_id=model_id,
-                sdk_package=sdk_package,
-            )
-    else:
-        await asyncio.to_thread(collections.ensure_workbench)
-
-    run_mode = "dataset_single" if collection == "dataset" else "workbench_single"
+    run_mode = "library_single"
     executor = execute_single_run_func or execute_single_run
     return await executor(
         user_content,
@@ -201,8 +161,6 @@ async def run_from_input_impl(
         resolved_repo_root=resolved_repo_root,
         storage_repo=storage_repo,
         record_store=record_store,
-        collections=collections,
-        datasets=datasets,
         run_store=run_store,
         image_path=image_path,
         provider=provider,
@@ -220,9 +178,7 @@ async def run_from_input_impl(
         max_cost_usd=max_cost_usd,
         label=label,
         tags=tags,
-        collection=collection,
         category_slug=category_slug,
-        dataset_id=dataset_id,
         run_mode=run_mode,
         record_id=record_id,
         run_id=run_id,
@@ -240,8 +196,6 @@ async def execute_single_run(
     resolved_repo_root: Path,
     storage_repo: StorageRepo,
     record_store: RecordStore,
-    collections: CollectionStore,
-    datasets: DatasetStore,
     run_store: RunStore,
     image_path: Path | None,
     provider: str,
@@ -259,23 +213,15 @@ async def execute_single_run(
     max_cost_usd: float | None = None,
     label: str | None = None,
     tags: Optional[list[str]] = None,
-    collection: str = "workbench",
     category_slug: str | None = None,
-    dataset_id: str | None = None,
     run_mode: str,
     context: SingleRunContext | None = None,
     record_id: str | None = None,
     run_id: str | None = None,
     persist_run_metadata: bool = True,
     persist_run_result: bool = True,
-    update_dataset_manifest: bool = True,
-    reconcile_category_after_success: bool = True,
     cleanup_staging_dir: bool = True,
     existing_record: dict | None = None,
-    workbench_entry: dict | None = None,
-    dataset_entry: dict | None = None,
-    batch_spec_id: str | None = None,
-    row_id: str | None = None,
     prompt_index: int | None = None,
     runtime_limits: BatchRuntimeLimits | None = None,
     record_author: str | None = None,
@@ -345,7 +291,6 @@ async def execute_single_run(
                     schema_version=1,
                     run_id=resolved_context.run_id,
                     run_mode=run_mode,
-                    collection=collection,
                     created_at=resolved_context.created_at,
                     updated_at=finished_at,
                     provider=provider,
@@ -391,7 +336,6 @@ async def execute_single_run(
                 schema_version=1,
                 run_id=resolved_context.run_id,
                 run_mode=run_mode,
-                collection=collection,
                 created_at=resolved_context.created_at,
                 updated_at=resolved_context.created_at,
                 provider=provider,
@@ -510,30 +454,11 @@ async def execute_single_run(
                 record_store.load_record, resolved_context.record_id
             )
             loaded_existing_record = maybe_record if isinstance(maybe_record, dict) else None
-        loaded_dataset_entry = dataset_entry
-        if loaded_dataset_entry is None:
-            maybe_entry = await asyncio.to_thread(
-                storage_repo.read_json,
-                storage_repo.layout.record_dataset_entry_path(resolved_context.record_id),
-            )
-            loaded_dataset_entry = maybe_entry if isinstance(maybe_entry, dict) else None
-        loaded_workbench_entry = workbench_entry
-        if loaded_workbench_entry is None and collection == "workbench":
-            maybe_workbench_entry = await asyncio.to_thread(
-                _load_workbench_entry,
-                collections,
-                record_id=resolved_context.record_id,
-            )
-            loaded_workbench_entry = (
-                maybe_workbench_entry if isinstance(maybe_workbench_entry, dict) else None
-            )
 
         write_request = SuccessRecordWrite(
             repo_root=resolved_repo_root,
             storage_repo=storage_repo,
             record_store=record_store,
-            collections=collections,
-            datasets=datasets,
             context=resolved_context,
             prompt_text=prompt_text,
             display_prompt=display_prompt or prompt_text,
@@ -555,16 +480,9 @@ async def execute_single_run(
             compile_attempt_count=result.compile_attempt_count,
             label=label,
             tags=list(tags or []),
-            collection=collection,
             category_slug=category_slug,
-            dataset_id=dataset_id,
-            batch_spec_id=batch_spec_id,
-            row_id=row_id,
             prompt_index=prompt_index,
             existing_record=loaded_existing_record,
-            workbench_entry=loaded_workbench_entry,
-            dataset_entry=loaded_dataset_entry,
-            update_dataset_manifest=update_dataset_manifest,
             record_author=record_author,
             lineage=lineage,
             revision_parent=revision_parent,
@@ -572,27 +490,6 @@ async def execute_single_run(
             inherited_inputs=inherited_inputs,
         )
         record_dir = await asyncio.to_thread(write_success_record_func, write_request)
-        if reconcile_category_after_success and collection == "dataset" and category_slug:
-            persisted_record = await asyncio.to_thread(
-                record_store.load_record,
-                resolved_context.record_id,
-            )
-            if not isinstance(persisted_record, dict):
-                raise ValueError(f"Failed to load persisted record {resolved_context.record_id}")
-            await asyncio.to_thread(
-                reconcile_category_metadata,
-                storage_repo,
-                StorageQueries(storage_repo),
-                category_slug=category_slug,
-                category_title=None,
-                record=persisted_record,
-                now=_utc_now(),
-                sequence=(
-                    parse_canonical_dataset_sequence(dataset_id, category_slug)
-                    if dataset_id
-                    else None
-                ),
-            )
         if cleanup_staging_dir:
             await asyncio.to_thread(_remove_tree_if_exists, resolved_context.staging_dir)
     except Exception as exc:
@@ -623,7 +520,6 @@ async def execute_single_run(
                 schema_version=1,
                 run_id=resolved_context.run_id,
                 run_mode=run_mode,
-                collection=collection,
                 created_at=resolved_context.created_at,
                 updated_at=finished_at,
                 provider=provider,

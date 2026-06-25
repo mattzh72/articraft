@@ -12,8 +12,6 @@ from agent.cost import max_cost_usd_from_env
 from agent.defaults import resolve_max_turns
 from agent.prompts import DESIGNER_PROMPT_NAME, normalize_sdk_package
 from agent.record_persistence import (
-    _load_workbench_entry,
-    _normalize_collection_names,
     _resolve_input_image_for_record,
 )
 from agent.run_context import (
@@ -29,8 +27,6 @@ from agent.run_context import (
 )
 from agent.single_run import ExecuteSingleRun, execute_single_run
 from agent.tools import build_initial_user_content as _build_initial_user_content
-from storage.collections import CollectionStore
-from storage.datasets import DatasetStore
 from storage.records import RecordStore
 from storage.repo import StorageRepo
 from storage.revisions import (
@@ -61,6 +57,7 @@ async def rerun_record_in_place(
     *,
     repo_root: Path,
     record_id: str,
+    data_root: Path | None = None,
     model_id: str | None = None,
     thinking_level: str | None = None,
     sdk_package: str | None = None,
@@ -70,12 +67,10 @@ async def rerun_record_in_place(
     resolve_record_author_func: Callable[[Path], str | None] = _resolve_runtime_record_author,
 ) -> int:
     resolved_repo_root = repo_root.resolve()
-    storage_repo = StorageRepo(resolved_repo_root)
+    storage_repo = StorageRepo(resolved_repo_root, data_root=data_root)
     storage_repo.ensure_layout()
     record_author = resolve_record_author_func(resolved_repo_root)
     record_store = RecordStore(storage_repo)
-    collections = CollectionStore(storage_repo)
-    datasets = DatasetStore(storage_repo)
     run_store = RunStore(storage_repo)
 
     existing_record = record_store.load_record(record_id)
@@ -174,26 +169,10 @@ async def rerun_record_in_place(
         return 1
 
     user_content = _build_initial_user_content(prompt_text, image_path=image_path)
-    workbench_entry = _load_workbench_entry(collections, record_id=record_id)
-    dataset_entry = datasets.load_entry(record_id)
-
-    normalized_collections = _normalize_collection_names(
-        existing_record.get("collections"),
-        "dataset" if isinstance(dataset_entry, dict) else "workbench",
-    )
-    collection = normalized_collections[0]
-    if collection not in {"dataset", "workbench"}:
-        logger.error("Unsupported collection for record %s: %s", record_id, collection)
-        return 1
-    run_mode = "dataset_single" if collection == "dataset" else "workbench_single"
     category_slug = _optional_string(existing_record.get("category_slug"))
-    if isinstance(dataset_entry, dict):
-        category_slug = _optional_string(dataset_entry.get("category_slug")) or category_slug
-    dataset_id = (
-        _optional_string(dataset_entry.get("dataset_id"))
-        if isinstance(dataset_entry, dict)
-        else None
-    )
+    label = _optional_string(existing_record.get("label"))
+    raw_tags = existing_record.get("tags")
+    tags = [str(tag) for tag in raw_tags] if isinstance(raw_tags, list) else []
 
     context = _build_single_run_context(
         repo_root=resolved_repo_root,
@@ -210,8 +189,6 @@ async def rerun_record_in_place(
         resolved_repo_root=resolved_repo_root,
         storage_repo=storage_repo,
         record_store=record_store,
-        collections=collections,
-        datasets=datasets,
         run_store=run_store,
         image_path=image_path,
         provider=provider,
@@ -224,25 +201,12 @@ async def rerun_record_in_place(
         sdk_package=sdk_package,
         openai_reasoning_summary=openai_reasoning_summary,
         max_cost_usd=resolved_max_cost_usd,
-        label=(
-            _optional_string(workbench_entry.get("label"))
-            if isinstance(workbench_entry, dict)
-            else None
-        ),
-        tags=[
-            str(tag)
-            for tag in (
-                workbench_entry.get("tags", []) if isinstance(workbench_entry, dict) else []
-            )
-        ],
-        collection=collection,
+        label=label,
+        tags=tags,
         category_slug=category_slug,
-        dataset_id=dataset_id,
-        run_mode=run_mode,
+        run_mode="library_single",
         context=context,
         existing_record=existing_record,
-        workbench_entry=workbench_entry if isinstance(workbench_entry, dict) else None,
-        dataset_entry=dataset_entry if isinstance(dataset_entry, dict) else None,
         record_author=record_author,
         revision_parent={"record_id": record_id, "revision_id": parent_revision_id},
         revision_seed=None,

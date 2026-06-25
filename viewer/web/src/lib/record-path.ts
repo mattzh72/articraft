@@ -21,9 +21,9 @@ export function buildRepoPath(repoRoot: string, path: string): string {
   return [normalizedRoot, normalizedRelativePath].join(separator);
 }
 
-export function buildRecordPath(repoRoot: string, recordId: string): string {
-  const separator = repoRoot.includes("\\") ? "\\" : "/";
-  return buildRepoPath(repoRoot, ["data", "records", recordId].join(separator));
+export function buildRecordPath(dataRoot: string, recordId: string): string {
+  const separator = dataRoot.includes("\\") ? "\\" : "/";
+  return buildRepoPath(dataRoot, ["records", recordId].join(separator));
 }
 
 export async function copyTextToClipboard(value: string): Promise<void> {

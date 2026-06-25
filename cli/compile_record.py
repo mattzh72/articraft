@@ -7,6 +7,7 @@ from typing import Any
 
 from agent.feedback import render_compile_signals
 from agent.models import CompileSignalBundle
+from cli.common import add_data_dir_argument, resolve_data_dir
 from storage.repo import StorageRepo
 from storage.revisions import active_model_path
 from viewer.api.store import ViewerStore
@@ -23,8 +24,9 @@ def _build_parser() -> argparse.ArgumentParser:
         "--repo-root",
         type=Path,
         default=Path("."),
-        help="Repository root containing data/records.",
+        help="Articraft code repository root.",
     )
+    add_data_dir_argument(parser)
     parser.add_argument(
         "--target",
         choices=("full", "visual"),
@@ -62,7 +64,8 @@ def main(argv: list[str] | None = None) -> int:
     args = parser.parse_args(argv)
 
     repo_root = args.repo_root.resolve()
-    repo = StorageRepo(repo_root)
+    data_root = resolve_data_dir(repo_root, args.data_dir)
+    repo = StorageRepo(repo_root, data_root=data_root)
     record_arg = args.record_dir.expanduser()
     if record_arg.exists():
         record_dir = record_arg.resolve()
@@ -77,7 +80,7 @@ def main(argv: list[str] | None = None) -> int:
     if not model_path.is_file():
         parser.error(f"Record model not found: {model_path}")
 
-    viewer_store = ViewerStore(repo_root)
+    viewer_store = ViewerStore(repo_root, data_root=data_root)
     started_at = time.perf_counter()
     try:
         result = viewer_store.materialization.materialize_record_assets(

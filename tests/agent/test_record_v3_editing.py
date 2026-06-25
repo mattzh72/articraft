@@ -11,7 +11,7 @@ from agent import runner
 from agent.edit import edit_record as edit_record_impl
 from agent.prompts import DESIGNER_PROMPT_NAME
 from agent.run_context import RunExecutionOutcome
-from storage.datasets import DatasetStore
+from storage.library_manifest import manifest_by_id
 from storage.repo import StorageRepo
 from storage.revisions import active_model_path, active_provenance_path
 from tests.helpers import FakeAgent
@@ -44,7 +44,7 @@ def _read_json(path: Path) -> dict:
     return json.loads(path.read_text(encoding="utf-8"))
 
 
-def test_copy_edit_dataset_child_uses_lineage_without_parent_artifact_copies(
+def test_copy_edit_child_uses_lineage_without_parent_artifact_copies(
     fake_agent: None,
     tmp_path: Path,
 ) -> None:
@@ -64,9 +64,7 @@ def test_copy_edit_dataset_child_uses_lineage_without_parent_artifact_copies(
             max_turns=30,
             system_prompt_path=DESIGNER_PROMPT_NAME,
             sdk_package="sdk",
-            collection="dataset",
             category_slug="hinge",
-            dataset_id="ds_hinge_seed",
         )
     )
     assert exit_code == 0
@@ -107,11 +105,9 @@ def test_copy_edit_dataset_child_uses_lineage_without_parent_artifact_copies(
         "edit_mode": "copy",
     }
 
-    child_dataset_entry = DatasetStore(repo).load_entry("rec_child_copy")
-    assert isinstance(child_dataset_entry, dict)
-    assert child_dataset_entry["category_slug"] == "hinge"
-    assert child_dataset_entry["dataset_id"].startswith("ds_hinge_seed_edit_")
-    assert child_dataset_entry["dataset_id"] != "ds_hinge_seed"
+    child_manifest_row = manifest_by_id(repo)["rec_child_copy"]
+    assert child_manifest_row["category_slug"] == "hinge"
+    assert child_manifest_row["parent_record_id"] == parent_record_id
 
     child_revision_dir = repo.layout.record_revision_dir("rec_child_copy", "rev_000001")
     child_revision = _read_json(child_revision_dir / "revision.json")
@@ -225,9 +221,7 @@ def test_history_api_and_revision_file_routes_traverse_lineage(
             max_turns=30,
             system_prompt_path=DESIGNER_PROMPT_NAME,
             sdk_package="sdk",
-            collection="dataset",
             category_slug="hinge",
-            dataset_id="ds_hinge_seed",
         )
     )
     assert exit_code == 0
@@ -252,11 +246,11 @@ def test_history_api_and_revision_file_routes_traverse_lineage(
     assert second.exit_code == 0
 
     repo = StorageRepo(repo_root)
-    dataset_ids = {
-        DatasetStore(repo).load_entry("rec_child_one")["dataset_id"],  # type: ignore[index]
-        DatasetStore(repo).load_entry("rec_child_two")["dataset_id"],  # type: ignore[index]
-    }
-    assert len(dataset_ids) == 2
+    manifest_rows = manifest_by_id(repo)
+    assert manifest_rows["rec_child_one"]["category_slug"] == "hinge"
+    assert manifest_rows["rec_child_two"]["category_slug"] == "hinge"
+    assert manifest_rows["rec_child_one"]["parent_record_id"] == parent_record_id
+    assert manifest_rows["rec_child_two"]["parent_record_id"] == parent_record_id
 
     client = TestClient(create_app(repo_root=repo_root))
     model_response = client.get(f"/api/records/{first.record_id}/files/model.py")

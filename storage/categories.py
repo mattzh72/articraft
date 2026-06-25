@@ -22,9 +22,6 @@ class CategoryStore:
             "title": raw_payload["title"],
             "description": raw_payload.get("description", ""),
         }
-        prompt_batch_ids = raw_payload.get("prompt_batch_ids")
-        if isinstance(prompt_batch_ids, list) and prompt_batch_ids:
-            payload["prompt_batch_ids"] = prompt_batch_ids
         target_sdk_version = raw_payload.get("target_sdk_version")
         if target_sdk_version is not None:
             payload["target_sdk_version"] = target_sdk_version

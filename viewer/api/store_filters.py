@@ -5,7 +5,7 @@ from datetime import datetime
 
 from viewer.api.store_values import _effective_rating_bucket
 
-_DASHBOARD_TIME_FILTER_DURATIONS_MS: dict[str, int] = {
+_TIME_FILTER_DURATIONS_MS: dict[str, int] = {
     "1h": 1 * 60 * 60 * 1000,
     "6h": 6 * 60 * 60 * 1000,
     "12h": 12 * 60 * 60 * 1000,
@@ -41,15 +41,15 @@ def _local_day_start_ms_from_timestamp_ms(timestamp_ms: int) -> int:
     return int(datetime(value.year, value.month, value.day).timestamp() * 1000)
 
 
-def _within_dashboard_time_filter(
+def _within_time_window(
     created_at: str | None,
     *,
     oldest: str | None,
     newest: str | None,
     now_ms: int,
 ) -> bool:
-    oldest_duration = _DASHBOARD_TIME_FILTER_DURATIONS_MS.get(oldest) if oldest else None
-    newest_duration = _DASHBOARD_TIME_FILTER_DURATIONS_MS.get(newest) if newest else None
+    oldest_duration = _TIME_FILTER_DURATIONS_MS.get(oldest) if oldest else None
+    newest_duration = _TIME_FILTER_DURATIONS_MS.get(newest) if newest else None
     if oldest_duration is None and newest_duration is None:
         return True
 
@@ -65,7 +65,7 @@ def _within_dashboard_time_filter(
     return True
 
 
-def _within_dashboard_stars_filter(
+def _within_star_window(
     value: float | None,
     *,
     min_stars: float | None,
@@ -102,7 +102,7 @@ def _within_time_filter(
         return False
 
     now_ms = int(time.time() * 1000)
-    return _within_dashboard_time_filter(
+    return _within_time_window(
         created_at,
         oldest=normalized_oldest,
         newest=normalized_newest,

@@ -1,11 +1,11 @@
 # Articraft Architecture & Organization
 
-Articraft is designed for scalable articulated 3D asset generation through iterative modeling feedback loops. 
+Articraft is designed for local-first articulated 3D asset generation through iterative modeling feedback loops.
 
 ## Project Structure & Module Organization
 
-- **`agent/`**: Contains the generation runtime, provider adapters, prompt compiler/loader, tools, cost tracking, TUI helpers, and batch orchestration.
-- **`storage/`**: Owns the canonical `data/` layout, records, categories, dataset metadata, batch specs, run caches, materialization metadata, and search indexes.
+- **`agent/`**: Contains the generation runtime, provider adapters, prompt compiler/loader, tools, cost tracking, TUI helpers, and single-record orchestration.
+- **`storage/`**: Owns the local `data/` layout, records, categories, `records_manifest.jsonl`, run caches, and materialization metadata.
 - **`sdk/`** & **`sdk/_core/`**: Define the articulated-object SDK layers used by the generation models.
 - **`sdk/_docs/`** & **`sdk/_examples/`**: Agent-facing authoring reference material and assets.
 - **`viewer/api/`**: Exposes the FastAPI surface.
@@ -13,13 +13,15 @@ Articraft is designed for scalable articulated 3D asset generation through itera
 - **`cli/`**: Contains the `articraft` entry points and subcommands.
 - **`tests/`**: Mirrors the main packages with focused smoke and regression coverage.
 
-## Dataset & Workbench Concepts
+## Local Library Concepts
 
-There are two primary ways to run generation in Articraft:
-1. **Workbench**: Isolated runs via `articraft generate` for direct exploration and testing. State is stored locally and isn't inherently categorized until placed into a dataset.
-2. **Dataset Batches**: Batch-run workflows driven by CSV specs under `data/batch_specs/`. These are tracked and assigned to a `category_slug`. This scales well with high concurrency and has a comprehensive resume and auto-recovery framework.
+Articraft uses one library model: every record is local, complete, and browsable. The default data root is the gitignored `<repo-root>/data`; set `ARTICRAFT_DATA_DIR` or pass `--data-dir` to point at another local/exportable folder.
 
-See [Dataset Generation](dataset_generation.md) for detailed workflows on creating and managing large-scale batch generation.
+The viewer and CLI read `records_manifest.jsonl` for record summaries and then load complete record files directly from `records/<record_id>/record.json`. Rebuild the manifest with:
+
+```bash
+uv run articraft library rebuild-manifest
+```
 
 ## Dependencies
 

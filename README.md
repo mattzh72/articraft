@@ -8,9 +8,9 @@
 
 [Paper](https://arxiv.org/abs/2605.15187) | [Project Page](https://articraft3d.github.io/)
 
-Articraft transforms the creation of articulated 3D assets into a programmatic, code-generation workflow powered by LLMs. Engineered for large-scale dataset generation, it bypasses heavyweight manual tools to rapidly produce objects with semantic parts, robust geometry, and physical joints.
+Articraft transforms the creation of articulated 3D assets into a programmatic, code-generation workflow powered by LLMs. It is now a local-first harness: records live in a plain data folder, the code repo stays small, and the viewer browses a simple manifest of complete local records.
 
-![Articraft viewer showing an articulated desk lamp with joint controls and dataset metadata](docs/images/viewer-demo.png)
+![Articraft viewer showing an articulated desk lamp with joint controls and library metadata](docs/images/viewer-demo.png)
 
 > **Security Note:** Articraft compiles and inspects generated records by executing their `model.py` files as Python code. Only run generated records and model scripts from trusted sources.
 
@@ -22,7 +22,6 @@ Articraft transforms the creation of articulated 3D assets into a programmatic, 
 - Python 3.12 recommended (or 3.11). *Note: 3.13+ is not currently supported.*
 - [`uv`](https://docs.astral.sh/uv/) for incredibly fast Python package management.
 - [`just`](https://github.com/casey/just) as the command runner.
-- [`Git LFS`](https://git-lfs.com/) for hydrating dataset records on demand.
 - [`npm`](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm) (optional, but needed for local viewer frontend).
 
 ### 2. Setup
@@ -35,14 +34,12 @@ To set up a checkout from another working directory, pass the repository root:
 just setup ./path/to/checkout
 ```
 
-Fresh clones are code-first: `data/records/**` is stored with Git LFS and excluded from automatic LFS fetch by `.lfsconfig`, so it does not need to be hydrated before developing the code or browsing indexed metadata. Hydrate records only when you want to inspect, render, or edit their payloads:
+Articraft stores records in a gitignored data root. By default that is `<repo-root>/data`; point commands elsewhere with `--data-dir` or `ARTICRAFT_DATA_DIR`:
 
 ```bash
-uv run articraft data hydrate --record <record_id>
-uv run articraft data hydrate --category <category_slug>
-uv run articraft data hydrate --time-from 2026-04-01 --time-to 2026-04-07
-uv run articraft data hydrate --last 7d
-uv run articraft data hydrate --all
+export ARTICRAFT_DATA_DIR=/Users/mzhou/articraft-data
+uv run articraft status
+uv run articraft library check --require-records
 ```
 
 ### 3. Add API Keys
@@ -50,7 +47,7 @@ Open `.env` and set one or more provider keys (e.g. `OPENAI_API_KEY`, `GEMINI_AP
 
 > **No API Keys?** No problem. You can use external AI agents like Claude Code, Codex, or Cursor instead. For Codex setup, including how to add the Codex plugin, see [Codex Plugin Setup](docs/codex_plugin.md). Then point the agent at this repository and prompt it:
 > 
-> *"Create a realistic articulated [object name] and add it to the Articraft dataset. Follow EXTERNAL_AGENT_DATA.md."*
+> *"Create a realistic articulated [object name] in Articraft. Follow EXTERNAL_AGENT_DATA.md."*
 
 ### 4. Create an Asset
 
@@ -72,26 +69,35 @@ Browse the objects you just generated. The local viewer API and React frontend c
 just viewer
 ```
 
-The viewer can browse/search the dataset from `data/records_index.jsonl` before record payloads are hydrated. When you select an unhydrated record, use the "Hydrate record" action before opening source files, traces, or rendered assets.
+To browse an external data folder explicitly:
+
+```bash
+uv run articraft viewer --data-dir /Users/mzhou/articraft-data
+```
 
 ### 6. Edit an Existing Asset
 Fork an existing record when you want to modify it:
 ```bash
-uv run articraft fork data/records/<record_id> "make the handle longer"
+uv run articraft fork <record_id> "make the handle longer"
 ```
 
-Forking creates a new child record and leaves the parent unchanged. See [Editing Existing Records](docs/record_editing.md) for model options, dataset behavior, and history viewing.
+Forking creates a new child record and leaves the parent unchanged. See [Editing Existing Records](docs/record_editing.md) for model options and history viewing.
 
 ---
 
-## Contribute Data
+## Local Library
 
-A huge part of Articraft's mission is crowdsourcing a diverse, massive dataset of articulated 3D models. We welcome generation via our CLI, batch processing, or through external AI agents (like Claude Code, Codex, or Cursor).
+Use the compact library surface to inspect and maintain the data folder:
 
-For full details on our data pipelines, generation guides, and opening pull requests, please read the complete **[Data Contribution Workflow in CONTRIBUTING.md](CONTRIBUTING.md)**.
+```bash
+uv run articraft library list
+uv run articraft library rebuild-manifest
+uv run articraft library check --require-records
+uv run articraft library set-category <record_id> <category_slug>
+```
 
 **Data Usage & Licensing**  
-By contributing data to the Articraft project, you acknowledge and agree that your submissions will be used to build, evaluate, and improve machine learning models, and will be distributed publicly as part of our datasets. You explicitly agree that all contributed data is released under the **[Creative Commons Attribution 4.0 International (CC-BY 4.0)](https://creativecommons.org/licenses/by/4.0/)** license.
+By contributing data to the Articraft project, you acknowledge and agree that your submissions will be used to build, evaluate, and improve machine learning models, and may be distributed publicly as part of Articraft data releases. You explicitly agree that all contributed data is released under the **[Creative Commons Attribution 4.0 International (CC-BY 4.0)](https://creativecommons.org/licenses/by/4.0/)** license.
 
 ---
 
@@ -102,7 +108,6 @@ By contributing data to the Articraft project, you acknowledge and agree that yo
 - **[Codex Plugin Setup](docs/codex_plugin.md)**
 - **[Editing Existing Records](docs/record_editing.md)**
 - **[Image-Conditioned Generation](docs/image_conditioned_generation.md)**
-- **[Dataset Generation & Batch Processing](docs/dataset_generation.md)**
 - **[Contributing Standards & Workflow](CONTRIBUTING.md)**
 - **[Security Policy](SECURITY.md)**
 
