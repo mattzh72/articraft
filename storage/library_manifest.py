@@ -9,6 +9,21 @@ from typing import Any
 from storage.identifiers import validate_record_id
 from storage.repo import StorageRepo
 from storage.revisions import active_cost_path, active_provenance_path, active_traces_dir
+from storage.value_normalization import (
+    coerce_int as _coerce_int,
+)
+from storage.value_normalization import (
+    coerce_rating as _coerce_rating,
+)
+from storage.value_normalization import (
+    coerce_string_list as _coerce_string_list,
+)
+from storage.value_normalization import (
+    cost_totals as _cost_totals,
+)
+from storage.value_normalization import (
+    string_or_none as _string_or_none,
+)
 
 LIBRARY_MANIFEST_SCHEMA_VERSION = 1
 
@@ -281,46 +296,3 @@ def _has_traces(
         return False
     traces_dir = active_traces_dir(repo, record_id, record=record)
     return traces_dir.is_dir() and any(traces_dir.iterdir())
-
-
-def _string_or_none(value: Any) -> str | None:
-    if value is None:
-        return None
-    text = str(value).strip()
-    return text or None
-
-
-def _coerce_string_list(value: Any) -> list[str]:
-    if not isinstance(value, list):
-        return []
-    return [str(item) for item in value if str(item).strip()]
-
-
-def _coerce_int(value: Any) -> int | None:
-    if isinstance(value, bool):
-        return None
-    if isinstance(value, int):
-        return value
-    return None
-
-
-def _coerce_rating(value: Any) -> int | None:
-    if isinstance(value, bool) or not isinstance(value, int):
-        return None
-    return value if 1 <= value <= 5 else None
-
-
-def _cost_totals(cost: Any) -> tuple[float | None, int | None, int | None]:
-    if not isinstance(cost, dict):
-        return None, None, None
-    total = cost.get("total") if isinstance(cost.get("total"), dict) else {}
-    costs = total.get("costs_usd") if isinstance(total.get("costs_usd"), dict) else {}
-    tokens = total.get("tokens") if isinstance(total.get("tokens"), dict) else {}
-    total_cost = costs.get("total")
-    input_tokens = tokens.get("input")
-    output_tokens = tokens.get("output")
-    return (
-        float(total_cost) if isinstance(total_cost, (int, float)) else None,
-        input_tokens if isinstance(input_tokens, int) else None,
-        output_tokens if isinstance(output_tokens, int) else None,
-    )

@@ -4,6 +4,8 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
+from storage import value_normalization
+
 
 def _utc_now() -> str:
     return datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z")
@@ -21,13 +23,31 @@ def _relative_path(path: Path, root: Path) -> str:
 
 
 def _coerce_int(value: Any) -> int | None:
-    return value if isinstance(value, int) else None
+    return value_normalization.coerce_int(value)
+
+
+def _coerce_float(value: Any) -> float | None:
+    return value_normalization.coerce_float(value)
 
 
 def _coerce_rating(value: Any) -> int | None:
-    if isinstance(value, int) and 1 <= value <= 5:
-        return value
-    return None
+    return value_normalization.coerce_rating(value)
+
+
+def _coerce_string(value: Any) -> str | None:
+    return value_normalization.coerce_string(value)
+
+
+def _normalize_sdk_package_value(value: Any) -> str | None:
+    return value_normalization.normalize_sdk_package_value(value)
+
+
+def _cost_totals(cost: Any) -> tuple[float | None, int | None, int | None]:
+    return value_normalization.cost_totals(cost)
+
+
+def _cost_turn_count(cost: Any) -> int | None:
+    return value_normalization.cost_turn_count(cost)
 
 
 def _effective_rating(primary_rating: int | None, secondary_rating: int | None) -> float | None:
@@ -51,24 +71,6 @@ def _effective_rating_bucket(value: float | None) -> str:
     return "5"
 
 
-def _coerce_float(value: Any) -> float | None:
-    if isinstance(value, (int, float)):
-        return float(value)
-    return None
-
-
-def _coerce_string(value: Any) -> str | None:
-    if isinstance(value, str):
-        stripped = value.strip()
-        return stripped or None
-    return None
-
-
-def _normalize_sdk_package_value(value: Any) -> str | None:
-    normalized = _coerce_string(value)
-    return "sdk" if normalized == "sdk" else normalized
-
-
 def _thinking_level_from_provenance(provenance: Any) -> str | None:
     if not isinstance(provenance, dict):
         return None
@@ -76,35 +78,3 @@ def _thinking_level_from_provenance(provenance: Any) -> str | None:
     if not isinstance(generation, dict):
         return None
     return _coerce_string(generation.get("thinking_level"))
-
-
-def _cost_totals(cost: Any) -> tuple[float | None, int | None, int | None]:
-    if not isinstance(cost, dict):
-        return None, None, None
-
-    total = cost.get("total")
-    if not isinstance(total, dict):
-        return None, None, None
-
-    total_cost_usd: float | None = None
-    costs_usd = total.get("costs_usd")
-    if isinstance(costs_usd, dict):
-        total_cost_usd = _coerce_float(costs_usd.get("total"))
-
-    input_tokens: int | None = None
-    output_tokens: int | None = None
-    tokens = total.get("tokens")
-    if isinstance(tokens, dict):
-        input_tokens = _coerce_int(tokens.get("prompt_tokens"))
-        output_tokens = _coerce_int(tokens.get("candidates_tokens"))
-
-    return total_cost_usd, input_tokens, output_tokens
-
-
-def _cost_turn_count(cost: Any) -> int | None:
-    if not isinstance(cost, dict):
-        return None
-    turns = cost.get("turns")
-    if not isinstance(turns, list):
-        return None
-    return len(turns)

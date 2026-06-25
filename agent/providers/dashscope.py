@@ -7,28 +7,28 @@ are served through chat.completions rather than OpenAI's Responses API.
 
 from __future__ import annotations
 
-import asyncio
 import logging
 import os
-import random
 from pathlib import Path
 from typing import Any
 
-from agent.providers.base import (
-    ContextWindowPressure,
-    PrepareRequestResult,
-    build_context_window_pressure,
+from agent.providers._shared import (
+    create_openai_compatible_client,
+    env_keys_from_values,
+    random_env_key,
+    should_retry_transient_http_exception,
 )
-from agent.providers.openrouter import (
-    _async_retry,
-    _convert_message_content,
-    _convert_tools,
-    _estimate_prompt_tokens,
-    _extract_usage,
-    _first_choice,
-    _get,
-    _serialize_tool_calls,
-    _should_retry_openrouter_exception,
+from agent.providers._shared import (
+    env_float as _env_float,
+)
+from agent.providers._shared import (
+    env_int as _env_int,
+)
+from agent.providers.chat_completions import (
+    OpenAICompatibleChatCompletionsMixin,
+)
+from agent.providers.chat_completions import (
+    convert_chat_messages as _base_convert_chat_messages,
 )
 from articraft.values import reasoning_level_alias
 
@@ -60,36 +60,30 @@ def _load_cwd_dotenv_override() -> None:
 
 
 def dashscope_api_keys_from_env(env: dict[str, str] | None = None) -> list[str]:
-    values = os.environ if env is None else env
-
-    def _split(raw: str | None) -> list[str]:
-        if not raw:
-            return []
-        return [token.strip() for token in raw.replace("\n", ",").split(",") if token.strip()]
-
-    keys: list[str] = []
-    primary_key = values.get("DASHSCOPE_API_KEY")
-    if primary_key and primary_key.strip():
-        keys.append(primary_key.strip())
-    keys.extend(_split(values.get("DASHSCOPE_API_KEYS")))
-
-    unique_keys: list[str] = []
-    seen: set[str] = set()
-    for key in keys:
-        if key in seen:
-            continue
-        unique_keys.append(key)
-        seen.add(key)
-    return unique_keys
+    return env_keys_from_values(
+        primary_name="DASHSCOPE_API_KEY",
+        pool_name="DASHSCOPE_API_KEYS",
+        env=env,
+    )
 
 
 def dashscope_api_key_from_env(env: dict[str, str] | None = None) -> str | None:
-    keys = dashscope_api_keys_from_env(env)
-    return random.choice(keys) if keys else None
+    return random_env_key(
+        primary_name="DASHSCOPE_API_KEY",
+        pool_name="DASHSCOPE_API_KEYS",
+        env=env,
+    )
 
 
-class DashScopeLLM:
+class DashScopeLLM(OpenAICompatibleChatCompletionsMixin):
     """DashScope Chat Completions client for Qwen tool-calling workflows."""
+
+    provider_name = "dashscope"
+    provider_label = "DashScope"
+    supports_image_content = True
+    assistant_extra_content_key = "dashscope"
+    assistant_extra_fields = ("reasoning_content",)
+    logger = logger
 
     def __init__(
         self,
@@ -130,229 +124,29 @@ class DashScopeLLM:
                 "DashScope credentials not found. Set DASHSCOPE_API_KEY or DASHSCOPE_API_KEYS."
             )
 
-        client_kwargs: dict[str, Any] = {
-            "api_key": api_key,
-            "base_url": self.base_url,
-            "max_retries": 0,
-        }
-        if self.request_timeout_seconds and self.request_timeout_seconds > 0:
-            client_kwargs["timeout"] = float(self.request_timeout_seconds)
-
-        try:
-            from openai import AsyncOpenAI  # type: ignore
-
-            self._client = AsyncOpenAI(**client_kwargs)
-            self._client_is_async = True
-        except Exception:
-            try:
-                from openai import OpenAI  # type: ignore
-            except Exception as exc:  # pragma: no cover
-                raise RuntimeError(
-                    "DashScope provider selected but the `openai` package is not installed. "
-                    "Install it (e.g. `uv add openai`), then try again."
-                ) from exc
-
-            self._client = OpenAI(**client_kwargs)
-            self._client_is_async = False
-
-    def build_request_preview(
-        self,
-        *,
-        system_prompt: str,
-        messages: list[dict],
-        tools: list[dict],
-    ) -> dict[str, Any]:
-        payload = self._build_chat_payload(
-            system_prompt=system_prompt,
-            messages=messages,
-            tools=tools,
-        )
-        payload["base_url"] = self.base_url
-        return payload
-
-    def context_window_pressure(self, usage: dict[str, int]) -> ContextWindowPressure:
-        return build_context_window_pressure(
-            provider="dashscope",
-            usage=usage,
-            max_context_tokens=self.context_tokens,
+        self._client, self._client_is_async = create_openai_compatible_client(
+            provider_label="DashScope",
+            api_key=api_key,
+            base_url=self.base_url,
+            timeout_seconds=self.request_timeout_seconds,
         )
 
-    async def prepare_next_request(
-        self,
-        *,
-        system_prompt: str,
-        messages: list[dict],
-        tools: list[dict],
-        completed_turns: int,
-        consecutive_compile_failure_count: int = 0,
-        last_compile_failure_sig: str | None = None,
-    ) -> PrepareRequestResult:
-        return PrepareRequestResult()
+    def _chat_extra_body(self) -> dict[str, Any]:
+        return dict(self.extra_body)
 
-    async def generate_with_tools(
-        self,
-        system_prompt: str,
-        messages: list[dict],
-        tools: list[dict],
-    ) -> dict[str, Any]:
-        if self._client is None:
-            raise RuntimeError("DashScope transport is unavailable in dry_run mode")
+    def _response_extra_content(self, message: Any) -> tuple[str | None, dict[str, Any] | None]:
+        from agent.providers._shared import get_value
 
-        request_payload = self._build_chat_payload(
-            system_prompt=system_prompt,
-            messages=messages,
-            tools=tools,
+        reasoning_content = get_value(message, "reasoning_content")
+        if not isinstance(reasoning_content, str) or not reasoning_content.strip():
+            return None, None
+        return (
+            reasoning_content.strip(),
+            {"dashscope": {"reasoning_content": reasoning_content}},
         )
 
-        async def _request_once() -> Any:
-            request_coro = self._chat_completion(request_payload)
-            if self.request_timeout_seconds and self.request_timeout_seconds > 0:
-                return await asyncio.wait_for(
-                    request_coro,
-                    timeout=float(self.request_timeout_seconds),
-                )
-            return await request_coro
-
-        response = await _async_retry(
-            _request_once,
-            max_attempts=self.max_attempts,
-            should_retry=_should_retry_openrouter_exception,
-            base_delay=self.retry_base_seconds,
-            max_delay=self.retry_max_seconds,
-            logger=logger,
-            context="dashscope[chat.completions]",
-        )
-        return self._convert_response(response)
-
-    async def close(self) -> None:
-        client = getattr(self, "_client", None)
-        if client is None:
-            return None
-        close_method = getattr(client, "close", None)
-        if close_method is None:
-            return None
-        result = close_method()
-        if asyncio.iscoroutine(result):
-            await result
-        return None
-
-    async def _chat_completion(self, request_payload: dict[str, Any]) -> Any:
-        payload = dict(request_payload)
-        extra_body = payload.pop("extra_body", None)
-        if self._client_is_async:
-            if extra_body is None:
-                return await self._client.chat.completions.create(**payload)
-            return await self._client.chat.completions.create(**payload, extra_body=extra_body)
-        if extra_body is None:
-            return await asyncio.to_thread(self._client.chat.completions.create, **payload)
-        return await asyncio.to_thread(
-            self._client.chat.completions.create,
-            **payload,
-            extra_body=extra_body,
-        )
-
-    def _build_chat_payload(
-        self,
-        *,
-        system_prompt: str,
-        messages: list[dict],
-        tools: list[dict],
-    ) -> dict[str, Any]:
-        chat_messages: list[dict[str, Any]] = []
-        if system_prompt.strip():
-            chat_messages.append({"role": "system", "content": system_prompt})
-        chat_messages.extend(_convert_dashscope_chat_messages(messages))
-
-        payload: dict[str, Any] = {
-            "model": self.model_id,
-            "messages": chat_messages,
-        }
-        if self.extra_body:
-            payload["extra_body"] = dict(self.extra_body)
-        converted_tools = _convert_tools(tools)
-        if converted_tools:
-            payload["tools"] = converted_tools
-        max_tokens = self._request_max_tokens(payload)
-        if max_tokens > 0:
-            payload["max_tokens"] = max_tokens
-        return payload
-
-    def _request_max_tokens(self, payload: dict[str, Any]) -> int:
-        if self.max_tokens <= 0:
-            return 0
-        if self.context_tokens <= 0:
-            return self.max_tokens
-        estimated_prompt_tokens = _estimate_prompt_tokens(payload)
-        available = (
-            self.context_tokens - estimated_prompt_tokens - max(0, self.output_safety_tokens)
-        )
-        if available <= 0:
-            return min(self.max_tokens, 16)
-        return min(self.max_tokens, available)
-
-    def _convert_response(self, response: Any) -> dict[str, Any]:
-        choice = _first_choice(response)
-        message = _get(choice, "message")
-        if message is None:
-            return {}
-
-        content = _get(message, "content")
-        tool_calls = _serialize_tool_calls(_get(message, "tool_calls"))
-        reasoning_content = _get(message, "reasoning_content")
-        usage = _extract_usage(response)
-
-        result: dict[str, Any] = {
-            "content": content if isinstance(content, str) else "",
-            "tool_calls": tool_calls,
-        }
-        if isinstance(reasoning_content, str) and reasoning_content.strip():
-            result["thought_summary"] = reasoning_content.strip()
-            result["extra_content"] = {
-                "dashscope": {
-                    "reasoning_content": reasoning_content,
-                }
-            }
-        if usage:
-            result["usage"] = usage
-        return result
-
-
-def _convert_dashscope_chat_messages(messages: list[dict]) -> list[dict[str, Any]]:
-    converted: list[dict[str, Any]] = []
-    for message in messages:
-        if not isinstance(message, dict):
-            continue
-        role = message.get("role")
-        if role == "user":
-            converted.append({"role": "user", "content": _convert_message_content(message)})
-            continue
-        if role == "assistant":
-            assistant: dict[str, Any] = {"role": "assistant"}
-            content = message.get("content")
-            assistant["content"] = content if isinstance(content, str) else None
-            tool_calls = message.get("tool_calls")
-            if tool_calls:
-                assistant["tool_calls"] = tool_calls
-            extra_content = message.get("extra_content")
-            if isinstance(extra_content, dict):
-                dashscope = extra_content.get("dashscope")
-                if isinstance(dashscope, dict):
-                    reasoning_content = dashscope.get("reasoning_content")
-                    if reasoning_content:
-                        assistant["reasoning_content"] = reasoning_content
-            converted.append(assistant)
-            continue
-        if role == "tool":
-            tool_message: dict[str, Any] = {
-                "role": "tool",
-                "tool_call_id": message.get("tool_call_id") or message.get("call_id"),
-                "content": message.get("content") or "",
-            }
-            name = message.get("name")
-            if isinstance(name, str) and name:
-                tool_message["name"] = name
-            converted.append(tool_message)
-    return converted
+    def _should_retry_exception(self, exc: BaseException) -> bool:
+        return _should_retry_dashscope_exception(exc)
 
 
 def _dashscope_extra_body(thinking_level: str) -> dict[str, Any]:
@@ -376,21 +170,14 @@ def _dashscope_extra_body(thinking_level: str) -> dict[str, Any]:
     return extra
 
 
-def _env_float(name: str, default: float) -> float:
-    raw = os.environ.get(name)
-    if raw is None:
-        return default
-    try:
-        return float(raw.strip())
-    except Exception:
-        return default
+def _should_retry_dashscope_exception(exc: BaseException) -> bool:
+    return should_retry_transient_http_exception(exc)
 
 
-def _env_int(name: str, default: int) -> int:
-    raw = os.environ.get(name)
-    if raw is None:
-        return default
-    try:
-        return int(raw.strip().replace("_", ""))
-    except Exception:
-        return default
+def _convert_dashscope_chat_messages(messages: list[dict]) -> list[dict[str, Any]]:
+    return _base_convert_chat_messages(
+        messages,
+        assistant_extra_content_key="dashscope",
+        assistant_extra_fields=("reasoning_content",),
+        include_images=True,
+    )
