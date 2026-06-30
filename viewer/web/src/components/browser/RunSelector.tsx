@@ -1,13 +1,7 @@
 import { type JSX } from "react";
 
 import { useViewer, useViewerDispatch } from "@/lib/viewer-context";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { NativeSelect } from "@/components/ui/native-select";
 
 export function RunSelector(): JSX.Element {
   const { bootstrap, selectedRunId } = useViewer();
@@ -22,26 +16,25 @@ export function RunSelector(): JSX.Element {
   }
 
   return (
-    <Select
+    <NativeSelect
+      aria-label="Run filter"
+      selectSize="sm"
+      className="h-7 w-full font-mono text-[11px]"
       value={selectedRunId ?? "all"}
-      onValueChange={(value) =>
+      onChange={(event) => {
+        const value = event.currentTarget.value;
         dispatch({
           type: "SET_RUN_FILTER",
           payload: value === "all" ? null : value,
-        })
-      }
+        });
+      }}
     >
-      <SelectTrigger size="sm" className="h-7 w-full text-[11px]">
-        <SelectValue placeholder="All runs" />
-      </SelectTrigger>
-      <SelectContent>
-        <SelectItem value="all">All runs</SelectItem>
-        {runs.map((run) => (
-          <SelectItem key={run.run_id} value={run.run_id}>
-            <span className="truncate font-mono text-[11px]">{run.run_id}</span>
-          </SelectItem>
-        ))}
-      </SelectContent>
-    </Select>
+      <option value="all">All runs</option>
+      {runs.map((run) => (
+        <option key={run.run_id} value={run.run_id}>
+          {run.run_id}
+        </option>
+      ))}
+    </NativeSelect>
   );
 }
