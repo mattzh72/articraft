@@ -8,6 +8,15 @@ type AppErrorBoundaryState = {
   error: Error | null;
 };
 
+function isChunkLoadError(error: Error): boolean {
+  return (
+    error.message.includes("Failed to fetch dynamically imported module")
+    || error.message.includes("error loading dynamically imported module")
+    || error.message.includes("Importing a module script failed")
+    || error.message.includes("ChunkLoadError")
+  );
+}
+
 export class AppErrorBoundary extends Component<AppErrorBoundaryProps, AppErrorBoundaryState> {
   state: AppErrorBoundaryState = {
     error: null,
@@ -20,13 +29,18 @@ export class AppErrorBoundary extends Component<AppErrorBoundaryProps, AppErrorB
   }
 
   componentDidCatch(error: Error, errorInfo: ErrorInfo): void {
-    console.error("Viewer render error", error, errorInfo);
+    console.error("Viewer render error", error);
+    if (errorInfo.componentStack) {
+      console.error("Viewer component stack", errorInfo.componentStack);
+    }
   }
 
   render(): ReactNode {
     if (!this.state.error) {
       return this.props.children;
     }
+
+    const chunkLoadError = isChunkLoadError(this.state.error);
 
     return (
       <div className="flex h-screen items-center justify-center bg-[var(--surface-2)] px-4">
@@ -35,10 +49,12 @@ export class AppErrorBoundary extends Component<AppErrorBoundaryProps, AppErrorB
             Viewer Error
           </p>
           <h1 className="mt-3 text-[18px] font-semibold text-[var(--text-primary)]">
-            The viewer needs a refresh
+            {chunkLoadError ? "The viewer needs a refresh" : "The viewer hit a render error"}
           </h1>
           <p className="mt-2 text-[12px] leading-5 text-[var(--text-secondary)]">
-            A frontend module failed to load. This usually happens when the local viewer was rebuilt while this tab was already open.
+            {chunkLoadError
+              ? "A frontend module failed to load. This usually happens when the local viewer was rebuilt while this tab was already open."
+              : "A React component failed while rendering. Refreshing may help, but this usually needs a code fix."}
           </p>
           <p className="mt-2 break-words font-mono text-[10px] leading-5 text-[var(--text-tertiary)]">
             {this.state.error.message}
