@@ -1,13 +1,9 @@
 import { type JSX } from "react";
 
 import { useViewer, useViewerDispatch } from "@/lib/viewer-context";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+
+const RUN_SELECT_CLASS =
+  "h-7 w-full rounded-md border border-[var(--border-default)] bg-[var(--surface-0)] px-2.5 text-[11px] font-mono text-[var(--text-primary)] outline-none transition-colors focus-visible:border-[var(--accent)] focus-visible:ring-2 focus-visible:ring-[var(--accent-soft)]";
 
 export function RunSelector(): JSX.Element {
   const { bootstrap, selectedRunId } = useViewer();
@@ -22,26 +18,23 @@ export function RunSelector(): JSX.Element {
   }
 
   return (
-    <Select
+    <select
       value={selectedRunId ?? "all"}
-      onValueChange={(value) =>
+      className={RUN_SELECT_CLASS}
+      aria-label="Run filter"
+      onChange={(event) =>
         dispatch({
           type: "SET_RUN_FILTER",
-          payload: value === "all" ? null : value,
+          payload: event.target.value === "all" ? null : event.target.value,
         })
       }
     >
-      <SelectTrigger size="sm" className="h-7 w-full text-[11px]">
-        <SelectValue placeholder="All runs" />
-      </SelectTrigger>
-      <SelectContent>
-        <SelectItem value="all">All runs</SelectItem>
-        {runs.map((run) => (
-          <SelectItem key={run.run_id} value={run.run_id}>
-            <span className="truncate font-mono text-[11px]">{run.run_id}</span>
-          </SelectItem>
-        ))}
-      </SelectContent>
-    </Select>
+      <option value="all">All runs</option>
+      {runs.map((run) => (
+        <option key={run.run_id} value={run.run_id}>
+          {run.run_id}
+        </option>
+      ))}
+    </select>
   );
 }

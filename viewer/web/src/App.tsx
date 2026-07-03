@@ -2,7 +2,6 @@ import { Suspense, type JSX } from "react";
 
 import { lazyWithChunkReload } from "@/lib/lazy";
 import { ViewerProvider } from "@/lib/viewer-context";
-import { TooltipProvider } from "@/components/ui/tooltip";
 import { AppHeader } from "@/components/layout/AppHeader";
 
 const ViewerShell = lazyWithChunkReload(() => import("@/ViewerShell"));
@@ -17,15 +16,13 @@ function AppLoadingFallback(): JSX.Element {
 
 export default function App(): JSX.Element {
   return (
-    <TooltipProvider>
-      <ViewerProvider>
-        <div className="flex h-screen flex-col bg-[var(--surface-2)]">
-          <AppHeader />
-          <Suspense fallback={<AppLoadingFallback />}>
-            <ViewerShell />
-          </Suspense>
-        </div>
-      </ViewerProvider>
-    </TooltipProvider>
+    <ViewerProvider>
+      <div className="flex h-screen flex-col bg-[var(--surface-2)]">
+        <AppHeader />
+        <Suspense fallback={<AppLoadingFallback />}>
+          <ViewerShell />
+        </Suspense>
+      </div>
+    </ViewerProvider>
   );
 }

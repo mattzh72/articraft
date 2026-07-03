@@ -12,14 +12,12 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { deleteRecord, openRecordFolder } from "@/lib/api";
 import { buildRecordPath, copyTextToClipboard } from "@/lib/record-path";
 import type { RecordSummary } from "@/lib/types";
@@ -254,15 +252,12 @@ function RecordListItemInner({
           </button>
 
           <DropdownMenu open={menuOpen} onOpenChange={setMenuOpen}>
-            <DropdownMenuTrigger asChild>
-              <Button
-                variant="ghost"
-                size="sm"
-                className="h-6 w-6 shrink-0 rounded-md p-0 opacity-0 transition-opacity group-hover:opacity-100 data-[state=open]:opacity-100"
-                aria-label="Record actions"
-              >
-                <MoreVertical className="size-3.5" />
-              </Button>
+            <DropdownMenuTrigger
+              type="button"
+              className="inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-md p-0 text-[var(--text-secondary)] opacity-0 transition-opacity hover:bg-[var(--surface-2)] hover:text-[var(--text-primary)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-1 group-hover:opacity-100 data-[state=open]:opacity-100"
+              aria-label="Record actions"
+            >
+              <MoreVertical className="size-3.5" />
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="min-w-40">
               <DropdownMenuItem onSelect={() => void handleCopyPath()}>
@@ -304,12 +299,9 @@ function RecordListItemInner({
         </AlertDialogContent>
       </AlertDialog>
 
-      <Tooltip open={copyState === "copied" || copyState === "error"}>
-        <TooltipTrigger asChild>
-          <span className="sr-only" />
-        </TooltipTrigger>
-        <TooltipContent>{copyState === "copied" ? "Copied" : "Copy failed"}</TooltipContent>
-      </Tooltip>
+      <span className="sr-only" aria-live="polite" aria-atomic="true">
+        {copyState === "copied" ? "Copied" : copyState === "error" ? "Copy failed" : ""}
+      </span>
     </>
   );
 }

@@ -24,9 +24,12 @@ const buttonVariants = cva(
   },
 );
 
-export type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> &
+export type ButtonProps = React.ComponentPropsWithoutRef<"button"> &
   VariantProps<typeof buttonVariants>;
 
-export function Button({ className, variant, size, ...props }: ButtonProps): React.JSX.Element {
-  return <button className={cn(buttonVariants({ variant, size, className }))} {...props} />;
-}
+export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
+  ({ className, variant, size, ...props }, ref): React.JSX.Element => (
+    <button ref={ref} className={cn(buttonVariants({ variant, size, className }))} {...props} />
+  ),
+);
+Button.displayName = "Button";

@@ -5,7 +5,6 @@ import { lazyWithChunkReload } from "@/lib/lazy";
 import type { InspectorTab } from "@/lib/types";
 import { useViewer, useViewerDispatch } from "@/lib/viewer-context";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { InspectPanel } from "@/components/inspector/InspectPanel";
 import { RenderOptionsPanel } from "@/components/inspector/RenderOptionsPanel";
 import { defaultRenderOptions, type RenderOptions } from "@/components/viewer3d/useRenderOptions";
@@ -95,18 +94,14 @@ export function InspectorTabs({
           ))}
         </TabsList>
         {forkedParent ? (
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <span
-                className="ml-auto inline-flex items-center gap-1 rounded-full border border-[var(--border-subtle)] px-1.5 py-0.5 text-[9.5px] font-medium uppercase tracking-[0.05em] text-[var(--text-tertiary)]"
-                aria-label="Forked record"
-              >
-                <GitFork className="size-[9px] text-[var(--accent)]" />
-                <span>Forked</span>
-              </span>
-            </TooltipTrigger>
-            <TooltipContent side="bottom">Forked from {forkedParent}</TooltipContent>
-          </Tooltip>
+          <span
+            className="ml-auto inline-flex items-center gap-1 rounded-full border border-[var(--border-subtle)] px-1.5 py-0.5 text-[9.5px] font-medium uppercase tracking-[0.05em] text-[var(--text-tertiary)]"
+            aria-label={`Forked from ${forkedParent}`}
+            title={`Forked from ${forkedParent}`}
+          >
+            <GitFork className="size-[9px] text-[var(--accent)]" />
+            <span>Forked</span>
+          </span>
         ) : null}
       </div>
 

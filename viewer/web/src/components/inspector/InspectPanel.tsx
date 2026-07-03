@@ -18,7 +18,6 @@ import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Slider } from "@/components/ui/slider";
-import { Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
 import type { UrdfJoint } from "@/components/inspector/JointSlider";
 
 type InspectPanelProps = {
@@ -82,36 +81,24 @@ function PathCard({ path, copyState, openState, onCopy, onOpen }: PathCardProps)
           Path
         </span>
         <div className="flex shrink-0 items-center gap-0.5">
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <button
-                type="button"
-                aria-label={copyState === "copied" ? "Copied path" : "Copy path"}
-                className="flex size-5 cursor-pointer items-center justify-center rounded-md text-[var(--text-quaternary)] transition-colors duration-100 hover:bg-[var(--surface-0)] hover:text-[var(--text-secondary)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-soft)]"
-                onClick={onCopy}
-              >
-                <Copy className={`size-3 ${copyState === "copied" ? "text-[var(--success)]" : ""}`} />
-              </button>
-            </TooltipTrigger>
-            <TooltipContent side="top">
-              {copyState === "copied" ? "Copied!" : copyState === "error" ? "Failed" : "Copy path"}
-            </TooltipContent>
-          </Tooltip>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <button
-                type="button"
-                aria-label={openState === "opened" ? "Opened folder" : "Open folder"}
-                className="flex size-5 cursor-pointer items-center justify-center rounded-md text-[var(--text-quaternary)] transition-colors duration-100 hover:bg-[var(--surface-0)] hover:text-[var(--text-secondary)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-soft)]"
-                onClick={onOpen}
-              >
-                <FolderOpen className={`size-3 ${openState === "opened" ? "text-[var(--success)]" : ""}`} />
-              </button>
-            </TooltipTrigger>
-            <TooltipContent side="top">
-              {openState === "opened" ? "Opened!" : openState === "error" ? "Failed" : "Open folder"}
-            </TooltipContent>
-          </Tooltip>
+          <button
+            type="button"
+            aria-label={copyState === "copied" ? "Copied path" : "Copy path"}
+            title={copyState === "copied" ? "Copied!" : copyState === "error" ? "Failed" : "Copy path"}
+            className="flex size-5 cursor-pointer items-center justify-center rounded-md text-[var(--text-quaternary)] transition-colors duration-100 hover:bg-[var(--surface-0)] hover:text-[var(--text-secondary)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-soft)]"
+            onClick={onCopy}
+          >
+            <Copy className={`size-3 ${copyState === "copied" ? "text-[var(--success)]" : ""}`} />
+          </button>
+          <button
+            type="button"
+            aria-label={openState === "opened" ? "Opened folder" : "Open folder"}
+            title={openState === "opened" ? "Opened!" : openState === "error" ? "Failed" : "Open folder"}
+            className="flex size-5 cursor-pointer items-center justify-center rounded-md text-[var(--text-quaternary)] transition-colors duration-100 hover:bg-[var(--surface-0)] hover:text-[var(--text-secondary)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-soft)]"
+            onClick={onOpen}
+          >
+            <FolderOpen className={`size-3 ${openState === "opened" ? "text-[var(--success)]" : ""}`} />
+          </button>
         </div>
       </div>
       <p

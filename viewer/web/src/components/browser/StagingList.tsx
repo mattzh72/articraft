@@ -23,7 +23,6 @@ import { useViewer, useViewerDispatch } from "@/lib/viewer-context";
 import { cn } from "@/lib/utils";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Button } from "@/components/ui/button";
-import { Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
 import { deleteStagingEntry, openStagingFolder } from "@/lib/api";
 import { viewerQueryKeys } from "@/lib/viewer-queries";
 
@@ -244,26 +243,20 @@ function StagingListItem({ entry }: { entry: StagingEntry }): JSX.Element {
 
           <DropdownMenu open={menuOpen} onOpenChange={setMenuOpen}>
             <div className="relative shrink-0 pt-px">
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <DropdownMenuTrigger asChild>
-                    <button
-                      type="button"
-                      aria-label={`Open actions for ${entry.title || entry.record_id}`}
-                      className={cn(
-                        "flex size-6 items-center justify-center rounded-md text-[var(--text-tertiary)] opacity-0 transition-all duration-100 group-hover:opacity-100 focus-visible:opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[rgba(26,138,74,0.18)]",
-                        menuOpen
-                          ? "bg-[var(--surface-0)] text-[var(--text-primary)] opacity-100 shadow-[0_1px_3px_rgba(0,0,0,0.06)]"
-                          : "hover:bg-[var(--surface-0)] hover:text-[var(--text-primary)]",
-                      )}
-                      onClick={(event) => event.stopPropagation()}
-                    >
-                      <MoreVertical className="size-3" />
-                    </button>
-                  </DropdownMenuTrigger>
-                </TooltipTrigger>
-                {!menuOpen ? <TooltipContent side="right">Actions</TooltipContent> : null}
-              </Tooltip>
+              <DropdownMenuTrigger
+                type="button"
+                aria-label={`Open actions for ${entry.title || entry.record_id}`}
+                title="Actions"
+                className={cn(
+                  "flex size-6 items-center justify-center rounded-md text-[var(--text-tertiary)] opacity-0 transition-all duration-100 group-hover:opacity-100 focus-visible:opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[rgba(26,138,74,0.18)]",
+                  menuOpen
+                    ? "bg-[var(--surface-0)] text-[var(--text-primary)] opacity-100 shadow-[0_1px_3px_rgba(0,0,0,0.06)]"
+                    : "hover:bg-[var(--surface-0)] hover:text-[var(--text-primary)]",
+                )}
+                onClick={(event) => event.stopPropagation()}
+              >
+                <MoreVertical className="size-3" />
+              </DropdownMenuTrigger>
 
               <DropdownMenuContent onClick={(event) => event.stopPropagation()}>
                 <DropdownMenuItem onSelect={() => void handleOpenStagingFolder()}>
