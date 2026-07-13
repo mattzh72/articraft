@@ -37,8 +37,6 @@ uv-version-ensure:
 
 setup root='.':
     just uv-version-ensure
-    # Create a local env template once; never overwrite an existing secrets file.
-    uv run --frozen --directory {{ quote(root) }} articraft env bootstrap
     uv sync --frozen --group dev --directory {{ quote(root) }}
     @if command -v npm >/dev/null 2>&1; then \
         npm --prefix {{ quote(root + "/viewer/web") }} ci; \

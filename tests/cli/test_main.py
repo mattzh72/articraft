@@ -1,6 +1,8 @@
 from __future__ import annotations
 
 import json
+import shutil
+import subprocess
 from pathlib import Path
 
 import pytest
@@ -8,6 +10,8 @@ import pytest
 from cli import main as articraft_cli
 from storage.repo import StorageRepo
 from storage.revisions import INITIAL_REVISION_ID, revision_artifacts_payload
+
+REPO_ROOT = Path(__file__).resolve().parents[2]
 
 
 def _help_text(argv: list[str], capsys: pytest.CaptureFixture[str]) -> str:
@@ -70,14 +74,32 @@ def test_public_command_help_surfaces_local_library_commands(
         assert fragment in output
 
 
+@pytest.mark.skipif(shutil.which("just") is None, reason="just is required for setup")
+def test_setup_recipe_uses_init_as_only_env_bootstrap() -> None:
+    result = subprocess.run(
+        ["just", "--dry-run", "setup"],
+        cwd=REPO_ROOT,
+        check=False,
+        capture_output=True,
+        text=True,
+    )
+
+    assert result.returncode == 0, result.stderr
+    output = result.stdout + result.stderr
+    assert "articraft env bootstrap" not in output
+    assert output.count("articraft init") == 1
+
+
 def test_init_creates_external_data_root_manifest(tmp_path: Path) -> None:
     data_root = tmp_path / "articraft-data"
+    (tmp_path / ".env.example").write_text("ARTICRAFT_MODEL=\n", encoding="utf-8")
 
     exit_code = articraft_cli.main(
         ["init", "--repo-root", str(tmp_path), "--data-dir", str(data_root)]
     )
 
     assert exit_code == 0
+    assert (tmp_path / ".env").read_text(encoding="utf-8") == "ARTICRAFT_MODEL=\n"
     assert (data_root / "records").is_dir()
     assert (data_root / "records_manifest.jsonl").read_text(encoding="utf-8") == ""
 
