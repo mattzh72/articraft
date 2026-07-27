@@ -215,6 +215,7 @@ cython_debug/
 # External Articraft dataset roots are not tracked in this code repository.
 data/
 performance/results/
+performance/viewer_data/
 
 # Viewer frontend dependencies/build output
 .mcp.json
