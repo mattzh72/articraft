@@ -133,6 +133,11 @@ class ViewerFileResolver:
         except HTTPException as exc:
             if exc.status_code != 404 or not should_attempt_materialize_for_record_path(file_path):
                 raise
+        if self._is_recorded_experiment_export_failure(record_id):
+            raise HTTPException(
+                status_code=404,
+                detail=("This experiment cell recorded an export failure and has no saved URDF."),
+            )
         try:
             await asyncio.to_thread(
                 self.store.materialize_record_assets,
@@ -165,6 +170,20 @@ class ViewerFileResolver:
         except RuntimeError as exc:
             raise HTTPException(status_code=500, detail=str(exc)) from exc
         return self.resolve_record_target(record_id, file_path)
+
+    def _is_recorded_experiment_export_failure(self, record_id: str) -> bool:
+        report = self.repo.read_json(
+            self.repo.layout.record_materialization_compile_report_path(record_id),
+            default=None,
+        )
+        if not isinstance(report, dict) or report.get("status") != "failure":
+            return False
+        metrics = report.get("metrics")
+        return (
+            isinstance(metrics, dict)
+            and bool(metrics.get("experiment_run_id"))
+            and metrics.get("export_success") is False
+        )
 
     def resolve_record_trace_target(self, record_id: str, file_path: str) -> tuple[Path, str]:
         self._validate_record_id(record_id)

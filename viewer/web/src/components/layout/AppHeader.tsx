@@ -58,6 +58,13 @@ export function AppHeader(): JSX.Element {
         )}
       </div>
 
+      <a
+        href="/compare"
+        className="hidden h-7 items-center rounded-md border border-[var(--border-default)] bg-[var(--surface-0)] px-2.5 font-mono text-[9px] uppercase tracking-[0.08em] text-[var(--text-tertiary)] transition hover:bg-[var(--surface-2)] hover:text-[var(--text-primary)] sm:inline-flex"
+      >
+        Compare
+      </a>
+
       <button
         type="button"
         onClick={handleRefresh}

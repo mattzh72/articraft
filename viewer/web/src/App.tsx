@@ -5,6 +5,9 @@ import { ViewerProvider } from "@/lib/viewer-context";
 import { AppHeader } from "@/components/layout/AppHeader";
 
 const ViewerShell = lazyWithChunkReload(() => import("@/ViewerShell"));
+const AblationComparePage = lazyWithChunkReload(
+  () => import("@/components/compare/AblationComparePage"),
+);
 
 function AppLoadingFallback(): JSX.Element {
   return (
@@ -15,6 +18,14 @@ function AppLoadingFallback(): JSX.Element {
 }
 
 export default function App(): JSX.Element {
+  if (window.location.pathname === "/compare") {
+    return (
+      <Suspense fallback={<AppLoadingFallback />}>
+        <AblationComparePage />
+      </Suspense>
+    );
+  }
+
   return (
     <ViewerProvider>
       <div className="flex h-screen flex-col bg-[var(--surface-2)]">

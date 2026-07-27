@@ -126,3 +126,32 @@ def test_delete_record_removes_record_and_manifest_row(tmp_path: Path) -> None:
     assert response.status_code == 200
     assert not repo.layout.record_dir("rec_lamp").exists()
     assert repo.layout.records_manifest_path.read_text(encoding="utf-8") == ""
+
+
+def test_recorded_experiment_export_failure_returns_missing_artifact(tmp_path: Path) -> None:
+    client, repo = _client(tmp_path)
+    record_id = "rec_failed_ablation"
+    _write_record(repo, record_id, title="Failed ablation")
+    repo.write_json(
+        repo.layout.record_materialization_compile_report_path(record_id),
+        {
+            "schema_version": 1,
+            "record_id": record_id,
+            "status": "failure",
+            "urdf_path": "model.urdf",
+            "warnings": [],
+            "checks_run": ["export_only"],
+            "metrics": {
+                "experiment_run_id": "test-run",
+                "export_success": False,
+            },
+        },
+    )
+    rebuild_manifest(repo)
+
+    response = client.get(f"/api/records/{record_id}/files/model.urdf")
+
+    assert response.status_code == 404
+    assert response.json()["detail"] == (
+        "This experiment cell recorded an export failure and has no saved URDF."
+    )

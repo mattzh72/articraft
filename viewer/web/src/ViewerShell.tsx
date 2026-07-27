@@ -500,6 +500,7 @@ export default function ViewerShell(): JSX.Element {
     return {
       recordId: selectedRecord.record_id,
       hasCompileReport: selectedRecord.has_compile_report,
+      experimentFailure: selectedRecord.tags.includes("export-failure"),
       detail,
     };
   }, [modelLoadState.error, modelLoadState.missingArtifacts, selectedRecord, selection]);
@@ -643,6 +644,7 @@ export default function ViewerShell(): JSX.Element {
                 <MissingArtifactsOverlay
                   recordId={missingArtifactsState.recordId}
                   hasCompileReport={missingArtifactsState.hasCompileReport}
+                  experimentFailure={missingArtifactsState.experimentFailure}
                   detail={missingArtifactsState.detail}
                 />
               ) : undefined
@@ -665,6 +667,7 @@ export default function ViewerShell(): JSX.Element {
                 <MissingArtifactsOverlay
                   recordId={missingArtifactsState.recordId}
                   hasCompileReport={missingArtifactsState.hasCompileReport}
+                  experimentFailure={missingArtifactsState.experimentFailure}
                   detail={missingArtifactsState.detail}
                   compact
                 />

@@ -3,6 +3,7 @@ import { type JSX } from "react";
 type MissingArtifactsOverlayProps = {
   recordId: string;
   hasCompileReport: boolean;
+  experimentFailure?: boolean;
   detail?: string | null;
   compact?: boolean;
 };
@@ -10,13 +11,20 @@ type MissingArtifactsOverlayProps = {
 export function MissingArtifactsOverlay({
   recordId,
   hasCompileReport,
+  experimentFailure = false,
   detail = null,
   compact = false,
 }: MissingArtifactsOverlayProps): JSX.Element {
-  const title = hasCompileReport ? "Viewer artifacts are missing" : "Viewer artifacts are unavailable";
-  const description = hasCompileReport
-    ? "A compile report exists for this record, but the saved URDF or mesh files the viewer needs are missing on disk."
-    : "This record does not currently have the saved URDF and mesh files the viewer needs.";
+  const title = experimentFailure
+    ? "No URDF"
+    : hasCompileReport
+      ? "Viewer artifacts are missing"
+      : "Viewer artifacts are unavailable";
+  const description = experimentFailure
+    ? "Export failed for this experiment cell."
+    : hasCompileReport
+      ? "A compile report exists for this record, but the saved URDF or mesh files the viewer needs are missing on disk."
+      : "This record does not currently have the saved URDF and mesh files the viewer needs.";
 
   return (
     <div className="flex h-full w-full items-center justify-center p-4">
@@ -29,7 +37,7 @@ export function MissingArtifactsOverlay({
         <div className="flex items-center gap-2">
           <span className="inline-flex h-2.5 w-2.5 rounded-full bg-[#d97706]" />
           <p className="text-[11px] font-semibold uppercase tracking-[0.08em] text-[var(--text-tertiary)]">
-            Materialization Required
+            {experimentFailure ? "Export failed" : "Materialization required"}
           </p>
         </div>
 
@@ -39,20 +47,24 @@ export function MissingArtifactsOverlay({
         <p className="mt-2 text-[12px] leading-5 text-[var(--text-secondary)]">{description}</p>
         {detail ? <p className="mt-2 text-[11px] leading-5 text-[var(--text-tertiary)]">{detail}</p> : null}
 
-        <div className="mt-4 space-y-3">
-          <div>
-            <p className="text-[10px] font-medium uppercase tracking-[0.06em] text-[var(--text-quaternary)]">
-              Compile This Record
-            </p>
-            <code className="mt-1 block overflow-x-auto rounded-md border border-[var(--border-subtle)] bg-[var(--surface-1)] px-3 py-2 font-mono text-[11px] text-[var(--text-primary)]">
-              {`uv run articraft compile ${recordId}`}
-            </code>
+        {!experimentFailure ? (
+          <div className="mt-4 space-y-3">
+            <div>
+              <p className="text-[10px] font-medium uppercase tracking-[0.06em] text-[var(--text-quaternary)]">
+                Compile this record
+              </p>
+              <code className="mt-1 block overflow-x-auto rounded-md border border-[var(--border-subtle)] bg-[var(--surface-1)] px-3 py-2 font-mono text-[11px] text-[var(--text-primary)]">
+                {`uv run articraft compile ${recordId}`}
+              </code>
+            </div>
           </div>
-        </div>
+        ) : null}
 
-        <p className="mt-4 text-[11px] leading-5 text-[var(--text-tertiary)]">
-          The viewer attempted to materialize the record automatically before showing this message. If it still failed, the record likely needs manual recompilation.
-        </p>
+        {!experimentFailure ? (
+          <p className="mt-4 text-[11px] leading-5 text-[var(--text-tertiary)]">
+            The viewer attempted to materialize the record automatically before showing this message. If it still failed, the record likely needs manual recompilation.
+          </p>
+        ) : null}
       </div>
     </div>
   );
