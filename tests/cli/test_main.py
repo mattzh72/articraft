@@ -7,6 +7,7 @@ from pathlib import Path
 
 import pytest
 
+from articraft.config import SUPPORTED_ENV_KEYS
 from cli import main as articraft_cli
 from storage.repo import StorageRepo
 from storage.revisions import INITIAL_REVISION_ID, revision_artifacts_payload
@@ -90,9 +91,13 @@ def test_setup_recipe_uses_init_as_only_env_bootstrap() -> None:
     assert output.count("articraft init") == 1
 
 
-def test_init_creates_external_data_root_manifest(tmp_path: Path) -> None:
+def test_init_creates_external_data_root_manifest(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
     data_root = tmp_path / "articraft-data"
     (tmp_path / ".env.example").write_text("ARTICRAFT_MODEL=\n", encoding="utf-8")
+    for key in SUPPORTED_ENV_KEYS:
+        monkeypatch.delenv(key, raising=False)
 
     exit_code = articraft_cli.main(
         ["init", "--repo-root", str(tmp_path), "--data-dir", str(data_root)]
