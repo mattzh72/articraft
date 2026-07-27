@@ -33,7 +33,7 @@ logger = logging.getLogger(__name__)
 
 
 DEFAULT_OPENAI_MODEL = DEFAULT_GENERATION_MODEL
-_GPT_5_4_AND_5_5_DANGER_ZONE_TOKENS = 272_000
+_GPT_5_4_AND_LATER_DANGER_ZONE_TOKENS = 272_000
 _GPT_5_2_AND_5_3_CODEX_DANGER_ZONE_TOKENS = 280_000
 DEFAULT_OPENAI_COMPACTION_MODEL = "gpt-5.4-mini"
 
@@ -920,8 +920,13 @@ def _is_completed_reasoning_only_response(response: Any) -> bool:
 
 def _hard_pressure_threshold_for_model(model_id: str) -> int | None:
     normalized = (model_id or "").strip().lower()
-    if normalized.startswith("gpt-5.4") or normalized.startswith("gpt-5.5"):
-        return _GPT_5_4_AND_5_5_DANGER_ZONE_TOKENS
+    if (
+        normalized.startswith("gpt-5.4")
+        or normalized.startswith("gpt-5.5")
+        or normalized == "gpt-5.6"
+        or normalized.startswith("gpt-5.6-sol")
+    ):
+        return _GPT_5_4_AND_LATER_DANGER_ZONE_TOKENS
     if normalized.startswith("gpt-5.2") or normalized.startswith("gpt-5.3-codex"):
         return _GPT_5_2_AND_5_3_CODEX_DANGER_ZONE_TOKENS
     return None
@@ -933,6 +938,8 @@ def _context_window_tokens_for_model(model_id: str) -> int | None:
         return override
 
     normalized = (model_id or "").strip().lower()
+    if normalized == "gpt-5.6" or normalized.startswith("gpt-5.6-sol"):
+        return 1_050_000
     if normalized.startswith(("gpt-5.2", "gpt-5.3-codex", "gpt-5.4", "gpt-5.5")):
         return 400_000
     if normalized.startswith("gpt-4.1"):

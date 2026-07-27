@@ -16,7 +16,7 @@ from articraft.values import (
 @pytest.mark.parametrize(
     ("model_id", "provider"),
     [
-        ("gpt-5.5-2026-04-23", ProviderName.OPENAI),
+        ("gpt-5.6-sol", ProviderName.OPENAI),
         ("claude-sonnet-4-5", ProviderName.ANTHROPIC),
         ("codex-cli-default", ProviderName.CODEX_CLI),
         ("codex/gpt-5.5", ProviderName.CODEX_CLI),
@@ -47,3 +47,9 @@ def test_thinking_level_helpers_accept_xhigh() -> None:
     assert normalize_thinking_level("xhigh") is ThinkingLevel.XHIGH
     assert provider_reasoning_level("xhigh") == "xhigh"
     assert reasoning_level_alias("xhigh") == "xhigh"
+
+
+def test_thinking_level_helpers_accept_max() -> None:
+    assert normalize_thinking_level("max") is ThinkingLevel.MAX
+    assert provider_reasoning_level("max") == "max"
+    assert reasoning_level_alias("max") == "max"

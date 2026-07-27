@@ -61,6 +61,18 @@ OPENAI_GPT_5_5_PRICING: dict[str, float] = {
     "output_above_threshold": 45.00,
 }
 
+OPENAI_GPT_5_6_SOL_PRICING: dict[str, float] = {
+    "input_uncached": 5.00,
+    "input_cached": 0.50,
+    "input_cache_write": 6.25,
+    "output": 30.00,
+    "prompt_tier_threshold_tokens": 272_000,
+    "input_uncached_above_threshold": 10.00,
+    "input_cached_above_threshold": 1.00,
+    "input_cache_write_above_threshold": 12.50,
+    "output_above_threshold": 45.00,
+}
+
 ANTHROPIC_OPUS_4_7_PRICING: dict[str, float] = {
     "input_uncached": 5.00,
     "input_cached": 0.50,
@@ -174,7 +186,8 @@ def calculate_cost(usage: dict[str, int], pricing: dict[str, float]) -> CostBrea
     )
 
     threshold = pricing.get("prompt_tier_threshold_tokens")
-    if threshold is not None and prompt_tokens > int(threshold):
+    above_threshold = threshold is not None and prompt_tokens > int(threshold)
+    if above_threshold:
         input_uncached_rate = pricing.get(
             "input_uncached_above_threshold",
             pricing["input_uncached"],
@@ -188,7 +201,10 @@ def calculate_cost(usage: dict[str, int], pricing: dict[str, float]) -> CostBrea
         input_uncached_rate = pricing["input_uncached"]
         input_cached_rate = pricing["input_cached"]
         output_rate = pricing["output"]
-    input_cache_write_rate = pricing.get("input_cache_write", input_uncached_rate)
+    input_cache_write_rate = pricing.get(
+        "input_cache_write_above_threshold" if above_threshold else "input_cache_write",
+        pricing.get("input_cache_write", input_uncached_rate),
+    )
     input_cache_write_1h_rate = pricing.get("input_cache_write_1h", input_cache_write_rate)
     detailed_cache_creation_tokens = cache_creation_5m_tokens + cache_creation_1h_tokens
     unknown_cache_creation_tokens = max(0, cache_creation_tokens - detailed_cache_creation_tokens)
@@ -373,6 +389,11 @@ def is_gpt_5_5_model(model_id: str) -> bool:
     return model_id.strip().lower().startswith("gpt-5.5")
 
 
+def is_gpt_5_6_sol_model(model_id: str) -> bool:
+    normalized = model_id.strip().lower()
+    return normalized == "gpt-5.6" or normalized.startswith("gpt-5.6-sol")
+
+
 def is_claude_opus_4_7_model(model_id: str) -> bool:
     return model_id.strip().lower().startswith("claude-opus-4-7")
 
@@ -429,6 +450,8 @@ def pricing_for_provider_model(provider: str, model_id: str) -> dict[str, float]
         return GEMINI_FLASH_PRICING
     if provider_norm is ProviderName.GEMINI and is_gemini_3_pro_model(model_id):
         return GEMINI_3_PRO_PRICING
+    if provider_norm is ProviderName.OPENAI and is_gpt_5_6_sol_model(model_id):
+        return OPENAI_GPT_5_6_SOL_PRICING
     if provider_norm is ProviderName.OPENAI and is_gpt_5_5_model(model_id):
         return OPENAI_GPT_5_5_PRICING
     if provider_norm is ProviderName.OPENAI and is_gpt_5_4_model(model_id):

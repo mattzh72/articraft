@@ -304,9 +304,10 @@ def extract_usage(response: Any) -> Optional[dict[str, int]]:
     output_tokens = get("output_tokens")
     total_tokens = get("total_tokens")
     cached_tokens = get("cached_tokens")
+    cache_write_tokens = get("cache_write_tokens")
     reasoning_tokens = None
+    details = get_details()
     if not isinstance(cached_tokens, int):
-        details = get_details()
         for field in (
             "cached_tokens",
             "cached_input_tokens",
@@ -316,6 +317,16 @@ def extract_usage(response: Any) -> Optional[dict[str, int]]:
             value = get_from(details, field)
             if isinstance(value, int):
                 cached_tokens = value
+                break
+    if not isinstance(cache_write_tokens, int):
+        for field in (
+            "cache_write_tokens",
+            "cache_creation_tokens",
+            "cache_creation_input_tokens",
+        ):
+            value = get_from(details, field)
+            if isinstance(value, int):
+                cache_write_tokens = value
                 break
     for details_name in (
         "output_tokens_details",
@@ -337,6 +348,8 @@ def extract_usage(response: Any) -> Optional[dict[str, int]]:
         cleaned["total_tokens"] = total_tokens
     if isinstance(cached_tokens, int):
         cleaned["cached_tokens"] = cached_tokens
+    if isinstance(cache_write_tokens, int):
+        cleaned["cache_creation_input_tokens"] = cache_write_tokens
     if isinstance(reasoning_tokens, int):
         cleaned["reasoning_tokens"] = reasoning_tokens
 

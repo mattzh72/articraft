@@ -180,6 +180,65 @@ def test_gpt55_pricing_uses_explicit_model_rates() -> None:
     }
 
 
+@pytest.mark.parametrize("model_id", ["gpt-5.6-sol", "gpt-5.6"])
+def test_gpt56_sol_pricing_uses_explicit_model_rates(model_id: str) -> None:
+    pricing = pricing_for_provider_model("openai", model_id)
+
+    assert pricing == {
+        "input_uncached": 5.00,
+        "input_cached": 0.50,
+        "input_cache_write": 6.25,
+        "output": 30.00,
+        "prompt_tier_threshold_tokens": 272_000,
+        "input_uncached_above_threshold": 10.00,
+        "input_cached_above_threshold": 1.00,
+        "input_cache_write_above_threshold": 12.50,
+        "output_above_threshold": 45.00,
+    }
+
+
+def test_gpt56_sol_pricing_calculates_cache_writes_below_threshold() -> None:
+    pricing = pricing_for_provider_model("openai", "gpt-5.6-sol")
+    assert pricing is not None
+
+    cost = calculate_cost(
+        {
+            "prompt_tokens": 100_000,
+            "cached_tokens": 20_000,
+            "cache_creation_input_tokens": 30_000,
+            "candidates_tokens": 10_000,
+            "total_tokens": 110_000,
+        },
+        pricing,
+    )
+
+    assert cost.input_uncached_cost == pytest.approx(0.4375)
+    assert cost.input_cached_cost == pytest.approx(0.01)
+    assert cost.output_cost == pytest.approx(0.3)
+    assert cost.total_cost == pytest.approx(0.7475)
+
+
+def test_gpt56_sol_pricing_calculates_cache_writes_above_threshold() -> None:
+    pricing = pricing_for_provider_model("openai", "gpt-5.6-sol")
+    assert pricing is not None
+
+    cost = calculate_cost(
+        {
+            "prompt_tokens": 300_000,
+            "cached_tokens": 100_000,
+            "cache_creation_input_tokens": 50_000,
+            "candidates_tokens": 10_000,
+            "total_tokens": 310_000,
+        },
+        pricing,
+    )
+
+    assert cost.input_uncached_cost == pytest.approx(2.125)
+    assert cost.input_cached_cost == pytest.approx(0.1)
+    assert cost.output_cost == pytest.approx(0.45)
+    assert cost.total_cost == pytest.approx(2.675)
+
+
 def test_gpt55_pricing_uses_high_context_tier_above_threshold() -> None:
     pricing = pricing_for_provider_model("openai", "gpt-5.5-2026-04-23")
     assert pricing is not None

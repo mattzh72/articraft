@@ -18,6 +18,7 @@ class ThinkingLevel(StrEnum):
     MED = "med"
     HIGH = "high"
     XHIGH = "xhigh"
+    MAX = "max"
 
 
 PROVIDER_VALUES = tuple(provider.value for provider in ProviderName)

@@ -112,6 +112,17 @@ def test_openai_context_window_pressure_reports_prompt_fraction() -> None:
     assert pressure.output_tokens == 10_000
 
 
+def test_openai_sol_context_window_pressure_uses_full_context_and_pricing_threshold() -> None:
+    provider = OpenAILLM(model_id="gpt-5.6-sol", dry_run=True)
+
+    pressure = provider.context_window_pressure({"prompt_tokens": 262_500})
+
+    assert pressure.max_context_tokens == 1_050_000
+    assert pressure.remaining_context_tokens == 787_500
+    assert pressure.pressure_ratio == 0.25
+    assert pressure.hard_pressure_tokens == 272_000
+
+
 def test_generate_with_tools_only_retries_without_reasoning_summary_for_supported_error(
     caplog: pytest.LogCaptureFixture,
 ) -> None:
@@ -356,8 +367,8 @@ def test_openai_default_request_timeout_is_15_minutes(
 def test_openai_default_model_is_latest_snapshot() -> None:
     provider = OpenAILLM(dry_run=True)
 
-    assert DEFAULT_OPENAI_MODEL == "gpt-5.5-2026-04-23"
-    assert provider.model_id == "gpt-5.5-2026-04-23"
+    assert DEFAULT_OPENAI_MODEL == "gpt-5.6-sol"
+    assert provider.model_id == "gpt-5.6-sol"
 
 
 def test_openai_default_compaction_model_is_mini() -> None:
@@ -387,7 +398,7 @@ def test_convert_response_preserves_incomplete_diagnostics_and_reasoning_tokens(
             "input_tokens": 12,
             "output_tokens": 7,
             "total_tokens": 19,
-            "input_tokens_details": {"cached_tokens": 3},
+            "input_tokens_details": {"cached_tokens": 3, "cache_write_tokens": 2},
             "output_tokens_details": {"reasoning_tokens": 7},
         },
     }
@@ -402,6 +413,7 @@ def test_convert_response_preserves_incomplete_diagnostics_and_reasoning_tokens(
         "candidates_tokens": 7,
         "total_tokens": 19,
         "cached_tokens": 3,
+        "cache_creation_input_tokens": 2,
         "reasoning_tokens": 7,
     }
     assert converted["provider_diagnostics"] == {
