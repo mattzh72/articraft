@@ -501,6 +501,7 @@ export default function ViewerShell(): JSX.Element {
       recordId: selectedRecord.record_id,
       hasCompileReport: selectedRecord.has_compile_report,
       experimentFailure: selectedRecord.tags.includes("export-failure"),
+      generationFailure: selectedRecord.run_status !== "success",
       detail,
     };
   }, [modelLoadState.error, modelLoadState.missingArtifacts, selectedRecord, selection]);
@@ -645,6 +646,7 @@ export default function ViewerShell(): JSX.Element {
                   recordId={missingArtifactsState.recordId}
                   hasCompileReport={missingArtifactsState.hasCompileReport}
                   experimentFailure={missingArtifactsState.experimentFailure}
+                  generationFailure={missingArtifactsState.generationFailure}
                   detail={missingArtifactsState.detail}
                 />
               ) : undefined
@@ -668,6 +670,7 @@ export default function ViewerShell(): JSX.Element {
                   recordId={missingArtifactsState.recordId}
                   hasCompileReport={missingArtifactsState.hasCompileReport}
                   experimentFailure={missingArtifactsState.experimentFailure}
+                  generationFailure={missingArtifactsState.generationFailure}
                   detail={missingArtifactsState.detail}
                   compact
                 />

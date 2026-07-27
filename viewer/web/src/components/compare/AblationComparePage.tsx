@@ -238,7 +238,11 @@ function ConditionCard({
                 <X className="size-4" />
               </span>
               <p className="mt-3 text-[12px] font-semibold text-[#351b1b]">
-                {record ? "No URDF" : "Missing record"}
+                {!record
+                  ? "Missing record"
+                  : generationSucceeded
+                    ? "Compile failed"
+                    : "Request failed"}
               </p>
             </div>
           </div>

@@ -4,6 +4,7 @@ type MissingArtifactsOverlayProps = {
   recordId: string;
   hasCompileReport: boolean;
   experimentFailure?: boolean;
+  generationFailure?: boolean;
   detail?: string | null;
   compact?: boolean;
 };
@@ -12,16 +13,21 @@ export function MissingArtifactsOverlay({
   recordId,
   hasCompileReport,
   experimentFailure = false,
+  generationFailure = false,
   detail = null,
   compact = false,
 }: MissingArtifactsOverlayProps): JSX.Element {
   const title = experimentFailure
-    ? "No URDF"
+    ? generationFailure
+      ? "Request failed"
+      : "Compile failed"
     : hasCompileReport
       ? "Viewer artifacts are missing"
       : "Viewer artifacts are unavailable";
   const description = experimentFailure
-    ? "Export failed for this experiment cell."
+    ? generationFailure
+      ? "The provider request failed before generation completed."
+      : "The generated model did not export."
     : hasCompileReport
       ? "A compile report exists for this record, but the saved URDF or mesh files the viewer needs are missing on disk."
       : "This record does not currently have the saved URDF and mesh files the viewer needs.";
