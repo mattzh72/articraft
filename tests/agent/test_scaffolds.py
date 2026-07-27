@@ -68,3 +68,21 @@ def test_base_examples_do_not_use_legacy_marker_contract() -> None:
         example_text = example_path.read_text(encoding="utf-8")
         for fragment in legacy_fragments:
             assert fragment not in example_text, f"{fragment!r} found in {example_path}"
+
+
+def test_experimental_scaffolds_match_restricted_profiles() -> None:
+    primitive_text = _minimal_scaffold_text(sdk_package="sdk_primitives")
+    no_testing_text = _minimal_scaffold_text(sdk_package="sdk_no_testing")
+
+    primitive_tree = ast.parse(primitive_text)
+    no_testing_tree = ast.parse(no_testing_text)
+
+    assert {"ArticulatedObject", "TestContext", "TestReport"} <= _imported_names(
+        primitive_tree,
+        module_name="sdk_primitives",
+    )
+    assert _imported_names(no_testing_tree, module_name="sdk_no_testing") == {"ArticulatedObject"}
+    no_testing_functions = {
+        node.name for node in no_testing_tree.body if isinstance(node, ast.FunctionDef)
+    }
+    assert "run_tests" not in no_testing_functions

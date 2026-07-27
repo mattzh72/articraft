@@ -27,6 +27,27 @@ def test_load_sdk_docs_bundle_mounts_router_and_default_refs() -> None:
     assert "docs/sdk/references/cadquery/gears.md" in bundle.files_by_path
 
 
+def test_ablation_profiles_mount_only_their_documentation() -> None:
+    repo_root = Path(__file__).resolve().parents[2]
+
+    primitives = load_sdk_docs_bundle(repo_root, sdk_package="sdk_primitives")
+    no_testing = load_sdk_docs_bundle(repo_root, sdk_package="sdk_no_testing")
+
+    assert primitives.default_read_virtual_paths() == (
+        "docs/sdk/references/quickstart.md",
+        "docs/sdk/references/probe-tooling.md",
+        "docs/sdk/references/testing.md",
+    )
+    assert "sdk_primitives" in primitives.router.read_text()
+    assert "docs/sdk/references/cadquery/overview.md" not in primitives.files_by_path
+    assert no_testing.default_read_virtual_paths() == (
+        "docs/sdk/references/quickstart.md",
+        "docs/sdk/references/probe-tooling.md",
+    )
+    assert "sdk_no_testing" in no_testing.router.read_text()
+    assert "docs/sdk/references/testing.md" not in no_testing.files_by_path
+
+
 def test_virtual_workspace_resolves_model_and_docs_paths(tmp_path: Path) -> None:
     repo_root = Path(__file__).resolve().parents[2]
     model_path = tmp_path / "model.py"

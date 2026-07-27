@@ -98,7 +98,33 @@ _SDK_PACKAGE_ALIASES = {
     "": "sdk",
     "base": "sdk",
     "sdk": "sdk",
+    "sdk-no-testing": "sdk_no_testing",
+    "sdk-primitives": "sdk_primitives",
+    "sdk_no_testing": "sdk_no_testing",
+    "sdk_primitives": "sdk_primitives",
 }
+
+
+_NO_TESTING_DOCS = (
+    (
+        Path("sdk/_docs/no_testing/00_quickstart.md"),
+        Path("sdk/_docs/common/10_errors.md"),
+        Path("sdk/_docs/common/20_core_types.md"),
+        Path("sdk/_docs/common/30_articulated_object.md"),
+        Path("sdk/_docs/common/40_assets.md"),
+        Path("sdk/_docs/common/50_placement.md"),
+        Path("sdk/_docs/common/70_probe_tooling.md"),
+    )
+    + _BASE_DOCS
+    + _CADQUERY_DOCS
+)
+
+_PRIMITIVES_DOCS = (
+    Path("sdk/_docs/primitives/00_quickstart.md"),
+    Path("sdk/_docs/primitives/20_core_types.md"),
+    Path("sdk/_docs/common/70_probe_tooling.md"),
+    Path("sdk/_docs/primitives/80_testing.md"),
+)
 
 
 SDK_PROFILES: dict[str, SdkProfile] = {
@@ -112,6 +138,34 @@ SDK_PROFILES: dict[str, SdkProfile] = {
             Path("sdk/_docs/common/70_probe_tooling.md"),
             Path("sdk/_docs/common/80_testing.md"),
         ),
+        openai_prompt_name=OPENAI_DESIGNER_PROMPT_NAME,
+        codex_cli_prompt_name=CODEX_CLI_DESIGNER_PROMPT_NAME,
+        gemini_prompt_name=GEMINI_DESIGNER_PROMPT_NAME,
+        openrouter_prompt_name=OPENROUTER_DESIGNER_PROMPT_NAME,
+        anthropic_prompt_name=ANTHROPIC_DESIGNER_PROMPT_NAME,
+        deepseek_prompt_name=DEEPSEEK_DESIGNER_PROMPT_NAME,
+    ),
+    "sdk_no_testing": SdkProfile(
+        package_name="sdk_no_testing",
+        scaffold_path=Path("scaffold_no_testing.py"),
+        docs_full=_NO_TESTING_DOCS,
+        docs_core=(
+            Path("sdk/_docs/no_testing/00_quickstart.md"),
+            Path("sdk/_docs/common/20_core_types.md"),
+            Path("sdk/_docs/common/70_probe_tooling.md"),
+        ),
+        openai_prompt_name=OPENAI_DESIGNER_PROMPT_NAME,
+        codex_cli_prompt_name=CODEX_CLI_DESIGNER_PROMPT_NAME,
+        gemini_prompt_name=GEMINI_DESIGNER_PROMPT_NAME,
+        openrouter_prompt_name=OPENROUTER_DESIGNER_PROMPT_NAME,
+        anthropic_prompt_name=ANTHROPIC_DESIGNER_PROMPT_NAME,
+        deepseek_prompt_name=DEEPSEEK_DESIGNER_PROMPT_NAME,
+    ),
+    "sdk_primitives": SdkProfile(
+        package_name="sdk_primitives",
+        scaffold_path=Path("scaffold_primitives.py"),
+        docs_full=_PRIMITIVES_DOCS,
+        docs_core=_PRIMITIVES_DOCS,
         openai_prompt_name=OPENAI_DESIGNER_PROMPT_NAME,
         codex_cli_prompt_name=CODEX_CLI_DESIGNER_PROMPT_NAME,
         gemini_prompt_name=GEMINI_DESIGNER_PROMPT_NAME,

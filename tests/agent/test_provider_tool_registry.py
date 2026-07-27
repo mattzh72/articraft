@@ -121,6 +121,32 @@ def test_provider_tool_registry_schemas() -> None:
     )
 
 
+def test_ablation_tool_registry_can_remove_compile_and_retrieval() -> None:
+    no_compile = build_tool_registry(
+        "openai",
+        sdk_package="sdk_no_testing",
+        include_compile_model=False,
+    )
+    no_retrieval = build_tool_registry(
+        "openai",
+        sdk_package="sdk",
+        include_find_examples=False,
+    )
+
+    assert set(no_compile.get_all_tool_names()) == {
+        "read_file",
+        "apply_patch",
+        "probe_model",
+        "find_examples",
+    }
+    assert set(no_retrieval.get_all_tool_names()) == {
+        "read_file",
+        "apply_patch",
+        "compile_model",
+        "probe_model",
+    }
+
+
 def test_tool_registry_rejects_hidden_file_path_parameter() -> None:
     openai_registry = build_tool_registry("openai", sdk_package="sdk")
     gemini_registry = build_tool_registry("gemini", sdk_package="sdk")

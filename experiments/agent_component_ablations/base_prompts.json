@@ -1,0 +1,63 @@
+{
+  "experiment": "agent_component_ablations",
+  "branch_policy": "Experimental only. Do not merge.",
+  "model": "gpt-5.6-sol",
+  "thinking_level": "high",
+  "representation_constraints": [
+    "Each object must be representable as one rooted URDF joint tree.",
+    "No prompt requires a closed kinematic loop, flexible transmission, or deformable part.",
+    "Parts not named as moving may remain fixed."
+  ],
+  "prompts": [
+    {
+      "id": "compact_excavator",
+      "category": "construction_equipment",
+      "prompt": "Create a compact tracked excavator. The upper body should rotate on the track base, and the digging arm should have a moving boom, stick, and bucket. Add a cab and a front dozer blade that can raise and lower."
+    },
+    {
+      "id": "powered_hospital_bed",
+      "category": "medical_equipment",
+      "prompt": "Create a powered hospital bed on caster wheels. The bed platform should raise and lower on a vertical lift column, while the backrest and leg sections adjust independently. Add side rails that can fold down."
+    },
+    {
+      "id": "folding_bicycle",
+      "category": "transportation",
+      "prompt": "Create a folding bicycle with a central frame hinge. Include rotating wheels, working steering, a crank with pedals, an adjustable seat post, and a handlebar stem that can fold for storage."
+    },
+    {
+      "id": "sliding_compound_miter_saw",
+      "category": "workshop_tool",
+      "prompt": "Create a sliding compound miter saw on a stable base. The saw should have a rotating table, a rail that lets the saw head slide, a bevel adjustment, a plunging saw arm, and a rotating blade with a movable guard."
+    },
+    {
+      "id": "dishwasher",
+      "category": "home_appliance",
+      "prompt": "Create a built-in dishwasher with a front door that opens downward. Include two racks that slide out, a utensil basket, and upper and lower spray arms that rotate. Add a small detergent door on the inside of the main door."
+    },
+    {
+      "id": "communications_satellite",
+      "category": "aerospace",
+      "prompt": "Create a communications satellite with a central equipment body. Add two solar arrays that unfold from the sides and a dish antenna that can turn and tilt. Include a small instrument cover that opens."
+    },
+    {
+      "id": "benchtop_cnc_mill",
+      "category": "manufacturing_equipment",
+      "prompt": "Create an enclosed benchtop CNC milling machine. The worktable should move left and right and forward and backward, while the spindle head moves vertically. Add a front safety door that slides open."
+    },
+    {
+      "id": "wall_bed",
+      "category": "furniture",
+      "prompt": "Create a wall bed inside a shallow cabinet. The bed frame should fold down from the wall, and two support legs should unfold from the frame. Add a headboard panel and cabinet doors that open without blocking the bed."
+    },
+    {
+      "id": "self_propelled_crop_sprayer",
+      "category": "agricultural_equipment",
+      "prompt": "Create a self-propelled crop sprayer with four rotating wheels, steering front wheels, a raised cab, and a rear tank. Mount the spray boom on a vertical slide so it can raise and lower. Each side of the boom should fold through two joints for transport."
+    },
+    {
+      "id": "video_tripod",
+      "category": "camera_equipment",
+      "prompt": "Create a professional video tripod with three telescoping legs. Each leg should spread from the center and extend in two stages. Add an adjustable center column and a camera head that can pan and tilt."
+    }
+  ]
+}

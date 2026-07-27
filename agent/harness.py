@@ -202,10 +202,18 @@ class ArticraftAgent:
         openai_reasoning_summary: Optional[str] = "auto",
         max_cost_usd: float | None = None,
         runtime_limits: BatchRuntimeLimits | None = None,
+        enable_compile_feedback: bool = True,
+        enable_example_retrieval: bool = True,
+        require_compile_before_finish: bool = True,
+        runtime_guidance_text: str | None = None,
     ):
         self.file_path = file_path
         self.sdk_package = _normalize_sdk_package(sdk_package)
         self.runtime_limits = runtime_limits
+        self.enable_compile_feedback = enable_compile_feedback
+        self.enable_example_retrieval = enable_example_retrieval
+        self.require_compile_before_finish = require_compile_before_finish
+        self.runtime_guidance_text = runtime_guidance_text
         self._seen_find_example_paths: set[str] = set()
         self.checkpoint_urdf_path = (
             Path(checkpoint_urdf_path).resolve() if checkpoint_urdf_path else None
@@ -260,6 +268,8 @@ class ArticraftAgent:
             provider_norm,
             sdk_package=self.sdk_package,
             runtime_limits=self.runtime_limits,
+            include_compile_model=self.enable_compile_feedback,
+            include_find_examples=self.enable_example_retrieval,
         )
         self.on_turn_start = on_turn_start
         self.on_compaction_event = on_compaction_event
@@ -406,11 +416,16 @@ class ArticraftAgent:
         )
 
     def _append_final_response_required_reminder(self, conversation: list[dict]) -> None:
+        compile_line = (
+            "The latest code has already compiled successfully.\n"
+            if getattr(self, "require_compile_before_finish", True)
+            else ""
+        )
         msg = {
             "role": "user",
             "content": (
                 "<final_response_required>\n"
-                "The latest code has already compiled successfully.\n"
+                f"{compile_line}"
                 "Return a visible final response, or call a tool if further work is needed.\n"
                 "</final_response_required>"
             ),
@@ -426,6 +441,29 @@ class ArticraftAgent:
         consecutive_no_action_turns: int,
         diagnostics: dict[str, Any] | None,
     ) -> bool:
+        if not getattr(self, "require_compile_before_finish", True):
+            if consecutive_no_action_turns < NO_ACTION_ESCALATION_STREAK:
+                self._append_final_response_required_reminder(conversation)
+                return False
+            diagnostic_summary = self._format_provider_diagnostic_summary(diagnostics)
+            diagnostic_line = (
+                f" Provider diagnostics: {diagnostic_summary}." if diagnostic_summary else ""
+            )
+            msg = {
+                "role": "user",
+                "content": (
+                    "<final_response_required>\n"
+                    "Your previous response produced no visible text and no tool calls."
+                    f"{diagnostic_line}\n"
+                    "Return a visible final response, or call an editing tool if more work is needed.\n"
+                    "</final_response_required>"
+                ),
+            }
+            conversation.append(msg)
+            if self.trace_writer:
+                self.trace_writer.write_message(msg)
+            return True
+
         if consecutive_no_action_turns < NO_ACTION_ESCALATION_STREAK:
             if self._latest_code_is_fresh():
                 logger.info(
@@ -506,6 +544,8 @@ class ArticraftAgent:
         tool_calls: list[dict],
         tool_results: list[ToolResult],
     ) -> None:
+        if not getattr(self, "require_compile_before_finish", True):
+            return
         self._ensure_guidance_injector().maybe_inject_code_contract_guidance(
             conversation,
             tool_calls=tool_calls,
@@ -1129,6 +1169,18 @@ class ArticraftAgent:
         usage: dict[str, int],
         display_turn_override: int | None = None,
     ) -> AgentResult | None:
+        if not getattr(self, "require_compile_before_finish", True):
+            if display_turn_override is not None:
+                self.display.current_turn = display_turn_override
+            self.display.end_turn(success=True)
+            return await self._build_code_valid_result(
+                message=message,
+                conversation=conversation,
+                turn_count=turn_count,
+                tool_call_count=tool_call_count,
+                usage=usage,
+            )
+
         if not self._latest_code_is_fresh():
             self._append_compile_required_reminder(conversation)
         else:
@@ -1165,6 +1217,7 @@ class ArticraftAgent:
                     user_message,
                     sdk_docs_context=self.sdk_docs_context,
                     provider=self.provider,
+                    runtime_guidance_text=getattr(self, "runtime_guidance_text", None),
                 )
             )
             if self.trace_writer:
@@ -1499,7 +1552,10 @@ class ArticraftAgent:
         self._persist_cost_tracking()
 
         max_turn_message = "Agent hit max turns limit"
-        if not self._latest_code_is_fresh():
+        if (
+            getattr(self, "require_compile_before_finish", True)
+            and not self._latest_code_is_fresh()
+        ):
             max_turn_message = (
                 "Agent hit max turns limit before `compile_model` succeeded on the latest revision"
             )

@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import ast
 import hashlib
 import importlib
 import inspect
@@ -66,6 +67,8 @@ _MODEL_EXECUTION_LOCK = threading.Lock()
 
 def _import_sdk_module(sdk_package: str, module_suffix: str = "") -> Any:
     package = normalize_sdk_package(sdk_package)
+    if package in {"sdk_no_testing", "sdk_primitives"}:
+        package = "sdk"
     return importlib.import_module(f"{package}{module_suffix}")
 
 
@@ -215,6 +218,7 @@ def compile_urdf_report(
     target: str = "full",
     rewrite_visual_glb: bool | None = None,
 ) -> CompileReport:
+    _validate_experimental_sdk_policy(script_path, sdk_package=sdk_package)
     session = asset_session_for_script(script_path)
     with activate_asset_session(session):
         return _compile_urdf_report_impl(
@@ -225,6 +229,35 @@ def compile_urdf_report(
             target=target,
             rewrite_visual_glb=rewrite_visual_glb,
         )
+
+
+def _validate_experimental_sdk_policy(script_path: Path, *, sdk_package: str) -> None:
+    package = normalize_sdk_package(sdk_package)
+    if package not in {"sdk_primitives", "sdk_no_testing"}:
+        return
+    source = script_path.read_text(encoding="utf-8")
+    tree = ast.parse(source, filename=str(script_path))
+    violations: list[str] = []
+    blocked_roots = {"cadquery", "manifold3d", "sdk", "trimesh"}
+    blocked_testing_names = {"AllowedOverlap", "TestContext", "TestFailure", "TestReport"}
+    for node in ast.walk(tree):
+        if isinstance(node, ast.Import):
+            for alias in node.names:
+                root = alias.name.split(".", 1)[0]
+                if root in blocked_roots:
+                    violations.append(f"import {alias.name}")
+        elif isinstance(node, ast.ImportFrom):
+            module = node.module or ""
+            root = module.split(".", 1)[0]
+            if root in blocked_roots:
+                violations.append(f"from {module} import ...")
+            if package == "sdk_no_testing" and any(
+                alias.name in blocked_testing_names for alias in node.names
+            ):
+                violations.append(f"testing import from {module or '<relative>'}")
+    if violations:
+        joined = ", ".join(dict.fromkeys(violations))
+        raise ValueError(f"Experimental {package} policy violation. Forbidden imports: {joined}")
 
 
 def _compile_urdf_report_impl(

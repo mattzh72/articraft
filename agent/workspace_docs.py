@@ -45,7 +45,7 @@ class DocsBundle:
             raise FileNotFoundError(f"Unknown virtual docs path: {normalized}") from exc
 
     def default_read_virtual_paths(self) -> tuple[str, ...]:
-        return _DEFAULT_PRELOAD_PATHS
+        return tuple(path for path in _DEFAULT_PRELOAD_PATHS if path in self.files_by_path)
 
 
 @dataclass(frozen=True)
@@ -111,7 +111,7 @@ def load_sdk_docs_reference(
 
 
 def load_sdk_docs_bundle(repo_root: Path, *, sdk_package: str) -> DocsBundle:
-    router = _load_router_document(repo_root)
+    router = _load_router_document(repo_root, sdk_package=sdk_package)
     files_by_path: dict[str, VirtualWorkspaceFile] = {
         router.router.virtual_path: router.router,
         **_build_sdk_reference_files(repo_root, sdk_package=sdk_package),
@@ -127,8 +127,10 @@ class _LoadedRouter:
     router: VirtualWorkspaceFile
 
 
-def _load_router_document(repo_root: Path) -> _LoadedRouter:
-    path = repo_root / _SDK_ROUTER_SOURCE
+def _load_router_document(repo_root: Path, *, sdk_package: str) -> _LoadedRouter:
+    profile = get_sdk_profile(sdk_package)
+    source = profile.docs_full[0] if profile.docs_full else _SDK_ROUTER_SOURCE
+    path = repo_root / source
     if not path.exists():
         raise FileNotFoundError(f"SDK quickstart document not found: {path}")
     return _LoadedRouter(
@@ -154,6 +156,13 @@ def _build_sdk_reference_files(
             continue
         files[f"docs/sdk/{virtual_suffix}"] = VirtualWorkspaceFile(
             virtual_path=f"docs/sdk/{virtual_suffix}",
+            content=(
+                (repo_root / rel_path)
+                .read_text(encoding="utf-8")
+                .replace("from sdk import", f"from {profile.package_name} import")
+                if profile.package_name == "sdk_no_testing"
+                else None
+            ),
             disk_path=repo_root / rel_path,
         )
     return files
@@ -169,6 +178,10 @@ def _resolve_sdk_docs_relative_path(path: str) -> str:
 
 
 _DOC_PATH_ALIASES = {
+    "sdk/_docs/no_testing/00_quickstart.md": "references/quickstart.md",
+    "sdk/_docs/primitives/00_quickstart.md": "references/quickstart.md",
+    "sdk/_docs/primitives/20_core_types.md": "references/core-types.md",
+    "sdk/_docs/primitives/80_testing.md": "references/testing.md",
     "sdk/_docs/common/00_quickstart.md": "references/quickstart.md",
     "sdk/_docs/common/10_errors.md": "references/errors.md",
     "sdk/_docs/common/20_core_types.md": "references/core-types.md",

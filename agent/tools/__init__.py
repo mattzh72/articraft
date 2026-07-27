@@ -79,6 +79,8 @@ def build_tool_registry(
     *,
     sdk_package: str = "sdk",
     runtime_limits: BatchRuntimeLimits | None = None,
+    include_compile_model: bool = True,
+    include_find_examples: bool = True,
 ) -> ToolRegistry:
     provider_norm = normalize_provider_name(provider)
     package = normalize_sdk_package(sdk_package)
@@ -86,7 +88,6 @@ def build_tool_registry(
         tools: list[BaseDeclarativeTool] = [
             ReadFileTool(),
             ApplyPatchFreeformTool(),
-            CompileModelTool(),
             ProbeModelTool(sdk_package=package, runtime_limits=runtime_limits),
         ]
     elif provider_norm is ProviderName.CODEX_CLI:
@@ -95,7 +96,6 @@ def build_tool_registry(
             ApplyPatchJsonTool(),
             ReplaceTool(),
             WriteFileTool(),
-            CompileModelTool(),
             ProbeModelTool(sdk_package=package, runtime_limits=runtime_limits),
         ]
     else:
@@ -103,12 +103,20 @@ def build_tool_registry(
             ReadFileTool(),
             ReplaceTool(),
             WriteFileTool(),
-            CompileModelTool(),
             ProbeModelTool(sdk_package=package, runtime_limits=runtime_limits),
         ]
-    tools.append(
-        FindExamplesTool(sdk_package=package, include_paths=provider_norm is ProviderName.OPENAI)
-    )
+    if include_compile_model:
+        probe_index = next(
+            (index for index, tool in enumerate(tools) if isinstance(tool, ProbeModelTool)),
+            len(tools),
+        )
+        tools.insert(probe_index, CompileModelTool())
+    if include_find_examples:
+        tools.append(
+            FindExamplesTool(
+                sdk_package=package, include_paths=provider_norm is ProviderName.OPENAI
+            )
+        )
     return ToolRegistry(tools)
 
 
@@ -141,6 +149,7 @@ def build_first_turn_messages(
     *,
     sdk_docs_context: str,
     provider: str,
+    runtime_guidance_text: str | None = None,
 ) -> list[dict[str, Any]]:
     messages: list[dict[str, Any]] = []
     if sdk_docs_context:
@@ -150,7 +159,11 @@ def build_first_turn_messages(
             "role": "user",
             "content": prepend_runtime_guidance(
                 user_content,
-                runtime_guidance_text=build_first_turn_runtime_guidance(provider),
+                runtime_guidance_text=(
+                    build_first_turn_runtime_guidance(provider)
+                    if runtime_guidance_text is None
+                    else runtime_guidance_text
+                ),
             ),
         }
     )
