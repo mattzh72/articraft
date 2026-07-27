@@ -6,7 +6,6 @@ import { viewerQueryKeys } from "@/lib/viewer-queries";
 import { useViewer } from "@/lib/viewer-context";
 import { findStagingEntryInBootstrap } from "@/lib/record-summary";
 import { Badge } from "@/components/ui/badge";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 
 const TRAILING_PUNCTUATION = /[\s,.;:!?)]*$/;
 
@@ -59,17 +58,16 @@ export function AppHeader(): JSX.Element {
         )}
       </div>
 
-      <Tooltip>
-        <TooltipTrigger
-          type="button"
-          onClick={handleRefresh}
-          disabled={activeFetchCount > 0}
-          className="inline-flex h-7 w-7 items-center justify-center rounded-md p-0 text-[var(--text-tertiary)] transition-all duration-150 hover:bg-[var(--surface-2)] hover:text-[var(--text-secondary)] disabled:pointer-events-none disabled:opacity-40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-1"
-        >
-          <RefreshCw className={`size-3.5 ${activeFetchCount > 0 ? "animate-spin" : ""}`} />
-        </TooltipTrigger>
-        <TooltipContent side="bottom">Refresh</TooltipContent>
-      </Tooltip>
+      <button
+        type="button"
+        onClick={handleRefresh}
+        disabled={activeFetchCount > 0}
+        className="inline-flex h-7 w-7 items-center justify-center rounded-md p-0 text-[var(--text-tertiary)] transition-all duration-150 hover:bg-[var(--surface-2)] hover:text-[var(--text-secondary)] disabled:pointer-events-none disabled:opacity-40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-1"
+        aria-label="Refresh"
+        title="Refresh"
+      >
+        <RefreshCw className={`size-3.5 ${activeFetchCount > 0 ? "animate-spin" : ""}`} />
+      </button>
     </header>
   );
 }

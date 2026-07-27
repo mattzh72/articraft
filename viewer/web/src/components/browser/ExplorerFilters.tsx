@@ -7,8 +7,6 @@ import { NativeSelect } from "@/components/ui/native-select";
 
 const ALL_VALUE = "__all__";
 const RATING_VALUES: RatingFilterValue[] = ["5", "4", "3", "2", "1", "unrated"];
-const FILTER_SELECT_CLASS =
-  "h-8 w-full rounded-md border border-[var(--border-default)] bg-[var(--surface-0)] px-2.5 text-[11px] text-[var(--text-primary)] outline-none transition-colors focus-visible:border-[var(--accent)] focus-visible:ring-2 focus-visible:ring-[var(--accent-soft)] disabled:cursor-not-allowed disabled:opacity-40";
 
 function uniqueSorted(values: Array<string | null | undefined>): string[] {
   return Array.from(
