@@ -11,6 +11,7 @@ from typing import Any
 
 from agent.compiler import load_model_globals
 from agent.tools.probe_model.helpers import ProbeLookupError, ProbeSession
+from sdk import TestContext
 from sdk._core.v0.assets import (
     activate_asset_session,
     asset_session_for_script,
@@ -115,12 +116,11 @@ def main() -> int:
             if object_model is None:
                 raise ValueError("Loaded script did not define `object_model`")
             sdk_module = importlib.import_module(sdk_package)
-            test_context_type = getattr(sdk_module, "TestContext")
             asset_root = _asset_root_from_globals(
                 globals_dict,
                 file_path=file_path,
             )
-            ctx = test_context_type(object_model, asset_root=asset_root)
+            ctx = TestContext(object_model, asset_root=asset_root)
             session = ProbeSession(object_model, ctx)
             namespace = {
                 "__name__": "__probe_model__",

@@ -36,3 +36,12 @@ object_model = build_object_model()
 Every non-root part must have exactly one parent articulation. Use fixed joints
 for rigid subassemblies and movable joints only for mechanisms requested by the
 prompt.
+
+Use only these mounted reference paths:
+
+- `docs/sdk/references/quickstart.md`
+- `docs/sdk/references/core-types.md`
+- `docs/sdk/references/probe-tooling.md`
+- `docs/sdk/references/testing.md`
+
+Do not guess other filenames.

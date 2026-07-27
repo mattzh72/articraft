@@ -140,10 +140,11 @@ async def _run_probe(
     script_path: Path,
     code: str,
     *,
+    sdk_package: str = "sdk",
     timeout_ms: int = 5000,
     include_stdout: bool = False,
 ) -> dict[str, object]:
-    tool = ProbeModelTool(sdk_package="sdk")
+    tool = ProbeModelTool(sdk_package=sdk_package)
     invocation = await tool.build(
         {
             "file_path": str(script_path),
@@ -156,6 +157,30 @@ async def _run_probe(
     assert result.error is None
     assert isinstance(result.output, dict)
     return result.output
+
+
+def test_probe_model_supports_no_testing_sdk_profile(tmp_path: Path) -> None:
+    script_path = tmp_path / "model.py"
+    script_path.write_text(
+        """from sdk_no_testing import ArticulatedObject, Box
+
+model = ArticulatedObject(name="no_testing_probe")
+model.part("body").visual(Box((0.2, 0.2, 0.2)), name="body")
+object_model = model
+""",
+        encoding="utf-8",
+    )
+
+    output = asyncio.run(
+        _run_probe(
+            script_path,
+            "emit({'parts': [name(item) for item in parts()]})",
+            sdk_package="sdk_no_testing",
+        )
+    )
+
+    assert output["ok"] is True
+    assert output["result"] == {"parts": ["body"]}
 
 
 def test_probe_model_returns_structured_measurements(tmp_path: Path) -> None:

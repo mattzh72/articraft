@@ -66,6 +66,20 @@ def test_primitives_policy_blocks_full_sdk_and_cadquery(tmp_path: Path) -> None:
         _validate_experimental_sdk_policy(script, sdk_package="sdk_primitives")
 
 
+def test_no_testing_policy_allows_cadquery_but_blocks_full_sdk(tmp_path: Path) -> None:
+    script = tmp_path / "main.py"
+    script.write_text(
+        "import cadquery as cq\nfrom sdk_no_testing import ArticulatedObject\n",
+        encoding="utf-8",
+    )
+
+    _validate_experimental_sdk_policy(script, sdk_package="sdk_no_testing")
+
+    script.write_text("from sdk import TestContext\n", encoding="utf-8")
+    with pytest.raises(ValueError, match="sdk_no_testing policy violation"):
+        _validate_experimental_sdk_policy(script, sdk_package="sdk_no_testing")
+
+
 def test_hidden_evaluation_exports_and_runs_standardized_qc(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,

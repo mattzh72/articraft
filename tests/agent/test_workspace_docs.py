@@ -1,7 +1,10 @@
 from __future__ import annotations
 
 import asyncio
+import re
 from pathlib import Path
+
+import pytest
 
 from agent.tools.read_file import ReadFileTool
 from agent.workspace_docs import build_virtual_workspace, load_sdk_docs_bundle
@@ -46,6 +49,17 @@ def test_ablation_profiles_mount_only_their_documentation() -> None:
     )
     assert "sdk_no_testing" in no_testing.router.read_text()
     assert "docs/sdk/references/testing.md" not in no_testing.files_by_path
+
+
+@pytest.mark.parametrize("sdk_package", ["sdk_no_testing", "sdk_primitives"])
+def test_ablation_quickstarts_list_every_mounted_reference(sdk_package: str) -> None:
+    repo_root = Path(__file__).resolve().parents[2]
+    bundle = load_sdk_docs_bundle(repo_root, sdk_package=sdk_package)
+
+    listed_paths = set(re.findall(r"`(docs/sdk/references/[^`]+\.md)`", bundle.router.read_text()))
+
+    assert listed_paths == set(bundle.files_by_path)
+    assert "20_geometry.md" not in bundle.router.read_text()
 
 
 def test_virtual_workspace_resolves_model_and_docs_paths(tmp_path: Path) -> None:

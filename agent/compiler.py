@@ -238,7 +238,11 @@ def _validate_experimental_sdk_policy(script_path: Path, *, sdk_package: str) ->
     source = script_path.read_text(encoding="utf-8")
     tree = ast.parse(source, filename=str(script_path))
     violations: list[str] = []
-    blocked_roots = {"cadquery", "manifold3d", "sdk", "trimesh"}
+    blocked_roots = (
+        {"cadquery", "manifold3d", "sdk", "sdk_no_testing", "trimesh"}
+        if package == "sdk_primitives"
+        else {"sdk", "sdk_primitives"}
+    )
     blocked_testing_names = {"AllowedOverlap", "TestContext", "TestFailure", "TestReport"}
     for node in ast.walk(tree):
         if isinstance(node, ast.Import):
