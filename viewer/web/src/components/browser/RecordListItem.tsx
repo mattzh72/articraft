@@ -1,6 +1,6 @@
 import { memo, useEffect, useState, type JSX, type MouseEvent as ReactMouseEvent } from "react";
 import { useQueryClient } from "@tanstack/react-query";
-import { Check, Copy, FolderOpen, MoreVertical, Star, Trash2 } from "lucide-react";
+import { Check, Copy, FolderOpen, Star, Trash2 } from "lucide-react";
 
 import {
   AlertDialog,
@@ -12,12 +12,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+import { Button } from "@/components/ui/button";
 import { deleteRecord, openRecordFolder } from "@/lib/api";
 import { buildRecordPath, copyTextToClipboard } from "@/lib/record-path";
 import type { RecordSummary } from "@/lib/types";
@@ -97,7 +92,6 @@ function RecordListItemInner({
 }: RecordListItemProps): JSX.Element {
   const dispatch = useViewerDispatch();
   const queryClient = useQueryClient();
-  const [menuOpen, setMenuOpen] = useState(false);
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [copyState, setCopyState] = useState<"idle" | "copied" | "error">("idle");
   const [openState, setOpenState] = useState<"idle" | "opened" | "error">("idle");
@@ -171,7 +165,6 @@ function RecordListItemInner({
   };
 
   const handleDeleteIntent = () => {
-    setMenuOpen(false);
     setDeleteError(null);
     setConfirmOpen(true);
   };
@@ -251,29 +244,41 @@ function RecordListItemInner({
             </div>
           </button>
 
-          <DropdownMenu open={menuOpen} onOpenChange={setMenuOpen}>
-            <DropdownMenuTrigger
+          <div className="flex shrink-0 items-center gap-0.5 opacity-0 transition-opacity group-hover:opacity-100 focus-within:opacity-100">
+            <Button
               type="button"
-              className="inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-md p-0 text-[var(--text-secondary)] opacity-0 transition-opacity hover:bg-[var(--surface-2)] hover:text-[var(--text-primary)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-1 group-hover:opacity-100 data-[state=open]:opacity-100"
-              aria-label="Record actions"
+              variant="ghost"
+              size="sm"
+              className="h-6 w-6 rounded-md p-0"
+              aria-label={copyState === "copied" ? "Copied path" : "Copy path"}
+              title={copyState === "copied" ? "Copied" : copyState === "error" ? "Copy failed" : "Copy path"}
+              onClick={() => void handleCopyPath()}
             >
-              <MoreVertical className="size-3.5" />
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="min-w-40">
-              <DropdownMenuItem onSelect={() => void handleCopyPath()}>
-                <Copy className="mr-2 size-3.5" />
-                {copyState === "copied" ? "Copied" : copyState === "error" ? "Copy failed" : "Copy path"}
-              </DropdownMenuItem>
-              <DropdownMenuItem onSelect={() => void handleOpenFolder()}>
-                <FolderOpen className="mr-2 size-3.5" />
-                {openState === "opened" ? "Opened" : openState === "error" ? "Open failed" : "Open folder"}
-              </DropdownMenuItem>
-              <DropdownMenuItem onSelect={handleDeleteIntent} className="text-[var(--destructive)]">
-                <Trash2 className="mr-2 size-3.5" />
-                Delete
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+              <Copy className={cn("size-3.5", copyState === "copied" && "text-[var(--success)]", copyState === "error" && "text-[var(--destructive)]")} />
+            </Button>
+            <Button
+              type="button"
+              variant="ghost"
+              size="sm"
+              className="h-6 w-6 rounded-md p-0"
+              aria-label={openState === "opened" ? "Opened folder" : "Open folder"}
+              title={openState === "opened" ? "Opened" : openState === "error" ? "Open failed" : "Open folder"}
+              onClick={() => void handleOpenFolder()}
+            >
+              <FolderOpen className={cn("size-3.5", openState === "opened" && "text-[var(--success)]", openState === "error" && "text-[var(--destructive)]")} />
+            </Button>
+            <Button
+              type="button"
+              variant="ghost"
+              size="sm"
+              className="h-6 w-6 rounded-md p-0 text-[var(--destructive)] hover:text-[var(--destructive)]"
+              aria-label="Delete record"
+              title="Delete"
+              onClick={handleDeleteIntent}
+            >
+              <Trash2 className="size-3.5" />
+            </Button>
+          </div>
         </div>
       </div>
 
@@ -298,10 +303,6 @@ function RecordListItemInner({
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
-
-      <span className="sr-only" aria-live="polite" aria-atomic="true">
-        {copyState === "copied" ? "Copied" : copyState === "error" ? "Copy failed" : ""}
-      </span>
     </>
   );
 }

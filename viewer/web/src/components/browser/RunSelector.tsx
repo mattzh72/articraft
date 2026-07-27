@@ -1,9 +1,7 @@
 import { type JSX } from "react";
 
 import { useViewer, useViewerDispatch } from "@/lib/viewer-context";
-
-const RUN_SELECT_CLASS =
-  "h-7 w-full rounded-md border border-[var(--border-default)] bg-[var(--surface-0)] px-2.5 text-[11px] font-mono text-[var(--text-primary)] outline-none transition-colors focus-visible:border-[var(--accent)] focus-visible:ring-2 focus-visible:ring-[var(--accent-soft)]";
+import { NativeSelect } from "@/components/ui/native-select";
 
 export function RunSelector(): JSX.Element {
   const { bootstrap, selectedRunId } = useViewer();
@@ -18,16 +16,18 @@ export function RunSelector(): JSX.Element {
   }
 
   return (
-    <select
-      value={selectedRunId ?? "all"}
-      className={RUN_SELECT_CLASS}
+    <NativeSelect
       aria-label="Run filter"
-      onChange={(event) =>
+      selectSize="sm"
+      className="h-7 w-full font-mono text-[11px]"
+      value={selectedRunId ?? "all"}
+      onChange={(event) => {
+        const value = event.currentTarget.value;
         dispatch({
           type: "SET_RUN_FILTER",
-          payload: event.target.value === "all" ? null : event.target.value,
-        })
-      }
+          payload: value === "all" ? null : value,
+        });
+      }}
     >
       <option value="all">All runs</option>
       {runs.map((run) => (
@@ -35,6 +35,6 @@ export function RunSelector(): JSX.Element {
           {run.run_id}
         </option>
       ))}
-    </select>
+    </NativeSelect>
   );
 }

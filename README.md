@@ -6,9 +6,9 @@
 
 **An Agentic System for Scalable Articulated 3D Asset Generation.**
 
-[Paper](https://arxiv.org/abs/2605.15187) | [Project Page](https://articraft3d.github.io/)
+[Paper](https://arxiv.org/abs/2605.15187) | [Project Page](https://articraft3d.github.io/) | [Dataset](https://github.com/mattzh72/articraft-data)
 
-Articraft transforms the creation of articulated 3D assets into a programmatic, code-generation workflow powered by LLMs. It is now a local-first harness: records live in a plain data folder, the code repo stays small, and the viewer browses a simple manifest of complete local records.
+Articraft transforms the creation of articulated 3D assets into a programmatic, code-generation workflow powered by LLMs. It is now a local-first harness: this repo contains the generation/viewer logic, while the public dataset lives separately at [`mattzh72/articraft-data`](https://github.com/mattzh72/articraft-data).
 
 ![Articraft viewer showing an articulated desk lamp with joint controls and library metadata](docs/images/viewer-demo.png)
 
@@ -34,13 +34,16 @@ To set up a checkout from another working directory, pass the repository root:
 just setup ./path/to/checkout
 ```
 
-Articraft stores records in a gitignored data root. By default that is `<repo-root>/data`; point commands elsewhere with `--data-dir` or `ARTICRAFT_DATA_DIR`:
+Articraft stores records in a gitignored data root. By default that is `<repo-root>/data`. To browse the released dataset, clone [`mattzh72/articraft-data`](https://github.com/mattzh72/articraft-data) and point Articraft at it:
 
 ```bash
-export ARTICRAFT_DATA_DIR=/Users/mzhou/articraft-data
+git clone https://github.com/mattzh72/articraft-data.git ../articraft-data
+export ARTICRAFT_DATA_DIR="$(cd ../articraft-data && pwd)"
 uv run articraft status
 uv run articraft library check --require-records
 ```
+
+You can also pass any data folder explicitly with `--data-dir`.
 
 ### 3. Add API Keys
 Open `.env` and set one or more provider keys (e.g. `OPENAI_API_KEY`, `GEMINI_API_KEYS`, `ANTHROPIC_API_KEYS`, `DASHSCOPE_API_KEY`).

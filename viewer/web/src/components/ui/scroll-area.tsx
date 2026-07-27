@@ -2,11 +2,25 @@ import * as React from "react"
 
 import { cn } from "@/lib/utils"
 
-type ScrollAreaBehavior = "auto" | "always" | "scroll" | "hover"
+const ScrollArea = React.forwardRef<
+  HTMLDivElement,
+  React.HTMLAttributes<HTMLDivElement>
+>(({ className, children, ...props }, ref) => {
+  return (
+    <div
+      ref={ref}
+      data-slot="scroll-area"
+      className={cn("min-w-0 overflow-y-auto overflow-x-hidden", className)}
+      {...props}
+    >
+      {children}
+    </div>
+  )
+})
+ScrollArea.displayName = "ScrollArea"
 
-type ScrollAreaProps = React.ComponentPropsWithoutRef<"div"> & {
-  type?: ScrollAreaBehavior
-  scrollHideDelay?: number
+function ScrollBar(): null {
+  return null
 }
 
 const ScrollArea = React.forwardRef<HTMLDivElement, ScrollAreaProps>(

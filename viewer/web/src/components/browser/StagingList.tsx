@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState, type JSX } from "react";
 import { useQueryClient } from "@tanstack/react-query";
-import { FolderOpen, MoreVertical, Trash2 } from "lucide-react";
+import { FolderOpen, Trash2 } from "lucide-react";
 
 import {
   AlertDialog,
@@ -12,12 +12,6 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import type { StagingEntry, ViewerSelection } from "@/lib/types";
 import { useViewer, useViewerDispatch } from "@/lib/viewer-context";
 import { cn } from "@/lib/utils";
@@ -105,7 +99,6 @@ function StagingListItem({ entry }: { entry: StagingEntry }): JSX.Element {
   const queryClient = useQueryClient();
   const isSelected = isStagingSelected(selection, entry);
   const isFailed = isFailedEntry(entry);
-  const [menuOpen, setMenuOpen] = useState(false);
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [openState, setOpenState] = useState<"idle" | "opened" | "error">("idle");
   const [deletePending, setDeletePending] = useState(false);
@@ -142,7 +135,6 @@ function StagingListItem({ entry }: { entry: StagingEntry }): JSX.Element {
   };
 
   const handleDeleteIntent = () => {
-    setMenuOpen(false);
     setDeleteError(null);
     setConfirmOpen(true);
   };
@@ -241,44 +233,38 @@ function StagingListItem({ entry }: { entry: StagingEntry }): JSX.Element {
             </div>
           </button>
 
-          <DropdownMenu open={menuOpen} onOpenChange={setMenuOpen}>
-            <div className="relative shrink-0 pt-px">
-              <DropdownMenuTrigger
-                type="button"
-                aria-label={`Open actions for ${entry.title || entry.record_id}`}
-                title="Actions"
-                className={cn(
-                  "flex size-6 items-center justify-center rounded-md text-[var(--text-tertiary)] opacity-0 transition-all duration-100 group-hover:opacity-100 focus-visible:opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[rgba(26,138,74,0.18)]",
-                  menuOpen
-                    ? "bg-[var(--surface-0)] text-[var(--text-primary)] opacity-100 shadow-[0_1px_3px_rgba(0,0,0,0.06)]"
-                    : "hover:bg-[var(--surface-0)] hover:text-[var(--text-primary)]",
-                )}
-                onClick={(event) => event.stopPropagation()}
-              >
-                <MoreVertical className="size-3" />
-              </DropdownMenuTrigger>
-
-              <DropdownMenuContent onClick={(event) => event.stopPropagation()}>
-                <DropdownMenuItem onSelect={() => void handleOpenStagingFolder()}>
-                  <FolderOpen className="size-3.5" />
-                  <span>
-                    {openState === "opened"
-                      ? "Opened staging folder"
-                      : openState === "error"
-                        ? "Open failed"
-                        : "Open staging folder"}
-                  </span>
-                </DropdownMenuItem>
-                <DropdownMenuItem
-                  onSelect={handleDeleteIntent}
-                  className="text-[var(--destructive)] focus:bg-[rgba(209,52,21,0.06)] focus:text-[var(--destructive)]"
-                >
-                  <Trash2 className="size-3.5" />
-                  <span>Delete</span>
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </div>
-          </DropdownMenu>
+          <div className="flex shrink-0 items-center gap-0.5 opacity-0 transition-opacity group-hover:opacity-100 focus-within:opacity-100">
+            <Button
+              type="button"
+              variant="ghost"
+              size="sm"
+              className="h-6 w-6 rounded-md p-0"
+              aria-label={
+                openState === "opened" ? "Opened staging folder" : "Open staging folder"
+              }
+              title={
+                openState === "opened"
+                  ? "Opened staging folder"
+                  : openState === "error"
+                    ? "Open failed"
+                    : "Open staging folder"
+              }
+              onClick={() => void handleOpenStagingFolder()}
+            >
+              <FolderOpen className={cn("size-3.5", openState === "opened" && "text-[var(--success)]", openState === "error" && "text-[var(--destructive)]")} />
+            </Button>
+            <Button
+              type="button"
+              variant="ghost"
+              size="sm"
+              className="h-6 w-6 rounded-md p-0 text-[var(--destructive)] hover:text-[var(--destructive)]"
+              aria-label="Delete staging entry"
+              title="Delete"
+              onClick={handleDeleteIntent}
+            >
+              <Trash2 className="size-3.5" />
+            </Button>
+          </div>
         </div>
       </div>
 

@@ -92,7 +92,10 @@ export function RecordList({
     sdkFilter,
     searchQuery,
   ]);
-  const visibleIds = visibleRecords.map((record) => record.record_id);
+  const visibleIds = useMemo(
+    () => visibleRecords.map((record) => record.record_id),
+    [visibleRecords],
+  );
 
   useEffect(() => {
     onVisibleIdsChange?.(visibleIds);

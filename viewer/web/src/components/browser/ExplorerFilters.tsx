@@ -3,6 +3,7 @@ import { type JSX } from "react";
 import { useViewer, useViewerDispatch } from "@/lib/viewer-context";
 import type { RatingFilterValue } from "@/lib/types";
 import { Button } from "@/components/ui/button";
+import { NativeSelect } from "@/components/ui/native-select";
 
 const ALL_VALUE = "__all__";
 const RATING_VALUES: RatingFilterValue[] = ["5", "4", "3", "2", "1", "unrated"];
@@ -34,16 +35,14 @@ export function ExplorerFilters(): JSX.Element {
   return (
     <div className="space-y-2">
       <div className="grid grid-cols-2 gap-2">
-        <select
-          value={modelFilter ?? ALL_VALUE}
-          className={FILTER_SELECT_CLASS}
+        <NativeSelect
           aria-label="Model filter"
-          onChange={(event) =>
-            dispatch({
-              type: "SET_MODEL_FILTER",
-              payload: event.target.value === ALL_VALUE ? null : event.target.value,
-            })
-          }
+          className="h-8 text-[11px]"
+          value={modelFilter ?? ALL_VALUE}
+          onChange={(event) => {
+            const value = event.currentTarget.value;
+            dispatch({ type: "SET_MODEL_FILTER", payload: value === ALL_VALUE ? null : value });
+          }}
         >
           <option value={ALL_VALUE}>All models</option>
           {models.map((model) => (
@@ -51,18 +50,16 @@ export function ExplorerFilters(): JSX.Element {
               {model}
             </option>
           ))}
-        </select>
+        </NativeSelect>
 
-        <select
-          value={sdkFilter ?? ALL_VALUE}
-          className={FILTER_SELECT_CLASS}
+        <NativeSelect
           aria-label="SDK filter"
-          onChange={(event) =>
-            dispatch({
-              type: "SET_SDK_FILTER",
-              payload: event.target.value === ALL_VALUE ? null : event.target.value,
-            })
-          }
+          className="h-8 text-[11px]"
+          value={sdkFilter ?? ALL_VALUE}
+          onChange={(event) => {
+            const value = event.currentTarget.value;
+            dispatch({ type: "SET_SDK_FILTER", payload: value === ALL_VALUE ? null : value });
+          }}
         >
           <option value={ALL_VALUE}>All SDKs</option>
           {sdks.map((sdk) => (
@@ -70,18 +67,19 @@ export function ExplorerFilters(): JSX.Element {
               {sdk}
             </option>
           ))}
-        </select>
+        </NativeSelect>
 
-        <select
-          value={agentHarnessFilters[0] ?? ALL_VALUE}
-          className={FILTER_SELECT_CLASS}
+        <NativeSelect
           aria-label="Agent filter"
-          onChange={(event) =>
+          className="h-8 text-[11px]"
+          value={agentHarnessFilters[0] ?? ALL_VALUE}
+          onChange={(event) => {
+            const value = event.currentTarget.value;
             dispatch({
               type: "SET_AGENT_HARNESS_FILTERS",
-              payload: event.target.value === ALL_VALUE ? [] : [event.target.value],
-            })
-          }
+              payload: value === ALL_VALUE ? [] : [value],
+            });
+          }}
         >
           <option value={ALL_VALUE}>All agents</option>
           {agentHarnesses.map((agent) => (
@@ -89,18 +87,19 @@ export function ExplorerFilters(): JSX.Element {
               {agent}
             </option>
           ))}
-        </select>
+        </NativeSelect>
 
-        <select
-          value={categoryFilters[0] ?? ALL_VALUE}
-          className={FILTER_SELECT_CLASS}
+        <NativeSelect
           aria-label="Category filter"
-          onChange={(event) =>
+          className="h-8 text-[11px]"
+          value={categoryFilters[0] ?? ALL_VALUE}
+          onChange={(event) => {
+            const value = event.currentTarget.value;
             dispatch({
               type: "SET_CATEGORY_FILTERS",
-              payload: event.target.value === ALL_VALUE ? [] : [event.target.value],
-            })
-          }
+              payload: value === ALL_VALUE ? [] : [value],
+            });
+          }}
         >
           <option value={ALL_VALUE}>All categories</option>
           {categories.map((category) => (
@@ -108,7 +107,7 @@ export function ExplorerFilters(): JSX.Element {
               {category}
             </option>
           ))}
-        </select>
+        </NativeSelect>
       </div>
 
       <div className="flex flex-wrap gap-1">
