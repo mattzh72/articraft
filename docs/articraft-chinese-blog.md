@@ -2,6 +2,10 @@
 
 > 剑桥、牛津等机构的研究者做了一套 3D 建模 Agent。它不盯着渲染图反复猜形状，而是写 Python、跑测试、修 Bug，最后交付带关节和运动范围的 URDF 资产。
 
+![Articraft-10K 中的关节 3D 资产](images/articraft-blog/hero-dataset.png)
+
+*图：Articraft-10K 覆盖日常用品、家具、机械装置和大型户外设施。来源：[Articraft 论文图 1](https://arxiv.org/html/2605.15187v1/x1.png)。*
+
 给大模型一句话：“做一盏写实的桌面台灯，要有配重底座、两段铰接灯臂和可调灯头。”
 
 普通文生 3D 系统或许能给你一张漂亮的静态网格。Articraft 交出的东西更像一台机器：底座、灯臂和灯头各有名字，转轴带方向和角度限制，生成结果可以导入机器人仿真器，也可以在 VR 里伸手拨动。
@@ -13,6 +17,10 @@
 *图：Articraft 本地 Viewer。右侧既能查看生成提示、模型、成本和评分，也能拖动每个关节。图片来自项目仓库。*
 
 这套系统来自剑桥大学、牛津大学和南洋理工大学等机构的研究团队。论文将其命名为 **Articraft**，研究者用它生产了 Articraft-10K：超过 1 万件经过人工筛选的关节 3D 资产，覆盖 245 个物体类别。[论文于 2026 年 5 月提交至 arXiv](https://arxiv.org/abs/2605.15187)。
+
+![Articraft-10K 资产及零件着色视图](images/articraft-blog/asset-examples.png)
+
+*图：轮椅、键盘、望远镜、箱式风扇、塔吊和卫星天线的生成结果。每组从左到右依次为文字提示、完整资产和零件着色视图。来源：[Articraft 论文图 4](https://arxiv.org/html/2605.15187v1/x4.png)。*
 
 ## 3D 世界缺的，是物体“怎么动”
 
@@ -29,6 +37,10 @@ Articraft 团队把这个数据瓶颈改写成了一个编程问题：**让大�
 ## 工作台上只有一个可写文件
 
 Articraft 没有把整个代码仓库和一套复杂的图形软件扔给 Agent。它的虚拟工作区只有一个可编辑文件 `model.py`，旁边放着只读的 SDK 文档和示例。
+
+![Articraft 的受限工作区与迭代生成流程](images/articraft-blog/method-overview.png)
+
+*图：Agent 只能编辑 `model.py`，并通过读取、编辑、检索示例、编译和几何探测完成任务。下半部分展示一把躺椅从运行报错、重叠警告到通过检查的修复过程。来源：[Articraft 项目主页](https://articraft3d.github.io/)。*
 
 `model.py` 有两个核心入口。`build_object_model()` 负责搭零件、几何和关节，`run_tests()` 负责写对象专属的检查。Agent 可以使用盒体、圆柱、球体等基础几何，也能调用放置、铰链、轮胎、格栅、扫掠和 CadQuery 等工具处理复杂形状。
 
@@ -55,7 +67,15 @@ Agent 能做的操作也受到限制。它可以读文件、打补丁、查示�
 
 研究团队从 PartNet-Mobility 的 46 个类别中各写 5 条提示词，把六种方法生成的结果随机交给 125 名大学生评价，共收回 5000 次比较。参与者依据提示词匹配度和整体质量选出前三名。
 
+![不同关节 3D 生成方法的结果对比](images/articraft-blog/method-comparison.png)
+
+*图：咖啡机和镜头相机两组提示下，不同方法生成的关节资产。最右两列为搭载 GPT-5.4 与 GPT-5.5 的 Articraft。来源：[Articraft 论文图 5](https://arxiv.org/html/2605.15187v1/x5.png)。*
+
 搭载 GPT-5.5 的 Articraft 有 **42%** 的结果被选为第一名，搭载 GPT-5.4 的版本为 **26%**。直接让 GPT-5.5 驱动通用 Codex 工具、自由编写 URDF 时，结果排在倒数第二。
+
+![Articraft 用户研究结果](images/articraft-blog/user-study.png)
+
+*图：125 名参与者提交 5000 次比较。深色部分代表被选为第一名的比例，Articraft（GPT-5.5）为 42%。来源：[Articraft 论文图 6](https://arxiv.org/html/2605.15187v1/x6.png)。*
 
 底座模型相同，差异来自 Agent 和计算机之间的接口。专用 SDK 缩短了代码，受限工作区砍掉无关选择，编译器又把几何问题转换成模型能采取行动的反馈。论文的核心贡献也落在这里：大模型能力要通过合适的工具、状态和反馈格式才能落到专业任务上。
 
@@ -73,6 +93,10 @@ Articraft-10K 的规模建立在一套清楚的成本账上。
 
 每件保留资产都带有 URDF、`model.py` 和生成轨迹。研究者同时拿到提示词、工具调用、编译反馈、模型版本、成本、人工评分和代码哈希。这些记录让人能够追溯一件物体如何从第一版代码改到可接受版本，也为后续训练开源 3D Agent 留下了监督信号。
 
+![Articraft-10K 更多类别与关节结构](images/articraft-blog/more-assets.png)
+
+*图：数据集从注射器、伸缩梯和窗户，延伸到风车、吊桥、车库门和机械装置；彩色视图显示语义零件的拆分。来源：[Articraft 论文图 19](https://arxiv.org/html/2605.15187v1/x19.png)。*
+
 这里有一个容易混淆的口径。论文的最终集合统计 4 星和 5 星对象，因此应写作“超过 1 万件、245 类”。[当前公开数据仓库](https://github.com/mattzh72/articraft-data)的快照列出 10,788 条本地记录和 246 个类别目录，其中还可能保留低评分坏例、审计材料和后续记录。原始记录数不能直接替代论文的最终对象数。
 
 ## 这些数据能喂给模型，也能送进机器人
@@ -83,6 +107,14 @@ Articraft-10K 的规模建立在一套清楚的成本账上。
 
 研究者也把生成的 URDF 直接导入 NVIDIA Isaac Sim，用 Franka 机械臂执行拉开抽屉等动作；在 VR 演示中，用户双手与物体碰撞后可以驱动对应关节。另一条管线结合 iPhone RoomPlan 和 LiteReality，把室内扫描中的家具逐件替换成带关节的生成资产，让重建房间中的柜门和抽屉可以活动。
 
+![参考图生成与室内场景重建](images/articraft-blog/image-conditioned-scene.png)
+
+*图：左侧展示 Eames 躺椅和户外游乐设施的参考图与生成资产；右侧把室内扫描重建为带材质、可交互的关节场景。来源：[Articraft 论文图 8](https://arxiv.org/html/2605.15187v1/x8.png)。*
+
+![机器人仿真与 VR 交互](images/articraft-blog/simulation-vr.png)
+
+*图：Franka 机械臂在仿真中拉开抽屉，VR 用户则用双手驱动物体关节。来源：[Articraft 论文图 9](https://arxiv.org/html/2605.15187v1/x9.png)。*
+
 这些演示说明了结构化 3D 资产的价值。一个物体只要带着零件树、碰撞几何和合法关节，就能在数据训练、物理仿真和交互应用之间复用。
 
 ## 编译通过，不代表看起来对
@@ -90,6 +122,10 @@ Articraft-10K 的规模建立在一套清楚的成本账上。
 Articraft 的失败案例比成功图更能说明系统边界。
 
 螺旋盖瓶的外壳可能已经变形，但网格仍然连通，瓶盖、瓶颈与旋转轴也通过了局部测试。滑板和旋转门同样可能避开悬空与碰撞错误，整体造型却不自然。喷壶扳机这类紧凑机构难以用现有 SDK 表达，运动时可能穿进瓶身。电饭煲和冰箱还会漏掉内部结构，或忘记把本该中空的外壳挖空。
+
+![Articraft 的失败案例](images/articraft-blog/failure-cases.png)
+
+*图：螺旋盖瓶、滑板、旋转门、喷壶、电饭煲和冰箱的失败样本。部分对象通过结构检查后，外形或内部构造仍不可信。来源：[Articraft 论文图 18](https://arxiv.org/html/2605.15187v1/x18.png)。*
 
 结构检查擅长回答“零件是否连着”“这里是否相交”，却很难判断“它像不像一个真实电饭煲”。系统也没有穷举每个关节的全部姿态，因为密集采样会抬高生成成本。论文中的 91.8% 保留率依赖人工评分，人工策展属于数据生产流程的一部分。
 
@@ -115,3 +151,5 @@ Articraft 最有价值的启发来自它的系统设计。团队把专业软件�
 - [Articraft 项目主页](https://articraft3d.github.io/)
 - [Articraft 代码仓库](https://github.com/mattzh72/articraft)
 - [Articraft 数据仓库](https://github.com/mattzh72/articraft-data)
+
+文中研究图片对应论文图 1、2、4、5、6、8、9、18、19；Articraft 论文以 [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/) 发布。
