@@ -253,7 +253,7 @@ def _add_geometry_errors(path: Path, *, severity: str) -> None:
 
     base_link = links[0]
     source_visuals = base_link.findall("visual")
-    duplicate_count = 1 if severity in {"subtle", "single"} else 2
+    duplicate_count = 2 if severity == "subtle" else 1
     for index, source_visual in enumerate(source_visuals[:duplicate_count]):
         duplicate = copy.deepcopy(source_visual)
         duplicate.set("name", f"overlapping_part_{index + 1}")
@@ -262,24 +262,28 @@ def _add_geometry_errors(path: Path, *, severity: str) -> None:
             origin = ET.Element("origin", {"xyz": "0 0 0", "rpy": "0 0 0"})
             duplicate.insert(0, origin)
         xyz = _parse_vector(origin.get("xyz"))
-        shift = scale * (0.035 if severity == "subtle" else 0.055)
+        shift = scale * (0.06 if severity == "subtle" else 0.055)
         xyz[0] += shift
         xyz[2] += shift * 0.35
         origin.set("xyz", _format_vector(xyz))
         base_link.append(duplicate)
 
-    floating_count = 1 if severity in {"subtle", "single"} else 2
+    floating_count = 3 if severity == "subtle" else 1
+    subtle_positions = (
+        [0.32, -0.2, 0.42],
+        [-0.34, 0.18, 0.32],
+        [0.08, 0.38, 0.56],
+    )
     for index in range(floating_count):
-        link = ET.SubElement(root, "link", {"name": f"floating_part_{index + 1}"})
-        position = [
-            scale * (0.58 + index * 0.16),
-            scale * (-0.32 + index * 0.48),
-            scale * (0.5 + index * 0.18),
-        ]
-        size_scale = 0.08 if severity == "subtle" else 0.1
+        position = (
+            [value * scale for value in subtle_positions[index]]
+            if severity == "subtle"
+            else [scale * 0.58, scale * -0.32, scale * 0.5]
+        )
+        size_scale = 0.13 if severity == "subtle" else 0.1
         _append_box_visual(
-            link,
-            name=f"floating_geometry_{index + 1}",
+            base_link,
+            name=f"floating_part_{index + 1}",
             position=position,
             size=[
                 scale * size_scale,
