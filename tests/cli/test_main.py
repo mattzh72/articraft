@@ -3,6 +3,8 @@ from __future__ import annotations
 import json
 import shutil
 import subprocess
+import sys
+from argparse import Namespace
 from pathlib import Path
 
 import pytest
@@ -89,6 +91,62 @@ def test_setup_recipe_uses_init_as_only_env_bootstrap() -> None:
     output = result.stdout + result.stderr
     assert "articraft env bootstrap" not in output
     assert output.count("articraft init") == 1
+
+
+def test_viewer_uses_resolved_npm_and_current_python(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    npm = str(tmp_path / "npm.CMD")
+    (tmp_path / "viewer" / "web" / "node_modules").mkdir(parents=True)
+    calls: list[tuple[list[str], dict[str, object]]] = []
+
+    monkeypatch.setattr(articraft_cli, "which", lambda command: npm)
+    monkeypatch.setattr(articraft_cli, "storage_repo_from_args", lambda args: object())
+    monkeypatch.setattr(articraft_cli, "rebuild_manifest", lambda repo: None)
+
+    def fake_call(command: list[str], **kwargs: object) -> int:
+        calls.append((command, kwargs))
+        return 0
+
+    monkeypatch.setattr(articraft_cli.subprocess, "call", fake_call)
+    args = Namespace(
+        repo_root=tmp_path,
+        data_dir=None,
+        dev=False,
+        host="127.0.0.1",
+        port="8765",
+        target="/",
+    )
+
+    assert articraft_cli._run_viewer(args) == 0
+    assert calls[0][0] == [npm, "--prefix", "viewer/web", "run", "build"]
+    assert calls[1][0][:3] == [sys.executable, "-m", "uvicorn"]
+    assert "--reload" not in calls[1][0]
+
+
+def test_stop_process_terminates_windows_process_tree(monkeypatch: pytest.MonkeyPatch) -> None:
+    commands: list[list[str]] = []
+
+    class FakeProcess:
+        pid = 1234
+
+        @staticmethod
+        def poll() -> None:
+            return None
+
+        @staticmethod
+        def wait() -> None:
+            return None
+
+    def fake_run(command: list[str], **kwargs: object) -> None:
+        commands.append(command)
+
+    monkeypatch.setattr(articraft_cli.sys, "platform", "win32")
+    monkeypatch.setattr(articraft_cli.subprocess, "run", fake_run)
+
+    articraft_cli._stop_process(FakeProcess())
+
+    assert commands == [["taskkill", "/PID", "1234", "/T", "/F"]]
 
 
 def test_init_creates_external_data_root_manifest(

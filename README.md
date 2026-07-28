@@ -34,11 +34,31 @@ To set up a checkout from another working directory, pass the repository root:
 just setup ./path/to/checkout
 ```
 
+On Windows, install `just` with `winget install --id Casey.Just --exact`, reopen
+PowerShell, and run the same `just` commands. The task recipes are compatible with both
+PowerShell and Unix shells. Without `just`, the equivalent setup commands are:
+
+```powershell
+uv sync --frozen --group dev
+npm --prefix .\viewer\web ci
+npm --prefix .\viewer\web run typecheck
+uv run --frozen articraft init
+```
+
 Articraft stores records in a gitignored data root. By default that is `<repo-root>/data`. To browse the released dataset, clone [`mattzh72/articraft-data`](https://github.com/mattzh72/articraft-data) and point Articraft at it:
 
 ```bash
 git clone https://github.com/mattzh72/articraft-data.git ../articraft-data
 export ARTICRAFT_DATA_DIR="$(cd ../articraft-data && pwd)"
+uv run articraft status
+uv run articraft library check --require-records
+```
+
+PowerShell equivalent:
+
+```powershell
+git clone https://github.com/mattzh72/articraft-data.git ..\articraft-data
+$env:ARTICRAFT_DATA_DIR = (Resolve-Path ..\articraft-data).Path
 uv run articraft status
 uv run articraft library check --require-records
 ```
@@ -72,10 +92,19 @@ Browse the objects you just generated. The local viewer API and React frontend c
 just viewer
 ```
 
+The command prints the URL to open, normally <http://127.0.0.1:8765>. It works from
+PowerShell as well. Without `just`, run `uv run --frozen articraft viewer`. For frontend
+development with hot reload, use `just viewer-dev` or
+`uv run --frozen articraft viewer --dev`, then open <http://127.0.0.1:5173>.
+
 To browse an external data folder explicitly:
 
 ```bash
-uv run articraft viewer --data-dir /Users/mzhou/articraft-data
+uv run articraft viewer --data-dir /path/to/articraft-data
+```
+
+```powershell
+uv run articraft viewer --data-dir C:\path\to\articraft-data
 ```
 
 ### 6. Edit an Existing Asset
