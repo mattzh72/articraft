@@ -3,8 +3,6 @@ import { useQuery } from "@tanstack/react-query";
 import {
   ArrowLeft,
   ArrowRight,
-  Check,
-  ExternalLink,
   RefreshCw,
   X,
 } from "lucide-react";
@@ -14,7 +12,6 @@ import { SceneCanvas } from "@/components/viewer3d/SceneCanvas";
 import { useJointController } from "@/components/viewer3d/useJointController";
 import { defaultRenderOptions } from "@/components/viewer3d/useRenderOptions";
 import type { UrdfJoint, UrdfSpec } from "@/components/viewer3d/urdf-parser";
-import { formatCost } from "@/lib/viewer-format";
 import { bootstrapQueryOptions } from "@/lib/viewer-queries";
 import type { RecordSummary } from "@/lib/types";
 
@@ -303,45 +300,6 @@ function syncPromptIdToUrl(promptId: string): void {
   window.history.replaceState(null, "", url);
 }
 
-function StatusMark({
-  success,
-  label,
-}: {
-  success: boolean;
-  label: string;
-}): JSX.Element {
-  return (
-    <span
-      className={[
-        "inline-flex items-center gap-1.5 rounded-full border px-2 py-1 font-mono text-[9px] font-medium uppercase tracking-[0.08em]",
-        success
-          ? "border-emerald-400/25 bg-emerald-400/10 text-emerald-300"
-          : "border-rose-400/25 bg-rose-400/10 text-rose-300",
-      ].join(" ")}
-    >
-      {success ? <Check className="size-2.5" /> : <X className="size-2.5" />}
-      {label}
-    </span>
-  );
-}
-
-function Metric({
-  label,
-  value,
-}: {
-  label: string;
-  value: string;
-}): JSX.Element {
-  return (
-    <div className="border-r border-white/[0.07] px-3 py-2.5 last:border-r-0">
-      <p className="font-mono text-[8px] uppercase tracking-[0.12em] text-white/35">{label}</p>
-      <p className="mt-1 truncate text-[11px] font-medium text-white/80" title={value}>
-        {value}
-      </p>
-    </div>
-  );
-}
-
 function ConditionCard({
   condition,
   record,
@@ -349,12 +307,7 @@ function ConditionCard({
   condition: ConditionDefinition;
   record: RecordSummary | undefined;
 }): JSX.Element {
-  const modelOnly = record?.tags.includes("model-only-package") ?? false;
-  const exportSucceeded =
-    record?.materialization_status === "available" &&
-    (modelOnly || record.tags.includes("export-success"));
-  const generationSucceeded = modelOnly ? exportSucceeded : record?.run_status === "success";
-  const qcSucceeded = record?.tags.includes("qc-success") ?? false;
+  const modelAvailable = record?.materialization_status === "available";
 
   return (
     <article
@@ -372,7 +325,7 @@ function ConditionCard({
       </header>
 
       <div className="relative min-h-[220px] flex-1 bg-[#edf0ec]">
-        {record && exportSucceeded ? (
+        {record && modelAvailable ? (
           <AutoArticulatingScene record={record} />
         ) : (
           <div className="absolute inset-0 flex items-center justify-center bg-[repeating-linear-gradient(135deg,#edf0ec,#edf0ec_12px,#e6e9e5_12px,#e6e9e5_24px)] p-6">
@@ -381,43 +334,13 @@ function ConditionCard({
                 <X className="size-4" />
               </span>
               <p className="mt-3 text-[12px] font-semibold text-[#351b1b]">
-                {!record
-                  ? "Missing record"
-                  : modelOnly
-                    ? "Model unavailable"
-                  : generationSucceeded
-                    ? "Compile failed"
-                    : "Request failed"}
+                Model unavailable
               </p>
             </div>
           </div>
         )}
         <div className="pointer-events-none absolute inset-x-0 bottom-0 h-12 bg-gradient-to-t from-black/10 to-transparent" />
       </div>
-
-      {modelOnly ? null : (
-        <footer className="border-t border-white/[0.08] bg-[#101412]">
-          <div className="flex min-h-[42px] flex-wrap items-center gap-1.5 border-b border-white/[0.07] px-3 py-2">
-            <StatusMark success={generationSucceeded} label="Gen" />
-            <StatusMark success={exportSucceeded} label="URDF" />
-            <StatusMark success={qcSucceeded} label="QC" />
-          </div>
-          <div className="grid grid-cols-3">
-            <Metric label="Turns" value={record?.turn_count == null ? "None" : String(record.turn_count)} />
-            <Metric label="Cost" value={formatCost(record?.total_cost_usd ?? null)} />
-            <Metric label="SDK" value={record?.sdk_package ?? "Unknown"} />
-          </div>
-          {record ? (
-            <a
-              href={`/viewer?record=${encodeURIComponent(record.record_id)}`}
-              className="flex h-9 items-center justify-between border-t border-white/[0.07] px-3 font-mono text-[9px] uppercase tracking-[0.1em] text-white/45 transition hover:bg-white/[0.04] hover:text-white/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[var(--condition-accent)]"
-            >
-              Inspect this record
-              <ExternalLink className="size-3" />
-            </a>
-          ) : null}
-        </footer>
-      )}
     </article>
   );
 }
@@ -450,13 +373,6 @@ export default function AblationComparePage(): JSX.Element {
     groups.findIndex((group) => group.promptId === selectedPromptId),
   );
   const selectedGroup = groups[selectedIndex] ?? null;
-  const modelOnlyPackage =
-    groups.length > 0 &&
-    groups.every((group) =>
-      Object.values(group.records).every((record) =>
-        record?.tags.includes("model-only-package"),
-      ),
-    );
 
   const selectGroup = (index: number): void => {
     const group = groups[index];
@@ -481,7 +397,7 @@ export default function AblationComparePage(): JSX.Element {
         <div className="max-w-md rounded-2xl border border-white/10 bg-white/[0.04] p-6 text-center">
           <h1 className="text-xl font-semibold">Comparison data is unavailable</h1>
           <p className="mt-2 text-[12px] leading-5 text-white/50">
-            This page expects records from the agent component ablation experiment.
+            The packaged 3D objects could not be loaded.
           </p>
           <button
             type="button"
@@ -508,29 +424,10 @@ export default function AblationComparePage(): JSX.Element {
       />
 
       <header className="relative z-10 border-b border-white/[0.08] bg-[#0c100e]/95 px-5 py-4 backdrop-blur">
-        <div className="flex flex-wrap items-end justify-between gap-4">
-          <div>
-            <h1 className="text-[clamp(20px,2vw,30px)] font-semibold tracking-[-0.035em]">
-              Agent component ablations
-            </h1>
-          </div>
-
-          {modelOnlyPackage ? null : (
-            <div className="flex items-center gap-2">
-              <span className="rounded-md border border-white/10 bg-white/[0.04] px-2.5 py-1.5 font-mono text-[9px] uppercase tracking-[0.1em] text-white/45">
-                {groups.length} objects
-              </span>
-              <span className="rounded-md border border-white/10 bg-white/[0.04] px-2.5 py-1.5 font-mono text-[9px] uppercase tracking-[0.1em] text-white/45">
-                {bootstrapQuery.data?.library_records.length ?? 0} cells
-              </span>
-              <a
-                href="/"
-                className="rounded-md border border-white/10 bg-white/[0.04] px-2.5 py-1.5 font-mono text-[9px] uppercase tracking-[0.1em] text-white/55 transition hover:bg-white/[0.08] hover:text-white"
-              >
-                Library viewer
-              </a>
-            </div>
-          )}
+        <div>
+          <h1 className="text-[clamp(20px,2vw,30px)] font-semibold tracking-[-0.035em]">
+            Agent component ablations
+          </h1>
         </div>
 
         <div className="mt-4 flex items-center gap-2">

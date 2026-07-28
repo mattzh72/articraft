@@ -1,0 +1,76 @@
+@import "tailwindcss";
+@source "../src/components/compare/AblationComparePage.tsx";
+@source "../src/components/viewer3d";
+
+@theme {
+  --font-sans: system-ui, -apple-system, sans-serif;
+  --font-mono: "SF Mono", "Consolas", monospace;
+}
+
+:root {
+  --surface-0: #ffffff;
+  --surface-1: #fafafa;
+  --surface-2: #f5f5f5;
+  --surface-3: #efefef;
+  --text-primary: #111111;
+  --text-secondary: #555555;
+  --text-tertiary: #8b8b8b;
+  --text-quaternary: #b0b0b0;
+  --border-default: #e6e6e6;
+  --border-subtle: #f0f0f0;
+  --border-strong: #d0d0d0;
+  --accent: #0c8ce9;
+  --accent-soft: rgba(12, 140, 233, 0.08);
+  --accent-hover: rgba(12, 140, 233, 0.12);
+  --success: #1a8a4a;
+  --warning: #c27803;
+  --destructive: #d13415;
+}
+
+* {
+  box-sizing: border-box;
+  border-color: var(--border-default);
+}
+
+body {
+  margin: 0;
+  height: 100vh;
+  overflow: hidden;
+  font-family: var(--font-sans);
+  color: var(--text-primary);
+  background: var(--surface-2);
+  font-size: 13px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  letter-spacing: -0.01em;
+}
+
+#root {
+  height: 100vh;
+  overflow: hidden;
+}
+
+button,
+select {
+  font: inherit;
+  letter-spacing: inherit;
+}
+
+.custom-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: var(--border-strong) transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: var(--border-strong);
+  border-radius: 3px;
+}
