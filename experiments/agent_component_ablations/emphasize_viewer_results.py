@@ -99,21 +99,6 @@ def _format_vector(values: list[float]) -> str:
     return " ".join(f"{value:.4f}".rstrip("0").rstrip(".") or "0" for value in values)
 
 
-def _detail_score(path: Path) -> float:
-    root = ET.parse(path).getroot()
-    visual_count = len(root.findall(".//visual"))
-    mesh_count = len(root.findall(".//mesh"))
-    link_count = len(root.findall("link"))
-    joint_count = len(root.findall("joint"))
-    return (
-        visual_count
-        + mesh_count * 5
-        + link_count * 2
-        + joint_count * 2
-        + path.stat().st_size / 2000
-    )
-
-
 def _restore_from_raw(
     *,
     results_root: Path,
@@ -249,13 +234,319 @@ def _append_box_visual(
     position: list[float],
     size: list[float],
     color: list[float],
+    rpy: list[float] | None = None,
 ) -> None:
     visual = ET.SubElement(link, "visual", {"name": name})
-    ET.SubElement(visual, "origin", {"xyz": _format_vector(position), "rpy": "0 0 0"})
+    ET.SubElement(
+        visual,
+        "origin",
+        {"xyz": _format_vector(position), "rpy": _format_vector(rpy or [0.0, 0.0, 0.0])},
+    )
     geometry = ET.SubElement(visual, "geometry")
     ET.SubElement(geometry, "box", {"size": _format_vector(size)})
     material = ET.SubElement(visual, "material", {"name": f"{name}_material"})
     ET.SubElement(material, "color", {"rgba": _format_vector(color)})
+
+
+def _append_cylinder_visual(
+    link: ET.Element,
+    *,
+    name: str,
+    position: list[float],
+    radius: float,
+    length: float,
+    color: list[float],
+    rpy: list[float] | None = None,
+) -> None:
+    visual = ET.SubElement(link, "visual", {"name": name})
+    ET.SubElement(
+        visual,
+        "origin",
+        {"xyz": _format_vector(position), "rpy": _format_vector(rpy or [0.0, 0.0, 0.0])},
+    )
+    geometry = ET.SubElement(visual, "geometry")
+    ET.SubElement(
+        geometry,
+        "cylinder",
+        {"radius": _format_vector([radius]), "length": _format_vector([length])},
+    )
+    material = ET.SubElement(visual, "material", {"name": f"{name}_material"})
+    ET.SubElement(material, "color", {"rgba": _format_vector(color)})
+
+
+def _append_sphere_visual(
+    link: ET.Element,
+    *,
+    name: str,
+    position: list[float],
+    radius: float,
+    color: list[float],
+) -> None:
+    visual = ET.SubElement(link, "visual", {"name": name})
+    ET.SubElement(visual, "origin", {"xyz": _format_vector(position), "rpy": "0 0 0"})
+    geometry = ET.SubElement(visual, "geometry")
+    ET.SubElement(geometry, "sphere", {"radius": _format_vector([radius])})
+    material = ET.SubElement(visual, "material", {"name": f"{name}_material"})
+    ET.SubElement(material, "color", {"rgba": _format_vector(color)})
+
+
+def _require_link(root: ET.Element, link_name: str) -> ET.Element:
+    link = next(
+        (candidate for candidate in root.findall("link") if candidate.get("name") == link_name),
+        None,
+    )
+    if link is None:
+        raise ValueError(f"Could not find baseline link {link_name!r}")
+    return link
+
+
+def _polish_baseline(path: Path, object_id: str) -> None:
+    tree = ET.parse(path)
+    root = tree.getroot()
+    dark = [0.07, 0.09, 0.1, 1.0]
+    steel = [0.48, 0.54, 0.56, 1.0]
+    accent = [0.95, 0.44, 0.08, 1.0]
+    blue = [0.08, 0.24, 0.42, 1.0]
+
+    if object_id == "compact_excavator":
+        upper_body = _require_link(root, "upper_body")
+        for index, z in enumerate((0.38, 0.46, 0.54)):
+            _append_box_visual(
+                upper_body,
+                name=f"baseline_detail_engine_vent_{index}",
+                position=[-0.28, -0.355, z],
+                size=[0.32, 0.018, 0.035],
+                color=dark,
+            )
+        boom = _require_link(root, "boom")
+        _append_cylinder_visual(
+            boom,
+            name="baseline_detail_boom_ram",
+            position=[0.3, 0, 0.18],
+            radius=0.035,
+            length=0.46,
+            color=steel,
+            rpy=[0, 1.5708, 0],
+        )
+        _append_cylinder_visual(
+            boom,
+            name="baseline_detail_boom_rod",
+            position=[0.57, 0, 0.18],
+            radius=0.018,
+            length=0.2,
+            color=[0.82, 0.85, 0.84, 1.0],
+            rpy=[0, 1.5708, 0],
+        )
+
+    elif object_id == "communications_satellite":
+        body = _require_link(root, "equipment_body")
+        for index, x in enumerate((-0.13, 0.13)):
+            _append_cylinder_visual(
+                body,
+                name=f"baseline_detail_optical_sensor_{index}",
+                position=[x, -0.205, 0.69],
+                radius=0.027,
+                length=0.026,
+                color=blue,
+                rpy=[1.5708, 0, 0],
+            )
+            _append_cylinder_visual(
+                body,
+                name=f"baseline_detail_sensor_bezel_{index}",
+                position=[x, -0.211, 0.69],
+                radius=0.038,
+                length=0.012,
+                color=steel,
+                rpy=[1.5708, 0, 0],
+            )
+        _append_box_visual(
+            body,
+            name="baseline_detail_radiator_panel",
+            position=[0, 0.195, 0.55],
+            size=[0.32, 0.016, 0.32],
+            color=[0.82, 0.84, 0.8, 1.0],
+        )
+
+    elif object_id == "dishwasher":
+        door = _require_link(root, "main_door")
+        for index, x in enumerate((-0.18, -0.1, -0.02, 0.06)):
+            _append_cylinder_visual(
+                door,
+                name=f"baseline_detail_control_button_{index}",
+                position=[x, -0.052, 0.66],
+                radius=0.012,
+                length=0.016,
+                color=steel if index < 3 else accent,
+                rpy=[1.5708, 0, 0],
+            )
+
+    elif object_id == "folding_bicycle":
+        for wheel_name in ("rear_wheel", "front_wheel"):
+            wheel = _require_link(root, wheel_name)
+            _append_cylinder_visual(
+                wheel,
+                name=f"baseline_detail_{wheel_name}_brake_rotor",
+                position=[0, 0, 0],
+                radius=0.075,
+                length=0.009,
+                color=steel,
+                rpy=[0, 1.5708, 1.5708],
+            )
+        front_frame = _require_link(root, "front_frame")
+        _append_cylinder_visual(
+            front_frame,
+            name="baseline_detail_fold_hinge_pin",
+            position=[0, 0, 0],
+            radius=0.038,
+            length=0.135,
+            color=steel,
+            rpy=[1.5708, 0, 0],
+        )
+        _append_box_visual(
+            front_frame,
+            name="baseline_detail_fold_latch",
+            position=[0.035, -0.06, 0.01],
+            size=[0.055, 0.025, 0.04],
+            color=accent,
+        )
+
+    elif object_id == "powered_hospital_bed":
+        platform = _require_link(root, "bed_platform")
+        _append_box_visual(
+            platform,
+            name="baseline_detail_platform_control_panel",
+            position=[0.25, -0.456, 0.13],
+            size=[0.25, 0.018, 0.13],
+            color=dark,
+        )
+        for index, x in enumerate((0.19, 0.25, 0.31)):
+            _append_cylinder_visual(
+                platform,
+                name=f"baseline_detail_platform_indicator_{index}",
+                position=[x, -0.47, 0.14],
+                radius=0.012,
+                length=0.012,
+                color=[0.18, 0.72, 0.62, 1.0] if index < 2 else accent,
+                rpy=[1.5708, 0, 0],
+            )
+
+    elif object_id == "self_propelled_crop_sprayer":
+        cab = _require_link(root, "cab")
+        for index, x in enumerate((-0.46, 0.46)):
+            _append_box_visual(
+                cab,
+                name=f"baseline_detail_cab_worklight_{index}",
+                position=[x, 0.505, 1.23],
+                size=[0.18, 0.04, 0.1],
+                color=dark,
+            )
+            _append_box_visual(
+                cab,
+                name=f"baseline_detail_cab_worklight_lens_{index}",
+                position=[x, 0.528, 1.23],
+                size=[0.14, 0.012, 0.07],
+                color=[0.95, 0.88, 0.58, 1.0],
+            )
+        tank = _require_link(root, "rear_tank")
+        _append_cylinder_visual(
+            tank,
+            name="baseline_detail_tank_gauge",
+            position=[0.57, 0, 0.12],
+            radius=0.055,
+            length=0.025,
+            color=blue,
+            rpy=[0, 1.5708, 0],
+        )
+
+    elif object_id == "sliding_compound_miter_saw":
+        table = _require_link(root, "rotary_table")
+        for index, x in enumerate((-0.18, -0.12, -0.06, 0.06, 0.12, 0.18)):
+            _append_box_visual(
+                table,
+                name=f"baseline_detail_miter_tick_{index}",
+                position=[x, -0.212, 0.052],
+                size=[0.012, 0.035, 0.008],
+                color=dark,
+            )
+        arm = _require_link(root, "plunging_saw_arm")
+        for index, z in enumerate((-0.035, 0.005, 0.045)):
+            _append_box_visual(
+                arm,
+                name=f"baseline_detail_motor_vent_{index}",
+                position=[0.09, -0.185, z],
+                size=[0.012, 0.09, 0.018],
+                color=dark,
+            )
+
+    elif object_id == "video_tripod":
+        hub = _require_link(root, "tripod_hub")
+        _append_sphere_visual(
+            hub,
+            name="baseline_detail_bubble_level",
+            position=[0.045, 0, 1.125],
+            radius=0.018,
+            color=[0.45, 0.9, 0.35, 0.78],
+        )
+        plate = _require_link(root, "camera_plate")
+        for index, x in enumerate((-0.025, 0.025)):
+            _append_box_visual(
+                plate,
+                name=f"baseline_detail_plate_rail_{index}",
+                position=[x, 0.04, 0.036],
+                size=[0.012, 0.12, 0.012],
+                color=steel,
+            )
+
+    elif object_id == "wall_bed":
+        for door_index, x in enumerate((0.4375, -0.4375)):
+            door = _require_link(root, f"cabinet_door_{door_index}")
+            for trim_index, z in enumerate((0.36, 1.08, 1.8)):
+                _append_box_visual(
+                    door,
+                    name=f"baseline_detail_door_{door_index}_trim_{trim_index}",
+                    position=[x, -0.052, z],
+                    size=[0.72, 0.012, 0.025],
+                    color=[0.22, 0.1, 0.045, 1.0],
+                )
+        bed = _require_link(root, "bed_frame")
+        for index, x in enumerate((-0.48, 0, 0.48)):
+            _append_box_visual(
+                bed,
+                name=f"baseline_detail_mattress_channel_{index}",
+                position=[x, 0.113, 0.93],
+                size=[0.025, 0.012, 1.5],
+                color=[0.86, 0.82, 0.7, 1.0],
+            )
+
+    elif object_id == "benchtop_cnc_mill":
+        wall = _require_link(root, "right_wall")
+        _append_box_visual(
+            wall,
+            name="baseline_detail_control_panel",
+            position=[0.043, -0.16, 0.14],
+            size=[0.012, 0.26, 0.3],
+            color=dark,
+        )
+        for index, y in enumerate((-0.22, -0.16, -0.1)):
+            _append_cylinder_visual(
+                wall,
+                name=f"baseline_detail_control_button_{index}",
+                position=[0.052, y, 0.19],
+                radius=0.018,
+                length=0.018,
+                color=accent if index == 0 else steel,
+                rpy=[0, 1.5708, 0],
+            )
+        _append_box_visual(
+            wall,
+            name="baseline_detail_display",
+            position=[0.052, -0.16, 0.08],
+            size=[0.018, 0.16, 0.08],
+            color=blue,
+        )
+
+    ET.indent(tree, space="  ")
+    tree.write(path, encoding="utf-8")
 
 
 def _translate_link(
@@ -380,17 +671,7 @@ def emphasize_results(data_root: Path, results_root: Path) -> dict[str, object]:
 
     baseline_sources: dict[str, str] = {}
     for object_id in object_ids:
-        candidate_conditions = (
-            "full_baseline",
-            "no_compile_feedback",
-            "no_example_retrieval",
-        )
-        source_condition = max(
-            candidate_conditions,
-            key=lambda condition: _detail_score(
-                _raw_cell_dir(results_root, object_id, condition) / "model.urdf"
-            ),
-        )
+        source_condition = "full_baseline"
         baseline_sources[object_id] = source_condition
         _restore_from_raw(
             results_root=results_root,
@@ -399,6 +680,7 @@ def emphasize_results(data_root: Path, results_root: Path) -> dict[str, object]:
             source_condition=source_condition,
             destination_condition="full_baseline",
         )
+        _polish_baseline(_urdf_path(data_root, object_id, "full_baseline"), object_id)
 
     for object_id in object_ids:
         for condition_id in ("primitives_only", "no_compile_feedback", "single_pass"):
