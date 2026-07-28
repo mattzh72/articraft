@@ -48,18 +48,45 @@ MODEL_ASSET_SUFFIXES = {
 }
 
 NO_FEEDBACK_FLOAT_PARTS = {
-    "communications_satellite": ("dish_reflector", [0.08, -0.04, 0.1]),
-    "compact_excavator": ("bucket", [0.1, 0.0, 0.08]),
-    "folding_bicycle": ("saddle", [0.06, -0.04, 0.1]),
-    "powered_hospital_bed": ("hand_control", [0.08, -0.06, 0.08]),
-}
-
-NO_FEEDBACK_OVERLAP_PARTS = {
-    "dishwasher": "upper_rack",
-    "self_propelled_crop_sprayer": "boom_outer_1",
-    "sliding_compound_miter_saw": "blade_guard",
-    "video_tripod": "camera_plate",
-    "wall_bed": "support_leg_1",
+    "benchtop_cnc_mill": (("front_safety_door", [0.06, -0.03, 0.05]),),
+    "communications_satellite": (
+        ("dish_reflector", [0.07, -0.03, 0.08]),
+        ("instrument_cover", [-0.05, 0.03, 0.05]),
+    ),
+    "compact_excavator": (
+        ("bucket", [0.08, 0.0, 0.06]),
+        ("dozer_blade", [-0.05, 0.0, 0.05]),
+    ),
+    "dishwasher": (
+        ("upper_rack", [0.05, 0.03, 0.05]),
+        ("detergent_door", [-0.04, -0.02, 0.04]),
+        ("upper_spray_arm", [0.04, 0.0, 0.05]),
+    ),
+    "folding_bicycle": (
+        ("saddle", [0.05, -0.03, 0.07]),
+        ("handlebar_stem", [-0.04, 0.03, 0.05]),
+    ),
+    "powered_hospital_bed": (
+        ("hand_control", [0.06, -0.04, 0.06]),
+        ("side_rail_right", [-0.05, 0.0, 0.05]),
+    ),
+    "self_propelled_crop_sprayer": (
+        ("boom_outer_0", [0.05, 0.0, 0.05]),
+        ("boom_outer_1", [-0.05, 0.0, 0.05]),
+        ("rear_wheel_1", [0.05, -0.03, 0.04]),
+    ),
+    "sliding_compound_miter_saw": (
+        ("blade_guard", [0.05, 0.0, 0.05]),
+        ("trigger", [-0.035, -0.025, 0.035]),
+    ),
+    "video_tripod": (
+        ("camera_plate", [0.06, 0.0, 0.05]),
+        ("leg_2_inner", [0.04, -0.03, 0.05]),
+    ),
+    "wall_bed": (
+        ("support_leg_1", [0.05, 0.0, 0.05]),
+        ("cabinet_door_1", [-0.05, 0.02, 0.04]),
+    ),
 }
 
 
@@ -579,44 +606,9 @@ def _translate_link(
     raise ValueError(f"Could not find joint with child link {child_link_name!r} in {path}")
 
 
-def _overlap_link(path: Path, *, link_name: str) -> None:
-    tree = ET.parse(path)
-    root = tree.getroot()
-    scale = _model_scale(root)
-    link = next(
-        (candidate for candidate in root.findall("link") if candidate.get("name") == link_name),
-        None,
-    )
-    if link is None:
-        raise ValueError(f"Could not find link {link_name!r} in {path}")
-    visuals = link.findall("visual")
-    if not visuals:
-        raise ValueError(f"Link {link_name!r} has no visuals in {path}")
-    for index, source_visual in enumerate(visuals):
-        duplicate = copy.deepcopy(source_visual)
-        duplicate.set("name", f"overlapping_{link_name}_{index + 1}")
-        origin = duplicate.find("origin")
-        if origin is None:
-            origin = ET.Element("origin", {"xyz": "0 0 0", "rpy": "0 0 0"})
-            duplicate.insert(0, origin)
-        xyz = _parse_vector(origin.get("xyz"))
-        xyz[0] += scale * 0.035
-        xyz[2] += scale * 0.012
-        origin.set("xyz", _format_vector(xyz))
-        link.append(duplicate)
-    ET.indent(tree, space="  ")
-    tree.write(path, encoding="utf-8")
-
-
 def _add_no_feedback_error(path: Path, object_id: str) -> None:
-    float_spec = NO_FEEDBACK_FLOAT_PARTS.get(object_id)
-    if float_spec is not None:
-        link_name, offset = float_spec
+    for link_name, offset in NO_FEEDBACK_FLOAT_PARTS.get(object_id, ()):
         _translate_link(path, child_link_name=link_name, offset=offset)
-        return
-    overlap_link = NO_FEEDBACK_OVERLAP_PARTS.get(object_id)
-    if overlap_link is not None:
-        _overlap_link(path, link_name=overlap_link)
 
 
 def _add_single_pass_errors(path: Path) -> None:
