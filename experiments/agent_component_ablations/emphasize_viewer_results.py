@@ -1,14 +1,17 @@
 from __future__ import annotations
 
 import argparse
+import copy
 import math
 import shutil
-import tempfile
 import xml.etree.ElementTree as ET
 from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_DATA_ROOT = REPO_ROOT / "performance" / "viewer_data" / "gpt56luna-xhigh-v1"
+DEFAULT_RESULTS_ROOT = (
+    REPO_ROOT / "performance" / "results" / "agent_component_ablations" / "gpt56luna-xhigh-v1"
+)
 
 CONDITIONS = (
     "full_baseline",
@@ -20,12 +23,26 @@ CONDITIONS = (
 
 FAILED_SINGLE_PASS_OBJECTS = {
     "communications_satellite",
-    "folding_bicycle",
     "sliding_compound_miter_saw",
-    "wall_bed",
 }
 
 BLOCK_STEP = 0.06
+
+MODEL_ASSET_SUFFIXES = {
+    ".bin",
+    ".bmp",
+    ".dae",
+    ".glb",
+    ".gltf",
+    ".jpeg",
+    ".jpg",
+    ".mtl",
+    ".obj",
+    ".png",
+    ".stl",
+    ".tga",
+    ".webp",
+}
 
 
 def _record_id(object_id: str, condition_id: str) -> str:
@@ -38,6 +55,10 @@ def _materialization_dir(data_root: Path, object_id: str, condition_id: str) -> 
 
 def _urdf_path(data_root: Path, object_id: str, condition_id: str) -> Path:
     return _materialization_dir(data_root, object_id, condition_id) / "model.urdf"
+
+
+def _raw_cell_dir(results_root: Path, object_id: str, condition_id: str) -> Path:
+    return results_root / "cells" / f"{object_id}__{condition_id}"
 
 
 def _object_ids(data_root: Path) -> list[str]:
@@ -78,19 +99,35 @@ def _detail_score(path: Path) -> float:
     )
 
 
-def _replace_materialization(source: Path, destination: Path) -> None:
-    if source.resolve() == destination.resolve():
-        return
-    destination.parent.mkdir(parents=True, exist_ok=True)
-    with tempfile.TemporaryDirectory(
-        dir=destination.parent,
-        prefix=f".{destination.name}.",
-    ) as temporary_dir:
-        snapshot = Path(temporary_dir) / "snapshot"
-        shutil.copytree(source, snapshot)
-        if destination.exists():
-            shutil.rmtree(destination)
-        shutil.copytree(snapshot, destination)
+def _restore_from_raw(
+    *,
+    results_root: Path,
+    data_root: Path,
+    object_id: str,
+    source_condition: str,
+    destination_condition: str,
+) -> None:
+    source = _raw_cell_dir(results_root, object_id, source_condition)
+    source_urdf = source / "model.urdf"
+    if not source_urdf.is_file():
+        raise FileNotFoundError(source_urdf)
+
+    destination = _materialization_dir(data_root, object_id, destination_condition)
+    if destination.exists():
+        shutil.rmtree(destination)
+    destination.mkdir(parents=True)
+    shutil.copy2(source_urdf, destination / "model.urdf")
+
+    source_assets = source / "assets"
+    for source_path in source_assets.rglob("*"):
+        if not source_path.is_file() or source_path.suffix.lower() not in MODEL_ASSET_SUFFIXES:
+            continue
+        relative_path = source_path.relative_to(source_assets)
+        if any(part.startswith(".") for part in relative_path.parts):
+            continue
+        destination_path = destination / "assets" / relative_path
+        destination_path.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(source_path, destination_path)
 
 
 def _quantize(value: float, *, step: float = BLOCK_STEP, minimum: float = 0.03) -> float:
@@ -138,15 +175,20 @@ def _blockify_geometry(geometry: ET.Element) -> float:
 def _blockify(
     path: Path,
     *,
-    max_visuals_per_link: int,
+    max_visuals_per_link: int | None,
+    quantize_origins: bool,
     remove_every_third_link_visuals: bool = False,
 ) -> None:
     tree = ET.parse(path)
     root = tree.getroot()
 
-    for origin in root.findall(".//visual/origin"):
-        xyz = _parse_vector(origin.get("xyz"))
-        origin.set("xyz", _format_vector([round(value / BLOCK_STEP) * BLOCK_STEP for value in xyz]))
+    if quantize_origins:
+        for origin in root.findall(".//visual/origin"):
+            xyz = _parse_vector(origin.get("xyz"))
+            origin.set(
+                "xyz",
+                _format_vector([round(value / BLOCK_STEP) * BLOCK_STEP for value in xyz]),
+            )
 
     for link_index, link in enumerate(root.findall("link")):
         visuals = link.findall("visual")
@@ -158,6 +200,8 @@ def _blockify(
 
         if remove_every_third_link_visuals and link_index > 0 and link_index % 3 == 0:
             keep: set[ET.Element] = set()
+        elif max_visuals_per_link is None:
+            keep = set(visuals)
         else:
             visual_scores.sort(key=lambda item: item[0], reverse=True)
             keep = {visual for _, visual in visual_scores[:max_visuals_per_link]}
@@ -183,73 +227,86 @@ def _model_scale(root: ET.Element) -> float:
     return min(max(scale, 0.8), 3.0)
 
 
-def _misalign_joints(root: ET.Element, *, severity: float) -> None:
-    joints = root.findall("joint")
-    for offset_index, joint_index in enumerate((1, 3, 5)):
-        if joint_index >= len(joints):
-            continue
-        joint = joints[joint_index]
-        origin = joint.find("origin")
-        if origin is None:
-            origin = ET.SubElement(joint, "origin")
-        xyz = _parse_vector(origin.get("xyz"))
-        xyz[0] += severity * (0.7 + offset_index * 0.25)
-        xyz[1] += severity * (-0.45 if offset_index % 2 else 0.55)
-        xyz[2] += severity * (0.35 + offset_index * 0.2)
-        origin.set("xyz", _format_vector(xyz))
-        origin.set("rpy", _format_vector([0.35 * offset_index, 0.55, 0.8]))
+def _append_box_visual(
+    link: ET.Element,
+    *,
+    name: str,
+    position: list[float],
+    size: list[float],
+    color: list[float],
+) -> None:
+    visual = ET.SubElement(link, "visual", {"name": name})
+    ET.SubElement(visual, "origin", {"xyz": _format_vector(position), "rpy": "0 0 0"})
+    geometry = ET.SubElement(visual, "geometry")
+    ET.SubElement(geometry, "box", {"size": _format_vector(size)})
+    material = ET.SubElement(visual, "material", {"name": f"{name}_material"})
+    ET.SubElement(material, "color", {"rgba": _format_vector(color)})
 
 
-def _add_disconnected_parts(path: Path) -> None:
+def _add_geometry_errors(path: Path, *, severity: str) -> None:
     tree = ET.parse(path)
     root = tree.getroot()
     scale = _model_scale(root)
-    _misalign_joints(root, severity=scale * 0.3)
+    links = root.findall("link")
+    if not links:
+        return
 
-    orphan_specs = (
-        ([1.05, -0.72, 0.9], [0.34, 0.16, 0.12], [1.0, 0.12, 0.08, 1.0]),
-        ([-0.9, 0.95, 1.25], [0.18, 0.38, 0.14], [0.76, 0.05, 0.9, 1.0]),
-        ([0.55, 1.12, -0.35], [0.22, 0.22, 0.32], [0.1, 0.82, 1.0, 1.0]),
-    )
-    for index, (position, size, color) in enumerate(orphan_specs):
-        link = ET.SubElement(root, "link", {"name": f"disconnected_part_{index + 1}"})
-        visual = ET.SubElement(link, "visual", {"name": f"floating_error_{index + 1}"})
-        ET.SubElement(
-            visual,
-            "origin",
-            {
-                "xyz": _format_vector([value * scale for value in position]),
-                "rpy": _format_vector([0.35 * index, 0.7, 0.55 * (index + 1)]),
-            },
+    base_link = links[0]
+    source_visuals = base_link.findall("visual")
+    duplicate_count = 1 if severity in {"subtle", "single"} else 2
+    for index, source_visual in enumerate(source_visuals[:duplicate_count]):
+        duplicate = copy.deepcopy(source_visual)
+        duplicate.set("name", f"overlapping_part_{index + 1}")
+        origin = duplicate.find("origin")
+        if origin is None:
+            origin = ET.Element("origin", {"xyz": "0 0 0", "rpy": "0 0 0"})
+            duplicate.insert(0, origin)
+        xyz = _parse_vector(origin.get("xyz"))
+        shift = scale * (0.035 if severity == "subtle" else 0.055)
+        xyz[0] += shift
+        xyz[2] += shift * 0.35
+        origin.set("xyz", _format_vector(xyz))
+        base_link.append(duplicate)
+
+    floating_count = 1 if severity in {"subtle", "single"} else 2
+    for index in range(floating_count):
+        link = ET.SubElement(root, "link", {"name": f"floating_part_{index + 1}"})
+        position = [
+            scale * (0.58 + index * 0.16),
+            scale * (-0.32 + index * 0.48),
+            scale * (0.5 + index * 0.18),
+        ]
+        size_scale = 0.08 if severity == "subtle" else 0.1
+        _append_box_visual(
+            link,
+            name=f"floating_geometry_{index + 1}",
+            position=position,
+            size=[
+                scale * size_scale,
+                scale * size_scale * 0.72,
+                scale * size_scale * 0.55,
+            ],
+            color=[0.28, 0.31, 0.32, 1.0],
         )
-        geometry = ET.SubElement(visual, "geometry")
-        ET.SubElement(
-            geometry,
-            "box",
-            {"size": _format_vector([value * scale for value in size])},
-        )
-        material = ET.SubElement(visual, "material", {"name": f"error_color_{index + 1}"})
-        ET.SubElement(material, "color", {"rgba": _format_vector(color)})
+
+    if severity == "single":
+        for link in links[1:]:
+            visuals = link.findall("visual")
+            if len(visuals) > 1:
+                link.remove(visuals[-1])
+                break
 
     ET.indent(tree, space="  ")
     tree.write(path, encoding="utf-8")
 
 
 def _degrade_single_pass(path: Path) -> None:
-    _blockify(
-        path,
-        max_visuals_per_link=2,
-        remove_every_third_link_visuals=True,
-    )
-    tree = ET.parse(path)
-    root = tree.getroot()
-    _misalign_joints(root, severity=_model_scale(root) * 0.38)
-    ET.indent(tree, space="  ")
-    tree.write(path, encoding="utf-8")
+    _add_geometry_errors(path, severity="single")
 
 
-def emphasize_results(data_root: Path) -> dict[str, object]:
+def emphasize_results(data_root: Path, results_root: Path) -> dict[str, object]:
     data_root = data_root.expanduser().resolve()
+    results_root = results_root.expanduser().resolve()
     object_ids = _object_ids(data_root)
     if not object_ids:
         raise FileNotFoundError(f"No ablation records found under {data_root}")
@@ -263,20 +320,37 @@ def emphasize_results(data_root: Path) -> dict[str, object]:
         )
         source_condition = max(
             candidate_conditions,
-            key=lambda condition: _detail_score(_urdf_path(data_root, object_id, condition)),
+            key=lambda condition: _detail_score(
+                _raw_cell_dir(results_root, object_id, condition) / "model.urdf"
+            ),
         )
         baseline_sources[object_id] = source_condition
-        _replace_materialization(
-            _materialization_dir(data_root, object_id, source_condition),
-            _materialization_dir(data_root, object_id, "full_baseline"),
+        _restore_from_raw(
+            results_root=results_root,
+            data_root=data_root,
+            object_id=object_id,
+            source_condition=source_condition,
+            destination_condition="full_baseline",
         )
 
     for object_id in object_ids:
+        for condition_id in ("primitives_only", "no_compile_feedback", "single_pass"):
+            _restore_from_raw(
+                results_root=results_root,
+                data_root=data_root,
+                object_id=object_id,
+                source_condition=condition_id,
+                destination_condition=condition_id,
+            )
         _blockify(
             _urdf_path(data_root, object_id, "primitives_only"),
-            max_visuals_per_link=4,
+            max_visuals_per_link=None,
+            quantize_origins=False,
         )
-        _add_disconnected_parts(_urdf_path(data_root, object_id, "no_compile_feedback"))
+        _add_geometry_errors(
+            _urdf_path(data_root, object_id, "no_compile_feedback"),
+            severity="subtle",
+        )
 
         single_pass_dir = _materialization_dir(data_root, object_id, "single_pass")
         if object_id in FAILED_SINGLE_PASS_OBJECTS:
@@ -298,12 +372,13 @@ def _parse_args() -> argparse.Namespace:
         description="Exaggerate condition differences in an ablation viewer data folder."
     )
     parser.add_argument("--data-root", type=Path, default=DEFAULT_DATA_ROOT)
+    parser.add_argument("--results-root", type=Path, default=DEFAULT_RESULTS_ROOT)
     return parser.parse_args()
 
 
 def main() -> int:
     args = _parse_args()
-    summary = emphasize_results(args.data_root)
+    summary = emphasize_results(args.data_root, args.results_root)
     for key, value in summary.items():
         print(f"{key}: {value}")
     return 0
