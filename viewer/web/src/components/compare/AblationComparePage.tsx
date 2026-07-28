@@ -202,9 +202,11 @@ function ConditionCard({
   condition: ConditionDefinition;
   record: RecordSummary | undefined;
 }): JSX.Element {
+  const modelOnly = record?.tags.includes("model-only-package") ?? false;
   const exportSucceeded =
-    record?.materialization_status === "available" && record.tags.includes("export-success");
-  const generationSucceeded = record?.run_status === "success";
+    record?.materialization_status === "available" &&
+    (modelOnly || record.tags.includes("export-success"));
+  const generationSucceeded = modelOnly ? exportSucceeded : record?.run_status === "success";
   const qcSucceeded = record?.tags.includes("qc-success") ?? false;
 
   return (
@@ -240,6 +242,8 @@ function ConditionCard({
               <p className="mt-3 text-[12px] font-semibold text-[#351b1b]">
                 {!record
                   ? "Missing record"
+                  : modelOnly
+                    ? "Model unavailable"
                   : generationSucceeded
                     ? "Compile failed"
                     : "Request failed"}
@@ -250,27 +254,29 @@ function ConditionCard({
         <div className="pointer-events-none absolute inset-x-0 bottom-0 h-12 bg-gradient-to-t from-black/10 to-transparent" />
       </div>
 
-      <footer className="border-t border-white/[0.08] bg-[#101412]">
-        <div className="flex min-h-[42px] flex-wrap items-center gap-1.5 border-b border-white/[0.07] px-3 py-2">
-          <StatusMark success={generationSucceeded} label="Gen" />
-          <StatusMark success={exportSucceeded} label="URDF" />
-          <StatusMark success={qcSucceeded} label="QC" />
-        </div>
-        <div className="grid grid-cols-3">
-          <Metric label="Turns" value={record?.turn_count == null ? "None" : String(record.turn_count)} />
-          <Metric label="Cost" value={formatCost(record?.total_cost_usd ?? null)} />
-          <Metric label="SDK" value={record?.sdk_package ?? "Unknown"} />
-        </div>
-        {record ? (
-          <a
-            href={`/viewer?record=${encodeURIComponent(record.record_id)}`}
-            className="flex h-9 items-center justify-between border-t border-white/[0.07] px-3 font-mono text-[9px] uppercase tracking-[0.1em] text-white/45 transition hover:bg-white/[0.04] hover:text-white/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[var(--condition-accent)]"
-          >
-            Inspect this record
-            <ExternalLink className="size-3" />
-          </a>
-        ) : null}
-      </footer>
+      {modelOnly ? null : (
+        <footer className="border-t border-white/[0.08] bg-[#101412]">
+          <div className="flex min-h-[42px] flex-wrap items-center gap-1.5 border-b border-white/[0.07] px-3 py-2">
+            <StatusMark success={generationSucceeded} label="Gen" />
+            <StatusMark success={exportSucceeded} label="URDF" />
+            <StatusMark success={qcSucceeded} label="QC" />
+          </div>
+          <div className="grid grid-cols-3">
+            <Metric label="Turns" value={record?.turn_count == null ? "None" : String(record.turn_count)} />
+            <Metric label="Cost" value={formatCost(record?.total_cost_usd ?? null)} />
+            <Metric label="SDK" value={record?.sdk_package ?? "Unknown"} />
+          </div>
+          {record ? (
+            <a
+              href={`/viewer?record=${encodeURIComponent(record.record_id)}`}
+              className="flex h-9 items-center justify-between border-t border-white/[0.07] px-3 font-mono text-[9px] uppercase tracking-[0.1em] text-white/45 transition hover:bg-white/[0.04] hover:text-white/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[var(--condition-accent)]"
+            >
+              Inspect this record
+              <ExternalLink className="size-3" />
+            </a>
+          ) : null}
+        </footer>
+      )}
     </article>
   );
 }
@@ -303,6 +309,13 @@ export default function AblationComparePage(): JSX.Element {
     groups.findIndex((group) => group.promptId === selectedPromptId),
   );
   const selectedGroup = groups[selectedIndex] ?? null;
+  const modelOnlyPackage =
+    groups.length > 0 &&
+    groups.every((group) =>
+      Object.values(group.records).every((record) =>
+        record?.tags.includes("model-only-package"),
+      ),
+    );
 
   const selectGroup = (index: number): void => {
     const group = groups[index];
@@ -361,20 +374,22 @@ export default function AblationComparePage(): JSX.Element {
             </h1>
           </div>
 
-          <div className="flex items-center gap-2">
-            <span className="rounded-md border border-white/10 bg-white/[0.04] px-2.5 py-1.5 font-mono text-[9px] uppercase tracking-[0.1em] text-white/45">
-              {groups.length} objects
-            </span>
-            <span className="rounded-md border border-white/10 bg-white/[0.04] px-2.5 py-1.5 font-mono text-[9px] uppercase tracking-[0.1em] text-white/45">
-              {bootstrapQuery.data?.library_records.length ?? 0} cells
-            </span>
-            <a
-              href="/"
-              className="rounded-md border border-white/10 bg-white/[0.04] px-2.5 py-1.5 font-mono text-[9px] uppercase tracking-[0.1em] text-white/55 transition hover:bg-white/[0.08] hover:text-white"
-            >
-              Library viewer
-            </a>
-          </div>
+          {modelOnlyPackage ? null : (
+            <div className="flex items-center gap-2">
+              <span className="rounded-md border border-white/10 bg-white/[0.04] px-2.5 py-1.5 font-mono text-[9px] uppercase tracking-[0.1em] text-white/45">
+                {groups.length} objects
+              </span>
+              <span className="rounded-md border border-white/10 bg-white/[0.04] px-2.5 py-1.5 font-mono text-[9px] uppercase tracking-[0.1em] text-white/45">
+                {bootstrapQuery.data?.library_records.length ?? 0} cells
+              </span>
+              <a
+                href="/"
+                className="rounded-md border border-white/10 bg-white/[0.04] px-2.5 py-1.5 font-mono text-[9px] uppercase tracking-[0.1em] text-white/55 transition hover:bg-white/[0.08] hover:text-white"
+              >
+                Library viewer
+              </a>
+            </div>
+          )}
         </div>
 
         <div className="mt-4 flex items-center gap-2">

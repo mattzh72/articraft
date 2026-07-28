@@ -59,6 +59,35 @@ CELL_EXTRA_FILES = (
     "system_prompt.txt",
 )
 
+MODEL_ASSET_SUFFIXES = frozenset(
+    {
+        ".bin",
+        ".bmp",
+        ".dae",
+        ".glb",
+        ".gltf",
+        ".jpeg",
+        ".jpg",
+        ".mtl",
+        ".obj",
+        ".png",
+        ".stl",
+        ".tga",
+        ".webp",
+    }
+)
+
+MODEL_ONLY_MANIFEST_KEYS = (
+    "schema_version",
+    "record_id",
+    "title",
+    "prompt_preview",
+    "category_slug",
+    "category_title",
+    "label",
+    "tags",
+)
+
 
 @dataclass(slots=True, frozen=True)
 class PackageSummary:
@@ -115,6 +144,22 @@ def _copy_tree(source: Path, destination: Path) -> None:
         shutil.copytree(source, destination)
 
 
+def _copy_model_assets(source: Path, destination: Path) -> None:
+    if not source.is_dir():
+        return
+    for source_path in source.rglob("*"):
+        if not source_path.is_file():
+            continue
+        relative_path = source_path.relative_to(source)
+        if any(part.startswith(".") for part in relative_path.parts):
+            continue
+        if source_path.suffix.lower() not in MODEL_ASSET_SUFFIXES:
+            continue
+        destination_path = destination / relative_path
+        destination_path.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(source_path, destination_path)
+
+
 def _stage_status(evaluation: dict[str, Any], stage: str) -> str | None:
     payload = evaluation.get(stage)
     if not isinstance(payload, dict):
@@ -136,7 +181,12 @@ def _stage_warning(evaluation: dict[str, Any], stage: str) -> CompileWarning | N
     return CompileWarning(code=stage, message=message[:1000])
 
 
-def _write_categories(repo: StorageRepo, manifest: dict[str, Any]) -> None:
+def _write_categories(
+    repo: StorageRepo,
+    manifest: dict[str, Any],
+    *,
+    model_only: bool = False,
+) -> None:
     store = CategoryStore(repo)
     conditions = manifest.get("conditions")
     if not isinstance(conditions, list):
@@ -150,12 +200,12 @@ def _write_categories(repo: StorageRepo, manifest: dict[str, Any]) -> None:
                 schema_version=1,
                 slug=condition_id,
                 title=CATEGORY_TITLES.get(condition_id, _object_title(condition_id)),
-                description=str(condition.get("label") or ""),
+                description="" if model_only else str(condition.get("label") or ""),
             )
         )
 
 
-def _write_cell(
+def _write_full_cell(
     *,
     repo: StorageRepo,
     source_dir: Path,
@@ -362,7 +412,72 @@ def _write_cell(
     return urdf_source.is_file()
 
 
-def _build_package(source_dir: Path, output_dir: Path, *, repo_root: Path) -> PackageSummary:
+def _write_model_only_cell(
+    *,
+    repo: StorageRepo,
+    source_dir: Path,
+    prompt: dict[str, Any],
+    condition: dict[str, Any],
+) -> bool:
+    prompt_id = str(prompt["id"])
+    condition_id = str(condition["id"])
+    cell_id = f"{prompt_id}__{condition_id}"
+    cell_dir = source_dir / "cells" / cell_id
+    if not cell_dir.is_dir():
+        raise FileNotFoundError(f"Experiment cell is missing: {cell_dir}")
+
+    record_id = f"rec_ablation_{cell_id}"
+    condition_title = CATEGORY_TITLES.get(condition_id, _object_title(condition_id))
+    object_title = _object_title(prompt_id)
+    repo.write_json(
+        repo.layout.record_metadata_path(record_id),
+        {
+            "schema_version": 3,
+            "record_id": record_id,
+            "category_slug": condition_id,
+            "category_title": condition_title,
+            "label": condition_title,
+            "tags": ["model-only-package"],
+            "display": {
+                "title": f"{object_title} · {condition_title}",
+                "prompt_preview": "",
+            },
+        },
+    )
+
+    urdf_source = cell_dir / "model.urdf"
+    if not urdf_source.is_file():
+        return False
+
+    materialization_dir = repo.layout.record_materialization_dir(record_id)
+    materialization_dir.mkdir(parents=True, exist_ok=True)
+    shutil.copy2(urdf_source, materialization_dir / "model.urdf")
+    for asset_group in ("meshes", "glb", "viewer"):
+        _copy_model_assets(
+            cell_dir / "assets" / asset_group,
+            materialization_dir / "assets" / asset_group,
+        )
+    return True
+
+
+def _scrub_model_only_manifest(repo: StorageRepo, rows: list[dict[str, Any]]) -> None:
+    scrubbed_rows = [
+        {key: row[key] for key in MODEL_ONLY_MANIFEST_KEYS if key in row} for row in rows
+    ]
+    manifest_text = "".join(
+        json.dumps(row, separators=(",", ":"), sort_keys=True) + "\n"
+        for row in sorted(scrubbed_rows, key=lambda item: str(item["record_id"]))
+    )
+    repo.layout.records_manifest_path.write_text(manifest_text, encoding="utf-8")
+
+
+def _build_package(
+    source_dir: Path,
+    output_dir: Path,
+    *,
+    repo_root: Path,
+    model_only: bool = False,
+) -> PackageSummary:
     manifest = _read_json(source_dir / "manifest.json")
     run_id = str(manifest["run_id"])
     prompts_raw = manifest.get("prompt_metadata", {}).get("prompts")
@@ -377,8 +492,8 @@ def _build_package(source_dir: Path, output_dir: Path, *, repo_root: Path) -> Pa
     conditions = {str(item["id"]): item for item in conditions_raw if isinstance(item, dict)}
     repo = StorageRepo(repo_root, data_root=output_dir)
     repo.ensure_layout()
-    _write_categories(repo, manifest)
-    git_commit = _git_commit(repo_root)
+    _write_categories(repo, manifest, model_only=model_only)
+    git_commit = None if model_only else _git_commit(repo_root)
 
     materialized_count = 0
     for schedule_index, cell in enumerate(schedule):
@@ -386,8 +501,15 @@ def _build_package(source_dir: Path, output_dir: Path, *, repo_root: Path) -> Pa
             raise TypeError("Every schedule item must be an object")
         prompt_id = str(cell["prompt_id"])
         condition_id = str(cell["condition_id"])
-        materialized_count += int(
-            _write_cell(
+        if model_only:
+            materialized = _write_model_only_cell(
+                repo=repo,
+                source_dir=source_dir,
+                prompt=prompts[prompt_id],
+                condition=conditions[condition_id],
+            )
+        else:
+            materialized = _write_full_cell(
                 repo=repo,
                 source_dir=source_dir,
                 manifest=manifest,
@@ -396,9 +518,11 @@ def _build_package(source_dir: Path, output_dir: Path, *, repo_root: Path) -> Pa
                 schedule_index=schedule_index,
                 git_commit=git_commit,
             )
-        )
+        materialized_count += int(materialized)
 
     rows = rebuild_manifest(repo)
+    if model_only:
+        _scrub_model_only_manifest(repo, rows)
     errors = validate_manifest(repo, require_records=True)
     if errors:
         raise ValueError("Packaged viewer data is invalid:\n" + "\n".join(errors))
@@ -409,7 +533,8 @@ def _build_package(source_dir: Path, output_dir: Path, *, repo_root: Path) -> Pa
         materialized_count=materialized_count,
         failed_export_count=len(rows) - materialized_count,
     )
-    repo.write_json(output_dir / "package_summary.json", summary.to_dict())
+    if not model_only:
+        repo.write_json(output_dir / "package_summary.json", summary.to_dict())
     return summary
 
 
@@ -418,6 +543,7 @@ def package_run(
     output_dir: Path,
     *,
     force: bool = False,
+    model_only: bool = False,
     repo_root: Path = REPO_ROOT,
 ) -> PackageSummary:
     source_dir = source_dir.expanduser().resolve()
@@ -438,7 +564,12 @@ def package_run(
     output_dir.parent.mkdir(parents=True, exist_ok=True)
     temporary_dir = output_dir.parent / f".{output_dir.name}.tmp-{uuid.uuid4().hex}"
     try:
-        summary = _build_package(source_dir, temporary_dir, repo_root=repo_root)
+        summary = _build_package(
+            source_dir,
+            temporary_dir,
+            repo_root=repo_root,
+            model_only=model_only,
+        )
         if output_dir.exists():
             shutil.rmtree(output_dir)
         temporary_dir.replace(output_dir)
@@ -453,9 +584,10 @@ def package_run(
         materialized_count=summary.materialized_count,
         failed_export_count=summary.failed_export_count,
     )
-    StorageRepo(repo_root, data_root=output_dir).write_json(
-        output_dir / "package_summary.json", final_summary.to_dict()
-    )
+    if not model_only:
+        StorageRepo(repo_root, data_root=output_dir).write_json(
+            output_dir / "package_summary.json", final_summary.to_dict()
+        )
     return final_summary
 
 
@@ -467,6 +599,11 @@ def _parse_args() -> argparse.Namespace:
     parser.add_argument("--source-dir", type=Path)
     parser.add_argument("--output-dir", type=Path)
     parser.add_argument("--force", action="store_true")
+    parser.add_argument(
+        "--model-only",
+        action="store_true",
+        help="Package only URDFs, render assets, and minimal comparison labels.",
+    )
     return parser.parse_args()
 
 
@@ -474,7 +611,12 @@ def main() -> int:
     args = _parse_args()
     source_dir = args.source_dir or DEFAULT_RESULTS_ROOT / args.run_id
     output_dir = args.output_dir or DEFAULT_VIEWER_ROOT / args.run_id
-    summary = package_run(source_dir, output_dir, force=args.force)
+    summary = package_run(
+        source_dir,
+        output_dir,
+        force=args.force,
+        model_only=args.model_only,
+    )
     print(json.dumps(summary.to_dict(), indent=2))
     return 0
 
