@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState, type JSX } from "react";
+import { useCallback, useEffect, useMemo, useState, type JSX } from "react";
 import { useQuery } from "@tanstack/react-query";
 import {
   ArrowLeft,
@@ -8,9 +8,12 @@ import {
   RefreshCw,
   X,
 } from "lucide-react";
+import type { Object3D } from "three";
 
 import { SceneCanvas } from "@/components/viewer3d/SceneCanvas";
+import { useJointController } from "@/components/viewer3d/useJointController";
 import { defaultRenderOptions } from "@/components/viewer3d/useRenderOptions";
+import type { UrdfJoint, UrdfSpec } from "@/components/viewer3d/urdf-parser";
 import { formatCost } from "@/lib/viewer-format";
 import { bootstrapQueryOptions } from "@/lib/viewer-queries";
 import type { RecordSummary } from "@/lib/types";
@@ -79,14 +82,158 @@ const PROMPT_ORDER = [
 ];
 
 const EMPTY_JOINT_POSE = new Map<string, number>();
+const ARTICULATION_MIN_CYCLE_SECONDS = 3.2;
+const ARTICULATION_LINEAR_SPEED_MPS = 0.08;
+const ARTICULATION_ANGULAR_SPEED_RAD_PER_SECOND = Math.PI / 5;
 const COMPARISON_RENDER_OPTIONS = {
   ...defaultRenderOptions,
   showEdges: true,
   showGrid: true,
   doubleSided: true,
   fancyGraphics: false,
-  autoAnimate: false,
+  autoAnimate: true,
 };
+
+type JointMotion = {
+  joint: UrdfJoint;
+  cycleSeconds: number;
+  phaseOffset: number;
+};
+
+function isArticulatedJoint(joint: UrdfJoint): boolean {
+  return (
+    !joint.mimic &&
+    (joint.type === "revolute" ||
+      joint.type === "continuous" ||
+      joint.type === "prismatic")
+  );
+}
+
+function jointTravelSpan(joint: UrdfJoint): number {
+  if (joint.type === "continuous") {
+    return Math.PI * 2;
+  }
+
+  const lower = joint.limit?.lower;
+  const upper = joint.limit?.upper;
+  if (
+    typeof lower === "number" &&
+    Number.isFinite(lower) &&
+    typeof upper === "number" &&
+    Number.isFinite(upper) &&
+    upper > lower
+  ) {
+    return upper - lower;
+  }
+  return joint.type === "prismatic" ? 0.24 : (Math.PI * 2) / 3;
+}
+
+function jointPhaseOffset(jointName: string, index: number): number {
+  let hash = 0;
+  for (const character of jointName) {
+    hash = (hash * 33 + character.charCodeAt(0)) % 4096;
+  }
+  return ((hash / 4096) + index * 0.61803398875) % 1;
+}
+
+function buildJointMotions(spec: UrdfSpec): JointMotion[] {
+  return spec.joints.filter(isArticulatedJoint).map((joint, index) => {
+    const span = jointTravelSpan(joint);
+    const speed =
+      joint.type === "prismatic"
+        ? ARTICULATION_LINEAR_SPEED_MPS
+        : ARTICULATION_ANGULAR_SPEED_RAD_PER_SECOND;
+    return {
+      joint,
+      cycleSeconds: Math.max(ARTICULATION_MIN_CYCLE_SECONDS, (span * 2) / speed),
+      phaseOffset: jointPhaseOffset(joint.name, index),
+    };
+  });
+}
+
+function articulatedJointValue(joint: UrdfJoint, phase: number): number {
+  if (joint.type === "continuous") {
+    return ((phase * Math.PI * 2 + Math.PI) % (Math.PI * 2)) - Math.PI;
+  }
+
+  const lower = joint.limit?.lower;
+  const upper = joint.limit?.upper;
+  if (
+    typeof lower === "number" &&
+    Number.isFinite(lower) &&
+    typeof upper === "number" &&
+    Number.isFinite(upper) &&
+    upper > lower
+  ) {
+    const normalized = 0.5 - 0.5 * Math.cos(phase * Math.PI * 2);
+    return lower + (upper - lower) * normalized;
+  }
+
+  const wave = Math.sin(phase * Math.PI * 2);
+  return joint.type === "prismatic" ? wave * 0.12 : wave * (Math.PI / 3);
+}
+
+function AutoArticulatingScene({
+  record,
+}: {
+  record: RecordSummary;
+}): JSX.Element {
+  const [urdfSpec, setUrdfSpec] = useState<UrdfSpec | null>(null);
+  const [jointNodes, setJointNodes] = useState<Map<string, Object3D> | null>(null);
+  const { applyJointValues } = useJointController(jointNodes, urdfSpec);
+
+  const handleUrdfSpecChange = useCallback(
+    (spec: UrdfSpec | null, nodes: Map<string, Object3D> | null) => {
+      setUrdfSpec(spec);
+      setJointNodes(nodes);
+    },
+    [],
+  );
+
+  useEffect(() => {
+    if (
+      !urdfSpec ||
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches
+    ) {
+      return;
+    }
+
+    const motions = buildJointMotions(urdfSpec);
+    if (motions.length === 0) {
+      return;
+    }
+
+    let frameId = 0;
+    const tick = (now: number): void => {
+      const elapsedSeconds = now / 1000;
+      const values = new Map<string, number>();
+      for (const motion of motions) {
+        const phase =
+          ((elapsedSeconds / motion.cycleSeconds) + motion.phaseOffset) % 1;
+        values.set(motion.joint.name, articulatedJointValue(motion.joint, phase));
+      }
+      applyJointValues(values);
+      frameId = requestAnimationFrame(tick);
+    };
+
+    frameId = requestAnimationFrame(tick);
+    return () => {
+      cancelAnimationFrame(frameId);
+      applyJointValues(EMPTY_JOINT_POSE);
+    };
+  }, [applyJointValues, urdfSpec]);
+
+  return (
+    <SceneCanvas
+      baseFileUrl={`/api/records/${record.record_id}/files`}
+      assetRevisionKey={record.viewer_asset_updated_at}
+      selectionKey={record.record_id}
+      jointPoseSignal={EMPTY_JOINT_POSE}
+      renderOptions={COMPARISON_RENDER_OPTIONS}
+      onUrdfSpecChange={handleUrdfSpecChange}
+    />
+  );
+}
 
 function displayName(promptId: string): string {
   const words = promptId.replaceAll("_", " ");
@@ -224,15 +371,9 @@ function ConditionCard({
         </h2>
       </header>
 
-      <div className="relative min-h-[300px] flex-1 bg-[#edf0ec]">
+      <div className="relative min-h-[220px] flex-1 bg-[#edf0ec]">
         {record && exportSucceeded ? (
-          <SceneCanvas
-            baseFileUrl={`/api/records/${record.record_id}/files`}
-            assetRevisionKey={record.viewer_asset_updated_at}
-            selectionKey={record.record_id}
-            jointPoseSignal={EMPTY_JOINT_POSE}
-            renderOptions={COMPARISON_RENDER_OPTIONS}
-          />
+          <AutoArticulatingScene record={record} />
         ) : (
           <div className="absolute inset-0 flex items-center justify-center bg-[repeating-linear-gradient(135deg,#edf0ec,#edf0ec_12px,#e6e9e5_12px,#e6e9e5_24px)] p-6">
             <div className="max-w-[220px] rounded-xl border border-rose-900/15 bg-white/90 px-5 py-4 text-center shadow-sm backdrop-blur">
@@ -454,7 +595,7 @@ export default function AblationComparePage(): JSX.Element {
         className="custom-scrollbar relative z-10 min-h-0 flex-1 overflow-auto p-4"
         aria-label={selectedGroup ? `Comparison for ${selectedGroup.label}` : "Comparison"}
       >
-        <div className="grid h-full min-h-[590px] min-w-[980px] grid-cols-5 gap-2">
+        <div className="grid h-full min-h-[590px] min-w-[900px] grid-cols-3 grid-rows-2 gap-3">
           {CONDITIONS.map((condition) => (
             <ConditionCard
               key={condition.id}
