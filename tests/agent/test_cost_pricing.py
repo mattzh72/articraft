@@ -197,6 +197,22 @@ def test_gpt56_sol_pricing_uses_explicit_model_rates(model_id: str) -> None:
     }
 
 
+def test_gpt56_luna_pricing_uses_explicit_model_rates() -> None:
+    pricing = pricing_for_provider_model("openai", "gpt-5.6-luna")
+
+    assert pricing == {
+        "input_uncached": 1.00,
+        "input_cached": 0.10,
+        "input_cache_write": 1.25,
+        "output": 6.00,
+        "prompt_tier_threshold_tokens": 272_000,
+        "input_uncached_above_threshold": 2.00,
+        "input_cached_above_threshold": 0.20,
+        "input_cache_write_above_threshold": 2.50,
+        "output_above_threshold": 9.00,
+    }
+
+
 def test_gpt56_sol_pricing_calculates_cache_writes_below_threshold() -> None:
     pricing = pricing_for_provider_model("openai", "gpt-5.6-sol")
     assert pricing is not None

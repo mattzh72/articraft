@@ -22,13 +22,14 @@ from agent.harness import ArticraftAgent
 from agent.models import AgentResult
 from agent.prompts import load_system_prompt_text
 from agent.providers.openai import OpenAILLM, openai_api_keys_from_env
+from articraft.values import THINKING_LEVEL_VALUES
 from sdk._profiles import get_sdk_profile
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 EXPERIMENT_DIR = Path(__file__).resolve().parent
 DEFAULT_OUTPUT_ROOT = REPO_ROOT / "performance" / "results" / "agent_component_ablations"
-MODEL = "gpt-5.6-sol"
-THINKING_LEVEL = "high"
+DEFAULT_MODEL = "gpt-5.6-sol"
+DEFAULT_THINKING_LEVEL = "high"
 PROMPT_FILE = EXPERIMENT_DIR / "base_prompts.json"
 BASE_SYSTEM_PROMPT = (
     REPO_ROOT / "agent" / "prompts" / "generated" / ("designer_system_prompt_openai.txt")
@@ -357,6 +358,8 @@ async def _run_iterative(
     system_prompt_path: Path,
     max_turns: int | None,
     max_cost_usd: float | None,
+    model: str,
+    thinking_level: str,
 ) -> dict[str, Any]:
     profile = get_sdk_profile(condition.sdk_package)
     script_path = cell_dir / "main.py"
@@ -364,8 +367,8 @@ async def _run_iterative(
     agent = ArticraftAgent(
         file_path=str(script_path),
         provider="openai",
-        model_id=MODEL,
-        thinking_level=THINKING_LEVEL,
+        model_id=model,
+        thinking_level=thinking_level,
         max_turns=max_turns,
         max_cost_usd=max_cost_usd,
         system_prompt_path=str(system_prompt_path),
@@ -394,8 +397,10 @@ async def _run_single_pass(
     cell_dir: Path,
     prompt: dict[str, str],
     system_prompt: str,
+    model: str,
+    thinking_level: str,
 ) -> dict[str, Any]:
-    client = OpenAILLM(model_id=MODEL, thinking_level=THINKING_LEVEL)
+    client = OpenAILLM(model_id=model, thinking_level=thinking_level)
     input_text = _single_pass_input(prompt)
     (cell_dir / "single_pass_input.txt").write_text(input_text, encoding="utf-8")
     try:
@@ -432,6 +437,8 @@ async def _run_cell(
     condition: Condition,
     max_turns: int | None,
     max_cost_usd: float | None,
+    model: str,
+    thinking_level: str,
     force: bool,
 ) -> dict[str, Any]:
     cell_id = _cell_id(prompt["id"], condition.id)
@@ -459,6 +466,8 @@ async def _run_cell(
                 cell_dir=cell_dir,
                 prompt=prompt,
                 system_prompt=system_prompt,
+                model=model,
+                thinking_level=thinking_level,
             )
         else:
             generation = await _run_iterative(
@@ -468,6 +477,8 @@ async def _run_cell(
                 system_prompt_path=system_prompt_path,
                 max_turns=max_turns,
                 max_cost_usd=max_cost_usd,
+                model=model,
+                thinking_level=thinking_level,
             )
         _write_json(cell_dir / "generation_result.json", generation)
         evaluation = await asyncio.to_thread(
@@ -523,6 +534,8 @@ async def _run_schedule(
     concurrency: int,
     max_turns: int | None,
     max_cost_usd: float | None,
+    model: str,
+    thinking_level: str,
     force: bool,
 ) -> list[dict[str, Any]]:
     semaphore = asyncio.Semaphore(concurrency)
@@ -541,6 +554,8 @@ async def _run_schedule(
                 condition=condition,
                 max_turns=max_turns,
                 max_cost_usd=max_cost_usd,
+                model=model,
+                thinking_level=thinking_level,
                 force=force,
             )
             async with result_lock:
@@ -559,7 +574,14 @@ def _parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser.add_argument("--run-id", help="Reusable output run ID. Defaults to a UTC timestamp.")
     parser.add_argument("--output-root", type=Path, default=DEFAULT_OUTPUT_ROOT)
     parser.add_argument("--concurrency", type=int, default=4)
+    parser.add_argument("--model", default=DEFAULT_MODEL)
+    parser.add_argument(
+        "--thinking-level",
+        choices=THINKING_LEVEL_VALUES,
+        default=DEFAULT_THINKING_LEVEL,
+    )
     parser.add_argument("--seed", type=int, default=20260727)
+    parser.add_argument("--prompt", action="append")
     parser.add_argument("--condition", action="append", choices=sorted(CONDITIONS_BY_ID))
     parser.add_argument("--limit", type=int)
     parser.add_argument("--max-turns", type=int)
@@ -577,6 +599,13 @@ def main(argv: list[str] | None = None) -> int:
         raise ValueError("--limit must be at least 1")
 
     prompt_metadata, prompts = _load_prompts()
+    if args.prompt:
+        requested_prompt_ids = set(args.prompt)
+        known_prompt_ids = {prompt["id"] for prompt in prompts}
+        unknown_prompt_ids = requested_prompt_ids - known_prompt_ids
+        if unknown_prompt_ids:
+            raise ValueError(f"Unknown prompt IDs: {', '.join(sorted(unknown_prompt_ids))}")
+        prompts = [prompt for prompt in prompts if prompt["id"] in requested_prompt_ids]
     condition_ids = args.condition or [condition.id for condition in CONDITIONS]
     conditions = [CONDITIONS_BY_ID[condition_id] for condition_id in condition_ids]
     schedule = _schedule(prompts, conditions, seed=args.seed)
@@ -592,8 +621,8 @@ def main(argv: list[str] | None = None) -> int:
         "do_not_merge": True,
         "created_at": _now(),
         "run_id": run_id,
-        "model": MODEL,
-        "thinking_level": THINKING_LEVEL,
+        "model": args.model,
+        "thinking_level": args.thinking_level,
         "seed": args.seed,
         "concurrency": args.concurrency,
         "max_turns": args.max_turns,
@@ -641,6 +670,8 @@ def main(argv: list[str] | None = None) -> int:
             concurrency=args.concurrency,
             max_turns=args.max_turns,
             max_cost_usd=args.max_cost_usd,
+            model=args.model,
+            thinking_level=args.thinking_level,
             force=args.force,
         )
     )

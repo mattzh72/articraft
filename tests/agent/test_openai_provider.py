@@ -123,6 +123,17 @@ def test_openai_sol_context_window_pressure_uses_full_context_and_pricing_thresh
     assert pressure.hard_pressure_tokens == 272_000
 
 
+def test_openai_luna_context_window_pressure_uses_full_context_and_pricing_threshold() -> None:
+    provider = OpenAILLM(model_id="gpt-5.6-luna", dry_run=True)
+
+    pressure = provider.context_window_pressure({"prompt_tokens": 262_500})
+
+    assert pressure.max_context_tokens == 1_050_000
+    assert pressure.remaining_context_tokens == 787_500
+    assert pressure.pressure_ratio == 0.25
+    assert pressure.hard_pressure_tokens == 272_000
+
+
 def test_generate_with_tools_only_retries_without_reasoning_summary_for_supported_error(
     caplog: pytest.LogCaptureFixture,
 ) -> None:

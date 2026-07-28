@@ -73,6 +73,18 @@ OPENAI_GPT_5_6_SOL_PRICING: dict[str, float] = {
     "output_above_threshold": 45.00,
 }
 
+OPENAI_GPT_5_6_LUNA_PRICING: dict[str, float] = {
+    "input_uncached": 1.00,
+    "input_cached": 0.10,
+    "input_cache_write": 1.25,
+    "output": 6.00,
+    "prompt_tier_threshold_tokens": 272_000,
+    "input_uncached_above_threshold": 2.00,
+    "input_cached_above_threshold": 0.20,
+    "input_cache_write_above_threshold": 2.50,
+    "output_above_threshold": 9.00,
+}
+
 ANTHROPIC_OPUS_4_7_PRICING: dict[str, float] = {
     "input_uncached": 5.00,
     "input_cached": 0.50,
@@ -394,6 +406,10 @@ def is_gpt_5_6_sol_model(model_id: str) -> bool:
     return normalized == "gpt-5.6" or normalized.startswith("gpt-5.6-sol")
 
 
+def is_gpt_5_6_luna_model(model_id: str) -> bool:
+    return model_id.strip().lower().startswith("gpt-5.6-luna")
+
+
 def is_claude_opus_4_7_model(model_id: str) -> bool:
     return model_id.strip().lower().startswith("claude-opus-4-7")
 
@@ -452,6 +468,8 @@ def pricing_for_provider_model(provider: str, model_id: str) -> dict[str, float]
         return GEMINI_3_PRO_PRICING
     if provider_norm is ProviderName.OPENAI and is_gpt_5_6_sol_model(model_id):
         return OPENAI_GPT_5_6_SOL_PRICING
+    if provider_norm is ProviderName.OPENAI and is_gpt_5_6_luna_model(model_id):
+        return OPENAI_GPT_5_6_LUNA_PRICING
     if provider_norm is ProviderName.OPENAI and is_gpt_5_5_model(model_id):
         return OPENAI_GPT_5_5_PRICING
     if provider_norm is ProviderName.OPENAI and is_gpt_5_4_model(model_id):
