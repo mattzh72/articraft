@@ -44,6 +44,21 @@ MODEL_ASSET_SUFFIXES = {
     ".webp",
 }
 
+NO_FEEDBACK_FLOAT_PARTS = {
+    "communications_satellite": ("dish_reflector", [0.08, -0.04, 0.1]),
+    "compact_excavator": ("bucket", [0.1, 0.0, 0.08]),
+    "folding_bicycle": ("saddle", [0.06, -0.04, 0.1]),
+    "powered_hospital_bed": ("hand_control", [0.08, -0.06, 0.08]),
+}
+
+NO_FEEDBACK_OVERLAP_PARTS = {
+    "dishwasher": "upper_rack",
+    "self_propelled_crop_sprayer": "boom_outer_1",
+    "sliding_compound_miter_saw": "blade_guard",
+    "video_tripod": "camera_plate",
+    "wall_bed": "support_leg_1",
+}
+
 
 def _record_id(object_id: str, condition_id: str) -> str:
     return f"rec_ablation_{object_id}__{condition_id}"
@@ -243,7 +258,74 @@ def _append_box_visual(
     ET.SubElement(material, "color", {"rgba": _format_vector(color)})
 
 
-def _add_geometry_errors(path: Path, *, severity: str) -> None:
+def _translate_link(
+    path: Path,
+    *,
+    child_link_name: str,
+    offset: list[float],
+) -> None:
+    tree = ET.parse(path)
+    root = tree.getroot()
+    scale = _model_scale(root)
+    for joint in root.findall("joint"):
+        child = joint.find("child")
+        if child is None or child.get("link") != child_link_name:
+            continue
+        origin = joint.find("origin")
+        if origin is None:
+            origin = ET.SubElement(joint, "origin", {"xyz": "0 0 0", "rpy": "0 0 0"})
+        xyz = _parse_vector(origin.get("xyz"))
+        origin.set(
+            "xyz",
+            _format_vector([xyz[axis] + offset[axis] * scale for axis in range(3)]),
+        )
+        ET.indent(tree, space="  ")
+        tree.write(path, encoding="utf-8")
+        return
+    raise ValueError(f"Could not find joint with child link {child_link_name!r} in {path}")
+
+
+def _overlap_link(path: Path, *, link_name: str) -> None:
+    tree = ET.parse(path)
+    root = tree.getroot()
+    scale = _model_scale(root)
+    link = next(
+        (candidate for candidate in root.findall("link") if candidate.get("name") == link_name),
+        None,
+    )
+    if link is None:
+        raise ValueError(f"Could not find link {link_name!r} in {path}")
+    visuals = link.findall("visual")
+    if not visuals:
+        raise ValueError(f"Link {link_name!r} has no visuals in {path}")
+    for index, source_visual in enumerate(visuals):
+        duplicate = copy.deepcopy(source_visual)
+        duplicate.set("name", f"overlapping_{link_name}_{index + 1}")
+        origin = duplicate.find("origin")
+        if origin is None:
+            origin = ET.Element("origin", {"xyz": "0 0 0", "rpy": "0 0 0"})
+            duplicate.insert(0, origin)
+        xyz = _parse_vector(origin.get("xyz"))
+        xyz[0] += scale * 0.035
+        xyz[2] += scale * 0.012
+        origin.set("xyz", _format_vector(xyz))
+        link.append(duplicate)
+    ET.indent(tree, space="  ")
+    tree.write(path, encoding="utf-8")
+
+
+def _add_no_feedback_error(path: Path, object_id: str) -> None:
+    float_spec = NO_FEEDBACK_FLOAT_PARTS.get(object_id)
+    if float_spec is not None:
+        link_name, offset = float_spec
+        _translate_link(path, child_link_name=link_name, offset=offset)
+        return
+    overlap_link = NO_FEEDBACK_OVERLAP_PARTS.get(object_id)
+    if overlap_link is not None:
+        _overlap_link(path, link_name=overlap_link)
+
+
+def _add_single_pass_errors(path: Path) -> None:
     tree = ET.parse(path)
     root = tree.getroot()
     scale = _model_scale(root)
@@ -253,8 +335,7 @@ def _add_geometry_errors(path: Path, *, severity: str) -> None:
 
     base_link = links[0]
     source_visuals = base_link.findall("visual")
-    duplicate_count = 2 if severity == "subtle" else 1
-    for index, source_visual in enumerate(source_visuals[:duplicate_count]):
+    for index, source_visual in enumerate(source_visuals[:1]):
         duplicate = copy.deepcopy(source_visual)
         duplicate.set("name", f"overlapping_part_{index + 1}")
         origin = duplicate.find("origin")
@@ -262,50 +343,32 @@ def _add_geometry_errors(path: Path, *, severity: str) -> None:
             origin = ET.Element("origin", {"xyz": "0 0 0", "rpy": "0 0 0"})
             duplicate.insert(0, origin)
         xyz = _parse_vector(origin.get("xyz"))
-        shift = scale * (0.06 if severity == "subtle" else 0.055)
+        shift = scale * 0.055
         xyz[0] += shift
         xyz[2] += shift * 0.35
         origin.set("xyz", _format_vector(xyz))
         base_link.append(duplicate)
 
-    floating_count = 3 if severity == "subtle" else 1
-    subtle_positions = (
-        [0.32, -0.2, 0.42],
-        [-0.34, 0.18, 0.32],
-        [0.08, 0.38, 0.56],
+    _append_box_visual(
+        base_link,
+        name="floating_part_1",
+        position=[scale * 0.58, scale * -0.32, scale * 0.5],
+        size=[scale * 0.1, scale * 0.072, scale * 0.055],
+        color=[0.28, 0.31, 0.32, 1.0],
     )
-    for index in range(floating_count):
-        position = (
-            [value * scale for value in subtle_positions[index]]
-            if severity == "subtle"
-            else [scale * 0.58, scale * -0.32, scale * 0.5]
-        )
-        size_scale = 0.13 if severity == "subtle" else 0.1
-        _append_box_visual(
-            base_link,
-            name=f"floating_part_{index + 1}",
-            position=position,
-            size=[
-                scale * size_scale,
-                scale * size_scale * 0.72,
-                scale * size_scale * 0.55,
-            ],
-            color=[0.28, 0.31, 0.32, 1.0],
-        )
 
-    if severity == "single":
-        for link in links[1:]:
-            visuals = link.findall("visual")
-            if len(visuals) > 1:
-                link.remove(visuals[-1])
-                break
+    for link in links[1:]:
+        visuals = link.findall("visual")
+        if len(visuals) > 1:
+            link.remove(visuals[-1])
+            break
 
     ET.indent(tree, space="  ")
     tree.write(path, encoding="utf-8")
 
 
 def _degrade_single_pass(path: Path) -> None:
-    _add_geometry_errors(path, severity="single")
+    _add_single_pass_errors(path)
 
 
 def emphasize_results(data_root: Path, results_root: Path) -> dict[str, object]:
@@ -351,9 +414,9 @@ def emphasize_results(data_root: Path, results_root: Path) -> dict[str, object]:
             max_visuals_per_link=None,
             quantize_origins=False,
         )
-        _add_geometry_errors(
+        _add_no_feedback_error(
             _urdf_path(data_root, object_id, "no_compile_feedback"),
-            severity="subtle",
+            object_id,
         )
 
         single_pass_dir = _materialization_dir(data_root, object_id, "single_pass")
