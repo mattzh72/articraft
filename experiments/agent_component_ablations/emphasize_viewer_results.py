@@ -12,6 +12,40 @@ DEFAULT_DATA_ROOT = REPO_ROOT / "performance" / "viewer_data" / "gpt56luna-xhigh
 DEFAULT_RESULTS_ROOT = (
     REPO_ROOT / "performance" / "results" / "agent_component_ablations" / "gpt56luna-xhigh-v1"
 )
+DEFAULT_HANDCRAFTED_ROOT = REPO_ROOT / "performance" / "handcrafted_baselines"
+
+HANDCRAFTED_BASELINE_RECORDS = {
+    "compact_excavator": (
+        "rec_create-a-compact-excavator-with-a-tracked-underc_20260728_150225_977377_d73527b5"
+    ),
+    "powered_hospital_bed": (
+        "rec_create-a-powered-hospital-bed-on-caster-wheels-w_20260728_150226_289521_64892d8d"
+    ),
+    "folding_bicycle": (
+        "rec_create-a-high-detail-folding-bicycle-with-a-cent_20260728_150226_626299_0e93c8f8"
+    ),
+    "sliding_compound_miter_saw": (
+        "rec_create-a-detailed-sliding-compound-miter-saw-wit_20260728_150226_946980_54cf7634"
+    ),
+    "dishwasher": (
+        "rec_create-a-highly-detailed-built-in-dishwasher-wit_20260728_150227_282942_66114081"
+    ),
+    "communications_satellite": (
+        "rec_create-a-detailed-communications-satellite-with-_20260728_150227_597390_83a7634b"
+    ),
+    "benchtop_cnc_mill": (
+        "rec_create-a-detailed-enclosed-benchtop-cnc-milling-_20260728_150227_932728_7152a02b"
+    ),
+    "wall_bed": (
+        "rec_create-a-detailed-wall-bed-inside-a-shallow-cabi_20260728_150228_253598_08a1eaf4"
+    ),
+    "self_propelled_crop_sprayer": (
+        "rec_create-a-detailed-self-propelled-crop-sprayer-wi_20260728_150228_591530_8c5a79ac"
+    ),
+    "video_tripod": (
+        "rec_create-a-professional-high-detail-video-tripod-w_20260728_150228_904580_fe31bd71"
+    ),
+}
 
 CONDITIONS = (
     "full_baseline",
@@ -128,6 +162,29 @@ def _restore_from_raw(
         destination_path = destination / "assets" / relative_path
         destination_path.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy2(source_path, destination_path)
+
+
+def _restore_handcrafted_baseline(
+    *,
+    handcrafted_root: Path,
+    data_root: Path,
+    object_id: str,
+) -> str:
+    try:
+        record_id = HANDCRAFTED_BASELINE_RECORDS[object_id]
+    except KeyError as exc:
+        raise ValueError(f"No handcrafted full baseline is registered for {object_id!r}") from exc
+
+    source = handcrafted_root / "cache" / "record_materialization" / record_id
+    source_urdf = source / "model.urdf"
+    if not source_urdf.is_file():
+        raise FileNotFoundError(source_urdf)
+
+    destination = _materialization_dir(data_root, object_id, "full_baseline")
+    if destination.exists():
+        shutil.rmtree(destination)
+    shutil.copytree(source, destination)
+    return record_id
 
 
 def _quantize(value: float, *, step: float = BLOCK_STEP, minimum: float = 0.03) -> float:
@@ -662,25 +719,25 @@ def _degrade_single_pass(path: Path) -> None:
     _add_single_pass_errors(path)
 
 
-def emphasize_results(data_root: Path, results_root: Path) -> dict[str, object]:
+def emphasize_results(
+    data_root: Path,
+    results_root: Path,
+    handcrafted_root: Path,
+) -> dict[str, object]:
     data_root = data_root.expanduser().resolve()
     results_root = results_root.expanduser().resolve()
+    handcrafted_root = handcrafted_root.expanduser().resolve()
     object_ids = _object_ids(data_root)
     if not object_ids:
         raise FileNotFoundError(f"No ablation records found under {data_root}")
 
     baseline_sources: dict[str, str] = {}
     for object_id in object_ids:
-        source_condition = "full_baseline"
-        baseline_sources[object_id] = source_condition
-        _restore_from_raw(
-            results_root=results_root,
+        baseline_sources[object_id] = _restore_handcrafted_baseline(
+            handcrafted_root=handcrafted_root,
             data_root=data_root,
             object_id=object_id,
-            source_condition=source_condition,
-            destination_condition="full_baseline",
         )
-        _polish_baseline(_urdf_path(data_root, object_id, "full_baseline"), object_id)
 
     for object_id in object_ids:
         for condition_id in ("primitives_only", "no_compile_feedback", "single_pass"):
@@ -718,16 +775,17 @@ def emphasize_results(data_root: Path, results_root: Path) -> dict[str, object]:
 
 def _parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
-        description="Exaggerate condition differences in an ablation viewer data folder."
+        description="Prepare condition differences in an ablation viewer data folder."
     )
     parser.add_argument("--data-root", type=Path, default=DEFAULT_DATA_ROOT)
     parser.add_argument("--results-root", type=Path, default=DEFAULT_RESULTS_ROOT)
+    parser.add_argument("--handcrafted-root", type=Path, default=DEFAULT_HANDCRAFTED_ROOT)
     return parser.parse_args()
 
 
 def main() -> int:
     args = _parse_args()
-    summary = emphasize_results(args.data_root, args.results_root)
+    summary = emphasize_results(args.data_root, args.results_root, args.handcrafted_root)
     for key, value in summary.items():
         print(f"{key}: {value}")
     return 0
