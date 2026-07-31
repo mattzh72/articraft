@@ -98,8 +98,8 @@ def test_build_materialization_summary_reports_visual_mesh_footprint(tmp_path) -
         "<robot name='mesh'><link name='base'><visual><geometry><mesh filename='assets/meshes/base.obj'/></geometry></visual></link></robot>",
         encoding="utf-8",
     )
-    (meshes_dir / "base.obj").write_text("v 0 0 0\n", encoding="utf-8")
-    (collision_dir / "skip.obj").write_text("v 1 1 1\n", encoding="utf-8")
+    (meshes_dir / "base.obj").write_bytes(b"v 0 0 0\n")
+    (collision_dir / "skip.obj").write_bytes(b"v 1 1 1\n")
 
     summary = build_materialization_summary(repo, record_id)
 

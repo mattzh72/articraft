@@ -50,6 +50,12 @@ The default data root is the gitignored `<repo-root>/data`. To use another local
 export ARTICRAFT_DATA_DIR=/path/to/articraft-data
 ```
 
+On Windows PowerShell:
+
+```powershell
+$env:ARTICRAFT_DATA_DIR = "C:\path\to\articraft-data"
+```
+
 The data root contains top-level `records/`, `categories/`, `records_manifest.jsonl`, `system_prompts/`, and `cache/`.
 
 ## Contribution Rules

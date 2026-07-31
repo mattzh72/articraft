@@ -15,6 +15,8 @@ Thank you for your interest in improving Articraft! We welcome contributions fro
     uv sync --group dev
     npm --prefix viewer/web ci
     ```
+   These commands and all `just` recipes also run from Windows PowerShell. Install the
+   task runner there with `winget install --id Casey.Just --exact`.
 
 ## Development Workflow
 

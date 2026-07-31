@@ -279,23 +279,51 @@ def _viewer_url(args: argparse.Namespace, *, dev_frontend: bool = False) -> str:
     return f"http://{args.host}:{port}{target}"
 
 
+def _stop_process(process: subprocess.Popen[bytes], *, timeout: float = 5.0) -> None:
+    if process.poll() is not None:
+        return
+    if sys.platform.startswith("win"):
+        subprocess.run(
+            ["taskkill", "/PID", str(process.pid), "/T", "/F"],
+            check=False,
+            capture_output=True,
+        )
+        process.wait()
+        return
+    process.terminate()
+    try:
+        process.wait(timeout=timeout)
+    except subprocess.TimeoutExpired:
+        process.kill()
+        process.wait()
+
+
 def _run_viewer(args: argparse.Namespace) -> int:
-    if not which("npm"):
+    npm = which("npm")
+    if npm is None:
         print("npm is required for viewer/web. Install Node.js and npm first.")
         return 1
     repo = storage_repo_from_args(args)
     rebuild_manifest(repo)
     node_modules = args.repo_root / "viewer" / "web" / "node_modules"
     if not node_modules.is_dir():
-        status = subprocess.call(["npm", "--prefix", "viewer/web", "install"], cwd=args.repo_root)
+        status = subprocess.call(
+            [npm, "--prefix", "viewer/web", "install"],
+            cwd=args.repo_root,
+        )
         if status != 0:
             return status
     if args.dev:
         env = _viewer_env(args)
+        process_options = (
+            {"creationflags": subprocess.CREATE_NEW_PROCESS_GROUP}
+            if sys.platform.startswith("win")
+            else {}
+        )
         api = subprocess.Popen(
             [
-                "uv",
-                "run",
+                sys.executable,
+                "-m",
                 "uvicorn",
                 "viewer.api.app:app",
                 "--reload",
@@ -306,29 +334,32 @@ def _run_viewer(args: argparse.Namespace) -> int:
             ],
             cwd=args.repo_root,
             env=env,
+            **process_options,
         )
         env["ARTICRAFT_VIEWER_API_HOST"] = args.host
         env["ARTICRAFT_VIEWER_API_PORT"] = str(args.port)
         try:
             print(f"Viewer URL: {_viewer_url(args, dev_frontend=True)}")
             return subprocess.call(
-                ["npm", "--prefix", "viewer/web", "run", "dev"],
+                [npm, "--prefix", "viewer/web", "run", "dev"],
                 cwd=args.repo_root,
                 env=env,
             )
         finally:
-            api.terminate()
-    status = subprocess.call(["npm", "--prefix", "viewer/web", "run", "build"], cwd=args.repo_root)
+            _stop_process(api)
+    status = subprocess.call(
+        [npm, "--prefix", "viewer/web", "run", "build"],
+        cwd=args.repo_root,
+    )
     if status != 0:
         return status
     print(f"Viewer URL: {_viewer_url(args)}")
     return subprocess.call(
         [
-            "uv",
-            "run",
+            sys.executable,
+            "-m",
             "uvicorn",
             "viewer.api.app:app",
-            "--reload",
             "--host",
             args.host,
             "--port",

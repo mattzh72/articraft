@@ -42,6 +42,13 @@ export ARTICRAFT_DATA_DIR=/Users/mzhou/articraft-data
 uv run articraft status
 ```
 
+PowerShell:
+
+```powershell
+$env:ARTICRAFT_DATA_DIR = "C:\path\to\articraft-data"
+uv run articraft status
+```
+
 ## 2. Create A Record
 
 Create the record through the external CLI and identify yourself explicitly:
